@@ -39,7 +39,7 @@ GitHub评论Gitalk插件
 		repo: `Github 仓库名`,
 		owner: 'Github 用户名',
 		admin: ['Github 用户名'],
-		id: 'indow.location.pathname',
+		id: 'indow.location.pathname', 注意id一定不要重复，这里是举个例子，可以写中文，如果重复了，就会把其他地方的评论显示过来
     
     });
     gitalk.render('gitalk-container');
@@ -47,7 +47,7 @@ GitHub评论Gitalk插件
 <!-- Gitalk end -->
 ```
 
-## 3、打开上面我们注册的网址，复制 `id` 和 `秘钥` 到上面
+## 3、打开上面我们注册的网址，复制 `clientID` 和 `秘clientSecret` 到上面
 ----
 ![WX20180306-154420@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180306-154420@2x.png)
 
