@@ -70,7 +70,7 @@ description: markdown基本命令，标题，文本样式，链接，代码块�
 ## 2、灰色代码块（可以选择语言html或者java）
 
 ```
-List<StudentInformation> queryStuInfo(
+List<`StudentInformation`> queryStuInfo(
     String name,
     String stuNo,
     LocalDate endDateMin ,
