@@ -12,6 +12,8 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 -->
 GitHub评论Gitalk插件
 
+![WX20180306-155426@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180306-155426@2x-1.png)
+
 ## 1、Gitalk 需要一个 Github Application，
 ---
 [点击这里申请](https://github.com/settings/applications/new)。
@@ -49,8 +51,9 @@ GitHub评论Gitalk插件
 ----
 ![WX20180306-154420@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180306-154420@2x.png)
 
-## 3、评论查看的位置 在GitHub的`issue`中
+## 4、评论插件预览，评论查看的位置 在GitHub的`issue`中
 ----
+![WX20180306-155426@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180306-155426@2x.png)
 
 
 <!-- Gitalk 评论 start  -->
