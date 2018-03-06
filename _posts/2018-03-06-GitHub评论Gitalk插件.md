@@ -7,13 +7,15 @@ category:
 - GitHub
 description: GitHub评论Gitalk插件
 ---
-
+<!-- image url 
+https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+-->
 GitHub评论Gitalk插件
 
 ## 1、Gitalk 需要一个 Github Application，[点击这里申请](https://github.com/settings/applications/new)。
 ---
 
-![WX20180306-153911@2x](markdownImage/WX20180306-153911@2x.png)
+![WX20180306-153911@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180306-153911@2x.png)
 
 ## 2、将下面的代码复制到每个页面
 
@@ -43,7 +45,7 @@ GitHub评论Gitalk插件
 
 ## 3、打开上面我们注册的网址，复制 `id` 和 `秘钥` 到上面
 
-![WX20180306-154420@2x](markdownImage/WX20180306-154420@2x.png)
+![WX20180306-154420@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180306-154420@2x.png)
 
 
 <!-- Gitalk 评论 start  -->
