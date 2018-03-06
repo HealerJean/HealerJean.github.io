@@ -12,7 +12,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 -->
 GitHub评论Gitalk插件
 
-![WX20180306-155426@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180306-155426@2x-1.png)
+![WX20180306-155426@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180306-155426@2x.png)
 
 ## 1、Gitalk 需要一个 Github Application，
 ---
