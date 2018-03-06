@@ -68,8 +68,7 @@ GitHub评论Gitalk插件
 		repo: `HealerJean123.github.io`,
 		owner: 'HealerJean123',
 		admin: ['HealerJean123'],
-		id: 'window.location.pathname',
-      distractionFreeMode: true,
+		id: 'GitHub评论Gitalk插件',
     });
     gitalk.render('gitalk-container');
 </script> 
