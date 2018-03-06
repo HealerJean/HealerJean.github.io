@@ -2,9 +2,9 @@
 title: AngularJs-watch监听input-value-并请求数据
 date: 2018-03-06 21:33:00
 tags: 
-- GitHub
+- AngularJs
 category: 
-- GitHub
+- AngularJs
 description: AngularJs-watch监听input-value-并请求数据
 ---
 <!-- image url 
