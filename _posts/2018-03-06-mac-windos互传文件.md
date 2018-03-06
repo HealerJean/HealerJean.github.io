@@ -12,7 +12,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 -->
 
 ## 各自下载软件 `Dukto`
-#### 1、ma下载地址[（点击直接下载）](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/software/Dukto/mac/Dukto.app)
+#### 1、ma下载地址[（点击直接下载）](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/software/Dukto/mac/Dukto.zip)
 
 #### 2、windos下载地址[（点击直接下载）](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/software/Dukto/windows/DuktoR6-Setup.exe)
 ---
