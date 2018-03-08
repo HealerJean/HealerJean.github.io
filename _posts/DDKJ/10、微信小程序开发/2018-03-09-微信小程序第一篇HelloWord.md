@@ -7,8 +7,10 @@ category:
 - WeChat
 description: 微信小程序第一篇HelloWord
 ---
-<!-- image url 
+<!-- 
+1、替换图片image url 
 https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+2、替换下面的gittalk id 随机数
 -->
 
 ## **准备工作**
