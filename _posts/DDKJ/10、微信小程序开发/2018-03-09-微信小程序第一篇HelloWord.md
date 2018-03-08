@@ -22,7 +22,8 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 ## **1、打开软件之后，会自动出现如下的代码** 
 
-![WX20180308-131852@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180308-132422@2x.png)
+![WX20180308-131852@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180308-131852@2x.png)
+
 
 ## **2、介绍下主要代码的构成**
 ![20170206092847476](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/20170206092847476.png)
