@@ -13,7 +13,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 ## **准备工作**
 ### 1、注册微信公众号（小程序）
-### **2、微信开发软件下载地址**`[点击下载](https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/download.html)`
+### **2、微信开发软件下载地址**[点击下载](https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/download.html)
 
 ### **3、注册号信息之后，我们会受到一个`AppID` 和一个`AppSecret`，如下图所示**
 ![WX20180308-131628@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180308-131628@2x.png)
@@ -41,7 +41,8 @@ Page({
 ```
 
 ## **4、重新编译，上传代码**
-![WX20180308-132422@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180308-132422@2.png)
+
+![WX20180308-132422@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180308-132422@2x.png)
 
 ## **5、打开[网址进行审核](https://mp.weixin.qq.com/wxopen/wacodepage?action=getcodepage&token=959420618&lang=zh_CN)**
 选中体验版本，然后扫码，即可预览
