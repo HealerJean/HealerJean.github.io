@@ -1,6 +1,6 @@
 ---
 title: 微信小程序第一篇HelloWord
-date: 2018-03-09 13:33:00
+date: 2018-03-08 13:33:00
 tags: 
 - WeChat
 category: 
