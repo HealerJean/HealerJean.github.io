@@ -56,6 +56,13 @@ GitHub评论Gitalk插件
 ![WX20180306-155426@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180306-155426@2x.png)
 
 
+
+如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与与博主自由讨论哦
+
+|支付包 | 微信|微信公众号|
+|:-------:|:-------:|:------:|
+|![支付宝](http://blog.healerjean.top/assets/img/tctip/alpay.jpg) | ![微信](http://blog.healerjean.top/assets/img/tctip/weixin.jpg)|![微信公众号](http://blog.healerjean.top/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+
 <!-- Gitalk 评论 start  -->
 
 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
