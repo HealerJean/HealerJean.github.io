@@ -1,6 +1,6 @@
 ---
 title: 微信小程序第一篇HelloWord
-date: 2018-03-06 03:33:00
+date: 2018-03-09 13:33:00
 tags: 
 - WeChat
 category: 
@@ -20,7 +20,8 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 ## **1、打开软件之后，会自动出现如下的代码** 
 
-![WX20180308-131852@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180308-131852@2x.png)
+![WX20180308-131852@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180308-132422@2x.png)
+
 ## **2、介绍下主要代码的构成**
 ![20170206092847476](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/20170206092847476.png)
 
@@ -40,7 +41,7 @@ Page({
 ```
 
 ## **4、重新编译，上传代码**
-![WX20180308-132422@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180308-132422@2x-1.png)
+![WX20180308-132422@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180308-132422@2.png)
 
 ## **5、打开[网址进行审核](https://mp.weixin.qq.com/wxopen/wacodepage?action=getcodepage&token=959420618&lang=zh_CN)**
 选中体验版本，然后扫码，即可预览
@@ -68,7 +69,7 @@ Page({
 		repo: `HealerJean123.github.io`,
 		owner: 'HealerJean123',
 		admin: ['HealerJean123'],
-		id: 'sJdvmHBeSGz5vcIm',
+		id: 'lp1tkURFKzI7QONv',
     });
     gitalk.render('gitalk-container');
 </script> 
