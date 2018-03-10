@@ -2,9 +2,9 @@
 title: session问题和cas单点登录ticket
 date: 2018-03-09 04:33:00
 tags: 
-- GitHub
+- CAS
 category: 
-- GitHub
+- CAS
 description: session问题和cas单点登录ticket
 ---
 <!-- image url 
