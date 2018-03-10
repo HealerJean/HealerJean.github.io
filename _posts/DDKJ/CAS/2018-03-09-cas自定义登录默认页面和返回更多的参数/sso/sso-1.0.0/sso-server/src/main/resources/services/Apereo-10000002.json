@@ -1,0 +1,11 @@
+{
+  "@class" : "org.apereo.cas.services.RegexRegisteredService",
+  "serviceId" : "^(https|imaps|http)://.*",
+  "name" : "Apereo",
+  "theme" : "apereo",
+  "id" : 10000002,
+  "description" : "Apereo foundation service",
+  "logoutUrl": "http://localhost:8443/cas/login",
+  "evaluationOrder" : 2
+}
+

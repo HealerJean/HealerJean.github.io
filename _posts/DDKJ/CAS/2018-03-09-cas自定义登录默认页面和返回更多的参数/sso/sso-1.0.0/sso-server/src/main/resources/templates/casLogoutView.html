@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
+
+<head>
+    <title></title>
+</head>
+
+<body id="cas">
+<div layout:fragment="content">
+    <div class="sign" style="margin-top: 150px;">
+        <div class="rightTitle" th:utext="#{screen.logout.header}"></div>
+        <div class="sign col-xs-12 adFlexForm">
+            <div class="auth-form">
+                <!--<div class="form-group">
+                    <label class="signLabel" th:utext="#{screen.logout.success}"></label>
+                </div>-->
+                <div class="form-group">
+                    <label class="signLabel">您已经成功退出广告平台管理系统，谢谢使用！</label>
+                    <!--<label class="signLabel" th:utext="#{screen.logout.security}"></label>-->
+                </div>
+                <div class="form-group">
+                    <a href="/login">返回 登录页</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
