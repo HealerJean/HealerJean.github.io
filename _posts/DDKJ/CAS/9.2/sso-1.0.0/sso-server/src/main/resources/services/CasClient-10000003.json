@@ -1,0 +1,11 @@
+{
+  "@class": "org.apereo.cas.services.RegexRegisteredService",
+  "serviceId" : "^(https|imaps|http)://localhost:8083.*",
+  "name": "CasClient-demo",
+  "id": 10000003,
+  "description": "CasClient-demo service",
+  "evaluationOrder": 100,
+  "theme":"apereo",
+  "logoutUrl": "http://localhost:8083" //需要配置logoutUrl，发送通知交给单点登录的SingleSignOutFilter处理
+}
+
