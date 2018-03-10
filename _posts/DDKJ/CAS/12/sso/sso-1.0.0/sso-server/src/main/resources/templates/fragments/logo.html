@@ -1,0 +1,35 @@
+<script type="application/javascript">
+    function handleHeadUrl(cas_url) {
+        var cas_index=cas_url.indexOf('?service=');
+        return cas_url.slice(cas_index+9);
+    }
+    var login_url_head=handleHeadUrl(window.location.href);
+    function goLoginHead() {
+        window.location.href=login_url_head;
+    }
+</script>
+<header>
+    <div id="fh5co-header-section" class="fh5co-scrolled">
+        <div class="container">
+            <div class="header" >
+                <div class="head-logo" style="float: left;padding: 28px 0 27px;">
+                    <a href="https://admore.com.cn"></a>
+                </div>
+                <div class="top-nav">
+                    <ul class="nav1">
+                        <li><a onclick="goLoginHead()">登录</a></li>
+                        <li><a  class="adFreeRegister" style="text-decoration: none;">免费注册</a></li>
+                        <div class="clearfix"> </div>
+                    </ul>
+                    <script>
+                        $( "span.menu" ).click(function() {
+                            $( "ul.nav1" ).slideToggle( 300, function() {
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+        </div>
+    </div>
+</header>

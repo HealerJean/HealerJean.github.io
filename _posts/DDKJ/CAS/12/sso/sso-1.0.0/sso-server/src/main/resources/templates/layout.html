@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <title>广告平台</title>
+    <!--<script type="text/javascript" src="https://admore-cas.oss-cn-hangzhou.aliyuncs.com/assets/js/jquery/1.11.3/jquery.min.js"></script>-->
+    <script th:inline="javascript">
+        function handleUrl(cas_url) {
+           // return 'http://passport.sso.com:8443/cas';
+            return 'https://passport.sso.com:8443/cas';
+
+        }
+        var login_url=handleUrl(window.location.href);
+        function goLogin() {
+            window.location.href=login_url;
+        }
+        goLogin();
+    </script>
+</head>
+
+<body>
+
+</body>
+</html>

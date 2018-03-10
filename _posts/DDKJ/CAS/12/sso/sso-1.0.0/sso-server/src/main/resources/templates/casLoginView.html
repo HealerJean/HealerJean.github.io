@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>广告平台-登录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--jquery-->
+    <script src="https://admore-cas.oss-cn-hangzhou.aliyuncs.com/assets/js/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Bootstrap-->
+    <link rel="stylesheet" href="https://admore-cas.oss-cn-hangzhou.aliyuncs.com/assets/js/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://admore-cas.oss-cn-hangzhou.aliyuncs.com/assets/js/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://admore-cas.oss-cn-hangzhou.aliyuncs.com/assets/css/admin/style.css">
+</head>
+<body>
+
+<div id="fh5co-header-section" class="fh5co-scrolled">
+    <div class="container">
+        <div class="header" >
+            <div class="head-logo" style="float: left;padding: 28px 0 27px;">
+                <a href="https://admore.com.cn"></a>
+            </div>
+            <div class="top-nav">
+                <ul class="nav1">
+                    <li><a>登录</a></li>
+                    <li><a href="http://work.duodian.com/register" class="adFreeRegister" style="text-decoration: none;">免费注册</a></li>
+                    <div class="clearfix"> </div>
+                </ul>
+                <script>
+                    $( "span.menu" ).click(function() {
+                        $( "ul.nav1" ).slideToggle( 300, function() {
+                        });
+                    });
+                </script>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+</div>
+
+<div class="specialty sign">
+    <div class="container">
+        <div class="specialty-info">
+            <div class="rightTitle">登录广告平台</div>
+            <div class="sign col-xs-12 col-sm-12 adFlexForm">
+                <form class="auth-form" method="post" id="fm1" th:object="${credential}">
+                    <div class="form-groups">
+                        <div class="form-group">
+                            <label for="username" class="signLabel adFormLabel">邮<i class="paddingMiddle"></i>箱：</label>
+                            <input type="text" name="username" id="username" class="form-control form-control--first required" placeholder="请填写邮箱" tabindex="1" th:disabled="${guaEnabled}"
+                                   th:field="*{username}"
+                                   th:accesskey="#{screen.welcome.label.netid.accesskey}"
+                                   autocomplete="off"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="signLabel adFormLabel" >密<i class="paddingMiddle"></i>码：</label>
+                            <input type="password" required name="password" minlength="6" maxlength="20"  id="userInputPassword" class="form-control form-control--last required" placeholder="请填写密码" tabindex="2"
+                                   th:accesskey="#{screen.welcome.label.password.accesskey}"
+                                   th:field="*{password}"
+                                   autocomplete="off"/>
+                        </div>
+                    </div>
+                    <div class="error" style="margin-top: 10px;">
+                          <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                              <span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
+                              <span th:utext="#{screen.welcome.instructions}"></span>
+                          </div>
+                    </div>
+
+                    <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
+                    <input type="hidden" name="_eventId" value="submit"/>
+                    <input type="hidden" name="geolocation"/>
+
+                    <input class="btn btn-block btn-primary btn-submit2"
+                           name="submit"
+                           accesskey="l"
+                           th:value="#{screen.welcome.button.login}"
+                           tabindex="6"
+                           type="submit"></input>
+
+                    <div class="row mt-3_2">
+                        <div class="col-sm-12">
+                            <span>没有账号? <a href="http://work.duodian.com/register">注册</a></span>
+                        </div>
+                    </div>
+                    <form th:if="${passwordManagementEnabled}" method="post" id="passwordManagementForm">
+                        <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
+                        <input type="hidden" name="_eventId" value="resetPassword"/>
+                        <span class="fa fa-unlock"></span>
+                        <a th:utext="#{screen.pm.button.resetPassword}" href="javascript:void(0)" onclick="$('#passwordManagementForm').submit();" />
+                        <p/>
+                    </form>
+                </form>
+            </div>
+
+            <p class="auth-form-divider">
+                <span class="line"></span><br>
+                <span class="auth-form-divider-text2">
+                即将开放第三方登录<br><span class="auth-form-divider-next">敬请期待</span>
+                </span>
+            </p>
+
+            <div class="social-signup-buttons col-md-8 col-md-offset-2">
+                <div class="signup-button">
+                    <a title="Sign in with weibo" class="btn btn-link-weibo btn-block">
+                        <span class="entypo-social entypo-weibo"></span>
+                        <span class="signup-button__text"></span>
+                    </a>
+                </div>
+                <div class="signup-button">
+                    <a title="Sign in with weixin" class="btn btn-link-weixin btn-block">
+                        <span class="entypo-social entypo-s-weixin"></span>
+                        <span class="signup-button__text"></span>
+                    </a>
+                </div>
+                <div class="signup-button">
+                    <a title="Sign in with QQ" class="btn btn-link-qq btn-block">
+                        <span class="entypo-social entypo-qq"></span><span class="signup-button__text"></span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        <div class="clearfix"> </div>
+
+    </div>
+</div>
+
+<div class="footer" style="margin-top: 125px;">
+    <div class="container">
+        <div class="col-md-4 footer-right" data-wow-delay="0.4s" style="padding-left: 0px;visibility: visible; -webkit-animation-delay: 0.4s;">
+            <a href="https://admore.com.cn" class="adFooterLogo"></a>
+        </div>
+        <div class="col-md-8 footer-left"  style="text-align: right;margin-top: -6px;padding-right: 0px;">
+            <ul>
+                <!--<li><a href="https://adwords.admore.com.cn/partner">合伙伙伴</a></li>-->
+                <li><a href="https://admore.com.cn/aboutUs">关于我们</a></li>
+                <!--<li><a href="https://admore.com.cn/download">下载APP</a></li>-->
+                <li style="border: 1px solid #99A4BC;padding: 6px;border-radius: 18px;margin-right: 0px;"><span class="adFooterWeixin" style=""></span> </li>
+            </ul>
+        </div>
+        <div class="clearfix"> </div>
+    </div>
+</div>
+
+<div class="copyright">
+    <div class="container">
+        <div class="copyright-left float-left" data-wow-delay="0.4s" style="visibility: visible; -webkit-animation-delay: 0.4s;">
+            <p>Copyright &copy; 2018.多点科技 All rights reserved.&nbsp;ICP证：京12011038号-8</p>
+        </div>
+        <div class="copyright-right float-right" data-wow-delay="0.4s" style="visibility: visible; -webkit-animation-delay: 0.4s;">
+            <p>北京市朝阳区朝阳路85号院5号楼C座
+            </p>
+        </div>
+        <div class="clearfix"> </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var i = "正在登录...";
+    $("#fm1").submit(function() {
+        $(":submit").attr("disabled", true);
+        $(":submit").attr("value", i);
+        return true;
+    });
+</script>
+
+</body>
+</html>
