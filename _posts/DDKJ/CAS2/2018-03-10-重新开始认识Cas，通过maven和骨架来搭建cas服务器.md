@@ -26,7 +26,7 @@ https://casinitializr.herokuapp.com/
 ![QQ20180310-225026@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180310-225026@2x.png)
 
 
-### 3、将它直接放到上面总司令的目录下
+### 3、将它直接放到上面总司令的目录下(cas-overlay可以删除的，没毛用)
 
 ![QQ20180311-015137@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-015137@2x.png)
 
@@ -187,9 +187,9 @@ https://casinitializr.herokuapp.com/
 ![QQ20180311-013212@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-013212@2x.png)
 
 
-出现下面表示成功了，但是点开idea右侧的maven还是有下划线，不用管。后面添加好配置文件等，再执行./build.sh run 就会成功了
+出现下面表示成功了，但是点开idea右侧的maven还是有下划线，不用管。后面添加好配置文件等，再执行./build.sh run 就会成功了。但还是会有下划线的。怕个毛毛
 
-![QQ20180311-013336@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-013336@2x-1.png)
+![QQ20180311-013336@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-013336@2x.png)
 
 ### 6.添加配置文件`application.properties `喽，哈哈
 
@@ -323,7 +323,7 @@ cas.authn.pac4j.wordpress.clientName=WordPress
 1、把etc/cas/config/log4j2.xml 放到项目的src/main/resources 下，
 2、内容由`<Property name="cas.log.dir" >.</Property> `调整成` <Property name="cas.log.dir" >logs</Property> `
 
-### 8、sso-server通过骨架会自动帮我们生成java文件，下面我们把这两个删除，因为我们启用用的是 ./build.sh,所以不需要。而且我也没有提供springBoot的jar包
+### 8、sso-server通过骨架会自动帮我们生成java文件，下面我们把这两个删除，注意test包下面的java也要删除哦，因为我们启用用的是 ./build.sh,所以不需要。而且我也没有提供springBoot的jar包
 
 ![QQ20180311-014136@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-014136@2x.png)
 
