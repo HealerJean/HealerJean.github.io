@@ -176,6 +176,8 @@ https://casinitializr.herokuapp.com/
 
 ![QQ20180311-012524@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-012524@2x.png)
 
+![QQ20180311-023944@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-023944@2x.png)
+
 解决方法，提前运行这个sso-server项目，这个时候才会真正下载，具体为什么我没有研究明白
 
 `sudo ./build.sh run`  提示没有权限。下面我们开始给sso-server全部权限，按照下面的命令打出(**有时候，命令不好使，就前面加个sudo**)
