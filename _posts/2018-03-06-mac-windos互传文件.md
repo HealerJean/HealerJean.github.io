@@ -19,11 +19,13 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 ![WX20180306-211612@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180306-211612@2x.png)
 
 
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与与博主自由讨论哦
+如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](http://blog.healerjean.top/assets/img/tctip/alpay.jpg) | ![微信](http://blog.healerjean.top/assets/img/tctip/weixin.jpg)|![微信公众号](http://blog.healerjean.top/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+
+
 
 
 <!-- Gitalk 评论 start  -->

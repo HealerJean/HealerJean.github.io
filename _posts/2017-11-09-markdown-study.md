@@ -19,12 +19,12 @@ description:  markdown study
 ![](http://img.blog.csdn.net/20170524152219156?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjk1NDcwNg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
 
 
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与与博主自由讨论哦
+
+如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](http://blog.healerjean.top/assets/img/tctip/alpay.jpg) | ![微信](http://blog.healerjean.top/assets/img/tctip/weixin.jpg)|![微信公众号](http://blog.healerjean.top/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
-
+|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 <!-- Gitalk 评论 start  -->
 
 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
