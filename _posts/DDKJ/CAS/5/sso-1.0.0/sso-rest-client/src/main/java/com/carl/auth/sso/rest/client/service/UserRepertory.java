@@ -21,7 +21,7 @@ public class UserRepertory {
         this.users = users;
     }
 
-    public UserRepertory(SysUser ... users) {
+    public UserRepertory(SysUser... users) {
         for(SysUser user : users) {
             this.users.put(user.getUsername(), user);
         }
