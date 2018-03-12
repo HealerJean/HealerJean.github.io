@@ -1,11 +1,11 @@
 ---
-title: 1-重新开始认识Cas-通过maven和骨架来搭建cas服务器
+title: 1、重新开始认识Cas-通过maven和骨架来搭建cas服务器
 date: 2018-03-10 03:33:00
 tags: 
 - CAS
 category: 
 - CAS
-description: 1-重新开始认识Cas-通过maven和骨架来搭建cas服务器
+description: 重新开始认识Cas-通过maven和骨架来搭建cas服务器
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
