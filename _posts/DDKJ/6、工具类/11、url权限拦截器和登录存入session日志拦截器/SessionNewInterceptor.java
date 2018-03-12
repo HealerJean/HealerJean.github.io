@@ -48,7 +48,7 @@ public class SessionNewInterceptor  implements HandlerInterceptor {
             Long remoteUserId = CasConfig.RemoteUserUtil.getRemoteUserId();
             if (remoteUserId != null) {
                 SysAdminUser adminUser = (SysAdminUser)session.getAttribute(AppConstants.SESSION_ADMIN_USER);
-                if (adminUser.getId().compareTo(remoteUserId) != 0) {
+                if (adminUser.getId().compareTo(remoteUserId) != 0) { //一般肯定的是相等的，毫无疑问啊
                     adminUser = loginService.getSysAdminUser(remoteUserId);
                     session.setAttribute(AppConstants.SESSION_ADMIN_USER,adminUser);
                     session.setAttribute(AppConstants.SESSION_CUSTOMER_COUNT, loginService.countUserByAdmId(remoteUserId));
