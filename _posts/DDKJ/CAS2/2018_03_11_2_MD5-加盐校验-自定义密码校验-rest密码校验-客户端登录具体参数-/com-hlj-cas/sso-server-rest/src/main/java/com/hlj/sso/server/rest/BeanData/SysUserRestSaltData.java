@@ -9,8 +9,7 @@ import java.util.Map;
 
 public class SysUserRestSaltData {
 
-    @NotNull
-    private String username;
+ 
 
     //@JsonProperty @JsonProperty不仅仅是在序列化的时候有用，
     // 反序列化的时候也有用，比如有些接口返回的是json字符串，
@@ -25,6 +24,10 @@ public class SysUserRestSaltData {
 
     @JsonProperty("attributes")
     private Map<String, Object> attributes = new HashMap<>();
+
+    @JsonIgnore
+    @NotNull
+    private String username;
 
     @JsonIgnore
     @NotNull

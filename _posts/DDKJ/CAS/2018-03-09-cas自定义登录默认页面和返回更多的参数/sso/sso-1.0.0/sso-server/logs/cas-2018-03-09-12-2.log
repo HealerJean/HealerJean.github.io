@@ -1,0 +1,370 @@
+[32m2018-03-09 12:20:27,710 INFO [org.springframework.cloud.config.client.ConfigServicePropertySourceLocator] - <Fetching config from server at: http://localhost:8888/config>[m
+[32m2018-03-09 12:20:28,164 INFO [org.springframework.cloud.config.client.ConfigServicePropertySourceLocator] - <Located environment: name=sso, profiles=[dev], label=null, version=null, state=null>[m
+[32m2018-03-09 12:20:28,164 INFO [org.springframework.cloud.bootstrap.config.PropertySourceBootstrapConfiguration] - <Located property source: CompositePropertySource [name='configService', propertySources=[MapPropertySource [name='classpath:/config/sso-dev.properties']]]>[m
+[32m2018-03-09 12:20:38,373 INFO [org.apereo.cas.web.CasWebApplication] - <The following profiles are active: dev>[m
+[32m2018-03-09 12:20:38,420 INFO [org.apereo.cas.web.CasWebApplicationContext] - <Refreshing CasWebApplicationContext>[m
+[32m2018-03-09 12:21:10,642 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:21:10,679 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:21:10,679 INFO [org.apereo.cas.services.ServiceRegistryInitializer] - <Service registry contains [1] service definitions>[m
+[32m2018-03-09 12:21:29,654 INFO [org.apereo.cas.support.events.listener.CasConfigurationEventListener] - <Refreshing CAS configuration. Stand by...>[m
+[33m2018-03-09 12:21:35,467 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Secret key for encryption is not defined for [Ticket-granting Cookie]; CAS will attempt to auto-generate the encryption key>[m
+[33m2018-03-09 12:21:35,479 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Generated encryption key [20YlizOMGgBb3EQ0FpR-uLLicn131r-z86QK0d6lFFU] of size [256] for [Ticket-granting Cookie]. The generated key MUST be added to CAS settings.>[m
+[33m2018-03-09 12:21:35,479 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Secret key for signing is not defined for [Ticket-granting Cookie]. CAS will attempt to auto-generate the signing key>[m
+[33m2018-03-09 12:21:35,480 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Generated signing key [hJJrl1_3S_1gBf80ly6aGut9Lz9WyNpzwaUB8jBV-vY_PW1xY7-1onnsE7jOrSTqsAH3YpxHqUmoM2X9xmDGiw] of size [512] for [Ticket-granting Cookie]. The generated key MUST be added to CAS settings.>[m
+[33m2018-03-09 12:21:35,884 WARN [org.apereo.cas.util.cipher.BaseBinaryCipherExecutor] - <Secret key for signing is not defined. CAS will attempt to auto-generate the signing key>[m
+[33m2018-03-09 12:21:35,884 WARN [org.apereo.cas.util.cipher.BaseBinaryCipherExecutor] - <Generated signing key [cfOqywJ8bFNsZ30PDW3p7tDzGjeV7a4tvD1me2kajtoA1Qgmr3UO9PGXOJZJ8qP8z3GlHLZnoQkDEjSV4C2T9g] of size [512]. The generated key MUST be added to CAS settings.>[m
+[33m2018-03-09 12:21:35,885 WARN [org.apereo.cas.util.cipher.BaseBinaryCipherExecutor] - <No encryption key is defined. CAS will attempt to auto-generate keys>[m
+[33m2018-03-09 12:21:35,885 WARN [org.apereo.cas.util.cipher.BaseBinaryCipherExecutor] - <Generated encryption key [KkQGoNDcbrxWlONJ] of size [16]. The generated key MUST be added to CAS settings.>[m
+[32m2018-03-09 12:21:36,061 INFO [org.apereo.cas.support.events.listener.DefaultCasEventListener] - <[36m>[m
+[32m2018-03-09 12:21:36,065 INFO [org.apereo.cas.support.events.listener.DefaultCasEventListener] - <
+
+  ____    _____      _      ____   __   __
+ |  _ \  | ____|    / \    |  _ \  \ \ / /
+ | |_) | |  _|     / _ \   | | | |  \ V / 
+ |  _ <  | |___   / ___ \  | |_| |   | |  
+ |_| \_\ |_____| /_/   \_\ |____/    |_|  
+                                          
+>[m
+[32m2018-03-09 12:21:36,065 INFO [org.apereo.cas.support.events.listener.DefaultCasEventListener] - <[0m>[m
+[32m2018-03-09 12:21:36,065 INFO [org.apereo.cas.support.events.listener.DefaultCasEventListener] - <Ready to process requests @ [2018-03-09T04:21:36.061Z]>[m
+[32m2018-03-09 12:21:36,067 INFO [org.apereo.cas.web.CasWebApplication] - <Started CasWebApplication in 101.011 seconds (JVM running for 108.375)>[m
+[32m2018-03-09 12:21:53,617 INFO [org.apereo.cas.web.flow.InitialFlowSetupAction] - <Setting path for cookies for warn cookie generator to: [/cas/] >[m
+[32m2018-03-09 12:21:53,617 INFO [org.apereo.cas.web.flow.InitialFlowSetupAction] - <Setting path for cookies for warn cookie generator to: [/cas/] >[m
+[32m2018-03-09 12:21:53,617 INFO [org.apereo.cas.web.flow.InitialFlowSetupAction] - <Setting path for cookies for warn cookie generator to: [/cas/] >[m
+[32m2018-03-09 12:21:53,617 INFO [org.apereo.cas.web.flow.InitialFlowSetupAction] - <Setting path for cookies for warn cookie generator to: [/cas/] >[m
+[32m2018-03-09 12:21:53,658 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:21:53 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:21:53 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:21:53,658 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:21:53 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:21:53 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+>[m
+[32m2018-03-09 12:21:53,658 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:21:53 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:21:53 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+>[m
+[32m2018-03-09 12:21:53,658 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:21:53 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:21:53 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[33m2018-03-09 12:21:53,708 WARN [org.apereo.cas.web.flow.ServiceAuthorizationCheck] - <Service Management: missing service. Service [http://localhost:8083/hello] is not found in service registry.>[m
+[33m2018-03-09 12:21:53,708 WARN [org.apereo.cas.web.flow.ServiceAuthorizationCheck] - <Service Management: missing service. Service [http://localhost:8083/hello] is not found in service registry.>[m
+[32m2018-03-09 12:21:55,968 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:21:55,980 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:22:02,418 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:22:02 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:22:02 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:22:02,418 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:22:02 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:22:02 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[33m2018-03-09 12:22:02,419 WARN [org.apereo.cas.web.flow.ServiceAuthorizationCheck] - <Service Management: missing service. Service [http://localhost:8083/hello] is not found in service registry.>[m
+[33m2018-03-09 12:22:02,419 WARN [org.apereo.cas.web.flow.ServiceAuthorizationCheck] - <Service Management: missing service. Service [http://localhost:8083/hello] is not found in service registry.>[m
+[32m2018-03-09 12:22:55,969 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:23:25,984 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:23:42,002 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:23:42 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:23:42 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+>[m
+[32m2018-03-09 12:23:42,002 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:23:42 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:23:42 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+>[m
+[32m2018-03-09 12:23:46,964 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:23:46 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:23:46 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+>[m
+[32m2018-03-09 12:23:46,964 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:23:46 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:23:46 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+>[m
+[32m2018-03-09 12:23:52,987 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:23:52 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:23:52 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:23:52,987 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:23:52 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:23:52 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:23:55,971 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:23:56,662 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:23:56 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:23:56 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:23:56,662 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:23:56 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:23:56 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:23:59,804 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:23:59 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:23:59 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:23:59,804 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:23:59 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:23:59 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:24:18,091 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:24:18 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:24:18 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:24:18,091 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:24:18 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:24:18 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[33m2018-03-09 12:24:18,092 WARN [org.apereo.cas.web.flow.ServiceAuthorizationCheck] - <Service Management: missing service. Service [http://localhost:8083/] is not found in service registry.>[m
+[33m2018-03-09 12:24:18,092 WARN [org.apereo.cas.web.flow.ServiceAuthorizationCheck] - <Service Management: missing service. Service [http://localhost:8083/] is not found in service registry.>[m
+[32m2018-03-09 12:24:29,413 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:24:29 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:24:29 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:24:29,413 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:24:29 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:24:29 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[33m2018-03-09 12:24:29,414 WARN [org.apereo.cas.web.flow.ServiceAuthorizationCheck] - <Service Management: missing service. Service [http://localhost:8083/] is not found in service registry.>[m
+[33m2018-03-09 12:24:29,414 WARN [org.apereo.cas.web.flow.ServiceAuthorizationCheck] - <Service Management: missing service. Service [http://localhost:8083/] is not found in service registry.>[m
+[32m2018-03-09 12:24:33,585 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:24:33 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:24:33 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:24:33,585 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:24:33 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:24:33 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[33m2018-03-09 12:24:33,586 WARN [org.apereo.cas.web.flow.ServiceAuthorizationCheck] - <Service Management: missing service. Service [http://localhost:8083/] is not found in service registry.>[m
+[33m2018-03-09 12:24:33,586 WARN [org.apereo.cas.web.flow.ServiceAuthorizationCheck] - <Service Management: missing service. Service [http://localhost:8083/] is not found in service registry.>[m
+[32m2018-03-09 12:24:38,065 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:24:38 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:24:38 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:24:38,065 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:24:38 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:24:38 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[33m2018-03-09 12:24:38,066 WARN [org.apereo.cas.web.flow.ServiceAuthorizationCheck] - <Service Management: missing service. Service [http://localhost:8083/] is not found in service registry.>[m
+[33m2018-03-09 12:24:38,066 WARN [org.apereo.cas.web.flow.ServiceAuthorizationCheck] - <Service Management: missing service. Service [http://localhost:8083/] is not found in service registry.>[m
+[32m2018-03-09 12:24:43,000 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:24:43 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:24:43 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:24:43,000 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:24:43 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:24:43 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[33m2018-03-09 12:24:43,001 WARN [org.apereo.cas.web.flow.ServiceAuthorizationCheck] - <Service Management: missing service. Service [http://localhost:8083/] is not found in service registry.>[m
+[33m2018-03-09 12:24:43,001 WARN [org.apereo.cas.web.flow.ServiceAuthorizationCheck] - <Service Management: missing service. Service [http://localhost:8083/] is not found in service registry.>[m
+[32m2018-03-09 12:24:55,976 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:24:55,986 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:25:55,979 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:26:25,991 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:26:55,983 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m

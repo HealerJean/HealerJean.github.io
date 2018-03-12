@@ -1,0 +1,79 @@
+[32m2018-03-09 12:00:23,747 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:00:53,763 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:01:53,750 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:01:53,764 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:02:53,764 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:03:23,751 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:03:53,769 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:04:53,755 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:04:53,773 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:05:53,775 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:06:23,757 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:06:53,781 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:07:53,763 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:07:53,785 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:08:53,786 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:09:23,767 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:09:53,788 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:10:53,771 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:10:53,792 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:11:53,794 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:12:09,472 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:12:09 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:12:09 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:12:09,472 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:12:09 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:12:09 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[33m2018-03-09 12:12:09,480 WARN [org.apereo.cas.services.RegisteredServiceAccessStrategyUtils] - <Unauthorized Service Access. Service [http://localhost:8083/] is not found in service registry.>[m
+[32m2018-03-09 12:12:09,481 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: http://localhost:8083/
+ACTION: SERVICE_TICKET_NOT_CREATED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:12:09 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:12:09,481 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: http://localhost:8083/
+ACTION: SERVICE_TICKET_NOT_CREATED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:12:09 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:12:23,773 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:12:53,799 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:13:53,779 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:13:53,804 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:14:53,805 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:15:23,782 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:15:53,808 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:16:53,786 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:16:53,814 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:17:53,817 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m

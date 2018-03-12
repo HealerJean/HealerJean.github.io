@@ -1,0 +1,240 @@
+2018-03-09 16:45:38,413 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:45:38 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:45:38 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:45:38,418 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:45:38 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:45:38 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:45:39,606 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:45:39 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:45:39 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:45:42,255 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:45:42 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:45:42 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:45:43,959 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:45:43 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:45:43 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:45:45,054 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:45:45 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:45:45 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:45:45,601 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:45:45 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:45:45 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:45:46,037 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:45:46 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:45:46 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:45:46,472 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:45:46 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:45:46 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:45:46,872 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:45:46 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:45:46 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:45:50,848 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: zhangsan
+WHAT: Supplied credentials: [zhangsan]
+ACTION: AUTHENTICATION_SUCCESS
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:45:50 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:45:50,957 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: zhangsan
+WHAT: TGT-**********************************************hpC5tfKqwj-JeandeMBP
+ACTION: TICKET_GRANTING_TICKET_CREATED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:45:50 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:45:50,987 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: zhangsan
+WHAT: ST-1-pQhHOZqSjR4rGj01rPnr-JeandeMBP for http://localhost:8083/start
+ACTION: SERVICE_TICKET_CREATED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:45:50 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:45:51,065 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: zhangsan
+WHAT: ST-1-pQhHOZqSjR4rGj01rPnr-JeandeMBP
+ACTION: SERVICE_TICKET_VALIDATED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:45:51 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+
+2018-03-09 16:45:56,581 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:45:56 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:45:56 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:46:01,749 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:46:01 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:46:01 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:46:07,089 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:46:07 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:46:07 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:46:12,611 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:46:12 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:46:12 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:46:16,909 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:46:16 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:46:16 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-09 16:46:23,214 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:46:23 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:46:23 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+

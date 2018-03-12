@@ -1,0 +1,100 @@
+[32m2018-03-09 16:28:36,761 INFO [org.springframework.cloud.config.client.ConfigServicePropertySourceLocator] - <Fetching config from server at: http://localhost:8888/config>[m
+[32m2018-03-09 16:28:37,513 INFO [org.springframework.cloud.config.client.ConfigServicePropertySourceLocator] - <Located environment: name=sso, profiles=[dev], label=null, version=null, state=null>[m
+[32m2018-03-09 16:28:37,514 INFO [org.springframework.cloud.bootstrap.config.PropertySourceBootstrapConfiguration] - <Located property source: CompositePropertySource [name='configService', propertySources=[MapPropertySource [name='classpath:/config/sso-dev.properties']]]>[m
+[32m2018-03-09 16:28:37,641 INFO [org.apereo.cas.web.CasWebApplication] - <The following profiles are active: dev>[m
+[32m2018-03-09 16:28:37,691 INFO [org.apereo.cas.web.CasWebApplicationContext] - <Refreshing CasWebApplicationContext>[m
+[32m2018-03-09 16:28:54,093 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [2] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 16:28:54,135 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [2] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 16:28:54,135 INFO [org.apereo.cas.services.ServiceRegistryInitializer] - <Service registry contains [2] service definitions>[m
+[33m2018-03-09 16:28:55,215 WARN [org.apereo.cas.pm.config.PasswordManagementConfiguration] - <CAS is unable to send password-reset sms messages given no settings are defined to account for sms providers, etc>[m
+[32m2018-03-09 16:28:58,768 INFO [org.apereo.cas.support.events.listener.CasConfigurationEventListener] - <Refreshing CAS configuration. Stand by...>[m
+[33m2018-03-09 16:28:59,654 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Secret key for encryption is not defined for [Password Reset Token]; CAS will attempt to auto-generate the encryption key>[m
+[33m2018-03-09 16:28:59,663 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Generated encryption key [M5B24tFPj0MWO8Q1B60YXMOCmtsRpGNsQNGBs5Qhm7M] of size [256] for [Password Reset Token]. The generated key MUST be added to CAS settings.>[m
+[33m2018-03-09 16:28:59,663 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Secret key for signing is not defined for [Password Reset Token]. CAS will attempt to auto-generate the signing key>[m
+[33m2018-03-09 16:28:59,663 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Generated signing key [cvIkpLtkwnIptOxUwEPDFAdT--f9y7fSqcB54cSIpJND9L_NLlq5YwCzSYvSpS6mWJpOncXxkmLO2HxklDrWww] of size [512] for [Password Reset Token]. The generated key MUST be added to CAS settings.>[m
+[33m2018-03-09 16:28:59,754 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Secret key for encryption is not defined for [Ticket-granting Cookie]; CAS will attempt to auto-generate the encryption key>[m
+[33m2018-03-09 16:28:59,754 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Generated encryption key [LwMAudxQphP0R-mZOR38eUL-ZWB-7wX83T9pUtljrnQ] of size [256] for [Ticket-granting Cookie]. The generated key MUST be added to CAS settings.>[m
+[33m2018-03-09 16:28:59,754 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Secret key for signing is not defined for [Ticket-granting Cookie]. CAS will attempt to auto-generate the signing key>[m
+[33m2018-03-09 16:28:59,755 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Generated signing key [TdKLc3QtUmccfMwZBe8QuwAXeFqaKuIXwwaJfdVY1gLMcYyjwYZEmPVGxarP9R9C68DvAWnSvOuKLThLZ_8Vtg] of size [512] for [Ticket-granting Cookie]. The generated key MUST be added to CAS settings.>[m
+[33m2018-03-09 16:29:00,104 WARN [org.apereo.cas.util.cipher.BaseBinaryCipherExecutor] - <Secret key for signing is not defined. CAS will attempt to auto-generate the signing key>[m
+[33m2018-03-09 16:29:00,104 WARN [org.apereo.cas.util.cipher.BaseBinaryCipherExecutor] - <Generated signing key [P6ST39Of6mqZjPJf08dOcvtz55PrgJkXrVnPMkfjUcFx4pzPKVheCrSfycL-KNiaX08LMIx2gCD3K0L2oF0eiw] of size [512]. The generated key MUST be added to CAS settings.>[m
+[33m2018-03-09 16:29:00,104 WARN [org.apereo.cas.util.cipher.BaseBinaryCipherExecutor] - <No encryption key is defined. CAS will attempt to auto-generate keys>[m
+[33m2018-03-09 16:29:00,105 WARN [org.apereo.cas.util.cipher.BaseBinaryCipherExecutor] - <Generated encryption key [DHfKajirNcjThuSX] of size [16]. The generated key MUST be added to CAS settings.>[m
+[32m2018-03-09 16:29:00,253 INFO [org.apereo.cas.support.events.listener.DefaultCasEventListener] - <[36m>[m
+[32m2018-03-09 16:29:00,256 INFO [org.apereo.cas.support.events.listener.DefaultCasEventListener] - <
+
+  ____    _____      _      ____   __   __
+ |  _ \  | ____|    / \    |  _ \  \ \ / /
+ | |_) | |  _|     / _ \   | | | |  \ V / 
+ |  _ <  | |___   / ___ \  | |_| |   | |  
+ |_| \_\ |_____| /_/   \_\ |____/    |_|  
+                                          
+>[m
+[32m2018-03-09 16:29:00,256 INFO [org.apereo.cas.support.events.listener.DefaultCasEventListener] - <[0m>[m
+[32m2018-03-09 16:29:00,256 INFO [org.apereo.cas.support.events.listener.DefaultCasEventListener] - <Ready to process requests @ [2018-03-09T08:29:00.253Z]>[m
+[32m2018-03-09 16:29:00,258 INFO [org.apereo.cas.web.CasWebApplication] - <Started CasWebApplication in 25.784 seconds (JVM running for 27.781)>[m
+[32m2018-03-09 16:29:20,176 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [2] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 16:29:20,194 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 16:29:26,102 INFO [org.apereo.cas.web.flow.InitialFlowSetupAction] - <Setting path for cookies for warn cookie generator to: [/cas/] >[m
+[32m2018-03-09 16:29:26,102 INFO [org.apereo.cas.web.flow.InitialFlowSetupAction] - <Setting path for cookies for warn cookie generator to: [/cas/] >[m
+[32m2018-03-09 16:29:26,136 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:29:26 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:29:26 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 16:29:26,136 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:29:26 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:29:26 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 16:29:31,498 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:29:31 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:29:31 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 16:29:31,498 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 16:29:31 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 16:29:31 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 16:30:20,182 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [2] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 16:30:50,199 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 16:31:20,186 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [2] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 16:32:20,191 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [2] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 16:32:20,201 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 16:33:20,195 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [2] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 16:33:50,205 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 16:34:20,196 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [2] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 16:35:20,198 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [2] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 16:35:20,208 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 16:36:20,201 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [2] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 16:36:50,210 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 16:37:20,204 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [2] service(s) from [InMemoryServiceRegistry].>[m

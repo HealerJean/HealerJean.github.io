@@ -1,0 +1,211 @@
+[32m2018-03-09 12:28:45,954 INFO [org.springframework.cloud.config.client.ConfigServicePropertySourceLocator] - <Fetching config from server at: http://localhost:8888/config>[m
+[32m2018-03-09 12:28:46,401 INFO [org.springframework.cloud.config.client.ConfigServicePropertySourceLocator] - <Located environment: name=sso, profiles=[dev], label=null, version=null, state=null>[m
+[32m2018-03-09 12:28:46,402 INFO [org.springframework.cloud.bootstrap.config.PropertySourceBootstrapConfiguration] - <Located property source: CompositePropertySource [name='configService', propertySources=[MapPropertySource [name='classpath:/config/sso-dev.properties']]]>[m
+[32m2018-03-09 12:28:56,512 INFO [org.apereo.cas.web.CasWebApplication] - <The following profiles are active: dev>[m
+[32m2018-03-09 12:28:56,554 INFO [org.apereo.cas.web.CasWebApplicationContext] - <Refreshing CasWebApplicationContext>[m
+[32m2018-03-09 12:29:29,018 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:29:29,051 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:29:29,051 INFO [org.apereo.cas.services.ServiceRegistryInitializer] - <Service registry contains [1] service definitions>[m
+[32m2018-03-09 12:29:48,606 INFO [org.apereo.cas.support.events.listener.CasConfigurationEventListener] - <Refreshing CAS configuration. Stand by...>[m
+[33m2018-03-09 12:29:54,410 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Secret key for encryption is not defined for [Ticket-granting Cookie]; CAS will attempt to auto-generate the encryption key>[m
+[33m2018-03-09 12:29:54,419 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Generated encryption key [-rL0w17TJ4mnQJu9nclEGzW7P0I57Am_l39uebFLTpM] of size [256] for [Ticket-granting Cookie]. The generated key MUST be added to CAS settings.>[m
+[33m2018-03-09 12:29:54,419 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Secret key for signing is not defined for [Ticket-granting Cookie]. CAS will attempt to auto-generate the signing key>[m
+[33m2018-03-09 12:29:54,419 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Generated signing key [WQXJLsRC7nQbLWmXXrEycZm5scKOEBaTxgkYNS8nrOrnEErwN3UEdx_uFdXRd4xg1j6FgBOEoVfmN_yUcwluGA] of size [512] for [Ticket-granting Cookie]. The generated key MUST be added to CAS settings.>[m
+[33m2018-03-09 12:29:54,776 WARN [org.apereo.cas.util.cipher.BaseBinaryCipherExecutor] - <Secret key for signing is not defined. CAS will attempt to auto-generate the signing key>[m
+[33m2018-03-09 12:29:54,776 WARN [org.apereo.cas.util.cipher.BaseBinaryCipherExecutor] - <Generated signing key [MI9BRI1Hz3YeXR2Wu8ah59TOB-RkWP4Lxd1wVAotw_rABh2VRers36MMOc51n_gPHtbkf8JyxiMh04jhyeA0xA] of size [512]. The generated key MUST be added to CAS settings.>[m
+[33m2018-03-09 12:29:54,777 WARN [org.apereo.cas.util.cipher.BaseBinaryCipherExecutor] - <No encryption key is defined. CAS will attempt to auto-generate keys>[m
+[33m2018-03-09 12:29:54,777 WARN [org.apereo.cas.util.cipher.BaseBinaryCipherExecutor] - <Generated encryption key [MsPdyoTCPRVuYLEf] of size [16]. The generated key MUST be added to CAS settings.>[m
+[32m2018-03-09 12:29:54,923 INFO [org.apereo.cas.support.events.listener.DefaultCasEventListener] - <[36m>[m
+[32m2018-03-09 12:29:54,926 INFO [org.apereo.cas.support.events.listener.DefaultCasEventListener] - <
+
+  ____    _____      _      ____   __   __
+ |  _ \  | ____|    / \    |  _ \  \ \ / /
+ | |_) | |  _|     / _ \   | | | |  \ V / 
+ |  _ <  | |___   / ___ \  | |_| |   | |  
+ |_| \_\ |_____| /_/   \_\ |____/    |_|  
+                                          
+>[m
+[32m2018-03-09 12:29:54,926 INFO [org.apereo.cas.support.events.listener.DefaultCasEventListener] - <[0m>[m
+[32m2018-03-09 12:29:54,926 INFO [org.apereo.cas.support.events.listener.DefaultCasEventListener] - <Ready to process requests @ [2018-03-09T04:29:54.922Z]>[m
+[32m2018-03-09 12:29:54,928 INFO [org.apereo.cas.web.CasWebApplication] - <Started CasWebApplication in 101.762 seconds (JVM running for 109.388)>[m
+[32m2018-03-09 12:30:13,823 INFO [org.apereo.cas.web.flow.InitialFlowSetupAction] - <Setting path for cookies for warn cookie generator to: [/cas/] >[m
+[32m2018-03-09 12:30:13,823 INFO [org.apereo.cas.web.flow.InitialFlowSetupAction] - <Setting path for cookies for warn cookie generator to: [/cas/] >[m
+[32m2018-03-09 12:30:13,861 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:30:13 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:30:13 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+>[m
+[32m2018-03-09 12:30:13,861 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:30:13 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:30:13 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+>[m
+[32m2018-03-09 12:30:14,848 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:30:14,863 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:30:23,902 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:30:23 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:30:23 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:30:23,902 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Fri Mar 09 12:30:23 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:30:23 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:30:37,532 INFO [org.apereo.cas.authentication.PolicyBasedAuthenticationManager] - <[QueryAndEncodeDatabaseAuthenticationHandler] failed authenticating [zhangsan]>[m
+[32m2018-03-09 12:30:37,557 INFO [org.apereo.cas.authentication.AbstractAuthenticationManager] - <Authenticated principal [zhangsan] with attributes [{}] via credentials [[zhangsan]].>[m
+[32m2018-03-09 12:30:37,561 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: zhangsan
+WHAT: Supplied credentials: [zhangsan]
+ACTION: AUTHENTICATION_SUCCESS
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:30:37 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:30:37,561 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: zhangsan
+WHAT: Supplied credentials: [zhangsan]
+ACTION: AUTHENTICATION_SUCCESS
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:30:37 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:30:37,677 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: zhangsan
+WHAT: TGT-**********************************************T4yFTW0ESE-JeandeMacBook-Pro
+ACTION: TICKET_GRANTING_TICKET_CREATED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:30:37 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:30:37,677 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: zhangsan
+WHAT: TGT-**********************************************T4yFTW0ESE-JeandeMacBook-Pro
+ACTION: TICKET_GRANTING_TICKET_CREATED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:30:37 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:30:37,709 INFO [org.apereo.cas.DefaultCentralAuthenticationService] - <Granted ticket [ST-1-rQMcjrmuFTYZMgLd72xJ-JeandeMacBook-Pro] for service [http://localhost:8083/] and principal [zhangsan]>[m
+[32m2018-03-09 12:30:37,710 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: zhangsan
+WHAT: ST-1-rQMcjrmuFTYZMgLd72xJ-JeandeMacBook-Pro for http://localhost:8083/
+ACTION: SERVICE_TICKET_CREATED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:30:37 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:30:37,710 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: zhangsan
+WHAT: ST-1-rQMcjrmuFTYZMgLd72xJ-JeandeMacBook-Pro for http://localhost:8083/
+ACTION: SERVICE_TICKET_CREATED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:30:37 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+>[m
+[32m2018-03-09 12:30:37,774 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: zhangsan
+WHAT: ST-1-rQMcjrmuFTYZMgLd72xJ-JeandeMacBook-Pro
+ACTION: SERVICE_TICKET_VALIDATED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:30:37 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+>[m
+[32m2018-03-09 12:30:37,774 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: zhangsan
+WHAT: ST-1-rQMcjrmuFTYZMgLd72xJ-JeandeMacBook-Pro
+ACTION: SERVICE_TICKET_VALIDATED
+APPLICATION: CAS
+WHEN: Fri Mar 09 12:30:37 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+>[m
+[32m2018-03-09 12:31:14,852 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:31:44,867 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:32:14,853 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:33:14,855 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:33:14,870 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:34:14,858 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:34:44,874 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:35:14,862 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:36:14,863 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:36:14,877 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:37:14,869 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:37:44,883 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:38:14,875 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:39:14,880 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:39:14,885 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:40:14,884 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:40:44,887 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:41:14,888 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:42:14,889 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:42:14,889 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:43:14,900 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:43:44,891 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:44:14,909 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:45:14,893 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:45:14,914 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:46:14,919 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:46:44,901 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:47:14,924 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
+[32m2018-03-09 12:48:14,902 INFO [org.apereo.cas.ticket.registry.DefaultTicketRegistryCleaner] - <[0] expired tickets removed.>[m
+[32m2018-03-09 12:48:14,933 INFO [org.apereo.cas.services.DefaultServicesManager] - <Loaded [1] service(s) from [InMemoryServiceRegistry].>[m
