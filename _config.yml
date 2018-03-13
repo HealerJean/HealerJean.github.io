@@ -24,8 +24,8 @@ defaults:
     values:
       layout: "post"
 
-#### Pagination
-paginate: 20
+#### Pagination 每页显示多少个，这里我建议还是10个吧。也够用了
+paginate: 10
 
 #### Site
 title : HealeJean的梦想博客
