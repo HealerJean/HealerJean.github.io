@@ -1,0 +1,10 @@
+{
+  "@class" : "org.apereo.cas.services.RegexRegisteredService",
+  "serviceId" : "^(https|imaps|http)://casclientone.*",
+  "name" : "casclientone",
+  "id" : 10000011,
+  "description" : "客户端casclientone项目访问过来，跳转到casclientone主题",
+  "evaluationOrder" : 11,
+  "theme": "casclientone"
+}
+

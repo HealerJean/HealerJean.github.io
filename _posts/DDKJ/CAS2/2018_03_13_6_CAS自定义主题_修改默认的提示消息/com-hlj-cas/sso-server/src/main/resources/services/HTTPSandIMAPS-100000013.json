@@ -1,0 +1,13 @@
+//下面theme:apereo可加可不加，因为本来就是默认的，但是如果自定义使用apereo.properties就必须配置thmee名字
+{
+  "@class" : "org.apereo.cas.services.RegexRegisteredService",
+  "serviceId" : "^(https|imaps|http)://.*",
+  "name" : "HTTPS and IMAPS",
+  "id" : 10000013,
+  "description" : "This service definition authorizes all application urls that support HTTPS and IMAPS and HTTP protocols.",
+  "evaluationOrder" : 1000,
+  "attributeReleasePolicy": {
+    "@class": "org.apereo.cas.services.ReturnAllAttributeReleasePolicy"
+  },
+  "theme": "apereo"
+}
