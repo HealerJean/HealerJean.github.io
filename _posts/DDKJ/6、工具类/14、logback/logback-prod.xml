@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="logging" class="com.github.pukkaone.gelf.logback.GelfAppender">
+        <graylogHost>10.45.145.228</graylogHost>
+        <originHost>zbtapi</originHost>
+        <levelIncluded>true</levelIncluded>
+        <locationIncluded>false</locationIncluded>
+        <loggerIncluded>true</loggerIncluded>
+        <markerIncluded>false</markerIncluded>
+        <mdcIncluded>false</mdcIncluded>
+        <threadIncluded>false</threadIncluded>
+        <facility>gelf-java</facility>
+        <additionalField>application=zbtapi</additionalField>
+        <additionalField>environment=prod</additionalField>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="logging" />
+    </root>
+</configuration>
