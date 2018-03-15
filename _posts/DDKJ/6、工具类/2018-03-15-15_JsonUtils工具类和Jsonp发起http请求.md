@@ -15,7 +15,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 ## 前言
 
-	Jsonp用来调用http请求的，非常小巧而且方便
+Jsonp用来调用http请求的，非常小巧而且方便
 
 
 ## 回顾之前所学
