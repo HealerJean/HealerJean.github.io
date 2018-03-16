@@ -131,6 +131,10 @@ curl -XPOST http://localhost:12201/gelf -p0 -d '{"message":"hello这是一条消
 
 ## 2、springBoot集成graylog
 
+1、创建 gref udp input
+
+![WX20180316-155922@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180316-155922@2x.png)
+
 ### 1、使用logback进行日志的封装
 
 ```
