@@ -335,7 +335,7 @@ source:tools AND warn
 		repo: `HealerJean123.github.io`,
 		owner: 'HealerJean123',
 		admin: ['HealerJean123'],
-		id: 'AAAAAAAAAAAAAA',
+		id: 'enBuXMrTvxUHcidh',
     });
     gitalk.render('gitalk-container');
 </script> 
