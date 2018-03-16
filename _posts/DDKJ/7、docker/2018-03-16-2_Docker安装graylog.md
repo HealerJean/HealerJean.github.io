@@ -100,8 +100,34 @@ docker-compose up -d
 
 [ http://localhost:9000/]( http://localhost:9000/)
 
-![WX20180316-141255@2x](markdownImage/WX20180316-141255@2x.png)
+![WX20180316-141255@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180316-141255@2x.png)
 
+
+
+## 3、测试
+
+### 3.1、查看运行的镜像 协议观察，可以看到12201 udp这样才算成功
+
+`docker ps`
+
+![WX20180316-141745@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180316-141745@2x.png)
+
+### 3.2、使用http测试是否成功
+
+#### 3.2.1、新建input http input
+
+![WX20180316-141909@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180316-141909@2x.png)
+
+
+#### 3.2.2、打开一个终端，输入下面的命令
+
+```
+curl -XPOST http://localhost:12201/gelf -p0 -d '{"message":"hello这是一条消息", "host":"127.0.0.1", "facility":"test", "topic": "meme"}'
+```
+打开浏览器观察信息,点击http-input之后
+
+
+![WX20180316-142346@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180316-142346@2x.png)
 
 
 
