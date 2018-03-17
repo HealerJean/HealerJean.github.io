@@ -61,7 +61,7 @@ Logger logger  = Logger.getLogger(CardBagController.class);
 
 ### logback
 
-在工程的src根目录下创建logback.xml文件(名字是固定的和Log4j是不是有点像呢)
+在工程的src根目录下创建logback.xml文件，springboot工程使用logback-spring.xml(名字是固定的和Log4j是不是有点像呢)
 
 
 
@@ -160,7 +160,7 @@ logback-prod.xml
 ```
 
 
-
+## [logback代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_16_2_Docker%E5%AE%89%E8%A3%85graylog%E5%92%8C%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/com-hlj-graylog.zip)
 
 
 
