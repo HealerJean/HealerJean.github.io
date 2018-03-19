@@ -128,8 +128,11 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 写入内容，解释说明
 
 1、FROM ，表示使用 Jdk8 环境 为基础镜像
+
 2、MAINTAINER ,作者为 HealerJean
+
 3、ADD 表示将maven打包好的jar重命名为app.jar
+
 4、CMD 表示运行这个项目 自己好好瞅瞅是不是 java -jar app.jar
 
 ```
