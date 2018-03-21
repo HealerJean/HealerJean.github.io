@@ -1,11 +1,15 @@
 ---
-title: redis使用工具类进行保存数据
-date: 2018-03-06 03:33:00
+title: redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value
+date: 2018-03-20 03:33:00
 tags: 
-- Docker
+- 缓存
+- redis
+- Ehcache
 category: 
-- Docker
-description: redis使用工具类进行保存数据
+- 缓存
+- redis
+- Ehcache
+description: redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
@@ -1254,7 +1258,7 @@ public class EhcacheServiceImpl implements EhcacheService{
 		repo: `HealerJean123.github.io`,
 		owner: 'HealerJean123',
 		admin: ['HealerJean123'],
-		id: 'esGqdqtFxdaCxjxZ',
+		id: 'PmGTBiTsWCwEWim1',
     });
     gitalk.render('gitalk-container');
 </script> 
