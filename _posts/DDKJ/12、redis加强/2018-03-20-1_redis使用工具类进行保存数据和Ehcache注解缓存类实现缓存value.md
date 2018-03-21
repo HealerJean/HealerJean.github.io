@@ -3,11 +3,11 @@ title: redis使用工具类进行保存数据和Ehcache注解缓存类实现缓�
 date: 2018-03-20 03:33:00
 tags: 
 - 缓存
-- redis
+- Redis
 - Ehcache
 category: 
 - 缓存
-- redis
+- Redis
 - Ehcache
 description: redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value
 ---
@@ -23,9 +23,13 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 这里我先说下序列化吧
  <font color="red">
 GenericToStringSerializer：使用Spring转换服务进行序列化（可以用来专门转化存放Double等类型，我下面的工具类有介绍）；
+
 JacksonJsonRedisSerializer：使用Jackson 1，将对象序列化为JSON；
+
 Jackson2JsonRedisSerializer：使用Jackson 2，将对象序列化为JSON；
+
 JdkSerializationRedisSerializer：使用Java序列化；
+
 StringRedisSerializer：序列化String类型的key和value。实际上是String和byte数组之间的转换，那么Key只能是String类型的，不能为Long，Integer，否则会报错抛异常。
 
 </font>
@@ -380,6 +384,7 @@ public class CustomJSONStringRedisSerializer implements RedisSerializer<Object> 
 ### 2.1、工具类<br/>
 
 1、这个工具类，在描述的时候，就说道，分不清Long和Integer，Double和Float。所以我们一般只用来存放对象
+
 2、本类中可以看到有两个服务类`ValueOperations`和`RedisOperations`，但是其实是同一个类只不过名字不同。只是其作用的范围表面上意思不一样，**第一个是用来存取数据，第二个用来操作参数数据的**
 
 
@@ -1233,7 +1238,7 @@ public class EhcacheServiceImpl implements EhcacheService{
 
 ```
 
-## [代码下载]()
+## [代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_20_1_redis%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7%E7%B1%BB%E8%BF%9B%E8%A1%8C%E4%BF%9D%E5%AD%98%E6%95%B0%E6%8D%AE%E5%92%8CEhcache%E6%B3%A8%E8%A7%A3%E7%BC%93%E5%AD%98%E7%B1%BB%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98value/com-hlj-ddkj-redis-ehcache.zip)
 
 
 <br/><br/><br/>
