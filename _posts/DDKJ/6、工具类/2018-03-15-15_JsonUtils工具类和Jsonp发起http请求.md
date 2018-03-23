@@ -91,6 +91,23 @@ public void findUuidPackages(String uuid, HttpServletResponse response) throws E
     response.getWriter().write(jsonArray.toString());
 }
 
+
+
+//第二种keyset，有时候可能里面的key是随机的，比如ddkj的idfa的标准格式
+{"EED2EE41-7EDA-4C89-9AC0-B95B226F44E1":"0"}
+
+String body = connection.body();
+JSONObject jsonObject = JSONObject.fromObject(body);
+for (Object key : jsonObject.keySet()) {
+    Object res = jsonObject.get(key);
+    if ("1".equals(res.toString())) {
+       // System.out.println(i++);
+        //System.out.println("idfa为"+thisIdfaflag.getIdfa());
+        System.out.println(thisIdfaflag.getIdfa());
+
+    }
+}
+
 ```
 
 ### 3、JsonUtils的使用 
