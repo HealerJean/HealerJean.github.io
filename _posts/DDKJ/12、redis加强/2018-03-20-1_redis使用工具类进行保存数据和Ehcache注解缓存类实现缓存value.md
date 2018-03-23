@@ -2,11 +2,9 @@
 title: redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value
 date: 2018-03-20 03:33:00
 tags: 
-- 缓存
 - Redis
 - Ehcache
 category: 
-- 缓存
 - Redis
 - Ehcache
 description: redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value

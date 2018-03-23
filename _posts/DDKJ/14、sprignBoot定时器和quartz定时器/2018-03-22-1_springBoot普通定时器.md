@@ -3,10 +3,8 @@ title: 1、SpringBoot普通定时器
 date: 2018-03-22 18:33:00
 tags: 
 - Quartz
-- 定时器
 category: 
 - Quartz
-- 定时器
 description: SpringBoot普通定时器
 ---
 <!-- image url 
