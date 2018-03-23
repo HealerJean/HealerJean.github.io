@@ -220,7 +220,7 @@ public String haveProperties() throws InterruptedException, SchedulerException {
 
 #### 调用的时候可以看到控制台关于，配置文件 quartz.properties 中的一些信息。 而且人物执行成功
 
-![WX20180322-191414](markdownImage/WX20180322-191414.png)
+![WX20180322-191414](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180322-191414.png)
 
 
 ## 2、没有配置文件，但是很牛逼的真正的quartz
