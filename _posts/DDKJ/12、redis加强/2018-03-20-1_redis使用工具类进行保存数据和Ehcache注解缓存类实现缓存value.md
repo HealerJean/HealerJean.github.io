@@ -1236,7 +1236,180 @@ public class EhcacheServiceImpl implements EhcacheService{
 
 ```
 
-## [代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_20_1_redis%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7%E7%B1%BB%E8%BF%9B%E8%A1%8C%E4%BF%9D%E5%AD%98%E6%95%B0%E6%8D%AE%E5%92%8CEhcache%E6%B3%A8%E8%A7%A3%E7%BC%93%E5%AD%98%E7%B1%BB%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98value/com-hlj-ddkj-redis-ehcache.zip)
+## 5、redis 使用计时器 活着是拦截点击次数过多
+
+### 5.1、拦截器配置 
+
+#### 1、设置要拦截的url和缓存时间10秒
+
+```
+public UrlRequestInterceptor() {
+    super();
+    urlFilter.put("/apps/plan/savePlan",10L);
+    urlFilter.put("/play/plan/savePlan",10L);
+}
+
+```
+
+
+#### 2、添加url缓存并且计数
+
+```
+Long count = redisUrlRequestData.increase(userId + uri,urlFilter.get(uri));
+```
+ 
+ 
+
+
+```
+package com.duodian.admore.advertiser.interceptor;
+
+import com.duodian.admore.common.utils.AppSessionHelper;
+import com.duodian.admore.dao.redis.RedisUrlRequestData;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * 类描述：
+ * 创建人： j.sh
+ * 创建时间： 2016/9/13
+ * version：1.0.0
+ */
+@Component
+public class UrlRequestInterceptor implements HandlerInterceptor {
+
+    @Resource
+    private RedisUrlRequestData redisUrlRequestData;
+
+    private Map<String,Long> urlFilter = new HashMap<>();
+
+    public UrlRequestInterceptor() {
+        super();
+        urlFilter.put("/apps/plan/savePlan",10L);
+        urlFilter.put("/play/plan/savePlan",10L);
+    }
+
+    @Override
+    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
+        String uri = httpServletRequest.getRequestURI();
+        if (urlFilter.get(uri) != null){
+            Long userId = AppSessionHelper.getRemoteUserId();
+            Long count = redisUrlRequestData.increase(userId + uri,urlFilter.get(uri));
+            if (count > 1){
+                this.invalidate(httpServletRequest,httpServletResponse);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
+
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
+
+    }
+
+
+    private void invalidate(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        String ajax = request.getHeader("X-Requested-With");
+        if (StringUtils.equals(ajax,"XMLHttpRequest")) {
+            //设置登陆超时header
+            response.addHeader("resubmit","true");
+        } else {
+            response.sendRedirect("/public/resubmit");
+        }
+    }
+
+}
+
+
+```
+### 5.2、配置redis缓存
+
+1、放入数据为byte[] 
+
+```
+  byte[] keyBytes = stringRedisSerializer.serialize(key);
+```
+
+```
+@Component
+public class RedisUrlRequestData {
+
+    private static Integer DB_INDEX = EnumRedisIndex.普通临时变量.index;
+
+    @Resource
+    private RedisTemplate<String,Long> redisTemplate;
+
+    private StringRedisSerializer stringRedisSerializer;
+    private GenericToStringSerializer longResisSerializer;
+
+    @PostConstruct
+    private void afterPropertiesSet() throws Exception {
+        stringRedisSerializer = new StringRedisSerializer();
+    }
+
+    /**
+     * 请求次数
+     * @param key
+     * @return
+     */
+    public Long increase(final String key,final Long seconds){
+        return redisTemplate.execute(new RedisCallback<Long>() {
+            @Override
+            public Long doInRedis(RedisConnection redisConnection) throws DataAccessException {
+                redisConnection.select(DB_INDEX);
+                byte[] keyBytes = stringRedisSerializer.serialize(key);
+
+                Long val = redisConnection.incr(keyBytes);
+                redisConnection.expire(keyBytes,seconds);
+                return val;
+            }
+        });
+    }
+}
+``` 
+
+网上不错的方法
+
+
+```
+ public boolean addHcode(final List<Map<String, Object>> list,final String tableName) {
+            boolean result = redisTemplate.execute(new RedisCallback<Boolean>() {
+                public Boolean doInRedis(RedisConnection connection)
+                        throws DataAccessException {
+                    RedisSerializer<String> serializer = redisTemplate.getStringSerializer();
+                    for (Map<String, Object> map : list) {
+                        byte[] key  = serializer.serialize(tableName+":"+map.get("hcode").toString());
+                        byte[] name = serializer.serialize(map.get("pcode").toString());
+                        connection.setNX(key, name);
+                    }
+                    return true;
+                }
+            }, false, true);
+            return result;
+        }
+
+```
+
+
+
+
+### [代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_20_1_redis%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7%E7%B1%BB%E8%BF%9B%E8%A1%8C%E4%BF%9D%E5%AD%98%E6%95%B0%E6%8D%AE%E5%92%8CEhcache%E6%B3%A8%E8%A7%A3%E7%BC%93%E5%AD%98%E7%B1%BB%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98value/com-hlj-ddkj-redis-ehcache.zip)
 
 
 <br/><br/><br/>
