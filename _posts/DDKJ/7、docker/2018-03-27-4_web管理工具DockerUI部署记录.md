@@ -1,11 +1,11 @@
 ---
-title: 1、docker的安装和配置国内镜像加快下载速度
-date: 2018-03-06 03:33:00
+title: 4、web管理工具DockerUI部署记录
+date: 2018-03-27 13:33:00
 tags: 
 - Docker
 category: 
 - Docker
-description: docker的安装和配置国内镜像加快下载速度
+description: web管理工具DockerUI部署记录
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
