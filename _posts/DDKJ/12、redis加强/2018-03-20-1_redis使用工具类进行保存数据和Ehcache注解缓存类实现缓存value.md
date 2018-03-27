@@ -1236,6 +1236,123 @@ public class EhcacheServiceImpl implements EhcacheService{
 
 ```
 
+#### 4.3、Ehcache工具类
+
+
+```
+package com.duodian.admore.dao.ehcache;
+
+import com.duodian.admore.cache.CustomEhCacheManager;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+
+/**
+ * 类名称：EhCacheObjectData
+ * 类描述：ehcache 对象数据存储
+ *
+ */
+@Component
+public class EhCacheObjectData {
+
+    @Resource
+    private CustomEhCacheManager customEhCacheManager;
+
+    private CacheManager cacheManager;
+
+    @PostConstruct
+    public void init() {
+        cacheManager = customEhCacheManager.getCacheManager();
+    }
+
+    public Object getData(String cacheName,String key){
+        Cache cache = cacheManager.getCache(cacheName);
+        if(cache == null ) return null;
+        Element element = cache.get(key);
+        if(element != null) return element.getObjectValue();
+        return null;
+    }
+
+    public void setData(String cacheName,String key,Object data){
+        Cache cache = cacheManager.getCache(cacheName);
+        if(cache != null ) cache.put(new Element(key,data));
+    }
+
+    /**
+     * 删除缓存下的key
+     * @param cacheName
+     * @param key
+     * @return
+     */
+    public boolean delete(String cacheName,String key){
+        Cache cache = cacheManager.getCache(cacheName);
+        if(cache != null ) {
+            return cache.remove(key);
+        }
+        return false;
+    }
+}
+
+```
+
+
+
+```
+package com.duodian.admore.dao.ehcache.apps;
+
+import com.duodian.admore.cache.CacheConstants;
+import com.duodian.admore.cache.CustomEhCacheManager;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+
+/**
+ * 类描述： 用以存放进程与包名对应关系
+ */
+@Component
+public class ProcessPackageCache {
+
+    @Resource
+    private CustomEhCacheManager customEhCacheManager;
+
+    private Cache cache;
+
+    @PostConstruct
+    private void init(){
+        cache = customEhCacheManager.getCacheManager().getCache(CacheConstants.CACHE_PUBLIC_DAY);
+    }
+
+    private String buildKey(String processName){
+        return "process." + processName;
+    }
+
+    public String getPackageName(String processName){
+        Element element = cache.get(this.buildKey(processName));
+        if(element != null) return element.getObjectValue().toString();
+        return null;
+    }
+
+    public void putPackageName(String processName,String packageName){
+        cache.putIfAbsent(new Element(this.buildKey(processName),packageName));
+    }
+
+}
+
+
+```
+
+
+
 ## 5、redis 使用计时器 活着是拦截点击次数过多
 
 ### 5.1、拦截器配置 
