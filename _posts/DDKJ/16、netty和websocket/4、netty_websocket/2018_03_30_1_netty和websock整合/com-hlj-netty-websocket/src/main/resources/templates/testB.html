@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+
+    <script type="text/javascript" >
+        var url = 'ws://localhost:9090/websocket';
+
+        var clientWs;
+
+        function initClient(){
+            clientWs = new WebSocket(url);
+            clientWs.onmessage = function (event) {
+                document.getElementById("content").innerText += event.data;
+            };
+            clientWs.onopen = function (event) {
+                var json = {
+                    from:2,
+                    init:1
+                };
+
+                clientWs.send(JSON.stringify(json));
+            }
+        }
+
+        function webSend(){
+            var content = document.getElementById('tt').value;
+
+            var json = {
+                from:2,
+                to:1,
+                content:content
+            };
+
+            clientWs.send(JSON.stringify(json));
+        }
+    </script>
+
+</head>
+<body>
+
+<input type="button" onclick="initClient()" value="initClient"/>
+
+<br>
+
+<input type="button" onclick="webSend()" value="send"/>
+
+
+<textarea  id="tt" cols="30" rows="10"></textarea>
+
+<div id="content">
+
+</div>
+
+
+
+</body>
+</html>

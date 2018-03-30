@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:redis="http://www.springframework.org/schema/redis"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/redis http://www.springframework.org/schema/redis/spring-redis.xsd">
+
+
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig" >
+        <property name="maxTotal" value="${hlj.redis.max-total}"/>
+        <property name="maxIdle" value="${hlj.redis.max-idle}"/>
+        <property name="maxWaitMillis" value="${hlj.redis.pool.max-wait}"/>
+        <!-- 永远不要加testOnBorrow 或 testOnReturn这类，不然你会后悔的 -->
+    </bean>
+
+    <bean id="redisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" destroy-method="destroy">
+        <property name="password" value="${hlj.redis.password}"/>
+        <property name="hostName" value="${hlj.redis.host-name}"/>
+        <property name="port" value="${hlj.redis.port}"/>
+        <property name="usePool" value="true"/>
+        <property name="poolConfig" ref="jedisPoolConfig"/>
+    </bean>
+
+
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" scope="prototype">
+        <property name="connectionFactory" ref="redisConnectionFactory"/>
+        <property name="keySerializer">
+            <bean class="com.hlj.netty.websocket.redis.cacheSerializer.CustomStringRedisSerializer"/>
+        </property>
+        <property name="valueSerializer">
+            <bean class="com.hlj.netty.websocket.redis.cacheSerializer.CustomJSONStringRedisSerializer"/>
+        </property>
+    </bean>
+
+
+
+    <!--配置监听队列-->
+    <bean id="requestMessageListener" class="com.hlj.netty.websocket.topic.RequestMessageListener"/>
+
+    <redis:listener-container>
+        <redis:listener ref="requestMessageListener" topic="request" />
+    </redis:listener-container>
+
+
+</beans>

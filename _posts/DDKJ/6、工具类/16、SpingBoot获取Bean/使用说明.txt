@@ -1,3 +1,0 @@
-    static {
-        weChatTokenService = SpringHelper.getBean(WeChatTokenService.class);
-    }
