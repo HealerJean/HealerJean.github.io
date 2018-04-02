@@ -67,7 +67,23 @@ public class SpringHelper implements ApplicationContextAware {
 
 ```
 
+## 2、直接通过注入获取
 
+
+```
+@Component
+public class WebSocketServerInitializer extends ChannelInitializer {
+
+    @Resource
+    private ApplicationContext applicationContext;
+
+    @Override
+    protected void initChannel() throws Exception {
+     pipeline.addLast(applicationContext.getBean(WebSocketFrameHandler.class));
+    }
+}
+
+```
 
 <br/><br/><br/>
 如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦

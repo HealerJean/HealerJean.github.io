@@ -343,6 +343,7 @@ import org.springframework.stereotype.Component;
 我们对注册用户以及发送邮件的监听重新编写，注册用户写入数据库监听代码如下所示：
  */
 @Component
+@Order(0)
 public class UserRegisterListener implements SmartApplicationListener
 {
     /**
@@ -415,6 +416,7 @@ import org.springframework.stereotype.Component;
  * @Date 2018/3/29  下午5:30.
  */
 @Component
+@Order(1)
 public class UserRegisterSendMailListener implements SmartApplicationListener
 {
     /**

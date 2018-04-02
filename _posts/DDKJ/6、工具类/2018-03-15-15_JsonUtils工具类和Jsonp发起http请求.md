@@ -110,6 +110,32 @@ for (Object key : jsonObject.keySet()) {
 
 ```
 
+
+### 1.3、JsonNode
+
+
+```
+@Test
+public void jsonNode() throws IOException {
+
+    String json = "{\"username\":\"zhangsan\",\"性别\":\"男\",\"company\":{\"companyName\":\"中华\",\"address\":\"北京\"},\"cars\":[\"奔驰\",\"宝马\"]}";
+    ObjectMapper mapper = new ObjectMapper();
+    //JSON ----> JsonNode
+    JsonNode rootNode = mapper.readTree(json);
+    Iterator<String> keys = rootNode.fieldNames();
+    while(keys.hasNext()){
+        String fieldName = keys.next();
+        System.out.println(fieldName + ": " + rootNode.path(fieldName).toString());
+    }
+    //JsonNode ----> JSON
+    System.out.println(mapper.writeValueAsString(rootNode));
+}
+
+```
+
+
+
+
 ### 3、JsonUtils的使用 
 
 #### 1、转化成对象

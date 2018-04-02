@@ -1,11 +1,11 @@
 ---
-title: 2、彻底明白redisTemplate
+title: 2、再次熟悉redisTemplate
 date: 2018-03-30 23:33:00
 tags: 
 - Redis
 category: 
 - Redis
-description: 彻底明白redisTemplate
+description: 再次熟悉redisTemplate
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages

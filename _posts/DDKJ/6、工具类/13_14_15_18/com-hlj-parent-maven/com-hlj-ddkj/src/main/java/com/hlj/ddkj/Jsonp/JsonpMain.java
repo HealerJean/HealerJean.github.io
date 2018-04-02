@@ -1,11 +1,14 @@
 package com.hlj.ddkj.Jsonp;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.junit.Test;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 @Slf4j
@@ -30,4 +33,22 @@ public class JsonpMain {
         String body =  connection.body();
         log.info(body);
     }
+
+    @Test
+    public void jsonNode() throws IOException {
+
+        String json = "{\"username\":\"zhangsan\",\"性别\":\"男\",\"company\":{\"companyName\":\"中华\",\"address\":\"北京\"},\"cars\":[\"奔驰\",\"宝马\"]}";
+        ObjectMapper mapper = new ObjectMapper();
+        //JSON ----> JsonNode
+        JsonNode rootNode = mapper.readTree(json);
+        Iterator<String> keys = rootNode.fieldNames();
+        while(keys.hasNext()){
+            String fieldName = keys.next();
+            System.out.println(fieldName + ": " + rootNode.path(fieldName).toString());
+        }
+        //JsonNode ----> JSON
+        System.out.println(mapper.writeValueAsString(rootNode));
+    }
+
+
 }
