@@ -1,6 +1,6 @@
 ---
 title: 2、彻底明白redisTemplate
-date: 2018-03-06 03:33:00
+date: 2018-03-30 23:33:00
 tags: 
 - Redis
 category: 
@@ -291,6 +291,31 @@ public String set(Long id){
 
 
 ```
+
+
+## 使用情况
+
+
+```
+redis 广告的点击次数和流量统计
+public class RedisConstants {
+
+    public static final String CACHE_COUNT = "cache.count";
+    public static final String CACHE_COUNT_AD = "cache.count.ad";
+    public static final String CACHE_COUNT_AD_BLACK = "cache.count.ad.black";
+    public static final String CACHE_COUNT_TIME = "cache.count.time";
+
+    public static final String CACHE_AD_GET = "cache.ad.get";
+    public static final String CACHE_AD_SHOW = "cache.ad.show";
+    public static final String CACHE_AD_CLICK = "cache.ad.click";
+    public static final String CACHE_AD_SKIP = "cache.ad.skip";
+    public static final String CACHE_AD_JUMP = "cache.ad.jump";
+}
+
+```
+
+
+Encache是后台我们自己用的
 
 
 <br/><br/><br/>
