@@ -323,7 +323,7 @@ public class HelloClientHandler extends SimpleChannelInboundHandler<String> {
 
 
 
-
+## [代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_30_1_netty%E5%92%8Cwebsock%E6%95%B4%E5%90%88/com-hlj-netty-websocket.zip)
 
 <br/><br/><br/>
 如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
@@ -347,7 +347,7 @@ public class HelloClientHandler extends SimpleChannelInboundHandler<String> {
 		repo: `HealerJean123.github.io`,
 		owner: 'HealerJean123',
 		admin: ['HealerJean123'],
-		id: 'AAAAAAAAAAAAAA',
+		id: 'klaRecd2U6nAXnCa',
     });
     gitalk.render('gitalk-container');
 </script> 
