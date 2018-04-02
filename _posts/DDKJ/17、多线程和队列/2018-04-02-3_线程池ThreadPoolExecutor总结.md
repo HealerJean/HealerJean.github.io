@@ -1,11 +1,11 @@
 ---
-title: 3、线程池总结
+title: 3、线程池ThreadPoolExecutor总结
 date: 2018-04-02 17:33:00
 tags: 
 - Thread
 category: 
 - Thread
-description: 3、线程池总结
+description: 3、线程池ThreadPoolExecutor总结
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
