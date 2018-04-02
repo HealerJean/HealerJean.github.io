@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class HomeController {
 
+    public static int i = 1;
+
     @Autowired
     private PersonRepository personRepository;
 
@@ -37,6 +39,18 @@ public class HomeController {
     public ResponseBean  findById(Long id){
         try {
             return ResponseBean.buildSuccess(personRepository.findById(id));
+        }catch (Exception e){
+            return  ResponseBean.buildFailure(e.getMessage());
+        }
+    }
+
+    @GetMapping("static")
+    @ResponseBody
+    public ResponseBean  staticTest( ){
+        i ++;
+
+        try {
+            return ResponseBean.buildSuccess(i);
         }catch (Exception e){
             return  ResponseBean.buildFailure(e.getMessage());
         }

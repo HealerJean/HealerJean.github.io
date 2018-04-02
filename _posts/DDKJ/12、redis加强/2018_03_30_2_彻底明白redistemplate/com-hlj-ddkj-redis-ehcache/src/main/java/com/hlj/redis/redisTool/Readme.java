@@ -33,6 +33,10 @@ stringRedisTemplate.opsForValue().get("test")//根据key获取缓存中的val
 
 stringRedisTemplate.expire("red_123",1000 , TimeUnit.MILLISECONDS);//设置过期时间
 
+
+stringRedisTemplate.hasKey("546545");//检查key是否存在，返回boolean值
+
+
 ## 2
 stringRedisTemplate.delete("test");//根据key删除缓存
 
@@ -58,10 +62,6 @@ stringRedisTemplate.opsForSet().members("red_123");//根据key获取set集合
 //用户是否在线
 stringRedisTemplate.opsForSet().isMember("red_123", "1")//根据key查看集合中是否存在指定数据
 
-
-
-
-stringRedisTemplate.hasKey("546545");//检查key是否存在，返回boolean值
 
 
 
