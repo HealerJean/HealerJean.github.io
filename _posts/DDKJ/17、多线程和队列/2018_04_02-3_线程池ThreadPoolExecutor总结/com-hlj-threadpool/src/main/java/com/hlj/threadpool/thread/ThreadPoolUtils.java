@@ -1,6 +1,5 @@
 package com.hlj.threadpool.thread;
 
-import com.hlj.threadpool.TestInterface;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -23,7 +22,7 @@ public class ThreadPoolUtils {
         threadPoolExecutor.execute(runnable);
     }
 
-    private ThreadPoolExecutor getThreadPoolExecutor(){
+    public ThreadPoolExecutor getThreadPoolExecutor(){
         if (threadPoolExecutor != null) {
             return threadPoolExecutor;
         }
@@ -96,8 +95,5 @@ public class ThreadPoolUtils {
     }
 
 
-    public void test(TestInterface testInterface){
-        System.out.println(testInterface);
 
-    }
 }
