@@ -1,0 +1,1 @@
+java.lang.IllegalArgumentException: Illegal character in query at index 57: https://openapi.youku.com/router/rest.json?opensysparams={"client_id":"gYYPpdoCv5X9tGap","timestamp":"1523186517","version":"3.0","sign":"1facb562c3b91d7a0b1e6ec36cc89ec5","action":"youku.api.idfa.notification.click"}

@@ -108,6 +108,50 @@ for (Object key : jsonObject.keySet()) {
     }
 }
 
+
+//3、jsonObject 加强
+
+
+@RequestMapping("loadAppSpreadNew")
+@ResponseBody
+public ResponseBean loadAppSpreadNew(String trackId){
+      AppsApp  appsAppNull =new AppsApp();
+
+	 String content = HttpHelper.handleGet(String.format("https://itunes.apple.com/lookup?id=%s&country=cn", trackId));
+	 
+	 JSONObject jsonObject = JSONObject.fromObject(content);
+	 
+	 //1、判断是不是存在节点
+	 if (!jsonObject.has("resultCount") || !jsonObject.has("results")){
+	     throw new AppException(ErrorCodeEnum.逻辑错误.code,"未找到对应的应用");
+	     }
+	     
+	//2、json中包含json数组，取数第一个  
+    JSONObject target = jsonObject.getJSONArray("results").getJSONObject(0);
+	
+	//3、获取string
+appsAppNull.setTrackName(target.getString("trackName"));
+	
+	 //4、获取Long类型数据
+	 	 appsAppNull.setFileSizeBytes((Long.valueOf(target.get("fileSizeBytes").toString())));
+	
+	// 5、后去金额 BigDecimal
+	 BigDecimal prive = new BigDecimal(target.getString("price"));
+	 appsAppNull.setPrice(prive);
+	
+	 return ResponseBean.buildSuccess(appsAppNull);
+	
+
+            }
+        }
+    }
+    return ResponseBean.buildFailure();
+}
+
+
+
+
+
 ```
 
 

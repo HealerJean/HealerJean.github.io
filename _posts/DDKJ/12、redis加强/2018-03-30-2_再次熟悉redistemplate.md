@@ -59,7 +59,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
  
 
 ```
-了ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue(); 
+ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue(); 
 ```
 
 ```
