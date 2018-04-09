@@ -155,6 +155,55 @@ appsAppNull.setTrackName(target.getString("trackName"));
 ```
 
 
+#### 1.2.2、拼装一个json
+
+需要什么房什么进来就行了就是用了个StringBuffer()没啥
+
+```
+ */
+private static TreeMap packageRequestParams(TreeMap params,
+                                            String appKey, String sign) {
+    StringBuffer buffer = new StringBuffer();
+    /**
+     * 拼接系统参数
+     */
+    buffer.append("{");
+    buffer.append("\"client_id\":");
+    buffer.append("\"");
+    buffer.append(appKey);
+    buffer.append("\",");
+    buffer.append("\"timestamp\":");
+    buffer.append("\"");
+    buffer.append(params.get("timestamp"));
+    buffer.append("\",");
+    buffer.append("\"version\":");
+    buffer.append("\"3.0\",");
+    buffer.append("\"sign\":");
+    buffer.append("\"");
+    buffer.append(sign);
+    buffer.append("\",");
+
+    buffer.append("\"sign_method\":");
+    buffer.append("\"md5\",");
+
+    buffer.append("\"access_token\":");
+    buffer.append("\"\",");
+
+    buffer.append("\"action\":");
+    buffer.append("\"");
+    buffer.append(params.get("action"));
+    buffer.append("\"");
+
+
+    buffer.append("}");
+    params.put("opensysparams", buffer.toString());
+
+    return params;
+}
+
+```
+
+
 ### 1.3、JsonNode
 
 
