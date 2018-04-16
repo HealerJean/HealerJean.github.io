@@ -314,6 +314,25 @@ public class RedisConstants {
 
 ```
 
+如果再使用进行查询到json对象的时候需要强制转换，这里提供一个方法
+
+
+```
+@Component
+public class MyObjectMapper extends ObjectMapper {
+
+    private static final long serialVersionUID = 4402127997078513582L;
+
+    public MyObjectMapper() {
+        this.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+}
+
+
+ZbtGameRoom room = mapper.convertValue(redisWithTemplate.opsForValue().get(CacheKey.USER_ROOM + userId), ZbtGameRoom.class);
+
+```
+
 
 Encache是后台我们自己用的
 
