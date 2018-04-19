@@ -1,5 +1,4 @@
 
-select * from user_old_background_balance_trannsfer u  where u.id='13' order  by cdate desc ;
 
 # 通过上面的主键和申请类型 用来唯一确定 
 -- public class WorkflowTask implements Serializable {

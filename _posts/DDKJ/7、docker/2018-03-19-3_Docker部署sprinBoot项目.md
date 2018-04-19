@@ -212,7 +212,42 @@ docker run -p 8080:8080 -t hello/com-hlj-springboot-docker
 ![WX20180319-162339@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180319-162339@2x.png)
 
 
+## 5、使用shell部署，更加方便
 
+
+```
+PREFIX=registry.cn-beijing.aliyuncs.com/healerjean
+
+docker login --username=ali@healerjean.top registry.cn-beijing.aliyuncs.com
+
+echo "清理项目..."
+mvn clean install
+cd admore-admin/
+echo "开始打包admin..."
+mvn package
+read -p "输入tag：" tag
+echo "删除之前版本..."
+docker rmi ${PREFIX}/admin:${tag}
+echo "开始构建..."
+docker build -t ${PREFIX}/admin:${tag} .
+echo "admin构建成功，开始上传至阿里云"
+docker push ${PREFIX}/admin:${tag}
+echo "镜像admin构建并上传至阿里云成功"
+
+```
+
+Dockerfile
+
+
+```
+FROM registry.cn-beijing.aliyuncs.com/admore/base:1
+MAINTAINER jingshuai.bian
+ADD target/admore-admin-1.0-SNAPSHOT.jar /app.jar
+CMD ["java","-jar","/app.jar"]
+
+```
+
+运行 ./admore-admin.sh 即可自动部署
 
 <br/><br/><br/>
 如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
