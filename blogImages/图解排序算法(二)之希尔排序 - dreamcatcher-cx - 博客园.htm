@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<!-- saved from url=(0048)https://www.cnblogs.com/chengxiao/p/6104371.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/bundle-CodingLife.css">
+<link type="text/css" rel="stylesheet" href="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/304993.css">
+<link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/bundle-CodingLife-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/chengxiao/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/chengxiao/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/chengxiao/wlwmanifest.xml">
+<script async="" src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/analytics.js"></script><script type="text/javascript" src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/encoder.js"></script><script src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/jquery-2.2.0.min.js"></script>
+<script type="text/javascript">var currentBlogApp = 'chengxiao', cb_enable_mathjax=false;var isLogined=true;</script>
+<script src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/blog-common.js" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a id="lnkBlogLogo" href="http://www.cnblogs.com/chengxiao/"><img id="blogLogo" src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/logo.gif" alt="返回主页"></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/chengxiao/">dreamcatcher-cx</a></h1>
+<h2>why is more important than what.</h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li><a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+<li><a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/chengxiao/">首页</a></li>
+<li><a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li><a id="blog_nav_contact" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/dreamcatcher-cx">联系</a></li>
+<li><a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/chengxiao/rss">订阅</a>
+<!--<a id="blog_nav_rss_image" class="aHeaderXML" href="http://www.cnblogs.com/chengxiao/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a>--></li>
+<li><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+		<div class="blogStats">
+			
+			<div id="blog_stats">
+<span id="stats_post_count">随笔 - 20&nbsp; </span>
+<span id="stats_article_count">文章 - 0&nbsp; </span>
+<span id="stats-comment_count">评论 - 99</span>
+</div>
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/chengxiao/p/6104371.html">图解排序算法(二)之希尔排序</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body" class="blogpost-body"><p><span style="color: #000000;">　　希尔排序是希尔（Donald Shell）于1959年提出的一种排序算法。希尔排序也是一种<span style="color: #ff0000;">插入排序</span>，它是简单插入排序经过改进之后的一个更高效的版本，也称为<span style="color: #ff0000;">缩小增量排序，<span style="color: #000000;">同时</span></span>该算法是冲破O(n<sup>2</sup>）的第一批算法之一。本文会以图解的方式详细介绍希尔排序的基本思想及其代码实现。</span></p>
+<h1>基本思想</h1>
+<blockquote>
+<p><span style="color: #000000;"><strong><span>　　希尔排序是把记录按下标的一定增量分组，对每组使用直接插入排序算法排序；随着增量逐渐减少，每组包含的关键词越来越多，当增量减至1时，整个文件恰被分成一组，算法便终止。</span></strong></span></p>
+</blockquote>
+<p><span style="color: #000000;"><strong><span>　　</span></strong><span>简单插入排序很循规蹈矩，不管数组分布是怎么样的，依然一步一步的对元素进行比较，移动，插入，</span><span>比如[5,4,3,2,1,0]这种倒序序列，数组末端的0要回到首位置很是费劲，比较和移动元素均需n-1次。而希尔排序在数组中采用跳跃式分组的策略，通过某个增量将数组元素划分为若干组，然后分组进行插入排序，随后逐步缩小增量，继续按组进行插入排序操作，直至增量为1。希尔排序通过这种策略使得整个数组在初始阶段达到从宏观上看基本有序，小的基本在前，大的基本在后。然后缩小增量，到增量为1时，其实多数情况下只需微调即可，不会涉及过多的数据移动。</span></span></p>
+<p><span style="color: #000000;"><span>　　我们来看下希尔排序的基本步骤，在此我们选择增量gap=length/2，缩小增量继续以gap = gap/2的方式，这种增量选择我们可以用一个序列来表示，{n/2,(n/2)/2...1}，称为<strong>增量序列</strong>。希尔排序的增量序列的选择与证明是个数学难题，我们选择的这个增量序列是比较常用的，也是希尔建议的增量，称为希尔增量，但其实这个增量序列不是最优的。此处我们做示例使用希尔增量。</span></span></p>
+<p><img src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/1024555-20161128110416068-1421707828.png" alt="" width="1161" height="1153"></p>
+<h1>代码实现</h1>
+<p>　　在希尔排序的理解时，我们倾向于对于每一个分组，逐组进行处理，但在代码实现中，我们可以不用这么按部就班地处理完一组再调转回来处理下一组（这样还得加个for循环去处理分组）比如[5,4,3,2,1,0] ，首次增量设gap=length/2=3,则为3组[5,2] [4,1] [3,0]，实现时不用循环按组处理，我们可以从第gap个元素开始，逐个跨组处理。同时，在插入数据时，可以采用元素交换法寻找最终位置，也可以采用数组元素移动法寻觅。希尔排序的代码比较简单，如下：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">package</span><span style="color: #000000;"> sortdemo;
+</span><span style="color: #008080;"> 2</span> 
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Arrays;
+</span><span style="color: #008080;"> 4</span> 
+<span style="color: #008080;"> 5</span> <span style="color: #008000;">/**</span>
+<span style="color: #008080;"> 6</span> <span style="color: #008000;"> * Created by chengxiao on 2016/11/24.
+</span><span style="color: #008080;"> 7</span>  <span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 8</span> <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ShellSort {
+</span><span style="color: #008080;"> 9</span>     <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String []args){
+</span><span style="color: #008080;">10</span>         <span style="color: #0000ff;">int</span> []arr ={1,4,2,7,9,8,3,6<span style="color: #000000;">};
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">        sort(arr);
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">        System.out.println(Arrays.toString(arr));
+</span><span style="color: #008080;">13</span>         <span style="color: #0000ff;">int</span> []arr1 ={1,4,2,7,9,8,3,6<span style="color: #000000;">};
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">        sort1(arr1);
+</span><span style="color: #008080;">15</span> <span style="color: #000000;">        System.out.println(Arrays.toString(arr1));
+</span><span style="color: #008080;">16</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">17</span> 
+<span style="color: #008080;">18</span>     <span style="color: #008000;">/**</span>
+<span style="color: #008080;">19</span> <span style="color: #008000;">     * 希尔排序 针对有序序列在插入时采用交换法
+</span><span style="color: #008080;">20</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> arr
+</span><span style="color: #008080;">21</span>      <span style="color: #008000;">*/</span>
+<span style="color: #008080;">22</span>     <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> sort(<span style="color: #0000ff;">int</span><span style="color: #000000;"> []arr){
+</span><span style="color: #008080;">23</span>         <span style="color: #008000;">//</span><span style="color: #008000;">增量gap，并逐步缩小增量</span>
+<span style="color: #008080;">24</span>        <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> gap=arr.length/2;gap&gt;0;gap/=2<span style="color: #000000;">){
+</span><span style="color: #008080;">25</span>            <span style="color: #008000;">//从第gap个元素，逐个对其所在组进行直接插入排序操作
+</span><span style="color: #008080;">26</span>            <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=gap;i&lt;arr.length;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">27</span>                <span style="color: #0000ff;">int</span> j =<span style="color: #000000;"> i;
+</span><span style="color: #008080;">28</span>                <span style="color: #0000ff;">while</span>(j-gap&gt;=0 &amp;&amp; arr[j]&lt;arr[j-<span style="color: #000000;">gap]){
+</span><span style="color: #008080;">29</span>                    <span style="color: #008000;">//</span><span style="color: #008000;">插入排序采用交换法</span>
+<span style="color: #008080;">30</span>                    swap(arr,j,j-<span style="color: #000000;">gap);
+</span><span style="color: #008080;">31</span>                    j-=<span style="color: #000000;">gap;
+</span><span style="color: #008080;">32</span> <span style="color: #000000;">               }
+</span><span style="color: #008080;">33</span> <span style="color: #000000;">           }
+</span><span style="color: #008080;">34</span> <span style="color: #000000;">       }
+</span><span style="color: #008080;">35</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">36</span> 
+<span style="color: #008080;">37</span>     <span style="color: #008000;">/**</span>
+<span style="color: #008080;">38</span> <span style="color: #008000;">     * 希尔排序 针对有序序列在插入时采用移动法。
+</span><span style="color: #008080;">39</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> arr
+</span><span style="color: #008080;">40</span>      <span style="color: #008000;">*/</span>
+<span style="color: #008080;">41</span>     <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> sort1(<span style="color: #0000ff;">int</span><span style="color: #000000;"> []arr){
+</span><span style="color: #008080;">42</span>         <span style="color: #008000;">//</span><span style="color: #008000;">增量gap，并逐步缩小增量</span>
+<span style="color: #008080;">43</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> gap=arr.length/2;gap&gt;0;gap/=2<span style="color: #000000;">){
+</span><span style="color: #008080;">44</span>             <span style="color: #008000;">//</span><span style="color: #008000;">从第gap个元素，逐个对其所在组进行直接插入排序操作</span>
+<span style="color: #008080;">45</span>             <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=gap;i&lt;arr.length;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">46</span>                 <span style="color: #0000ff;">int</span> j =<span style="color: #000000;"> i;
+</span><span style="color: #008080;">47</span>                 <span style="color: #0000ff;">int</span> temp =<span style="color: #000000;"> arr[j];
+</span><span style="color: #008080;">48</span>                 <span style="color: #0000ff;">if</span>(arr[j]&lt;arr[j-<span style="color: #000000;">gap]){
+</span><span style="color: #008080;">49</span>                     <span style="color: #0000ff;">while</span>(j-gap&gt;=0 &amp;&amp; temp&lt;arr[j-<span style="color: #000000;">gap]){
+</span><span style="color: #008080;">50</span>                         <span style="color: #008000;">//</span><span style="color: #008000;">移动法</span>
+<span style="color: #008080;">51</span>                         arr[j] = arr[j-<span style="color: #000000;">gap];
+</span><span style="color: #008080;">52</span>                         j-=<span style="color: #000000;">gap;
+</span><span style="color: #008080;">53</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;">54</span>                     arr[j] =<span style="color: #000000;"> temp;
+</span><span style="color: #008080;">55</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">56</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">57</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">58</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">59</span>     <span style="color: #008000;">/**</span>
+<span style="color: #008080;">60</span> <span style="color: #008000;">     * 交换数组元素
+</span><span style="color: #008080;">61</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> arr
+</span><span style="color: #008080;">62</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> a
+</span><span style="color: #008080;">63</span> <span style="color: #008000;">     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> b
+</span><span style="color: #008080;">64</span>      <span style="color: #008000;">*/</span>
+<span style="color: #008080;">65</span>     <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> swap(<span style="color: #0000ff;">int</span> []arr,<span style="color: #0000ff;">int</span> a,<span style="color: #0000ff;">int</span><span style="color: #000000;"> b){
+</span><span style="color: #008080;">66</span>         arr[a] = arr[a]+<span style="color: #000000;">arr[b];
+</span><span style="color: #008080;">67</span>         arr[b] = arr[a]-<span style="color: #000000;">arr[b];
+</span><span style="color: #008080;">68</span>         arr[a] = arr[a]-<span style="color: #000000;">arr[b];
+</span><span style="color: #008080;">69</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">70</span> }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h1>总结</h1>
+<p>　　本文介绍了希尔排序的基本思想及其代码实现，希尔排序中对于增量序列的选择十分重要，直接影响到希尔排序的性能。我们上面选择的增量序列{n/2,(n/2)/2...1}(希尔增量)，其最坏时间复杂度依然为O(n<sup>2</sup>)，一些经过优化的增量序列如Hibbard经过复杂证明可使得最坏时间复杂度为O(n<sup>3/2</sup>)。希尔排序的介绍到此为止，关于其他排序算法的介绍也会陆续更新，谢谢支持。</p></div><div id="MySignature" style="display: block;"><div style="margin-bottom: 10px; padding: 5px 10px; background-color: #D9FFFF; border: #53FF53 1px solid;">
+    <p>
+            作者： 
+            <a href="http://www.cnblogs.com/chengxiao/">dreamcatcher-cx</a>
+    </p>
+    <p>
+            出处：
+            <a href="http://www.cnblogs.com/chengxiao/">&lt;http://www.cnblogs.com/chengxiao/&gt;</a>
+    </p>
+    <p>
+             本文版权归作者和博客园共有，欢迎转载，但未经作者同意必须保留此段声明，且在页面明显位置给出原文链接。
+    </p>
+
+</div></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/chengxiao/category/880910.html" target="_blank">算法</a></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(6104371,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;8319750a-5977-e611-9fc1-ac853d9f53cc&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/chengxiao/" target="_blank"><img src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/20170217101538.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/chengxiao/">dreamcatcher-cx</a><br>
+            <a href="http://home.cnblogs.com/u/chengxiao/followees">关注 - 28</a><br>
+            <a href="http://home.cnblogs.com/u/chengxiao/followers">粉丝 - 199</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;8319750a-5977-e611-9fc1-ac853d9f53cc&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(6104371,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">7</span>
+    </div>
+    <div class="buryit" onclick="votePost(6104371,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+<script type="text/javascript">
+    currentDiggType = 0;
+</script></div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/chengxiao/p/6103002.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/chengxiao/p/6103002.html" title="发布于2016-11-26 12:46">图解排序算法(一)之3种简单排序(选择，冒泡，直接插入)</a><br><a href="http://www.cnblogs.com/chengxiao/p/6152824.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/chengxiao/p/6152824.html" title="发布于2016-12-14 00:02">谈谈Java中的ThreadLocal</a><br></div>
+</div>
+
+
+		</div>
+		<div class="postDesc">posted @ <span id="post-date">2016-11-27 17:34</span> <a href="http://www.cnblogs.com/chengxiao/">dreamcatcher-cx</a> 阅读(<span id="post_view_count">36109</span>) 评论(<span id="post_comment_count">10</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=6104371" rel="nofollow">编辑</a> <a href="https://www.cnblogs.com/chengxiao/p/6104371.html#" onclick="AddToWz(6104371);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=304993,cb_entryId=6104371,cb_blogApp=currentBlogApp,cb_blogUserGuid='8319750a-5977-e611-9fc1-ac853d9f53cc',cb_entryCreatedDate='2016/11/27 17:34:00';loadViewCount(cb_entryId);var cb_postType=1;</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"><div id="comments_pager_top"></div>
+<br>
+<div class="feedback_area_title">评论列表</div>
+<div class="feedbackNoItems"></div>	
+
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"><a href="javascript:void(0);" onclick="return ReplyComment(3566812,&#39;V6qP027ip8XQg7zaj55Qy27Az+F2c1en8tKgjpeeMWWnyK7jrrAVdQ==&#39;)">回复</a><a href="javascript:void(0);" onclick="return QuoteComment(3566812,&#39;V6qP027ip8XQg7zaj55Qy27Az+F2c1en8tKgjpeeMWWnyK7jrrAVdQ==&#39;)">引用</a></span>
+				</div>
+				<a href="https://www.cnblogs.com/chengxiao/p/6104371.html#3566812" class="layer">#1楼</a><a name="3566812" id="comment_anchor_3566812"></a>  <span class="comment_date">2016-11-28 10:46</span> <a id="a_comment_author_3566812" href="http://home.cnblogs.com/u/891865/" target="_blank">p712long</a> <a href="http://msg.cnblogs.com/send/p712long" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3566812" class="blog_comment_body">那个8、9、1、7、2、3、5、4、6、0分组是不是有错？<br>分成5组分别是：[8,3],[9,5],[1,4],[7,6],[2,0]</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3566812,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3566812,&#39;Bury&#39;,this)">反对(0)</a></div>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"><a href="javascript:void(0);" onclick="return ReplyComment(3566840,&#39;c9AKkqlx/NtpGFCZ2CgGznT+4T1JpYJBh53k89+4gOiSM10u1Y7W+w==&#39;)">回复</a><a href="javascript:void(0);" onclick="return QuoteComment(3566840,&#39;c9AKkqlx/NtpGFCZ2CgGznT+4T1JpYJBh53k89+4gOiSM10u1Y7W+w==&#39;)">引用</a></span>
+				</div>
+				<a href="https://www.cnblogs.com/chengxiao/p/6104371.html#3566840" class="layer">#2楼</a><a name="3566840" id="comment_anchor_3566840"></a>[<span class="louzhu">楼主</span>]  <span class="comment_date">2016-11-28 11:09</span> <a id="a_comment_author_3566840" href="http://www.cnblogs.com/chengxiao/" target="_blank">dreamcatcher-cx</a> <a href="http://msg.cnblogs.com/send/dreamcatcher-cx" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3566840" class="blog_comment_body"><a href="https://www.cnblogs.com/chengxiao/p/6104371.html#3566812" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,3566812);">@</a>
+p712long<br>调整的时候没注意到，已经修复了，谢谢提醒哈</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3566840,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3566840,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_3566840_avatar" style="display:none;">http://pic.cnblogs.com/face/1024555/20170217101538.png</span>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"><a href="javascript:void(0);" onclick="return ReplyComment(3566968,&#39;V6qP027ip8XQg7zaj55Qy27Az+F2c1en8tKgjpeeMWWnyK7jrrAVdQ==&#39;)">回复</a><a href="javascript:void(0);" onclick="return QuoteComment(3566968,&#39;V6qP027ip8XQg7zaj55Qy27Az+F2c1en8tKgjpeeMWWnyK7jrrAVdQ==&#39;)">引用</a></span>
+				</div>
+				<a href="https://www.cnblogs.com/chengxiao/p/6104371.html#3566968" class="layer">#3楼</a><a name="3566968" id="comment_anchor_3566968"></a>  <span class="comment_date">2016-11-28 13:07</span> <a id="a_comment_author_3566968" href="http://home.cnblogs.com/u/891865/" target="_blank">p712long</a> <a href="http://msg.cnblogs.com/send/p712long" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3566968" class="blog_comment_body">这个希尔排序法：我不明白优点在哪里？对于非长数组排序，其实用JavaScrit的sort和reverse一行代码就实现了：<br>var arr1 = [3, 1, 'd', 'b', 'c', 'a', 0, 9, 7].sort().reverse();<br>console.log(arr1.join('|'));</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3566968,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3566968,&#39;Bury&#39;,this)">反对(2)</a></div>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"><a href="javascript:void(0);" onclick="return ReplyComment(3567016,&#39;c9AKkqlx/NtpGFCZ2CgGznT+4T1JpYJBh53k89+4gOiSM10u1Y7W+w==&#39;)">回复</a><a href="javascript:void(0);" onclick="return QuoteComment(3567016,&#39;c9AKkqlx/NtpGFCZ2CgGznT+4T1JpYJBh53k89+4gOiSM10u1Y7W+w==&#39;)">引用</a></span>
+				</div>
+				<a href="https://www.cnblogs.com/chengxiao/p/6104371.html#3567016" class="layer">#4楼</a><a name="3567016" id="comment_anchor_3567016"></a>[<span class="louzhu">楼主</span>]  <span class="comment_date">2016-11-28 13:59</span> <a id="a_comment_author_3567016" href="http://www.cnblogs.com/chengxiao/" target="_blank">dreamcatcher-cx</a> <a href="http://msg.cnblogs.com/send/dreamcatcher-cx" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3567016" class="blog_comment_body"><a href="https://www.cnblogs.com/chengxiao/p/6104371.html#3566968" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,3566968);">@</a>
+p712long<br>你说的sort()函数是语言层面的对于排序算法的封装，我们现在讨论的希尔排序不过是排序操作的其中一种算法思想，其实每种语言类库里都有对于排序算法的封装，实际中我们大都直接调用就可以，很少自己去实现的（像Java中的Arrays.sort()）。js中的sort()函数，底层究竟使用了哪种排序算法，貌似不同浏览器会采用不同排序算法（快排，归并....)。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3567016,&#39;Digg&#39;,this)">支持(2)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3567016,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_3567016_avatar" style="display:none;">http://pic.cnblogs.com/face/1024555/20170217101538.png</span>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"><a href="javascript:void(0);" onclick="return ReplyComment(3703726,&#39;67Kk02C9XmGHvfIUHXlkQXYGBY5tZj5g5IYyaoBRu7QeQ5kmY8MdpQ==&#39;)">回复</a><a href="javascript:void(0);" onclick="return QuoteComment(3703726,&#39;67Kk02C9XmGHvfIUHXlkQXYGBY5tZj5g5IYyaoBRu7QeQ5kmY8MdpQ==&#39;)">引用</a></span>
+				</div>
+				<a href="https://www.cnblogs.com/chengxiao/p/6104371.html#3703726" class="layer">#5楼</a><a name="3703726" id="comment_anchor_3703726"></a>  <span class="comment_date">2017-05-31 09:55</span> <a id="a_comment_author_3703726" href="http://www.cnblogs.com/obito/" target="_blank">雾唤风月</a> <a href="http://msg.cnblogs.com/send/%E9%9B%BE%E5%94%A4%E9%A3%8E%E6%9C%88" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3703726" class="blog_comment_body">问哈，第二种，移动法是不是有问题呀？为啥代码实现后，并没有完全排序呀。<br><br>我好像找到原因了，arr[j] = temp;这个应该放到while里面去吧？不然的话，就按照你的第二种方法的例子，跑出来的结果都不对。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3703726,&#39;Digg&#39;,this)">支持(1)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3703726,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_3703726_avatar" style="display:none;">http://pic.cnblogs.com/face/957173/20170531101345.png</span>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"><a href="javascript:void(0);" onclick="return ReplyComment(3704101,&#39;c9AKkqlx/NtpGFCZ2CgGznT+4T1JpYJBh53k89+4gOiSM10u1Y7W+w==&#39;)">回复</a><a href="javascript:void(0);" onclick="return QuoteComment(3704101,&#39;c9AKkqlx/NtpGFCZ2CgGznT+4T1JpYJBh53k89+4gOiSM10u1Y7W+w==&#39;)">引用</a></span>
+				</div>
+				<a href="https://www.cnblogs.com/chengxiao/p/6104371.html#3704101" class="layer">#6楼</a><a name="3704101" id="comment_anchor_3704101"></a>[<span class="louzhu">楼主</span>]  <span class="comment_date">2017-05-31 15:10</span> <a id="a_comment_author_3704101" href="http://www.cnblogs.com/chengxiao/" target="_blank">dreamcatcher-cx</a> <a href="http://msg.cnblogs.com/send/dreamcatcher-cx" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3704101" class="blog_comment_body"><a href="https://www.cnblogs.com/chengxiao/p/6104371.html#3703726" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,3703726);">@</a>
+雾唤风月<br>在对当前元素进行比较，并寻找最终位置进行插入的时候，判断条件应该是temp&lt;arr[j-gap]，而不是arr[j]&lt;arr[j-gap]。当然，您说的将arr[j]=temp放入while里面也可以，只不过这样就跟交换法一样了（每次比较后， 若后值小于前值，都需要调整；移动法则是比较过程中，不符合排序规则的移动，然后找到当前元素的最终位置插入即可），我已经修改了，感谢指正。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3704101,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3704101,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_3704101_avatar" style="display:none;">http://pic.cnblogs.com/face/1024555/20170217101538.png</span>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"><a href="javascript:void(0);" onclick="return ReplyComment(3805458,&#39;jf8ZBGdqLyg99vzDeTfSvyAe8WUfjaxKaqbRAag1hxXaeSefGe2R7g==&#39;)">回复</a><a href="javascript:void(0);" onclick="return QuoteComment(3805458,&#39;jf8ZBGdqLyg99vzDeTfSvyAe8WUfjaxKaqbRAag1hxXaeSefGe2R7g==&#39;)">引用</a></span>
+				</div>
+				<a href="https://www.cnblogs.com/chengxiao/p/6104371.html#3805458" class="layer">#7楼</a><a name="3805458" id="comment_anchor_3805458"></a>  <span class="comment_date">2017-10-09 16:14</span> <a id="a_comment_author_3805458" href="http://www.cnblogs.com/Burning-Ice/" target="_blank">姜饼哥</a> <a href="http://msg.cnblogs.com/send/%E5%A7%9C%E9%A5%BC%E5%93%A5" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3805458" class="blog_comment_body">一个小建议：移动法那里可以把int temp = arr[j];放入下面的if体内。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3805458,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3805458,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_3805458_avatar" style="display:none;">http://pic.cnblogs.com/face/1113889/20170226210853.png</span>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"><a href="javascript:void(0);" onclick="return ReplyComment(3879015,&#39;lHHCGpUPf+h9QMRVuWSSaXO3EEroFV3YoDtT83dV9b2apC41n6ux8g==&#39;)">回复</a><a href="javascript:void(0);" onclick="return QuoteComment(3879015,&#39;lHHCGpUPf+h9QMRVuWSSaXO3EEroFV3YoDtT83dV9b2apC41n6ux8g==&#39;)">引用</a></span>
+				</div>
+				<a href="https://www.cnblogs.com/chengxiao/p/6104371.html#3879015" class="layer">#8楼</a><a name="3879015" id="comment_anchor_3879015"></a>  <span class="comment_date">2018-01-02 08:07</span> <a id="a_comment_author_3879015" href="http://home.cnblogs.com/u/1296760/" target="_blank">左影尘</a> <a href="http://msg.cnblogs.com/send/%E5%B7%A6%E5%BD%B1%E5%B0%98" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3879015" class="blog_comment_body">请问为什么交换法那里, swap之后还需要 j -= gap</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3879015,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3879015,&#39;Bury&#39;,this)">反对(0)</a></div>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"><a href="javascript:void(0);" onclick="return ReplyComment(3891102,&#39;Cq8e47EbUbo+iLTozeVGArInI4JE/SwUY/v0o8A8mp3NqCEFjim+3A==&#39;)">回复</a><a href="javascript:void(0);" onclick="return QuoteComment(3891102,&#39;Cq8e47EbUbo+iLTozeVGArInI4JE/SwUY/v0o8A8mp3NqCEFjim+3A==&#39;)">引用</a></span>
+				</div>
+				<a href="https://www.cnblogs.com/chengxiao/p/6104371.html#3891102" class="layer">#9楼</a><a name="3891102" id="comment_anchor_3891102"></a>  <span class="comment_date">2018-01-16 19:17</span> <a id="a_comment_author_3891102" href="http://www.cnblogs.com/Kymo/" target="_blank">KymoWang</a> <a href="http://msg.cnblogs.com/send/KymoWang" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3891102" class="blog_comment_body">图拿什么做的？</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3891102,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3891102,&#39;Bury&#39;,this)">反对(0)</a></div>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"><a href="javascript:void(0);" onclick="return ReplyComment(3892117,&#39;c9AKkqlx/NtpGFCZ2CgGznT+4T1JpYJBh53k89+4gOiSM10u1Y7W+w==&#39;)">回复</a><a href="javascript:void(0);" onclick="return QuoteComment(3892117,&#39;c9AKkqlx/NtpGFCZ2CgGznT+4T1JpYJBh53k89+4gOiSM10u1Y7W+w==&#39;)">引用</a></span>
+				</div>
+				<a href="https://www.cnblogs.com/chengxiao/p/6104371.html#3892117" class="layer">#10楼</a><a name="3892117" id="comment_anchor_3892117"></a>[<span class="louzhu">楼主</span>]<span id="comment-maxId" style="display:none;">3892117</span><span id="comment-maxDate" style="display:none;">2018/1/17 17:40:33</span>  <span class="comment_date">2018-01-17 17:40</span> <a id="a_comment_author_3892117" href="http://www.cnblogs.com/chengxiao/" target="_blank">dreamcatcher-cx</a> <a href="http://msg.cnblogs.com/send/dreamcatcher-cx" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3892117" class="blog_comment_body"><a href="https://www.cnblogs.com/chengxiao/p/6104371.html#3891102" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,3891102);">@</a>
+KymoWang<br>ominigraffle</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3892117,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3892117,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_3892117_avatar" style="display:none;">http://pic.cnblogs.com/face/1024555/20170217101538.png</span>
+			</div>
+		</div>
+	<div id="comments_pager_bottom"></div></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="https://www.cnblogs.com/chengxiao/p/6104371.html#" onclick="return RefreshPage();">刷新页面</a><a href="https://www.cnblogs.com/chengxiao/p/6104371.html#top">返回顶部</a></div>
+<div id="comment_form_container"><script type="text/javascript" src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/mention.js"></script>
+<div id="commentform_title">发表评论</div>
+<span id="tip_comment" style="color:Red"></span>
+<p>
+昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50" value="HealerJean">
+</p>
+<div class="commentbox_main">
+<div class="commentbox_title">
+<div class="commentbox_title_left">评论内容：</div>
+<div class="commentbox_title_right">
+<img id="ubb_quote" class="comment_icon" src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/quote.gif" alt="引用" title="添加引用" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;quote&#39;)">
+<img id="ubb_bold" class="comment_icon" src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/b.png" alt="粗体" title="添加粗体" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;b&#39;)">
+<img id="ubb_url" class="comment_icon" src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/lk.png" alt="链接" title="添加链接" onclick="insertUbbUrl(&#39;tbCommentBody&#39;)">
+<img id="ubb_indent" class="comment_icon" src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/indent.png" alt="缩进" title="添加首行缩进" onclick="insertIndent(&#39;tbCommentBody&#39;)">
+<img id="ubb_code" class="comment_icon" src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/InsertCode.gif" alt="代码" title="添加代码" onclick="insertUbbCode()">
+<img id="ubb_img" class="comment_icon" src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/img.gif" alt="图片" title="上传图片" onclick="OpenImageUploadWindow();">
+</div>
+</div>
+<div class="clear"></div>
+<textarea id="tbCommentBody" class="comment_textarea"></textarea>
+</div>
+<p id="commentbox_opt">
+<input id="btn_comment_submit" type="button" class="comment_btn" value="提交评论">
+<span id="span_comment_canceledit" style="display:none"><a href="javascript:void(0);" onclick="return CancelCommentEdit()">不改了</a></span>
+<a href="javascript:void(0);" onclick="return logout();">退出</a>
+        <a id="commentbox_opt_sub" href="javascript:void(0);" title="订阅后有新评论时会邮件通知您" onclick="commentManager.Subscribe()">订阅评论</a>
+</p>
+<div id="tip_comment2" style="color:Red"></div>
+<p>
+[Ctrl+Enter快捷键提交]
+</p>
+<div style="display:none">
+<span id="comment_edit_id"></span><span id="span_parentcomment_id"></span>
+<span id="span_parent_id"></span>
+<span id="span_comment_replyto"></span>
+<span id="span_comment_posted"></span>
+</div>
+</div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】超50万VC++源码: 大型组态工控、电力仿真CAD与GIS源码库！</a><br><a href="https://www.yunqi2050.com/#/index" target="_blank">【活动】2050 大会 - 年青人因科技而团聚（5.26-27杭州·云栖小镇）</a><br><a href="http://clickc.admaster.com.cn/c/a105960,b2436453,c1705,i0,m101,8a1,8b2,h" target="_blank">【活动】华为云全新一代云服务器·限时特惠5.6折</a><br><a href="https://cloud.tencent.com/act/free?fromSource=gwzcw.910319.910319.910319" target="_blank">【推荐】腾讯云多款高规格服务器，免费申请试用6个月</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;C1&#39;);" href="https://cloud.tencent.com/solution/la?fromSource=gwzcw.891967.891967.891967" target="_blank"><img width="300" height="250" src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/24442-20180402101833163-1165053275.jpg" alt="qcloud_C1_0402"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="https://news.cnblogs.com/n/594955/" target="_blank">《第五人格》这么恐怖，为什么你还是玩得停不下来？</a><br> ·  <a href="https://news.cnblogs.com/n/594954/" target="_blank">77岁侯为贵：中兴危局 老将出马</a><br> ·  <a href="https://news.cnblogs.com/n/594937/" target="_blank">天猫精灵与三车企达成合作 发布“AI+车”解决方案</a><br> ·  <a href="https://news.cnblogs.com/n/594915/" target="_blank">美国警方试图用死亡嫌疑人指纹解锁手机 但未成功</a><br> ·  <a href="https://news.cnblogs.com/n/594936/" target="_blank">俄罗斯封杀Telegram的IP数已破1800万个 谷歌部分服务无法使用</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="http://click.aliyun.com/m/9667/" target="_blank"><img src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/TB1iQKbhqmWBuNjy1XaXXXCbXXa-468-60.jpg" alt="" style="width: 468px; height: 60px;"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/593985/" target="_blank">如何识别人的技术能力和水平？</a><br> ·  <a href="http://kb.cnblogs.com/page/575255/" target="_blank">写给自学者的入门指南</a><br> ·  <a href="http://kb.cnblogs.com/page/578690/" target="_blank">和程序员谈恋爱</a><br> ·  <a href="http://kb.cnblogs.com/page/585734/" target="_blank">学会学习</a><br> ·  <a href="http://kb.cnblogs.com/page/588938/" target="_blank">优秀技术人的管理陷阱</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"><!--侧边栏公告栏-->
+<!--访问量统计 -->
+访问量:
+<div align="left"><a href="http://www.amazingcounters.com/"><img border="0" src="./图解排序算法(二)之希尔排序 - dreamcatcher-cx - 博客园_files/counter.php" alt="AmazingCounters.com"></a></div>
+<!--人形时钟
+<div id="myTime">
+    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="160" height="70" id="honehoneclock" align="middle">
+        <param name="allowScriptAccess" value="always">
+        <param name="movie" value="http://chabudai.sakura.ne.jp/blogparts/honehoneclock/honehone_clock_wh.swf">
+        <param name="quality" value="high">
+        <param name="bgcolor" value="#ffffff">
+        <param name="wmode" value="transparent">
+        <embed wmode="transparent" src="http://chabudai.sakura.ne.jp/blogparts/honehoneclock/honehone_clock_wh.swf" quality="high" bgcolor="#ffffff" width="160" height="70" name="honehoneclock" align="middle" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">
+    </object>
+</div>
+-->
+
+
+
+
+<!--站点访问量统计
+<a href="https://info.flagcounter.com/09YB">
+<img src="https://s09.flagcounter.com/count2/09YB/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_6/viewers_0/labels_0/pageviews_1/flags_0/percent_0/" alt="Flag Counter" border="0">
+</a>
+-->
+<!--
+<a href="https://s07.flagcounter.com/more/pk"><img src="https://s07.flagcounter.com/count2/pk/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_10/viewers_0/labels_0/pageviews_1/flags_0/percent_0/" alt="Flag Counter" border="0"></a> --><div id="profile_block">昵称：<a href="https://home.cnblogs.com/u/chengxiao/">dreamcatcher-cx</a><br>园龄：<a href="https://home.cnblogs.com/u/chengxiao/" title="入园时间：2016-09-10">1年7个月</a><br>粉丝：<a href="https://home.cnblogs.com/u/chengxiao/followers/">199</a><br>关注：<a href="https://home.cnblogs.com/u/chengxiao/followees/">28</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;8319750a-5977-e611-9fc1-ac853d9f53cc&#39;)">+加关注</a></div><script>getFollowStatus('8319750a-5977-e611-9fc1-ac853d9f53cc')</script></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2018/03/01&#39;);return false;">&lt;</a></td><td align="center">2018年4月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2018/05/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">25</td><td class="CalOtherMonthDay" align="center">26</td><td class="CalOtherMonthDay" align="center">27</td><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td><td class="CalOtherMonthDay" align="center">31</td></tr><tr><td class="CalWeekendDay" align="center">1</td><td align="center">2</td><td align="center">3</td><td align="center">4</td><td align="center">5</td><td align="center">6</td><td class="CalWeekendDay" align="center">7</td></tr><tr><td class="CalWeekendDay" align="center">8</td><td align="center">9</td><td align="center">10</td><td align="center">11</td><td align="center">12</td><td align="center">13</td><td class="CalWeekendDay" align="center">14</td></tr><tr><td class="CalWeekendDay" align="center">15</td><td align="center">16</td><td align="center">17</td><td align="center">18</td><td align="center">19</td><td align="center">20</td><td class="CalWeekendDay" align="center">21</td></tr><tr><td class="CalWeekendDay" align="center">22</td><td class="CalTodayDay" align="center">23</td><td align="center">24</td><td align="center">25</td><td align="center">26</td><td align="center">27</td><td class="CalWeekendDay" align="center">28</td></tr><tr><td class="CalWeekendDay" align="center">29</td><td align="center">30</td><td class="CalOtherMonthDay" align="center">1</td><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<div class="catListLink">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/chengxiao/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/chengxiao/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/chengxiao/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/chengxiao/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/chengxiao/tag/" title="我的博客的标签列表">我的标签</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+<ul>
+
+</ul>
+</div>
+</div></div><div id="sidebar_toptags" class="sidebar-block">
+<div class="catListTag">
+<h3 class="catListTitle">我的标签</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/chengxiao/tag/Oracle/">Oracle</a>(3)</li><li><a href="http://www.cnblogs.com/chengxiao/tag/hashmap/">hashmap</a>(1)</li>
+</ul>
+</div></div><div id="sidebar_categories">
+<div id="sidebar_postcategory" class="catListPostCategory sidebar-block">
+<h3 class="catListTitle">随笔分类<span style="font-size:11px;font-weight:normal">(20)</span></h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/chengxiao/category/880743.html">java 基础</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/chengxiao/category/909714.html">java集合框架(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/chengxiao/category/880744.html">jvm</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/chengxiao/category/880742.html">mysql</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/chengxiao/category/880741.html">Oracle(4)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/chengxiao/category/921614.html">并发编程(8)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/chengxiao/category/880745.html">分布式系统</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_7" href="http://www.cnblogs.com/chengxiao/category/880909.html">数据结构(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_8" href="http://www.cnblogs.com/chengxiao/category/880910.html">算法(5)</a> </li>
+
+</ul>
+
+</div>
+
+<div id="sidebar_postarchive" class="catListPostArchive sidebar-block">
+<h3 class="catListTitle">随笔档案<span style="font-size:11px;font-weight:normal">(20)</span></h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/chengxiao/archive/2017/07.html">2017年7月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/chengxiao/archive/2017/06.html">2017年6月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/chengxiao/archive/2017/05.html">2017年5月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/chengxiao/archive/2017/04.html">2017年4月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/chengxiao/archive/2017/03.html">2017年3月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/chengxiao/archive/2017/02.html">2017年2月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/chengxiao/archive/2017/01.html">2017年1月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/chengxiao/archive/2016/12.html">2016年12月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/chengxiao/archive/2016/11.html">2016年11月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_9" href="http://www.cnblogs.com/chengxiao/archive/2016/10.html">2016年10月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_10" href="http://www.cnblogs.com/chengxiao/archive/2016/09.html">2016年9月 (2)</a> </li>
+
+</ul>
+
+</div>
+
+</div><div id="sidebar_scorerank" class="sidebar-block">
+<div class="catListBlogRank">
+<h3 class="catListTitle">积分与排名</h3>
+<ul>
+	<li class="liScore">
+		积分 -	46694
+	</li>
+	<li class="liRank">
+		排名 -	8247
+	</li>
+</ul>
+</div>
+
+
+</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<div class="catListComment">
+<h3 class="catListTitle">最新评论</h3>
+
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/chengxiao/p/6129630.html#3957830">1. Re:图解排序算法(三)之堆排序</a></li>
+        <li class="recent_comment_body">博主你这图是自己画的吗还是PPT的？</li>
+        <li class="recent_comment_author">--六步上篮</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/chengxiao/p/6059914.html#3957269">2. Re:HashMap实现原理及源码分析</a></li>
+        <li class="recent_comment_body">学到了，谢谢！</li>
+        <li class="recent_comment_author">--数据放大镜</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/chengxiao/p/6129630.html#3955622">3. Re:图解排序算法(三)之堆排序</a></li>
+        <li class="recent_comment_body">多谢博主，学习啦，点错了点成反对。。。。</li>
+        <li class="recent_comment_author">--遗世独立的理想乡</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/chengxiao/p/6881974.html#3951575">4. Re:CopyOnWriteArrayList实现原理及源码分析</a></li>
+        <li class="recent_comment_body">@光与热读操作是没有加锁的，当A线程在写数据的时候，B线程是可以读的，A线程在完成写操作之前B线程读到的都是老数据。读和写是一个复合操作，是非原子的，volatile只能保证可见性但并不能保证原子性，......</li>
+        <li class="recent_comment_author">--cornerStone</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/chengxiao/p/6059914.html#3950264">5. Re:HashMap实现原理及源码分析</a></li>
+        <li class="recent_comment_body">如果不重写HashCode（）好像会默认使用Object的hashcode()方法</li>
+        <li class="recent_comment_author">--敲代码的小哥</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/chengxiao/p/6103002.html">1. 图解排序算法(一)之3种简单排序(选择，冒泡，直接插入)(81844)</a></li><li><a href="http://www.cnblogs.com/chengxiao/p/6129630.html">2. 图解排序算法(三)之堆排序(51531)</a></li><li><a href="http://www.cnblogs.com/chengxiao/p/6059914.html">3. HashMap实现原理及源码分析(49994)</a></li><li><a href="http://www.cnblogs.com/chengxiao/p/6104371.html">4. 图解排序算法(二)之希尔排序(36106)</a></li><li><a href="http://www.cnblogs.com/chengxiao/p/6194356.html">5. 图解排序算法(四)之归并排序(30715)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<div class="catListFeedback">
+<h3 class="catListTitle">评论排行榜</h3>
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/chengxiao/p/6059914.html">1. HashMap实现原理及源码分析(22)</a></li><li><a href="http://www.cnblogs.com/chengxiao/p/6129630.html">2. 图解排序算法(三)之堆排序(14)</a></li><li><a href="http://www.cnblogs.com/chengxiao/p/6103002.html">3. 图解排序算法(一)之3种简单排序(选择，冒泡，直接插入)(13)</a></li><li><a href="http://www.cnblogs.com/chengxiao/p/6194356.html">4. 图解排序算法(四)之归并排序(11)</a></li><li><a href="http://www.cnblogs.com/chengxiao/p/6104371.html">5. 图解排序算法(二)之希尔排序(10)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/chengxiao/p/6059914.html">1. HashMap实现原理及源码分析(49)</a></li><li><a href="http://www.cnblogs.com/chengxiao/p/6129630.html">2. 图解排序算法(三)之堆排序(25)</a></li><li><a href="http://www.cnblogs.com/chengxiao/p/6194356.html">3. 图解排序算法(四)之归并排序(17)</a></li><li><a href="http://www.cnblogs.com/chengxiao/p/5904783.html">4. Oracle体系结构详解(10)</a></li><li><a href="http://www.cnblogs.com/chengxiao/p/6842045.html">5. ConcurrentHashMap实现原理及源码分析(9)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright ©2018 dreamcatcher-cx
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+</body></html>
