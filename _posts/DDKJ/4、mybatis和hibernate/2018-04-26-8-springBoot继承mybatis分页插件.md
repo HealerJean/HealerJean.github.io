@@ -138,6 +138,63 @@ http://localhost:8888/page?pageNum=1&pageSize=2
 }
 ```
 
+## 补充，代码中没有
+
+### 1、 通过分页对象进行前端传入
+
+```
+package com.appshike.admin.domain.page;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import springfox.documentation.annotations.ApiIgnore;
+
+
+@Setter
+@ApiModel("分页对象")
+@Accessors(chain = true)
+public class PageQuery {
+
+    @ApiModelProperty(value = "开始页数，从1开始",example = "1", required = true,dataType = "java.lang.Integer")
+    private Integer pageNum = 1;
+    @ApiModelProperty(value = "每页数量",example = "20", required = true,dataType = "java.lang.Integer")
+    private Integer pageSize = 20;
+    @ApiModelProperty(hidden = true)
+   
+    public Integer getPageSize() {
+        return pageSize == null ? 20 : pageSize;
+    }
+
+    public Integer getPageNum() {
+        return pageNum == null ? 1 : pageNum;
+    }
+}
+
+
+```
+
+### 2、controller 其实和pageable是一样的了，是吧
+
+```
+@GetMapping("getCategoryTagList")
+public Wrapper<?> getCategoryTagList(Long categoryId,Short classify, PageQuery pageQuery){
+    Map<String,Object> query = new HashMap<String,Object>();
+    query.put("categoryId", categoryId);
+    query.put("classify", classify);
+    PageInfo<TVideoCategoryTagVO> page = zqCategoryService.getCategoryTagList(query, pageQuery);
+    return WrapMapper.ok(page);
+}
+
+```
+
+### 3、service
+
+```
+
+```
 
 
 ## [源码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_04_26_8-springBoot%E7%BB%A7%E6%89%BFmybatis%E5%88%86%E9%A1%B5%E6%8F%92%E4%BB%B6/com-hlj-mybatis-Automatic-method-pagehelper.zip)

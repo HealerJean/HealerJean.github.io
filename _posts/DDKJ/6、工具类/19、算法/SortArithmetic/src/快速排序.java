@@ -22,7 +22,7 @@ public class 快速排序 {
         int i=low,j=high;
         if(i<j){ //当i小于J的时候执行，也就是说low必须小于hign
             int po = a[low]; //po为基数
-            while(i<j){
+            while(i<j){ //每次当i比j小的时候小的时候开始比较，当它大于的时候，就会开始下一次排序
                 while(i<j && po<a[j]){   //肯定是i<j的 ，一旦po小于后面的，那么j就减1， 从后往前推 j--
                                           //这里是while循环 ，一定到最后是po>a[j] 所以一定到了最后是i<j基本上毫无疑问的
                     j--;
@@ -46,6 +46,7 @@ public class 快速排序 {
                     j--;
                 }
             }
+            //这个时候i就比j大了，所以需要进行下一趟排序。直到最终的结果low =j-1 j+1=high
             QuickSort(a,low,j-1);   //从小到J 分成两组
             QuickSort(a,j+1,high);  //从J到到 分成两组
         }
