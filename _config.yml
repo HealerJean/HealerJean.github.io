@@ -40,7 +40,7 @@ language: zh-CN    ## blog site languages: en, zh-CN, zh-TW, de
 #### Menu
 menu:
   Home: /
-  Archives: /archives
+  # Archives: /archives
   About: /about
   Tags: /tags
   Categories: /categories
