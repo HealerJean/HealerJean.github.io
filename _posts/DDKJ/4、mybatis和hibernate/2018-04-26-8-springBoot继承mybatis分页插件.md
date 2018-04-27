@@ -176,7 +176,7 @@ public class PageQuery {
 
 ```
 
-### 2、controller 其实和pageable是一样的了，是吧
+### 2、controller 其实和pageable是一样的了，是吧，但是这里根本不需要关注里面发生了什么只给一个list就可以了
 
 ```
 @GetMapping("getCategoryTagList")
@@ -193,6 +193,13 @@ public Wrapper<?> getCategoryTagList(Long categoryId,Short classify, PageQuery p
 ### 3、service
 
 ```
+@TargetDataSource(DataSource.ZUIQIANG)
+@Override
+public PageInfo<TVideoCategoryTagVO> getCategoryTagList(Map<String,Object> query, PageQuery pageQuery) {
+    PageHelper.startPage(pageQuery.getPageNum(),pageQuery.getPageSize());
+    List<TVideoCategoryTagVO> beanList = tVideoCategoryTagMapper.getList(query);
+    return new PageInfo<>(beanList);
+}
 
 ```
 
