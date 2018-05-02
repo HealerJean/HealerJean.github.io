@@ -25,7 +25,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 3. 方法execute()在默认情况下异常直接抛出（即打印堆栈信息），不能捕获，但是可以通过自定义ThreadFactory的方式进行捕获（通过setUncaughtExceptionHandler方法设置），而submit()方法在默认的情况下可以捕获异常
 
 
-线程池的概念是Executor这个接口，具体实现为ThreadPoolExecutor类，学习Java中的线程池，就可以直接学习对线程池的配置，就是对ThreadPoolExecutor构造函数的参数的配置
+线程池的概念是Executor这个接口ExecutorService继承了它，具体实现为ThreadPoolExecutor类，学习Java中的线程池，就可以直接学习对线程池的配置，就是对ThreadPoolExecutor构造函数的参数的配置
 
 
 ## 2、获取`ThreadPoolExecutor`的几种构造函数
@@ -91,7 +91,7 @@ TimeUnit是一个枚举类型，其包括： NANOSECONDS ： 1微毫秒 = 1微
 
 
 ```
-这玩意儿就是抛出异常专用的，比如上面提到的两个错误发生了，就会由这个handler抛出异常，根本用不上。
+//任务拒绝策略，这玩意儿就是抛出异常专用的，比如上面提到的两个错误发生了，就会由这个handler抛出异常，根本用不上。
 ```
 
 
@@ -273,6 +273,12 @@ public class ThradMain {
 
 
 
+```
+newFixedThreadPool创建的线程池corePoolSize和maximumPoolSize值是相等的，它使用的LinkedBlockingQueue；
+newSingleThreadExecutor将corePoolSize和maximumPoolSize都设置为1，也使用的LinkedBlockingQueue；
+newCachedThreadPool将corePoolSize设置为0，将maximumPoolSize设置为Integer.MAX_VALUE，使用的SynchronousQueue，
+
+```
 
 <br/><br/><br/>
 如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
