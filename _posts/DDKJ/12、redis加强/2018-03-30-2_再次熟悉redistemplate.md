@@ -25,6 +25,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 
 ## 1、Reids定义的5中数据结构
+
 |redis操作|子api接口|操作类型|
 |:---|:--|:---|
 |redisTemplate.opsForValue();|ValueOperations|操作字符串|
