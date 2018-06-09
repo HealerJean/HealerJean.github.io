@@ -14,15 +14,17 @@ public class 测试排序算法 {
     @Test
     public void 直接插入排序(){
         int a[] = {2,123,12,45,23,234,4,5};
-        for(int i = 1 ; i<a.length; i++){
-            for(int  j = i; j>0;j--){
-                if(a[j-1]>a[j]){
-                    int temp = a[j-1];
-                    a[j-1] = a[j];
-                    a[j] = temp;
+        for(int i=1;i<a.length-1;i++){
+            for(int j = i;j>0;j--){
+
+                if(a[j]>a[j-1]){
+                    int temp = a[j];
+                    a[j]= a[j-1];
+                    a[j-1] = temp;
                 }
             }
         }
+
         print(a);
     }
 
@@ -30,19 +32,22 @@ public class 测试排序算法 {
     @Test
     public void 选择排序(){ //每次选择一个小的放到左边的右面
         int a[] = {2,123,12,45,23,234,4,5};
-        for(int i = 0; i <a.length-1 ;i++){
+
+        for(int i = 0;i<a.length-1;i++){
             int min = i;
-            for(int j = i+1;j<a.length;j++ ){
-                if(a[min] > a[j]){
+            for(int j = i+1;j<a.length;j++){
+                if(a[min]>a[j]){
                     min = j;
                 }
             }
+
             if(min!=i){
-                int temp = a[i];
-                a[i] =a[min];
-                a[min] = temp;
+                int temp = a[min];
+                a[min]  = a[j];
+                a[j] = temp;
             }
         }
+
 
         print(a);
 
@@ -55,67 +60,67 @@ public class 测试排序算法 {
     @Test
     public void 快速排序(){
         int a[] = {2,123,12,45,23,234,4,5};
-        int low  = 0;
-        int high  =a.length -1;
-        qspx(a,low,high);
+
+        int low =0;
+        int high = a.length-1;
+        快速排序method(a,low,high);
         print(a);
 
 
     }
-    public void qspx(int a[],int low,int hign){
+
+    快速排序method(int a[],int low,int high){
+
         int i = low;
-        int j = hign;
+        int j = high;
         if(i<j){
-            int po = a[low];//给定一个中介值
-            while (i<j) { //每次当i比j小的时候小的时候开始比较，当它大于的时候，就会重新开始一次排序
-                while (i < j && po < a[j]) {
-                    j--;
-                }
-                if (i < j) {
-                    int temp = a[j];
-                    a[j] = a[i];
-                    a[i] = temp;
-                    i++;
-                }
-                while (i < j && po > a[i]) {
-                    i++;
-                }
-                if (i < j) {
-                    int temp = a[j];
-                    a[j] = a[i];
-                    a[i] = temp;
-                    j--;
-                }
+            int po = a[low];
+            while (i<j&&po<a[j]){
+                j--;
             }
-            //这个时候i就比j大了，所以需要进行下一趟排序。知道最终的结果low =j-1
-            qspx(a,low,j-1);
-            qspx(a,j+1,hign);
+            if(i<j){
+                int temp = a[i];
+                a[j] = a[j];
+                a[j] = temp;
+                i++;
+            }
+            while (i<j&&po>a[i]){
+                i++;
+            }
+            if(i<j){
+                int temp = a[i];
+                a[j] = a[j];
+                a[j] = temp;
+                j--;
+            }
+
+            快速排序method(a,low,j-1);
+            快速排序method(a,j+1,high);
+
         }
-
-
-
     }
-
 
     @Test
     public void 希尔排序(){
-
         int a[] = {2,123,12,45,23,234,4,5};
-        int incr = a.length-1;
+
+        int low = 0;
+        int high  = a.length-1;
+        int incr = (low+high)/2;
 
         while (incr>=1) {
-            for (int i = 0; i < a.length - 1; i++) {
-                for (int j = 0; j < a.length - incr; j=j+incr){
-                    if(a[j]>a[j+incr]){
-                        int temp = a[j];
-                        a[j] = a[incr+j];
-                        a[incr+j] = temp;
-                    }
+            for (int i = 0; i < a.length; i++) {
+                for (int j = j; j < a.length - incr; j = j + incr) ;
+                if(a[j] > [j+incr]){
+                    int temp = a[j]；
+                    a[j] = a[j+incr];
+                    a[j+incr] = temp;
                 }
             }
             incr = incr/2;
 
         }
+
         print(a);
 
     }
@@ -125,50 +130,27 @@ public class 测试排序算法 {
     public void 希尔排序加折半查找(){
 
         int a[] = {2,123,12,45,23,234,4,5};
-        int incr = a.length-1;
 
-        while (incr>=1) {
-            for (int i = 0; i < a.length - 1; i++) {
-                for (int j = 0; j < a.length - incr; j=j+incr){
-                    if(a[j]>a[j+incr]){
-                        int temp = a[j];
-                        a[j] = a[incr+j];
-                        a[incr+j] = temp;
-                    }
-                }
-            }
-            incr = incr/2;
 
-        }
-
+        //折半查找
         int low  = 0;
-        int high = a.length-1;
-
-        int flag = a.length/2;
-        int x = 45;
-        while (low<=high){ //最后一定的是low和hig重合和x得坐标相等
-
-            if(a[flag]==45){
-                System.out.println(flag);
-                break;
+        int high  = a.length;
+        int x = 123;
+        while (low<=high){
+            mid  = (low+high)/2;
+            if(a[mid] == x){
+                System.out.println(mid);
             }
-            if(x > a[flag]){
-                low = flag+1;
+            if(x>a[mid]){
+                low = mid;
             }
-            if(x < a[flag]){
-                high = flag-1;
+            if(x<a[mid]){
+                high = mid;
             }
-            if(low >high){
-                System.out.println("不存在");
-                break;
+            else{
+                System.out.println("查无此数");
             }
-
-             flag = (low+high)/2; //取中值
-
         }
-
-
-
 
 
         print(a);
