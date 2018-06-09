@@ -247,6 +247,17 @@ public static ZbtUser getUser(String json
 
 ``` 
 
+### 4、json数组转化成对象
+
+
+```
+注意一定要防止json数据不全
+List<UserTag> list = JSONArray.toList(tagsArray,new UserTag(),new JsonConfig());
+
+
+```
+
+
 
 ```
 package com.hlj.ddkj.Jsonp;

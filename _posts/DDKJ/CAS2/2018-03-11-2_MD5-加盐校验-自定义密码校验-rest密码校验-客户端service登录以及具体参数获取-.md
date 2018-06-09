@@ -10,7 +10,9 @@ description: MD5-加盐校验-自定义密码校验-rest密码校验-客户端se
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
 -->
-前言，本代码接接着上一讲代码进行。
+## 前言
+
+本代码接接着上一讲代码进行。
 
 ## 1、服务端、sso-server中的准备
 
