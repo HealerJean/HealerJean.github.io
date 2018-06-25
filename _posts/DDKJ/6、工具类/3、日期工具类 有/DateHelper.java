@@ -1,14 +1,11 @@
-package com.duodian.admore.core.helper;
+package com.duodian.youhui.admin.utils;
 
-import com.duodian.admore.core.encrypt.MD5;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -553,31 +550,15 @@ public class DateHelper extends DateUtils {
         return flag;
     }
 
-    public static void main(String[] args) {
-//        Calendar calendar = Calendar.getInstance();
-//        int date = calendar.get(Calendar.DATE);
-//
-//        System.out.println(date);
 
-//        System.out.println(differDays(convertString2Date("2017-07-16 00:00:00",YYYY_MM_DD_HH_MM_SS),convertString2Date("2017-07-17 23:59:59",YYYY_MM_DD_HH_MM_SS)));
-
-//        System.out.println(getDateHour(DateHelper.rollDate(convertString2Date("2017-07-16 00:00:00",YYYY_MM_DD_HH_MM_SS), Calendar.HOUR_OF_DAY, 1)));
-
-        System.out.println(getWeeksMonday(YYYY_MM_DD,convertString2Date("2017-10-01 00:00:00",YYYY_MM_DD_HH_MM_SS),convertString2Date("2017-10-31 23:00:00",YYYY_MM_DD_HH_MM_SS)));
-//        System.out.println(convertDate2String(getThisWeekStartTime(convertString2Date("2017-10-01",YYYY_MM_DD))));
-
-      /*  List<String> list = FileUtils.readLines(new File("/Users/bianjingshuai/Downloads/1212.csv"),"UTF-8");
-
-        for (String c : list) {
-            String[] split = c.split(",");
-
-
-            String sql = "insert into lgzx_member (userid,userpwd,mobile,cityid,status,score) values ('"+split[0]+"','e10adc3949ba59abbe56e057f20f883e','"+split[0]+"',253,1,10);";
-
-            System.out.println(sql);
-
-        }*/
-
+    public static Date  getRecentlyDayFirstTime(Integer num) {
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, num);
+        String time  = DateHelper.convertDate2String(calendar.getTime(), DateHelper.YYYY_MM_DD)+" 00:00:00";
+        return DateHelper.convertString2Date(time,DateHelper.YYYY_MM_DD_HH_MM_SS);
     }
+
 
 }
