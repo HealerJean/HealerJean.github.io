@@ -1,6 +1,6 @@
-package com.hlj.many.datasourse.dataresource.dao.data;
+package com.hlj.many.datasourse.dataresource.dao.db;
 
-import com.hlj.many.datasourse.dataresource.dao.data.entry.PersonOne;
+import com.hlj.many.datasourse.dataresource.dao.db.entry.PersonOne;
 import org.apache.ibatis.annotations.Param;
 
 /**

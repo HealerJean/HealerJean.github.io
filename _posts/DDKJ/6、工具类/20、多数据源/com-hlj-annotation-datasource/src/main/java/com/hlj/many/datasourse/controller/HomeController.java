@@ -1,7 +1,7 @@
 package com.hlj.many.datasourse.controller;
 
 
-import com.hlj.many.datasourse.dataresource.dao.data.entry.PersonOne;
+import com.hlj.many.datasourse.dataresource.dao.db.entry.PersonOne;
 import com.hlj.many.datasourse.dataresource.dao.db.entry.PersonTwo;
 import com.hlj.many.datasourse.dataresource.service.MainService;
 import com.hlj.many.datasourse.dataresource.service.OneService;
@@ -35,10 +35,11 @@ public class HomeController {
       return   mainService.save(personOne);
     }
 
-    @GetMapping("one")
-    public PersonOne savePersonOne(PersonOne personOne){
+    @GetMapping("onetwo")
+    public PersonTwo savePersonOne(PersonOne personOne){
         return   oneService.save(personOne);
     }
+
 
     @GetMapping("oneFindById")
     public PersonOne findByIdOne(Long id){
@@ -58,6 +59,11 @@ public class HomeController {
     @GetMapping("twoFindALL")
     public List<PersonTwo> findByIdTwo(){
         return   twoService.findALL();
+    }
+
+    @GetMapping("onetoTwo")
+    public PersonTwo onetoTwo(PersonOne personOne){
+        return   oneService.onetoTwo(personOne);
     }
 
 }

@@ -1,7 +1,7 @@
 package com.hlj.many.datasourse.dataresource.service;
 
-import com.hlj.many.datasourse.dataresource.dao.data.PersonOneDao;
-import com.hlj.many.datasourse.dataresource.dao.data.entry.PersonOne;
+import com.hlj.many.datasourse.dataresource.dao.db.PersonOneDao;
+import com.hlj.many.datasourse.dataresource.dao.db.entry.PersonOne;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

@@ -1,8 +1,8 @@
 package com.hlj.many.datasourse.dataresource.service;
 
-import com.hlj.many.datasourse.dataresource.dao.db.PersonTwoDao;
-import com.hlj.many.datasourse.dataresource.dao.db.PersonTwoMapper;
-import com.hlj.many.datasourse.dataresource.dao.db.entry.PersonTwo;
+import com.hlj.many.datasourse.dataresource.dao.data.PersonTwoDao;
+import com.hlj.many.datasourse.dataresource.dao.data.PersonTwoMapper;
+import com.hlj.many.datasourse.dataresource.dao.data.entry.PersonTwo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

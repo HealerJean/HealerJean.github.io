@@ -2,11 +2,12 @@ package com.hlj.many.datasourse.dataresource.service;
 
 import com.hlj.many.datasourse.data.DataSource;
 import com.hlj.many.datasourse.data.TargetDataSource;
-import com.hlj.many.datasourse.dataresource.dao.data.PersonOneDao;
-import com.hlj.many.datasourse.dataresource.dao.data.PersonOneMapper;
-import com.hlj.many.datasourse.dataresource.dao.data.entry.PersonOne;
+import com.hlj.many.datasourse.dataresource.dao.db.PersonOneDao;
+import com.hlj.many.datasourse.dataresource.dao.db.PersonOneMapper;
+import com.hlj.many.datasourse.dataresource.dao.db.PersonTwoDao;
+import com.hlj.many.datasourse.dataresource.dao.db.entry.PersonOne;
+import com.hlj.many.datasourse.dataresource.dao.db.entry.PersonTwo;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -25,14 +26,29 @@ public class OneService {
     @Resource
     private PersonOneMapper personOneMapper;
 
-    public PersonOne save(PersonOne personOne){
-        return personOneDao.save(personOne);
+    @Resource
+    private PersonTwoDao personTwoDao ;
+
+    @Resource
+    private TwoService twoService ;
+
+
+    public PersonTwo save(PersonOne personOne){
+        PersonTwo personTwo = new PersonTwo();
+        personTwo.setName(personOne.getName());
+        return personTwoDao.save(personTwo);
     }
 
     public PersonOne findById(Long id){
        return personOneMapper.findById(id);
     }
 
+
+    public PersonTwo onetoTwo(PersonOne personOne){
+        PersonTwo personTwo = new PersonTwo();
+        personTwo.setName(personOne.getName());
+        return twoService.save(personTwo);
+    }
 
 
 

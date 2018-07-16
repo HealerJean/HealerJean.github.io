@@ -35,8 +35,8 @@ import javax.sql.DataSource;
 @EnableJpaRepositories(
         entityManagerFactoryRef="admoreDataEMF",
         transactionManagerRef="admoreDataTM",
-        basePackages= { "com.hlj.many.datasourse.dataresource.dao.db" })
-        @MapperScan(basePackages = {"com.hlj.many.datasourse.dataresource.dao.db"}, sqlSessionTemplateRef  = "admoreDataSessionTemplate")
+        basePackages= { "com.hlj.many.datasourse.dataresource.dao.data" })
+        @MapperScan(basePackages = {"com.hlj.many.datasourse.dataresource.dao.data"}, sqlSessionTemplateRef  = "admoreDataSessionTemplate")
 //@MapperScan(basePackages = {"com.hlj.many.datasourse.dataresource.dao.db","com.hlj.many.datasourse.dataresource.dao.data.mydata"}, sqlSessionTemplateRef  = "admoreSessionTemplate")
 public class DatasourceTwoDb {
 
@@ -67,7 +67,7 @@ public class DatasourceTwoDb {
     public LocalContainerEntityManagerFactoryBean admoreDataEMF(EntityManagerFactoryBuilder builder, @Qualifier("admoreData") DataSource dataSource) {
         return builder
                 .dataSource(dataSource)
-                .packages("com.hlj.many.datasourse.dataresource.dao.db.entry")
+                .packages("com.hlj.many.datasourse.dataresource.dao.data.entry")
                 .persistenceUnit("admoreData")
                 .build();
     }
@@ -83,7 +83,7 @@ public class DatasourceTwoDb {
         sessionFactoryBean.setDataSource(dataSource);
         sessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:mybatis.xml"));
         Resource[] resources = ArrayUtils.addAll(
-                applicationContext.getResources("classpath*:com/hlj/many/datasourse/dataresource/dao/db/mysql/*.xml")
+                applicationContext.getResources("classpath:/com/hlj/many/datasourse/dataresource/dao/data/mysql/*.xml")
 //                applicationContext.getResources("classpath*:com/duodian/admore/dao/mydata/**/mysql/*.xml")
         );
         sessionFactoryBean.setMapperLocations(resources);

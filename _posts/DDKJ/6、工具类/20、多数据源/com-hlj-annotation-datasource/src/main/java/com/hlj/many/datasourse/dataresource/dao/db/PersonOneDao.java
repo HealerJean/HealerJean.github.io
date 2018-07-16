@@ -1,6 +1,6 @@
-package com.hlj.many.datasourse.dataresource.dao.data;
+package com.hlj.many.datasourse.dataresource.dao.db;
 
-import com.hlj.many.datasourse.dataresource.dao.data.entry.PersonOne;
+import com.hlj.many.datasourse.dataresource.dao.db.entry.PersonOne;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.hlj.many.datasourse.dataresource.dao.db.entry;
+package com.hlj.many.datasourse.dataresource.dao.data.entry;
 
 import javax.persistence.*;
 import java.io.Serializable;

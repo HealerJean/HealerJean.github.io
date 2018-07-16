@@ -1,0 +1,101 @@
+---
+title: idea_数据库插件的使用_mysql举例说明
+date: 2018-03-06 03:33:00
+tags: 
+- Mysql
+- Database
+category: 
+- Mysql
+- Database
+
+description: idea_数据库插件的使用_mysql举例说明
+---
+<!-- image url 
+https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+　　首行缩进
+<font color="red">  </font>
+-->
+
+## 前言
+
+下面都是根据项目中实实在在用到的地方进行编写的博客，如果有大家用不到的，大家想知道的，可以直接留言，博主看到会回复大家的
+
+## 1、根据查询结果制作为sql或者是table表格
+
+
+```
+SELECT * from coupon_item_good ;
+
+```
+
+![WX20180716-180429](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180716-180429.png)
+
+
+### 1、制作为table
+
+![WX20180716-180634](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180716-180634.png)
+
+![WX20180716-180703@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180716-180703@2x.png)
+
+
+
+### 1.2、制作为insert sql语句
+
+![WX20180716-180815](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180716-180815.png)
+
+
+
+
+
+```
+INSERT INTO duodianyouhui.coupon_item_good (id, couponAdzoneId, itemUrl, itemId, coupoUrl, activityId, label, title, copywritingTitle, itemDescription, originPrice, nowPrice, couponPrice, taokouling, couponClickUrl, remark, status, cdate, udate, imgUrl, delstatus, connectItemGoodId, connectParentItemGoodId, qCodeIs, volume, IsTmall, connectStatus, pubStatus, imageTextId, createAdminId, pubAdminId, originUrl, spareUrl, createAdminName, pubAdminName, shopId, downSaleStatus, erWeiMaInfoUrl, itemSortId, reserveTaoKouLing, zhiboStatus, beforeOriginPrice, beforeNowPrice, beforeCouponPrice, duodainyouhuiId, pubtime, orderTime, scheduleDealStatus) VALUES (1, 17, 'https://detail.tmall.com/item.htm?id=43985550708', 43985550708, 'https://uland.taobao.com/quan/detail?sellerId=2076616785&activityId=e3b00cc6e1574cefa9aa102aa74e111c', 'e3b00cc6e1574cefa9aa102aa74e111c', '包邮', '浪莎决明子磁石养生保健枕头助睡眠护颈枕芯成人学生单人一对拍2', '浪莎决明子磁石养生保健枕头助睡眠护颈枕芯成人学生单人一对拍2', '源自浪莎博士后工作站的研发！磨毛静音~透气，舒柔，高弹~给你整晚好梦！真空包装，拆开后会迅速膨胀，蓬松柔软，质地轻盈，透气性良好。让你宛如睡在云朵中一样。', 29.90, 19.90, 10.00, '￥C9TfbZ2DEPq￥', 'https://uland.taobao.com/coupon/edetail?e=yFW6jZpH5uA8Clx5mXPEKjstTrjU8RYZE3rdfJSjN4mFxaJECwf%2Fc7n9ItSCaDFagB3%2F5XdBW0SDxq6nENWpgpEE6WxWorXt%2BMUwzxYlSKHD%2FXDu4igYWHtrlwV1Hhl%2BADDIjqvO8i%2BFuwh2CRsScGc1TL3CrsHNSJs2ttvReFLnbYfZPG6qkkBsXx8cnY%2FDbSfud4H1FX%2BYPB4BsjiSsw%3D%3D&traceId=0bb75c5615317118817038686e', '', 1, '2018-07-16 11:31:25', '2018-07-16 17:50:06', 'https://img.alicdn.com/imgextra/i1/2076616785/TB27BIlAH5YBuNjSspoXXbeNFXa_!!2076616785.jpg', 1, null, null, 1, 22365, 1, 1, 1, null, 1, 1, null, null, '我是测试', '我是测试', 2076616785, 1, 'admin/duodianyouhui/itemgood/erweima2d0779730d344ed682b4aa3a9fcd831c.jpg', null, '￥hKlNbZ2DH0s￥', null, null, null, null, null, null, '2018-07-16 17:13:41', 0);
+```
+
+
+
+
+## 2、树形显示
+
+
+![WX20180716-181813](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180716-181813.png)
+
+
+### 2.2、展示
+
+![WX20180716-181844](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180716-181844.png)
+
+
+
+
+
+
+
+<br/><br/><br/>
+如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，添加博主微信哦， 请下方留言吧。可与博主自由讨论哦
+
+|支付包 | 微信|微信公众号|
+|:-------:|:-------:|:------:|
+|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+
+
+
+
+<!-- Gitalk 评论 start  -->
+
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script> 
+<div id="gitalk-container"></div>    
+ <script type="text/javascript">
+    var gitalk = new Gitalk({
+		clientID: `1d164cd85549874d0e3a`,
+		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
+		repo: `HealerJean123.github.io`,
+		owner: 'HealerJean123',
+		admin: ['HealerJean123'],
+		id: 'AAAAAAAAAAAAAA',
+    });
+    gitalk.render('gitalk-container');
+</script> 
+
+<!-- Gitalk end -->
+
