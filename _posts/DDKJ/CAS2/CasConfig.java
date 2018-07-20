@@ -209,11 +209,12 @@ public class CasConfig {
          * 是否登录
          */
         public static boolean isLogin(){
-                Object isSuper = AssertionHolder.getAssertion().getPrincipal();
-                if(isSuper==null){
-                    return  false;
-                }
-            return true;
+            HttpSession session   = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+            Assertion assertion = session != null ? (Assertion) session.getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION):null;
+            if(assertion!=null){
+                return  true;
+            }
+            return false;
         }
 
     }
