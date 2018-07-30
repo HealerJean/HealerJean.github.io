@@ -74,7 +74,7 @@ http {
 		repo: `HealerJean123.github.io`,
 		owner: 'HealerJean123',
 		admin: ['HealerJean123'],
-		id: 'AAAAAAAAAAAAAA',
+		id: '37aeF5HRRQ4gxehl',
     });
     gitalk.render('gitalk-container');
 </script> 

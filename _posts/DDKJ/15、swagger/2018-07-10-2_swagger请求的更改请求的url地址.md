@@ -161,7 +161,7 @@ public class InterceptorConfig extends WebMvcConfigurerAdapter{
 		repo: `HealerJean123.github.io`,
 		owner: 'HealerJean123',
 		admin: ['HealerJean123'],
-		id: 'AAAAAAAAAAAAAA',
+		id: 'xTxtlyrHkWOy0PDQ',
     });
     gitalk.render('gitalk-container');
 </script> 

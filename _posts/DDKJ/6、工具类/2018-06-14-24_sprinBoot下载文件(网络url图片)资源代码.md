@@ -73,7 +73,7 @@ public void downUrlImage(String url, HttpServletResponse response){
 		repo: `HealerJean123.github.io`,
 		owner: 'HealerJean123',
 		admin: ['HealerJean123'],
-		id: 'AAAAAAAAAAAAAA',
+		id: '5uEdExlL8zfGVngY',
     });
     gitalk.render('gitalk-container');
 </script> 

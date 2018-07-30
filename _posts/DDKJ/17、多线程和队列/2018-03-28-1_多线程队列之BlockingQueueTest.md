@@ -151,7 +151,7 @@ public class BlockingQueueTest extends Thread {
 		repo: `HealerJean123.github.io`,
 		owner: 'HealerJean123',
 		admin: ['HealerJean123'],
-		id: 'AAAAAAAAAAAAAA',
+		id: '1fk9yXknLkdU4c7I',
     });
     gitalk.render('gitalk-container');
 </script> 

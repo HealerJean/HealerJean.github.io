@@ -62,7 +62,7 @@ scp admin/target/admin-1.0-SNAPSHOT.jar root@15.1.1.1:/usr/local/webproject
 		repo: `HealerJean123.github.io`,
 		owner: 'HealerJean123',
 		admin: ['HealerJean123'],
-		id: 'AAAAAAAAAAAAAA',
+		id: 'lZ1uLRU8A99RLrYw',
     });
     gitalk.render('gitalk-container');
 </script> 

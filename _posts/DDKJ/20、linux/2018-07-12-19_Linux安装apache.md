@@ -130,7 +130,7 @@ make && make install
 		repo: `HealerJean123.github.io`,
 		owner: 'HealerJean123',
 		admin: ['HealerJean123'],
-		id: 'AAAAAAAAAAAAAA',
+		id: 'rh9X8ZiGhjIf8NES',
     });
     gitalk.render('gitalk-container');
 </script> 

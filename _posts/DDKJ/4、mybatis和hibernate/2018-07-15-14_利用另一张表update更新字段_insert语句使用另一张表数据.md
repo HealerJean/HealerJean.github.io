@@ -85,7 +85,7 @@ WHERE  b.itemId IN (40762167681);
 		repo: `HealerJean123.github.io`,
 		owner: 'HealerJean123',
 		admin: ['HealerJean123'],
-		id: 'AAAAAAAAAAAAAA',
+		id: 'cx7pz7OTtfmZ7DVB',
     });
     gitalk.render('gitalk-container');
 </script> 

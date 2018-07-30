@@ -1,6 +1,6 @@
 ---
 title: Ubuntu安装Nginx以及上传限制
-date: 2018-03-06 03:33:00
+date: 2018-07-05 03:33:00
 tags: 
 - Nginx
 category: 
@@ -97,7 +97,7 @@ http {
 		repo: `HealerJean123.github.io`,
 		owner: 'HealerJean123',
 		admin: ['HealerJean123'],
-		id: 'AAAAAAAAAAAAAA',
+		id: 'dw8Om763GOjyZvsT',
     });
     gitalk.render('gitalk-container');
 </script> 

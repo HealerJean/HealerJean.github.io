@@ -98,7 +98,7 @@ new初始为0
 		repo: `HealerJean123.github.io`,
 		owner: 'HealerJean123',
 		admin: ['HealerJean123'],
-		id: 'AAAAAAAAAAAAAA',
+		id: 'pN3cRrCmHP1KStDx',
     });
     gitalk.render('gitalk-container');
 </script> 
