@@ -40,7 +40,7 @@ sudo apt-get install nginx
 ## 3、启动
 
 ```
-sudo nginx -c /etc/nginx/nginx.conf
+ nginx -c /etc/nginx/nginx.conf
 ```
 
 centos 启动是 

@@ -205,18 +205,6 @@ public class CasConfig {
             return isSuper != null && isSuper.toString().equals("1");
         }
 
-        /**
-         * 是否登录
-         */
-        public static boolean isLogin(){
-            HttpSession session   = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-            Assertion assertion = session != null ? (Assertion) session.getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION):null;
-            if(assertion!=null){
-                return  true;
-            }
-            return false;
-        }
-
     }
 }
 

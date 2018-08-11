@@ -9,10 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by j.sh on 2015/5/15.
@@ -318,7 +315,7 @@ public class DateHelper extends DateUtils {
     }
 
     /**
-     * 获取hour
+     * 获取分钟
      * @param date one day
      * @return date
      */
@@ -551,13 +548,58 @@ public class DateHelper extends DateUtils {
     }
 
 
-    public static Date  getRecentlyDayFirstTime(Integer num) {
+
+    /**
+     * 获取最近前多少天的开始时间
+     * @param num
+     * @return
+     */
+    public  static Date  getRecentlyDayFirstTime(Integer num) {
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.DATE, num);
         String time  = DateHelper.convertDate2String(calendar.getTime(), DateHelper.YYYY_MM_DD)+" 00:00:00";
         return DateHelper.convertString2Date(time,DateHelper.YYYY_MM_DD_HH_MM_SS);
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println(DateHelper.convertDate2String( getRecentMinuteFirstTime(-1),DateHelper.YYYY_MM_DD_HH_MM_SS));
+    }
+
+
+    /**
+     * 获取最近前或者后 多少分钟的开始时间
+     * @param num
+     * @return
+     */
+    public static Date getRecentMinuteFirstTime(Integer num){
+        Date date  = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE, num);
+        String time  = DateHelper.convertDate2String(calendar.getTime(), DateHelper.YYYY_MM_DD_HH_MM)+":00";
+        return DateHelper.convertString2Date(time,DateHelper.YYYY_MM_DD_HH_MM_SS);
+    }
+
+
+    /**
+     * 输入long 转化date或者string
+     * @param s
+     * @return
+     */
+    public Map<String,Object> stampToDate(String s){
+        String res;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        long lt = new Long(s);
+        Date date = new Date(lt);
+        Map<String,Object> map = new HashMap<>();
+        map.put("date",date);
+        res = simpleDateFormat.format(date);
+        map.put("dateString",res);
+
+        return map;
     }
 
 
