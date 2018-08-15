@@ -127,7 +127,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 写入内容，解释说明
 
-1、FROM ，表示使用 Jdk8 环境 为基础镜像
+1、FROM ，表示使用 Jdk8 环境 为基础镜像，如果镜像不是本地的会从 DockerHub 进行下载
 
 2、MAINTAINER ,作者为 HealerJean
 

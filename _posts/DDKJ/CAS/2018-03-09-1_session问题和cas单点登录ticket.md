@@ -17,15 +17,13 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 ---
 
-2、关于session，其实之前也不是很了解，但是学了单点登录，突然觉得必须稍微了解一下。
+---
+
+2、之前做过一个Nginx，Tomcat，session共享，当时用了的是一个域名，也就是常见的localhost，当时没有考虑过一个域名下的session是不是同一个，但是按照教程做完了。通过配置tomcat和项目，最后得到是一个sessionId。其实现在我才知道，如果没有配置共享session，本来一个localhost，不同端口，如果开启项目的话，每次刷新不同的端口项目，session变了。那是因为当前的端口将之前的端口的sessionId被替换掉了。但是之前的端口的sessionId再刷新的话，就又会变了。
 
 ---
 
-3、之前做过一个Nginx，Tomcat，session共享，当时用了的是一个域名，也就是常见的localhost，当时没有考虑过一个域名下的session是不是同一个，但是按照教程做完了。通过配置tomcat和项目，最后得到是一个sessionId。其实现在我才知道，如果没有配置共享session，本来一个localhost，不同端口，如果开启项目的话，每次刷新不同的端口项目，session变了。那是因为当前的端口将之前的端口的sessionId被替换掉了。但是之前的端口的sessionId再刷新的话，就又会变了。
-
----
-
-4、接着说sso，我还是用了同一个localhost，发现，单点是可以登录，但是只能登录一个客户端。这就偶是3中强调的一个域名session是同一个，如果登录另外一个。通过sso就会将之前的session给干掉。只留下当前登录的那个客户端。我这里用的是sso使用的是ticket验证，不可以共用一个sessionId的。
+4、接着说sso，我还是用了同一个localhost，发现，单点是可以登录，但是只能登录一个客户端。这就偶是3中强调的一个域名session是同一个，如果登录另外一个。通过sso就会将之前的session给干掉。只留下当前登录的那个客户端。我这里用的是sso使用的是ticket验证，不可以共用一个sessionId的。所以请看下面的第一个
 
 
 ## 1、一个域名下两个不同端口的项目，session不能同时存在
