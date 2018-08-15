@@ -88,7 +88,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 ```
 
-## 2、项目中配置docker
+## 2、项目中配置docker（也可以不配置，后面阿里云镜像容器没有配置哦）
 
 1、配置名称
 
