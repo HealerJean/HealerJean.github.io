@@ -159,10 +159,11 @@ latest: Pulling from duodianyouhui/com-hlj-springboot-docker
 
 ## 3、观察阿里云镜像信息
 
-![WX20180815-145708@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145708@2x-1.png)
-![WX20180815-145748@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145748@2x-1.png)
+![WX20180815-145708@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145708@2x.png)
 
-![WX20180815-145050@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145050@2x-1.png)
+![WX20180815-145748@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145748@2x.png)
+
+![WX20180815-145050@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145050@2x.png)
 
 ### 3.2、修改仓库类型为公开，否则后面容器服务不能够搭建web成功
 
