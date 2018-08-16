@@ -1,11 +1,11 @@
 ---
-title: 阿里云搭建springboot项目容器
+title: 阿里云容器镜像服务和容器服务搭建springboot项目容器
 date: 2018-08-13 03:33:00
 tags: 
 - Docker
 category: 
 - Docker
-description: 阿里云搭建springboot项目容器
+description: 阿里云容器镜像服务和容器服务搭建springboot项目容器
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
@@ -40,7 +40,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 ```
 PREFIX=registry.cn-qingdao.aliyuncs.com/duodianyouhui/com-hlj-springboot-docker
 PROJECT=com-hlj-springboot-docker
-tag=latest
+tag=1
 
 
 docker login --username=HealerJean registry.cn-qingdao.aliyuncs.com --password=123456789
@@ -128,11 +128,11 @@ latest: digest: sha256:218917c3411a807842ca66f6bb8baccd29b45746d49524611584271d3
 ![WX20180815-145748@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145748@2x.png)
 
 
-#### 2.5、修改Dockerfile 文件的From ，修改为基础镜像为阿里云仓库镜像
+#### 2.5、修改Dockerfile 文件的From ，修改为基础镜像为阿里云仓库镜像,设置为标签为 1 ，这个镜像我们在阿里云上不要删除，否则执行命令的时候，会报错招不到该镜像
 
 
 ```
-FROM registry.cn-qingdao.aliyuncs.com/duodianyouhui/com-hlj-springboot-docker:latest
+FROM registry.cn-qingdao.aliyuncs.com/duodianyouhui/com-hlj-springboot-docker:1
 MAINTAINER HealerJean
 ADD target/com-hlj-springboot-docker-0.0.1-SNAPSHOT.jar app.jar
 CMD ["java","-jar","/app.jar"]
@@ -278,11 +278,17 @@ lb-m5eezyl4kqkux3
 
 ## 5、更新版本
 
-1、如果所有的使用现在的latest版本，则每次从本地发布到阿里云镜像文件之后，点击重新部署即可自动完成发布新版本，但是回退版本是不可能的事情了，
+1、如果所有的使用现在的tag:1版本，则每次从本地发布到阿里云镜像文件之后，点击重新部署即可自动完成发布新版本，但是回退版本是不可能的事情了，
 
 ![WX20180816-122813@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-122813@2x.png)
 
+2、如果想每次的旧版本不删除，则我们在打包命令的时候，taq就要发生变化，tag变成日期的格式
 
+
+```
+tag=1
+#tag=`date +%m%d%H%M`
+```
 
 
 
