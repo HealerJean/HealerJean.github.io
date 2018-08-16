@@ -23,14 +23,13 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 ![WX20180815-144234@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-144234@2x.png)
 
 
-#### 1.2、创建镜像仓库
+#### 1.2、创建镜像仓库(这里不需要执行，以为我使用代码登录的时候就会自动创建)
+
+创建的仓库名称（不需要创建，在下面上传代码的时候，我们根据sh命令中的信息会进行创建，当然我们也可以自行创建）
 
 ![WX20180815-144409@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-144409@2x.png)
 
-#### 1.3、创建的仓库名称（不需要创建，在下面上传代码的时候，我们根据sh命令中的信息会进行创建，当然我们也可以自行创建）
 
-
-### 2、开始打包上传代码
 
 ![WX20180815-145050@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145050@2x.png)
 
@@ -44,10 +43,7 @@ PROJECT=com-hlj-springboot-docker
 tag=latest
 
 
-
-docker login --username=HealerJean registry.cn-qingdao.aliyuncs.com --password=AAAAAAAAA
-
-
+docker login --username=HealerJean registry.cn-qingdao.aliyuncs.com --password=123456789
 
 
 echo "清理项目..."
@@ -61,9 +57,12 @@ docker images | grep registry.cn-qingdao.aliyuncs.com/duodianyouhui/com-hlj-spri
 
 echo "开始构建..."
 docker build -t ${PREFIX}:${tag} .
+
 echo "${PROJECT}构建成功，开始上传至阿里云"
 docker push ${PREFIX}:${tag}
+
 echo "镜像${PROJECT}构建并上传至阿里云成功"
+
 
 
 ```
@@ -156,6 +155,139 @@ Step 1/4 : FROM registry.cn-qingdao.aliyuncs.com/duodianyouhui/com-hlj-springboo
 latest: Pulling from duodianyouhui/com-hlj-springboot-docker
 
 ```
+
+
+## 3、观察阿里云镜像信息
+
+![WX20180815-145708@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145708@2x-1.png)
+![WX20180815-145748@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145748@2x-1.png)
+
+![WX20180815-145050@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145050@2x-1.png)
+
+### 3.2、修改仓库类型为公开，否则后面容器服务不能够搭建web成功
+
+
+![WX20180816-111017@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-111017@2x.png)
+
+
+![WX20180816-111049@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-111049@2x.png)
+
+
+## 4、容器服务启动web应用尽心访问
+
+### 4.1、创建应用
+
+![WX20180816-111237@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-111237@2x.png)
+
+### 4.2、不勾选，检测最新，防止我们发布版本的时候，出现错误的版本（通过上面我们可以看到版本是一模一样的，都是latest，当然这个我们可以自己选择版本是最好的，这里是为了方便，最好是版本我们可以自己进行输入，第二章节会讲）
+
+![WX20180816-111324@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-111324@2x.png)
+
+
+### 4.3、使用镜像进行创建
+
+
+#### 4.3.1、选择镜像
+
+![WX20180816-111552@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-111552@2x.png)
+
+
+#### 4.3.2、端口映射
+
+
+[简单路由-域名配置](https://help.aliyun.com/document_detail/25986.html?spm=5176.2020520152.220.1.419116ddS5MyNX)
+
+
+主机端口为空，表示随机暴露一个主机的端口（暴露 HTTP/HTTPS 服务时，您可以不需要知道主机暴露的具体端口是什么，可以使用 overlay 网络或者 VPC 网络来直接访问容器的端口），容器端口为 8080。您使用 wordpress-web 服务的 8080 端口来提供 HTTP 服务，使用的协议是 TCP 协议。，但是这里我们还是最好制定一个端口吧，主机端口也是8080 ,<font color="red">最好不要用80端口，小心出问题吧</font>
+
+
+![WX20180816-120927@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-120927@2x.png)
+
+
+
+#### 4.3.3、简单路由配置（配置域名）（写不写http://都可以）
+
+[简单路由（支持 HTTP/HTTPS)](https://help.aliyun.com/document_detail/25984.html?spm=5176.2020520152.220.2.419116ddS5MyNX)
+
+##### 1、配置阿里云提供的子域名
+
+
+```
+springboot;http://springboothttp;http://rongqi.dangqugame.cn;httprongqi.dangqugame.cn
+
+观察有没有http;//会不会报错
+
+阿里云提供的子域名服务
+springboot;
+http://springboothttp;
+
+我们自己的域名
+http://rongqi.dangqugame.cn; 
+httprongqi.dangqugame.cn
+```
+
+
+![WX20180816-121207@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-121207@2x.png)
+
+
+
+##### 2、配置自己提供的域名
+
+1、集群，找到这个集群容器
+
+![WX20180816-113417@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-113417@2x.png)
+
+2、查看这个容器的负载均衡id
+
+
+```
+lb-m5eezyl4kqkux3
+
+```
+
+![WX20180816-113800@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-113800@2x.png)
+
+
+3、打开负载均衡控制台，通过这个id查看ip地址，然后域名这个ip分配过去
+
+
+![WX20180816-114028@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-114028@2x.png)
+
+
+
+#### 4.3.4、创建成功
+
+![WX20180816-115503@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-115503@2x.png)
+
+
+##### 1、观察该应用所有域名（可以观察到有我们自己设置的，也有阿里云给我们提供的）
+
+![WX20180816-120040@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-120040@2x.png)
+
+
+
+##### 2、重新配置
+
+1、 服务->变更配置
+
+![WX20180816-121324@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-121324@2x.png)
+
+
+![WX20180816-121351@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-121351@2x.png)
+
+
+## 5、更新版本
+
+1、如果所有的使用现在的latest版本，则每次从本地发布到阿里云镜像文件之后，点击重新部署即可自动完成发布新版本，但是回退版本是不可能的事情了，
+
+![WX20180816-122813@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-122813@2x.png)
+
+
+
+
+
+
+
 
 
 <br/><br/><br/>
