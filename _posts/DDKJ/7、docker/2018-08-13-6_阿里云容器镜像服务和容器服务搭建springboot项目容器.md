@@ -165,13 +165,28 @@ latest: Pulling from duodianyouhui/com-hlj-springboot-docker
 
 ![WX20180815-145050@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145050@2x.png)
 
-### 3.2、修改仓库类型为公开，否则后面容器服务不能够搭建web成功
+### 3.2、修改仓库类型，不可使用：修改仓库类为为公开，否则后面容器服务不能够搭建web成功，但是这样的话，就会泄漏我们的源码镜像文件<br/>
 
 
 ![WX20180816-111017@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-111017@2x.png)
 
 
 ![WX20180816-111049@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-111049@2x.png)
+
+
+
+### 3.2.2、修改仓库类型，建议使用：需要到docker集群进行仓库登录，之后之后就可以使用私有仓库了。安全
+![WX20180816-181648@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-181648@2x.png)
+
+![WX20180816-181727@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-181727@2x.png)
+
+
+使用的是阿里云镜像仓库，仓库域名 应填写阿里云镜像仓库域名，如 registry.cn-hangzhou.aliyuncs.com，并使用您的阿里云用户名和仓库独立登录密码以及注册邮箱进行登录。登录成功也不会给提示
+
+#### 3.2.2.1、仓库密码的设置，到容器镜像服务中去
+
+![WX20180816-182010@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-182010@2x.png)
+
 
 
 ## 4、容器服务启动web应用尽心访问
@@ -255,6 +270,20 @@ lb-m5eezyl4kqkux3
 ![WX20180816-114028@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-114028@2x.png)
 
 
+##### 3、配置启动的环境
+
+
+```
+## 可写 可不写 server.port=8080
+
+spring.profiles.active=dev
+
+
+```
+
+![WX20180816-192218@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-192218@2x.png)
+
+
 
 #### 4.3.4、创建成功
 
@@ -292,6 +321,35 @@ tag=1
 ```
 
 
+2、容器服务中->应用->变更配置，这个时候出来一个配置文件，我们修改后面的版本即可
+
+![WX20180816-192301@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-192301@2x.png)
+
+
+![WX20180816-192435@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-192435@2x.png)
+
+
+```
+duodian-youhui-server:
+  restart: always
+  ports:
+    - '8080:8080/tcp'
+  environment:
+    - LANG=C.UTF-8
+    - JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+    - server.port=8080
+    - spring.profiles.active=dev
+  memswap_limit: 0
+  labels:
+    aliyun.scale: '1'
+    aliyun.routing.port_8080: test.dangqugame.cn;test
+  shm_size: 0
+  image: 'registry-vpc.cn-qingdao.aliyuncs.com/duodianyouhui/duodian-youhui-server:1'
+  memswap_reservation: 0
+  kernel_memory: 0
+  mem_limit: 0
+
+```
 
 
 
