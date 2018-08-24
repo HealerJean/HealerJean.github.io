@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -564,9 +565,7 @@ public class DateHelper extends DateUtils {
     }
 
 
-    public static void main(String[] args) {
-        System.out.println(DateHelper.convertDate2String( getRecentMinuteFirstTime(-1),DateHelper.YYYY_MM_DD_HH_MM_SS));
-    }
+
 
 
     /**
@@ -601,6 +600,61 @@ public class DateHelper extends DateUtils {
 
         return map;
     }
+
+
+
+    /**
+     * 两个时间之间相差距离多少天
+     * @param one 时间参数 1：
+     * @param two 时间参数 2：
+     * @return 相差天数
+     */
+    public static Long getDistanceDays(Date one, Date two){
+        one = DateHelper.getDateFirstTime(one);
+        two = DateHelper.getDateFirstTime(two);
+        long days=0;
+        long time1 = one.getTime();
+        long time2 = two.getTime();
+        long diff ;
+        if(time1<time2) {
+            diff = time2 - time1;
+        } else {
+            diff = time1 - time2;
+        }
+        days = diff / (1000 * 60 * 60 * 24);
+        return days;
+    }
+
+
+    /**
+     * 两个时间相差距离多少天多少小时多少分多少秒
+     * @return Long[] 返回值为：{天, 时, 分, 秒}
+     */
+    public static Long[] getDistanceTimes(Date one, Date two) {
+        long day = 0;
+        long hour = 0;
+        long min = 0;
+        long sec = 0;
+        long time1 = one.getTime();
+        long time2 = two.getTime();
+        long diff ;
+        if(time1<time2) {
+            diff = time2 - time1;
+        } else {
+            diff = time1 - time2;
+        }
+        day = diff / (24 * 60 * 60 * 1000);
+        hour = (diff / (60 * 60 * 1000) - day * 24);
+        min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
+        sec = (diff/1000-day*24*60*60-hour*60*60-min*60);
+
+        System.out.println(day+"天"+hour+"小时"+min+"分钟"+sec+"秒");
+
+        Long[] times = {day, hour, min, sec};
+        return times;
+    }
+
+    
 
 
 }

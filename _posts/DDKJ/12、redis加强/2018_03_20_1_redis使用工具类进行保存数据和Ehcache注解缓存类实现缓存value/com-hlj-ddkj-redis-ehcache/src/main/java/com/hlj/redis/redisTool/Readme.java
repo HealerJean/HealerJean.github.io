@@ -58,6 +58,8 @@ stringRedisTemplate.opsForSet().members("red_123");//根据key获取set集合
 //用户是否在线
 stringRedisTemplate.opsForSet().isMember("red_123", "1")//根据key查看集合中是否存在指定数据
 
+删除set中的某个元素
+redisUtils.stringRedisTemplate.boundSetOps(setKey).remove(setKey);
 
 
 

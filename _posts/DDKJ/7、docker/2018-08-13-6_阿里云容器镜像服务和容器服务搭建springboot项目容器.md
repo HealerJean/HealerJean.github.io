@@ -23,7 +23,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 ![WX20180815-144234@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-144234@2x.png)
 
 
-#### 1.2、创建镜像仓库(这里不需要执行，以为我使用代码登录的时候就会自动创建)
+#### 1.2、创建镜像仓库(这里不需要执行，因为我使用代码登录的时候就会自动创建)
 
 创建的仓库名称（不需要创建，在下面上传代码的时候，我们根据sh命令中的信息会进行创建，当然我们也可以自行创建）
 
@@ -274,7 +274,7 @@ lb-m5eezyl4kqkux3
 
 
 ```
-## 可写 可不写 server.port=8080
+## 可写 可不写（也可以写一个我们配置文件中没有声明的端口，注意要和上面的其他端口同意） server.port=8080
 
 spring.profiles.active=dev
 
@@ -296,7 +296,7 @@ spring.profiles.active=dev
 
 
 
-##### 2、重新配置
+##### 2、重新配置（建议使用yml配置文件配置，不建议瞎用下面的进行配置）
 
 1、 服务->变更配置
 
@@ -306,7 +306,7 @@ spring.profiles.active=dev
 ![WX20180816-121351@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-121351@2x.png)
 
 
-## 5、更新版本
+## 5、更新版本（下面是标准发布，会将服务停止，建议看下一篇蓝绿发布进行更新）
 
 1、如果所有的使用现在的tag:1版本，则每次从本地发布到阿里云镜像文件之后，点击重新部署即可自动完成发布新版本，但是回退版本是不可能的事情了，
 
@@ -330,6 +330,8 @@ tag=1
 
 
 ```
+  image: 'registry-vpc.cn-qingdao.aliyuncs.com/duodianyouhui/duodian-youhui-server:08224522'
+  
 duodian-youhui-server:
   restart: always
   ports:
@@ -344,13 +346,94 @@ duodian-youhui-server:
     aliyun.scale: '1'
     aliyun.routing.port_8080: test.dangqugame.cn;test
   shm_size: 0
-  image: 'registry-vpc.cn-qingdao.aliyuncs.com/duodianyouhui/duodian-youhui-server:1'
+  image: 'registry-vpc.cn-qingdao.aliyuncs.com/duodianyouhui/duodian-youhui-server:08224522'
   memswap_reservation: 0
   kernel_memory: 0
   mem_limit: 0
 
 ```
 
+
+
+
+## 通过编排模板创建，当我们使用这种容器多了之后，发现上面填表格清单并不好用，建议使用下面的这种方式
+
+### 2、复制之前点击变更配置的时候，出现的yml文件内容
+
+
+
+
+### 1、创建编排模板
+
+![WX20180824-182622@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-182622@2x.png)
+
+
+### 2、复制之前
+
+
+```
+server-dev:
+  restart: always
+  ports:
+    - '8081:8081/tcp'
+  environment:
+    - LANG=C.UTF-8
+    - JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+    - spring.profiles.active=dev
+    - server.port=8081
+  memswap_limit: 0
+  labels:
+    aliyun.scale: '1'
+    aliyun.routing.port_8081: serverdev
+  shm_size: 0
+  image: 'registry-vpc.cn-qingdao.aliyuncs.com/duodianyouhui/dev-server:08241834'
+  memswap_reservation: 0
+  kernel_memory: 0
+  mem_limit: 0
+```
+ 
+#### 2.1、复制-可以直接 创建编排（未删减版）
+
+![WX20180824-190622@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-190622@2x.png)
+
+#### 2.1、复制进入-右面点击编辑，可以自己看看修改下内容，点击保存（这样就会把系统提供的默认的删除）
+
+![WX20180824-190747@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-190747@2x.png)
+
+![WX20180824-190849@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-190849@2x.png)
+
+
+```
+server-dev:
+  image: 'registry-vpc.cn-qingdao.aliyuncs.com/duodianyouhui/dev-server:08241834'
+  ports:
+    - '8081:8081/tcp'
+  restart: always
+  environment:
+    - LANG=C.UTF-8
+    - JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+    - spring.profiles.active=dev
+    - server.port=8081
+  labels:
+    aliyun.scale: '1'
+    aliyun.routing.port_8081: serverdev
+
+```
+
+## 3、根据模板创建应用
+
+### 3.1、创建应用
+
+![WX20180824-190947@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-190947@2x.png)
+
+
+### 3.2、现在我们需要的模板
+
+![WX20180824-191017@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-191017@2x.png)
+
+### 3.3、模板里面直接改或者编辑即可，完成该项目
+
+![WX20180824-191106@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-191106@2x.png)
 
 
 

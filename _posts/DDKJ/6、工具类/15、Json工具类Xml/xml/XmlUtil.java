@@ -56,6 +56,24 @@ public class WeChatMessageUtil {
         return map;
     }
 
+    /**XML格式字符串转map*/
+    public static Map<String,String> xmlToMap(String xmlStr){
+        Map<String, String> map = null;
+        try{
+            map = new HashMap<String, String>();
+            Document document = DocumentHelper.parseText(xmlStr);
+            Element root = document.getRootElement();
+            List<Element> elementList = root.elements();
+            for (Element e : elementList)
+                map.put(e.getName(), e.getText());
+        }catch(Exception ex){
+            ex.printStackTrace();
+            return null;
+        }
+        return map;
+    }
+
+
     /**
      * 文本消息转化为xml
      *
