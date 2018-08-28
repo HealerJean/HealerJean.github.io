@@ -19,7 +19,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 日志当然是我们开发人员最常用的东西了，不管是调试日志，还是后期检查bug，对系统进行维护都是有及其重要的作用。但是很多人可能还是分不清 那么多日志类到底有什么区别，其实说白了，就一句话
 
-比如：slf4j 是打日志的。可以使用各种日志系统存储。Log4j和logback就是那个日志存储系统(它自带打日志，因为自己本身就是一个日志系统。所以不能够切换日志系统)。但是slf4j 是可以随时切换到任何日志系统
+比如：slf4j 是打日志的。可以使用各种日志系统存储。Log4j和logback就是那个日志存储系统(Log4j它自带打日志，因为自己本身就是一个日志系统。所以不能够切换日志系统)。但是slf4j 是可以随时切换到任何日志系统
 
 一般我们打日志都用SLF4J进行打日志吧！！！
 
@@ -161,9 +161,6 @@ logback-prod.xml
 
 
 ## [logback代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_16_2_Docker%E5%AE%89%E8%A3%85graylog%E5%92%8C%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/com-hlj-graylog.zip)
-
-
-
 
 
 <br/><br/><br/>

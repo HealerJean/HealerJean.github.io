@@ -1,5 +1,6 @@
 package com.duodian.youhui.admin.utils;
 
+import com.duodian.youhui.admin.utils.wechat.PayCommonHttpXmlUtil;
 import com.duodian.youhui.data.http.HttpBackBean;
 import com.duodian.youhui.enums.http.SdkHttpCodeEnum;
 import com.duodian.youhui.enums.http.SdkLogicCodeEnum;
@@ -22,13 +23,12 @@ import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.TextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.*;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
+import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.*;
@@ -102,7 +102,11 @@ public class SdkHttpHelper {
             backBean.setResult(result);
             backBean.setStatusCode(response.getStatusLine().getStatusCode());
             backBean.setLogicCode(SdkLogicCodeEnum.正常.code);
-        } catch (SocketTimeoutException e) {
+        }catch (UnknownHostException e){
+            backBean.setStatusCode(SdkHttpCodeEnum.请求未发出.code);
+            backBean.setLogicCode(SdkLogicCodeEnum.请求未发出.code);
+            backBean.setResult(e.getMessage());
+        }catch (SocketTimeoutException e) {
             backBean.setStatusCode(SdkHttpCodeEnum.超时.code);
             backBean.setLogicCode(SdkLogicCodeEnum.超时.code);
             backBean.setResult(e.getMessage());
@@ -126,6 +130,82 @@ public class SdkHttpHelper {
         }
         return backBean;
     }
+
+
+    public static HttpBackBean handleGetSortedMap(String uri, Map<String,String> headers, SortedMap<String,String> params, Integer over_time){
+        HttpBackBean backBean = new HttpBackBean();
+        CloseableHttpClient httpclient = null;
+        HttpGet request = null;
+        HttpResponse response = null;
+        try {
+            uri = StringUtils.trim(uri);
+            if(uri.startsWith("https://")){
+                SSLContext sslcontext = SSLContexts.custom().loadTrustMaterial(new TrustSelfSignedStrategy()).build();
+                sslcontext.init(null, new TrustManager[]{new SdkHttpHelper.MyTrustManager()}, null);
+                httpclient = HttpClients.custom().setSSLSocketFactory(new SSLConnectionSocketFactory(sslcontext)).build();
+            }else{
+                httpclient = HttpClients.custom().build();
+            }
+            StringBuilder sb = new StringBuilder(uri);
+            if(params !=null){
+                if(uri.indexOf("?") == -1){
+                    sb.append("?");
+                }else{
+                    sb.append("&");
+                }
+                Iterator it = params.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String,String> entry = (Map.Entry) it.next();
+                    sb.append(entry.getKey());
+                    sb.append("=");
+                    sb.append(entry.getValue());
+                    if(it.hasNext()) sb.append("&");
+                }
+            }
+            request = new HttpGet(sb.toString());
+            request.setHeader("User-Agent","admore");
+            if(headers != null){
+                for(Map.Entry<String,String> entry:headers.entrySet()){
+                    request.setHeader(entry.getKey(),entry.getValue());
+                }
+            }
+            request.setConfig(defaultRequestConfig(over_time));
+            backBean.setStart(System.currentTimeMillis());
+            response = httpclient.execute(request);
+            String result =  IOUtils.toString(response.getEntity().getContent(),ENCODING_UTF8);
+            backBean.setResult(result);
+            backBean.setStatusCode(response.getStatusLine().getStatusCode());
+            backBean.setLogicCode(SdkLogicCodeEnum.正常.code);
+        }catch (UnknownHostException e){
+            backBean.setStatusCode(SdkHttpCodeEnum.请求未发出.code);
+            backBean.setLogicCode(SdkLogicCodeEnum.请求未发出.code);
+            backBean.setResult(e.getMessage());
+        }catch (SocketTimeoutException e) {
+            backBean.setStatusCode(SdkHttpCodeEnum.超时.code);
+            backBean.setLogicCode(SdkLogicCodeEnum.超时.code);
+            backBean.setResult(e.getMessage());
+        } catch (ConnectTimeoutException e) {
+            backBean.setStatusCode(SdkHttpCodeEnum.超时.code);
+            backBean.setLogicCode(SdkLogicCodeEnum.超时.code);
+            backBean.setResult(e.getMessage());
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+            backBean.setResult(e.getMessage());
+            if(response == null){
+                backBean.setStatusCode(SdkHttpCodeEnum.系统内部错误.code);
+                backBean.setLogicCode(SdkLogicCodeEnum.请求未发出.code);
+            }else{
+                backBean.setStatusCode(response.getStatusLine().getStatusCode());
+                backBean.setLogicCode(SdkLogicCodeEnum.请求未发出.code);
+            }
+        } finally {
+            backBean.setEnd(System.currentTimeMillis());
+            IOUtils.closeQuietly(httpclient);
+        }
+        return backBean;
+    }
+
+
 
     public static HttpBackBean handleGet(String uri, Map<String,String> headers, Map<String,String> params){
         return handleGet(uri,headers,params,OVERTIME);
@@ -512,11 +592,67 @@ public class SdkHttpHelper {
 
 
 
-    public static void main(String[] args) {
-        System.out.println("==============start===============");
-        String uri = "http://advert.jianlc.com/batchvalidateidfa.shtml?idfa_list=1&appid=1";
-        System.out.println("1"+SdkHttpHelper.handleGet(uri,null,null).getResult());
-        System.out.println("===============end==============");
+
+    /**
+     * 发送https请求
+     * @param requestUrl 请求地址
+     * @param method  请求方式（GET、POST）
+     * @param xmlParam  提交xml数据
+     * @return 返回微信服务器响应的信息
+     */
+    public static String httpXmlGetOrPost(String requestUrl, String method, String xmlParam) {
+        try
+        {
+
+            URL url = new URL(requestUrl);
+            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setUseCaches(false);
+            // 设置请求方式（GET/POST）
+            conn.setRequestMethod(method);
+            conn.setRequestProperty("content-type", "application/x-www-form-urlencoded");
+            // 当outputStr不为null时向输出流写数据
+            if (null != xmlParam)
+            {
+                OutputStream outputStream = conn.getOutputStream();
+                // 注意编码格式
+                outputStream.write(xmlParam.getBytes("UTF-8"));
+                outputStream.close();
+            }
+            // 从输入流读取返回内容
+            InputStream inputStream = conn.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String str = null;
+            StringBuffer buffer = new StringBuffer();
+            while ((str = bufferedReader.readLine()) != null) {
+                buffer.append(str);
+            }
+            // 释放资源
+            bufferedReader.close();
+            inputStreamReader.close();
+            inputStream.close();
+            inputStream = null;
+            conn.disconnect();
+            return buffer.toString();
+        }  catch (ConnectException ce) {
+            ExceptionLogUtils.log(ce,PayCommonHttpXmlUtil.class );
+        }   catch (IOException e) {
+            ExceptionLogUtils.log(e,PayCommonHttpXmlUtil.class );
+        }catch (Exception e) {
+            ExceptionLogUtils.log(e,PayCommonHttpXmlUtil.class );
+        }
+        return null;
     }
+
+
+
+//    public static void main(String[] args) {
+//        System.out.println("==============start===============");
+//        String uri = "http://advert.jianlc.com/batchvalidateidfa.shtml?idfa_list=1&appid=1";
+//        System.out.println("1"+SdkHttpHelper.handleGet(uri,null,null).getResult());
+//        System.out.println("===============end==============");
+//    }
 }
 
