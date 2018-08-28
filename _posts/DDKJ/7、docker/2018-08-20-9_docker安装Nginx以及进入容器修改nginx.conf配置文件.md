@@ -1,11 +1,11 @@
 ---
-title: docker安装Nginx以及进入容器修改nginx.conf配置文件
-date: 2018-08-14 03:33:00
+title: docker安装_进入容器修改nginx.conf配置文件_宿主主机挂载（nginx举例）
+date: 2018-08-20 03:33:00
 tags: 
 - Docker
 category: 
 - Docker
-description: docker安装Nginx以及进入容器修改nginx.conf配置文件
+description: docker安装_进入容器修改nginx.conf配置文件_宿主主机挂载（nginx举例）
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
@@ -53,7 +53,17 @@ healerjean$
 
 ```
 
-### 3.2、进入这个容器
+## 2、进入这个容器
+
+### 2.1、docker exec ：在运行的容器中执行命令
+
+```
+		-d :分离模式: 在后台运行
+		-i :即使没有附加也保持STDIN（标准输入） 打开,以交互模式运行容器，通常与 -t 同时使用；
+		-t: 为容器重新分配一个伪输入终端，通常与 -i 同时使用； 
+
+docker exec -it 9fbe362214a6  /bin/bash 
+```
 
 
 ```
@@ -91,8 +101,89 @@ total 4
 
 ```
 
+## 3、docker cp
 
 
+#### 3.1、将容器29df10f32d44:/etc/nginx/nginx.conf 目录拷贝到主机/Users/healerjean/Desktop目录下
+
+
+```
+:~ healerjean$  docker cp  29df10f32d44:/etc/nginx/nginx.conf /Users/healerjean/Desktop
+
+```
+
+#### 3.2、将主机/Users/healerjean/Desktop/AAA.md 拷贝到容器29df10f32d44:/etc/nginx/中
+
+
+```
+ docker cp /Users/healerjean/Desktop/AAA.md 29df10f32d44:/etc/nginx/
+```
+
+
+```
+
+:~ healerjean$ docker cp /Users/healerjean/Desktop/AAA.md 29df10f32d44:/etc/nginx/
+
+
+:~ healerjean$ docker exec -it 29df10f32d44 /bin/bash
+root@29df10f32d44:/# cd /etc/nginx/
+root@29df10f32d44:/etc/nginx# ls -l
+total 44
+-rw-r--r-- 1  501 dialout 1519 Jul 27 08:08 AAA.md
+drwxr-xr-x 1 root root    4096 Aug 28 07:10 conf.d
+-rw-r--r-- 1 root root    1007 Jul 24 13:02 fastcgi_params
+-rw-r--r-- 1 root root    2837 Jul 24 13:02 koi-utf
+-rw-r--r-- 1 root root    2223 Jul 24 13:02 koi-win
+-rw-r--r-- 1 root root    5231 Jul 24 13:02 mime.types
+lrwxrwxrwx 1 root root      22 Jul 24 13:02 modules -> /usr/lib/nginx/modules
+-rw-r--r-- 1 root root     643 Jul 24 13:02 nginx.conf
+-rw-r--r-- 1 root root     636 Jul 24 13:02 scgi_params
+-rw-r--r-- 1 root root     664 Jul 24 13:02 uwsgi_params
+-rw-r--r-- 1 root root    3610 Jul 24 13:02 win-utf
+root@29df10f32d44:/etc/nginx# 
+
+
+
+```
+
+
+## 4、 -v 挂在本地目录到容器中
+
+
+#### 4.1、建议启动的时候挂载 ：:ro 表示分配给只读权限（这样容器就可以使用宿主主机的目录了）
+
+
+```
+docker run -p 80:80  -v /Users/healerjean/Desktop:/usr/local/mynginx:ro -d nginx
+```
+
+```
+JeandeMBP:~ healerjean$ docker run -p 80:80 -it -v /Users/healerjean/Desktop:/usr/local/mynginx:ro -d nginx 
+f3a39301086b999f4bcd9ccddcd83672007be0280889c3f4f0c1fc6bc45b0db4
+JeandeMBP:~ healerjean$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                NAMES
+f3a39301086b        nginx               "nginx -g 'daemon of…"   2 seconds ago       Up 7 seconds        0.0.0.0:80->80/tcp   sharp_varahamihira
+JeandeMBP:~ healerjean$ docker exec -it f3a39301086b /bin/bash
+root@f3a39301086b:/# cd /usr/local/mynginx/
+root@f3a39301086b:/usr/local/mynginx# ls -l
+total 35824
+-rw-r--r--  1 root root    19915 Jan 25  2018 1???.docx
+-rw-r--r--  1 root root 18885250 Aug 28 06:58 2018-07.xlsx
+-rw-r--r--  1 root root 17711506 Aug 28 06:55 2018-08.xlsx
+-rw-r--r--  1 root root     1519 Jul 27 08:08 AAA.md
+-rw-r--r--  1 root root        0 Jul 17 09:05 AAA.sql
+-rw-r--r--  1 root root        0 Jul 26 09:22 AAAAA.txt
+-rw-r--r--  1 root root      972 Mar  8 10:56 DDKJ
+-rw-r--r--  1 root root      671 Aug 11 07:00 HttpHelper.java
+-rw-r--r--  1 root root      936 Mar  6 06:43 _posts
+-rw-r--r--  1 root root     1542 Aug 24 09:01 default
+drwxr-xr-x  4 root root      136 Aug 16 07:42 images
+drwx------ 20 root root      680 Aug 28 03:21 study
+drwxr-xr-x 15 root root      510 Aug 20 11:11 workspace
+drwxr-xr-x 23 root root      782 Aug  2 03:59 youhui-h5
+root@f3a39301086b:/usr/local/mynginx# 
+
+```
 
 
 
