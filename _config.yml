@@ -54,8 +54,8 @@ menu:
 #### Widgets
 widgets:
 - person
-#- category
-- tag
+- category
+#- tag
 - links
 - douban
 - github-card
