@@ -1,7 +1,7 @@
 
-[blog.healerjean.top](blog.healerjean.top)
 
-## [HealerJean的梦想博客](blog.healerjean.top)
+
+## [HealerJean的梦想博客](blog.healerjean.top) [blog.healerjean.top](blog.healerjean.top)
 
 
   很开心您能看到这里，博主这里都是一些个人的经验笔记，很适合初级的朋友浏览学习，里面某个小地方也许就有你需要的知识点。
