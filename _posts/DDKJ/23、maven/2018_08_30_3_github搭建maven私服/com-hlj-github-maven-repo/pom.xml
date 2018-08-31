@@ -37,7 +37,7 @@
 	<repositories>
 		<repository>
 			<!--id任意-->
-			<id>hlj-maven</id>
+			<id>hlj-repo</id>
 			<url>https://raw.github.com/HealerJean123/maven_github/master/hlj-test-github-maven</url>
 		</repository>
 	</repositories>

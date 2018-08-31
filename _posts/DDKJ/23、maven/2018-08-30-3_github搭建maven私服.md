@@ -187,7 +187,7 @@ JeandeMBP:hlj healerjean$
 <repositories>
 	<repository>
 		<!--id任意-->
-		<id>hlj-maven</id>
+		<id>hlj-repo</id>
 		<url>https://raw.github.com/HealerJean123/maven_github/master/hlj-test-github-maven</url>
 	</repository>
 </repositories>
@@ -255,7 +255,7 @@ mvn packege
 	<repositories>
 		<repository>
 			<!--id任意-->
-			<id>hlj-maven</id>
+		  <id>hlj-repo</id>
 			<url>https://raw.github.com/HealerJean123/maven_github/master/hlj-test-github-maven</url>
 		</repository>
 	</repositories>
@@ -388,11 +388,16 @@ mvn install:install-file -Dfile=taobao-sdk-java-5.2.1.jar -DgroupId=taobao-sdk-j
 <repositories>
 	<repository>
 		<!--id任意-->
-		<id>hlj-maven</id>
+		<id>hlj-repo</id>
 		<url>https://raw.github.com/HealerJean123/maven_github/master/hlj-test-github-maven</url>
 	</repository>
 </repositories>
 
+	<dependency>
+			<groupId>com.hlj.repo</groupId>
+			<artifactId>test-github-maven</artifactId>
+			<version>0.0.1</version>
+	</dependency>
 
 ```
 
