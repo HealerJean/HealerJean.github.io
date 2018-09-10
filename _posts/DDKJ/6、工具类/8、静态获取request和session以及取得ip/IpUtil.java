@@ -47,13 +47,33 @@ public class IpUtil {
     }
 
 
+       /**
+     * 获取服务器ip
+     * @return
+     */
     public static  String getHostIp(){
         try {
-            String ip = InetAddress.getLocalHost().getHostAddress().toString();
-            return  ip;
+            InetAddress ia2 = InetAddress.getLocalHost();
+            return  ia2.getHostAddress();
         } catch (UnknownHostException e) {
-            ExceptionLogUtils.log(e,this.getClass());
+            ExceptionLogUtils.log(e,IpUtil.class);
+            return  null ;
         }
-        return  null;
+    }
+
+    /**
+     * 根据域名获取ip
+     * www.baidu.com
+     * @param url
+     * @return
+     */
+    public  static String getIpByUrl(String url) {
+        try {
+            InetAddress ia2 = InetAddress.getByName(url);
+            return ia2.getHostAddress();
+        } catch (UnknownHostException e) {
+            ExceptionLogUtils.log(e,IpUtil.class );
+            return  null;
+        }
     }
 }
