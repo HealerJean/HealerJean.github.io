@@ -1,7 +1,7 @@
 PREFIX=registry.cn-qingdao.aliyuncs.com/duodianyouhui/com-hlj-springboot-docker
 PROJECT=com-hlj-springboot-docker
-tag=1
-#tag=`date +%m%d%H%M`
+#tag=1
+tag=`date +%m%d%H%M`
 
 
 docker login --username=北京当趣科技 registry.cn-qingdao.aliyuncs.com --password=DANGQU123569

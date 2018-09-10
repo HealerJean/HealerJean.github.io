@@ -29,7 +29,7 @@ graylog我就不想介绍了，如果你看到graylog就知道它是一个日志
 ### 1、创建目录<br/>
 
 `/usr/local/graylog ` **注意自己服务器的id**
-
+:i
 该目录下新建文件   `graylog.yml` 或者 `compose.yml` 
 
 写入内容：
