@@ -163,7 +163,12 @@ public class CasConfig {
 
     public static class RemoteUserUtil {
 
-/**
+     public static Boolean hasLogin(){
+            return AssertionHolder.getAssertion() != null;
+        }
+
+
+        /**
          * 获取单点登录用户id
          * @return
          */
@@ -174,7 +179,7 @@ public class CasConfig {
         }
 
 
-/**
+        /**
          * 获取单点登录用户账户
          * @return
          */
@@ -184,7 +189,7 @@ public class CasConfig {
         }
 
 
-/**
+        /**
          * 获取单点登录用户名称
          * @return
          */
@@ -195,7 +200,7 @@ public class CasConfig {
         }
 
 
-/**
+        /**
          * 是否超级管理员
          * @return
          */
