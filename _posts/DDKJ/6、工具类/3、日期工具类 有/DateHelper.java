@@ -76,7 +76,12 @@ public class DateHelper extends DateUtils {
         }
     }
 
-
+    /**
+     * 将String类型的日日期格式化 为其他格式
+     * @param dateStr
+     * @param pattern
+     * @return
+     */
     public static String formatDateString(String dateStr,String pattern){
         if(StringUtils.isBlank(dateStr)){
             throw new NullPointerException("dateStr is null");
@@ -90,6 +95,11 @@ public class DateHelper extends DateUtils {
             throw new RuntimeException("date parse error"+dateStr);
         }
     }
+
+
+
+
+
 
     /**
      * 滚动日期,
@@ -436,6 +446,8 @@ public class DateHelper extends DateUtils {
         return result;
     }
 
+
+
     /**
      * 获取两个日期之间的所有周的周一日期
      * @param pattern    日期格式
@@ -654,7 +666,27 @@ public class DateHelper extends DateUtils {
         return times;
     }
 
-    
 
+    /**
+     * 判断time是否在from，to之内
+     *
+     * @param time 指定日期
+     * @param from 开始日期
+     * @param to   结束日期
+     * @return
+     */
+    public static boolean belongCalendar(Date time, Date from, Date to) {
+        Calendar date = Calendar.getInstance();
+        date.setTime(time);
+        Calendar after = Calendar.getInstance();
+        after.setTime(from);
+        Calendar before = Calendar.getInstance();
+        before.setTime(to);
+        if (date.after(after) && date.before(before)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }
