@@ -29,8 +29,8 @@ public class OptsForSetController {
     public String set(){
         stringRedisTemplate.opsForSet().add(KEY,"stringRedisTemplate.opsForSet().add");
         stringRedisTemplate.opsForSet().add(KEY,"stringRedisTemplate.opsForSet().add");
-
-        return   stringRedisTemplate.opsForValue().get(KEY).toString();
+        //必须是 opsForSet
+        return   stringRedisTemplate.opsForSet().members(KEY).toString();
     }
 
 
