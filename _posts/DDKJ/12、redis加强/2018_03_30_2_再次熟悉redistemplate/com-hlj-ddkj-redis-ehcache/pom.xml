@@ -78,6 +78,7 @@
 			<version>1.4.7.RELEASE</version>
 		</dependency>
 
+
 		<!-- 集成ehcache需要的依赖-->
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>

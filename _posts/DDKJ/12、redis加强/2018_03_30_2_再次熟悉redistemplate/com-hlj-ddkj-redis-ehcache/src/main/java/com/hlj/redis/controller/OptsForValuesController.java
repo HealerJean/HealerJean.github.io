@@ -69,7 +69,7 @@ public class OptsForValuesController {
         redisTemplate.opsForValue().set(LongKey,id);
 
 
-        return   stringRedisTemplate.opsForValue().get(KEY).toString();
+        return   stringRedisTemplate.opsForValue().get(LongKey).toString();
     }
 
 
