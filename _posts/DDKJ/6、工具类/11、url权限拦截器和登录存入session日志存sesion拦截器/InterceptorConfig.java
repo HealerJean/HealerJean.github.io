@@ -32,16 +32,21 @@ public class InterceptorConfig extends WebMvcConfigurerAdapter{
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(sessionNewInterceptor).addPathPatterns("/**")
-                .excludePathPatterns("/api/**")
+
+        //.excludePathPatterns("/duodian/public/nopermission*")
+          registry.addInterceptor(permissionInterceptor).addPathPatterns("/**")
+                .excludePathPatterns("/duodian/public/nopermission*")
                 .excludePathPatterns("/register/**")
                 .excludePathPatterns("/error")
-                .excludePathPatterns("/public/**")
-                .excludePathPatterns("/fan/**")
-                .excludePathPatterns("/custom/**")
-                .excludePathPatterns("/templet/**")
-                .excludePathPatterns("/workflow/ding/**")
-                ;
+                .excludePathPatterns("/duodian/youhui/**")
+                .excludePathPatterns("/swagger/**")
+                .excludePathPatterns("/duodian/invalidate/**")
+                .excludePathPatterns("/duodian/entity/upload/**")
+                .excludePathPatterns("/duodian/taokeData/uploadExcel/**")
+                .excludePathPatterns("/duodian/coupon/upload/**")
+                .excludePathPatterns("/MP_verify_esLZ6tgyC8A8UY04.txt");
+
+
 
         registry.addInterceptor(permissionInterceptor).addPathPatterns("/**")
                 .excludePathPatterns("/api/**")

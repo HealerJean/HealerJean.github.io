@@ -37,7 +37,7 @@
     </bean>
 
     <!--配置监听队列-->
-    <bean id="requestMessageListener" class="com.hlj.redis.listener.RequestMessageListener"/>
+    <bean id="requestMessageListener" class="com.hlj.redis.topiclistener.RequestMessageListener"/>
 
     <redis:listener-container>
         <redis:listener ref="requestMessageListener"  topic="request" />

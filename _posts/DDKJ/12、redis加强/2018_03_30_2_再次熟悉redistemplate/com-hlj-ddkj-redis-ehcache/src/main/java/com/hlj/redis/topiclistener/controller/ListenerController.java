@@ -1,6 +1,6 @@
-package com.hlj.redis.listener.controller;
+package com.hlj.redis.topiclistener.controller;
 
-import com.hlj.redis.listener.data.ConvertBean;
+import com.hlj.redis.topiclistener.data.ConvertBean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
