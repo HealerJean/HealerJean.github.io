@@ -1,4 +1,4 @@
-package com.hlj.redis.listener.data;
+package com.hlj.redis.topiclistener.data;
 
 import java.io.Serializable;
 

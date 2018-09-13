@@ -1,8 +1,8 @@
-package com.hlj.redis.listener;
+package com.hlj.redis.topiclistener;
 
 import com.hlj.redis.cacheSerializer.CustomJSONStringRedisSerializer;
 import com.hlj.redis.cacheSerializer.CustomStringRedisSerializer;
-import com.hlj.redis.listener.data.ConvertBean;
+import com.hlj.redis.topiclistener.data.ConvertBean;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 

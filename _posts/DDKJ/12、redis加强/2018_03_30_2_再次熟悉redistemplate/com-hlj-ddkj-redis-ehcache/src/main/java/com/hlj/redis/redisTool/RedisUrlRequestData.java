@@ -43,7 +43,7 @@ public class RedisUrlRequestData {
         return redisTemplate.execute(new RedisCallback<Long>() {
             @Override
             public Long doInRedis(RedisConnection redisConnection) throws DataAccessException {
-                redisConnection.select(DB_INDEX);
+                redisConnection.select(DB_INDEX); //那个索引库，默认是第一个索引库
                 byte[] keyBytes = stringRedisSerializer.serialize(key);
                 Long val = redisConnection.incr(keyBytes);
                 redisConnection.expire(keyBytes,seconds);

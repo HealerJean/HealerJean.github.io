@@ -49,9 +49,6 @@ public class RedisTempStringData {
         });
     }
 
-    public boolean  setValue(final String key,final String value) {
-        return setValue(key, value, Expiration.from(7,TimeUnit.DAYS));
-    }
 
     public boolean  setValue(final String key,final String value,final Expiration expiration) {
         return redisTemplate.execute(new RedisCallback<Boolean>() {

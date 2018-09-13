@@ -240,7 +240,7 @@ public class SerializerController {
         return stringRedisTemplate.execute(new RedisCallback<String>() {
             @Override
             public String doInRedis(RedisConnection redisConnection) throws DataAccessException {
-                //选中哪一个库
+                //选中哪一个库,默认是第一个库
              //   redisConnection.select();
                 byte[] keys = stringRedisSerializer.serialize(KEY);
                 byte[] values = redisConnection.get(keys);
