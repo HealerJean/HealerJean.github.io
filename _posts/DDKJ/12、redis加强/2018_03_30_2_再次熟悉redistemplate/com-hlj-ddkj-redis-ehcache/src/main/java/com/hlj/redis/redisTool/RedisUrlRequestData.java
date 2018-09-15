@@ -21,13 +21,10 @@ import javax.annotation.Resource;
 @Component
 public class RedisUrlRequestData {
 
-    private static Integer DB_INDEX = EnumRedisIndex.普通临时变量.index;
-
     @Resource
     private RedisTemplate<String,Long> redisTemplate;
 
     private StringRedisSerializer stringRedisSerializer;
-    private GenericToStringSerializer longResisSerializer;
 
     @PostConstruct
     private void afterPropertiesSet() throws Exception {
@@ -43,7 +40,6 @@ public class RedisUrlRequestData {
         return redisTemplate.execute(new RedisCallback<Long>() {
             @Override
             public Long doInRedis(RedisConnection redisConnection) throws DataAccessException {
-                redisConnection.select(DB_INDEX); //那个索引库，默认是第一个索引库
                 byte[] keyBytes = stringRedisSerializer.serialize(key);
                 Long val = redisConnection.incr(keyBytes);
                 redisConnection.expire(keyBytes,seconds);

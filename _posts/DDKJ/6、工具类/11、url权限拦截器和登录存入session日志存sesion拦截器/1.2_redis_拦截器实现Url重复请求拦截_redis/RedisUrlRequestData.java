@@ -1,20 +1,16 @@
-package com.duodian.admore.dao.redis;
+package com.hlj.redis.redisTool;
 
-import com.duodian.admore.enums.EnumRedisIndex;
-import org.springframework.beans.factory.InitializingBean;
+import com.hlj.redis.EnumRedisIndex;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.connection.RedisStringCommands;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 类描述：用以拦截用户重复请求
@@ -25,13 +21,10 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisUrlRequestData {
 
-    private static Integer DB_INDEX = EnumRedisIndex.普通临时变量.index;
-
     @Resource
     private RedisTemplate<String,Long> redisTemplate;
 
     private StringRedisSerializer stringRedisSerializer;
-    private GenericToStringSerializer longResisSerializer;
 
     @PostConstruct
     private void afterPropertiesSet() throws Exception {
@@ -47,9 +40,7 @@ public class RedisUrlRequestData {
         return redisTemplate.execute(new RedisCallback<Long>() {
             @Override
             public Long doInRedis(RedisConnection redisConnection) throws DataAccessException {
-                redisConnection.select(DB_INDEX);
                 byte[] keyBytes = stringRedisSerializer.serialize(key);
-
                 Long val = redisConnection.incr(keyBytes);
                 redisConnection.expire(keyBytes,seconds);
                 return val;
