@@ -117,6 +117,42 @@ public final class JsonUtils {
         }
     }
 
+
+ /**
+     * 将JSON字符串(数组或者Json) 转换为对象 用到下面这种情况的时候往往是因为使用了lombok 注解二引起
+     * 报错 例如
+     15:54:00.944 [main] INFO net.sf.json.JSONObject - Property 'code' of class com.duodian.youhui.admin.utils.json.data.Person has no write method. SKIPPED.
+     *
+     * @param json     JSON字符串
+     * @param javaType 类型
+     * @return 对象
+     */
+    public static Object toObjectOrList(String json,Class javaType) {
+        Assert.hasText(json, "json 不允许为空");
+        Assert.notNull(javaType, "javaType 不允许为空");
+        try {
+            Object jsonT = new JSONTokener(json).nextValue();
+            if(jsonT instanceof JSONObject){
+                return OBJECT_MAPPER.readValue(json,javaType);
+            }else if (jsonT instanceof JSONArray) {
+                JSONArray jsonArray = (JSONArray) jsonT;
+                List objects = new ArrayList<>();
+                for(int i = 0 ;i <jsonArray.size() ;i++){
+                    objects.add(new ObjectMapper().readValue(jsonArray.get(i).toString(),javaType));
+                }
+                return objects ;
+            }
+            return  OBJECT_MAPPER.readValue(json,javaType);
+        } catch (JsonParseException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+
     /**
      * 将JSON字符串转换为树
      *
