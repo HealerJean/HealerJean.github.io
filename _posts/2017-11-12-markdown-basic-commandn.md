@@ -49,7 +49,7 @@ description: markdown基本命令，标题，文本样式，链接，代码块�
 [链接文字](www.baidu.com)
 ```
 
- # 4、代码块
+# 4、代码块
 
 ## 1、引用
 
@@ -69,7 +69,9 @@ description: markdown基本命令，标题，文本样式，链接，代码块�
 
 ## 2、灰色代码块（可以选择语言html或者java）
 
-```
+
+
+```java
 List<`StudentInformation`> queryStuInfo(
     String name,
     String stuNo,
@@ -80,7 +82,7 @@ List<`StudentInformation`> queryStuInfo(
     String eduDegree);
 ```
 ```
-​```
+​```java(选择语言)
 List<StudentInformation> queryStuInfo(
     String name,
     String stuNo,
