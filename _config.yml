@@ -11,10 +11,12 @@ permalink: pretty
 
 #### Markdown Processors
 # 'redcarpet' is unsupported on GitHub Pages now.
+## 自改markdown代码块
 markdown: kramdown
 kramdown:
     input: GFM
     syntax_highlighter: rouge
+
 
 #### Default Attributes
 defaults:
