@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Desc:
@@ -46,6 +47,16 @@ public class RedisSetUtil {
      */
     public boolean isExists(String key,Object object){
       return   redisTemplate.opsForSet().isMember(key,object );
+    }
+
+    /**
+     * 过期时间
+     * @param key
+     * @param time
+     * @param timeUnit
+     */
+    public void setExpire(String key,Long time,TimeUnit timeUnit){
+        redisTemplate.expire(key,time,timeUnit);
     }
 
 
