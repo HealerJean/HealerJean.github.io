@@ -179,3 +179,5 @@ simple_jekyll_search:
 
 gems:
  - jemoji
+
+theme: jekyll-theme-cayman
