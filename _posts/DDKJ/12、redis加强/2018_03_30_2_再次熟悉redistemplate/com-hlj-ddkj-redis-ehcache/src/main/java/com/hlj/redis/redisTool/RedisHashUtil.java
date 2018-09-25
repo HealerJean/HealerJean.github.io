@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Desc:
@@ -34,7 +35,7 @@ public class RedisHashUtil {
         for (int i = 0; i < objects.length; i += 2) {
             map.put(objects[i].toString(),objects[i + 1]);
         }
-//添加单个        redisTemplate.opsForHash().put(key,hKey , hValue);
+            //添加单个 redisTemplate.opsForHash().put(key,hKey , hValue);
 
         redisTemplate.opsForHash().putAll(key,map);
     }
@@ -73,11 +74,22 @@ public class RedisHashUtil {
     }
 
 
-    /**
+      /**
      * 删除hash中的某个值
      */
     public void deleteHkey(String key,String hKey){
         redisTemplate.opsForHash().delete(key,hKey);
+    }
+
+
+    /**
+     * 过期时间
+     * @param key
+     * @param time
+     * @param timeUnit
+     */
+    public void setExpire(String key,Long time,TimeUnit timeUnit){
+        redisTemplate.expire(key,time,timeUnit);
     }
 
 
