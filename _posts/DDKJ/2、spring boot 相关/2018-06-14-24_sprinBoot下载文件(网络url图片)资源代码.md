@@ -19,7 +19,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 #### 下载成功，主要是给response放入一个outputstream
 
-```
+```java
 
 @GetMapping("downUrlImage")
 public void downUrlImage(String url, HttpServletResponse response){

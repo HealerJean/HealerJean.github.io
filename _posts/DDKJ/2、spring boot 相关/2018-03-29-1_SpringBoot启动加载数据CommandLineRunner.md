@@ -22,7 +22,7 @@ order越小越先执行
 
 ## 1、order为1
 
-```
+```java
 package com.hlj.commandlinerunner.comhljcommandlinerunner.orlder;
 
 import org.springframework.boot.CommandLineRunner;
@@ -50,7 +50,7 @@ public class MyStartupRunner1 implements CommandLineRunner {
 
 ## 2、order为2
 
-```
+```java
 package com.hlj.commandlinerunner.comhljcommandlinerunner.orlder;
 
 import org.springframework.boot.CommandLineRunner;
