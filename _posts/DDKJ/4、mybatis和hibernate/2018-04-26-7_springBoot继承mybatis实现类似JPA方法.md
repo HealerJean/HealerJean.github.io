@@ -23,7 +23,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 ## 1、依赖如下
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -138,7 +138,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 #### 2.1、注意下面的BaseMapper 为我们将来自己定义的mapper的实现接口，它里面具备了各种我们需要的方法，类似于CruRepository
 
-```
+```java
 package com.hlj.mybatisxml.utility;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.common.MySqlMapper;
@@ -154,7 +154,7 @@ public interface BaseMapper<T> extends Mapper<T>,MySqlMapper<T> {
 
 ```
 
-```
+```yml
 
 spring.datasource.url=jdbc:mysql://localhost:3306/springboot_mybatis_aotumatic_method?useUnicode=true&characterEncoding=UTF-8
 spring.datasource.username=root
@@ -186,7 +186,7 @@ mapper.identity=MYSQL
 
 ## 3、启动类，启动扫描mapper类
 
-```
+```java
 package com.hlj.mybatisxml;
 
 import org.mybatis.spring.annotation.MapperScan;
@@ -207,7 +207,7 @@ public class SpringbootMybatisxmlApplication {
 ## 4、逆向工程配置文件
 
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>   
@@ -277,7 +277,7 @@ public class SpringbootMybatisxmlApplication {
 ## 5、逆向工程生成类(将来不会生成Example，应该是具备了插件的原因)
 
 
-```
+```java
 package com.hlj.mybatisxml;
 
 import org.mybatis.generator.api.MyBatisGenerator;
@@ -329,7 +329,7 @@ public class GeneratorSqlmap {
 
 ### 6.1、mapper
 
-```
+```java
 package com.hlj.mybatisxml.mapper.baseset;
 
 import com.hlj.mybatisxml.entity.baseset.Country;
@@ -344,7 +344,7 @@ public interface CountryMapper extends BaseMapper<Country> {
 
 #### resultMap 可以直接删掉，没什么用
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hlj.mybatisxml.mapper.baseset.CountryMapper">
@@ -363,7 +363,7 @@ public interface CountryMapper extends BaseMapper<Country> {
 ### 6.3、实体类
 
 
-```
+```java
 package com.hlj.mybatisxml.entity.baseset;
 
 import javax.persistence.*;
@@ -427,7 +427,7 @@ public class Country {
 
 ## 3、要和jpa结合则需要加上 @Entry 等表格信息
 
-```
+```java
 public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

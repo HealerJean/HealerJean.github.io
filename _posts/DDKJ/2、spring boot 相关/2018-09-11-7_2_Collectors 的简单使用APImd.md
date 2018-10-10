@@ -22,7 +22,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 ### 4、forEach
 
-```
+```java
 /**
  * 3、Java8为集合类引入了另一个重要概念：流（stream）。一个流通常以一个集合类实例为其数据源，
  * 然后在其上定义各种操作。流的API设计使用了管道（pipelines）模式。
@@ -67,7 +67,7 @@ public void distinctPrimary(String... numbers) {
 
 
 
-```
+```java
 package com.hlj.Lambda;
 
 import com.hlj.Lambda.bean.Student;

@@ -22,7 +22,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 ## 1、导入依赖
 
-```
+```xml
 
 <!--分页插件-->
 <dependency>
@@ -35,7 +35,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 ## 2、启动加载PageHelperbean
 
-```
+```java
 package com.hlj.mybatisxml.pagehelper;
 
 import com.github.pagehelper.PageHelper;
@@ -76,7 +76,7 @@ public class PageHelperConfiguration {
 
 <font color="red">只要找出list来就可以进行分页了</font>
 
-```
+```java
 @RestController
 public class PageHelperController {
 
@@ -100,7 +100,7 @@ public class PageHelperController {
 ## 4、测试
 
 
-```
+```json
 
 http://localhost:8888/page?pageNum=1&pageSize=2
 
@@ -142,7 +142,7 @@ http://localhost:8888/page?pageNum=1&pageSize=2
 
 ### 1、 通过分页对象进行前端传入
 
-```
+```java
 package com.appshike.admin.domain.page;
 
 import io.swagger.annotations.ApiModel;
@@ -178,7 +178,7 @@ public class PageQuery {
 
 ### 2、controller 其实和pageable是一样的了，是吧，但是这里根本不需要关注里面发生了什么只给一个list就可以了
 
-```
+```java
 @GetMapping("getCategoryTagList")
 public Wrapper<?> getCategoryTagList(Long categoryId,Short classify, PageQuery pageQuery){
     Map<String,Object> query = new HashMap<String,Object>();
@@ -192,7 +192,7 @@ public Wrapper<?> getCategoryTagList(Long categoryId,Short classify, PageQuery p
 
 ### 3、service
 
-```
+```java
 @TargetDataSource(DataSource.ZUIQIANG)
 @Override
 public PageInfo<TVideoCategoryTagVO> getCategoryTagList(Map<String,Object> query, PageQuery pageQuery) {
