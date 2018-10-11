@@ -8,12 +8,12 @@ category:
 description: AngularJs-watch监听input-value-并请求数据
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 -->
 
 ### 效果展示
 
-![angularJswatch](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/angularJswatch.gif)
+![angularJswatch](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/angularJswatch.gif)
 
 ## 1、html input菜单和隐藏的控件
 ---
@@ -152,9 +152,9 @@ public SysAdminUser findAdminByAppName(String appName) {
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'GitHub评论Gitalk插件',
     });
     gitalk.render('gitalk-container');
