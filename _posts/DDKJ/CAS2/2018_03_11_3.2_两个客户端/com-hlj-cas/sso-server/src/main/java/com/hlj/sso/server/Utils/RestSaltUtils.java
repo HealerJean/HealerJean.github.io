@@ -21,7 +21,7 @@ public class RestSaltUtils {
     }
 
     public static void main(String[] args) {
-        String password ="HealerJean123456";
+        String password ="HealerJean456";
         RestSaltUtils restSaltUtils = new RestSaltUtils();
         restSaltUtils.salt(password);
     }

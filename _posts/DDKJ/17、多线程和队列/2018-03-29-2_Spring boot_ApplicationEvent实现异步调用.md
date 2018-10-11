@@ -8,7 +8,7 @@ category:
 description: SpringBoot_ApplicationEvent实现异步调用
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -40,7 +40,7 @@ ApplicationEvent以及Listener是Spring为我们提供的一个事件监听、�
 ### 1.1、要被事件监听的bean
 将来这个就是事件发生以后我们获取的对象
 
-```
+```java
 package com.hlj.applicationevent.ApplicationEvent.Bean;
 
 /**
@@ -83,11 +83,11 @@ public class UserBean {
 1、集成ApplicationEvent ，创建注册事件
 2、下面的构造器可以添加事件的多个对象
 
-```
+```java
 public UserRegisterEvent(Object source,UserBean user,String other ……) {}
 ```
 
-```
+```java
 package com.hlj.applicationevent.ApplicationEvent;
 
 import com.hlj.applicationevent.ApplicationEvent.Bean.UserBean;
@@ -146,7 +146,7 @@ public class UserRegisterEvent extends ApplicationEvent {
 解释：使用applicationContext 上下文对象进行发布事件，并注册成功
 
 
-```
+```java
 package com.hlj.applicationevent.ApplicationEvent.service;
 
 
@@ -186,7 +186,7 @@ public class UserService
 ### 1.4、controller中开始调用执行这个事件
 
 
-```
+```java
 package com.hlj.applicationevent.ApplicationEvent.controller;
 
 
@@ -229,7 +229,7 @@ public class UserController
 
 解释：@EventListener 注解的方法中传入的是被注册的事件，通过这个被注册的事件可以获取关注对象的一些信息
  
-```
+```java
 package com.hlj.applicationevent.ApplicationEvent.Listener;
 
 
@@ -270,7 +270,7 @@ public class AnnotationRegisterListener {
 #### 1、浏览器打开测试
 [http://127.0.0.1:8080/register?name=admin&password=123456](http://127.0.0.1:8080/register?name=admin&password=123456)
 
-![WX20180329-175321@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180329-175321@2x.png)
+![WX20180329-175321@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180329-175321@2x.png)
 
 #### 2、观察控制台，有对应的输出
 
@@ -278,7 +278,7 @@ public class AnnotationRegisterListener {
 
 解释：在继承的对象中添加泛型，（注册对象）
 
-```
+```java
 package com.hlj.applicationevent.ApplicationEvent.Listener;
 
 
@@ -324,7 +324,7 @@ public class RegisterListener implements ApplicationListener<UserRegisterEvent>
 
 #### 3.1、注册成功，数据入库(模拟而已) order 为0
 
-```
+```java
 package com.hlj.applicationevent.ApplicationEvent.Listener.NiuBi;
 
 
@@ -399,7 +399,7 @@ public class UserRegisterListener implements SmartApplicationListener
 ### 3.2 、上面操作完事之后，要进行发送邮件，只是下面的order不一样而已
 
 
-```
+```java
 package com.hlj.applicationevent.ApplicationEvent.Listener.NiuBi;
 
 
@@ -475,7 +475,7 @@ public class UserRegisterSendMailListener implements SmartApplicationListener
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -489,9 +489,9 @@ public class UserRegisterSendMailListener implements SmartApplicationListener
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'mVdXVUatKKBPA9Tl',
     });
     gitalk.render('gitalk-container');

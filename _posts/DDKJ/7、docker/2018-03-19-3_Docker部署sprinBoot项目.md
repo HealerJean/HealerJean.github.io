@@ -10,7 +10,7 @@ category:
 description: Docker部署sprinBoot项目
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -123,7 +123,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 3、在当前项目目录下创建文件名为的文件`Dockerfile`
 
-![WX20180319-155748](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180319-155748.png)
+![WX20180319-155748](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180319-155748.png)
 
 写入内容，解释说明
 
@@ -175,7 +175,7 @@ public class DockerController {
 }
 ```
 
-![WX20180319-162339@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180319-162339@2x.png)
+![WX20180319-162339@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180319-162339@2x.png)
 
 ## 4、docker开始部署吧，朋友
 
@@ -188,7 +188,7 @@ docker build -t hello/com-hlj-springboot-docker .
 
 ```
 
-![WX20180319-161111](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180319-161111.png)
+![WX20180319-161111](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180319-161111.png)
 
 
 2、查看是否存在我们帮个编译好的镜像
@@ -198,7 +198,7 @@ docker build -t hello/com-hlj-springboot-docker .
 docker images
 ```
 
-![WX20180319-161243@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180319-161243@2x.png)
+![WX20180319-161243@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180319-161243@2x.png)
  
 3 docker 部署运行 成功 浏览器访问即可
 
@@ -209,7 +209,7 @@ docker run -p 8080:8080 -t hello/com-hlj-springboot-docker
 
 ```
 
-![WX20180319-162339@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180319-162339@2x.png)
+![WX20180319-162339@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180319-162339@2x.png)
 
 
 ## 5、使用shell部署，更加方便
@@ -254,7 +254,7 @@ CMD ["java","-jar","/app.jar"]
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -268,9 +268,9 @@ CMD ["java","-jar","/app.jar"]
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'oRdKZCbzt05ZNGhm',
     });
     gitalk.render('gitalk-container');

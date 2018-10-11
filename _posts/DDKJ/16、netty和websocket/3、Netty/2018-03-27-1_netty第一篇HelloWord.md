@@ -8,7 +8,7 @@ category:
 description: netty第一篇HelloWord之与服务器聊天
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -284,7 +284,7 @@ public class HelloClientHandler extends SimpleChannelInboundHandler<String> {
 ## 3、开始测试 <br/>
 ### 3.1、启动服务端，服务端什么都不输出
 
-![WX20180327-162732](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180327-162732.png)
+![WX20180327-162732](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180327-162732.png)
 
 
 ### 3.2、启动客户端
@@ -295,14 +295,14 @@ public class HelloClientHandler extends SimpleChannelInboundHandler<String> {
 1、先打印自己客户端的东西，channelActive
 2、再打印服务端传来的的东西。channelActive （服务端收到激活）
 
-![WX20180327-162823](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180327-162823.png)
+![WX20180327-162823](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180327-162823.png)
 
 #### 3.2.2 、观察服务端
 
 1、服务端激活channelActive
  
 
-![WX20180327-164024](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180327-164024.png)
+![WX20180327-164024](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180327-164024.png)
 
 
 
@@ -312,14 +312,14 @@ public class HelloClientHandler extends SimpleChannelInboundHandler<String> {
 
 1、接收服务端传来的信息 channelRead0
 
-![WX20180327-165117](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180327-165117.png)
+![WX20180327-165117](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180327-165117.png)
 
 
 #### 3.3.2、观察服务端
 
 2、接收客户端传来的信息channelRead0
 
-![WX20180327-165446](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180327-165446.png)
+![WX20180327-165446](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180327-165446.png)
 
 
 
@@ -330,7 +330,7 @@ public class HelloClientHandler extends SimpleChannelInboundHandler<String> {
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -344,9 +344,9 @@ public class HelloClientHandler extends SimpleChannelInboundHandler<String> {
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'klaRecd2U6nAXnCa',
     });
     gitalk.render('gitalk-container');

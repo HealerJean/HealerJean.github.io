@@ -8,7 +8,7 @@ category:
 description: 多线程队列之BlockingQueueTest
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -124,7 +124,7 @@ public class BlockingQueueTest extends Thread {
 
 ```
 
-![WX20180328-175518](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180328-175518.png)
+![WX20180328-175518](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180328-175518.png)
 
 
 ## [代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_28_1_%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%98%9F%E5%88%97%E4%B9%8BBlockingQueueTest/com-hlj-thread.zip)
@@ -134,7 +134,7 @@ public class BlockingQueueTest extends Thread {
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -148,9 +148,9 @@ public class BlockingQueueTest extends Thread {
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: '1fk9yXknLkdU4c7I',
     });
     gitalk.render('gitalk-container');

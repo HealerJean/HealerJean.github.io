@@ -8,7 +8,7 @@ category:
 description: jar包导入maven工程进入pom引入依赖
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -25,14 +25,14 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 > 如下，发现很不规则
 
 
-![WX20180606-175209@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180606-175209@2x.png)
+![WX20180606-175209@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180606-175209@2x.png)
 
  
 ### 1.1、第一步修改名字，
 
 >主要是为了方便我们区分，其实名字可以随意指定的，但是最好加个版本号，也不要像下面这样版本号太大
 
-![WX20180606-175342@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180606-175342@2x.png)
+![WX20180606-175342@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180606-175342@2x.png)
 
 
 ### 1.2、执行maven命令
@@ -54,7 +54,7 @@ mvn install:install-file -Dfile=taobao-sdk-java-5.2.1.jar -DgroupId=taobao-sdk-j
 ### 1.3、pom.xml引入依赖
 
 
-```
+```xml
 <!--淘客官网下载的jar，导入了maven库中，具体观察readme.md-->
 <dependency>
     <groupId>taobao-sdk-java-source</groupId>
@@ -80,7 +80,7 @@ mvn install:install-file -Dfile=taobao-sdk-java-5.2.1.jar -DgroupId=taobao-sdk-j
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -94,9 +94,9 @@ mvn install:install-file -Dfile=taobao-sdk-java-5.2.1.jar -DgroupId=taobao-sdk-j
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'XNVfMfDTjesCZoKm',
     });
     gitalk.render('gitalk-container');

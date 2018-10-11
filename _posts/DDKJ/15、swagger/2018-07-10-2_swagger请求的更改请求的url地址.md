@@ -8,7 +8,7 @@ category:
 description: swagger请求的更改请求的url地址
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -18,7 +18,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 ## 1、引入swagger 相关jar包
 
 
-```
+```xml
 <!--swagger 版本-->
 		<swagger.version>2.7.0</swagger.version>
 
@@ -46,12 +46,12 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 [https://github.com/swagger-api/swagger-ui](https://github.com/swagger-api/swagger-ui)
 
-![WX20180717-182152](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180717-182152.png)
+![WX20180717-182152](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180717-182152.png)
 
 ## 3、在resources下新建swagger.properties文件，其中的内容为
 
 
-```
+```yml
 springfox.documentation.swagger.v2.path=/duodian/swagger
 
 ```
@@ -59,7 +59,7 @@ springfox.documentation.swagger.v2.path=/duodian/swagger
 ## 4、再dist目录下面的index.html中添加
 
 
-```
+```js
 
 url = "http://petstore.swagger.io/v2/swagger.json"
 修改为
@@ -81,7 +81,7 @@ url = url = "/duodian/swagger";
 ## 5、新建swag配置文件
 
 
-```
+```java
 @EnableSwagger2
 @Configuration
 @PropertySource("classpath:swagger.properties") // 新增对swagger.properties 的引入
@@ -117,7 +117,7 @@ public class ApiConfig   extends WebMvcConfigurerAdapter{
 ## 6、添加资源的映射
 
 
-```
+```java
 @Configuration
 public class InterceptorConfig extends WebMvcConfigurerAdapter{
 
@@ -137,14 +137,14 @@ public class InterceptorConfig extends WebMvcConfigurerAdapter{
 
 [http://localhost:8080/duodian/swagger/index.html](http://localhost:8080/duodian/swagger/index.html)<br/>
 
-![WX20180717-182604@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180717-182604@2x.png)
+![WX20180717-182604@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180717-182604@2x.png)
 
 <br/><br/><br/>
 如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，添加博主微信哦， 请下方留言吧。可与博主自由讨论哦
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -158,9 +158,9 @@ public class InterceptorConfig extends WebMvcConfigurerAdapter{
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'xTxtlyrHkWOy0PDQ',
     });
     gitalk.render('gitalk-container');

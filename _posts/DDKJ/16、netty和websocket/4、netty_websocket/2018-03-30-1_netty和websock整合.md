@@ -10,7 +10,7 @@ category:
 description: 1_netty和websock整合
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -20,7 +20,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 ## 1、main函数启动进入netty服务端
 
 
-```
+```java
 package com.hlj.netty.websocket;
 
 import com.hlj.netty.websocket.server.WebSocketServerInitializer;
@@ -91,7 +91,7 @@ public class ComHljNettyWebsocketApplication  implements CommandLineRunner {
 2、自定义websocket方法用来返回数据
 
 
-```
+```java
 package com.hlj.netty.websocket.server;
 
 import com.hlj.netty.websocket.handler.ChannelStatusHandler;
@@ -133,7 +133,7 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
 
 使用到了现场安全的hashmap
 
-```
+```java
 private static ConcurrentHashMap<String,Channel> channelMap = new ConcurrentHashMap<>();
 
 
@@ -142,7 +142,7 @@ private static ConcurrentHashMap<String,Channel> channelMap = new ConcurrentHash
 > 在用户连接成功的时候，进行添加
 > 在用户退出（关闭浏览器）的时候进行移除
 
-```
+```java
 package com.hlj.netty.websocket.selector;
 
 import io.netty.channel.Channel;
@@ -176,7 +176,7 @@ public class ChannelSelector {
 ### 2、管道和用户id的保存
 
 
-```
+```java
 package com.hlj.netty.websocket.selector;
 
 import io.netty.channel.Channel;
@@ -222,7 +222,7 @@ public class ChannelRelation {
 
 
 
-```
+```java
 package com.hlj.netty.websocket.handler;
 
 import com.hlj.netty.websocket.selector.ChannelSelector;
@@ -296,7 +296,7 @@ public class ChannelStatusHandler implements ChannelInboundHandler {
 
 > 1、当用户第一次连接的时候，应该是进入else初始化，添加管道和id的信息
 
-```
+```js
 var json = { //第一次传来
     from:1,
     init:1
@@ -307,7 +307,7 @@ var json = { //第一次传来
 > 2、当点击发送信息传力的json为
 
 
-```
+```js
 var json = {
     from:1,
     to:2,
@@ -316,7 +316,7 @@ var json = {
 
 ```
 
-```
+```java
 package com.hlj.netty.websocket.handler;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -373,7 +373,7 @@ public class WebSocketFrameHandler  extends SimpleChannelInboundHandler<WebSocke
 
 ## 6、交互的Bean
 
-```
+```java
 package com.hlj.netty.websocket.bean;
 
 import java.io.Serializable;
@@ -430,7 +430,7 @@ public class RequestBean implements Serializable{
 ### 1、html
 
 
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -495,7 +495,7 @@ public class RequestBean implements Serializable{
 
 ### 2、html
 
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -565,25 +565,25 @@ public class RequestBean implements Serializable{
 ### 1、html1 这里我打卡端口进行测试
 
 
-![WX20180330-145604@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180330-145604@2x.png)
+![WX20180330-145604@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180330-145604@2x.png)
 
 
 #### 1、首先点击拦截进入到的是，这里我们将通道放到ConcurrentHashMap中去
 
-![WX20180330-145656](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180330-145656.png)
+![WX20180330-145656](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180330-145656.png)
 
 
 #### 2、接着进入的是自定义的websocket发送
 
-![WX20180330-145835](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180330-145835.png)
+![WX20180330-145835](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180330-145835.png)
 
 
 #### 3、如果关闭浏览器 
 
-![WX20180330-150728](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180330-150728.png)
+![WX20180330-150728](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180330-150728.png)
 
 
-![WX20180330-150758](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180330-150758.png)
+![WX20180330-150758](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180330-150758.png)
 
 
 ### 3、自己打开着两个测试下吧，没什么难度
@@ -597,7 +597,7 @@ public class RequestBean implements Serializable{
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -611,9 +611,9 @@ public class RequestBean implements Serializable{
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'RmJC6LzBcXj3rKoM',
     });
     gitalk.render('gitalk-container');

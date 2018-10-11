@@ -8,7 +8,7 @@ category:
 description: 微信订阅号access_toaken获取、
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -20,7 +20,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 自定义菜单，客户回复消息，图文上传都需要用到它。非常重要，但是它的使用是有次数的，每天只能使用2000次，所以我们要非常小心，因为它两个小时才过期，所以，只要我们重复使用它，还是够用的啦
 
 
-![WX20180606-160021@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180606-160021@2x.png)
+![WX20180606-160021@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180606-160021@2x.png)
 
 
 ## 1、解决access_toaken失效问题
@@ -32,7 +32,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 #### 1.2.1、实体
 
 
-```
+```java
 /**
  * @Desc: 为了防止调用测试过多
  * @Author HealerJean
@@ -80,7 +80,7 @@ PRIMARY key (id));
 这里其实很重点了，这里获取access_toaken的时候，使用的是static方法，所以对于使用的服务层注入是不可以直接注入的，所以需要用到其他的一些简单的手段
 
 
-```
+```java
 @Resource
 private WechatAccessToakenMapper wechatAccessToakenMapper;
 
@@ -102,7 +102,7 @@ public void init() {
 ```
 
 
-```
+```java
 package com.duodian.youhui.admin.utils;
 
 import com.duodian.youhui.admin.constants.WeChatMessageParams;
@@ -193,7 +193,7 @@ public class AccessToakeUtil {
 ## 3、查询7000秒内的access_是否存在于数据库中
 
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.duodian.youhui.dao.mybatis.utils.WechatAccessToakenMapper">
@@ -215,7 +215,7 @@ public class AccessToakeUtil {
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -229,9 +229,9 @@ public class AccessToakeUtil {
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'mnENWH8gj9KQHslg',
     });
     gitalk.render('gitalk-container');

@@ -8,7 +8,7 @@ category:
 description: 多数据源配置之Transactional注解不同的事务管理器控制
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -26,7 +26,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 
 
-```
+```xml
 
 	<resources>
 		<resource>
@@ -52,7 +52,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 ## 1、配置信息中写入多种数据源的配置连接信息
 
-```
+```yml
 
 
 ########################################################
@@ -84,7 +84,7 @@ admore.data.datasource.driver-class-name=com.mysql.jdbc.Driver
 
 ## 2、启用事物注解
 
-```
+```java
 package com.hlj.many.datasourse;
 
 import org.springframework.boot.SpringApplication;
@@ -110,7 +110,7 @@ public class ComHljManyDatasourceApplication {
 
 
 
-```
+```java
 package com.hlj.many.datasourse.dataresource;
 
 import com.alibaba.druid.pool.DruidDataSource;
@@ -221,7 +221,7 @@ public class DatasourceOneData {
 ## 4、其他数据源
 
 
-```
+```java
 package com.hlj.many.datasourse.dataresource;
 
 import com.alibaba.druid.pool.DruidDataSource;
@@ -330,7 +330,7 @@ public class DatasourceTwoDb {
 
 ### 5.1、默认的数据源
 
-```
+```java
 package com.hlj.many.datasourse.dataresource.service;
 
 import com.hlj.many.datasourse.dataresource.dao.data.PersonOneDao;
@@ -370,7 +370,7 @@ public class MainService {
 
 ### 5.2、指定第一种数据源
 
-```
+```java
 package com.hlj.many.datasourse.dataresource.service;
 
 import com.hlj.many.datasourse.dataresource.dao.data.PersonOneDao;
@@ -413,7 +413,7 @@ public class OneService {
 ### 5.3、指定第二种数据源
 
 
-```
+```java
 package com.hlj.many.datasourse.dataresource.service;
 
 import com.hlj.many.datasourse.dataresource.dao.db.PersonTwoDao;
@@ -463,7 +463,7 @@ public class TwoService {
 
 ## 6、项目结构
 
-![WX20180424-153641](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180424-153641.png)
+![WX20180424-153641](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180424-153641.png)
 
 
 ## 7、[代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2019-04-19-20_1_%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E9%85%8D%E7%BD%AE%E4%B9%8BTransactional%E6%B3%A8%E8%A7%A3/com-hlj-many-datasource.zip)
@@ -475,7 +475,7 @@ public class TwoService {
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -489,9 +489,9 @@ public class TwoService {
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'BaTOzRtu8bdz0Ug7',
     });
     gitalk.render('gitalk-container');
