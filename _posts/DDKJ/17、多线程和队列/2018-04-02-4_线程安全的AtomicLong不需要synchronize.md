@@ -8,7 +8,7 @@ category:
 description: 线程安全的AtomicLong不需要synchronize
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -18,7 +18,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 ## 如果不上synchronize的情况
 
-```
+```java
 package com.hlj.thread.AtomicLong;
 
 /**
@@ -62,7 +62,7 @@ package com.hlj.thread.AtomicLong;
 
 new初始为0
 
-```
+```java
  class Counter {
     private static AtomicLong counter = new AtomicLong(0);
 
@@ -73,7 +73,7 @@ new初始为0
 }
 
 ```
-![WX20180402-165444](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180402-165444.png)
+![WX20180402-165444](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180402-165444.png)
 
 
 <br/><br/><br/>
@@ -81,7 +81,7 @@ new初始为0
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -95,9 +95,9 @@ new初始为0
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'pN3cRrCmHP1KStDx',
     });
     gitalk.render('gitalk-container');

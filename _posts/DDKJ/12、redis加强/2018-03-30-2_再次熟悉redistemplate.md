@@ -8,7 +8,7 @@ category:
 description: 再次熟悉redisTemplate
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -59,7 +59,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
  
  
 
-```
+```java
 ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue(); 
 ```
 
@@ -87,7 +87,7 @@ public class RedisLongData implements InitializingBean {
 
 
 
-```
+```java
 
 @Component
 public class RedisObjectData {
@@ -107,7 +107,7 @@ public class RedisObjectData {
 
 其实在项目中实际应用的时候，通过序列化key和value为String，已经将redisTemplate变成StringRedisTemplate了，也就是说redistemplate可以直接向StringRedisTemplate医院使用，但还是优先推荐StringRedisTemplate ，但是这里我想说的是，我下面的时候用的是自定义的，比直接String牛逼多了，好不。也可以拿来当StringRedisTemplate
 
-```
+```xml
 
 <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" scope="prototype">
     <property name="connectionFactory" ref="jedisFactory"/>
@@ -130,7 +130,7 @@ public class RedisObjectData {
 
 ### 2、测试结果一样
 
-```
+```java
 @RestController
 public class OptsForValuesController {
 
@@ -152,13 +152,13 @@ public class OptsForValuesController {
 
 ```
 
-![WX20180330-182911@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180330-182911@2x.png)
+![WX20180330-182911@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180330-182911@2x.png)
 
 
 ## 2、关于其他的一些基本的方法
 
 
-```
+```java
 
 
 ## 1、
@@ -204,7 +204,7 @@ stringRedisTemplate.opsForSet().isMember("red_123", "1")//根据key查看集合�
 ## 3、通过序列化和反序列进行获取值
 
 
-```
+```java
 package com.hlj.redis.controller;
 
 import org.springframework.dao.DataAccessException;
@@ -273,7 +273,7 @@ public class SerializerController {
 那么 这个时候就不能使用`StringRedisTemplate` 了，使用它会报错的，可以使用使用RedisTemplate，可以使用泛型，也可以不使用
 
 
-```
+```java
 @Resource(name = "redisTemplate")
 private  RedisTemplate redisTemplate;
 
@@ -297,7 +297,7 @@ public String set(Long id){
 ## 使用情况
 
 
-```
+```java
 redis 广告的点击次数和流量统计
 public class RedisConstants {
 
@@ -318,7 +318,7 @@ public class RedisConstants {
 如果再使用进行查询到json对象的时候需要强制转换，这里提供一个方法
 
 
-```
+```java
 @Component
 public class MyObjectMapper extends ObjectMapper {
 
@@ -343,7 +343,7 @@ Encache是后台我们自己用的
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -357,9 +357,9 @@ Encache是后台我们自己用的
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'h150mdb20RBuzvTP',
     });
     gitalk.render('gitalk-container');

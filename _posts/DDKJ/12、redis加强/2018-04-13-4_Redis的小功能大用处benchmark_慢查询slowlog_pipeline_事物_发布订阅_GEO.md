@@ -8,7 +8,7 @@ category:
 description: Redis的小功能大用处
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -21,7 +21,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 redis命令执行分为4个步奏，发送命令，命令排队，执行命令，返回结果，这里的慢查询分析值统计执行命令的时间。
 
-![WX20180413-102037@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180413-102037@2x.png)
+![WX20180413-102037@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180413-102037@2x.png)
 
 
 ### 1、慢查询的2个配置参数
@@ -516,7 +516,7 @@ JeandeMBP:bin healerjean$
 Redis客户端执行一条没拿过来分为如下4个过程，发送命令，命令排队，执行命令，返回结果，其中1+4成为Round Trip Time (RTT,往返时间) 
 
 1、Redis批量操作命令有效节省时间，这种批量命令相当于是原子性，比较节约RTT，但是大部分命令是不支持批量操作的，如果客户端和服务端在一台机器上还好，假如服务器在北京客户端在上海，那就有点麻烦了，传播速度非常慢， 
-![WX20180413-122841@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180413-122841@2x.png)
+![WX20180413-122841@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180413-122841@2x.png)
 
 
 2、为了解决这一的问题，PipeLine流水线机制就出现了，它能将一组RTT传输给Redis，再将这组命令的结果按照顺序返回给客户端，但是它不是原子性的
@@ -624,7 +624,7 @@ QUEUED
 
 Redis提供了基于发布/订阅的消息机制，此种模式下，消息发布者和订阅中不能相互直接通信，发布者客户端向指定的频道（channel）发布消息，订阅该频道的每个客户端都可以收到该消息
 
-![WX20180413-154821@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180413-154821@2x.png)
+![WX20180413-154821@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180413-154821@2x.png)
 
 
 
@@ -827,7 +827,7 @@ zrem  cities:location beijing
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -841,9 +841,9 @@ zrem  cities:location beijing
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'xkIOzhZZ6cOnwpmo',
     });
     gitalk.render('gitalk-container');

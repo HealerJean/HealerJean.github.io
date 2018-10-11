@@ -8,7 +8,7 @@ category:
 description: SpringBoot普通定时器
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -103,7 +103,7 @@ public class MyTaskAnnotation {
 
 <br/>
 
-![WX20180322-184806](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180322-184806.png)
+![WX20180322-184806](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-184806.png)
 
 
 
@@ -190,7 +190,7 @@ public class ScheduleConfig implements SchedulingConfigurer, AsyncConfigurer
 
 发现了吧，定时器的线程改变了，变成多线程的样式，那么这里就代码是多线程喽。也就是实现并行了
 
-![WX20180322-185336](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180322-185336.png)
+![WX20180322-185336](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-185336.png)
 
 
 ## [代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_22_1_springBoot%E6%99%AE%E9%80%9A%E5%AE%9A%E6%97%B6%E5%99%A8/com-hlj-schedule.zip)
@@ -200,7 +200,7 @@ public class ScheduleConfig implements SchedulingConfigurer, AsyncConfigurer
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -214,9 +214,9 @@ public class ScheduleConfig implements SchedulingConfigurer, AsyncConfigurer
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: '51FrwFLypWGMR0K3',
     });
     gitalk.render('gitalk-container');

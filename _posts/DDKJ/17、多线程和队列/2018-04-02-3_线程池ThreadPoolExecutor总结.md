@@ -8,7 +8,7 @@ category:
 description: 3、线程池ThreadPoolExecutor总结
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -96,7 +96,7 @@ TimeUnit是一个枚举类型，其包括： NANOSECONDS ： 1微毫秒 = 1微
 
 
 
-```
+```java
 
 //五个参数的构造函数
 public ThreadPoolExecutor(int corePoolSize,
@@ -147,7 +147,7 @@ public ThreadPoolExecutor(int corePoolSize,
 ## 4、项目中使用
 
 
-```
+```java
 package com.hlj.threadpool.thread;
 
 import java.util.concurrent.*;
@@ -254,7 +254,7 @@ public class ThreadPoolUtils {
 
 这个箭头里面的东西就代表在run中了
 
-```
+```java
 @Slf4j
 public class ThradMain {
 
@@ -273,7 +273,7 @@ public class ThradMain {
 
 
 
-```
+```java
 newFixedThreadPool创建的线程池corePoolSize和maximumPoolSize值是相等的，它使用的LinkedBlockingQueue；
 newSingleThreadExecutor将corePoolSize和maximumPoolSize都设置为1，也使用的LinkedBlockingQueue；
 newCachedThreadPool将corePoolSize设置为0，将maximumPoolSize设置为Integer.MAX_VALUE，使用的SynchronousQueue，
@@ -285,7 +285,7 @@ newCachedThreadPool将corePoolSize设置为0，将maximumPoolSize设置为Intege
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -299,9 +299,9 @@ newCachedThreadPool将corePoolSize设置为0，将maximumPoolSize设置为Intege
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'TWtfKmIZF94rRFxQ',
     });
     gitalk.render('gitalk-container');

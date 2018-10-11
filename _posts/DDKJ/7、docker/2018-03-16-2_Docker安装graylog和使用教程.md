@@ -12,7 +12,7 @@ category:
 description: Docker安装graylog和详解
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 -->
 
 ## 前言
@@ -102,7 +102,7 @@ docker-compose up -d
 
 [ http://localhost:9000/]( http://localhost:9000/)
 
-![WX20180316-141255@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180316-141255@2x.png)
+![WX20180316-141255@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180316-141255@2x.png)
 
 
 
@@ -112,13 +112,13 @@ docker-compose up -d
 
 `docker ps`
 
-![WX20180316-141745@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180316-141745@2x.png)
+![WX20180316-141745@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180316-141745@2x.png)
 
 ### 3.2、使用http测试是否成功
 
 #### 3.2.1、新建input http input
 
-![WX20180316-141909@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180316-141909@2x.png)
+![WX20180316-141909@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180316-141909@2x.png)
 
 
 #### 3.2.2、打开一个终端，输入下面的命令
@@ -129,13 +129,13 @@ curl -XPOST http://localhost:12201/gelf -p0 -d '{"message":"hello这是一条消
 打开浏览器观察信息,点击http-input之后
 
 
-![WX20180316-142346@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180316-142346@2x.png)
+![WX20180316-142346@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180316-142346@2x.png)
 
 ## 2、springBoot集成graylog
 
 1、创建 gref udp input
 
-![WX20180316-155922@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180316-155922@2x.png)
+![WX20180316-155922@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180316-155922@2x.png)
 
 ### 1、使用logback进行日志的封装
 
@@ -255,7 +255,7 @@ public class TestController {
 
 可以看到日志和控制台是一样的
 
-![WX20180316-144300@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180316-144300@2x.png)
+![WX20180316-144300@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180316-144300@2x.png)
 
 ## 3、详说graylog，里面的内容标签可以自己定义
 
@@ -267,7 +267,7 @@ logback-prod.xml 中很多的信息都是固定的，除了message、timestamp�
 
 下面是异常的输出信息，可以看到里面有fullMessage自动出现的，很详细，开发人员可以根据里面的具体信息针对上线的异常进行分析和解决。
 
-![WX20180316-144638@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180316-144638@2x.png)
+![WX20180316-144638@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180316-144638@2x.png)
 
 #### 3.1.2、正常
 
@@ -277,7 +277,7 @@ logback-prod.xml 中很多的信息都是固定的，除了message、timestamp�
 
 继续观察graylo日志，可以看到dubug的日志没有出现，因为我们配置文件中设置的级别是info
 
-![WX20180316-145454@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180316-145454@2x.png)
+![WX20180316-145454@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180316-145454@2x.png)
 
 ### 3.2、条件搜索 
 
@@ -288,13 +288,13 @@ logback-prod.xml 中很多的信息都是固定的，除了message、timestamp�
 source:tools AND warn
 ```
 
-![WX20180316-151056@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180316-151056@2x.png)
+![WX20180316-151056@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180316-151056@2x.png)
 
 
 
 ### 3.3、饼状图查看
 
-![WX20180316-151904@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180316-151904@2x.png)
+![WX20180316-151904@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180316-151904@2x.png)
 
 
 ## 4、[代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_16_2_Docker%E5%AE%89%E8%A3%85graylog%E5%92%8C%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/com-hlj-graylog.zip)
@@ -320,7 +320,7 @@ source:tools AND warn
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -334,9 +334,9 @@ source:tools AND warn
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'enBuXMrTvxUHcidh',
     });
     gitalk.render('gitalk-container');

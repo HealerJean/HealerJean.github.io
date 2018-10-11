@@ -10,7 +10,7 @@ category:
 description: redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 <br/>
@@ -64,7 +64,7 @@ public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory factor
 
 
 ```
-![WX20180320-193953@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180320-193953@2x.png)
+![WX20180320-193953@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-193953@2x.png)
 
 
 ## Ehcache和redis应该怎么用
@@ -370,9 +370,9 @@ public class CustomJSONStringRedisSerializer implements RedisSerializer<Object> 
 
 1.3.4、如果使用上面序列化的话，那么redis库总可以看到是class或者是请他的java数据类型，下图是后期的答案，这里只是简单的介绍
 
-![WX20180320-194420@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180320-194420@2x.png)
+![WX20180320-194420@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-194420@2x.png)
 
-![WX20180320-194333@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180320-194333@2x.png)
+![WX20180320-194333@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-194333@2x.png)
 
 ### 1.4、至此，其实redis就已经搭建好了<br/>
 
@@ -504,15 +504,15 @@ public class RedisObjectDataController {
 服务器启动：
 1.1、浏览器打开输入 [http://localhost:8080/setRedisObjectData?id=1](http://localhost:8080/setRedisObjectData?id=1)<br/>
 
-![WX20180320-122358@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180320-122358@2x.png)
+![WX20180320-122358@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-122358@2x.png)
 
 1.2、查看redis中的数据,发现已经有数据了数据了<br/>
 
-![WX20180320-122446@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180320-122446@2x.png)
+![WX20180320-122446@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-122446@2x.png)
 
 2.1、对数据进行读取，浏览器中打开[http://localhost:8080/getRedisObjectData?key=person](http://localhost:8080/getRedisObjectData?key=person)<br/>
 
-![WX20180320-122622@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180320-122622@2x.png)
+![WX20180320-122622@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-122622@2x.png)
 
 2.2、上述读取数据成功<br/>
 
@@ -540,11 +540,11 @@ public @ResponseBody ResponseBean delRedisObjectData(String key){
 
 1.1、浏览器中打开 [http://localhost:8080/delRedisObjectData?key=person](http://localhost:8080/delRedisObjectData?key=person)<br/>
 
-![WX20180320-122846@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180320-122846@2x.png)
+![WX20180320-122846@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-122846@2x.png)
 
 1.2、查看redis库,删除成功
 
-![WX20180320-122931@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180320-122931@2x.png)
+![WX20180320-122931@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-122931@2x.png)
 
 #### 2.2.3、存储List对象集合 <br/>
 
@@ -590,15 +590,15 @@ public @ResponseBody ResponseBean getListRedisObjectData(String key){
 
 1.1、浏览器中打开[http://localhost:8080/setListRedisObjectData?id=1](http://localhost:8080/setListRedisObjectData?id=1)
 
-![WX20180320-123152@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180320-123152@2x.png)
+![WX20180320-123152@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-123152@2x.png)
 
 1.2、查看redis库,有数据
 
-![WX20180320-123233@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180320-123233@2x.png)
+![WX20180320-123233@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-123233@2x.png)
 
 2.1、根据key值获取list对象，浏览器中打开[http://localhost:8080/getListRedisObjectData?key=persons](http://localhost:8080/getListRedisObjectData?key=persons)
 
-![WX20180320-123356@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180320-123356@2x.png)
+![WX20180320-123356@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-123356@2x.png)
 
 2.2、成功,下面要测试，清除下redis库
 
@@ -646,16 +646,16 @@ public @ResponseBody ResponseBean get(String key){
 
 1.1、浏览器中打开[http://localhost:8080/set?id=1](http://localhost:8080/set?id=1)
 
-![WX20180320-131826@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180320-131826@2x.png)
+![WX20180320-131826@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-131826@2x.png)
 
 
 1.2、查看redis库
 
-![WX20180320-131858@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180320-131858@2x.png)
+![WX20180320-131858@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-131858@2x.png)
 
 2.1、根据key值获取，这个时候 就会报错了，朋友们,提示Integer不能转化为long
 
-![WX20180320-132003@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180320-132003@2x.png)
+![WX20180320-132003@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-132003@2x.png)
 
 
 ## 3、redis存取Long类型工具类<br/>
@@ -1534,7 +1534,7 @@ public class RedisUrlRequestData {
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -1548,9 +1548,9 @@ public class RedisUrlRequestData {
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'PmGTBiTsWCwEWim1',
     });
     gitalk.render('gitalk-container');

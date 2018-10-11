@@ -12,7 +12,7 @@ category:
 description: netty_websocket_redisTemplate_thread
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -32,7 +32,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 需要注意的是，这里面我配置了rdis监听，也就是说我们的客户端用户进行交互其实是从redis来的
 
 
-```
+```xml
 <!--配置监听队列-->
 <bean id="requestMessageListener" class="com.hlj.netty.websocket.topic.RequestMessageListener"/>
 
@@ -94,7 +94,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 **其实通过一个章节的讲解，我们应该是已经知道，下面的操作应该就是用来发送消息的**<br/>
 
-```
+```java
 /**
  * 通过监听redistemplate进行发送消息
  */
@@ -124,7 +124,7 @@ public class RequestMessageListener implements MessageListener {
 ### 3、redis配置文件
 
 
-```
+```yml
 #logging
 server.port2=9090
 server.port=9091
@@ -147,7 +147,7 @@ hlj.redis.pool.max-wait=-1
 
 > 这里会发现有个一步的调用，重点就在这里，这里的异步调用，会出现，一直在等待，时刻接收消息队列。
 
-```
+```java
 package com.hlj.netty.websocket;
 
 import com.hlj.netty.websocket.executor.AsyncExecutor;
@@ -237,12 +237,12 @@ public class ComHljNettyWebsocketApplication implements CommandLineRunner {
 
 当调用下面的传递并且发送的时候，会自动进入redis配置的监听，并且发送给Bean对象中的to
 
-```
+```java
 redisTemplate.convertAndSend("request",new ConvertBean(toUid,content));
 requestBean.getPromise().setSuccess("");
 
 ```
-```
+```java
 package com.hlj.netty.websocket.executor;
 
 
@@ -332,7 +332,7 @@ public class AsyncExecutor {
 
 > 这里的hander和上一篇的作用不太一样，以为上一篇是直接在这就进行了发送，这里不一样，这里重点介绍下netty中给我们提供的DefaultPromise，。设置了一个监听，如果promise 一旦发送改变就会调用下面的结果，用来给用户返回异常信息
 
-```
+```java
 //它判断异步任务执行的状态，如果执行完成，就理解通知监听者，否则加入到监听者队列
 DefaultPromise<String> promise = new DefaultPromise<>(ctx.executor()) ;
 promise.addListener(new PromiseNotifier<String,DefaultPromise<String>>(){
@@ -350,7 +350,7 @@ AsyncExecutor.offerQueue(new RequestBean(request,ctx.channel(),promise));
 
 
 
-```
+```java
 package com.hlj.netty.websocket.handler;
 
 
@@ -405,7 +405,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -419,9 +419,9 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'niCzebtxRmbQX24p',
     });
     gitalk.render('gitalk-container');

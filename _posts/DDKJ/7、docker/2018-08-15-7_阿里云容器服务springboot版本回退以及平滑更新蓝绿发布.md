@@ -8,7 +8,7 @@ category:
 description: 阿里云容器服务springboot版本回退_以及平滑更新蓝绿发布
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -20,7 +20,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 ## 2、查看容器镜像版本
 
-![WX20180824-150642@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-150642@2x.png)
+![WX20180824-150642@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180824-150642@2x.png)
 
 
 
@@ -29,7 +29,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 ### 3.1、点击应用 -> 变更配置
 
-![WX20180824-150744@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-150744@2x.png)
+![WX20180824-150744@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180824-150744@2x.png)
 
 
 ### 3.2、之前的版本
@@ -114,17 +114,17 @@ dev-08241301:
 
 #### 3.4.1、观察容器和日志，查看启动是否完成（下面之所以是因为我使用了2个容器）
 
-![WX20180824-152139@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-152139@2x.png)
+![WX20180824-152139@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180824-152139@2x.png)
 
 
-![WX20180824-152105@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-152105@2x.png)
+![WX20180824-152105@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180824-152105@2x.png)
 
 #### 3.4.2、启动完成修改域名的权重比例
-![WX20180824-152220@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-152220@2x.png)
+![WX20180824-152220@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180824-152220@2x.png)
 
 #### 3.4.3、将旧版本的权重比例和新版本的权重比例进行对调
 
-![WX20180824-152251@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-152251@2x.png)
+![WX20180824-152251@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180824-152251@2x.png)
 
 
 #### 3.4.4、蓝绿发布完成或者撤销
@@ -133,7 +133,7 @@ dev-08241301:
 
 2、当发现新版本有问题的时候，点击回滚，就会将我们刚刚发布的版本进行删除
 
-![WX20180824-152519@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-152519@2x.png)
+![WX20180824-152519@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180824-152519@2x.png)
 
 
 
@@ -143,7 +143,7 @@ dev-08241301:
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -157,9 +157,9 @@ dev-08241301:
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'yQ4cnDTuazekOY0I',
     });
     gitalk.render('gitalk-container');

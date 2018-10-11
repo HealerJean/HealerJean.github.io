@@ -10,7 +10,7 @@ category:
 description: springBoot集成Durid进行SQL监控
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -285,18 +285,18 @@ public class HomeController {
 ### 6.1、这个时候，我们启动项目吧！
 浏览器访问 [http://localhost:8080/druid/index.html](http://localhost:8080/druid/index.html)
 
-![WX20180322-110616@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180322-110616@2x.png)
+![WX20180322-110616@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-110616@2x.png)
 
 
 ### 6.1.1、点开sql监控
 浏览器输入，开始进行sql的执行 [http://localhost:8080/insert?name=荒凉](http://localhost:8080/insert?name=荒凉)
 
-![WX20180322-110852@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180322-110852@2x.png)
+![WX20180322-110852@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-110852@2x.png)
 
 
 <font color="red"> 但是，但是，但是，朋友们。在sql监控中是啥也没，原因我觉得你应该能猜得到吧，我们导入的druid的jar包是阿里爸爸的的。druid是阿里开发的。sprinBoot在配置文件中配置数据源不支持也很正常的，但是我们可以重新定义数据源看6.2 </font>
 
-![WX20180322-111024@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180322-111024@2x.png)
+![WX20180322-111024@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-111024@2x.png)
 
 
 ### 6.2、重新定义数据源
@@ -383,18 +383,18 @@ public DataSource dataSource(){
 [http://localhost:8080/insert?name=HealerJean](http://localhost:8080/insert?name=HealerJean)
 
 
-![WX20180322-111622@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180322-111622@2x.png)
+![WX20180322-111622@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-111622@2x.png)
 
 
 2、查找数据
 [http://localhost:8080/findById?id=4](http://localhost:8080/findById?id=4)
 
-![WX20180322-111650@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180322-111650@2x.png)
+![WX20180322-111650@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-111650@2x.png)
 
 
 3、查看sql监控
 
-![WX20180322-111739@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180322-111739@2x.png)
+![WX20180322-111739@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-111739@2x.png)
 
 ## 7、至此，基本上完成了。
 
@@ -406,7 +406,7 @@ public DataSource dataSource(){
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -420,9 +420,9 @@ public DataSource dataSource(){
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'tGxbUZwy3PDlWzoz',
     });
     gitalk.render('gitalk-container');

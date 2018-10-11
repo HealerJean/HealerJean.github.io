@@ -8,7 +8,7 @@ category:
 description: 阿里云容器镜像服务和容器服务搭建springboot项目容器
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 　　首行缩进
 <font color="red">  </font>
 -->
@@ -20,18 +20,18 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 #### 1.1、创建命名空间 
 
-![WX20180815-144234@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-144234@2x.png)
+![WX20180815-144234@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180815-144234@2x.png)
 
 
 #### 1.2、创建镜像仓库(这里不需要执行，因为我使用代码登录的时候就会自动创建)
 
 创建的仓库名称（不需要创建，在下面上传代码的时候，我们根据sh命令中的信息会进行创建，当然我们也可以自行创建）
 
-![WX20180815-144409@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-144409@2x.png)
+![WX20180815-144409@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180815-144409@2x.png)
 
 
 
-![WX20180815-145050@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145050@2x.png)
+![WX20180815-145050@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180815-145050@2x.png)
 
 
 #### 2.1、sh命令
@@ -122,10 +122,10 @@ latest: digest: sha256:218917c3411a807842ca66f6bb8baccd29b45746d49524611584271d3
 #### 2.4、观察浏览器发现多出来一个镜像仓库，观察仓库的版本信息
 
 
-![WX20180815-145708@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145708@2x.png)
+![WX20180815-145708@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180815-145708@2x.png)
 
 
-![WX20180815-145748@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145748@2x.png)
+![WX20180815-145748@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180815-145748@2x.png)
 
 
 #### 2.5、修改Dockerfile 文件的From ，修改为基础镜像为阿里云仓库镜像,设置为标签为 1 ，这个镜像我们在阿里云上不要删除，否则执行命令的时候，会报错招不到该镜像
@@ -159,33 +159,33 @@ latest: Pulling from duodianyouhui/com-hlj-springboot-docker
 
 ## 3、观察阿里云镜像信息
 
-![WX20180815-145708@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145708@2x.png)
+![WX20180815-145708@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180815-145708@2x.png)
 
-![WX20180815-145748@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145748@2x.png)
+![WX20180815-145748@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180815-145748@2x.png)
 
-![WX20180815-145050@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180815-145050@2x.png)
+![WX20180815-145050@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180815-145050@2x.png)
 
 ### 3.2、修改仓库类型，不可使用：修改仓库类为为公开，否则后面容器服务不能够搭建web成功，但是这样的话，就会泄漏我们的源码镜像文件<br/>
 
 
-![WX20180816-111017@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-111017@2x.png)
+![WX20180816-111017@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-111017@2x.png)
 
 
-![WX20180816-111049@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-111049@2x.png)
+![WX20180816-111049@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-111049@2x.png)
 
 
 
 ### 3.2.2、修改仓库类型，建议使用：需要到docker集群进行仓库登录，之后之后就可以使用私有仓库了。安全
-![WX20180816-181648@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-181648@2x.png)
+![WX20180816-181648@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-181648@2x.png)
 
-![WX20180816-181727@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-181727@2x.png)
+![WX20180816-181727@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-181727@2x.png)
 
 
 使用的是阿里云镜像仓库，仓库域名 应填写阿里云镜像仓库域名，如 registry.cn-hangzhou.aliyuncs.com，并使用您的阿里云用户名和仓库独立登录密码以及注册邮箱进行登录。登录成功也不会给提示
 
 #### 3.2.2.1、仓库密码的设置，到容器镜像服务中去
 
-![WX20180816-182010@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-182010@2x.png)
+![WX20180816-182010@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-182010@2x.png)
 
 
 
@@ -193,11 +193,11 @@ latest: Pulling from duodianyouhui/com-hlj-springboot-docker
 
 ### 4.1、创建应用
 
-![WX20180816-111237@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-111237@2x.png)
+![WX20180816-111237@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-111237@2x.png)
 
 ### 4.2、不勾选，检测最新，防止我们发布版本的时候，出现错误的版本（通过上面我们可以看到版本是一模一样的，都是latest，当然这个我们可以自己选择版本是最好的，这里是为了方便，最好是版本我们可以自己进行输入，第二章节会讲）
 
-![WX20180816-111324@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-111324@2x.png)
+![WX20180816-111324@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-111324@2x.png)
 
 
 ### 4.3、使用镜像进行创建
@@ -205,7 +205,7 @@ latest: Pulling from duodianyouhui/com-hlj-springboot-docker
 
 #### 4.3.1、选择镜像
 
-![WX20180816-111552@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-111552@2x.png)
+![WX20180816-111552@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-111552@2x.png)
 
 
 #### 4.3.2、端口映射
@@ -217,7 +217,7 @@ latest: Pulling from duodianyouhui/com-hlj-springboot-docker
 主机端口为空，表示随机暴露一个主机的端口（暴露 HTTP/HTTPS 服务时，您可以不需要知道主机暴露的具体端口是什么，可以使用 overlay 网络或者 VPC 网络来直接访问容器的端口），容器端口为 8080。您使用 wordpress-web 服务的 8080 端口来提供 HTTP 服务，使用的协议是 TCP 协议。，但是这里我们还是最好制定一个端口吧，主机端口也是8080 ,<font color="red">最好不要用80端口，小心出问题吧</font>
 
 
-![WX20180816-120927@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-120927@2x.png)
+![WX20180816-120927@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-120927@2x.png)
 
 
 
@@ -243,7 +243,7 @@ httprongqi.dangqugame.cn
 ```
 
 
-![WX20180816-121207@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-121207@2x.png)
+![WX20180816-121207@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-121207@2x.png)
 
 
 
@@ -251,7 +251,7 @@ httprongqi.dangqugame.cn
 
 1、集群，找到这个集群容器
 
-![WX20180816-113417@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-113417@2x.png)
+![WX20180816-113417@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-113417@2x.png)
 
 2、查看这个容器的负载均衡id
 
@@ -261,13 +261,13 @@ lb-m5eezyl4kqkux3
 
 ```
 
-![WX20180816-113800@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-113800@2x.png)
+![WX20180816-113800@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-113800@2x.png)
 
 
 3、打开负载均衡控制台，通过这个id查看ip地址，然后域名这个ip分配过去
 
 
-![WX20180816-114028@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-114028@2x.png)
+![WX20180816-114028@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-114028@2x.png)
 
 
 ##### 3、配置启动的环境
@@ -281,18 +281,18 @@ spring.profiles.active=dev
 
 ```
 
-![WX20180816-192218@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-192218@2x.png)
+![WX20180816-192218@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-192218@2x.png)
 
 
 
 #### 4.3.4、创建成功
 
-![WX20180816-115503@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-115503@2x.png)
+![WX20180816-115503@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-115503@2x.png)
 
 
 ##### 1、观察该应用所有域名（可以观察到有我们自己设置的，也有阿里云给我们提供的）
 
-![WX20180816-120040@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-120040@2x.png)
+![WX20180816-120040@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-120040@2x.png)
 
 
 
@@ -300,17 +300,17 @@ spring.profiles.active=dev
 
 1、 服务->变更配置
 
-![WX20180816-121324@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-121324@2x.png)
+![WX20180816-121324@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-121324@2x.png)
 
 
-![WX20180816-121351@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-121351@2x.png)
+![WX20180816-121351@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-121351@2x.png)
 
 
 ## 5、更新版本（下面是标准发布，会将服务停止，建议看下一篇蓝绿发布进行更新）
 
 1、如果所有的使用现在的tag:1版本，则每次从本地发布到阿里云镜像文件之后，点击重新部署即可自动完成发布新版本，但是回退版本是不可能的事情了，
 
-![WX20180816-122813@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-122813@2x.png)
+![WX20180816-122813@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-122813@2x.png)
 
 2、如果想每次的旧版本不删除，则我们在打包命令的时候，taq就要发生变化，tag变成日期的格式
 
@@ -323,10 +323,10 @@ tag=1
 
 2、容器服务中->应用->变更配置，这个时候出来一个配置文件，我们修改后面的版本即可
 
-![WX20180816-192301@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-192301@2x.png)
+![WX20180816-192301@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-192301@2x.png)
 
 
-![WX20180816-192435@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180816-192435@2x.png)
+![WX20180816-192435@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180816-192435@2x.png)
 
 
 ```
@@ -365,7 +365,7 @@ duodian-youhui-server:
 
 ### 1、创建编排模板
 
-![WX20180824-182622@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-182622@2x.png)
+![WX20180824-182622@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180824-182622@2x.png)
 
 
 ### 2、复制之前
@@ -394,13 +394,13 @@ server-dev:
  
 #### 2.1、复制-可以直接 创建编排（未删减版）
 
-![WX20180824-190622@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-190622@2x.png)
+![WX20180824-190622@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180824-190622@2x.png)
 
 #### 2.1、复制进入-右面点击编辑，可以自己看看修改下内容，点击保存（这样就会把系统提供的默认的删除）
 
-![WX20180824-190747@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-190747@2x.png)
+![WX20180824-190747@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180824-190747@2x.png)
 
-![WX20180824-190849@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-190849@2x.png)
+![WX20180824-190849@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180824-190849@2x.png)
 
 
 ```
@@ -424,16 +424,16 @@ server-dev:
 
 ### 3.1、创建应用
 
-![WX20180824-190947@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-190947@2x.png)
+![WX20180824-190947@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180824-190947@2x.png)
 
 
 ### 3.2、现在我们需要的模板
 
-![WX20180824-191017@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-191017@2x.png)
+![WX20180824-191017@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180824-191017@2x.png)
 
 ### 3.3、模板里面直接改或者编辑即可，完成该项目
 
-![WX20180824-191106@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180824-191106@2x.png)
+![WX20180824-191106@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180824-191106@2x.png)
 
 
 
@@ -443,7 +443,7 @@ server-dev:
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -457,9 +457,9 @@ server-dev:
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'EhMnaN2Uz1KXupF3',
     });
     gitalk.render('gitalk-container');
