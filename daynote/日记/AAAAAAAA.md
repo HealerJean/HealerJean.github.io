@@ -1,13 +1,11 @@
 ---
-title: 1、添加模块
-date: 2018-03-06 03:33:00
+title: AAAAAAAAAAAAAA
+date: 2018-08-20 03:33:00
 tags: 
-- Docker
+- AAAAAAAAAA
 category: 
-- Docker
-daynote:
-- 第一篇
-description: docker的安装和配置国内镜像加快下载速度
+- AAAAAAAAAA
+description: AAAAAAAAAAAAAA
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
@@ -18,11 +16,14 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 ## 前言
 
 
+日历
 
 
 
-<br/><br/><br/>
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
+
+
+<font color="red"> 感兴趣的，欢迎添加博主微信， </font>哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备备注您的微信或者其他联系方式。添加博主微信哦。
+请下方留言吧。可与博主自由讨论哦
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
@@ -43,7 +44,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 		repo: `HealerJean123.github.io`,
 		owner: 'HealerJean123',
 		admin: ['HealerJean123'],
-		id: 'AAAAAAAAAAAAAA',
+		id: 'AAAAAAAAAAAAAAA',
     });
     gitalk.render('gitalk-container');
 </script> 
