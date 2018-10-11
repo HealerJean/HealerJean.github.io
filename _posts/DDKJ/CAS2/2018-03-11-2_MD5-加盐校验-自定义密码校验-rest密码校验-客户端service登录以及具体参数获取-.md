@@ -8,7 +8,7 @@ category:
 description: MD5-加盐校验-自定义密码校验-rest密码校验-客户端service登录以及具体参数获取
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 -->
 ## 前言
 
@@ -220,7 +220,7 @@ public class MD5Util {
 
     // 测试主函数
     public static void main(String args[]) {
-        String s = new String("HealerJean123456
+        String s = new String("HealerJean456
 ");
         System.out.println("原始：" + s);
         System.out.println("MD5后：" + string2MD5(s));
@@ -230,7 +230,7 @@ public class MD5Util {
 }
 
 ```
-![QQ20180311-112447@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-112447@2x.png)
+![QQ20180311-112447@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-112447@2x.png)
 
 
 ### 2、创建数据库表和添加测试数据
@@ -259,7 +259,7 @@ CREATE TABLE SYS_USER (
   DISABLE INT
 );
 
-/*HealerJean123456*/
+/*HealerJean456*/
 INSERT INTO SYS_USER VALUES ('HealerJean', '40e5fd27a2f9db33d397d11617c2098b', 'mxzdhealer@gmail.com', '山西忻州', 24, 0, 0);
 /*123*/
 INSERT INTO SYS_USER VALUES ('admin', '202cb962ac59075b964b07152d234b70', 'huang.wenbin@foxmail.com', '广州天河', 24, 0, 0);
@@ -310,11 +310,11 @@ cas.authn.jdbc.query[0].passwordEncoder.encodingAlgorithm=MD5
 ### 4、开始MD5加密测试吧，朋友们,MD5加密测试吧，朋友们
 `sudo ./build.sh`
 
-使用用户名和密码mxzdhealer@gmail.com/HealerJean123456
+使用用户名和密码mxzdhealer@gmail.com/HealerJean456
 
-![QQ20180311-113737@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-113737@2x.png)
+![QQ20180311-113737@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-113737@2x.png)
 
-![QQ20180311-113838@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-113838@2x.png)
+![QQ20180311-113838@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-113838@2x.png)
 
 
 ## 3、使用自定义的java类进行密码的验证
@@ -509,11 +509,11 @@ cas.authn.jdbc.encode[0].password=123456
 
 ### 1、通过总司令新建Moudule ,新建springBoot工程。
 
- ![QQ20180311-130243@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-130243@2x.png)
+ ![QQ20180311-130243@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-130243@2x.png)
 
 添加web和jpa 下面忘记写mysql了记得写上哦，依赖
 
-![QQ20180311-130417@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-130417@2x.png)
+![QQ20180311-130417@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-130417@2x.png)
 
 ### 3、总司令com-hlj-cas进行聚合，但并没有继承总司令。和ddkj有点像
 
@@ -605,7 +605,7 @@ public class RestSaltUtils {
     }
 
     public static void main(String[] args) {
-        String password ="HealerJean123456";
+        String password ="HealerJean456";
         RestSaltUtils restSaltUtils = new RestSaltUtils();
         restSaltUtils.salt(password);
     }
@@ -1087,25 +1087,25 @@ public class SysUserRestSaltServiceImpl implements SysUserRestSaltService{
 ### 9、使用postman进行测试
 
 
-![QQ20180311-165524@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-165524@2x.png)
+![QQ20180311-165524@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-165524@2x.png)
 
 ### 10、启动sso-server和sso-server-rest进行登录验证，使用email和密码登录
 
-![QQ20180311-170148@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-170148@2x.png)
+![QQ20180311-170148@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-170148@2x.png)
 
 
-1、正确的账户 mxzdhealer@gmail.com HealerJean123456 
+1、正确的账户 mxzdhealer@gmail.com HealerJean456 
 
-![QQ20180311-170309@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-170309@2x.png)
+![QQ20180311-170309@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-170309@2x.png)
 
-2、禁用的的账户 zhangsan@gmail.com HealerJean123456
+2、禁用的的账户 zhangsan@gmail.com HealerJean456
 
-![QQ20180311-170519@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-170519@2x.png)
+![QQ20180311-170519@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-170519@2x.png)
 
 
 
-3、锁定的账户 huang.wenbin@gmail.com HealerJean123456
-![QQ20180311-192640@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-192640@2x.png)
+3、锁定的账户 huang.wenbin@gmail.com HealerJean456
+![QQ20180311-192640@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-192640@2x.png)
 
 
 4、过期的账户，zhaosi@gmail.com ,zhaosi@gmail.com
@@ -1119,12 +1119,12 @@ public class SysUserRestSaltServiceImpl implements SysUserRestSaltService{
 
 ### 1、通过总司令新建Moudule ,新建springBoot工程,总司令要聚合它，但是它还不是总司令的儿子，ddkj项目
 
-![QQ20180311-171426@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-171426@2x.png)
+![QQ20180311-171426@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-171426@2x.png)
 
 
 添加依赖 web，jpa，mysql(jpahe mysql以后难免会遇到，所以提前加上了)
 
-![QQ20180311-171720@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-171720@2x.png)
+![QQ20180311-171720@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-171720@2x.png)
 
 
 
@@ -1435,7 +1435,7 @@ sso-client-one 8081
 浏览器中输入 http://casclientone:8081/hello 
 哈哈搞笑的事情出现了，他说没有经过服务端认证就访问了,原来是没有介入service
 
-![QQ20180311-174623@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-174623@2x.png)
+![QQ20180311-174623@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-174623@2x.png)
 
 
 #### 1、接入service
@@ -1484,7 +1484,7 @@ cas.serviceRegistry.initFromJson=true
 ```
 ##### 2、resource/service 新建json文件 Apereo-10000002.json
 
-![QQ20180311-183000@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-183000@2x.png)
+![QQ20180311-183000@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-183000@2x.png)
 
 ```
 {
@@ -1502,20 +1502,20 @@ cas.serviceRegistry.initFromJson=true
 ```
 小插曲，再加一条，如果配置了这个，那么启动起来之后就会出现下面的东东
 
-![WX20180312-153819@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180312-153819@2x.png)
+![WX20180312-153819@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-153819@2x.png)
 
 
 #### 4、重新启动吧，朋友们小插曲很重要哦
 浏览器中输入 http://casclientone:8081/hello
 自动到到了cas登录页面浏览器中变成了，下图所示
 
-![QQ20180311-183738@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-183738@2x.png) 
+![QQ20180311-183738@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-183738@2x.png) 
 
 登录成功 浏览器地址变成了 http://casclientone:8081/hello;jsessionid=4463DE12AB6D84330D7A847449D95BA1
 
 ### 9、观察客户端控制台，取到了服务端过来的用户名
 
-![QQ20180311-184456@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-184456@2x.png)
+![QQ20180311-184456@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-184456@2x.png)
 
 
 ## 5.2 客户端配置不需要浏览器访问的链接
@@ -1559,7 +1559,7 @@ public FilterRegistrationBean authenticationFilter() {
 
 http://casclientone:8081/url
 
-![QQ20180311-190457@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-190457@2x.png)
+![QQ20180311-190457@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-190457@2x.png)
 
 ## 5.3、从服务的获取更加详细的信息,不是用了密码校验哦
 
@@ -1672,7 +1672,7 @@ public class HomeController {
 
 http://casclientone:8081/hello
 
-![QQ20180311-192118@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-192118@2x.png)
+![QQ20180311-192118@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-192118@2x.png)
 
 ## 6、[代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018-03-11-MD5-%E5%8A%A0%E7%9B%90%E6%A0%A1%E9%AA%8C-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AF%86%E7%A0%81%E6%A0%A1%E9%AA%8C-rest%E5%AF%86%E7%A0%81%E6%A0%A1%E9%AA%8C-%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%99%BB%E5%BD%95%E5%85%B7%E4%BD%93%E5%8F%82%E6%95%B0-/com-hlj-cas.zip)
 
@@ -1684,7 +1684,7 @@ http://casclientone:8081/hello
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -1697,9 +1697,9 @@ http://casclientone:8081/hello
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'LHL0hExZUELlSP5Y',
     });
     gitalk.render('gitalk-container');

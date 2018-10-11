@@ -8,27 +8,27 @@ category:
 description: 重新开始认识Cas-通过maven和骨架来搭建cas服务器
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 -->
 ## 1、新建一个maven总司令，注意修改成pom的，因为默认是jar的。总司令一定是pom
 
-![QQ20180310-221810@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180310-221810@2x.png)
+![QQ20180310-221810@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180310-221810@2x.png)
 
 ## 2、根据骨架url
 
 https://casinitializr.herokuapp.com/ 
 
 ### 1、选择cas-tomcat
-![QQ20180310-223112@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180310-223112@2x.png)
+![QQ20180310-223112@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180310-223112@2x.png)
 
 ### 2、输入项目中需要pom和包关系
 
-![QQ20180310-225026@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180310-225026@2x.png)
+![QQ20180310-225026@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180310-225026@2x.png)
 
 
 ### 3、将它直接放到上面总司令的目录下(cas-overlay可以删除的，没毛用)
 
-![QQ20180311-015137@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-015137@2x.png)
+![QQ20180311-015137@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-015137@2x.png)
 
 
 ### 4、修改这个com.hlj.sso-server的pom，让它继承总司令并被总司令聚合
@@ -174,24 +174,24 @@ https://casinitializr.herokuapp.com/
 ```
 ### 5、这个时候可能会看到maven中cas-tomcat，虽然pom中已经有了，但是jar没有导入
 
-![QQ20180311-012524@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-012524@2x.png)
+![QQ20180311-012524@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-012524@2x.png)
 
-![QQ20180311-023944@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-023944@2x.png)
+![QQ20180311-023944@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-023944@2x.png)
 
 解决方法，提前运行这个sso-server项目，这个时候才会真正下载，具体为什么我没有研究明白
 
 `sudo ./build.sh run`  提示没有权限。下面我们开始给sso-server全部权限，按照下面的命令打出(**有时候，命令不好使，就前面加个sudo**)
 
-![QQ20180311-012920@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-012920@2x.png)
+![QQ20180311-012920@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-012920@2x.png)
 
 给出权限之后，会出现下面这个，也就是开始下载它了
 
-![QQ20180311-013212@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-013212@2x.png)
+![QQ20180311-013212@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-013212@2x.png)
 
 
 出现下面表示成功了，但是点开idea右侧的maven还是有下划线，不用管。后面添加好配置文件等，再执行./build.sh run 就会成功了。但还是会有下划线的。怕个毛毛
 
-![QQ20180311-013336@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-013336@2x.png)
+![QQ20180311-013336@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-013336@2x.png)
 
 ### 6.添加配置文件`application.properties `喽，哈哈
 
@@ -327,17 +327,17 @@ cas.authn.pac4j.wordpress.clientName=WordPress
 
 ### 8、sso-server通过骨架会自动帮我们生成java文件，下面我们把这两个删除，注意test包下面的java也要删除哦，因为我们启用用的是 ./build.sh,所以不需要。而且我也没有提供springBoot的jar包
 
-![QQ20180311-014136@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-014136@2x.png)
+![QQ20180311-014136@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-014136@2x.png)
 
 删除完成，就是下面这样了
 
-![QQ20180311-014236@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-014236@2x.png)
+![QQ20180311-014236@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-014236@2x.png)
 
 
 ### 8、开始启动吧，朋友们
 `sudo ./build.sh run`，出现下面这个表示启动成功
 
-![QQ20180311-020036@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-020036@2x.png)
+![QQ20180311-020036@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-020036@2x.png)
 
 浏览器中输入 http://localhost:8443/cas ，输入配置文件中提供的用户名和密码进行登录
 
@@ -347,17 +347,17 @@ cas.authn.accept.users=casuser::Mellon
 
 ```
 
-![QQ20180311-020155@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-020155@2x.png)
+![QQ20180311-020155@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-020155@2x.png)
 
-![QQ20180311-020326@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-020326@2x.png)
+![QQ20180311-020326@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-020326@2x.png)
 
 控制台，信息
 
-![QQ20180311-020529@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-020529@2x.png)
+![QQ20180311-020529@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-020529@2x.png)
 
 ### 9、这个时候我们在idea的右侧maven还会看到下划线的报错，但是却毫无影响，所以不需要纠结了
 
-![QQ20180311-020444@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/QQ20180311-020444@2x.png)
+![QQ20180311-020444@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180311-020444@2x.png)
 
 ## 3、[源码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018-03-10-%E9%87%8D%E6%96%B0%E5%BC%80%E5%A7%8B%E8%AE%A4%E8%AF%86Cas-%E9%80%9A%E8%BF%87maven%E5%92%8C%E9%AA%A8%E6%9E%B6%E6%9D%A5%E6%90%AD%E5%BB%BAcas%E6%9C%8D%E5%8A%A1%E5%99%A8/com-hlj-cas.zip)
 
@@ -366,7 +366,7 @@ cas.authn.accept.users=casuser::Mellon
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -379,9 +379,9 @@ cas.authn.accept.users=casuser::Mellon
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'fdsjflkj',
     });
     gitalk.render('gitalk-container');

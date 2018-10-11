@@ -8,18 +8,18 @@ category:
 description: GitHub评论Gitalk插件
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 -->
 GitHub评论Gitalk插件
 
-![WX20180306-155426@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180306-155426@2x.png)
+![WX20180306-155426@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180306-155426@2x.png)
 
 ## 1、Gitalk 需要一个 Github Application，
 ---
 [点击这里申请](https://github.com/settings/applications/new)。
 ---
 
-![WX20180306-153911@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180306-153911@2x.png)
+![WX20180306-153911@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180306-153911@2x.png)
 
 ## 2、将下面的代码复制到每个页面
 ---
@@ -49,11 +49,11 @@ GitHub评论Gitalk插件
 
 ## 3、打开上面我们注册的网址，复制 `clientID` 和 `秘clientSecret` 到上面
 ----
-![WX20180306-154420@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180306-154420@2x.png)
+![WX20180306-154420@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180306-154420@2x.png)
 
 ## 4、评论插件预览，评论查看的位置 在GitHub的`issue`中
 ----
-![WX20180306-155426@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180306-155426@2x.png)
+![WX20180306-155426@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180306-155426@2x.png)
 
 
 
@@ -62,7 +62,7 @@ GitHub评论Gitalk插件
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 <!-- Gitalk 评论 start  -->
@@ -74,10 +74,10 @@ GitHub评论Gitalk插件
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
-		id: 'GitHub评论Gitalk插件',
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
+		id: '81PrBdtZ9WAMflo4',
     });
     gitalk.render('gitalk-container');
 </script> 
