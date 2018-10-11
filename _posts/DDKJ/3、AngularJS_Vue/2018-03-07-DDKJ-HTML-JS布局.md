@@ -10,7 +10,7 @@ category:
 description: HTML中提示控件不能正常在需要提示的控件之下。
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 -->
 
 # 1、input下面的标签提示控件不能对齐<br>
@@ -18,11 +18,11 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 ### 之前
 
-![WechatIMG234](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WechatIMG234.jpeg)
+![WechatIMG234](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WechatIMG234.jpeg)
 
 
 ### 之后
-![WX20180307-103852@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180307-103852%402x.png)
+![WX20180307-103852@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180307-103852%402x.png)
 
 ## **之前代码** <br/>
 ---
@@ -60,10 +60,10 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
-		id: 'GitHub评论Gitalk插件',
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
+		id: 'dTZCSgOlpcWLAwfu',
     });
     gitalk.render('gitalk-container');
 </script> 

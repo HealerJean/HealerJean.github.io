@@ -8,7 +8,7 @@ category:
 description: cas_http_https_用户名或者邮箱修改密码
 ---
 <!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
 -->
 
 
@@ -18,7 +18,7 @@ cas自定义通过邮箱修改密码，这里的验证，点击邮箱链接之�
 
 ## 1、在sso-server的resource下放入创建好的证书
 
-![WX20180312-122829](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180312-122829.png)
+![WX20180312-122829](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-122829.png)
 
 ## 2、cas这里的邮箱验证，数据表创建
 
@@ -60,7 +60,7 @@ server.ssl.keyAlias=passport.sso.com
 ```
 **证书验证开启之后，下面的这个红色将会消失。
 
-![WX20180312-153905@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180312-153905@2x.png)
+![WX20180312-153905@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-153905@2x.png)
 
 
 
@@ -168,28 +168,28 @@ cas.authn.pm.jdbc.passwordEncoder.encodingAlgorithm=${cas.authn.jdbc.query[0].pa
 
 **在进入下面的修改密码页面的时候，如果控制台出现下面的问题，无须理会**
 
-![WX20180312-140832](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180312-140832.png)
+![WX20180312-140832](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-140832.png)
 
 
 1、输入用户名：HealerJean
  
 
-![WX20180312-133304@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180312-133304@2x.png)
+![WX20180312-133304@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-133304@2x.png)
 
 提示发送成功。
 
-![WX20180312-133537@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180312-133537@2x.png)
+![WX20180312-133537@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-133537@2x.png)
 
 2、到邮箱中开始确认，但是发现域名并不是我们提供的https域名password.sso.com，而是cas给我们提供的举例域名，这个肯定是点不开的楼
 
-![WX20180312-133940@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180312-133940@2x.png)
+![WX20180312-133940@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-133940@2x.png)
 
 
 ## 5、修改邮箱中的链接的域名为我们自己证书中配置的域名。
 
 这个时候，我们才正儿八经用到的etc/config/cas.properties中的内容，修改成如下：
 
-![WX20180312-134235](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180312-134235.png)
+![WX20180312-134235](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-134235.png)
 
 
 ```
@@ -208,11 +208,11 @@ logging.config: file:/etc/cas/config/log4j2.xml
 
 1、观察下面的，发现这次对喽，点击链接打开
 
-![WX20180312-134412@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180312-134412@2x.png)
+![WX20180312-134412@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-134412@2x.png)
 
 2、点开链接之后，我们会发现让我们输入密保问题的答案，输入答案HealerJean （为上面的数据库中的测试数据）
 
-![WX20180312-134557@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180312-134557@2x.png)
+![WX20180312-134557@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-134557@2x.png)
 
 小插曲，多个几个密保问题，我们为HealerJean 多加几个密保问题吧。
 
@@ -220,7 +220,7 @@ logging.config: file:/etc/cas/config/log4j2.xml
 INSERT INTO SYS_USER_QUESTION VALUES ('HealerJean', '你喜欢的人是？',  'Liuli');
 ```
 
-![WX20180312-135746@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180312-135746@2x.png)
+![WX20180312-135746@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-135746@2x.png)
 
 
 
@@ -232,11 +232,11 @@ cas.authn.pm.policyPattern=\\d{3,10}
 
 ```
 
-![WX20180312-134703@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180312-134703@2x.png)
+![WX20180312-134703@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-134703@2x.png)
 
 4、提示修改成功，可以登录使用了
 
-![WX20180312-135018@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180312-135018@2x.png)
+![WX20180312-135018@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-135018@2x.png)
 
 
 ## 7、至此邮箱修改密码就算成功了，这次我们将登陆的用户的username变成邮箱email测试下
@@ -344,11 +344,11 @@ cas.authn.pm.jdbc.passwordEncoder.encodingAlgorithm=${cas.authn.jdbc.query[0].pa
 
 #### 3.1、输入邮箱，成功发送
 
-![WX20180312-142013@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180312-142013@2x.png)
+![WX20180312-142013@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-142013@2x.png)
 
 #### 3.2、 mxzdhealer@gamail.com中打开邮件，点击链接，发现变成了email了，ok成功；
 
-![WX20180312-142110@2x](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180312-142110@2x.png)
+![WX20180312-142110@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-142110@2x.png)
 
 
 ## 8、http邮箱发送，测试成功
@@ -387,7 +387,7 @@ server.ssl.enabled=false
 
 |支付包 | 微信|微信公众号|
 |:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 
 
@@ -400,9 +400,9 @@ server.ssl.enabled=false
     var gitalk = new Gitalk({
 		clientID: `1d164cd85549874d0e3a`,
 		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean123.github.io`,
-		owner: 'HealerJean123',
-		admin: ['HealerJean123'],
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
 		id: 'pksf9KLM9M5waDCl',
     });
     gitalk.render('gitalk-container');
