@@ -26,7 +26,7 @@ defaults:
       layout: "post"
 
 #### Pagination 每页显示多少个，这里我建议还是10个吧。也够用了
-paginate: 10
+paginate: 15
 
 #### Site
 title : HealeJean的梦想博客
@@ -42,9 +42,10 @@ language: zh-CN    ## blog site languages: en, zh-CN, zh-TW, de
 menu:
   Home: /
 #  Tags: /tags
-  Categories: /categories
-  Archives: /archives
-  About: /about
+  技术: /categories
+  归档: /archives
+  留言板: /about
+  友情链接: /about
 
 ## you can create `tags` and `categories` folders (I had created them already).
 ## And create a `index.md` file in each of them.
