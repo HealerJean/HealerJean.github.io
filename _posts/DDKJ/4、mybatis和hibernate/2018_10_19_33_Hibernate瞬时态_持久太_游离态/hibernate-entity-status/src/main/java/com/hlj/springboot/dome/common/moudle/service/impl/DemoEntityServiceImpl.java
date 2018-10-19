@@ -1,115 +1,3 @@
----
-title: Hibernate瞬时态_持久太_游离态
-date: 2018-10-19 03:33:00
-tags: 
-- Database
-category: 
-- Database
-description: Hibernate瞬时态_持久太_游离态
----
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
-
-<font  color="red" size="4">   </font>
-
-
-<font size="4">   </font>
--->
-
-## 前言
-
-总结一个多年以前自己犯的错误，就是Hibernate持久化状态下，查出来的数据，只要set过修改过数据之后， 不用save也会自动更新.
-
-
-```java
-@Service
-@Slf4j
-public class DemoEntityServiceImpl implements DemoEntityService {
-
-    @Resource
-    DemoEntityRepository demoEntityRepository ;
-
-    @Override
-    public void testNoHaveSaveButSaveSuccess() {
-
-
-DemoEntity demoEntity =demoEntityRepository.findOne(1L);
-demoEntity.setBalance(12L);
-demoEntity.setName("张宇晋"); //观察到下面没有save方法，但是这里实实在在显示到数据库中去了
-
-DemoEntity copy = demoEntity ;
-copy.setName("copyEntity"); //最终数据id为1的数据库中 name为 copyEntity ，因为是浅复制
-
-
-DemoEntity demoEntityT = new DemoEntity();
-demoEntityT.setName("z1");
-demoEntityRepository.save(demoEntityT);
-
-demoEntityT.setBalance(12L); //会对上面的进行更新
-
-
-    }
-}
-
-
-```
-
-
-## 解释：
-
-### 1.瞬态：
-  一个实体通过new操作符创建后，没有和Hibernate的Session建立关系，也没有手动赋值过该实体的持久化 标识(持久化标识可以认为是映射表的主键)。  此时该实体中任何属性的更新都不会反映到数据库表中。
-### 2.持久化：
-  当一个实体和Hibernate的Session创建了关系，并获取了持久化标识，而且在Hibernate的Session生命周期内 存在。  此时针对该实体任何属性的更改都会直接影响到数据库表中一条记录对应字段的更新，即与数据库表同步。
- 
-### 3.脱管：
-  当一个实体和Hibernate的Session创建了关系，并获取了持久化标识，而此时Hibernate的Session生命周期结 束，实体的持久化标识没有被改动过。  针对该实体任何属性的修改都不会及时反映到数据库表中。
-
-## 解决方案
-
-如果我们只是想使用这个查出来的实体，并且在某种情况下，如果需要里面的值，并且要对它进行暂时的修改，却不是修改之后要保存到数据库中
-
-情景：淘宝的appkey和appSecret保存了，默认给提供一些渠道数据，当定时器在修改某个商品的渠道的时候，淘宝信息是我们需要的，但是它提供的渠道却不是我们需要的，所以时候是要set渠道一下一下。
-
-### 1、重新new一个出来
-
-
-```java
-BeanUtils.copyProperties(, );或者下面的
-
-
-public static TaobaoUserInfo getNewTaobaoUserInfo(TaobaoUserInfo source){
-    TaobaoUserInfo target = new TaobaoUserInfo();
-    target.setId(source.getId());
-    target.setCouponAdzoneId(source.getCouponAdzoneId());
-    target.setUserId(source.getUserId());
-    target.setUserName(source.getUserName());
-    target.setAppkey(source.getAppkey());
-    target.setSecret(source.getSecret());
-    target.setHaodankuApiKey(source.getHaodankuApiKey());
-    target.setCdate(source.getCdate());
-    target.setUdate(source.getUdate());
-    target.setStatus(source.getStatus());
-    return target;
-
-}
-
-```
-
-
-## 2、数据库表逻辑修改
-
-针对上面的情况，我们可以将，淘宝信息中默认的渠道保存到另一张表中。也就是说制作两张表<br/>
-一张渠道表（针对淘宝信息id提供默认值）、一张是淘宝表、表中添加注解Transient，这样即使将渠道set上也不会持久化保存了）
-
-
-## 2、关于hibernate中`entityManager`一些方法的使用
-
-
-```java
-   
 package com.hlj.springboot.dome.common.moudle.service.impl;
 
 import com.hlj.springboot.dome.common.entity.DemoEntity;
@@ -279,48 +167,6 @@ public class DemoEntityServiceImpl implements DemoEntityService {
         System.out.println(persist); //DemoEntity(id=6, name=persist, balance=null)
 
 
-
     }
-    
+
 }
-
-
-
-```
-
-## [代码下载](https://github.com/HealerJean/hibernate-entity-status.git)
-
-
-
-<br/><br/><br/><br/>
-<font color="red"> 感兴趣的，欢迎添加博主微信， </font><br/>
-哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。
-<br/>
-请下方留言吧。可与博主自由讨论哦
-
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
-
-
-
-
-<!-- Gitalk 评论 start  -->
-
-<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script> 
-<div id="gitalk-container"></div>    
- <script type="text/javascript">
-    var gitalk = new Gitalk({
-		clientID: `1d164cd85549874d0e3a`,
-		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean.github.io`,
-		owner: 'HealerJean',
-		admin: ['HealerJean'],
-		id: 'iVcSejlB067UN1td',
-    });
-    gitalk.render('gitalk-container');
-</script> 
-
-<!-- Gitalk end -->
-
