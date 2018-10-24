@@ -1,0 +1,1010 @@
+
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta name="baidu-site-verification" content="0r55fUD7QR" />
+  <meta charset="UTF-8">
+    
+    
+    
+    
+    <title>docker安装_进入容器修改nginx.conf配置文件_宿主主机挂载（nginx举例） | HealeJean的梦想博客</title>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HealerJean">
+    
+
+    
+    <!--<%- open_graph({twitter_id: theme.author.twitter, google_plus: theme.author.google_plus}) %>-->
+
+    <meta name="description" content="page.description">
+    
+    <meta property="og:type" content="article">
+    
+    <meta property="og:title" content="docker安装_进入容器修改nginx.conf配置文件_宿主主机挂载（nginx举例）">
+    <meta property="og:url" content="/docker/2018/08/20/9_docker%E5%AE%89%E8%A3%85Nginx%E4%BB%A5%E5%8F%8A%E8%BF%9B%E5%85%A5%E5%AE%B9%E5%99%A8%E4%BF%AE%E6%94%B9nginx.conf%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">
+    <meta property="og:site_name" content="HealeJean的梦想博客">
+    <meta property="og:description" content="docker安装_进入容器修改nginx.conf配置文件_宿主主机挂载（nginx举例）">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="docker安装_进入容器修改nginx.conf配置文件_宿主主机挂载（nginx举例）">
+    <meta name="twitter:description" content="page.description">
+    <meta name="twitter:creator" content="@mxzdhealer">
+    <link rel="publisher" href="">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HealeJean的梦想博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/assets/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/assets/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/assets/img/jacman.jpg">
+    
+
+    <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/highlight.css" type="text/css">
+    
+    
+  <!-- 百度统计 -->
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?19549885065170e0019f01e9975dfc1d";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <!-- 百度联盟 -->
+    <meta name="baidu_union_verify" content="c2f387067cf0849991ea870f73c055f2">
+  
+</head>
+
+  <body>
+    <header>
+        <div>
+		    
+			<div id="imglogo">
+				<a href="/"><img src="/assets/img/logo.png" alt="HealeJean的梦想博客" title="HealeJean的梦想博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HealeJean的梦想博客">HealeJean的梦想博客</a></h1>
+				<h2 class="blog-motto">一个高级软件开发工程师的成长之路</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/categories">技术</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories/#Job">生活日记</a></li>
+					
+						<li><a href="/about">留言板</a></li>
+					
+						<li><a href="/friends">友情链接</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search" method="get" accept-charset="utf-8">
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>
+</div>
+
+    </header>
+    <div id="container">
+      
+
+
+
+<div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+	<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/docker/2018/08/20/9_docker%E5%AE%89%E8%A3%85Nginx%E4%BB%A5%E5%8F%8A%E8%BF%9B%E5%85%A5%E5%AE%B9%E5%99%A8%E4%BF%AE%E6%94%B9nginx.conf%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" title="docker安装_进入容器修改nginx.conf配置文件_宿主主机挂载（nginx举例）" itemprop="url">docker安装_进入容器修改nginx.conf配置文件_宿主主机挂载（nginx举例）</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="HealerJean" target="_blank" itemprop="author">HealerJean</a>
+		
+  <p class="article-time">
+    <time datetime="2018-08-20 11:33:00 +0800" itemprop="datePublished"> 发表于 2018-08-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article toc-content" style="display: none;">
+		
+			<!--<%- toc(item.content) %>-->
+		
+		</div>
+		
+		<!-- image url 
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
+　　首行缩进
+<font color="red">  </font>
+-->
+
+<h2 id="前言">前言</h2>
+
+<h2 id="1docker安装nginx">1、docker安装Nginx</h2>
+
+<h3 id="11观察nginx是否可下载">1.1、观察nginx是否可下载</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>healerjean$ docker search nginx
+
+</code></pre></div></div>
+
+<h3 id="12开始安装">1.2、开始安装</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>healerjean$ docker pull nginx
+</code></pre></div></div>
+<h2 id="2先运行这个nginx">2、先运行这个nginx</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>healerjean$ docker run -it -p 80:80 nginx
+
+</code></pre></div></div>
+
+<h3 id="31查看这个nginx的容器id号">3.1、查看这个nginx的容器id号</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker ps
+
+healerjean$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED                  STATUS              PORTS                NAMES
+9fbe362214a6        nginx               "nginx -g 'daemon of…"   Less than a second ago   Up 2 seconds        0.0.0.0:80-&gt;80/tcp   objective_chandrasekhar
+healerjean$ 
+
+</code></pre></div></div>
+
+<h2 id="2进入这个容器">2、进入这个容器</h2>
+
+<h3 id="21docker-exec-在运行的容器中执行命令">2.1、docker exec ：在运行的容器中执行命令</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		-d :分离模式: 在后台运行
+		-i :即使没有附加也保持STDIN（标准输入） 打开,以交互模式运行容器，通常与 -t 同时使用；
+		-t: 为容器重新分配一个伪输入终端，通常与 -i 同时使用； 
+
+docker exec -it 9fbe362214a6  /bin/bash 
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker exec -it 9fbe362214a6  /bin/bash 
+
+
+
+healerjean$ docker exec -it 9fbe362214a6  /bin/bash 
+root@9fbe362214a6:/# ls -l
+total 64
+drwxr-xr-x   2 root root 4096 Jul 16 00:00 bin
+drwxr-xr-x   2 root root 4096 Jun 26 12:03 boot
+drwxr-xr-x   5 root root  360 Aug 15 10:12 dev
+drwxr-xr-x   1 root root 4096 Aug 15 10:12 etc
+drwxr-xr-x   2 root root 4096 Jun 26 12:03 home
+drwxr-xr-x   1 root root 4096 Jul 16 00:00 lib
+drwxr-xr-x   2 root root 4096 Jul 16 00:00 lib64
+drwxr-xr-x   2 root root 4096 Jul 16 00:00 media
+drwxr-xr-x   2 root root 4096 Jul 16 00:00 mnt
+drwxr-xr-x   2 root root 4096 Jul 16 00:00 opt
+dr-xr-xr-x 185 root root    0 Aug 15 10:12 proc
+drwx------   2 root root 4096 Jul 16 00:00 root
+drwxr-xr-x   1 root root 4096 Aug 15 10:12 run
+drwxr-xr-x   2 root root 4096 Jul 16 00:00 sbin
+drwxr-xr-x   2 root root 4096 Jul 16 00:00 srv
+dr-xr-xr-x  13 root root    0 Aug 15 10:12 sys
+drwxrwxrwt   1 root root 4096 Jul 24 17:21 tmp
+drwxr-xr-x   1 root root 4096 Jul 16 00:00 usr
+drwxr-xr-x   1 root root 4096 Jul 16 00:00 var
+   
+root@9fbe362214a6:/# cd /etc/nginx/conf.d/
+root@9fbe362214a6:/etc/nginx/conf.d# ls -l
+total 4
+-rw-r--r-- 1 root root 1093 Jul 24 13:02 default.conf
+
+</code></pre></div></div>
+
+<h2 id="3docker-cp">3、docker cp</h2>
+
+<h4 id="31将容器29df10f32d44etcnginxnginxconf-目录拷贝到主机usershealerjeandesktop目录下">3.1、将容器29df10f32d44:/etc/nginx/nginx.conf 目录拷贝到主机/Users/healerjean/Desktop目录下</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:~ healerjean$  docker cp  29df10f32d44:/etc/nginx/nginx.conf /Users/healerjean/Desktop
+
+</code></pre></div></div>
+
+<h4 id="32将主机usershealerjeandesktopaaamd-拷贝到容器29df10f32d44etcnginx中">3.2、将主机/Users/healerjean/Desktop/AAA.md 拷贝到容器29df10f32d44:/etc/nginx/中</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> docker cp /Users/healerjean/Desktop/AAA.md 29df10f32d44:/etc/nginx/
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+:~ healerjean$ docker cp /Users/healerjean/Desktop/AAA.md 29df10f32d44:/etc/nginx/
+
+
+:~ healerjean$ docker exec -it 29df10f32d44 /bin/bash
+root@29df10f32d44:/# cd /etc/nginx/
+root@29df10f32d44:/etc/nginx# ls -l
+total 44
+-rw-r--r-- 1  501 dialout 1519 Jul 27 08:08 AAA.md
+drwxr-xr-x 1 root root    4096 Aug 28 07:10 conf.d
+-rw-r--r-- 1 root root    1007 Jul 24 13:02 fastcgi_params
+-rw-r--r-- 1 root root    2837 Jul 24 13:02 koi-utf
+-rw-r--r-- 1 root root    2223 Jul 24 13:02 koi-win
+-rw-r--r-- 1 root root    5231 Jul 24 13:02 mime.types
+lrwxrwxrwx 1 root root      22 Jul 24 13:02 modules -&gt; /usr/lib/nginx/modules
+-rw-r--r-- 1 root root     643 Jul 24 13:02 nginx.conf
+-rw-r--r-- 1 root root     636 Jul 24 13:02 scgi_params
+-rw-r--r-- 1 root root     664 Jul 24 13:02 uwsgi_params
+-rw-r--r-- 1 root root    3610 Jul 24 13:02 win-utf
+root@29df10f32d44:/etc/nginx# 
+
+
+
+</code></pre></div></div>
+
+<h2 id="4--v-挂在本地目录到容器中">4、 -v 挂在本地目录到容器中</h2>
+
+<h4 id="41建议启动的时候挂载-ro-表示分配给只读权限这样容器就可以使用宿主主机的目录了">4.1、建议启动的时候挂载 ：:ro 表示分配给只读权限（这样容器就可以使用宿主主机的目录了）</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -p 80:80  -v /Users/healerjean/Desktop:/usr/local/mynginx:ro -d nginx
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>JeandeMBP:~ healerjean$ docker run -p 80:80 -it -v /Users/healerjean/Desktop:/usr/local/mynginx:ro -d nginx 
+f3a39301086b999f4bcd9ccddcd83672007be0280889c3f4f0c1fc6bc45b0db4
+JeandeMBP:~ healerjean$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                NAMES
+f3a39301086b        nginx               "nginx -g 'daemon of…"   2 seconds ago       Up 7 seconds        0.0.0.0:80-&gt;80/tcp   sharp_varahamihira
+JeandeMBP:~ healerjean$ docker exec -it f3a39301086b /bin/bash
+root@f3a39301086b:/# cd /usr/local/mynginx/
+root@f3a39301086b:/usr/local/mynginx# ls -l
+total 35824
+-rw-r--r--  1 root root    19915 Jan 25  2018 1???.docx
+-rw-r--r--  1 root root 18885250 Aug 28 06:58 2018-07.xlsx
+-rw-r--r--  1 root root 17711506 Aug 28 06:55 2018-08.xlsx
+-rw-r--r--  1 root root     1519 Jul 27 08:08 AAA.md
+-rw-r--r--  1 root root        0 Jul 17 09:05 AAA.sql
+-rw-r--r--  1 root root        0 Jul 26 09:22 AAAAA.txt
+-rw-r--r--  1 root root      972 Mar  8 10:56 DDKJ
+-rw-r--r--  1 root root      671 Aug 11 07:00 HttpHelper.java
+-rw-r--r--  1 root root      936 Mar  6 06:43 _posts
+-rw-r--r--  1 root root     1542 Aug 24 09:01 default
+drwxr-xr-x  4 root root      136 Aug 16 07:42 images
+drwx------ 20 root root      680 Aug 28 03:21 study
+drwxr-xr-x 15 root root      510 Aug 20 11:11 workspace
+drwxr-xr-x 23 root root      782 Aug  2 03:59 youhui-h5
+root@f3a39301086b:/usr/local/mynginx# 
+
+</code></pre></div></div>
+
+<p><br /><br /><br />
+如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，添加博主微信哦， 请下方留言吧。可与博主自由讨论哦</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">支付包</th>
+      <th style="text-align: center">微信</th>
+      <th style="text-align: center">微信公众号</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg" alt="支付宝" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg" alt="微信" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg" alt="微信公众号" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Gitalk 评论 start  -->
+
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+<p> </p>
+<div id="gitalk-container"></div>
+<p>  <br />
+ <script type="text/javascript">
+    var gitalk = new Gitalk({
+		clientID: `1d164cd85549874d0e3a`,
+		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
+		id: 'mHbBiN7OQRZLFj2P',
+    });
+    gitalk.render('gitalk-container');
+</script> </p>
+
+<!-- Gitalk end -->
+
+  
+	</div>
+	<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <!--
+  <%- list_categories(item.categories, {
+      show_count: false,
+      class: 'article-category',
+      style: 'none',
+      separator: '►'
+  }) %>
+  -->
+  
+  <a class="article-category-link" href="/categories/#Docker">Docker</a>
+  
+</div>
+
+
+  <div class="article-tags">
+  <!--
+  <% var tags = [];
+    item.tags.forEach(function(tag){
+      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
+    }); %>-->
+  <span></span> <!--<%- tags.join('') %>-->
+  
+  
+  <a href="/tags/#Docker">Docker</a>
+  
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://localhost:4000/docker/2018/08/20/9_docker%E5%AE%89%E8%A3%85Nginx%E4%BB%A5%E5%8F%8A%E8%BF%9B%E5%85%A5%E5%AE%B9%E5%99%A8%E4%BF%AE%E6%94%B9nginx.conf%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" data-title="docker安装_进入容器修改nginx.conf配置文件_宿主主机挂载（nginx举例） | HealeJean的梦想博客" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+   
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/docker/2018/08/20/8_%E9%98%BF%E9%87%8C%E4%BA%91%E5%AE%B9%E5%99%A8%E6%9C%8D%E5%8A%A1%E8%BF%9B%E5%85%A5Nginx%E5%AE%B9%E5%99%A8%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" title="阿里云容器服务进入Nginx容器修改配置文件">
+  <strong>上一篇：</strong><br/>
+  <span>
+  阿里云容器服务进入Nginx容器修改配置文件</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/job/2018/08/20/%E5%AF%B9%E4%B8%8D%E8%B5%B7%E6%88%91%E6%94%BE%E5%BC%83/"  title="对不起我放弃">
+ <strong>下一篇：</strong><br/> 
+ <span>对不起我放弃
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+
+      
+      
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside toc-content">
+ 
+ <!--<%- toc(item.content) %>-->
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+
+  <div class="linkslist">
+  <p class="asidetitle">个人网站</p>
+    <ul>
+        
+          <li>
+            <a href="http://blog.csdn.net/u012954706" target="_blank" title="csdn">csdn</a>
+          </li>
+        
+          <li>
+            <a href="http://www.cnblogs.com/HealerJean/" target="_blank" title="博客园">博客园</a>
+          </li>
+        
+          <li>
+            <a href="https://weibo.com/u/3889598250/" target="_blank" title="微博">微博</a>
+          </li>
+        
+          <li>
+            <a href="https://www.jianshu.com/u/54ba972e92a8" target="_blank" title="简书">简书</a>
+          </li>
+        
+          <li>
+            <a href="https://www.zhihu.com/people/healerjean" target="_blank" title="知乎">知乎</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+
+     <p class="asidetitle">个人信息</p>
+     <script src="/assets/img/person/jquery.js"></script>
+     <script src="/assets/img/person/jquery-github-user-widget.js"></script>
+     <div class="github-widget-user" data-user="HealerJean">	</div>
+
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/#Job" title="Job">Job<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#MarkDown" title="MarkDown">MarkDown<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GitHub" title="GitHub">GitHub<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mac" title="Mac">Mac<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Thread" title="Thread">Thread<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Url" title="Url">Url<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mysql" title="Mysql">Mysql<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Database" title="Database">Database<sup>19</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Annotation" title="Annotation">Annotation<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SortAlgorithm" title="SortAlgorithm">SortAlgorithm<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#CAS" title="CAS">CAS<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Maven" title="Maven">Maven<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#HTML" title="HTML">HTML<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#AngularJs" title="AngularJs">AngularJs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WeChat" title="WeChat">WeChat<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Experience" title="Experience">Experience<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Team" title="Team">Team<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SoftWare" title="SoftWare">SoftWare<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Utils" title="Utils">Utils<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Hibernate" title="Hibernate">Hibernate<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Date" title="Date">Date<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Log" title="Log">Log<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JSON" title="JSON">JSON<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Docker" title="Docker">Docker<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GrayLog" title="GrayLog">GrayLog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpringBoot" title="SpringBoot">SpringBoot<sup>21</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Redis" title="Redis">Redis<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Ehcache" title="Ehcache">Ehcache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Druid" title="Druid">Druid<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Quartz" title="Quartz">Quartz<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Swagger" title="Swagger">Swagger<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Netty" title="Netty">Netty<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#NIO" title="NIO">NIO<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WebSocket" title="WebSocket">WebSocket<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Map" title="Map">Map<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JVM" title="JVM">JVM<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mybatis" title="Mybatis">Mybatis<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Element" title="Element">Element<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Graphics" title="Graphics">Graphics<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linux" title="Linux">Linux<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Databases" title="Databases">Databases<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Nginx" title="Nginx">Nginx<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpirngBoot" title="SpirngBoot">SpirngBoot<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linu" title="Linu">Linu<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Java" title="Java">Java<sup>15</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JAVA" title="JAVA">JAVA<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Google" title="Google">Google<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  
+
+
+  
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+	<!-- 打赏功能 -->
+  <!-- <script src="http://static.tctip.com/tctip-1.0.0.min.js"></script> -->
+  <script src="/assets/img/tctip/tctip-1.0.1.min.js"></script>
+	<script>  
+	new tctip({
+	  top: '20%',
+	  button: {
+	    id: 9,
+	    type: 'dashang',
+	  },
+	  list: [
+	    {
+	      type: 'alipay',
+	      qrImg: '/assets/img/tctip/alpay.jpg'
+	    }, {
+	      type: 'wechat',
+	      qrImg: '/assets/img/tctip/weixin.jpg'
+	    }
+	  ]
+	}).init()
+	</script>
+
+
+
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 欢迎来到  HealerJean 的梦想博客. <br/>
+			------您已走进一个高级软件开发工程师的成长之路</p>
+	</section>
+	 
+
+
+<!--  自带的分享功能 	-->
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3889598250" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		<a href="https://twitter.com/mxzdhealer" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:mxzdhealer@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div> 
+
+
+	<!--
+			<%  Array.prototype.S=String.fromCharCode(2);
+			  Array.prototype.in_array=function(e){
+    			var r=new RegExp(this.S+e+this.S);
+    			return (r.test(this.S+this.join(this.S)+this.S));
+				};
+				var cc = new Array('by','by-nc','by-nc-nd','by-nc-sa','by-nd','by-sa','zero'); %>
+		<% if (cc.in_array(theme.creative_commons) ) { %>
+				<div class="cc-license">
+          <a href="http://creativecommons.org/licenses/<%= theme.creative_commons %>/4.0" class="cc-opacity" target="_blank">
+            <img src="<%- config.root %>img/cc-<%= theme.creative_commons %>.svg" alt="Creative Commons" />
+          </a>
+        </div>
+    <% } %>
+				-->
+
+		<p class="copyright">
+		welcome to <a href="http://jekyllrb.com" target="_blank" title="jekyll">HealerJean</a> 
+		blog <a href="https://github.com/simpleyyt/jekyll-jacman" target="_blank" title="Jacman">for</a> © 2017 
+		
+		<a href="about" target="_blank" title="HealerJean">HealerJean</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/assets/js/jquery-2.0.3.min.js"></script>
+<script src="/assets/js/jquery.imagesloaded.min.js"></script>
+<script src="/assets/js/gallery.js"></script>
+<script src="/assets/js/jquery.qrcode-0.12.0.min.js"></script>
+<script src="/assets/js/toc.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+
+  
+
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+});
+</script>
+
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#toc.toc-aside').toc({
+    title: "文章目录",
+    showEffect: "none"
+  });
+  $('#toc.toc-article').toc({
+    title: "文章目录",
+    showEffect: "show",
+    showSpeed: 0
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+/*
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      //$('.hoverqrcode').hide();
+  });
+  */
+});
+</script>
+
+
+
+
+
+
+<!--
+
+-->
+
+
+
+
+<link rel="stylesheet" href="/assets/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/assets/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      if ($(this).hasClass('emoji')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+});
+</script>
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/assets/img/scrollup.png"/></a>
+	</div>
+	<script src="/assets/js/totop.js"></script>
+
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
+

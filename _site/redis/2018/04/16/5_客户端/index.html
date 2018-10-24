@@ -1,0 +1,1405 @@
+
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta name="baidu-site-verification" content="0r55fUD7QR" />
+  <meta charset="UTF-8">
+    
+    
+    
+    
+    <title>5、客户端 | HealeJean的梦想博客</title>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HealerJean">
+    
+
+    
+    <!--<%- open_graph({twitter_id: theme.author.twitter, google_plus: theme.author.google_plus}) %>-->
+
+    <meta name="description" content="page.description">
+    
+    <meta property="og:type" content="article">
+    
+    <meta property="og:title" content="5、客户端">
+    <meta property="og:url" content="/redis/2018/04/16/5_%E5%AE%A2%E6%88%B7%E7%AB%AF/">
+    <meta property="og:site_name" content="HealeJean的梦想博客">
+    <meta property="og:description" content="客户端">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="5、客户端">
+    <meta name="twitter:description" content="page.description">
+    <meta name="twitter:creator" content="@mxzdhealer">
+    <link rel="publisher" href="">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HealeJean的梦想博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/assets/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/assets/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/assets/img/jacman.jpg">
+    
+
+    <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/highlight.css" type="text/css">
+    
+    
+  <!-- 百度统计 -->
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?19549885065170e0019f01e9975dfc1d";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <!-- 百度联盟 -->
+    <meta name="baidu_union_verify" content="c2f387067cf0849991ea870f73c055f2">
+  
+</head>
+
+  <body>
+    <header>
+        <div>
+		    
+			<div id="imglogo">
+				<a href="/"><img src="/assets/img/logo.png" alt="HealeJean的梦想博客" title="HealeJean的梦想博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HealeJean的梦想博客">HealeJean的梦想博客</a></h1>
+				<h2 class="blog-motto">一个高级软件开发工程师的成长之路</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/categories">技术</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories/#Job">生活日记</a></li>
+					
+						<li><a href="/about">留言板</a></li>
+					
+						<li><a href="/friends">友情链接</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search" method="get" accept-charset="utf-8">
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>
+</div>
+
+    </header>
+    <div id="container">
+      
+
+
+
+<div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+	<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/redis/2018/04/16/5_%E5%AE%A2%E6%88%B7%E7%AB%AF/" title="5、客户端" itemprop="url">5、客户端</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="HealerJean" target="_blank" itemprop="author">HealerJean</a>
+		
+  <p class="article-time">
+    <time datetime="2018-04-16 11:33:00 +0800" itemprop="datePublished"> 发表于 2018-04-16</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article toc-content" style="display: none;">
+		
+			<!--<%- toc(item.content) %>-->
+		
+		</div>
+		
+		<!-- image url 
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
+　　首行缩进
+<font color="red">  </font>
+-->
+
+<h2 id="前言">前言</h2>
+
+<h2 id="1序列化">1、序列化</h2>
+
+<p>Jedis还提供了字节数组的参数，可以将java对象序列化为二进制，当需要的时候，取出来。</p>
+
+<h2 id="2jedis连接">2、Jedis连接</h2>
+<h3 id="1直接连接">1、直接连接</h3>
+
+<p>每次使用都会新建TCP连接，每次使用后都会断开连接，对于频繁访问肯定是不好的</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static Jedis jedis = null;
+static{
+	 jedis = new Jedis("127.0.0.1",6379);
+} 
+
+</code></pre></div></div>
+
+<h3 id="2jedis连接池">2、Jedis连接池</h3>
+
+<p>因此生产环境都是使用的Jedis连接池，所有的Jedis对象预先放到池子中,每次都从池子中借，用完了还给池子</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>admore.redis.max-total=64
+admore.redis.max-idle=30
+
+
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd"&gt;
+
+    &lt;bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig" &gt;
+        &lt;property name="maxTotal" value="${admore.redis.max-total}"/&gt;
+        &lt;property name="maxIdle" value="${admore.redis.max-idle}"/&gt;
+        &lt;property name="maxWaitMillis" value="1500"/&gt;
+        &lt;!-- 永远不要加testOnBorrow 或 testOnReturn这类，不然你会后悔的 --&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id="jedisFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" destroy-method="destroy"&gt;
+        &lt;property name="password" value="${admore.redis.password}"/&gt;
+        &lt;property name="hostName" value="${admore.redis.host-name}"/&gt;
+        &lt;property name="port" value="6379"/&gt;
+        &lt;property name="usePool" value="true"/&gt;
+        &lt;property name="poolConfig" ref="jedisPoolConfig"/&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" scope="prototype"&gt;
+        &lt;property name="connectionFactory" ref="jedisFactory"/&gt;
+        &lt;property name="keySerializer"&gt;
+            &lt;bean class="com.duodian.admore.cache.CustomStringRedisSerializer"/&gt;
+        &lt;/property&gt;
+        &lt;property name="valueSerializer"&gt;
+            &lt;bean class="com.duodian.admore.cache.CustomJSONStringRedisSerializer"/&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+
+&lt;/beans&gt;
+
+</code></pre></div></div>
+
+<h2 id="3redis中的pipeline的使用方法">3、Redis中的Pipeline的使用方法</h2>
+
+<p>1、获取pipeline</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Pipeline pipeline = jedis.pipelined();
+</code></pre></div></div>
+
+<p>2、命令执行
+pipeline和jedis写法完全一致，但是不知在这个时候执行，而是<code class="highlighter-rouge">pipeline.sync();</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    public static void usePipeline(){
+        Jedis jedis = getJedis();
+        Pipeline pipeline = jedis.pipelined();
+        long begin = System.currentTimeMillis();
+        for(int i = 0;i&lt;count;i++){
+            pipeline.set("key_"+i,"value_"+i);
+        }
+        //执行命令
+        pipeline.sync();
+        jedis.close();
+    }
+   
+    
+    
+</code></pre></div></div>
+
+<p>3、操作结果返回</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> List&lt;Object&gt; result= pipeline.syncAndReturnAll();
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+@Test
+public void pipeline(){
+    Pipeline pipeline = jedis.pipelined();
+    pipeline.set("hello","hello");
+    pipeline.set("count","1");
+    pipeline.incr("count");
+
+    List&lt;Object&gt; result= pipeline.syncAndReturnAll();
+
+    for(Object o :result){
+        System.out.println(o);
+    }
+
+}
+
+
+OK
+OK
+2
+</code></pre></div></div>
+
+<h2 id="5客户端管理和异常分析">5、客户端管理和异常分析</h2>
+
+<h3 id="51客户端api">5.1、客户端API</h3>
+<h4 id="511client-list">5.1.1、client list</h4>
+
+<p>这里我同一个redis开启了两个客户端</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1:6379&gt; client list
+id=3808 addr=127.0.0.1:55369 fd=8 name= age=5050 idle=0 flags=N db=0 sub=0 psub=0 multi=-1 qbuf=0 qbuf-free=32768 obl=0 oll=0 omem=0 events=r cmd=client
+id=3810 addr=127.0.0.1:56759 fd=7 name= age=27 idle=26 flags=N db=0 sub=0 psub=0 multi=-1 qbuf=0 qbuf-free=0 obl=0 oll=0 omem=0 events=r cmd=client
+</code></pre></div></div>
+
+<p>解释下信息：
+###（1）标识、</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id 客户端连接的唯一标识
+addr 客户端链接的ip和标识
+name 客户端的名字
+</code></pre></div></div>
+<p>###（2）输入缓冲区</p>
+
+<p>redis为每个客户端分配了输入缓冲区，它的作用是将客户端发送的命令临时保存，同时Redis会从缓冲区拉去命令并执行，输入缓存区为客户端发送命令到Redis提供了缓存功能。</p>
+
+<font color="red">输入缓冲区会根据输入内容的大小而动态调整，只是要求缓冲区的大小不超过1G，超过后客户端将关闭</font>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>qbuf  输入缓冲区总容量
+qbuf-free 输入缓冲区剩余容量
+
+</code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180416-133103@2x.png" alt="WX20180416-133103@2x" /></p>
+
+<h4 id="1输入缓冲区使用不当会产生两个问题">1、输入缓冲区使用不当会产生两个问题</h4>
+
+<p>1、一旦某个输入缓冲区大小超过1G，客户端将会被关闭。
+2、输入缓冲区不受maxmemory控制，加上一个Redis实例上得知了maxmemory为4G，已经存储了2G数据，但是如果此时输入缓冲区使用了3G。已经超过maxmemory限制，可能会产生数据丢失，键值淘汰、OOM（内存泄漏）</p>
+
+<h4 id="2那么造成缓冲区过大的原因">2、那么造成缓冲区过大的原因</h4>
+
+<p>1、Redis的处理速度跟不上输入缓冲区的输入速度，并且每次进入缓冲区的命令包含了大量bigkey<br />
+2、Redis发生了阻塞，短期内不能处理命令，造成客户端输入的命令积压在缓冲区</p>
+
+<h4 id="3如何快速发现和监控">3、如何快速发现和监控</h4>
+
+<p>1、通过定期执行client list命令，手机qbuf和qbuf-free找到异常的连接记录并分析，最终找到可能出问题的客户端<br />
+2、通过info命令的info clients模块，找到最大的输入缓冲区<code class="highlighter-rouge">client_biggest_input_buf:0</code>，例如，可以设置10M就开始报警</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1:6379&gt; info clients
+# Clients
+connected_clients:2
+client_longest_output_list:0
+client_biggest_input_buf:0
+blocked_clients:0
+127.0.0.1:6379&gt; 
+
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>命令</th>
+      <th>优点</th>
+      <th>info clients</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>client list</td>
+      <td>能精准分析每个客户端来定位问题</td>
+      <td>执行速度较慢，尤其是在连接数较多的情况下，频繁执行可能阻塞Redis</td>
+    </tr>
+    <tr>
+      <td>info clients</td>
+      <td>执行速度比client list快，分析过程较为简单</td>
+      <td>不能精准定位到客户端，不能显示所有输入缓冲区的总量，只能显示最大量</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="3输出缓冲区">(3)输出缓冲区</h3>
+
+<p>redis为每个客户端分配了输出缓冲区，它的作用是保存命令执行的结果返回给客户端。<br />
+与输入缓冲区不同，它的容量是可以通过参数配置的，。并且按照客户端的不同分为三种，普通客户端，发布订阅客户端，slave客户端。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;class&gt; 客户端缓冲区超过&lt;hard limit&gt; ，客户端会立即关闭；如何客户端缓冲区的输出缓冲区超过了&lt;soft limit&gt; ，并且持续了 &lt;soft secontds&gt;秒，客户端会被立即关闭 
+
+默认
+client-output-buffer-limit normal 0 0 0
+client-output-buffer-limit slave 256mb 64mb 60
+client-output-buffer-limit pubsub 8mb 2mb 60
+
+
+</code></pre></div></div>
+
+<p>相同的是，它的大小不会受到maxmemory的限制，^,也会造成数据丢失，键值淘汰，OOM等情况。</p>
+
+<h4 id="1输出缓冲区的组成">1、输出缓冲区的组成</h4>
+
+<p>实际上输出缓冲区由两部分组成，固定缓冲区和动态缓冲区，其中固定缓冲区返回比较小的执行结果，而动态缓冲区返回比较大的结果，例如大的字符串，hgetall，smembers 命令的结果。<br /></p>
+<font color="red">固定缓冲区使用的是字节数组，动态缓冲区使用的是列表。当固定缓冲区存满后会将Redis新的返回结果存放到动态缓冲区的队列中。队列中每个对象就是每个返回结果</font>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>obl  固定缓冲区的长度
+oll  动态缓冲区的长度
+omen 使用的字节数 
+</code></pre></div></div>
+
+<p>举例</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>下面表示为固定缓冲区长度为0，动态缓冲区有4869个对象，两个部分共使用了133081288字节=126M内从
+obl=0 oll=4869 omem=133081288
+</code></pre></div></div>
+
+<h4 id="2监控输出缓冲区的方法">2、监控输出缓冲区的方法</h4>
+
+<p>1、定期执行client list 模块命令，手机……<br />
+2、通过info命令的info clients模块，找到输出缓冲区列表的最大对象数<code class="highlighter-rouge">client_longest_output_list</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+127.0.0.1:6379&gt; info clients
+# Clients
+connected_clients:2
+client_longest_output_list:0
+client_biggest_input_buf:0
+blocked_clients:0
+127.0.0.1:6379&gt; 
+</code></pre></div></div>
+
+<h4 id="3发现和预防输出缓冲区出现异常">3、发现和预防输出缓冲区出现异常</h4>
+
+<p>1、进行上述监控，设置阀值及时处理
+2、限制普通客户端输出缓冲区参数<code class="highlighter-rouge">的&lt;hard limit&gt; &lt;soft limit &gt; ，&lt;soft seconds&gt;</code>，把错误扼杀在摇篮中，例如可以进行如下设置</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client-output-buffer-limit normal 20mb 10mb 120
+</code></pre></div></div>
+
+<p>3、适当增大slave的输出缓冲区的<code class="highlighter-rouge">&lt;hard limit&gt; &lt;soft limit &gt; ，&lt;soft seconds&gt;</code>，如果master节点写入较大，slave客户端的输出缓冲区可能也会比较大，一旦slave客户端链接因为输出缓冲区溢出而别杀死，会造成重复重连<br /></p>
+
+<h3 id="4客户端的存活状态">（4）客户端的存活状态</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+age=27  客户点已经链接的时间 ，连接redis的时间为27秒
+idle=26  最近一次的空闲时间   redis空闲了26秒
+
+</code></pre></div></div>
+<h4 id="1异常分析">1、异常分析</h4>
+
+<p>1、当Redis连接的时间等于空闲时间的时候，就说明连接一直处于空闲，这种情况就是不正常的</p>
+
+<p>正常情况下当，当再次使用jedis的时候，idle会再次重新从0开始计数</p>
+
+<h3 id="5客户端的限制macclients和timeout">（5）客户端的限制macclients和timeout</h3>
+
+<h4 id="1查看maxclients和timeout属性值">1、查看<code class="highlighter-rouge">maxclients</code>和<code class="highlighter-rouge">timeout</code>属性值</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1:6379&gt; config get maxclients
+1) "maxclients"
+2) "10000" //默认10000
+127.0.0.1:6379&gt; config get timeout
+1) "timeout" //默认是0
+2) "0"
+127.0.0.1:6379&gt; 
+
+</code></pre></div></div>
+
+<h4 id="2maxclients-maxtotal">2、maxclients <code class="highlighter-rouge">maxTotal</code></h4>
+
+<p>Redis提供了maxclients参数来限制最大客户端连接数，一旦超过maxclients，新的连接将会被拒绝。maxclients默认值是10000，可以通过info clients来查看当前的连接数</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1:6379&gt; info clients
+# Clients
+connected_clients:2  //当前的连接数
+client_longest_output_list:0 //客户端输出缓冲区列表最大对象数
+client_biggest_input_buf:0 //客户端输入缓冲区最大值
+blocked_clients:0
+127.0.0.1:6379&gt; 
+
+</code></pre></div></div>
+
+<h4 id="3timeout">3、timeout</h4>
+
+<p>一般情况下来说maxclients=10000在大部分场景已经绝对够用，但是某些情况由于业务方使用不当，例如，没有主动关闭连接，可能存在大量的idle空闲连接，无论是从网络连接成本还是超过maxclients的后果来说都不是什么好事，因此Redis提供了一个timeou来限制最大空闲连接，一旦空闲连接超过了timeout，连接将会被关闭</p>
+
+<p>举例下面设置最大空闲时间设置为30秒将会抛出异常</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public void testString() throws InterruptedException {
+  Jedis  jedis = new Jedis("127.0.0.1",6379);
+
+    //-----添加数据----------  
+    jedis.set("name","xinxin");//向key--&gt;name中放入了value--&gt;xinxin  
+    System.out.println(jedis.get("name"));//执行结果：xinxin  
+
+
+    TimeUnit.SECONDS.sleep(31);
+    System.out.println(jedis.ping()); 
+
+}
+
+xinxin
+Exception in thread "main" redis.clients.jedis.exceptions.JedisConnectionException: Unexpected end of stream.
+	at redis.clients.util.RedisInputStream.ensureFill(RedisInputStream.java:199)
+	at redis.clients.util.RedisInputStream.readByte(RedisInputStream.java:40)
+	at redis.clients.jedis.Protocol.process(Protocol.java:151)
+	at redis.clients.jedis.Protocol.read(Protocol.java:215)
+</code></pre></div></div>
+
+<p>redis给出timeout的默认值是0，永不超时，就是说，及时空闲也不会断掉，在这种情况下客户端基本不会出现上面的异常，这是基于对客户端开发的一种保护，但是在JedisPool时不会对连接池对象做空闲检测和验证，如果设置了timeout大于0（这样就可能渠道已经过时的JedisPool），可能就会出现上面的异常，如果Redis的客户端使用不当，没有及时释放，后果很严重<br />
+解决方法:
+可以将timeout设置为300秒，同事客户端加上空闲检测和验证等措施</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>参数名字</th>
+      <th>内容</th>
+      <th>默认值</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>minEvictableIdleTimeMillis</td>
+      <td>连接的最小空闲时间，达到这个值后空闲连接将被移除timeBetweenEvictionRunsMillis大于0时才有意义；</td>
+      <td>默认30分钟</td>
+    </tr>
+    <tr>
+      <td>timeBetweenEvictionRunsMillis</td>
+      <td>空闲检测周期（单位毫秒）</td>
+      <td>-1,表示永不检测</td>
+    </tr>
+    <tr>
+      <td>testWhileIdle</td>
+      <td>向连接池借用连接时是否做连接空闲检测，空闲超时的连接将会被移除</td>
+      <td>false</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="6客户端类型">（6）、客户端类型</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		addr ： 客户端的地址和端口
+		fd ： 套接字所使用的文件描述符
+		age ： 以秒计算的客户端已连接时长
+		idle ： 以秒计算的空闲时长
+		flags ： 客户端 flag
+		db ： 该客户端正在使用的数据库 ID
+		sub ： 已订阅频道的数量
+		psub ： 已订阅模式的数量
+		multi ： 在事务中被执行的命令数量
+		qbuf ： 查询缓冲区的长度（字节为单位， 0 表示没有分配查询缓冲区）
+		qbuf-free ： 查询缓冲区剩余空间的长度（字节为单位， 0 表示没有剩余空间）
+		obl ： 输出固定缓冲区的长度（字节为单位， 0 表示没有分配输出缓冲区）
+		oll ： 输出动态列表包含的对象数量（当输出缓冲区没有剩余空间时，命令回复会以字符串对象的形式被入队到这个队列里）
+		omem ： 输出缓冲区和输出列表占用的内存总量
+		events ： 文件描述符事件
+		cmd ： 最近一次执行的命令
+
+</code></pre></div></div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	&lt;font color="red"&gt;cmd ： 最近一次执行的命令&lt;/font&gt;
+</code></pre></div></div>
+
+<h2 id="4客户端命名杀死暂停">4、客户端命名、杀死、暂停</h2>
+
+<h3 id="1命名">1、命名</h3>
+<p>这样比较容易标识出客户端的来源</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1:6379&gt; client setName clent1
+127.0.0.1:6379&gt; client getName
+"client1"
+127.0.0.1:6379&gt; 
+
+</code></pre></div></div>
+<p>观察下面的name</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1:6379&gt; client list
+id=3818 addr=127.0.0.1:62540 fd=7 name= age=4 idle=0 flags=N db=0 sub=0 psub=0 multi=-1 qbuf=0 qbuf-free=32768 obl=0 oll=0 omem=0 events=r cmd=client
+127.0.0.1:6379&gt; client setName clent1
+OK
+127.0.0.1:6379&gt; client list
+id=3818 addr=127.0.0.1:62540 fd=7 name=clent1 age=15 idle=0 flags=N db=0 sub=0 psub=0 multi=-1 qbuf=0 qbuf-free=32768 obl=0 oll=0 omem=0 events=r cmd=client
+127.0.0.1:6379&gt; 
+
+</code></pre></div></div>
+
+<h3 id="2杀死指定ip地址和端口的客户端">2、杀死指定ip地址和端口的客户端</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client kill 127.0.0.1:62569
+</code></pre></div></div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1:6379&gt; client list
+id=3819 addr=127.0.0.1:62555 fd=7 name=client1 age=153 idle=0 flags=N db=0 sub=0 psub=0 multi=-1 qbuf=0 qbuf-free=32768 obl=0 oll=0 omem=0 events=r cmd=client
+id=3820 addr=127.0.0.1:62569 fd=8 name= age=102 idle=102 flags=N db=0 sub=0 psub=0 multi=-1 qbuf=0 qbuf-free=0 obl=0 oll=0 omem=0 events=r cmd=client
+127.0.0.1:6379&gt; client kill 127.0.0.1:62569
+OK
+127.0.0.1:6379&gt; 
+</code></pre></div></div>
+
+<h3 id="3客户端暂停阻塞">3、客户端暂停阻塞</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1:6379&gt; client pause 10000
+……
+</code></pre></div></div>
+
+<p>使用范围:只对普通发布者和订阅发布者有效，对于主从复制是无效的，生产环境中成本非常高</p>
+
+<h3 id="4monitor-用于监控redis正在执行的命令">4、monitor 用于监控Redis正在执行的命令</h3>
+
+<p>另一个客户端B输入命令，则客户端A,monitor可以监听到正在执行的命令，并且记录了详细的时间戳</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>打开两个客户端，一个客户端A输入 monitor
+
+127.0.0.1:6379&gt; monitor
+^
+
+另一个客户端B输入命令，则客户端A可以监听到正在执行的命令，并且记录了详细的时间戳
+
+客户端B 
+127.0.0.1:6379&gt; keys *
+1) "name"
+2) "count"
+3) "age"
+4) "hello"
+5) "qq"
+127.0.0.1:6379&gt; set m girl
+OK
+127.0.0.1:6379&gt; 
+
+
+客户端A
+
+127.0.0.1:6379&gt; monitor
+OK
+1523876898.815455 [0 127.0.0.1:62628] "keys" "*"
+1523876908.519187 [0 127.0.0.1:62628] "set" "m" "girl"
+
+
+</code></pre></div></div>
+
+<p>每个客户端都有自己的输出缓冲区，既然monitor能监听到所有的命令，则一旦并发量过大，则monitor的输出缓存就会暴涨，瞬间占用大量内存</p>
+
+<h2 id="5客户端常见异常分析从源头上找">5、客户端常见异常分析，从源头上找</h2>
+
+<h3 id="51无法从连接池池获取到连接">5.1、无法从连接池池获取到连接</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>could not get a resourse
+</code></pre></div></div>
+<p>1、Jedis连接池连接个数是有限的，默认是8个，这里假设使用的默认配置，如果有8个对象被占用，并没有归还，此时还要借用，就需要等待(如果设置了maxWaitMIlls&gt;0),如果超时，则会发生异常<br />
+2、连接池设置数量过小，并发量太大，8个也不够用
+3、没有正确使用连接池，使用了8次，都没有释放<br />
+4、存在慢查询操作，这些慢查询持有的Jedis对象归还速度会比较慢，造成池子满了<br /></p>
+
+<h3 id="52客户端读写超时">5.2、客户端读写超时</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Read time out
+</code></pre></div></div>
+<p>1、读写超时时间设置过段，<br />
+2、命令本身比较慢<br />
+3、网络连接不正常（我的代码就是）<br />
+4、Redis自身发生阻塞<br /></p>
+
+<h3 id="53客户端链接超时">5.3、客户端链接超时</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Connect time out
+</code></pre></div></div>
+<p>1、设置超时时间过短，<br />
+2、网络不正常<br />
+3、Redis发送阻塞<br /></p>
+
+<h3 id="54客户端缓冲区异常">5.4、客户端缓冲区异常</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unexpected end of stream
+</code></pre></div></div>
+
+<p>1、输出缓冲区满，例如将普通客户端的输出缓冲区设置成了 1M 1M 60,<br />
+2、不正常的并发读写，Jedis对象呗多个线程并发操作</p>
+
+<h3 id="55客户端连接数过大">5.5、客户端连接数过大</h3>
+
+<p>如果客户端连接数超过了maxclients，就会抛出异常，遇到这个问题就麻烦了，因为肯定是不能再输入命令进行修复了</p>
+
+<p>1、客户端方面，如果应用方是分布式结果的话，下线部分应用节点。让Redis连接数降下来，再通过查找程序bug或者调整maxclients进行修复<br />
+2、服务端，使用高可用模式主从复制和集群，将当期Redis做故障转移</p>
+
+<h2 id="6客户端案例分析">6、客户端案例分析</h2>
+
+<h3 id="redis内存陡增">Redis内存陡增</h3>
+<h4 id="1现象">1、现象</h4>
+
+<p>服务端现象 ：Redis主节点内存陡增，几乎用满maxmemory，而从节点没有变化（主从复制，内存使用主从节点基本相同）<br />
+客户端现象:客户端产生了OOM，也就是Redis主节点使用的内存已经超过了maxmemory，无法写入新的数据</p>
+
+<h4 id="2原因">2、原因</h4>
+<p>1、确实有大量写入 ，通过查看主节点的dbseze和从节点的dbsize相同<br />
+2、输出缓冲区数量数量过大，造成内存陡增</p>
+
+<p>1、查看到输出缓冲区数量过大</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1:6379&gt; info clients
+# Clients
+connected_clients:2
+client_longest_output_list:225698
+client_biggest_input_buf:0
+blocked_clients:0
+127.0.0.1:6379&gt; 
+发现输出缓冲区的队列已经超过了20万个对象
+</code></pre></div></div>
+<p>2、通过 client list 找到不正常的连接,一般来说大部分客户端的omem（输出缓存区占用字节为0，以为其他的客户端都已经执行完事了）,通过下面的查找发现最后一次执行的命令是monitor，很明显就知道是通过monitor造成的</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redis-cli client list | grep -v “omem=0”
+
+id=3822 addr=127.0.0.1:64244 fd=7 name= age=0 idle=0 flags=N db=0 sub=0 psub=0 multi=-1 qbuf=0 qbuf-free=32768 obl=0 oll=0 omem=224551255844 events=r cmd=monitor
+
+</code></pre></div></div>
+
+<p>3、处理方法</p>
+
+<p>只要使用 client kill就可以杀掉这个连接，但是我们以后如果及时发现并且避免</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1、禁止在生成环境中使用monitor命令
+2、限制输出缓冲区的大小
+
+</code></pre></div></div>
+
+<h3 id="2客户端周期性超时">2、客户端周期性超时</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+redis.clients.jedis.exceptions.JedisConnectionException  
+java.net.SocketException  ：connect time out  
+
+</code></pre></div></div>
+
+<p>通过慢查询查看时间点，就可以判断出是哪里出了问题
+解决方法：运维层面，监控慢查询，一旦超过阀值，就发出报警，开发层面看，加强对Redis的理解，避免不挣钱的使用方式</p>
+
+<p><br /><br /><br />
+如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">支付包</th>
+      <th style="text-align: center">微信</th>
+      <th style="text-align: center">微信公众号</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg" alt="支付宝" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg" alt="微信" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg" alt="微信公众号" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Gitalk 评论 start  -->
+
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+<p> </p>
+<div id="gitalk-container"></div>
+<p>  <br />
+ <script type="text/javascript">
+    var gitalk = new Gitalk({
+		clientID: `1d164cd85549874d0e3a`,
+		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
+		id: 'LiEcalbZRbLKhNUL',
+    });
+    gitalk.render('gitalk-container');
+</script> </p>
+
+<!-- Gitalk end -->
+
+  
+	</div>
+	<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <!--
+  <%- list_categories(item.categories, {
+      show_count: false,
+      class: 'article-category',
+      style: 'none',
+      separator: '►'
+  }) %>
+  -->
+  
+  <a class="article-category-link" href="/categories/#Redis">Redis</a>
+  
+</div>
+
+
+  <div class="article-tags">
+  <!--
+  <% var tags = [];
+    item.tags.forEach(function(tag){
+      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
+    }); %>-->
+  <span></span> <!--<%- tags.join('') %>-->
+  
+  
+  <a href="/tags/#Redis">Redis</a>
+  
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://localhost:4000/redis/2018/04/16/5_%E5%AE%A2%E6%88%B7%E7%AB%AF/" data-title="5、客户端 | HealeJean的梦想博客" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+   
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/redis/2018/04/14/4_Redis%E7%9A%84%E5%B0%8F%E5%8A%9F%E8%83%BD%E5%A4%A7%E7%94%A8%E5%A4%84benchmark_%E6%85%A2%E6%9F%A5%E8%AF%A2slowlog_pipeline_%E4%BA%8B%E7%89%A9_%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85_GEO/" title="4、Redis的小功能大用处">
+  <strong>上一篇：</strong><br/>
+  <span>
+  4、Redis的小功能大用处</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/redis/2018/04/17/6_%E6%8C%81%E4%B9%85%E5%8C%96/"  title="6、持久化">
+ <strong>下一篇：</strong><br/> 
+ <span>6、持久化
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+
+      
+      
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside toc-content">
+ 
+ <!--<%- toc(item.content) %>-->
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+
+  <div class="linkslist">
+  <p class="asidetitle">个人网站</p>
+    <ul>
+        
+          <li>
+            <a href="http://blog.csdn.net/u012954706" target="_blank" title="csdn">csdn</a>
+          </li>
+        
+          <li>
+            <a href="http://www.cnblogs.com/HealerJean/" target="_blank" title="博客园">博客园</a>
+          </li>
+        
+          <li>
+            <a href="https://weibo.com/u/3889598250/" target="_blank" title="微博">微博</a>
+          </li>
+        
+          <li>
+            <a href="https://www.jianshu.com/u/54ba972e92a8" target="_blank" title="简书">简书</a>
+          </li>
+        
+          <li>
+            <a href="https://www.zhihu.com/people/healerjean" target="_blank" title="知乎">知乎</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+
+     <p class="asidetitle">个人信息</p>
+     <script src="/assets/img/person/jquery.js"></script>
+     <script src="/assets/img/person/jquery-github-user-widget.js"></script>
+     <div class="github-widget-user" data-user="HealerJean">	</div>
+
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/#Job" title="Job">Job<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#MarkDown" title="MarkDown">MarkDown<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GitHub" title="GitHub">GitHub<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mac" title="Mac">Mac<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Thread" title="Thread">Thread<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Url" title="Url">Url<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mysql" title="Mysql">Mysql<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Database" title="Database">Database<sup>19</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Annotation" title="Annotation">Annotation<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SortAlgorithm" title="SortAlgorithm">SortAlgorithm<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#CAS" title="CAS">CAS<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Maven" title="Maven">Maven<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#HTML" title="HTML">HTML<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#AngularJs" title="AngularJs">AngularJs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WeChat" title="WeChat">WeChat<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Experience" title="Experience">Experience<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Team" title="Team">Team<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SoftWare" title="SoftWare">SoftWare<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Utils" title="Utils">Utils<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Hibernate" title="Hibernate">Hibernate<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Date" title="Date">Date<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Log" title="Log">Log<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JSON" title="JSON">JSON<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Docker" title="Docker">Docker<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GrayLog" title="GrayLog">GrayLog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpringBoot" title="SpringBoot">SpringBoot<sup>21</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Redis" title="Redis">Redis<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Ehcache" title="Ehcache">Ehcache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Druid" title="Druid">Druid<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Quartz" title="Quartz">Quartz<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Swagger" title="Swagger">Swagger<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Netty" title="Netty">Netty<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#NIO" title="NIO">NIO<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WebSocket" title="WebSocket">WebSocket<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Map" title="Map">Map<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JVM" title="JVM">JVM<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mybatis" title="Mybatis">Mybatis<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Element" title="Element">Element<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Graphics" title="Graphics">Graphics<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linux" title="Linux">Linux<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Databases" title="Databases">Databases<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Nginx" title="Nginx">Nginx<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpirngBoot" title="SpirngBoot">SpirngBoot<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linu" title="Linu">Linu<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Java" title="Java">Java<sup>15</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JAVA" title="JAVA">JAVA<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Google" title="Google">Google<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  
+
+
+  
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+	<!-- 打赏功能 -->
+  <!-- <script src="http://static.tctip.com/tctip-1.0.0.min.js"></script> -->
+  <script src="/assets/img/tctip/tctip-1.0.1.min.js"></script>
+	<script>  
+	new tctip({
+	  top: '20%',
+	  button: {
+	    id: 9,
+	    type: 'dashang',
+	  },
+	  list: [
+	    {
+	      type: 'alipay',
+	      qrImg: '/assets/img/tctip/alpay.jpg'
+	    }, {
+	      type: 'wechat',
+	      qrImg: '/assets/img/tctip/weixin.jpg'
+	    }
+	  ]
+	}).init()
+	</script>
+
+
+
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 欢迎来到  HealerJean 的梦想博客. <br/>
+			------您已走进一个高级软件开发工程师的成长之路</p>
+	</section>
+	 
+
+
+<!--  自带的分享功能 	-->
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3889598250" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		<a href="https://twitter.com/mxzdhealer" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:mxzdhealer@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div> 
+
+
+	<!--
+			<%  Array.prototype.S=String.fromCharCode(2);
+			  Array.prototype.in_array=function(e){
+    			var r=new RegExp(this.S+e+this.S);
+    			return (r.test(this.S+this.join(this.S)+this.S));
+				};
+				var cc = new Array('by','by-nc','by-nc-nd','by-nc-sa','by-nd','by-sa','zero'); %>
+		<% if (cc.in_array(theme.creative_commons) ) { %>
+				<div class="cc-license">
+          <a href="http://creativecommons.org/licenses/<%= theme.creative_commons %>/4.0" class="cc-opacity" target="_blank">
+            <img src="<%- config.root %>img/cc-<%= theme.creative_commons %>.svg" alt="Creative Commons" />
+          </a>
+        </div>
+    <% } %>
+				-->
+
+		<p class="copyright">
+		welcome to <a href="http://jekyllrb.com" target="_blank" title="jekyll">HealerJean</a> 
+		blog <a href="https://github.com/simpleyyt/jekyll-jacman" target="_blank" title="Jacman">for</a> © 2017 
+		
+		<a href="about" target="_blank" title="HealerJean">HealerJean</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/assets/js/jquery-2.0.3.min.js"></script>
+<script src="/assets/js/jquery.imagesloaded.min.js"></script>
+<script src="/assets/js/gallery.js"></script>
+<script src="/assets/js/jquery.qrcode-0.12.0.min.js"></script>
+<script src="/assets/js/toc.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+
+  
+
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+});
+</script>
+
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#toc.toc-aside').toc({
+    title: "文章目录",
+    showEffect: "none"
+  });
+  $('#toc.toc-article').toc({
+    title: "文章目录",
+    showEffect: "show",
+    showSpeed: 0
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+/*
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      //$('.hoverqrcode').hide();
+  });
+  */
+});
+</script>
+
+
+
+
+
+
+<!--
+
+-->
+
+
+
+
+<link rel="stylesheet" href="/assets/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/assets/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      if ($(this).hasClass('emoji')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+});
+</script>
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/assets/img/scrollup.png"/></a>
+	</div>
+	<script src="/assets/js/totop.js"></script>
+
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
+

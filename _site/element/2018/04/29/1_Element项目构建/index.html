@@ -1,0 +1,1377 @@
+
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta name="baidu-site-verification" content="0r55fUD7QR" />
+  <meta charset="UTF-8">
+    
+    
+    
+    
+    <title>1、Element项目构建 | HealeJean的梦想博客</title>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HealerJean">
+    
+
+    
+    <!--<%- open_graph({twitter_id: theme.author.twitter, google_plus: theme.author.google_plus}) %>-->
+
+    <meta name="description" content="page.description">
+    
+    <meta property="og:type" content="article">
+    
+    <meta property="og:title" content="1、Element项目构建">
+    <meta property="og:url" content="/element/2018/04/29/1_Element%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA/">
+    <meta property="og:site_name" content="HealeJean的梦想博客">
+    <meta property="og:description" content="Element项目构建">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="1、Element项目构建">
+    <meta name="twitter:description" content="page.description">
+    <meta name="twitter:creator" content="@mxzdhealer">
+    <link rel="publisher" href="">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HealeJean的梦想博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/assets/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/assets/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/assets/img/jacman.jpg">
+    
+
+    <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/highlight.css" type="text/css">
+    
+    
+  <!-- 百度统计 -->
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?19549885065170e0019f01e9975dfc1d";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <!-- 百度联盟 -->
+    <meta name="baidu_union_verify" content="c2f387067cf0849991ea870f73c055f2">
+  
+</head>
+
+  <body>
+    <header>
+        <div>
+		    
+			<div id="imglogo">
+				<a href="/"><img src="/assets/img/logo.png" alt="HealeJean的梦想博客" title="HealeJean的梦想博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HealeJean的梦想博客">HealeJean的梦想博客</a></h1>
+				<h2 class="blog-motto">一个高级软件开发工程师的成长之路</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/categories">技术</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories/#Job">生活日记</a></li>
+					
+						<li><a href="/about">留言板</a></li>
+					
+						<li><a href="/friends">友情链接</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search" method="get" accept-charset="utf-8">
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>
+</div>
+
+    </header>
+    <div id="container">
+      
+
+
+
+<div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+	<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/element/2018/04/29/1_Element%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA/" title="1、Element项目构建" itemprop="url">1、Element项目构建</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="HealerJean" target="_blank" itemprop="author">HealerJean</a>
+		
+  <p class="article-time">
+    <time datetime="2018-04-29 01:33:00 +0800" itemprop="datePublished"> 发表于 2018-04-29</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article toc-content" style="display: none;">
+		
+			<!--<%- toc(item.content) %>-->
+		
+		</div>
+		
+		<!-- image url 
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
+　　首行缩进
+<font color="red">  </font>
+-->
+
+<h2 id="前言">前言</h2>
+
+<h3 id="1官方文档地址">1、<a href="http://element.eleme.io/#/zh-CN/component/message">官方文档地址</a></h3>
+
+<h3 id="2快速上手">2、<a href="http://element.eleme.io/#/zh-CN/component/quickstart">快速上手</a></h3>
+
+<h3 id="3官方demo">3、<a href="https://github.com/ElementUI/element-starter">官方demo</a></h3>
+
+<h2 id="1进度条项目">1、进度条项目</h2>
+
+<h3 id="11先找到进度条的组件">1.1、先找到进度条的组件</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &lt;Progress strokeWidth={18} percentage={0} textInside /&gt;
+ &lt;Progress strokeWidth={18} percentage={70} textInside /&gt;
+ &lt;Progress strokeWidth={18} percentage={100} status="success" textInside /&gt;
+ &lt;Progress strokeWidth={18} percentage={50} status="exception" textInside /&gt;
+</code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180427-170130@2x.png" alt="WX20180427-170130@2x" /></p>
+
+<table class="grid"><thead><tr>
+<th>参数</th>
+<th>说明</th>
+<th>类型</th>
+<th>可选值</th>
+<th>默认值</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>percentage</strong></td>
+<td><strong>百分比（必填）</strong></td>
+<td>number</td>
+<td>0-100</td>
+<td>0</td>
+</tr>
+<tr>
+<td>type</td>
+<td>进度条类型</td>
+<td>string</td>
+<td>line/circle</td>
+<td>line</td>
+</tr>
+<tr>
+<td>strokeWidth</td>
+<td>进度条的宽度，单位 px</td>
+<td>number</td>
+<td>—</td>
+<td>6</td>
+</tr>
+<tr>
+<td>textInside</td>
+<td>进度条显示文字内置在进度条内（只在 type=line 时可用）</td>
+<td>Boolean</td>
+<td>—</td>
+<td>false</td>
+</tr>
+<tr>
+<td>status</td>
+<td>进度条当前状态</td>
+<td>string</td>
+<td>success/exception</td>
+<td>—</td>
+</tr>
+<tr>
+<td>width</td>
+<td>环形进度条画布宽度（只在 type=circle 时可用）</td>
+<td>number</td>
+<td></td>
+<td>126</td>
+</tr>
+<tr>
+<td>showText</td>
+<td>是否显示进度条文字内容</td>
+<td>boolean</td>
+<td>—</td>
+<td>true</td>
+</tr>
+</tbody></table>
+
+<h3 id="12打开mainjs中看看我们的组件有没有引入进来">1.2、打开main.js中看看我们的组件有没有引入进来</h3>
+
+<p>Element就是这样，需要什么自己引入，当然也可以全部引入进来，如下就是全部引入。但是一般情况下我们都是需要什么引入什么</p>
+
+<h4 id="121全部引入">1.2.1、全部引入</h4>
+<div class="language-vue highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import Vue from 'vue';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+import App from './App.vue';
+
+Vue.use(ElementUI);
+
+new Vue({
+  el: '#app',
+  render: h =&gt; h(App)
+});
+</code></pre></div></div>
+
+<h4 id="122部分引入需要什么引入什么">1.2.2、部分引入，需要什么引入什么</h4>
+
+<p>需要先执行命令，因为需要借助<code class="highlighter-rouge">babel-plugin-component</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install babel-plugin-component -D
+
+</code></pre></div></div>
+
+<h5 id="1比较简单的demo组件下面只写了两个button-和select">1、比较简单的demo组件，。下面只写了两个Button 和Select</h5>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Vue</span> <span class="k">from</span> <span class="s1">'vue'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Button</span><span class="p">,</span> <span class="nx">Select</span> <span class="p">}</span> <span class="k">from</span> <span class="s1">'element-ui'</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">App</span> <span class="k">from</span> <span class="s1">'./App.vue'</span><span class="p">;</span>
+
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">component</span><span class="p">(</span><span class="nx">Button</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">Button</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">component</span><span class="p">(</span><span class="nx">Select</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">Select</span><span class="p">);</span>
+<span class="cm">/* 或写为
+ * Vue.use(Button)
+ * Vue.use(Select)
+ */</span>
+
+<span class="k">new</span> <span class="nx">Vue</span><span class="p">({</span>
+  <span class="na">el</span><span class="p">:</span> <span class="s1">'#app'</span><span class="p">,</span>
+  <span class="na">render</span><span class="p">:</span> <span class="nx">h</span> <span class="o">=&gt;</span> <span class="nx">h</span><span class="p">(</span><span class="nx">App</span><span class="p">)</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h5 id="2全局组件和我公司有点像">2、全局组件，和我公司有点像</h5>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">Vue</span> <span class="k">from</span> <span class="s1">'vue'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span>
+  <span class="nx">Pagination</span><span class="p">,</span>
+  <span class="nx">Dialog</span><span class="p">,</span>
+  <span class="nx">Autocomplete</span><span class="p">,</span>
+  <span class="nx">Dropdown</span><span class="p">,</span>
+  <span class="nx">DropdownMenu</span><span class="p">,</span>
+  <span class="nx">DropdownItem</span><span class="p">,</span>
+  <span class="nx">Menu</span><span class="p">,</span>
+  <span class="nx">Submenu</span><span class="p">,</span>
+  <span class="nx">MenuItem</span><span class="p">,</span>
+  <span class="nx">MenuItemGroup</span><span class="p">,</span>
+  <span class="nx">Input</span><span class="p">,</span>
+  <span class="nx">InputNumber</span><span class="p">,</span>
+  <span class="nx">Radio</span><span class="p">,</span>
+  <span class="nx">RadioGroup</span><span class="p">,</span>
+  <span class="nx">RadioButton</span><span class="p">,</span>
+  <span class="nx">Checkbox</span><span class="p">,</span>
+  <span class="nx">CheckboxButton</span><span class="p">,</span>
+  <span class="nx">CheckboxGroup</span><span class="p">,</span>
+  <span class="nx">Switch</span><span class="p">,</span>
+  <span class="nx">Select</span><span class="p">,</span>
+  <span class="nx">Option</span><span class="p">,</span>
+  <span class="nx">OptionGroup</span><span class="p">,</span>
+  <span class="nx">Button</span><span class="p">,</span>
+  <span class="nx">ButtonGroup</span><span class="p">,</span>
+  <span class="nx">Table</span><span class="p">,</span>
+  <span class="nx">TableColumn</span><span class="p">,</span>
+  <span class="nx">DatePicker</span><span class="p">,</span>
+  <span class="nx">TimeSelect</span><span class="p">,</span>
+  <span class="nx">TimePicker</span><span class="p">,</span>
+  <span class="nx">Popover</span><span class="p">,</span>
+  <span class="nx">Tooltip</span><span class="p">,</span>
+  <span class="nx">Breadcrumb</span><span class="p">,</span>
+  <span class="nx">BreadcrumbItem</span><span class="p">,</span>
+  <span class="nx">Form</span><span class="p">,</span>
+  <span class="nx">FormItem</span><span class="p">,</span>
+  <span class="nx">Tabs</span><span class="p">,</span>
+  <span class="nx">TabPane</span><span class="p">,</span>
+  <span class="nx">Tag</span><span class="p">,</span>
+  <span class="nx">Tree</span><span class="p">,</span>
+  <span class="nx">Alert</span><span class="p">,</span>
+  <span class="nx">Slider</span><span class="p">,</span>
+  <span class="nx">Icon</span><span class="p">,</span>
+  <span class="nx">Row</span><span class="p">,</span>
+  <span class="nx">Col</span><span class="p">,</span>
+  <span class="nx">Upload</span><span class="p">,</span>
+  <span class="nx">Progress</span><span class="p">,</span>
+  <span class="nx">Badge</span><span class="p">,</span>
+  <span class="nx">Card</span><span class="p">,</span>
+  <span class="nx">Rate</span><span class="p">,</span>
+  <span class="nx">Steps</span><span class="p">,</span>
+  <span class="nx">Step</span><span class="p">,</span>
+  <span class="nx">Carousel</span><span class="p">,</span>
+  <span class="nx">CarouselItem</span><span class="p">,</span>
+  <span class="nx">Collapse</span><span class="p">,</span>
+  <span class="nx">CollapseItem</span><span class="p">,</span>
+  <span class="nx">Cascader</span><span class="p">,</span>
+  <span class="nx">ColorPicker</span><span class="p">,</span>
+  <span class="nx">Transfer</span><span class="p">,</span>
+  <span class="nx">Container</span><span class="p">,</span>
+  <span class="nx">Header</span><span class="p">,</span>
+  <span class="nx">Aside</span><span class="p">,</span>
+  <span class="nx">Main</span><span class="p">,</span>
+  <span class="nx">Footer</span><span class="p">,</span>
+  <span class="nx">Loading</span><span class="p">,</span>
+  <span class="nx">MessageBox</span><span class="p">,</span>
+  <span class="nx">Message</span><span class="p">,</span>
+  <span class="nx">Notification</span>
+<span class="p">}</span> <span class="k">from</span> <span class="s1">'element-ui'</span><span class="p">;</span>
+
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Pagination</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Dialog</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Autocomplete</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Dropdown</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">DropdownMenu</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">DropdownItem</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Menu</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Submenu</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">MenuItem</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">MenuItemGroup</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Input</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">InputNumber</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Radio</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">RadioGroup</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">RadioButton</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Checkbox</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">CheckboxButton</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">CheckboxGroup</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Switch</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Select</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Option</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">OptionGroup</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Button</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">ButtonGroup</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Table</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">TableColumn</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">DatePicker</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">TimeSelect</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">TimePicker</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Popover</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Tooltip</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Breadcrumb</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">BreadcrumbItem</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Form</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">FormItem</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Tabs</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">TabPane</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Tag</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Tree</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Alert</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Slider</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Icon</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Row</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Col</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Upload</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Progress</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Badge</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Card</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Rate</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Steps</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Step</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Carousel</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">CarouselItem</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Collapse</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">CollapseItem</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Cascader</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">ColorPicker</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Container</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Header</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Aside</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Main</span><span class="p">);</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Footer</span><span class="p">);</span>
+
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Loading</span><span class="p">.</span><span class="nx">directive</span><span class="p">);</span>
+
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">$loading</span> <span class="o">=</span> <span class="nx">Loading</span><span class="p">.</span><span class="nx">service</span><span class="p">;</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">$msgbox</span> <span class="o">=</span> <span class="nx">MessageBox</span><span class="p">;</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">$alert</span> <span class="o">=</span> <span class="nx">MessageBox</span><span class="p">.</span><span class="nx">alert</span><span class="p">;</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">$confirm</span> <span class="o">=</span> <span class="nx">MessageBox</span><span class="p">.</span><span class="nx">confirm</span><span class="p">;</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">$prompt</span> <span class="o">=</span> <span class="nx">MessageBox</span><span class="p">.</span><span class="nx">prompt</span><span class="p">;</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">$notify</span> <span class="o">=</span> <span class="nx">Notification</span><span class="p">;</span>
+<span class="nx">Vue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">$message</span> <span class="o">=</span> <span class="nx">Message</span><span class="p">;</span>
+
+
+</code></pre></div></div>
+
+<h5 id="3my-我使用的是下面这导入了progress组件">3、my 我使用的是下面这，导入了Progress组件</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import Vue from 'vue'
+import ElementUI from 'element-ui'
+import {
+  Pagination,
+  Dialog,
+  // Autocomplete,
+  // Dropdown,
+  // DropdownMenu,
+  // DropdownItem,
+  // Menu,
+  // Submenu,
+  // MenuItem,
+  // MenuItemGroup,
+  Input,
+  InputNumber,
+  Radio,
+  RadioGroup,
+  RadioButton,
+  Checkbox,
+  CheckboxButton,
+  CheckboxGroup,
+  // Switch,
+  Select,
+  Option,
+  OptionGroup,
+  Button,
+  ButtonGroup,
+  Table,
+  TableColumn,
+  DatePicker,
+  // TimeSelect,
+  TimePicker,
+  // Popover,
+  // Tooltip,
+  // Breadcrumb,
+  // BreadcrumbItem,
+  Form,
+  FormItem,
+  Tabs,
+  TabPane,
+  // Tag,
+  // Tree,
+  // Alert,
+  // Slider,
+  Icon,
+  Row,
+  Col,
+  Upload,
+  // Progress,
+  // Badge,
+  // Card,
+  // Rate,
+  // Steps,
+  // Step,
+  // Carousel,
+  // CarouselItem,
+  // Collapse,
+  // CollapseItem,
+  // Cascader,
+  // ColorPicker,
+  // Transfer,
+  Container,
+  Header,
+  Aside,
+  Main,
+  Footer,
+  Loading,
+  MessageBox,
+  Message,
+  Progress,
+  Notification,
+} from 'element-ui'
+
+Vue.use(Pagination)
+Vue.use(Dialog)
+// Vue.use(Autocomplete)
+// Vue.use(Dropdown)
+// Vue.use(DropdownMenu)
+// Vue.use(DropdownItem)
+// Vue.use(Menu)
+// Vue.use(Submenu)
+// Vue.use(MenuItem)
+// Vue.use(MenuItemGroup)
+Vue.use(Input)
+Vue.use(InputNumber)
+Vue.use(Radio)
+Vue.use(RadioGroup)
+Vue.use(RadioButton)
+Vue.use(Checkbox)
+Vue.use(CheckboxButton)
+Vue.use(CheckboxGroup)
+// Vue.use(Switch)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(OptionGroup)
+Vue.use(Button)
+Vue.use(ButtonGroup)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(DatePicker)
+// Vue.use(TimeSelect)
+Vue.use(TimePicker)
+// Vue.use(Popover)
+// Vue.use(Tooltip)
+// Vue.use(Breadcrumb)
+// Vue.use(BreadcrumbItem)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Tabs)
+Vue.use(TabPane)
+// Vue.use(Tag)
+// Vue.use(Tree)
+// Vue.use(Alert)
+// Vue.use(Slider)
+Vue.use(Icon)
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Upload)
+// Vue.use(Progress)
+// Vue.use(Badge)
+// Vue.use(Card)
+// Vue.use(Rate)
+// Vue.use(Steps)
+// Vue.use(Step)
+// Vue.use(Carousel)
+// Vue.use(CarouselItem)
+// Vue.use(Collapse)
+// Vue.use(CollapseItem)
+// Vue.use(Cascader)
+// Vue.use(ColorPicker)
+Vue.use(Container)
+Vue.use(Header)
+Vue.use(Aside)
+Vue.use(Main)
+Vue.use(Footer)
+Vue.use(Progress)
+Vue.use(Loading.directive)
+
+Vue.prototype.$loading = Loading.service
+Vue.prototype.$msgbox = MessageBox
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$notify = Notification
+Vue.prototype.$message = Message
+
+import './filter'
+import axios from '@/api/axios';
+Vue.prototype.$http = axios;
+import router from './router'
+import App from './App'
+import './common/js/date-format'
+
+router.beforeEach((route, redirect, next) =&gt; {
+  document.title = route.meta.title || document.title;
+  next();
+});
+new Vue({
+  el: '#app',
+  router,
+  template: '&lt;App/&gt;',
+  components: {
+    App
+  }
+})
+
+</code></pre></div></div>
+
+<h3 id="13开始编辑进度条当不上传的时候隐藏上传的时候显示">1.3、开始编辑进度条，当不上传的时候隐藏，上传的时候显示</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>progress:0, //初始状态进度为0
+showProgressFlag:false,//默认隐藏进度条
+
+
+&lt;div class="el-pro" v-show="showProgressFlag"&gt;
+  &lt;el-progress :text-inside="true" :stroke-width="20" :percentage="progress"  &gt;&lt;/el-progress&gt;
+&lt;/div&gt;
+</code></pre></div></div>
+
+<h3 id="14上传表单和文件注意的是当浏览器在上传的时候本身是可以知道自己上传了多少上去但是到了后端具体怎么处理是后端的事情了所以我们这里只关注浏览器识别的进度也就是在http协议中知道的-关注变量thisconfig">1.4、上传表单和文件，注意的是，当浏览器在上传的时候，本身是可以知道自己上传了多少上去，但是到了后端具体怎么处理是后端的事情了。所以我们这里只关注浏览器识别的进度，也就是在http协议中知道的 关注变量this.config</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+progressEvent 为监控状态下的进度事件
+
+config : { //上传组件监控进度条
+    headers: {'Content-Type': 'multipart/form-data'},
+    timeout: 300000,
+    onUploadProgress: progressEvent =&gt; {
+      var complete   = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+      this.progressMethod(complete);
+    }
+  }
+
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	var formData = new FormData();
+  formData.append("videoFile", this.videoFileData);
+  formData.append("imgFile", this.fileData);
+  formData.append("id", this.ruleForm.id);
+  formData.append("intro", this.ruleForm.intro);
+  formData.append("intro2", this.ruleForm.intro2);
+  formData.append("duration", this.ruleForm.duration);
+  formData.append("beonTimeDisp", this.ruleForm.beonTimeDisp);
+  formData.append("category", this.ruleForm.category);
+  formData.append("categoryTag", this.ruleForm.categoryTag);
+  formData.append("dailyCouponId", this.ruleForm.dailyCouponId);
+  formData.append("videoIntro", this.ruleForm.videoIntro);
+   formData.append("videoTitle", this.ruleForm.videoTitle);
+   formData.append("soldNum", this.ruleForm.soldNum);
+   this.showProgressFlag=true; //开始上传显示进度条
+   this.addFormVisible = false; //关闭窗口
+   this.masterLoading = false; //关闭刷新进度条
+
+
+  fecth.post('/snzq/video/add', formData,this.config).then(res =&gt; {
+     if (res.code == 0) {
+       if(this.progress==100){
+         this.$message({
+           type: "success",
+           message: "上传成功"
+         });
+         this.progress=0;
+         this.showProgressFlag=false; //关闭进度条
+         this.search();
+       }
+
+     } else {
+       this.masterLoading = false;
+       this.$message({
+         type: "info",
+         message: res.message
+       });
+     }
+}).catch(() =&gt; {
+  this.masterLoading = false;
+  this.$message({
+    type: "info",
+    message: "网速太慢了，上传超时！刷新当前页面看是否上传成功！"
+  });
+});
+
+</code></pre></div></div>
+
+<p><br /><br /><br />
+如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">支付包</th>
+      <th style="text-align: center">微信</th>
+      <th style="text-align: center">微信公众号</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg" alt="支付宝" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg" alt="微信" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg" alt="微信公众号" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Gitalk 评论 start  -->
+
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+<p> </p>
+<div id="gitalk-container"></div>
+<p>  <br />
+ <script type="text/javascript">
+    var gitalk = new Gitalk({
+		clientID: `1d164cd85549874d0e3a`,
+		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
+		id: '6y3CgjQZX30cman7',
+    });
+    gitalk.render('gitalk-container');
+</script> </p>
+
+<!-- Gitalk end -->
+
+  
+	</div>
+	<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <!--
+  <%- list_categories(item.categories, {
+      show_count: false,
+      class: 'article-category',
+      style: 'none',
+      separator: '►'
+  }) %>
+  -->
+  
+  <a class="article-category-link" href="/categories/#Element">Element</a>
+  
+</div>
+
+
+  <div class="article-tags">
+  <!--
+  <% var tags = [];
+    item.tags.forEach(function(tag){
+      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
+    }); %>-->
+  <span></span> <!--<%- tags.join('') %>-->
+  
+  
+  <a href="/tags/#Element">Element</a>
+  
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://localhost:4000/element/2018/04/29/1_Element%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA/" data-title="1、Element项目构建 | HealeJean的梦想博客" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+   
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/springboot/mybatis/2018/04/26/8-springBoot%E7%BB%A7%E6%89%BFmybatis%E5%88%86%E9%A1%B5%E6%8F%92%E4%BB%B6/" title="2、springBoot集成mybatis分页插件PageHelper">
+  <strong>上一篇：</strong><br/>
+  <span>
+  2、springBoot集成mybatis分页插件PageHelper</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/redis/2018/05/02/11_CacheCloud%E7%9B%91%E6%8E%A7%E8%BF%90%E7%BB%B4/"  title="11、CacheCloud监控运维">
+ <strong>下一篇：</strong><br/> 
+ <span>11、CacheCloud监控运维
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+
+      
+      
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside toc-content">
+ 
+ <!--<%- toc(item.content) %>-->
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+
+  <div class="linkslist">
+  <p class="asidetitle">个人网站</p>
+    <ul>
+        
+          <li>
+            <a href="http://blog.csdn.net/u012954706" target="_blank" title="csdn">csdn</a>
+          </li>
+        
+          <li>
+            <a href="http://www.cnblogs.com/HealerJean/" target="_blank" title="博客园">博客园</a>
+          </li>
+        
+          <li>
+            <a href="https://weibo.com/u/3889598250/" target="_blank" title="微博">微博</a>
+          </li>
+        
+          <li>
+            <a href="https://www.jianshu.com/u/54ba972e92a8" target="_blank" title="简书">简书</a>
+          </li>
+        
+          <li>
+            <a href="https://www.zhihu.com/people/healerjean" target="_blank" title="知乎">知乎</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+
+     <p class="asidetitle">个人信息</p>
+     <script src="/assets/img/person/jquery.js"></script>
+     <script src="/assets/img/person/jquery-github-user-widget.js"></script>
+     <div class="github-widget-user" data-user="HealerJean">	</div>
+
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/#Job" title="Job">Job<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#MarkDown" title="MarkDown">MarkDown<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GitHub" title="GitHub">GitHub<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mac" title="Mac">Mac<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Thread" title="Thread">Thread<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Url" title="Url">Url<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mysql" title="Mysql">Mysql<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Database" title="Database">Database<sup>19</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Annotation" title="Annotation">Annotation<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SortAlgorithm" title="SortAlgorithm">SortAlgorithm<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#CAS" title="CAS">CAS<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Maven" title="Maven">Maven<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#HTML" title="HTML">HTML<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#AngularJs" title="AngularJs">AngularJs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WeChat" title="WeChat">WeChat<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Experience" title="Experience">Experience<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Team" title="Team">Team<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SoftWare" title="SoftWare">SoftWare<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Utils" title="Utils">Utils<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Hibernate" title="Hibernate">Hibernate<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Date" title="Date">Date<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Log" title="Log">Log<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JSON" title="JSON">JSON<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Docker" title="Docker">Docker<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GrayLog" title="GrayLog">GrayLog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpringBoot" title="SpringBoot">SpringBoot<sup>21</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Redis" title="Redis">Redis<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Ehcache" title="Ehcache">Ehcache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Druid" title="Druid">Druid<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Quartz" title="Quartz">Quartz<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Swagger" title="Swagger">Swagger<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Netty" title="Netty">Netty<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#NIO" title="NIO">NIO<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WebSocket" title="WebSocket">WebSocket<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Map" title="Map">Map<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JVM" title="JVM">JVM<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mybatis" title="Mybatis">Mybatis<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Element" title="Element">Element<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Graphics" title="Graphics">Graphics<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linux" title="Linux">Linux<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Databases" title="Databases">Databases<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Nginx" title="Nginx">Nginx<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpirngBoot" title="SpirngBoot">SpirngBoot<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linu" title="Linu">Linu<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Java" title="Java">Java<sup>15</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JAVA" title="JAVA">JAVA<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Google" title="Google">Google<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  
+
+
+  
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+	<!-- 打赏功能 -->
+  <!-- <script src="http://static.tctip.com/tctip-1.0.0.min.js"></script> -->
+  <script src="/assets/img/tctip/tctip-1.0.1.min.js"></script>
+	<script>  
+	new tctip({
+	  top: '20%',
+	  button: {
+	    id: 9,
+	    type: 'dashang',
+	  },
+	  list: [
+	    {
+	      type: 'alipay',
+	      qrImg: '/assets/img/tctip/alpay.jpg'
+	    }, {
+	      type: 'wechat',
+	      qrImg: '/assets/img/tctip/weixin.jpg'
+	    }
+	  ]
+	}).init()
+	</script>
+
+
+
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 欢迎来到  HealerJean 的梦想博客. <br/>
+			------您已走进一个高级软件开发工程师的成长之路</p>
+	</section>
+	 
+
+
+<!--  自带的分享功能 	-->
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3889598250" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		<a href="https://twitter.com/mxzdhealer" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:mxzdhealer@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div> 
+
+
+	<!--
+			<%  Array.prototype.S=String.fromCharCode(2);
+			  Array.prototype.in_array=function(e){
+    			var r=new RegExp(this.S+e+this.S);
+    			return (r.test(this.S+this.join(this.S)+this.S));
+				};
+				var cc = new Array('by','by-nc','by-nc-nd','by-nc-sa','by-nd','by-sa','zero'); %>
+		<% if (cc.in_array(theme.creative_commons) ) { %>
+				<div class="cc-license">
+          <a href="http://creativecommons.org/licenses/<%= theme.creative_commons %>/4.0" class="cc-opacity" target="_blank">
+            <img src="<%- config.root %>img/cc-<%= theme.creative_commons %>.svg" alt="Creative Commons" />
+          </a>
+        </div>
+    <% } %>
+				-->
+
+		<p class="copyright">
+		welcome to <a href="http://jekyllrb.com" target="_blank" title="jekyll">HealerJean</a> 
+		blog <a href="https://github.com/simpleyyt/jekyll-jacman" target="_blank" title="Jacman">for</a> © 2017 
+		
+		<a href="about" target="_blank" title="HealerJean">HealerJean</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/assets/js/jquery-2.0.3.min.js"></script>
+<script src="/assets/js/jquery.imagesloaded.min.js"></script>
+<script src="/assets/js/gallery.js"></script>
+<script src="/assets/js/jquery.qrcode-0.12.0.min.js"></script>
+<script src="/assets/js/toc.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+
+  
+
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+});
+</script>
+
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#toc.toc-aside').toc({
+    title: "文章目录",
+    showEffect: "none"
+  });
+  $('#toc.toc-article').toc({
+    title: "文章目录",
+    showEffect: "show",
+    showSpeed: 0
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+/*
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      //$('.hoverqrcode').hide();
+  });
+  */
+});
+</script>
+
+
+
+
+
+
+<!--
+
+-->
+
+
+
+
+<link rel="stylesheet" href="/assets/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/assets/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      if ($(this).hasClass('emoji')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+});
+</script>
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/assets/img/scrollup.png"/></a>
+	</div>
+	<script src="/assets/js/totop.js"></script>
+
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
+

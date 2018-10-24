@@ -1,0 +1,1380 @@
+
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta name="baidu-site-verification" content="0r55fUD7QR" />
+  <meta charset="UTF-8">
+    
+    
+    
+    
+    <title>2、垃圾收集器 | HealeJean的梦想博客</title>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HealerJean">
+    
+
+    
+    <!--<%- open_graph({twitter_id: theme.author.twitter, google_plus: theme.author.google_plus}) %>-->
+
+    <meta name="description" content="page.description">
+    
+    <meta property="og:type" content="article">
+    
+    <meta property="og:title" content="2、垃圾收集器">
+    <meta property="og:url" content="/jvm/2018/04/09/2_%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/">
+    <meta property="og:site_name" content="HealeJean的梦想博客">
+    <meta property="og:description" content="垃圾收集器">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="2、垃圾收集器">
+    <meta name="twitter:description" content="page.description">
+    <meta name="twitter:creator" content="@mxzdhealer">
+    <link rel="publisher" href="">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HealeJean的梦想博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/assets/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/assets/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/assets/img/jacman.jpg">
+    
+
+    <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/highlight.css" type="text/css">
+    
+    
+  <!-- 百度统计 -->
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?19549885065170e0019f01e9975dfc1d";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <!-- 百度联盟 -->
+    <meta name="baidu_union_verify" content="c2f387067cf0849991ea870f73c055f2">
+  
+</head>
+
+  <body>
+    <header>
+        <div>
+		    
+			<div id="imglogo">
+				<a href="/"><img src="/assets/img/logo.png" alt="HealeJean的梦想博客" title="HealeJean的梦想博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HealeJean的梦想博客">HealeJean的梦想博客</a></h1>
+				<h2 class="blog-motto">一个高级软件开发工程师的成长之路</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/categories">技术</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories/#Job">生活日记</a></li>
+					
+						<li><a href="/about">留言板</a></li>
+					
+						<li><a href="/friends">友情链接</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search" method="get" accept-charset="utf-8">
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>
+</div>
+
+    </header>
+    <div id="container">
+      
+
+
+
+<div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+	<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/jvm/2018/04/09/2_%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/" title="2、垃圾收集器" itemprop="url">2、垃圾收集器</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="HealerJean" target="_blank" itemprop="author">HealerJean</a>
+		
+  <p class="article-time">
+    <time datetime="2018-04-09 21:33:00 +0800" itemprop="datePublished"> 发表于 2018-04-09</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article toc-content" style="display: none;">
+		
+			<!--<%- toc(item.content) %>-->
+		
+		</div>
+		
+		<!-- image url 
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
+　　首行缩进
+<font color="red">  </font>
+-->
+
+<h2 id="前言">前言</h2>
+
+<p>垃圾收集器GC ，同通常需要考虑3个事情</p>
+
+<ul>
+  <li>1、那些内存需要回收</li>
+  <li>2、什么时候回收</li>
+  <li>3、如何回收</li>
+</ul>
+
+<h3 id="1不需要回收的">1、不需要回收的</h3>
+
+<font color="red">  程序计时器，虚拟机栈，本地方法栈</font>
+<p>这3个区域都是线程所私有的，随着线程而生，而死。 关于栈的话，基本上就是在运行方法的时候开启一个栈帧。他们的内存大小和声明周期是已知的，因此这几个区域内存分配和回收都具备确定性，不需要过多考虑回收问题，因为他们在方法结束者是线程结束，内存自然的就被回收了</p>
+
+<h3 id="2需要回收的">2、需要回收的</h3>
+
+<p>JAVA堆和方法区 则是需要被垃圾收集器回收的</p>
+
+<h2 id="1判断对象是否活着">1、判断对象是否活着</h2>
+
+<h3 id="11引用计数法">1.1、引用计数法</h3>
+
+<p>解释：给对象添加一个计时器，每当引用的时候加1，当引用失效时候减1，任何时候为0的对象就是不能再被使用的。（书上说，这样表达不太好）</p>
+
+<p><br />
+java虚拟机没有使用它来管理内存，因为它很难解决对象之间相互引用的问题</p>
+
+<h4 id="111测试代码">1.1.1、测试代码</h4>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">hlj</span><span class="o">.</span><span class="na">jvm</span><span class="o">.</span><span class="na">GC</span><span class="o">;</span>
+
+<span class="cm">/**
+ * @Description
+ * @Author HealerJean
+ * @Date 2018/4/9  下午1:38.
+ */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ReferenceCountingGC</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="n">Object</span> <span class="n">instance</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="kd">static</span>  <span class="kd">final</span> <span class="kt">int</span> <span class="n">_1MB</span><span class="o">=</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">;</span>
+
+	<span class="cm">/**
+	 占点内存，以便在日志中看清楚是否被回收
+	 */</span>	
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">bigSize</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="mi">1</span> <span class="o">*</span> <span class="n">_1MB</span><span class="o">];</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">ReferenceCountingGC</span> <span class="n">objA</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReferenceCountingGC</span><span class="o">();</span>
+        <span class="n">ReferenceCountingGC</span> <span class="n">objB</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReferenceCountingGC</span><span class="o">();</span>
+
+        <span class="n">objA</span><span class="o">.</span><span class="na">instance</span> <span class="o">=</span> <span class="n">objB</span><span class="o">;</span>
+        <span class="n">objB</span><span class="o">.</span><span class="na">instance</span> <span class="o">=</span> <span class="n">objA</span><span class="o">;</span>
+
+        <span class="c1">//加入这个时候发生GC，如果是jvm采用的是引用计数法的话，objA和objB不能被回收，</span>
+        <span class="c1">// 因为他们互相引用这对方，导致他们的引用计数都不为0，</span>
+        <span class="c1">// 于是引用计数算法，不能通知GC收集器回收他们</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
+         <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="112idea查看gc日志">1.1.2、idea查看GC日志</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-XX:+PrintGCDetails
+
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-XX:+PrintGC 输出GC日志
+-XX:+PrintGCDetails 输出GC的详细日志
+-XX:+PrintGCTimeStamps 输出GC的时间戳（以基准时间的形式）
+-XX:+PrintGCDateStamps 输出GC的时间戳（以日期的形式，如 2013-05-04T21:53:59.234+0800）
+-XX:+PrintHeapAtGC 在进行GC的前后打印出堆的信息
+-Xloggc:../logs/gc.log 日志文件的输出路径
+</code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180409-135324@2x.png" alt="WX20180409-135324@2x" /></p>
+
+<h4 id="113运行">1.1.3、运行</h4>
+
+<blockquote>
+  <p>名称通过收集器而定
+1、这里的收集器是Parallel Scavenge。新生代为PSYoungGen，老年代为ParOldGen，Metaspace代表元空间（JDK 8中用来替代永久代PermGen）。 
+2、如果收集器为ParNew收集器，新生代为ParNew，Parallel New Generation <br />
+3、如果收集器是Serial收集器，新生代为DefNew，Default New Generation<br /></p>
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[GC (System.gc()) [PSYoungGen: 5980K-&gt;2752K(76288K)] 5980K-&gt;2760K(251392K), 0.0023918 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] 
+[Full GC (System.gc()) [PSYoungGen: 2752K-&gt;0K(76288K)] [ParOldGen: 8K-&gt;2621K(175104K)] 2760K-&gt;2621K(251392K), [Metaspace: 3139K-&gt;3139K(1056768K)], 0.0057354 secs] [Times: user=0.02 sys=0.00, real=0.01 secs] 
+Heap
+ PSYoungGen      total 76288K, used 1966K [0x000000076ab00000, 0x0000000770000000, 0x00000007c0000000)
+  eden space 65536K, 3% used [0x000000076ab00000,0x000000076aceba38,0x000000076eb00000)
+  from space 10752K, 0% used [0x000000076eb00000,0x000000076eb00000,0x000000076f580000)
+  to   space 10752K, 0% used [0x000000076f580000,0x000000076f580000,0x0000000770000000)
+ ParOldGen       total 175104K, used 2621K [0x00000006c0000000, 0x00000006cab00000, 0x000000076ab00000)
+  object space 175104K, 1% used [0x00000006c0000000,0x00000006c028f420,0x00000006cab00000)
+ Metaspace       used 3146K, capacity 4496K, committed 4864K, reserved 1056768K
+  class space    used 344K, capacity 388K, committed 512K, reserved 1048576K
+</code></pre></div></div>
+<font color="red"> 这就说明JDK8的HotSpot虚拟机并没有采用引用计数算法来标记内存，它对上述代码中的两个死亡对象的引用进行了回收。(因为内存变小，肯定是回收了，要不然能变么) 具体看下面</font>
+
+<p>1、可以看到上面有两种GC类型：GC和Full GC，有Full表示这次GC是发生了Stop-The-World（即在执行垃圾收集算法时,Java应用程序的其他所有除了垃圾收集收集器线程之外的线程都被挂起，因为执行了<code class="highlighter-rouge">System.gc();</code>）
+<br /></p>
+
+<p>新生代GC（Minor GC）：指发生在新生代的垃圾收集动作，因为Java对象大多都具备朝生夕灭的特性，所以Minor GC非常频繁，一般回收速度非常快。
+老年代GC（Major GC/Full GC）：指发生在老年代的GC，出现了Major GC，经常会伴随至少一次的Minor GC，Major GC的速度一般会比Minor GC慢10倍以上。</p>
+
+<p> 
+<br /></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[GC (System.gc()) [PSYoungGen: 5980K-&gt;2752K(76288K)] 5980K-&gt;2760K(251392K), 0.0023918 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] 
+</code></pre></div></div>
+<p>2、上面方括号内部的5980K-&gt;2752K(76288K)，表示GC前该新生代已使用容量-&gt;GC后该新生代已使用容量（也就是Survivor占用的控件为2752K），后面圆括号里面的76288K为该新生代的总容量<font color="red">（其实就是8+1 （Elen+Survivor 占比为9），观察下面的就可以看出来 eden(65536K)+from(10752K)=76288K）</font>。<br /></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> PSYoungGen      total 76288K, used 1966K [0x000000076ab00000, 0x0000000770000000, 0x00000007c0000000)
+  eden space 65536K, 3% used [0x000000076ab00000,0x000000076aceba38,0x000000076eb00000)
+  from space 10752K, 0% used [0x000000076eb00000,0x000000076eb00000,0x000000076f580000)
+  to   space 10752K, 0% used [0x000000076f580000,0x000000076f580000,0x0000000770000000)
+
+</code></pre></div></div>
+
+<p>方括号外面的5980K-&gt;2760K(251392K)，表示GC前Java堆已使用容量-&gt;GC后Java堆已使用容量，后面圆括号里面的251392K为Java堆总容量。<br /></p>
+
+<p>通过上面的可以计算出 老年代的空间了 Java堆-新生代 = 老年代 （251392k- 76288k=175 104k）   GC前 （5980K-5980K=0k） GC后（2760K-2752K=8k）（就是说新生代GC后8K会进入老年代）</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Full GC (System.gc()) [PSYoungGen: 2752K-&gt;0K(76288K)] [ParOldGen: 8K-&gt;2621K(175104K)] 2760K-&gt;2621K(251392K), [Metaspace: 3139K-&gt;3139K(1056768K)], 0.0057354 secs] [Times: user=0.02 sys=0.00, real=0.01 secs] 
+Heap
+</code></pre></div></div>
+
+<p>老年代GC， PSYoungGen: 2752K-&gt;0K(76288K) 老年代GC前新生代已使用容量-&gt;老年代GC后新生代已使用容量（2752k就是上面我们说到的新生代在Survivor中占据的容量）<br /></p>
+
+<p>[ParOldGen: 8K-&gt;2621K(175104K)] 2760K-&gt;2621K(251392K), 表示老年代GC前老年代已使用的容量-&gt;老年代GC后老年代已使用的容量（发现增长了 ，有趣吧），圆括号中的数值就是上面我们已经推算出的老年代的总容量（175104K）   2760K-&gt;2621K(251392K)则为老年代GC前java堆已经使用的总容量(发现其实就是新生代GC后JAVA堆的已经容量)-&gt;老年代GC后java推已使用的容量（其实也就是老年代的已使用的容量了，因为可以新生代都死了，只剩下老年代了）</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Times: user=0.01 sys=0.00, real=0.00 secs] 
+</code></pre></div></div>
+<p>3、[Times: user=0.01 sys=0.00, real=0.00 secs]</p>
+
+<ul>
+  <li>分别表示用户消耗的CPU时间，</li>
+  <li>内核态消耗的CPU时间</li>
+  <li>操作从开始到结束所经过的墙钟时间（Wall Clock Time），</li>
+</ul>
+
+<p>CPU时间和墙钟时间的差别是，墙钟时间包括各种非运算的等待耗时，例如等待磁盘I/O、等待线程阻塞，而CPU时间不包括这些耗时。</p>
+
+<h3 id="2可达性分析算法">2、可达性分析算法</h3>
+
+<blockquote>
+  <p>解释:这个算法的基本思路就是通过一系列名为GC Roots的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链(Reference Chain)，当一个对象到GC Roots没有任何引用链相连时，则证明此对象是不可用的，下图对象object5, object6, object7虽然有互相判断，但它们到GC Roots是不可达的，所以它们将会判定为是可回收对象。</p>
+</blockquote>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180409-141558@2x.png" alt="WX20180409-141558@2x" /></p>
+
+<p>可以作为GC Roots的对象包括下面几种</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.	虚拟机栈(栈桢中的本地变量表)中的引用的对象
+.	本地方法栈中JNI（Native方法）的引用的对象
+.	方法区中的类静态属性引用的对象
+.	方法区中的常量引用的对象
+</code></pre></div></div>
+
+<h2 id="2垃圾收集一定非死不可吗">2、垃圾收集，一定非死不可吗</h2>
+
+<p>解释：</p>
+
+<p>即使在可达性分析算法中不可达的对象，也并非是“非死不可”的，这时候它们暂时处于“缓刑”阶段，<font color="red">  要真正宣告一个对象死亡，至少要经历两次标记过程</font>:</p>
+
+<ul>
+  <li>如果对象在进行可达性分析后发现没有与GC Roots 相连接的引用链，那它将会被第一次标记并且进行一次筛选，</li>
+  <li>筛选的条件是此对象是否有必要执行finalize() 方法。当对象没有覆盖finalize() 方法，或者finalize() 方法已经被虚拟机调用过，虚拟机将这两种情况都视为“没有必要执行”。这样就会被垃圾收集器调用回收。如下</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">hlj</span><span class="o">.</span><span class="na">jvm</span><span class="o">.</span><span class="na">GC</span><span class="o">;</span>
+
+<span class="cm">/*
+ * @Description
+ * @Author HealerJean
+ * @Date 2018/4/9  下午3:30.
+ *
+ *此代码演示了两点
+ * 对象可以在GC时自我拯救
+ * 这种自救只会有一次，因为一个对象的finalize方法只会被自动调用一次
+ * */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">FinalizeEscapeGC</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">FinalizeEscapeGC</span> <span class="n">SAVE_HOOK</span><span class="o">=</span><span class="kc">null</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">isAlive</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"yes我还活着"</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">finalize</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Throwable</span><span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">finalize</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"执行finalize方法"</span><span class="o">);</span>
+        <span class="n">FinalizeEscapeGC</span><span class="o">.</span><span class="na">SAVE_HOOK</span><span class="o">=</span><span class="k">this</span><span class="o">;</span><span class="c1">//自救</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span><span class="o">{</span>
+        <span class="n">SAVE_HOOK</span><span class="o">=</span><span class="k">new</span> <span class="n">FinalizeEscapeGC</span><span class="o">();</span>
+
+
+        <span class="c1">//对象的第一次回收</span>
+        <span class="n">SAVE_HOOK</span><span class="o">=</span><span class="kc">null</span><span class="o">;</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
+        <span class="c1">//因为finalize方法的优先级很低所以暂停0.5秒等它</span>
+        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">500</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">SAVE_HOOK</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+            <span class="n">SAVE_HOOK</span><span class="o">.</span><span class="na">isAlive</span><span class="o">();</span>
+        <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"no我死了"</span><span class="o">);</span>
+        <span class="o">}</span>
+
+
+        <span class="c1">//下面的代码和上面的一样，但是这次自救却失败了，因为finalize方法已经调用过一次，而且它只能执行一次</span>
+        <span class="c1">//对象的第二次回收</span>
+        <span class="n">SAVE_HOOK</span><span class="o">=</span><span class="kc">null</span><span class="o">;</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
+        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">500</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">SAVE_HOOK</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+            <span class="n">SAVE_HOOK</span><span class="o">.</span><span class="na">isAlive</span><span class="o">();</span>
+        <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"no我死了"</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>运行结果，说明第一次成功逃脱，finalize为对象逃脱的最后一次机会</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>执行finalize方法
+yes我还活着
+no我死了
+
+</code></pre></div></div>
+
+<h2 id="3回收方法区">3、回收方法区</h2>
+
+<p>大部分都认为方法区（也叫永久代）是没有垃圾回收的，Java虚拟机规范中也说过不要求虚拟机在方法区实现垃圾收集，而且在方法区中进行垃圾收集性价比很低。一帮情况下新生代中回收的性价比比较高</p>
+
+<h3 id="31回收内容">3.1、回收内容</h3>
+
+<p>废弃常亮和无用的类，当然回收是可以，而不是一定能够回收</p>
+
+<h4 id="312无用的类">3.1.2、无用的类</h4>
+
+<p>（1）该类所有的实例都已经被回收，即Java堆中不存在该类的任何实例； 
+（2）加载该类的ClassLoader已经被回收； 
+（3）该类对应的java.lang.Class对象没有在任何地方被引用，无法在任何地方通过反射访问该类的方法。</p>
+
+<h4 id="313回收方法和场景">3.1.3、回收方法和场景</h4>
+
+<h5 id="1回收方法">1、回收方法</h5>
+
+<p>虚拟机可以对满足上述3个条件的无用类进行回收，这里说的仅仅是“可以”，而不是和对象一样，不使用了就必然会回收。是否对类进行回收，HotSpot虚拟机提供了-Xnoclassgc参数进行控制，还可以使用-verbose:class及-XX:+TraceClassLoading、 -XX:+TraceClassUnLoading查看类的加载和卸载信息。</p>
+
+<h6 id="回收场景">回收场景</h6>
+
+<p>2、在大量使用反射、动态代理、CGLib等bytecode框架的场景，以及动态生成JSP和OSGi<strong>这类频繁自定义ClassLoader的场景</strong>都需要虚拟机具备类卸载的功能，以保证永久代不会溢出。</p>
+
+<h2 id="4垃圾收集算法">4、垃圾收集算法</h2>
+
+<p>不同平台的虚拟机操作内存的方法是不同的，这里主要介绍下几种算法的思想和发展过程</p>
+
+<h3 id="41标记-清除算法">4.1、标记-清除算法</h3>
+
+<blockquote>
+  <p>很明显，两个阶段，标记和清除踏实最基础的算法，因为后续的手机算法都是基于这种思路并对他的不足进行改进而得到的
+不足有两处
+1、效率问题：这两个过程效率都不高
+2、空间问题：标记清除会产生大量不连续的碎片，碎片太多费配给大的对象的时候，无法找到连续的控件而不得不触发另一次垃圾收集动作</p>
+</blockquote>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180409-165031@2x.png" alt="WX20180409-165031@2x" /></p>
+
+<h3 id="42复制算法">4.2、复制算法</h3>
+
+<blockquote>
+  <p>为了解决上面的效率问题，就出现了复制，它将内存分为大学相等的两块，每次只使用其中一块，<code class="highlighter-rouge">当这一块的内存满了</code>，就会将里面活着的对象复制到另一块上面，然后再把已经使用过的空间一次清理掉（牛逼了，相当于的夫妻二人大家，满了就跑）</p>
+
+  <p>这样就不需要考虑是否存在碎片了，但是但是，它他妈的把内存缩小了一半，这代价太高了</p>
+</blockquote>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180409-165738@2x.png" alt="WX20180409-165738@2x" /></p>
+
+<h4 id="421使用">4.2.1、使用</h4>
+
+<blockquote>
+  <p>现在的商业虚拟机都采用这种收集算法手机<code class="highlighter-rouge">新生代</code>，IBM公司研究到其实新生代中的对象98%都是早上出生，晚上就挂了。所以其实不需要1：1来配置，而是分成3块，一块较大的和两块较小的 比为8：1：1。
+<br />
+每次使用的时候，都是使用一个快大的和一块小的，当垃圾收集器回收的时候，就会把这两个上面存活的对象放到另外一个小的上面。然后清理刚刚的那两个空间。 这个时候，如果继续使用的话，就会继续放到大的上面。也就是说，只会浪费10%的空间
+<br />
+从实际出发，其实我们不能保证每次都只有10%的对象存活，但是当它这个小的空间不够用的时候，会依赖其他内存进行分配担保。这个时候这些对象就会进入<code class="highlighter-rouge">老年代</code>。关于担保后面讲吧，哈哈，是不是很简单呢</p>
+</blockquote>
+
+<h3 id="43标记-整理算法">4.3、标记-整理算法</h3>
+
+<blockquote>
+  <font color="red">  复制算法在存活率特别高的时候，效率就会降低，更关键的是，老年代存活率高，假如所有对象对100%存活，那么需要有额外的空间来进行担保。所以在老年代一般不能使用这种算法。</font>
+  <p>老人不是喜欢收拾东西吗，哈哈，标记整理吧</p>
+
+  <p>这里不是讲标记的对象之间进行清理，而是先将可用的对象都像一边移动，然后之间清理掉除它以外的内容</p>
+</blockquote>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180409-171221@2x.png" alt="WX20180409-171221@2x" /></p>
+
+<h3 id="44分代收集算法">4.4、分代收集算法</h3>
+
+<blockquote>
+  <p>当前商业虚拟机都采用这种算法来收集，这种算法将对象存活周期的不同而将Java堆分为新生代和老年代，
+1、在新生代总每次都有大量的对象死去，只有少量存活，就使用复制算法，这样就付出存活少量对象的复制成本就可以完成收集，</p>
+
+  <p>2、但是老年代因为存活率高，没有额外的空间为它担保就必须使用标记-清除或者是标记-整理算法。</p>
+</blockquote>
+
+<h2 id="5垃圾收集器">5、垃圾收集器</h2>
+
+<p>如果收集算法是内存回收的方法论，那么垃圾收集器就是内存回收的具体表现，Java虚拟机堆垃圾收集器如何实现并没有任何规定，因此不同的厂家，不同版本的虚拟机所提供的垃圾收集器可能会有很大差别，并且一般都是提供参数，用户根据自己的特定和要求组合出各个年代所用的收集器。<br /></p>
+
+<p>如何两个收集器直接存在连线，就说明可以搭配使用，如果下面介绍的收集器进行比较，但是并没有哪个收集器是完美的，我们只是根据具体应用选择最合适的收集器</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  新生代收集器：Serial、ParNew、Parallel Scavenge；
+  老年代收集器：Serial Old、Parallel Old、CMS；
+  整堆收集器：G1；
+</code></pre></div></div>
+
+<p>1-2、并发垃圾收集和并行垃圾收集的区别
+（A）、并行（Parallel）
+       指多条垃圾收集线程并行工作，但此时用户线程仍然处于等待状态；
+       如ParNew、Parallel Scavenge、Parallel Old；
+（B）、并发（Concurrent）
+       指用户线程与垃圾收集线程同时执行（但不一定是并行的，可能会交替执行）；
+      用户程序在继续运行，而垃圾收集程序线程运行于另一个CPU上；    
+       如CMS、G1（也有并行）；</p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180411-142826@2x.png" alt="WX20180411-142826@2x" /></p>
+
+<h3 id="51serial收集器-串行收集器">5.1、Serial收集器 (串行收集器)</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> -XX:+UseSerialGC：添加该参数来显式的使用串行垃圾收集器；
+</code></pre></div></div>
+
+<p>针对新生代；采用复制算法；单线程收集；<br /></p>
+
+<p>进行垃圾收集时，必须暂停所有工作线程，直到完成；即会”Stop The World”； 相当于是妈妈在打扫房间，让我们乖乖在凳子上站着，等妈妈打扫完成。这种在用户不可见的情况下把用户正常的工作的线程全部关掉，这对于很多应用来说是不能够接受的</p>
+
+<p>但是 <br />
+1、它现在依然是client模式下的虚拟机默认新生代的收集器，简单而且高效，因为它是单线程的，没有线程加护的开销，专心做事。 
+2、在用户的桌面应用场景中，分配给虚拟机的内存不会很大，停顿时间非常少，只要这种听得不是频繁发生。这是可以接受的</p>
+
+<font color="red">总之 ：Serial垃圾收集器在client模式下的虚拟机来说是一个不错的选择</font>
+
+<h3 id="52parnew收集器">5.2、ParNew收集器</h3>
+
+<p>解释：其实他是serial的多线程版本，与serial相比并没有太多的创新之处，<font color="red">但是它是server模式下迅疾中首选的新生代收集器，其中有一个性能更重要的原因是，除了serial外，目前只有它能够CMS垃圾收集器配合工作</font></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"-XX:+UseConcMarkSweepGC"：指定使用CMS后，会默认使用ParNew作为新生代收集器；
+"-XX:+UseParNewGC"：强制指定使用ParNew；    
+"-XX:ParallelGCThreads"：指定垃圾收集的线程数量，ParNew默认开启的收集线程与CPU的数量相同；
+</code></pre></div></div>
+
+<h3 id="53parallel-scavenge-英文平行打扫吞吐量收集器">5.3、parallel Scavenge (：英文:平行打扫，吞吐量收集器)</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-XX:+UseParallelGC   明确指定使用Parallel Scavenge收集器
+</code></pre></div></div>
+
+<p>是JAVA虚拟机在Server模式下的默认值（比如我的电脑就是），使用Server模式后，java虚拟机使用Parallel Scavenge收集器（新生代）+ Serial Old收集器（老年代）、在JDK1.5及之前，JDK1.6之后有Parallel Old收集器可搭配）  的收集器组合进行内存回收。</p>
+
+<p>新生代收集器，使用的也是复制算法，而且是并行的多线程收集器看上去和preNew一样，但是。</p>
+
+<p>它的特点是与其他的垃圾收集器关注点不同，CMS等收集器所关注的是尽可能缩短垃圾收集器收集时候的用户线程的停顿时间，但是它的目标是达到一个可控制的吞吐量，吞吐量=运行用户代码时间/（运行用户代码时间+垃圾收集时间）  比如虚拟机总共运行了100分支，垃圾收集花掉1分钟，那么吞吐量就是99%  高的吞吐量就是可以高效的利用cpu时间
+<br /></p>
+
+<h4 id="应用场景">应用场景</h4>
+<p> 
+主要适应主要适合在后台运算而不需要太多交互的任务。比如需要与用户交互的程序，良好的响应速度能提升用户的体验；而高吞吐量则可以最高效率地利用CPU时间，尽快地完成程序的运算任务等。</p>
+
+<p>   高吞吐量为目标，即减少垃圾收集时间，让用户代码获得更长的运行时间；
+      
+   当应用程序运行在具有多个CPU上，对暂停时间没有特别高的要求时，即程序主要在后台进行计算，而不需要与用户进行太多交互；
+   
+      例如，那些执行批量处理、订单处理、工资支付、科学计算的应用程序；</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"-XX:MaxGCPauseMillis" 控制最大垃圾收集停顿时间（可以这样理解，每次1G的时候才清理垃圾，时间挺长的，但是当500M的时候，就清理，清理垃圾的时间就短了，剩下的可能与用户交互的时候用不到，就不清理，或者很长时间才清理呢 ），大于0的毫秒数；设置得稍小，停顿时间可能会缩短，
+但也可能会使得吞吐量下降；因为可能导致垃圾收集发生得更频繁，GC停顿时间缩短是以牺牲吞吐量和新生代控件来换取多的，
+
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"-XX:GCTimeRatio" 设置垃圾收集时间占总时间的比率，0&lt;n&lt;100的整数；
+GCTimeRatio相当于设置吞吐量大小；
+      垃圾收集执行时间占应用程序执行时间的比例的计算方法是：
+      1 / (1 + n)
+      例如，选项-XX:GCTimeRatio=19，设置了垃圾收集时间占总时间的5%--1/(1+19)；
+      默认值是1%--1/(1+99)，即n=99；
+垃圾收集所花费的时间是年轻一代和老年代收集的总时间；
+如果没有满足吞吐量目标，则增加新生代的内存大小以尽量增加用户程序运行的时间；
+
+</code></pre></div></div>
+
+<p>JVM会根据当前系统运行情况收集性能监控信息，动态调整这些参数，以提供最合适的停顿时间或最大的吞吐量，这种调节方式称为GC自适应的调节策略（GC Ergonomiscs）；    
+      这是一种值得推荐的方式：
+      (1)、只需设置好内存数据大小（如”-Xmx”设置最大堆）；
+      (2)、然后使用”-XX:MaxGCPauseMillis”（更关注最大停顿时间）或”-XX:GCTimeRatio”（更关注吞吐量）给JVM设置一个优化目标；
+      (3)、那些具体细节参数的调节就由JVM自适应完成；        
+      这也是Parallel Scavenge收集器与ParNew收集器一个重要区别；   </p>
+
+<p>垃圾收集器期望的目标（关注点）
+（1）、停顿时间 （垃圾收集器垃圾的时候用户线程的停顿时间）  
+      停顿时间越短就适合需要与用户交互的程序；
+      良好的响应速度能提升用户体验；
+（2）、吞吐量
+      高吞吐量则可以高效率地利用CPU时间，尽快完成运算的任务；
+      主要适合在后台计算而不需要太多交互的任务；
+（3）、覆盖区（Footprint）
+      在达到前面两个目标的情况下，尽量减少堆的内存空间；
+      可以获得更好的空间局部性；</p>
+
+<h3 id="54serial-old收集器">5.4、、Serial Old收集器</h3>
+
+<p>      Serial Old是 Serial收集器的老年代版本；
+      
+1、特点
+      针对老年代；
+      采用”标记-整理”算法（还有压缩，Mark-Sweep-Compact）；
+      单线程收集；</p>
+
+<p>2、应用场景
+      主要用于Client模式；
+      而在Server模式有两大用途：
+      （A）、在JDK1.5及之前，与Parallel Scavenge收集器搭配使用（JDK1.6有Parallel Old收集器可搭配）；
+      （B）、作为CMS收集器的后备预案，在并发收集发生Concurrent Mode Failure时使用
+      
+      
+      </p>
+
+<h3 id="55parallel-old收集器">5.5、Parallel Old收集器</h3>
+<p>      Parallel Old垃圾收集器是Parallel Scavenge收集器的老年代版本；
+      JDK1.6中才开始提供；
+1、特点
+      针对老年代；
+      采用”标记-整理”算法；
+      多线程收集；</p>
+
+<p>2、应用场景
+      JDK1.6及之后用来代替老年代的Serial Old收集器；
+      特别是在Server模式，多CPU的情况下；
+      这样在注重吞吐量以及CPU资源敏感的场景，就有了Parallel Scavenge加Parallel Old收集器的”给力”应用组合；</p>
+
+<h3 id="56cms收集器concurrent-mark-sweep">5.6、CMS收集器（Concurrent Mark Sweep）</h3>
+
+<p>并发标记清理（Concurrent Mark Sweep，CMS）收集器也称为并发低停顿收集器（Concurrent Low Pause Collector）或低延迟（low-latency）垃圾收集器；
+      在前面ParNew收集器曾简单介绍过其特点；
+1、特点
+      针对老年代；
+      基于”标记-清除”算法(不进行压缩操作，产生内存碎片)；            
+      以获取最短回收停顿时间为目标；
+      并发收集、低停顿；
+      需要更多的内存（看后面的缺点）；</p>
+
+<h4 id="应用场景-1">应用场景</h4>
+
+<p>      与用户交互较多的场景；希望系统停顿时间最短，注重服务的响应速度；以给用户带来较好的体验；如常见WEB、B/S系统的服务器上的应用；</p>
+
+<h4 id="过程">过程</h4>
+<p>（A）、初始标记（CMS initial mark）
+      仅标记一下GC Roots能直接关联到的对象；
+      速度很快；
+      但需要”Stop The World”；
+（B）、并发标记（CMS concurrent mark）
+      进行GC Roots Tracing的过程；
+      刚才产生的集合中标记出存活对象；
+      应用程序也在运行；
+      并不能保证可以标记出所有的存活对象；
+（C）、重新标记（CMS remark）
+      为了修正并发标记期间因用户程序继续运作而导致标记变动的那一部分对象的标记记录；
+      需要”Stop The World”，且停顿时间比初始标记稍长，但远比并发标记短；
+      采用多线程并行执行来提升效率；
+（D）、并发清除（CMS concurrent sweep）
+      回收所有的垃圾对象；
+      整个过程中耗时最长的并发标记和并发清除都可以与用户线程一起工作；
+      所以总体上说，CMS收集器的内存回收过程与用户线程一起并发执行；</p>
+<h4 id="缺点">缺点</h4>
+<p> 1、对CPU资源非常敏感
+  
+  并发收集虽然不会暂停用户线程，但因为占用一部分CPU资源，还是会导致应用程序变慢，总吞吐量降低。
+  CMS的默认收集线程数量是=(CPU数量+3)/4；
+      当CPU数量多于4个，收集线程占用的CPU资源多于25%，对用户程序影响可能较大；不足4个时，影响更大，可能无法接受。
+      
+2、无法处理浮动垃圾,可能出现”Concurrent Mode Failure”失败
+（1）、浮动垃圾（Floating Garbage）
+      在并发清除时，用户线程新产生的垃圾，称为浮动垃圾；
+      这使得并发清除时需要预留一定的内存空间，不能像其他收集器在老年代几乎填满再进行收集；
+      也要可以认为CMS所需要的空间比其他垃圾收集器大；
+      </p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> "-XX:CMSInitiatingOccupancyFraction"：设置CMS预留内存空间；
+      JDK1.5默认值为68%；
+      JDK1.6变为大约92%；
+</code></pre></div></div>
+<p>                    
+（2）、”Concurrent Mode Failure”失败
+      如果CMS预留内存空间无法满足程序需要，就会出现一次”Concurrent Mode Failure”失败；
+      这时JVM启用后备预案：临时启用Serail Old收集器，而导致另一次Full GC的产生；
+      这样的代价是很大的，所以CMSInitiatingOccupancyFraction不能设置得太大。
+（C）、产生大量内存碎片
+      由于CMS基于”标记-清除”算法，清除后不进行压缩操作；
+      前面《Java虚拟机垃圾回收(二) 垃圾回收算法》”标记-清除”算法介绍时曾说过：
+      产生大量不连续的内存碎片会导致分配大内存对象时，无法找到足够的连续内存，从而需要提前触发另一次Full GC动作。
+      解决方法：                
+（1）、”-XX:+UseCMSCompactAtFullCollection”
+      使得CMS出现上面这种情况时不进行Full GC，而开启内存碎片的合并整理过程；
+      但合并整理过程无法并发，停顿时间会变长；
+      默认开启（但不会进行，结合下面的CMSFullGCsBeforeCompaction）；
+（2）、”-XX:+CMSFullGCsBeforeCompaction”
+      设置执行多少次不压缩的Full GC后，来一次压缩整理；
+      为减少合并整理过程的停顿时间；
+      默认为0，也就是说每次都执行Full GC，不会进行压缩整理；
+      由于空间不再连续，CMS需要使用可用”空闲列表”内存分配方式，这比简单实用”碰撞指针”分配内存消耗大；</p>
+
+<p>     </p>
+
+<p><br /><br /><br />
+如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">支付包</th>
+      <th style="text-align: center">微信</th>
+      <th style="text-align: center">微信公众号</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg" alt="支付宝" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg" alt="微信" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg" alt="微信公众号" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Gitalk 评论 start  -->
+
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+<p> </p>
+<div id="gitalk-container"></div>
+<p>  <br />
+ <script type="text/javascript">
+    var gitalk = new Gitalk({
+		clientID: `1d164cd85549874d0e3a`,
+		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
+		id: 'GIGpj1NIXBs21OGz',
+    });
+    gitalk.render('gitalk-container');
+</script> </p>
+
+<!-- Gitalk end -->
+
+  
+	</div>
+	<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <!--
+  <%- list_categories(item.categories, {
+      show_count: false,
+      class: 'article-category',
+      style: 'none',
+      separator: '►'
+  }) %>
+  -->
+  
+  <a class="article-category-link" href="/categories/#JVM">JVM</a>
+  
+</div>
+
+
+  <div class="article-tags">
+  <!--
+  <% var tags = [];
+    item.tags.forEach(function(tag){
+      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
+    }); %>-->
+  <span></span> <!--<%- tags.join('') %>-->
+  
+  
+  <a href="/tags/#JVM">JVM</a>
+  
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://localhost:4000/jvm/2018/04/09/2_%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/" data-title="2、垃圾收集器 | HealeJean的梦想博客" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+   
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/utils/2018/04/09/10_%E6%8E%A510%E8%B0%83%E7%94%A8%E8%8B%B9%E6%9E%9C%E5%95%86%E5%BA%97%E6%8F%90%E4%BE%9B%E7%9A%84http%E6%8E%A5%E5%8F%A3/" title="使用Http工具类调用苹果商店提供的http接口">
+  <strong>上一篇：</strong><br/>
+  <span>
+  使用Http工具类调用苹果商店提供的http接口</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/jvm/2018/04/09/3_%E5%BC%95%E7%94%A8/"  title="3、引用">
+ <strong>下一篇：</strong><br/> 
+ <span>3、引用
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+
+      
+      
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside toc-content">
+ 
+ <!--<%- toc(item.content) %>-->
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+
+  <div class="linkslist">
+  <p class="asidetitle">个人网站</p>
+    <ul>
+        
+          <li>
+            <a href="http://blog.csdn.net/u012954706" target="_blank" title="csdn">csdn</a>
+          </li>
+        
+          <li>
+            <a href="http://www.cnblogs.com/HealerJean/" target="_blank" title="博客园">博客园</a>
+          </li>
+        
+          <li>
+            <a href="https://weibo.com/u/3889598250/" target="_blank" title="微博">微博</a>
+          </li>
+        
+          <li>
+            <a href="https://www.jianshu.com/u/54ba972e92a8" target="_blank" title="简书">简书</a>
+          </li>
+        
+          <li>
+            <a href="https://www.zhihu.com/people/healerjean" target="_blank" title="知乎">知乎</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+
+     <p class="asidetitle">个人信息</p>
+     <script src="/assets/img/person/jquery.js"></script>
+     <script src="/assets/img/person/jquery-github-user-widget.js"></script>
+     <div class="github-widget-user" data-user="HealerJean">	</div>
+
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/#Job" title="Job">Job<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#MarkDown" title="MarkDown">MarkDown<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GitHub" title="GitHub">GitHub<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mac" title="Mac">Mac<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Thread" title="Thread">Thread<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Url" title="Url">Url<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mysql" title="Mysql">Mysql<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Database" title="Database">Database<sup>19</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Annotation" title="Annotation">Annotation<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SortAlgorithm" title="SortAlgorithm">SortAlgorithm<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#CAS" title="CAS">CAS<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Maven" title="Maven">Maven<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#HTML" title="HTML">HTML<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#AngularJs" title="AngularJs">AngularJs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WeChat" title="WeChat">WeChat<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Experience" title="Experience">Experience<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Team" title="Team">Team<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SoftWare" title="SoftWare">SoftWare<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Utils" title="Utils">Utils<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Hibernate" title="Hibernate">Hibernate<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Date" title="Date">Date<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Log" title="Log">Log<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JSON" title="JSON">JSON<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Docker" title="Docker">Docker<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GrayLog" title="GrayLog">GrayLog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpringBoot" title="SpringBoot">SpringBoot<sup>21</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Redis" title="Redis">Redis<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Ehcache" title="Ehcache">Ehcache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Druid" title="Druid">Druid<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Quartz" title="Quartz">Quartz<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Swagger" title="Swagger">Swagger<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Netty" title="Netty">Netty<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#NIO" title="NIO">NIO<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WebSocket" title="WebSocket">WebSocket<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Map" title="Map">Map<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JVM" title="JVM">JVM<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mybatis" title="Mybatis">Mybatis<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Element" title="Element">Element<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Graphics" title="Graphics">Graphics<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linux" title="Linux">Linux<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Databases" title="Databases">Databases<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Nginx" title="Nginx">Nginx<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpirngBoot" title="SpirngBoot">SpirngBoot<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linu" title="Linu">Linu<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Java" title="Java">Java<sup>15</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JAVA" title="JAVA">JAVA<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Google" title="Google">Google<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  
+
+
+  
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+	<!-- 打赏功能 -->
+  <!-- <script src="http://static.tctip.com/tctip-1.0.0.min.js"></script> -->
+  <script src="/assets/img/tctip/tctip-1.0.1.min.js"></script>
+	<script>  
+	new tctip({
+	  top: '20%',
+	  button: {
+	    id: 9,
+	    type: 'dashang',
+	  },
+	  list: [
+	    {
+	      type: 'alipay',
+	      qrImg: '/assets/img/tctip/alpay.jpg'
+	    }, {
+	      type: 'wechat',
+	      qrImg: '/assets/img/tctip/weixin.jpg'
+	    }
+	  ]
+	}).init()
+	</script>
+
+
+
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 欢迎来到  HealerJean 的梦想博客. <br/>
+			------您已走进一个高级软件开发工程师的成长之路</p>
+	</section>
+	 
+
+
+<!--  自带的分享功能 	-->
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3889598250" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		<a href="https://twitter.com/mxzdhealer" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:mxzdhealer@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div> 
+
+
+	<!--
+			<%  Array.prototype.S=String.fromCharCode(2);
+			  Array.prototype.in_array=function(e){
+    			var r=new RegExp(this.S+e+this.S);
+    			return (r.test(this.S+this.join(this.S)+this.S));
+				};
+				var cc = new Array('by','by-nc','by-nc-nd','by-nc-sa','by-nd','by-sa','zero'); %>
+		<% if (cc.in_array(theme.creative_commons) ) { %>
+				<div class="cc-license">
+          <a href="http://creativecommons.org/licenses/<%= theme.creative_commons %>/4.0" class="cc-opacity" target="_blank">
+            <img src="<%- config.root %>img/cc-<%= theme.creative_commons %>.svg" alt="Creative Commons" />
+          </a>
+        </div>
+    <% } %>
+				-->
+
+		<p class="copyright">
+		welcome to <a href="http://jekyllrb.com" target="_blank" title="jekyll">HealerJean</a> 
+		blog <a href="https://github.com/simpleyyt/jekyll-jacman" target="_blank" title="Jacman">for</a> © 2017 
+		
+		<a href="about" target="_blank" title="HealerJean">HealerJean</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/assets/js/jquery-2.0.3.min.js"></script>
+<script src="/assets/js/jquery.imagesloaded.min.js"></script>
+<script src="/assets/js/gallery.js"></script>
+<script src="/assets/js/jquery.qrcode-0.12.0.min.js"></script>
+<script src="/assets/js/toc.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+
+  
+
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+});
+</script>
+
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#toc.toc-aside').toc({
+    title: "文章目录",
+    showEffect: "none"
+  });
+  $('#toc.toc-article').toc({
+    title: "文章目录",
+    showEffect: "show",
+    showSpeed: 0
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+/*
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      //$('.hoverqrcode').hide();
+  });
+  */
+});
+</script>
+
+
+
+
+
+
+<!--
+
+-->
+
+
+
+
+<link rel="stylesheet" href="/assets/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/assets/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      if ($(this).hasClass('emoji')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+});
+</script>
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/assets/img/scrollup.png"/></a>
+	</div>
+	<script src="/assets/js/totop.js"></script>
+
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
+
