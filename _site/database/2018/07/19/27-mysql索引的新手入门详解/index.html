@@ -1,0 +1,1271 @@
+
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta name="baidu-site-verification" content="0r55fUD7QR" />
+  <meta charset="UTF-8">
+    
+    
+    
+    
+    <title>mysql索引的新手入门详解 | HealeJean的梦想博客</title>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HealerJean">
+    
+
+    
+    <!--<%- open_graph({twitter_id: theme.author.twitter, google_plus: theme.author.google_plus}) %>-->
+
+    <meta name="description" content="page.description">
+    
+    <meta property="og:type" content="article">
+    
+    <meta property="og:title" content="mysql索引的新手入门详解">
+    <meta property="og:url" content="/database/2018/07/19/27-mysql%E7%B4%A2%E5%BC%95%E7%9A%84%E6%96%B0%E6%89%8B%E5%85%A5%E9%97%A8%E8%AF%A6%E8%A7%A3/">
+    <meta property="og:site_name" content="HealeJean的梦想博客">
+    <meta property="og:description" content="mysql索引的新手入门详解">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="mysql索引的新手入门详解">
+    <meta name="twitter:description" content="page.description">
+    <meta name="twitter:creator" content="@mxzdhealer">
+    <link rel="publisher" href="">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HealeJean的梦想博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/assets/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/assets/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/assets/img/jacman.jpg">
+    
+
+    <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/highlight.css" type="text/css">
+    
+    
+  <!-- 百度统计 -->
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?19549885065170e0019f01e9975dfc1d";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <!-- 百度联盟 -->
+    <meta name="baidu_union_verify" content="c2f387067cf0849991ea870f73c055f2">
+  
+</head>
+
+  <body>
+    <header>
+        <div>
+		    
+			<div id="imglogo">
+				<a href="/"><img src="/assets/img/logo.png" alt="HealeJean的梦想博客" title="HealeJean的梦想博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HealeJean的梦想博客">HealeJean的梦想博客</a></h1>
+				<h2 class="blog-motto">一个高级软件开发工程师的成长之路</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/categories">技术</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories/#Job">生活日记</a></li>
+					
+						<li><a href="/about">留言板</a></li>
+					
+						<li><a href="/friends">友情链接</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search" method="get" accept-charset="utf-8">
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>
+</div>
+
+    </header>
+    <div id="container">
+      
+
+
+
+<div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+	<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/database/2018/07/19/27-mysql%E7%B4%A2%E5%BC%95%E7%9A%84%E6%96%B0%E6%89%8B%E5%85%A5%E9%97%A8%E8%AF%A6%E8%A7%A3/" title="mysql索引的新手入门详解" itemprop="url">mysql索引的新手入门详解</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="HealerJean" target="_blank" itemprop="author">HealerJean</a>
+		
+  <p class="article-time">
+    <time datetime="2018-07-19 11:33:00 +0800" itemprop="datePublished"> 发表于 2018-07-19</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article toc-content" style="display: none;">
+		
+			<!--<%- toc(item.content) %>-->
+		
+		</div>
+		
+		<!-- image url 
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
+　　首行缩进
+<font color="red">  </font>
+-->
+
+<h2 id="前言">前言</h2>
+
+<p>如果是小白的话，我觉得看到这篇文章一定会对博主赞赏有加，因为实在是太好了，没错，博主就是要让你喜欢上。</p>
+
+<h2 id="1索引">1、索引</h2>
+<p>索引是表的目录，在查找内容之前可以先在目录中查找索引位置，以此快速定位查询数据。对于索引，会保存在额外的文件中。
+2、索引，是数据库中专门用于帮助用户快速查询数据的一种数据结构。类似于字典中的目录，查找字典内容时可以根据目录查找到数据的存放位置，然后直接获取即可。</p>
+
+<h3 id="11索引选取类型">1.1、索引选取类型</h3>
+
+<ul>
+  <li>
+    <p>1、越小的数据类型通常更好：越小的数据类型通常在磁盘、内存和CPU缓存中都需要更少的空间，处理起来更快。</p>
+  </li>
+  <li>
+    <p>2、简单的数据类型更好：整型数据比起字符，处理开销更小，因为字符串的比较更复杂。</p>
+  </li>
+  <li>
+    <p>3、尽量避免NULL：应该指定列为NOT  nuLL,在MySQL中，<font color="red">  含有空值的列很难进行查询优化，</font>因为它们使得索引、索引的统计信息以及比较运算更加复杂</p>
+  </li>
+</ul>
+
+<h3 id="12什么场景不适合创建索引">1.2、什么场景不适合创建索引</h3>
+<ul>
+  <li>第一，<font color="red">对于那些在查询中很少使用或者参考的列不应该创建索引。</font>这是因 为，既然这些列很少使用到，因此有索引或者无索引，并不能提高查询速度。相反，由于增加了索引，反而降低了系统的维护速度和增大了空间需求。 </li>
+  <li>第二，<font color="red">对于那 些只有很少数据值的列也不应该增加索引。因为本来结果集合就是相当于全表查询了，所以没有必要。</font>这是因为，由于这些列的取值很少，例如人事表的性别列，在查询的结果中，结果集的数据行占了表中数据行的很大比 例，即需要在表中搜索的数据行的比例很大。增加索引，并不能明显加快检索速度。 &lt;/font&gt;</li>
+  <li>第三，<font color="red">对于那些定义为text, image和bit数据类型的列不应该增加索引。这是因为，这些列的数据量要么相当大，要么取值很少。 </font></li>
+  <li>第四，<font color="red">当修改性能远远大于检索性能时，不应该创建索 引。</font>这是因为，修改性能和检索性能是互相矛盾的。当增加索引时，会提高检索性能，但是会降低修改性能。当减少索引时，会提高修改性能，降低检索性能。因 此，当修改性能远远大于检索性能时，不应该创建索引。</li>
+  <li>第五，不会出现在where条件中的字段不该建立索引。</li>
+</ul>
+
+<h3 id="13什么样的字段适合创建索引">1.3、什么样的字段适合创建索引</h3>
+<font color="red"></font>
+<p>1、表的主键、外键必须有索引；
+2、数据量超过300的表应该有索引；
+3、经常与其他表进行连接的表，在连接字段上应该建立索引；
+4、经常出现在Where子句中的字段，加快判断速度，特别是大表的字段，应该建立索引，建立索引，一般用在select ……where f1 and f2 ，我们在f1或者f2上建立索引是没用的。只有两个都有索引才能有用
+5、<font color="red">经常用到排序的列上</font>，因为索引已经排序。
+6、<font color="red">经常用在范围内搜索的列上创建索引</font>，因为索引已经排序了，其指定的范围是连续的
+7、<font color="red">经常用到搜索的列上，可以加快搜索的速度</font></p>
+
+<h2 id="2索引优缺点">2、索引优缺点</h2>
+<h4 id="21优点">2.1、优点</h4>
+
+<p>索引由数据库中一列或多列组合而成，其作用是提高对表中数据的查询速度 索引的优点是可以提高检索数据的速度</p>
+<h4 id="22缺点">2.2、缺点</h4>
+<p> 索引的缺点是创建和维护索引需要耗费时间
+索引可以提高查询速度，会减慢写入速度</p>
+
+<h2 id="3索引分类">3、索引分类</h2>
+
+<h3 id="1普通索引">1，普通索引：</h3>
+
+<h4 id="仅加速查询--最基本的索引没有任何限制是我们大多数情况下使用到的索引">仅加速查询  最基本的索引，没有任何限制，是我们大多数情况下使用到的索引。</h4>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">INDEX</span>  <span class="n">index_name</span>  <span class="k">on</span> <span class="n">user_info</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>  <span class="p">;</span>
+</code></pre></div></div>
+<h3 id="2唯一索引">2，唯一索引：</h3>
+<h4 id="与普通索引类型不同的是加速查询--列值唯一可以有null">与普通索引类型，不同的是：加速查询 + 列值唯一（可以有null）</h4>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">UNIQUE</span> <span class="k">INDEX</span>  <span class="n">mail</span>  <span class="k">on</span> <span class="n">user_info</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>  <span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="3全文索引">3，全文索引：</h3>
+<h4 id="全文索引fulltext仅可以适用于myisam引擎的数据表作用于charvarchartext数据类型的列">全文索引（FULLTEXT）仅可以适用于MyISAM引擎的数据表；作用于CHAR、VARCHAR、TEXT数据类型的列。</h4>
+
+<h3 id="4组合索引">4，组合索引：</h3>
+<h4 id="将几个列作为一条索引进行检索使用最左匹配原则">将几个列作为一条索引进行检索，使用最左匹配原则。</h4>
+
+<h2 id="1普通索引-1">1、普通索引</h2>
+
+<h3 id="111创建表的时候同事创建索引">1.1.1、创建表的时候同事创建索引</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">create</span> <span class="k">table</span> <span class="n">healerjean</span> <span class="p">(</span>
+  <span class="n">id</span>   <span class="n">bigint</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>  <span class="k">NOT</span> <span class="k">NULL</span> <span class="n">AUTO_INCREMENT</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="k">COMMENT</span>  <span class="s1">'主键'</span><span class="p">,</span>
+  <span class="n">name</span>  <span class="n">VARCHAR</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">COMMENT</span> <span class="s1">'姓名'</span><span class="p">,</span>
+  <span class="n">email</span> <span class="n">VARCHAR</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">COMMENT</span>  <span class="s1">'邮箱'</span><span class="p">,</span>
+  <span class="n">message</span> <span class="n">text</span> <span class="k">DEFAULT</span>  <span class="k">NULL</span> <span class="k">COMMENT</span> <span class="s1">'个人信息'</span><span class="p">,</span>
+  <span class="k">INDEX</span> <span class="n">index_name</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">COMMENT</span> <span class="s1">'索引name'</span>
+<span class="p">)</span> <span class="k">COMMENT</span>  <span class="o">=</span> <span class="s1">'索引测试表'</span><span class="p">;</span>
+
+</code></pre></div></div>
+
+<h3 id="112在存在的表上创建索引">1.1.2、在存在的表上创建索引</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">create</span> <span class="k">index</span> <span class="n">index_name</span> <span class="k">on</span> <span class="n">healerjean</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+
+</code></pre></div></div>
+<h3 id="113注意">1.1.3、注意：</h3>
+<font color="red">对于创建索引时如果是blob 和 text 类型，必须指定length。
+ </font>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">create</span> <span class="k">index</span> <span class="n">ix_extra</span> <span class="k">on</span> <span class="n">in1</span><span class="p">(</span><span class="n">message</span><span class="p">(</span><span class="mi">200</span><span class="p">));</span>
+
+<span class="k">alter</span> <span class="k">table</span> <span class="n">employee</span> <span class="k">add</span> <span class="k">index</span> <span class="n">emp_name</span> <span class="p">(</span><span class="n">name</span><span class="p">);</span>
+
+</code></pre></div></div>
+
+<h3 id="12删除索引">1.2、删除索引</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">drop</span> <span class="n">index_name</span> <span class="k">on</span> <span class="n">healerjean</span><span class="p">;</span>
+
+<span class="k">alter</span> <span class="k">TABLE</span> <span class="n">users</span>  <span class="k">drop</span> <span class="k">index</span>  <span class="n">name_index</span> <span class="p">;</span>
+
+</code></pre></div></div>
+
+<h3 id="13查看索引">1.3、查看索引</h3>
+
+<p>这个时候，我们会发现其实主键id也是一个索引</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">show</span> <span class="k">index</span> <span class="k">from</span> <span class="n">healerjean</span><span class="p">;</span>
+
+</code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180727-155546.png" alt="WX20180727-155546" /></p>
+
+<h2 id="2主键索引-我们一般都会提供主键的默认主键就是索引">2、主键索引 （我们一般都会提供主键的，默认主键就是索引）</h2>
+
+<h2 id="3正确使用索引">3、正确使用索引</h2>
+
+<p>文章相当出色，请查看。主要是看explain 中出现的row有有多少行，行数越多，表示执行速度越慢</p>
+
+<p><a href="https://www.cnblogs.com/Cheney222/articles/5876382.html">https://www.cnblogs.com/Cheney222/articles/5876382.html</a></p>
+
+<h3 id="如果以错误的方式使用则即使建立索引也会不奏效"><font color="red">如果以错误的方式使用，则即使建立索引也会不奏效。</font></h3>
+<p>&lt;/font&gt;</p>
+
+<h3 id="31对于创建的多列索引只要查询的条件中用到了最左边的列索引一般就会被使用">3.1、对于创建的<font color="red">多列索引,只要查询的条件中用到了最左边的列,索引一般就会被使用</font></h3>
+
+<p>1、首先按 company_id,moneys 的顺序创建一个复合索引,具体如下:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span><span class="err"> </span><span class="k">create</span><span class="err"> </span><span class="k">index</span><span class="err"> </span><span class="n">ind_sales2_companyid_moneys</span><span class="err"> </span><span class="k">on</span><span class="err"> </span><span class="n">sales2</span><span class="p">(</span><span class="n">company_id</span><span class="p">,</span><span class="n">moneys</span><span class="p">);</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">1000</span><span class="err"> </span><span class="k">rows</span><span class="err"> </span><span class="n">affected</span> <span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">03</span> <span class="n">sec</span><span class="p">)</span>
+<span class="n">Records</span><span class="p">:</span> <span class="mi">1000</span> <span class="n">Duplicates</span><span class="p">:</span> <span class="mi">0</span> <span class="n">Warnings</span><span class="p">:</span> <span class="mi">0</span>
+<span class="err"> </span>
+</code></pre></div></div>
+<p>2、然后按 company_id 进行表查询,具体如下:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">explain</span><span class="err"> </span><span class="k">select</span><span class="err"> </span><span class="o">*</span><span class="err"> </span><span class="k">from</span><span class="err"> </span><span class="n">sales2</span><span class="err"> </span><span class="k">where</span><span class="err"> </span><span class="n">company_id</span> <span class="o">=</span> <span class="mi">2006</span><span class="err">\</span><span class="k">G</span><span class="p">;</span>
+<span class="o">***************************</span> <span class="mi">1</span><span class="p">.</span> <span class="k">row</span> <span class="o">***************************</span>
+<span class="n">id</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">select_type</span><span class="p">:</span> <span class="k">SIMPLE</span>
+<span class="k">table</span><span class="p">:</span> <span class="n">sales2</span>
+<span class="k">type</span><span class="p">:</span> <span class="k">ref</span>
+<span class="n">possible_keys</span><span class="p">:</span> <span class="n">ind_sales2_companyid_moneys</span>
+<span class="mi">208</span><span class="k">key</span><span class="p">:</span> <span class="n">ind_sales2_companyid_moneys</span>
+<span class="n">key_len</span><span class="p">:</span> <span class="mi">5</span>
+<span class="k">ref</span><span class="p">:</span> <span class="n">const</span>
+<span class="k">rows</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">Extra</span><span class="p">:</span> <span class="k">Using</span><span class="err"> </span><span class="k">where</span>
+<span class="mi">1</span> <span class="k">row</span><span class="err"> </span><span class="k">in</span><span class="err"> </span><span class="k">set</span><span class="err"> </span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span> <span class="n">sec</span><span class="p">)</span>
+<span class="err"> </span>
+</code></pre></div></div>
+<p>3、可以发现即便 where 条件中不是用的 company_id 与 moneys 的组合条件,索引仍然能用到,这就是索引的前缀特性。<br /></p>
+
+<p>4、但是如果只按 moneys 条件查询表,那么索引就不会被用到,具体如下:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="k">explain</span><span class="err"> </span><span class="k">select</span><span class="err"> </span><span class="o">*</span><span class="err"> </span><span class="k">from</span><span class="err"> </span><span class="n">sales2</span><span class="err"> </span><span class="k">where</span><span class="err"> </span><span class="n">moneys</span> <span class="o">=</span> <span class="mi">1</span><span class="err">\</span><span class="k">G</span><span class="p">;</span>
+<span class="o">***************************</span> <span class="mi">1</span><span class="p">.</span> <span class="k">row</span> <span class="o">***************************</span>
+<span class="n">id</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">select_type</span><span class="p">:</span> <span class="k">SIMPLE</span>
+<span class="k">table</span><span class="p">:</span> <span class="n">sales2</span>
+<span class="k">type</span><span class="p">:</span><span class="err"> </span><span class="k">ALL</span>
+<span class="n">possible_keys</span><span class="p">:</span><span class="err"> </span><span class="k">NULL</span>
+<span class="k">key</span><span class="p">:</span><span class="err"> </span><span class="k">NULL</span>
+<span class="n">key_len</span><span class="p">:</span><span class="err"> </span><span class="k">NULL</span>
+<span class="k">ref</span><span class="p">:</span><span class="err"> </span><span class="k">NULL</span>
+<span class="k">rows</span><span class="p">:</span> <span class="mi">1000</span>
+<span class="n">Extra</span><span class="p">:</span> <span class="k">Using</span><span class="err"> </span><span class="k">where</span>
+<span class="mi">1</span> <span class="k">row</span><span class="err"> </span><span class="k">in</span><span class="err"> </span><span class="k">set</span><span class="err"> </span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span> <span class="n">sec</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<h3 id="32对于使用-like-的查询后面如果是常量并且只有号不在第一个字符索引才可能会被使用">3.2、对于使用 like 的查询,后面如果是<font color="red">常量</font>并且只有%号不在第一个字符,索引才可能会被使用：</h3>
+
+<p>1、 可以发现第一个例子没有使用索引,而第二例子就能够使用索引,
+2、 区别就在于“%”的位置不同,前者把“%”放到第一位就不能用到索引,而后者没有放到第一位就使用了索引。</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">explain</span><span class="err"> </span><span class="k">select</span><span class="err"> </span><span class="o">*</span><span class="err"> </span><span class="k">from</span><span class="err"> </span><span class="n">company2</span><span class="err"> </span><span class="k">where</span><span class="err"> </span><span class="n">name</span><span class="err"> </span><span class="k">like</span><span class="err"> </span><span class="s1">'%3'</span><span class="err">\</span><span class="k">G</span><span class="p">;</span>
+<span class="o">***************************</span> <span class="mi">1</span><span class="p">.</span> <span class="k">row</span> <span class="o">***************************</span>
+<span class="n">id</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">select_type</span><span class="p">:</span> <span class="k">SIMPLE</span>
+<span class="k">table</span><span class="p">:</span> <span class="n">company2</span>
+<span class="k">type</span><span class="p">:</span><span class="err"> </span><span class="k">ALL</span>
+<span class="n">possible_keys</span><span class="p">:</span><span class="err"> </span><span class="k">NULL</span>
+<span class="k">key</span><span class="p">:</span><span class="err"> </span><span class="k">NULL</span>
+<span class="n">key_len</span><span class="p">:</span><span class="err"> </span><span class="k">NULL</span>
+<span class="k">ref</span><span class="p">:</span><span class="err"> </span><span class="k">NULL</span>
+<span class="k">rows</span><span class="p">:</span> <span class="mi">1000</span>
+<span class="n">Extra</span><span class="p">:</span> <span class="k">Using</span><span class="err"> </span><span class="k">where</span>
+<span class="mi">1</span> <span class="k">row</span><span class="err"> </span><span class="k">in</span><span class="err"> </span><span class="k">set</span><span class="err"> </span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span> <span class="n">sec</span><span class="p">)</span>
+<span class="err"> </span>
+</code></pre></div></div>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err"> </span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="k">explain</span><span class="err"> </span><span class="k">select</span><span class="err"> </span><span class="o">*</span><span class="err"> </span><span class="k">from</span><span class="err"> </span><span class="n">company2</span><span class="err"> </span><span class="k">where</span><span class="err"> </span><span class="n">name</span><span class="err"> </span><span class="k">like</span><span class="err"> </span><span class="s1">'3%'</span><span class="err">\</span><span class="k">G</span><span class="p">;</span>
+<span class="o">***************************</span> <span class="mi">1</span><span class="p">.</span> <span class="k">row</span> <span class="o">***************************</span>
+<span class="n">id</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">select_type</span><span class="p">:</span> <span class="k">SIMPLE</span>
+<span class="k">table</span><span class="p">:</span> <span class="n">company2</span>
+<span class="k">type</span><span class="p">:</span> <span class="n">range</span>
+<span class="mi">209</span><span class="n">possible_keys</span><span class="p">:</span> <span class="n">ind_company2_name</span>
+<span class="k">key</span><span class="p">:</span> <span class="n">ind_company2_name</span>
+<span class="n">key_len</span><span class="p">:</span> <span class="mi">11</span>
+<span class="k">ref</span><span class="p">:</span><span class="err"> </span><span class="k">NULL</span>
+<span class="k">rows</span><span class="p">:</span> <span class="mi">103</span>
+<span class="n">Extra</span><span class="p">:</span> <span class="k">Using</span><span class="err"> </span><span class="k">where</span>
+<span class="mi">1</span> <span class="k">row</span><span class="err"> </span><span class="k">in</span><span class="err"> </span><span class="k">set</span><span class="err"> </span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span> <span class="n">sec</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<h3 id="33如果列名记得是列的名字是索引使用-column_name-is-null-将使用索引">3.3、如果列名，记得是列的名字，是索引,使用 column_name is null 将使用索引。</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">explain</span><span class="err"> </span><span class="k">select</span><span class="err"> </span><span class="o">*</span><span class="err"> </span><span class="k">from</span><span class="err"> </span><span class="n">company2</span><span class="err"> </span><span class="k">where</span><span class="err"> </span><span class="n">name</span><span class="err"> </span><span class="k">is</span><span class="err"> </span><span class="k">null</span><span class="err">\</span><span class="k">G</span><span class="p">;</span>
+<span class="o">***************************</span> <span class="mi">1</span><span class="p">.</span> <span class="k">row</span> <span class="o">***************************</span>
+<span class="n">id</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">select_type</span><span class="p">:</span> <span class="k">SIMPLE</span>
+<span class="k">table</span><span class="p">:</span> <span class="n">company2</span>
+<span class="k">type</span><span class="p">:</span> <span class="k">ref</span>
+<span class="n">possible_keys</span><span class="p">:</span> <span class="n">ind_company2_name</span>
+<span class="k">key</span><span class="p">:</span> <span class="n">ind_company2_name</span>
+<span class="n">key_len</span><span class="p">:</span> <span class="mi">11</span>
+<span class="k">ref</span><span class="p">:</span> <span class="n">const</span>
+<span class="k">rows</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">Extra</span><span class="p">:</span> <span class="k">Using</span><span class="err"> </span><span class="k">where</span>
+<span class="mi">1</span> <span class="k">row</span><span class="err"> </span><span class="k">in</span><span class="err"> </span><span class="k">set</span><span class="err"> </span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span> <span class="n">sec</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<h3 id="34如果对大的文本进行搜索使用全文索引而不用使用-like-">3.4、如果对大的文本进行搜索,使用全文索引而不用使用 like ‘%…%’。</h3>
+
+<h2 id="4存在索引但是不使用">4、存在索引，但是不使用</h2>
+
+<h3 id="41如果-mysql-估计使用索引比全表扫描更慢则不使用索引例如如果列key_part1-均匀分布在-1-和-100-之间下列查询中使用索引就不是很好">4.1、如果 MySQL 估计使用索引比全表扫描更慢,则不使用索引。例如，如果列key_part1 均匀分布在 1 和 100 之间,下列查询中使用索引就不是很好:</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span><span class="err"> </span><span class="o">*</span><span class="err"> </span><span class="k">FROM</span><span class="err"> </span><span class="k">table_name</span><span class="err"> </span><span class="k">where</span><span class="err"> </span><span class="n">key_part1</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="err"> </span><span class="k">and</span><span class="err"> </span><span class="n">key_part1</span> <span class="o">&lt;</span> <span class="mi">90</span><span class="p">;</span>
+
+</code></pre></div></div>
+
+<h3 id="42如果使用-memoryheap-表并且-where-条件中不使用进行索引列那么不会用到索引heap-表只有在的条件下才会使用索引">4.2、如果使用 MEMORY/HEAP 表并且 where 条件中不使用“=”进行索引列,那么不会用到索引。heap 表只有在“=”的条件下才会使用索引。</h3>
+
+<h3 id="43用-or-分割开的条件如果-or-前的条件中的列有索引而后面的列中没有索引那么涉及到的索引都不会被用到例如必须or前后都有索引才能被使用而且必须是单独索引">4.3、用 or 分割开的条件,如果 or 前的条件中的列有索引,而后面的列中没有索引,那么涉及到的索引都不会被用到,例如:，必须or前后都有索引才能被使用，而且必须是单独索引。</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">show</span><span class="err"> </span><span class="k">index</span><span class="err"> </span><span class="k">from</span><span class="err"> </span><span class="n">sales</span><span class="err">\</span><span class="k">G</span><span class="p">;</span>
+<span class="o">***************************</span> <span class="mi">1</span><span class="p">.</span> <span class="k">row</span> <span class="o">***************************</span>
+<span class="k">Table</span><span class="p">:</span> <span class="n">sales</span>
+<span class="n">Non_unique</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">Key_name</span><span class="p">:</span> <span class="n">ind_sales_year</span>
+<span class="n">Seq_in_index</span><span class="p">:</span> <span class="mi">1</span>
+<span class="k">Column_name</span><span class="p">:</span><span class="err"> </span><span class="k">year</span>
+<span class="mi">210</span><span class="k">Collation</span><span class="p">:</span> <span class="n">A</span>
+<span class="k">Cardinality</span><span class="p">:</span><span class="err"> </span><span class="k">NULL</span>
+<span class="n">Sub_part</span><span class="p">:</span><span class="err"> </span><span class="k">NULL</span>
+<span class="n">Packed</span><span class="p">:</span><span class="err"> </span><span class="k">NULL</span>
+<span class="k">Null</span><span class="p">:</span>
+<span class="n">Index_type</span><span class="p">:</span> <span class="n">BTREE</span>
+<span class="k">Comment</span><span class="p">:</span>
+<span class="mi">1</span> <span class="k">row</span><span class="err"> </span><span class="k">in</span><span class="err"> </span><span class="k">set</span><span class="err"> </span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span> <span class="n">sec</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<h3 id="44如果列是字符型传入的是数字则不上不会使用索引">4.4、如果列是字符型，，传入的是数字，则不上‘’不会使用索引</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">explain</span><span class="err"> </span><span class="k">select</span><span class="err"> </span><span class="o">*</span><span class="err"> </span><span class="k">from</span><span class="err"> </span><span class="n">company2</span><span class="err"> </span><span class="k">where</span><span class="err"> </span><span class="n">name</span><span class="err"> </span><span class="o">=</span> <span class="mi">294</span><span class="err">\</span><span class="k">G</span><span class="p">;</span>
+<span class="o">***************************</span> <span class="mi">1</span><span class="p">.</span> <span class="k">row</span> <span class="o">***************************</span>
+<span class="n">id</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">select_type</span><span class="p">:</span> <span class="k">SIMPLE</span>
+<span class="k">table</span><span class="p">:</span> <span class="n">company2</span>
+<span class="k">type</span><span class="p">:</span><span class="err"> </span><span class="k">ALL</span>
+<span class="n">possible_keys</span><span class="p">:</span> <span class="n">ind_company2_name</span>
+<span class="k">key</span><span class="p">:</span><span class="err"> </span><span class="k">NULL</span>
+<span class="n">key_len</span><span class="p">:</span><span class="err"> </span><span class="k">NULL</span>
+<span class="k">ref</span><span class="p">:</span><span class="err"> </span><span class="k">NULL</span>
+<span class="k">rows</span><span class="p">:</span> <span class="mi">1000</span>
+<span class="n">Extra</span><span class="p">:</span> <span class="k">Using</span><span class="err"> </span><span class="k">where</span>
+<span class="mi">1</span> <span class="k">row</span><span class="err"> </span><span class="k">in</span><span class="err"> </span><span class="k">set</span><span class="err"> </span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span> <span class="n">sec</span><span class="p">)</span>
+<span class="err"> </span>
+<span class="err"> </span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="k">explain</span><span class="err"> </span><span class="k">select</span><span class="err"> </span><span class="o">*</span><span class="err"> </span><span class="k">from</span><span class="err"> </span><span class="n">company2</span><span class="err"> </span><span class="k">where</span><span class="err"> </span><span class="n">name</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="s1">'294'</span><span class="err">\</span><span class="k">G</span><span class="p">;</span>
+<span class="o">***************************</span> <span class="mi">1</span><span class="p">.</span> <span class="k">row</span> <span class="o">***************************</span>
+<span class="n">id</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">select_type</span><span class="p">:</span> <span class="k">SIMPLE</span>
+<span class="k">table</span><span class="p">:</span> <span class="n">company2</span>
+<span class="k">type</span><span class="p">:</span> <span class="k">ref</span>
+<span class="n">possible_keys</span><span class="p">:</span> <span class="n">ind_company2_name</span>
+<span class="k">key</span><span class="p">:</span> <span class="n">ind_company2_name</span>
+<span class="n">key_len</span><span class="p">:</span> <span class="mi">23</span>
+<span class="k">ref</span><span class="p">:</span> <span class="n">const</span>
+<span class="k">rows</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">Extra</span><span class="p">:</span> <span class="k">Using</span><span class="err"> </span><span class="k">where</span>
+<span class="mi">1</span> <span class="k">row</span><span class="err"> </span><span class="k">in</span><span class="err"> </span><span class="k">set</span><span class="err"> </span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span> <span class="n">sec</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<h2 id="5执行计划">5、执行计划</h2>
+
+<p>explain + 查询SQL – 用于显示SQL执行信息参数，根据参考信息可以进行SQL优化</p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180727-181745.png" alt="WX20180727-181745" /></p>
+
+<h4 id="1id查询顺序标识">1、id,查询顺序标识</h4>
+<h4 id="2select_type查询类型">2、select_type,查询类型</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SIMPLE          简单查询
+PRIMARY         最外层查询
+SUBQUERY        映射为子查询
+DERIVED         子查询
+UNION           联合
+UNION RESULT    使用联合的结果
+</code></pre></div></div>
+
+<h4 id="3type-查询时的访问方式">3、type 查询时的访问方式</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>性能：all &lt; index &lt; range &lt; index_merge &lt; ref_or_null &lt; ref &lt; eq_ref &lt; system/const
+	
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	
+1、ALL、全表扫描，对于数据表从头到尾找一遍  select * from tb1;特别的：如果有limit限制，则找到之后就不在继续向下扫描
+	虽然上述两个语句都会进行全表扫描，第二句使用了limit，则找到一个后就不再继续扫描。
+	
+	mysql&gt; EXPLAIN SELECT * FROM `t_mobilesms_11` WHERE location = '2222' ;
++----+-------------+----------------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table          | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+----------------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| 1  | SIMPLE      | t_mobilesms_11 | NULL       | ALL  | NULL          | NULL | NULL    | NULL | 1    | 100.00   | Using where |
++----+-------------+----------------+------------+------+---------------+------+---------+------+------+----------+-------------+
+1 rows in set (0.02 sec)
+	
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2、INDEX 、全索引扫描，对索引从头到尾找一遍
+	select nid from tb1;
+	
+3、RANGE 、对索引列进行范围查找
+	PS:
+	between and
+	in
+	&gt;   &gt;=  &lt;   &lt;=  操作
+	注意：!= 和 &lt;&gt; 符号 不会使用索引，而是全表扫描
+	
+	mysql&gt; EXPLAIN SELECT * FROM `t_mobilesms_11` WHERE userid &lt; '2222' ;
++----+-------------+----------------+------------+-------+---------------+--------------+---------+------+------+----------+-----------------------+
+| id | select_type | table          | partitions | type  | possible_keys | key          | key_len | ref  | rows | filtered | Extra                 |
++----+-------------+----------------+------------+-------+---------------+--------------+---------+------+------+----------+-----------------------+
+| 1  | SIMPLE      | t_mobilesms_11 | NULL       | range | 联合索引  | 联合索引 | 767     | NULL | 1    | 100.00   | Using index condition |
++----+-------------+----------------+------------+-------+---------------+--------------+---------+------+------+----------+-----------------------+
+1 rows in set (0.03 sec)
+
+	
+</code></pre></div></div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4、INDEX_MERGE、合并索引，使用多个单列索引搜索
+	select *  from tb1 where name = 'alex' or nid in (11,22,33);
+	
+5、REF、根据索引查找一个或多个值
+
+mysql&gt; EXPLAIN SELECT * FROM `t_mobilesms_11` WHERE userid = '2222' ;
++----+-------------+----------------+------------+------+---------------+--------------+---------+-------+------+----------+-------+
+| id | select_type | table          | partitions | type | possible_keys | key          | key_len | ref   | rows | filtered | Extra |
++----+-------------+----------------+------------+------+---------------+--------------+---------+-------+------+----------+-------+
+| 1  | SIMPLE      | t_mobilesms_11 | NULL       | ref  | 联合索引  | 联合索引 | 767     | const | 1    | 100.00   | NULL  |
++----+-------------+----------------+------------+------+---------------+--------------+---------+-------+------+----------+-------+
+1 rows in set (0.04 sec)
+
+	
+6、EQ_REF、连接时使用primary key 或 unique类型
+	select tb2.nid,tb1.name from tb2 left join tb1 on tb2.nid = tb1.nid;
+	
+7、CONST、常量
+	表最多有一个匹配行,因为仅有一行,在这行的列值可被优化器剩余部分认为是常数,const表很快,因为它们只读取一次。
+	select nid from tb1 where nid = 2 ;
+	
+8、SYSTEM          系统
+	表仅有一行(=系统表)。这是const联接类型的一个特例。
+	select * from (select nid from tb1 where nid = 1) as A;
+
+</code></pre></div></div>
+
+<h4 id="4possible_keys可能使用的索引">4、possible_keys、可能使用的索引  </h4>
+<h4 id="5key_lenmysql中使用索引字节长度">5、key_len、MySQL中使用索引字节长度</h4>
+
+<h4 id="6rowsmysql估计为了找到所需的行而要读取的行数--只是预估值">6、rows、mysql估计为了找到所需的行而要读取的行数 —— 只是预估值</h4>
+
+<h4 id="7extra该列包含mysql解决查询的详细信息">7、extra、该列包含MySQL解决查询的详细信息</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+1、“Using index”
+	此值表示mysql将使用覆盖索引，以避免访问表。不要把覆盖索引和index访问类型弄混了。
+	
+2、“Using where”
+	这意味着mysql服务器将在存储引擎检索行后再进行过滤，许多where条件里涉及索引中的列，当（并且如果）它读取索引时，就能被存储引擎检验，因此不是所有带where子句的查询都会显示“Using where”。有时“Using where”的出现就是一个暗示：查询可受益于不同的索引。
+	
+3、“Using temporary”
+	这意味着mysql在对查询结果排序时会使用一个临时表。
+	
+4、“Using filesort”
+	这意味着mysql会对结果使用一个外部索引排序，而不是按索引次序从表里读取行。mysql有两种文件排序算法，这两种排序方式都可以在内存或者磁盘上完成，explain不会告诉你mysql将使用哪一种文件排序，也不会告诉你排序会在内存里还是磁盘上完成。
+	
+5、“Range checked for each record(index map: N)”
+	这个意味着没有好用的索引，新的索引将在联接的每一行上重新估算，N是显示在possible_keys列中索引的位图，并且是冗余的。
+
+</code></pre></div></div>
+
+<h3 id="51联合索引和单列索引测试">5.1、联合索引和单列索引测试</h3>
+
+<p><a href="https://blog.csdn.net/Abysscarry/article/details/80792876">https://blog.csdn.net/Abysscarry/article/details/80792876</a></p>
+
+<p><br /><br /><br />
+如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，添加博主微信哦， 请下方留言吧。可与博主自由讨论哦</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">支付包</th>
+      <th style="text-align: center">微信</th>
+      <th style="text-align: center">微信公众号</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg" alt="支付宝" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg" alt="微信" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg" alt="微信公众号" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Gitalk 评论 start  -->
+
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+<p> </p>
+<div id="gitalk-container"></div>
+<p>  <br />
+ <script type="text/javascript">
+    var gitalk = new Gitalk({
+		clientID: `1d164cd85549874d0e3a`,
+		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
+		id: '1dv6t962CQpD2HWt',
+    });
+    gitalk.render('gitalk-container');
+</script> </p>
+
+<!-- Gitalk end -->
+
+  
+	</div>
+	<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <!--
+  <%- list_categories(item.categories, {
+      show_count: false,
+      class: 'article-category',
+      style: 'none',
+      separator: '►'
+  }) %>
+  -->
+  
+  <a class="article-category-link" href="/categories/#Database">Database</a>
+  
+</div>
+
+
+  <div class="article-tags">
+  <!--
+  <% var tags = [];
+    item.tags.forEach(function(tag){
+      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
+    }); %>-->
+  <span></span> <!--<%- tags.join('') %>-->
+  
+  
+  <a href="/tags/#Database">Database</a>
+  
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://localhost:4000/database/2018/07/19/27-mysql%E7%B4%A2%E5%BC%95%E7%9A%84%E6%96%B0%E6%89%8B%E5%85%A5%E9%97%A8%E8%AF%A6%E8%A7%A3/" data-title="mysql索引的新手入门详解 | HealeJean的梦想博客" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+   
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/springboot/2018/07/19/4-%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2%E5%88%B0Linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8COSS%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="前端部署到Linux服务器和OSS服务器">
+  <strong>上一篇：</strong><br/>
+  <span>
+  前端部署到Linux服务器和OSS服务器</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/database/2018/07/19/28_mysql%E6%B7%BB%E5%8A%A0%E5%A4%87%E6%B3%A8%E4%BF%A1%E6%81%AF/"  title="mysql添加备注信息">
+ <strong>下一篇：</strong><br/> 
+ <span>mysql添加备注信息
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+
+      
+      
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside toc-content">
+ 
+ <!--<%- toc(item.content) %>-->
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+
+  <div class="linkslist">
+  <p class="asidetitle">个人网站</p>
+    <ul>
+        
+          <li>
+            <a href="http://blog.csdn.net/u012954706" target="_blank" title="csdn">csdn</a>
+          </li>
+        
+          <li>
+            <a href="http://www.cnblogs.com/HealerJean/" target="_blank" title="博客园">博客园</a>
+          </li>
+        
+          <li>
+            <a href="https://weibo.com/u/3889598250/" target="_blank" title="微博">微博</a>
+          </li>
+        
+          <li>
+            <a href="https://www.jianshu.com/u/54ba972e92a8" target="_blank" title="简书">简书</a>
+          </li>
+        
+          <li>
+            <a href="https://www.zhihu.com/people/healerjean" target="_blank" title="知乎">知乎</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+
+     <p class="asidetitle">个人信息</p>
+     <script src="/assets/img/person/jquery.js"></script>
+     <script src="/assets/img/person/jquery-github-user-widget.js"></script>
+     <div class="github-widget-user" data-user="HealerJean">	</div>
+
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/#Job" title="Job">Job<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#MarkDown" title="MarkDown">MarkDown<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GitHub" title="GitHub">GitHub<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mac" title="Mac">Mac<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Thread" title="Thread">Thread<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Url" title="Url">Url<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mysql" title="Mysql">Mysql<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Database" title="Database">Database<sup>19</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Annotation" title="Annotation">Annotation<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SortAlgorithm" title="SortAlgorithm">SortAlgorithm<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#CAS" title="CAS">CAS<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Maven" title="Maven">Maven<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#HTML" title="HTML">HTML<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#AngularJs" title="AngularJs">AngularJs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WeChat" title="WeChat">WeChat<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Experience" title="Experience">Experience<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Team" title="Team">Team<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SoftWare" title="SoftWare">SoftWare<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Utils" title="Utils">Utils<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Hibernate" title="Hibernate">Hibernate<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Date" title="Date">Date<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Log" title="Log">Log<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JSON" title="JSON">JSON<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Docker" title="Docker">Docker<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GrayLog" title="GrayLog">GrayLog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpringBoot" title="SpringBoot">SpringBoot<sup>21</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Redis" title="Redis">Redis<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Ehcache" title="Ehcache">Ehcache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Druid" title="Druid">Druid<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Quartz" title="Quartz">Quartz<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Swagger" title="Swagger">Swagger<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Netty" title="Netty">Netty<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#NIO" title="NIO">NIO<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WebSocket" title="WebSocket">WebSocket<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Map" title="Map">Map<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JVM" title="JVM">JVM<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mybatis" title="Mybatis">Mybatis<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Element" title="Element">Element<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Graphics" title="Graphics">Graphics<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linux" title="Linux">Linux<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Databases" title="Databases">Databases<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Nginx" title="Nginx">Nginx<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpirngBoot" title="SpirngBoot">SpirngBoot<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linu" title="Linu">Linu<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Java" title="Java">Java<sup>15</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JAVA" title="JAVA">JAVA<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Google" title="Google">Google<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  
+
+
+  
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+	<!-- 打赏功能 -->
+  <!-- <script src="http://static.tctip.com/tctip-1.0.0.min.js"></script> -->
+  <script src="/assets/img/tctip/tctip-1.0.1.min.js"></script>
+	<script>  
+	new tctip({
+	  top: '20%',
+	  button: {
+	    id: 9,
+	    type: 'dashang',
+	  },
+	  list: [
+	    {
+	      type: 'alipay',
+	      qrImg: '/assets/img/tctip/alpay.jpg'
+	    }, {
+	      type: 'wechat',
+	      qrImg: '/assets/img/tctip/weixin.jpg'
+	    }
+	  ]
+	}).init()
+	</script>
+
+
+
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 欢迎来到  HealerJean 的梦想博客. <br/>
+			------您已走进一个高级软件开发工程师的成长之路</p>
+	</section>
+	 
+
+
+<!--  自带的分享功能 	-->
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3889598250" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		<a href="https://twitter.com/mxzdhealer" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:mxzdhealer@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div> 
+
+
+	<!--
+			<%  Array.prototype.S=String.fromCharCode(2);
+			  Array.prototype.in_array=function(e){
+    			var r=new RegExp(this.S+e+this.S);
+    			return (r.test(this.S+this.join(this.S)+this.S));
+				};
+				var cc = new Array('by','by-nc','by-nc-nd','by-nc-sa','by-nd','by-sa','zero'); %>
+		<% if (cc.in_array(theme.creative_commons) ) { %>
+				<div class="cc-license">
+          <a href="http://creativecommons.org/licenses/<%= theme.creative_commons %>/4.0" class="cc-opacity" target="_blank">
+            <img src="<%- config.root %>img/cc-<%= theme.creative_commons %>.svg" alt="Creative Commons" />
+          </a>
+        </div>
+    <% } %>
+				-->
+
+		<p class="copyright">
+		welcome to <a href="http://jekyllrb.com" target="_blank" title="jekyll">HealerJean</a> 
+		blog <a href="https://github.com/simpleyyt/jekyll-jacman" target="_blank" title="Jacman">for</a> © 2017 
+		
+		<a href="about" target="_blank" title="HealerJean">HealerJean</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/assets/js/jquery-2.0.3.min.js"></script>
+<script src="/assets/js/jquery.imagesloaded.min.js"></script>
+<script src="/assets/js/gallery.js"></script>
+<script src="/assets/js/jquery.qrcode-0.12.0.min.js"></script>
+<script src="/assets/js/toc.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+
+  
+
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+});
+</script>
+
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#toc.toc-aside').toc({
+    title: "文章目录",
+    showEffect: "none"
+  });
+  $('#toc.toc-article').toc({
+    title: "文章目录",
+    showEffect: "show",
+    showSpeed: 0
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+/*
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      //$('.hoverqrcode').hide();
+  });
+  */
+});
+</script>
+
+
+
+
+
+
+<!--
+
+-->
+
+
+
+
+<link rel="stylesheet" href="/assets/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/assets/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      if ($(this).hasClass('emoji')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+});
+</script>
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/assets/img/scrollup.png"/></a>
+	</div>
+	<script src="/assets/js/totop.js"></script>
+
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
+

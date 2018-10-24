@@ -1,0 +1,2305 @@
+
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta name="baidu-site-verification" content="0r55fUD7QR" />
+  <meta charset="UTF-8">
+    
+    
+    
+    
+    <title>redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value | HealeJean的梦想博客</title>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HealerJean">
+    
+
+    
+    <!--<%- open_graph({twitter_id: theme.author.twitter, google_plus: theme.author.google_plus}) %>-->
+
+    <meta name="description" content="page.description">
+    
+    <meta property="og:type" content="article">
+    
+    <meta property="og:title" content="redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value">
+    <meta property="og:url" content="/redis/ehcache/2018/03/20/1_redis%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7%E7%B1%BB%E8%BF%9B%E8%A1%8C%E4%BF%9D%E5%AD%98%E6%95%B0%E6%8D%AE%E5%92%8CEhcache%E6%B3%A8%E8%A7%A3%E7%BC%93%E5%AD%98%E7%B1%BB%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98value/">
+    <meta property="og:site_name" content="HealeJean的梦想博客">
+    <meta property="og:description" content="redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value">
+    <meta name="twitter:description" content="page.description">
+    <meta name="twitter:creator" content="@mxzdhealer">
+    <link rel="publisher" href="">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HealeJean的梦想博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/assets/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/assets/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/assets/img/jacman.jpg">
+    
+
+    <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/highlight.css" type="text/css">
+    
+    
+  <!-- 百度统计 -->
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?19549885065170e0019f01e9975dfc1d";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <!-- 百度联盟 -->
+    <meta name="baidu_union_verify" content="c2f387067cf0849991ea870f73c055f2">
+  
+</head>
+
+  <body>
+    <header>
+        <div>
+		    
+			<div id="imglogo">
+				<a href="/"><img src="/assets/img/logo.png" alt="HealeJean的梦想博客" title="HealeJean的梦想博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HealeJean的梦想博客">HealeJean的梦想博客</a></h1>
+				<h2 class="blog-motto">一个高级软件开发工程师的成长之路</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/categories">技术</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories/#Job">生活日记</a></li>
+					
+						<li><a href="/about">留言板</a></li>
+					
+						<li><a href="/friends">友情链接</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search" method="get" accept-charset="utf-8">
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>
+</div>
+
+    </header>
+    <div id="container">
+      
+
+
+
+<div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+	<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/redis/ehcache/2018/03/20/1_redis%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7%E7%B1%BB%E8%BF%9B%E8%A1%8C%E4%BF%9D%E5%AD%98%E6%95%B0%E6%8D%AE%E5%92%8CEhcache%E6%B3%A8%E8%A7%A3%E7%BC%93%E5%AD%98%E7%B1%BB%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98value/" title="redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value" itemprop="url">redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="HealerJean" target="_blank" itemprop="author">HealerJean</a>
+		
+  <p class="article-time">
+    <time datetime="2018-03-20 11:33:00 +0800" itemprop="datePublished"> 发表于 2018-03-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article toc-content" style="display: none;">
+		
+			<!--<%- toc(item.content) %>-->
+		
+		</div>
+		
+		<!-- image url 
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
+　　首行缩进
+<font color="red">  </font>
+<br/>
+-->
+
+<h2 id="前言">前言</h2>
+<p>本文主要是key value的形式。
+这里我先说下序列化吧
+ <font color="red">
+GenericToStringSerializer：使用Spring转换服务进行序列化（可以用来专门转化存放Double等类型，我下面的工具类有介绍）；</font></p>
+
+<p>JacksonJsonRedisSerializer：使用Jackson 1，将对象序列化为JSON；</p>
+
+<p>Jackson2JsonRedisSerializer：使用Jackson 2，将对象序列化为JSON；</p>
+
+<p>JdkSerializationRedisSerializer：使用Java序列化；</p>
+
+<p>StringRedisSerializer：序列化String类型的key和value。实际上是String和byte数组之间的转换，那么Key只能是String类型的，不能为Long，Integer，否则会报错抛异常。</p>
+
+<p>&lt;/font&gt;</p>
+
+<p>StringSerializer就是通过String.getBytes()来实现的，而且在Redis中，所有存储的值都是字符串类型的。所以这种方法保存后，通过Redis-cli控制台，是可以清楚的查看到我们保存了什么key,value是什么。它只能对String类型进行序列化</p>
+
+<p>JdkSerializationRedisSerializer，这个序列化方法是Idk提供的，要求要被序列化的类继承自Serializeable接口，然后通过Jdk对象序列化的方法保存，这个序列化保存的对象，即使是个String类型的，在redis控制台，也是看不出来的，还是类似于 乱码的东西。因为它保存了一些对象的类型什么的额外信息。除非中间再加上一些objectmappr就可以看到内容了，如下</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@Bean
+public RedisTemplate&lt;String, String&gt; redisTemplate(RedisConnectionFactory factory) {
+	RedisTemplate&lt;String, String&gt; redisTemplate = new RedisTemplate&lt;String, String&gt;();
+	redisTemplate.setConnectionFactory(factory);
+
+	//key序列化方式,StringXX是转为String，JacksonXX是将对象转为json。
+	// 需要注意这里Key使用了StringRedisSerializer，那么Key只能是String类型的，不能为Long，Integer，否则会报错抛异常。
+	// 就是假如PostRepository里定义的@Cacheable（key="0"）的话就会报错，因为这样作为key的是int型，key必须为String。
+	//所以在没有自己定义key生成策略的时候，可以不配置,我就没有配置
+	RedisSerializer&lt;String&gt; redisSerializer = new StringRedisSerializer();//Long类型不可以会出现异常信息;
+	redisTemplate.setKeySerializer(redisSerializer);
+
+	Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+	ObjectMapper om = new ObjectMapper();
+	om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+	om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+	jackson2JsonRedisSerializer.setObjectMapper(om);
+
+	redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+
+
+	return redisTemplate;
+}
+
+
+</code></pre></div></div>
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-193953@2x.png" alt="WX20180320-193953@2x" /></p>
+
+<h2 id="ehcache和redis应该怎么用">Ehcache和redis应该怎么用</h2>
+
+<p>我公司的项目中既有Ehcache 又有Redis，所以这里都会讲解
+ehcache直接在jvm虚拟机中缓存，速度快，效率高；但是缓存共享麻烦，集群分布式应用不方便。</p>
+
+<p>redis是通过socket访问到缓存服务，效率比ecache低，比数据库要快很多，处理集群和分布式缓存方便，有成熟的方案。</p>
+
+<p>如果是单个应用或者对缓存访问要求很高的应用，用ehcache。
+如果是大型系统，存在缓存共享、分布式部署、缓存内容很大的，建议用redis。</p>
+
+<p>补充下：ehcache也有缓存共享方案，不过是通过RMI或者Jgroup多播方式进行广播缓存通知更新，缓存共享复杂，维护不方便；简单的共享可以，但是涉及到缓存恢复，大数据缓存，则不合适</p>
+
+<h2 id="1springboot引入spring配置文件进行redis的搭建">1、springBoot引入spring配置文件，进行redis的搭建<br /></h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@ImportResource(value = "classpath:applicationContext.xml")
+@SpringBootApplication
+public class SinoredisSpringbootApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SinoredisSpringbootApplication.class, args);
+	}
+}
+
+</code></pre></div></div>
+
+<h3 id="11spring配置文件如下">1.1、spring配置文件如下<br /></h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+       <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;description&gt;</span>spring configuration<span class="nt">&lt;/description&gt;</span>
+
+
+    <span class="nt">&lt;import</span> <span class="na">resource=</span><span class="s">"applicationContext-redis.xml"</span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;/beans&gt;</span>
+
+</code></pre></div></div>
+
+<h3 id="12redis配置信息在properties中如下">1.2、redis配置信息在properties中如下<br /></h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>########################################################
+###REDIS (RedisProperties) redis
+########################################################
+hlj.redis.host-name=127.0.0.1
+hlj.redis.password=
+hlj.redis.max-total=64
+hlj.redis.max-idle=30
+hlj.redis.port=6379
+hlj.redis.pool.max-wait=-1
+
+</code></pre></div></div>
+<h3 id="13redis配置文件如下">1.3、redis配置文件如下<br /></h3>
+
+<p>这里可以看到我使用了自定义的key 和value的序列化方式</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+       <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"jedisPoolConfig"</span> <span class="na">class=</span><span class="s">"redis.clients.jedis.JedisPoolConfig"</span> <span class="nt">&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"maxTotal"</span> <span class="na">value=</span><span class="s">"${hlj.redis.max-total}"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"maxIdle"</span> <span class="na">value=</span><span class="s">"${hlj.redis.max-idle}"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"maxWaitMillis"</span> <span class="na">value=</span><span class="s">"${hlj.redis.pool.max-wait}"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/bean&gt;</span>
+
+    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"jedisFactory"</span> <span class="na">class=</span><span class="s">"org.springframework.data.redis.connection.jedis.JedisConnectionFactory"</span> <span class="na">destroy-method=</span><span class="s">"destroy"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"password"</span> <span class="na">value=</span><span class="s">"${hlj.redis.password}"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"hostName"</span> <span class="na">value=</span><span class="s">"${hlj.redis.host-name}"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"port"</span> <span class="na">value=</span><span class="s">"${hlj.redis.port}"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"usePool"</span> <span class="na">value=</span><span class="s">"true"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"poolConfig"</span> <span class="na">ref=</span><span class="s">"jedisPoolConfig"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/bean&gt;</span>
+
+    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"redisTemplate"</span> <span class="na">class=</span><span class="s">"org.springframework.data.redis.core.RedisTemplate"</span> <span class="na">scope=</span><span class="s">"prototype"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"connectionFactory"</span> <span class="na">ref=</span><span class="s">"jedisFactory"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"keySerializer"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">"com.hlj.redis.cache.CustomStringRedisSerializer"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/property&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"valueSerializer"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">"com.hlj.redis.cache.CustomJSONStringRedisSerializer"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/property&gt;</span>
+    <span class="nt">&lt;/bean&gt;</span>
+<span class="nt">&lt;/beans&gt;</span>
+
+</code></pre></div></div>
+<h3 id="131-自定义key的序列化方式">1.3.1 自定义key的序列化方式</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">serializer</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">serializer</span><span class="p">.</span><span class="n">RedisSerializer</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">Assert</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">math</span><span class="p">.</span><span class="n">BigDecimal</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">math</span><span class="p">.</span><span class="n">BigInteger</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">nio</span><span class="p">.</span><span class="n">charset</span><span class="p">.</span><span class="n">Charset</span><span class="p">;</span>
+
+<span class="p">/**</span>
+ <span class="p">*</span> <span class="err">类名称：</span><span class="n">CustomStringRedisSerializer</span>
+ <span class="p">*</span> <span class="err">类描述：定制</span><span class="k">String</span> <span class="err">序列转换</span>
+ <span class="p">*</span> <span class="err">创建人：</span><span class="n">qingxu</span>
+ <span class="p">*</span> <span class="err">修改人：</span>
+ <span class="p">*</span> <span class="err">修改时间：</span><span class="m">2016</span><span class="p">/</span><span class="m">3</span><span class="p">/</span><span class="m">2</span> <span class="m">15</span><span class="p">:</span><span class="m">04</span>
+ <span class="p">*</span> <span class="err">修改备注：</span>
+ <span class="p">*</span>
+ <span class="p">*</span> <span class="p">@</span><span class="k">version</span> <span class="m">1.0.0</span>
+ <span class="p">*/</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">CustomStringRedisSerializer</span> <span class="n">implements</span> <span class="n">RedisSerializer</span><span class="p">&lt;</span><span class="n">Object</span><span class="p">&gt;</span> <span class="p">{</span>
+
+    <span class="n">private</span> <span class="n">final</span> <span class="n">Charset</span> <span class="n">charset</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="n">CustomStringRedisSerializer</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">this</span><span class="p">(</span><span class="n">Charset</span><span class="p">.</span><span class="n">forName</span><span class="p">(</span><span class="s2">"UTF8"</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">CustomStringRedisSerializer</span><span class="p">(</span><span class="n">Charset</span> <span class="n">charset</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">Assert</span><span class="p">.</span><span class="n">notNull</span><span class="p">(</span><span class="n">charset</span><span class="p">);</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">charset</span> <span class="p">=</span> <span class="n">charset</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">String</span> <span class="n">deserialize</span><span class="p">(</span><span class="n">byte</span><span class="p">[]</span> <span class="n">bytes</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">return</span> <span class="n">bytes</span> <span class="p">==</span> <span class="n">null</span><span class="p">?</span><span class="n">null</span><span class="p">:</span><span class="n">new</span> <span class="k">String</span><span class="p">(</span><span class="n">bytes</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">charset</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">byte</span><span class="p">[]</span> <span class="n">serialize</span><span class="p">(</span><span class="n">Object</span> <span class="k">string</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="k">string</span> <span class="p">==</span> <span class="n">null</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="n">return</span> <span class="n">null</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span><span class="p">(</span><span class="k">string</span> <span class="n">instanceof</span> <span class="n">Long</span><span class="p">){</span>
+            <span class="n">return</span> <span class="k">String</span><span class="p">.</span><span class="n">valueOf</span><span class="p">(</span><span class="k">string</span><span class="p">).</span><span class="n">getBytes</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">charset</span><span class="p">);</span>
+
+        <span class="p">}</span>
+        <span class="k">if</span><span class="p">(</span><span class="k">string</span> <span class="n">instanceof</span> <span class="k">Integer</span><span class="p">){</span>
+            <span class="n">return</span> <span class="k">String</span><span class="p">.</span><span class="n">valueOf</span><span class="p">(</span><span class="k">string</span><span class="p">).</span><span class="n">getBytes</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">charset</span><span class="p">);</span>
+
+        <span class="p">}</span>
+        <span class="k">if</span><span class="p">(</span><span class="k">string</span> <span class="n">instanceof</span> <span class="n">BigDecimal</span><span class="p">){</span>
+            <span class="n">return</span> <span class="p">((</span><span class="n">BigDecimal</span><span class="p">)</span><span class="k">string</span><span class="p">).</span><span class="n">toString</span><span class="p">().</span><span class="n">getBytes</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">charset</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="k">string</span> <span class="n">instanceof</span> <span class="n">BigInteger</span><span class="p">){</span>
+            <span class="n">return</span> <span class="p">((</span><span class="n">BigInteger</span><span class="p">)</span><span class="k">string</span><span class="p">).</span><span class="n">toString</span><span class="p">().</span><span class="n">getBytes</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">charset</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="k">string</span> <span class="n">instanceof</span> <span class="n">Double</span><span class="p">){</span>
+            <span class="n">return</span> <span class="p">((</span><span class="n">Double</span><span class="p">)</span><span class="k">string</span><span class="p">).</span><span class="n">toString</span><span class="p">().</span><span class="n">getBytes</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">charset</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="k">string</span> <span class="n">instanceof</span> <span class="n">Float</span><span class="p">){</span>
+            <span class="n">return</span> <span class="p">((</span><span class="n">Float</span><span class="p">)</span><span class="k">string</span><span class="p">).</span><span class="n">toString</span><span class="p">().</span><span class="n">getBytes</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">charset</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">return</span> <span class="p">((</span><span class="k">String</span><span class="p">)</span><span class="k">string</span><span class="p">).</span><span class="n">getBytes</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">charset</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+</code></pre></div></div>
+
+<h4 id="132自定义value的序列化方式">1.3.2、自定义value的序列化方式</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">serializer</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">fasterxml</span><span class="p">.</span><span class="n">jackson</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">JsonTypeInfo</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">fasterxml</span><span class="p">.</span><span class="n">jackson</span><span class="p">.</span><span class="n">core</span><span class="p">.</span><span class="n">JsonProcessingException</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">fasterxml</span><span class="p">.</span><span class="n">jackson</span><span class="p">.</span><span class="n">databind</span><span class="p">.</span><span class="n">DeserializationFeature</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">fasterxml</span><span class="p">.</span><span class="n">jackson</span><span class="p">.</span><span class="n">databind</span><span class="p">.</span><span class="n">ObjectMapper</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">serializer</span><span class="p">.</span><span class="n">RedisSerializer</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">serializer</span><span class="p">.</span><span class="n">SerializationException</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">Assert</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">StringUtils</span><span class="p">;</span>
+
+<span class="p">/**</span>
+ <span class="p">*</span> <span class="err">类名称：</span><span class="n">CustomJSONStringRedisSerializer</span>
+ <span class="p">*</span> <span class="err">类描述：转换对象为</span><span class="n">json</span><span class="err">字符串</span>
+ <span class="p">*</span> <span class="err">创建人：</span><span class="n">qingxu</span>
+ <span class="p">*</span> <span class="err">修改人：</span>
+ <span class="p">*</span> <span class="err">修改时间：</span><span class="m">2016</span><span class="p">/</span><span class="m">3</span><span class="p">/</span><span class="m">2</span> <span class="m">15</span><span class="p">:</span><span class="m">04</span>
+ <span class="p">*</span> <span class="err">修改备注：</span>
+ <span class="p">*</span>
+ <span class="p">*</span> <span class="p">@</span><span class="k">version</span> <span class="m">1.0.0</span>
+ <span class="p">*/</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">CustomJSONStringRedisSerializer</span> <span class="n">implements</span> <span class="n">RedisSerializer</span><span class="p">&lt;</span><span class="n">Object</span><span class="p">&gt;</span> <span class="p">{</span>
+
+    <span class="k">public</span> <span class="n">static</span> <span class="n">final</span> <span class="k">String</span> <span class="n">EMPTY_JSON</span> <span class="p">=</span> <span class="s2">"{}"</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="n">static</span> <span class="n">final</span> <span class="n">byte</span><span class="p">[]</span> <span class="n">EMPTY_ARRAY</span> <span class="p">=</span> <span class="n">new</span> <span class="n">byte</span><span class="p">[</span><span class="m">0</span><span class="p">];</span>
+
+    <span class="n">private</span> <span class="n">final</span> <span class="n">ObjectMapper</span> <span class="n">mapper</span><span class="p">;</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="n">Creates</span> <span class="p">{@</span><span class="n">link</span> <span class="n">CustomJSONStringRedisSerializer</span><span class="p">}</span> <span class="k">and</span> <span class="n">configures</span> <span class="p">{@</span><span class="n">link</span> <span class="n">ObjectMapper</span><span class="p">}</span> <span class="n">for</span> <span class="n">default</span> <span class="n">typing</span><span class="p">.</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">CustomJSONStringRedisSerializer</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">this</span><span class="p">((</span><span class="k">String</span><span class="p">)</span> <span class="n">null</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="n">Creates</span> <span class="p">{@</span><span class="n">link</span> <span class="n">CustomJSONStringRedisSerializer</span><span class="p">}</span> <span class="k">and</span> <span class="n">configures</span> <span class="p">{@</span><span class="n">link</span> <span class="n">ObjectMapper</span><span class="p">}</span> <span class="n">for</span> <span class="n">default</span> <span class="n">typing</span> <span class="n">using</span> <span class="n">the</span>
+     <span class="p">*</span> <span class="n">given</span> <span class="p">{@</span><span class="n">literal</span> <span class="n">name</span><span class="p">}.</span> <span class="k">In</span> <span class="k">case</span> <span class="k">of</span> <span class="n">an</span> <span class="p">{@</span><span class="n">literal</span> <span class="n">empty</span><span class="p">}</span> <span class="k">or</span> <span class="p">{@</span><span class="n">literal</span> <span class="n">null</span><span class="p">}</span> <span class="k">String</span> <span class="n">the</span> <span class="n">default</span>
+     <span class="p">*</span> <span class="p">{@</span><span class="n">link</span> <span class="n">JsonTypeInfo</span><span class="p">.</span><span class="n">Id</span><span class="p">#</span><span class="n">CLASS</span><span class="p">}</span> <span class="n">will</span> <span class="n">be</span> <span class="n">used</span><span class="p">.</span>
+     <span class="p">*</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">classPropertyTypeName</span> <span class="n">Name</span> <span class="k">of</span> <span class="n">the</span> <span class="n">JSON</span> <span class="n">property</span> <span class="n">holding</span> <span class="n">type</span> <span class="n">information</span><span class="p">.</span> <span class="n">Can</span> <span class="n">be</span> <span class="p">{@</span><span class="n">literal</span> <span class="n">null</span><span class="p">}.</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">CustomJSONStringRedisSerializer</span><span class="p">(</span><span class="k">String</span> <span class="n">classPropertyTypeName</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="n">this</span><span class="p">(</span><span class="n">new</span> <span class="n">RedisObjectMapper</span><span class="p">());</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">StringUtils</span><span class="p">.</span><span class="n">hasText</span><span class="p">(</span><span class="n">classPropertyTypeName</span><span class="p">))</span> <span class="p">{</span>
+            <span class="n">mapper</span><span class="p">.</span><span class="n">enableDefaultTypingAsProperty</span><span class="p">(</span><span class="n">ObjectMapper</span><span class="p">.</span><span class="n">DefaultTyping</span><span class="p">.</span><span class="n">NON_FINAL</span><span class="p">,</span> <span class="n">classPropertyTypeName</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">mapper</span><span class="p">.</span><span class="n">enableDefaultTyping</span><span class="p">(</span><span class="n">ObjectMapper</span><span class="p">.</span><span class="n">DefaultTyping</span><span class="p">.</span><span class="n">NON_FINAL</span><span class="p">,</span> <span class="n">JsonTypeInfo</span><span class="p">.</span><span class="k">As</span><span class="p">.</span><span class="n">PROPERTY</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="n">Setting</span> <span class="n">a</span> <span class="n">custom</span><span class="p">-</span><span class="n">configured</span> <span class="p">{@</span><span class="n">link</span> <span class="n">ObjectMapper</span><span class="p">}</span> <span class="n">is</span> <span class="n">one</span> <span class="n">way</span> <span class="k">to</span> <span class="n">take</span> <span class="n">further</span> <span class="n">control</span> <span class="k">of</span> <span class="n">the</span> <span class="n">JSON</span> <span class="n">serialization</span>
+     <span class="p">*</span> <span class="n">process</span><span class="p">.</span> <span class="n">For</span> <span class="n">example</span><span class="p">,</span> <span class="n">an</span> <span class="n">extended</span> <span class="p">{@</span><span class="n">link</span><span class="p">}</span> <span class="n">can</span> <span class="n">be</span> <span class="n">configured</span> <span class="n">that</span> <span class="n">provides</span> <span class="n">custom</span> <span class="n">serializers</span> <span class="n">for</span>
+     <span class="p">*</span> <span class="n">specific</span> <span class="n">types</span><span class="p">.</span>
+     <span class="p">*</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">mapper</span> <span class="n">must</span> <span class="k">not</span> <span class="n">be</span> <span class="p">{@</span><span class="n">literal</span> <span class="n">null</span><span class="p">}.</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">CustomJSONStringRedisSerializer</span><span class="p">(</span><span class="n">ObjectMapper</span> <span class="n">mapper</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">Assert</span><span class="p">.</span><span class="n">notNull</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span> <span class="s2">"ObjectMapper must not be null!"</span><span class="p">);</span>
+
+        <span class="n">mapper</span><span class="p">.</span><span class="n">configure</span><span class="p">(</span><span class="n">DeserializationFeature</span><span class="p">.</span><span class="n">FAIL_ON_UNKNOWN_PROPERTIES</span><span class="p">,</span><span class="nb">false</span><span class="p">);</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">mapper</span> <span class="p">=</span> <span class="n">mapper</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">/*</span>
+     <span class="p">*</span> <span class="p">(</span><span class="n">non</span><span class="p">-</span><span class="n">Javadoc</span><span class="p">)</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">see</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">serializer</span><span class="p">.</span><span class="n">RedisSerializer</span><span class="p">#</span><span class="n">serialize</span><span class="p">(</span><span class="n">java</span><span class="p">.</span><span class="n">lang</span><span class="p">.</span><span class="n">Object</span><span class="p">)</span>
+     <span class="p">*/</span>
+    <span class="p">@</span><span class="n">Override</span>
+    <span class="k">public</span> <span class="n">byte</span><span class="p">[]</span> <span class="n">serialize</span><span class="p">(</span><span class="n">Object</span> <span class="n">source</span><span class="p">)</span> <span class="n">throws</span> <span class="n">SerializationException</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">source</span> <span class="p">==</span> <span class="n">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">return</span> <span class="n">EMPTY_ARRAY</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">try</span> <span class="p">{</span>
+            <span class="n">return</span> <span class="n">mapper</span><span class="p">.</span><span class="n">writeValueAsBytes</span><span class="p">(</span><span class="n">source</span><span class="p">);</span>
+        <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">JsonProcessingException</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">throw</span> <span class="n">new</span> <span class="n">SerializationException</span><span class="p">(</span><span class="s2">"Could not write JSON: "</span> <span class="p">+</span> <span class="n">e</span><span class="p">.</span><span class="n">getMessage</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="p">/*</span>
+     <span class="p">*</span> <span class="p">(</span><span class="n">non</span><span class="p">-</span><span class="n">Javadoc</span><span class="p">)</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">see</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">serializer</span><span class="p">.</span><span class="n">RedisSerializer</span><span class="p">#</span><span class="n">deserialize</span><span class="p">(</span><span class="n">byte</span><span class="p">[])</span>
+     <span class="p">*/</span>
+    <span class="p">@</span><span class="n">Override</span>
+    <span class="k">public</span> <span class="n">Object</span> <span class="n">deserialize</span><span class="p">(</span><span class="n">byte</span><span class="p">[]</span> <span class="n">source</span><span class="p">)</span> <span class="n">throws</span> <span class="n">SerializationException</span> <span class="p">{</span>
+        <span class="n">return</span> <span class="n">deserialize</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">Object</span><span class="p">.</span><span class="n">class</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">source</span> <span class="n">can</span> <span class="n">be</span> <span class="p">{@</span><span class="n">literal</span> <span class="n">null</span><span class="p">}.</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">type</span> <span class="n">must</span> <span class="k">not</span> <span class="n">be</span> <span class="p">{@</span><span class="n">literal</span> <span class="n">null</span><span class="p">}.</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">return</span> <span class="p">{@</span><span class="n">literal</span> <span class="n">null</span><span class="p">}</span> <span class="n">for</span> <span class="n">empty</span> <span class="n">source</span><span class="p">.</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">throws</span> <span class="n">SerializationException</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">T</span> <span class="n">deserialize</span><span class="p">(</span><span class="n">byte</span><span class="p">[]</span> <span class="n">source</span><span class="p">,</span> <span class="n">Class</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">type</span><span class="p">)</span> <span class="n">throws</span> <span class="n">SerializationException</span> <span class="p">{</span>
+
+        <span class="n">Assert</span><span class="p">.</span><span class="n">notNull</span><span class="p">(</span><span class="n">type</span><span class="p">,</span>
+                <span class="s2">"Deserialization type must not be null! Pleaes provide Object.class to make use of Jackson2 default typing."</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">source</span> <span class="p">==</span> <span class="n">null</span> <span class="p">||</span> <span class="n">source</span><span class="p">.</span><span class="n">length</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">return</span> <span class="n">null</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">try</span> <span class="p">{</span>
+            <span class="n">return</span> <span class="n">mapper</span><span class="p">.</span><span class="n">readValue</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">type</span><span class="p">);</span>
+        <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">ex</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">throw</span> <span class="n">new</span> <span class="n">SerializationException</span><span class="p">(</span><span class="s2">"Could not read JSON: "</span> <span class="p">+</span> <span class="n">ex</span><span class="p">.</span><span class="n">getMessage</span><span class="p">(),</span> <span class="n">ex</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+</code></pre></div></div>
+
+<p>1.3.4、如果使用上面序列化的话，那么redis库总可以看到是class或者是请他的java数据类型，下图是后期的答案，这里只是简单的介绍</p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-194420@2x.png" alt="WX20180320-194420@2x" /></p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-194333@2x.png" alt="WX20180320-194333@2x" /></p>
+
+<h3 id="14至此其实redis就已经搭建好了">1.4、至此，其实redis就已经搭建好了<br /></h3>
+
+<h2 id="2reids存储对象工具类">2、、reids存储对象工具类<br /></h2>
+
+<h3 id="21工具类">2.1、工具类<br /></h3>
+
+<p>1、这个工具类，在描述的时候，就说道，分不清Long和Integer，Double和Float。所以我们一般只用来存放对象</p>
+
+<p>2、本类中可以看到有两个服务类<code class="highlighter-rouge">ValueOperations</code>和<code class="highlighter-rouge">RedisOperations</code>，但是其实是同一个类只不过名字不同。只是其作用的范围表面上意思不一样，<strong>第一个是用来存取数据，第二个用来操作参数数据的</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">redisTool</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">core</span><span class="p">.</span><span class="n">RedisOperations</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">core</span><span class="p">.</span><span class="n">ValueOperations</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">stereotype</span><span class="p">.</span><span class="n">Component</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">javax</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Resource</span><span class="p">;</span>
+
+<span class="p">/**</span>
+ <span class="p">*</span> <span class="err">类描述：</span>
+ <span class="p">*</span> <span class="err">操作</span><span class="n">redis</span> <span class="err">对象数据的工具类</span>
+ <span class="p">*</span> <span class="err">提供存取数字外对象的存取，数字类型使用</span><span class="n">RedisLongData</span><span class="p">/</span><span class="n">RedisIntegerData</span><span class="err">进行操作</span>
+ <span class="p">*</span> <span class="err">这个类分不清</span><span class="n">Long</span><span class="err">和</span><span class="k">Integer</span><span class="p">,</span><span class="n">Float</span><span class="err">和</span><span class="n">Double</span><span class="err">。也无法进行原子操作</span>
+ <span class="p">*</span> <span class="err">创建人：</span> <span class="n">j</span><span class="p">.</span><span class="n">sh</span>
+ <span class="p">*</span> <span class="err">创建时间：</span> <span class="m">2016</span><span class="p">/</span><span class="m">3</span><span class="p">/</span><span class="m">1</span>
+ <span class="p">*</span> <span class="k">version</span><span class="err">：</span><span class="m">1.0.0</span>
+ <span class="p">*/</span>
+<span class="p">@</span><span class="n">Component</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">RedisObjectData</span> <span class="p">{</span>
+
+    <span class="p">@</span><span class="n">Resource</span><span class="p">(</span><span class="n">name</span><span class="p">=</span><span class="s2">"redisTemplate"</span><span class="p">)</span>
+    <span class="n">private</span> <span class="n">ValueOperations</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span> <span class="n">Object</span><span class="p">&gt;</span> <span class="n">valueOperations</span><span class="p">;</span>
+
+    <span class="p">@</span><span class="n">Resource</span><span class="p">(</span><span class="n">name</span> <span class="p">=</span> <span class="s2">"redisTemplate"</span><span class="p">)</span>
+    <span class="n">private</span> <span class="n">RedisOperations</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span><span class="n">Object</span><span class="p">&gt;</span> <span class="n">operations</span><span class="p">;</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">根据</span><span class="n">key</span><span class="err">获取数据</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">key</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">return</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">Object</span> <span class="n">getData</span><span class="p">(</span><span class="k">String</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">return</span> <span class="n">valueOperations</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">设置数据</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">key</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">object</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">void</span> <span class="n">setData</span><span class="p">(</span><span class="k">String</span> <span class="n">key</span><span class="p">,</span><span class="n">Object</span> <span class="n">object</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">valueOperations</span><span class="p">.</span><span class="k">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">object</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">根据</span><span class="n">key</span> <span class="err">删除对应的数据</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">key</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">void</span> <span class="n">delete</span><span class="p">(</span><span class="k">String</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">operations</span><span class="p">.</span><span class="n">delete</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h3 id="22controller测试">2.2、controller测试</h3>
+
+<h4 id="221添加缓存对象和读取缓存对象">2.2.1、添加缓存对象和读取缓存对象</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">controller</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">Format</span><span class="p">.</span><span class="n">ResponseBean</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">bean</span><span class="p">.</span><span class="n">Person</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">redisTool</span><span class="p">.</span><span class="n">RedisLongData</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">redisTool</span><span class="p">.</span><span class="n">RedisObjectData</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">beans</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Autowired</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">stereotype</span><span class="p">.</span><span class="n">Controller</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">web</span><span class="p">.</span><span class="n">bind</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">RequestMapping</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">web</span><span class="p">.</span><span class="n">bind</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">ResponseBody</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">ArrayList</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="k">List</span><span class="p">;</span>
+
+
+<span class="p">@</span><span class="n">Controller</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">RedisObjectDataController</span> <span class="p">{</span>
+
+	<span class="p">@</span><span class="n">Autowired</span>
+	<span class="n">private</span> <span class="n">RedisObjectData</span> <span class="n">redisObjectData</span><span class="p">;</span>
+
+	<span class="p">/**</span>
+	 <span class="p">*</span> <span class="err">添加缓存对象</span>
+	 <span class="p">*/</span>
+    <span class="p">@</span><span class="n">RequestMapping</span><span class="p">(</span><span class="s2">"/setRedisObjectData"</span><span class="p">)</span>
+    <span class="k">public</span> <span class="p">@</span><span class="n">ResponseBody</span> <span class="n">ResponseBean</span> <span class="n">setRedisObjectData</span><span class="p">(</span><span class="n">Long</span> <span class="n">id</span><span class="p">){</span>
+		<span class="n">try</span> <span class="p">{</span>
+			<span class="n">Person</span> <span class="n">person</span> <span class="p">=</span> <span class="n">new</span> <span class="n">Person</span><span class="p">();</span>
+			<span class="n">person</span><span class="p">.</span><span class="n">setName</span><span class="p">(</span><span class="s2">"HealerJean"</span><span class="p">);</span>
+			<span class="n">person</span><span class="p">.</span><span class="n">setPwd</span><span class="p">(</span><span class="s2">"123456"</span><span class="p">);</span>
+			<span class="n">person</span><span class="p">.</span><span class="n">setId</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+			<span class="n">redisObjectData</span><span class="p">.</span><span class="n">setData</span><span class="p">(</span><span class="s2">"person"</span><span class="p">,</span> <span class="n">person</span><span class="p">);</span>
+			<span class="n">return</span>  <span class="n">ResponseBean</span><span class="p">.</span><span class="n">buildSuccess</span><span class="p">();</span>
+		<span class="p">}</span><span class="n">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">){</span>
+			<span class="n">return</span> <span class="n">ResponseBean</span><span class="p">.</span><span class="n">buildFailure</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">getMessage</span><span class="p">());</span>
+		<span class="p">}</span>
+    <span class="p">}</span>
+
+	<span class="p">/**</span>
+	 <span class="p">*</span> <span class="err">根据</span><span class="n">key</span><span class="err">获取缓存对象</span>
+	 <span class="p">*</span> <span class="p">@</span><span class="n">return</span>
+	 <span class="p">*/</span>
+	<span class="p">@</span><span class="n">RequestMapping</span><span class="p">(</span><span class="s2">"/getRedisObjectData"</span><span class="p">)</span>
+	<span class="k">public</span> <span class="p">@</span><span class="n">ResponseBody</span> <span class="n">ResponseBean</span> <span class="n">getRedisObjectData</span><span class="p">(</span><span class="k">String</span> <span class="n">key</span><span class="p">){</span>
+	   	<span class="n">try</span> <span class="p">{</span>
+			<span class="n">Person</span> <span class="n">person</span> <span class="p">=</span> <span class="p">(</span><span class="n">Person</span><span class="p">)</span> <span class="n">redisObjectData</span><span class="p">.</span><span class="n">getData</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+			<span class="n">return</span> <span class="n">ResponseBean</span><span class="p">.</span><span class="n">buildSuccess</span><span class="p">(</span><span class="n">person</span><span class="p">);</span>
+		<span class="p">}</span><span class="n">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">){</span>
+	   		<span class="n">return</span>  <span class="n">ResponseBean</span><span class="p">.</span><span class="n">buildFailure</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">getMessage</span><span class="p">());</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>服务器启动：
+1.1、浏览器打开输入 <a href="http://localhost:8080/setRedisObjectData?id=1">http://localhost:8080/setRedisObjectData?id=1</a><br /></p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-122358@2x.png" alt="WX20180320-122358@2x" /></p>
+
+<p>1.2、查看redis中的数据,发现已经有数据了数据了<br /></p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-122446@2x.png" alt="WX20180320-122446@2x" /></p>
+
+<p>2.1、对数据进行读取，浏览器中打开<a href="http://localhost:8080/getRedisObjectData?key=person">http://localhost:8080/getRedisObjectData?key=person</a><br /></p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-122622@2x.png" alt="WX20180320-122622@2x" /></p>
+
+<p>2.2、上述读取数据成功<br /></p>
+
+<h4 id="222-根据key值删除缓存">2.2.2、 根据key值删除缓存<br /></h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/**
+ * 根据key删除缓存对象
+ * @return
+ */
+@RequestMapping("/delRedisObjectData")
+public @ResponseBody ResponseBean delRedisObjectData(String key){
+	try {
+		redisObjectData.delete(key);
+		return ResponseBean.buildSuccess();
+	}catch (Exception e){
+		return  ResponseBean.buildFailure(e.getMessage());
+	}
+}
+
+
+</code></pre></div></div>
+
+<p>1.1、浏览器中打开 <a href="http://localhost:8080/delRedisObjectData?key=person">http://localhost:8080/delRedisObjectData?key=person</a><br /></p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-122846@2x.png" alt="WX20180320-122846@2x" /></p>
+
+<p>1.2、查看redis库,删除成功</p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-122931@2x.png" alt="WX20180320-122931@2x" /></p>
+
+<h4 id="223存储list对象集合-">2.2.3、存储List对象集合 <br /></h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+/**
+ * 添加List缓存对象
+ * @param id
+ * @return
+ */
+@RequestMapping("/setListRedisObjectData")
+public @ResponseBody ResponseBean setListRedisObjectData(Long id){
+	try {
+		List&lt;Person&gt; persons = new ArrayList&lt;&gt;();
+		Person person1= new Person(id,"HealerJean"+id,"password"+id);
+		Person person2 = new Person(id+1,"HuangLiang"+id,"HuangLiang"+id);
+		persons.add(person1);
+		persons.add(person2);
+		redisObjectData.setData("persons", persons);
+		return  ResponseBean.buildSuccess();
+	}catch (Exception e){
+		return ResponseBean.buildFailure(e.getMessage());
+	}
+}
+
+/**
+ * 根据key获取缓存List对象
+ * @return
+ */
+@RequestMapping("/getListRedisObjectData")
+public @ResponseBody ResponseBean getListRedisObjectData(String key){
+	try {
+		List&lt;Person&gt; persons = (List&lt;Person&gt;) redisObjectData.getData(key);
+		return ResponseBean.buildSuccess(persons);
+	}catch (Exception e){
+		return  ResponseBean.buildFailure(e.getMessage());
+	}
+}
+
+
+</code></pre></div></div>
+
+<p>1.1、浏览器中打开<a href="http://localhost:8080/setListRedisObjectData?id=1">http://localhost:8080/setListRedisObjectData?id=1</a></p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-123152@2x.png" alt="WX20180320-123152@2x" /></p>
+
+<p>1.2、查看redis库,有数据</p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-123233@2x.png" alt="WX20180320-123233@2x" /></p>
+
+<p>2.1、根据key值获取list对象，浏览器中打开<a href="http://localhost:8080/getListRedisObjectData?key=persons">http://localhost:8080/getListRedisObjectData?key=persons</a></p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-123356@2x.png" alt="WX20180320-123356@2x" /></p>
+
+<p>2.2、成功,下面要测试，清除下redis库</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fulshdb
+</code></pre></div></div>
+
+<h4 id="224测试放入long报错误异常integer不能转化为long">2.2.4、测试放入Long，报错误异常Integer不能转化为Long</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/**
+ * 添加Long类型缓存对象，这是个错误的演示，仅供测试
+ * @param id
+ * @return
+ */
+@RequestMapping("/set")
+public @ResponseBody ResponseBean set(Long id){
+	try {
+
+		redisObjectData.setData("id", id);
+		return  ResponseBean.buildSuccess();
+	}catch (Exception e){
+		return ResponseBean.buildFailure(e.getMessage());
+	}
+}
+
+/**
+ * 根据key获取Long，这是个错误的演示，仅供测试
+ * @return
+ */
+@RequestMapping("/get")
+public @ResponseBody ResponseBean get(String key){
+	try {
+		Long id = (Long) redisObjectData.getData("id");
+		return ResponseBean.buildSuccess(id);
+	}catch (Exception e){
+		return  ResponseBean.buildFailure(e.getMessage());
+	}
+}
+
+
+</code></pre></div></div>
+
+<p>1.1、浏览器中打开<a href="http://localhost:8080/set?id=1">http://localhost:8080/set?id=1</a></p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-131826@2x.png" alt="WX20180320-131826@2x" /></p>
+
+<p>1.2、查看redis库</p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-131858@2x.png" alt="WX20180320-131858@2x" /></p>
+
+<p>2.1、根据key值获取，这个时候 就会报错了，朋友们,提示Integer不能转化为long</p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180320-132003@2x.png" alt="WX20180320-132003@2x" /></p>
+
+<h2 id="3redis存取long类型工具类">3、redis存取Long类型工具类<br /></h2>
+
+<h3 id="31工具类代码">3.1、工具类代码<br /></h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">redisTool</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">beans</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">InitializingBean</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">core</span><span class="p">.</span><span class="n">RedisTemplate</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">core</span><span class="p">.</span><span class="n">ValueOperations</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">serializer</span><span class="p">.</span><span class="n">GenericToStringSerializer</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">stereotype</span><span class="p">.</span><span class="n">Component</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">javax</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Resource</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">concurrent</span><span class="p">.</span><span class="n">TimeUnit</span><span class="p">;</span>
+
+<span class="p">/**</span>
+ <span class="p">*</span> <span class="err">类描述：</span>
+ <span class="p">*</span> <span class="n">redis</span><span class="err">操作</span><span class="n">Long</span><span class="err">类型数据的工具类</span>
+ <span class="p">*</span> <span class="err">提供</span><span class="n">Long</span><span class="err">类型原子操作</span>
+ <span class="p">*</span> <span class="err">默认一天过期</span><span class="p">,</span><span class="err">其他过期时间调用</span><span class="n">setExpire</span>
+ <span class="p">*</span> <span class="err">创建人：</span> <span class="n">j</span><span class="p">.</span><span class="n">sh</span>
+ <span class="p">*</span> <span class="err">创建时间：</span> <span class="m">2016</span><span class="p">/</span><span class="m">3</span><span class="p">/</span><span class="m">1</span>
+ <span class="p">*</span> <span class="k">version</span><span class="err">：</span><span class="m">1.0.0</span>
+ <span class="p">*/</span>
+<span class="p">@</span><span class="n">Component</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">RedisLongData</span> <span class="n">implements</span> <span class="n">InitializingBean</span> <span class="p">{</span>
+
+    <span class="p">@</span><span class="n">Resource</span><span class="p">(</span><span class="n">name</span><span class="p">=</span><span class="s2">"redisTemplate"</span><span class="p">)</span>
+    <span class="n">private</span> <span class="n">ValueOperations</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span> <span class="n">Long</span><span class="p">&gt;</span> <span class="n">valueOperations</span><span class="p">;</span>
+
+    <span class="p">@</span><span class="n">Resource</span><span class="p">(</span><span class="n">name</span><span class="p">=</span><span class="s2">"redisTemplate"</span><span class="p">)</span>
+    <span class="n">private</span> <span class="n">RedisTemplate</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span><span class="n">Long</span><span class="p">&gt;</span> <span class="n">redisTemplate</span><span class="p">;</span>
+
+
+    <span class="p">@</span><span class="n">Override</span>
+    <span class="k">public</span> <span class="n">void</span> <span class="n">afterPropertiesSet</span><span class="p">()</span> <span class="n">throws</span> <span class="n">Exception</span> <span class="p">{</span>
+        <span class="n">redisTemplate</span><span class="p">.</span><span class="n">setValueSerializer</span><span class="p">(</span><span class="n">new</span> <span class="n">GenericToStringSerializer</span><span class="p">&lt;</span><span class="n">Long</span><span class="p">&gt;(</span><span class="n">Long</span><span class="p">.</span><span class="n">class</span><span class="p">));</span>
+        <span class="n">valueOperations</span> <span class="p">=</span> <span class="n">redisTemplate</span><span class="p">.</span><span class="n">opsForValue</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">根据</span><span class="n">key</span> <span class="err">删除</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">key</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">void</span> <span class="n">delete</span><span class="p">(</span><span class="k">String</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">redisTemplate</span><span class="p">.</span><span class="n">delete</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">进行数值的增加</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">key</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">value</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">return</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">Long</span> <span class="n">increase</span><span class="p">(</span><span class="k">String</span> <span class="n">key</span><span class="p">,</span><span class="n">long</span> <span class="n">value</span><span class="p">){</span>
+        <span class="n">Long</span> <span class="n">result</span> <span class="p">=</span> <span class="n">valueOperations</span><span class="p">.</span><span class="n">increment</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">);</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">setExpire</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="m">1L</span><span class="p">,</span><span class="n">TimeUnit</span><span class="p">.</span><span class="n">DAYS</span><span class="p">);</span>
+        <span class="n">return</span> <span class="n">result</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">进行数值的增加</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">key</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">return</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">Long</span> <span class="n">increase</span><span class="p">(</span><span class="k">String</span> <span class="n">key</span><span class="p">){</span>
+        <span class="n">return</span> <span class="n">increase</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="m">1</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">进行数值的递减</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">key</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">value</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">return</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">Long</span> <span class="n">decrease</span><span class="p">(</span><span class="k">String</span> <span class="n">key</span><span class="p">,</span><span class="n">long</span> <span class="n">value</span><span class="p">){</span>
+        <span class="n">Long</span> <span class="n">result</span> <span class="p">=</span>  <span class="n">valueOperations</span><span class="p">.</span><span class="n">increment</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="m">0</span><span class="p">-</span><span class="n">value</span><span class="p">);</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">setExpire</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="m">1L</span><span class="p">,</span><span class="n">TimeUnit</span><span class="p">.</span><span class="n">DAYS</span><span class="p">);</span>
+        <span class="n">return</span> <span class="n">result</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">进行数值的递减</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">key</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">return</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">Long</span> <span class="n">decrease</span><span class="p">(</span><span class="k">String</span> <span class="n">key</span><span class="p">){</span>
+        <span class="n">return</span> <span class="n">decrease</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="m">1</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">根据</span><span class="n">key</span><span class="err">获取</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">key</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">return</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">Long</span> <span class="n">get</span><span class="p">(</span><span class="k">String</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">return</span> <span class="n">valueOperations</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">设置</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">key</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">value</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">void</span> <span class="k">set</span><span class="p">(</span><span class="k">String</span> <span class="n">key</span><span class="p">,</span><span class="n">Long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">valueOperations</span><span class="p">.</span><span class="k">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">);</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">setExpire</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="m">1L</span><span class="p">,</span><span class="n">TimeUnit</span><span class="p">.</span><span class="n">DAYS</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">过期时间，默认单位秒</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">key</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">time</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">void</span> <span class="n">setExpire</span><span class="p">(</span><span class="k">String</span> <span class="n">key</span><span class="p">,</span><span class="n">Long</span> <span class="n">time</span><span class="p">){</span>
+        <span class="n">redisTemplate</span><span class="p">.</span><span class="n">expire</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">time</span><span class="p">,</span> <span class="n">TimeUnit</span><span class="p">.</span><span class="n">SECONDS</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">过期时间</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">key</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">time</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">timeUnit</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">void</span> <span class="n">setExpire</span><span class="p">(</span><span class="k">String</span> <span class="n">key</span><span class="p">,</span><span class="n">Long</span> <span class="n">time</span><span class="p">,</span><span class="n">TimeUnit</span> <span class="n">timeUnit</span><span class="p">){</span>
+        <span class="n">redisTemplate</span><span class="p">.</span><span class="n">expire</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">time</span><span class="p">,</span><span class="n">timeUnit</span><span class="p">);</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+
+
+</code></pre></div></div>
+
+<h3 id="32controller测试没啥问题自己测试吧">3.2、controller测试。没啥问题。自己测试吧</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">controller</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">Format</span><span class="p">.</span><span class="n">ResponseBean</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">redisTool</span><span class="p">.</span><span class="n">RedisLongData</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">beans</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Autowired</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">stereotype</span><span class="p">.</span><span class="n">Controller</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">web</span><span class="p">.</span><span class="n">bind</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">RequestMapping</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">web</span><span class="p">.</span><span class="n">bind</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">ResponseBody</span><span class="p">;</span>
+
+<span class="p">@</span><span class="n">Controller</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">RedisLongDataController</span> <span class="p">{</span>
+
+
+    <span class="p">@</span><span class="n">Autowired</span>
+    <span class="n">private</span> <span class="n">RedisLongData</span> <span class="n">redisLongData</span><span class="p">;</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">添加</span><span class="n">Long</span><span class="err">类型的缓存数据</span>
+     <span class="p">*/</span>
+    <span class="p">@</span><span class="n">RequestMapping</span><span class="p">(</span><span class="s2">"/setRedisLongData"</span><span class="p">)</span>
+    <span class="k">public</span> <span class="p">@</span><span class="n">ResponseBody</span>  <span class="n">ResponseBean</span> <span class="n">setRedisLongData</span><span class="p">(</span><span class="n">Long</span> <span class="n">id</span><span class="p">){</span>
+        <span class="n">try</span> <span class="p">{</span>
+            <span class="n">redisLongData</span><span class="p">.</span><span class="k">set</span><span class="p">(</span><span class="s2">"long"</span><span class="p">,</span><span class="n">id</span><span class="p">);</span>
+            <span class="n">return</span>  <span class="n">ResponseBean</span><span class="p">.</span><span class="n">buildSuccess</span><span class="p">();</span>
+        <span class="p">}</span><span class="n">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">){</span>
+            <span class="n">return</span> <span class="n">ResponseBean</span><span class="p">.</span><span class="n">buildFailure</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">getMessage</span><span class="p">());</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+	<span class="p">/**</span>
+	 <span class="p">*</span> <span class="err">获取</span><span class="n">Long</span><span class="err">类型的缓存数据</span>
+	 <span class="p">*/</span>
+	
+    <span class="p">@</span><span class="n">RequestMapping</span><span class="p">(</span><span class="s2">"/getRedisLongData"</span><span class="p">)</span>
+    <span class="k">public</span> <span class="p">@</span><span class="n">ResponseBody</span> <span class="n">ResponseBean</span> <span class="n">getRedisLongData</span><span class="p">(</span><span class="k">String</span> <span class="n">key</span><span class="p">){</span>
+        <span class="n">try</span> <span class="p">{</span>
+            <span class="n">Long</span> <span class="n">id</span> <span class="p">=</span> <span class="n">redisLongData</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+            <span class="n">return</span> <span class="n">ResponseBean</span><span class="p">.</span><span class="n">buildSuccess</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+        <span class="p">}</span><span class="n">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">){</span>
+            <span class="n">return</span>  <span class="n">ResponseBean</span><span class="p">.</span><span class="n">buildFailure</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">getMessage</span><span class="p">());</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h2 id="4ehcache">4、Ehcache</h2>
+<p>那么关于它的使用，我先说明，这里是要使用注解的，而且是非常完美的注解</p>
+
+<h3 id="1依赖的导入">1、依赖的导入</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!--
+        包含支持UI模版（Velocity，FreeMarker，JasperReports），
+        邮件服务，
+        脚本服务(JRuby)，
+        缓存Cache（EHCache），
+        任务计划Scheduling（uartz）。
+     --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+	&lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;!-- 集成ehcache需要的依赖--&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;net.sf.ehcache&lt;/groupId&gt;
+	&lt;artifactId&gt;ehcache&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+</code></pre></div></div>
+
+<h3 id="2缓存配置文件">2、缓存配置文件</h3>
+
+<p>之前学习的时候，这个配置文件中药写入value的缓存策略，但是我做了一个自定义的缓存管理器，直接在Java类中配置常量就可以了，非常小巧和方便</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!--
+  ~ Hibernate, Relational Persistence for Idiomatic Java
+  ~
+  ~ Copyright (c) 2007, Red Hat Middleware LLC or third-party contributors as
+  ~ indicated by the @author tags or express copyright attribution
+  ~ statements applied by the authors. All third-party contributions are
+  ~ distributed under license by Red Hat Middleware LLC.
+  ~
+  ~ This copyrighted material is made available to anyone wishing to use, modify,
+  ~ copy, or redistribute it subject to the terms and conditions of the GNU
+  ~ Lesser General Public License, as published by the Free Software Foundation.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+  ~ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
+  ~ for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public License
+  ~ along with this distribution; if not, write to:
+  ~ Free Software Foundation, Inc.
+  ~ 51 Franklin Street, Fifth Floor
+  ~ Boston, MA  02110-1301  USA
+  --&gt;
+&lt;ehcache updateCheck="false"&gt;
+
+    &lt;!-- Sets the path to the directory where cache .data files are created.
+
+         If the path is a Java System Property it is replaced by
+         its value in the running VM.
+
+         The following properties are translated:
+         user.home - User's home directory
+         user.dir - User's current working directory
+         java.io.tmpdir - Default temp file path --&gt;
+    &lt;!--&lt;diskStore path="c:\dev\cache"/&gt;--&gt;
+
+    &lt;!--
+       name：Cache的唯一标识
+       maxElementsInMemory：内存中最大缓存对象数
+       maxElementsOnDisk：磁盘中最大缓存对象数，若是0表示无穷大
+       eternal：Element是否永久有效，一但设置了，timeout将不起作用
+       overflowToDisk：配置此属性，当内存中Element数量达到maxElementsInMemory时，Ehcache将会Element写到磁盘中
+       timeToIdleSeconds：设置Element在失效前的允许闲置时间。仅当element不是永久有效时使用，可选属性，默认值是0，也就是可闲置时间无穷大
+       timeToLiveSeconds：设置Element在失效前允许存活时间。最大时间介于创建时间和失效时间之间。仅当element不是永久有效时使用，默认是0.，也就是element存活时间无穷大
+       diskPersistent：是否缓存虚拟机重启期数据
+       diskExpiryThreadIntervalSeconds：磁盘失效线程运行时间间隔，默认是120秒
+       diskSpoolBufferSizeMB：这个参数设置DiskStore（磁盘缓存）的缓存区大小。默认是30MB。每个Cache都应该有自己的一个缓冲区
+       memoryStoreEvictionPolicy：当达到maxElementsInMemory限制时，Ehcache将会根据指定的策略去清理内存。默认策略是LRU（最近最少使用）。你可以设置为FIFO（先进先出）或是LFU（较少使用）
+       --&gt;
+
+    &lt;defaultCache
+            maxElementsInMemory="10000"
+            eternal="false"
+            timeToIdleSeconds="600"
+            timeToLiveSeconds="600"
+            overflowToDisk="true"
+            maxElementsOnDisk="10000000"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            diskSpoolBufferSizeMB="64"
+            memoryStoreEvictionPolicy="LRU"
+    /&gt;
+    &lt;!--中间可以包含其他的缓存key--&gt;
+
+&lt;/ehcache&gt;
+
+</code></pre></div></div>
+
+<h3 id="3spring中进行配置">3、spring中进行配置</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+       <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="na">xmlns:cache=</span><span class="s">"http://www.springframework.org/schema/cache"</span>
+       <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd "</span> <span class="nt">&gt;</span>
+
+
+    <span class="nt">&lt;description&gt;</span>spring configuration<span class="nt">&lt;/description&gt;</span>
+
+
+    <span class="nt">&lt;import</span> <span class="na">resource=</span><span class="s">"applicationContext-redis.xml"</span><span class="nt">/&gt;</span>
+
+
+    <span class="c">&lt;!-- 自定义Ehcache缓存，根据java类加入更多的key 支持注解缓存   --&gt;</span>
+    <span class="nt">&lt;cache:annotation-driven/&gt;</span>
+
+    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"cacheManager"</span> <span class="na">class=</span><span class="s">"com.hlj.Ehcache.config.CustomEhCacheManager"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"cacheManager"</span> <span class="na">ref=</span><span class="s">"ehcacheManager"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/bean&gt;</span>
+
+    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"ehcacheManager"</span> <span class="na">class=</span><span class="s">"org.springframework.cache.ehcache.EhCacheManagerFactoryBean"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"configLocation"</span> <span class="na">value=</span><span class="s">"classpath:ehcache.xml"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"shared"</span> <span class="na">value=</span><span class="s">"true"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/bean&gt;</span>
+
+<span class="nt">&lt;/beans&gt;</span>
+
+</code></pre></div></div>
+
+<h4 id="31配置自定义的缓存管理器">3.1、配置自定义的缓存管理器</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">Ehcache</span><span class="p">.</span><span class="n">config</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">net</span><span class="p">.</span><span class="n">sf</span><span class="p">.</span><span class="n">ehcache</span><span class="p">.</span><span class="n">Ehcache</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">net</span><span class="p">.</span><span class="n">sf</span><span class="p">.</span><span class="n">ehcache</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">CacheConfiguration</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">slf4j</span><span class="p">.</span><span class="n">Logger</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">slf4j</span><span class="p">.</span><span class="n">LoggerFactory</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">cache</span><span class="p">.</span><span class="n">Cache</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">cache</span><span class="p">.</span><span class="n">ehcache</span><span class="p">.</span><span class="n">EhCacheCache</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">cache</span><span class="p">.</span><span class="n">ehcache</span><span class="p">.</span><span class="n">EhCacheCacheManager</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">lang</span><span class="p">.</span><span class="n">reflect</span><span class="p">.</span><span class="n">Field</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.*;</span>
+
+<span class="p">/**</span>
+ <span class="p">*</span>  <span class="err">类描述：继承</span> <span class="n">EhCacheCacheManager</span>
+ <span class="p">*</span> <span class="p">@</span><span class="n">Description</span> <span class="err">初始化缓存。加载</span><span class="p">@</span><span class="n">CacheConstants</span><span class="err">中缓存定义及缓存自定义过期时间</span>
+ <span class="p">*</span> <span class="p">@</span><span class="n">Date</span>   <span class="m">2018</span><span class="p">/</span><span class="m">3</span><span class="p">/</span><span class="m">21</span> <span class="err">下午</span><span class="m">2</span><span class="p">:</span><span class="m">46.</span>
+ <span class="p">*/</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">CustomEhCacheManager</span> <span class="n">extends</span> <span class="n">EhCacheCacheManager</span> <span class="p">{</span>
+
+    <span class="n">private</span> <span class="n">static</span> <span class="k">String</span> <span class="n">CACHE_PREFIX</span> <span class="p">=</span> <span class="s2">"CACHE_"</span><span class="p">;</span>
+    <span class="n">private</span> <span class="n">static</span> <span class="k">String</span> <span class="n">EXPIRE_PREFIX</span> <span class="p">=</span> <span class="s2">"EXPIRE_"</span><span class="p">;</span>
+    <span class="n">private</span> <span class="n">static</span> <span class="n">Logger</span> <span class="n">logger</span> <span class="p">=</span> <span class="n">LoggerFactory</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">CustomEhCacheManager</span><span class="p">.</span><span class="n">class</span><span class="p">);</span>
+
+    <span class="n">private</span> <span class="n">static</span> <span class="k">List</span><span class="p">&lt;</span><span class="k">String</span><span class="p">&gt;</span> <span class="n">cacheNames</span> <span class="p">=</span> <span class="n">new</span> <span class="n">ArrayList</span><span class="p">&lt;&gt;();</span>
+    <span class="n">private</span> <span class="n">static</span> <span class="n">Map</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span><span class="n">Long</span><span class="p">&gt;</span> <span class="n">expires</span> <span class="p">=</span> <span class="n">new</span> <span class="n">HashMap</span><span class="p">&lt;&gt;();</span>
+
+    <span class="p">@</span><span class="n">Override</span>
+    <span class="k">public</span> <span class="n">void</span> <span class="n">afterPropertiesSet</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">try</span> <span class="p">{</span>
+            <span class="n">Class</span> <span class="n">clazz</span> <span class="p">=</span> <span class="n">CacheConstants</span><span class="p">.</span><span class="n">class</span><span class="p">;</span>
+            <span class="n">Field</span><span class="p">[]</span> <span class="n">fields</span> <span class="p">=</span> <span class="n">clazz</span><span class="p">.</span><span class="n">getDeclaredFields</span><span class="p">();</span>
+            <span class="n">for</span><span class="p">(</span><span class="n">Field</span> <span class="n">field</span> <span class="p">:</span> <span class="n">fields</span><span class="p">){</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">field</span><span class="p">.</span><span class="n">getName</span><span class="p">().</span><span class="nf">startsWith</span><span class="p">(</span><span class="n">CACHE_PREFIX</span><span class="p">)){</span>
+                    <span class="n">cacheNames</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">field</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">clazz</span><span class="p">).</span><span class="n">toString</span><span class="p">());</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">field</span><span class="p">.</span><span class="n">getName</span><span class="p">().</span><span class="nf">startsWith</span><span class="p">(</span><span class="n">EXPIRE_PREFIX</span><span class="p">)){</span>
+                    <span class="n">expires</span><span class="p">.</span><span class="n">put</span><span class="p">(</span>
+                            <span class="n">clazz</span><span class="p">.</span><span class="n">getField</span><span class="p">(</span><span class="n">field</span><span class="p">.</span><span class="n">getName</span><span class="p">().</span><span class="n">replace</span><span class="p">(</span><span class="n">EXPIRE_PREFIX</span><span class="p">,</span><span class="s2">""</span><span class="p">)).</span><span class="n">get</span><span class="p">(</span><span class="n">clazz</span><span class="p">).</span><span class="n">toString</span><span class="p">(),</span>
+                            <span class="n">Long</span><span class="p">.</span><span class="n">parseLong</span><span class="p">(</span><span class="n">field</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">clazz</span><span class="p">).</span><span class="n">toString</span><span class="p">())</span>
+                    <span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">logger</span><span class="p">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">getMessage</span><span class="p">(),</span><span class="n">e</span><span class="p">);</span>
+            <span class="n">throw</span> <span class="n">new</span> <span class="n">RuntimeException</span><span class="p">(</span><span class="s2">"init cache failure!"</span><span class="p">,</span><span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">super</span><span class="p">.</span><span class="n">afterPropertiesSet</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="p">@</span><span class="n">Override</span>
+    <span class="n">protected</span> <span class="n">Collection</span><span class="p">&lt;</span><span class="n">Cache</span><span class="p">&gt;</span> <span class="n">loadCaches</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">LinkedHashSet</span><span class="p">&lt;</span><span class="n">Cache</span><span class="p">&gt;</span> <span class="n">caches</span> <span class="p">=</span> <span class="n">new</span> <span class="n">LinkedHashSet</span><span class="p">&lt;</span><span class="n">Cache</span><span class="p">&gt;(</span><span class="n">cacheNames</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+        <span class="n">for</span><span class="p">(</span><span class="k">String</span> <span class="n">name</span><span class="p">:</span><span class="n">cacheNames</span><span class="p">){</span>
+            <span class="n">Ehcache</span> <span class="n">exist</span> <span class="p">=</span> <span class="n">this</span><span class="p">.</span><span class="n">getCacheManager</span><span class="p">().</span><span class="n">addCacheIfAbsent</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">exist</span> <span class="c1">!= null){
+</span>                <span class="n">Cache</span> <span class="n">cache</span> <span class="p">=</span> <span class="n">new</span> <span class="n">EhCacheCache</span><span class="p">(</span><span class="n">exist</span><span class="p">);</span>
+                <span class="n">Ehcache</span> <span class="n">ehcache</span> <span class="p">=</span> <span class="p">(</span><span class="n">Ehcache</span><span class="p">)</span> <span class="n">cache</span><span class="p">.</span><span class="n">getNativeCache</span><span class="p">();</span>
+                <span class="n">CacheConfiguration</span> <span class="n">configuration</span> <span class="p">=</span> <span class="n">ehcache</span><span class="p">.</span><span class="n">getCacheConfiguration</span><span class="p">();</span>
+                <span class="n">Long</span> <span class="n">time</span> <span class="p">=</span> <span class="n">expires</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+                <span class="n">configuration</span><span class="p">.</span><span class="n">setTimeToIdleSeconds</span><span class="p">(</span><span class="n">time</span><span class="p">);</span>
+                <span class="n">configuration</span><span class="p">.</span><span class="n">setTimeToLiveSeconds</span><span class="p">(</span><span class="n">time</span><span class="p">);</span>
+                <span class="n">caches</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">cache</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="n">return</span> <span class="n">caches</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+</code></pre></div></div>
+
+<h4 id="32字段以缓存策略的名称也叫缓存位置名称">3.2、字段以缓存策略的名称，也叫缓存位置名称</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">Ehcache</span><span class="p">.</span><span class="n">config</span><span class="p">;</span>
+
+<span class="p">/**</span>
+ <span class="p">*</span> <span class="err">类名称：</span><span class="n">CacheConstants</span>
+ <span class="p">*</span> <span class="err">类描述：缓存常量类</span>
+ <span class="p">*</span> <span class="err">创建人：</span><span class="n">HealerJean</span>
+ <span class="p">*</span> <span class="err">需要初始化的缓存定义名称需要以</span><span class="n">CACHE_</span><span class="err">为前缀。如：</span><span class="n">CACHE_XXX</span>
+ <span class="p">*</span> <span class="err">如果需要增加自定义过期时间，则增加过期时间变量定义</span><span class="n">EXPIRE_</span><span class="err">为前缀的缓存过期时间</span><span class="p">.</span><span class="err">如：</span><span class="n">EXPIRE_CACHE_XXX</span>
+ <span class="p">*</span> <span class="err">如不设置自定义过期时间即默认</span><span class="n">spring</span> <span class="n">cache</span><span class="err">中设置过期时间</span>
+ <span class="p">*</span>
+ <span class="p">*</span> <span class="p">@</span><span class="k">version</span> <span class="m">1.0.0</span>
+ <span class="p">*/</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">CacheConstants</span> <span class="p">{</span>
+
+    <span class="p">//</span><span class="err">公共缓存，</span><span class="m">1</span><span class="err">分钟过期时间</span>
+    <span class="k">public</span> <span class="n">static</span> <span class="n">final</span> <span class="k">String</span> <span class="n">CACHE_PUBLIC_PERSON</span> <span class="p">=</span> <span class="s2">"cache.public.person"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">static</span> <span class="n">final</span> <span class="n">Long</span> <span class="n">EXPIRE_CACHE_PUBLIC_PERSON</span> <span class="p">=</span> <span class="m">60L</span><span class="p">;</span>
+
+
+    <span class="k">public</span> <span class="n">static</span> <span class="n">final</span> <span class="k">String</span> <span class="n">CACHE_PUBLIC</span> <span class="p">=</span> <span class="s2">"cache.public"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">static</span> <span class="n">final</span> <span class="n">Long</span> <span class="n">EXPIRE_CACHE_PUBLIC</span> <span class="p">=</span> <span class="m">60L</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="n">static</span> <span class="n">final</span> <span class="k">String</span> <span class="n">CACHE_PUBLIC_TEN_MINUTE</span> <span class="p">=</span> <span class="s2">"cache.public.ten.minute"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">static</span> <span class="n">final</span> <span class="n">Long</span> <span class="n">EXPIRE_CACHE_PUBLIC_TEN_MINUTE</span> <span class="p">=</span> <span class="m">10</span> <span class="p">*</span> <span class="m">60L</span><span class="p">;</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="4开始测试吧朋友们这里不像多讲解了主要还是看代码吧注释也非常详细">4、开始测试吧，朋友们，这里不像多讲解了，主要还是看代码吧，注释也非常详细</h3>
+
+<h4 id="1controller">1、controller</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">Ehcache</span><span class="p">.</span><span class="n">controller</span><span class="p">;</span>
+
+
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">Ehcache</span><span class="p">.</span><span class="n">service</span><span class="p">.</span><span class="n">EhcacheService</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">bean</span><span class="p">.</span><span class="n">Person</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">beans</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Autowired</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">stereotype</span><span class="p">.</span><span class="n">Controller</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">web</span><span class="p">.</span><span class="n">bind</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">GetMapping</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">web</span><span class="p">.</span><span class="n">bind</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">ResponseBody</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="k">List</span><span class="p">;</span>
+
+<span class="p">/**</span>
+ <span class="p">*</span> <span class="p">@</span><span class="n">Description</span>
+ <span class="p">*</span> <span class="p">@</span><span class="n">Author</span> <span class="n">HealerJean</span>
+ <span class="p">*</span> <span class="p">@</span><span class="n">Date</span> <span class="m">2018</span><span class="p">/</span><span class="m">3</span><span class="p">/</span><span class="m">21</span>  <span class="err">下午</span><span class="m">1</span><span class="p">:</span><span class="m">58.</span>
+ <span class="p">*/</span>
+<span class="p">@</span><span class="n">Controller</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">EhCacheController</span> <span class="p">{</span>
+
+
+    <span class="p">@</span><span class="n">Autowired</span>
+    <span class="n">private</span> <span class="n">EhcacheService</span> <span class="n">ehcacheService</span><span class="p">;</span>
+
+    <span class="p">@</span><span class="n">GetMapping</span><span class="p">(</span><span class="s2">"save"</span><span class="p">)</span>
+    <span class="k">public</span> <span class="p">@</span><span class="n">ResponseBody</span> <span class="n">Person</span> <span class="n">save</span><span class="p">(</span><span class="n">Long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">Person</span> <span class="n">person</span> <span class="p">=</span> <span class="n">new</span> <span class="n">Person</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="s2">"EhcacheHealerJean"</span><span class="p">,</span><span class="s2">"123465"</span><span class="p">);</span>
+        <span class="n">return</span> <span class="n">ehcacheService</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="n">person</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">@</span><span class="n">GetMapping</span><span class="p">(</span><span class="s2">"findById"</span><span class="p">)</span>
+    <span class="k">public</span> <span class="p">@</span><span class="n">ResponseBody</span> <span class="n">Person</span> <span class="n">findById</span><span class="p">(</span><span class="n">Long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">return</span> <span class="n">ehcacheService</span><span class="p">.</span><span class="n">findById</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">@</span><span class="n">GetMapping</span><span class="p">(</span><span class="s2">"update"</span><span class="p">)</span>
+    <span class="k">public</span> <span class="p">@</span><span class="n">ResponseBody</span> <span class="n">Person</span> <span class="n">update</span><span class="p">(</span><span class="n">Person</span> <span class="n">person</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">return</span> <span class="n">ehcacheService</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">person</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">@</span><span class="n">GetMapping</span><span class="p">(</span><span class="s2">"delete"</span><span class="p">)</span>
+    <span class="k">public</span> <span class="p">@</span><span class="n">ResponseBody</span> <span class="k">String</span> <span class="n">delete</span><span class="p">(</span><span class="n">Long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ehcacheService</span><span class="p">.</span><span class="n">delete</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+        <span class="n">return</span> <span class="s2">"删除成功"</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">@</span><span class="n">GetMapping</span><span class="p">(</span><span class="s2">"listPerson"</span><span class="p">)</span>
+    <span class="k">public</span><span class="p">@</span><span class="n">ResponseBody</span>  <span class="k">List</span><span class="p">&lt;</span><span class="n">Person</span><span class="p">&gt;</span> <span class="n">listPerson</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">return</span> <span class="n">ehcacheService</span><span class="p">.</span><span class="n">listPerson</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h4 id="42service">4.2、service</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">Ehcache</span><span class="p">.</span><span class="n">service</span><span class="p">.</span><span class="n">impl</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">Ehcache</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">CacheConstants</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">Ehcache</span><span class="p">.</span><span class="n">service</span><span class="p">.</span><span class="n">EhcacheService</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">bean</span><span class="p">.</span><span class="n">Person</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">repository</span><span class="p">.</span><span class="n">PersonRepository</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">beans</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Autowired</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">cache</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">CacheEvict</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">cache</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">CachePut</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">cache</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Cacheable</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">stereotype</span><span class="p">.</span><span class="n">Service</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="k">List</span><span class="p">;</span>
+
+<span class="p">/**</span>
+ <span class="p">*</span> <span class="p">@</span><span class="n">Description</span>
+ <span class="p">*</span> <span class="p">@</span><span class="n">Author</span> <span class="n">HealerJean</span>
+ <span class="p">*</span> <span class="p">@</span><span class="n">Date</span> <span class="m">2018</span><span class="p">/</span><span class="m">3</span><span class="p">/</span><span class="m">21</span>  <span class="err">下午</span><span class="m">1</span><span class="p">:</span><span class="m">59.</span>
+ <span class="p">*/</span>
+<span class="p">@</span><span class="n">Service</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">EhcacheServiceImpl</span> <span class="n">implements</span> <span class="n">EhcacheService</span><span class="p">{</span>
+
+    <span class="p">@</span><span class="n">Autowired</span>
+    <span class="n">private</span> <span class="n">PersonRepository</span> <span class="n">personRepository</span><span class="p">;</span>
+
+
+    <span class="p">//</span><span class="err">这里的单引号不能少，否则会报错，被识别是一个对象</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">static</span> <span class="n">final</span> <span class="k">String</span> <span class="n">CACHE_KEY</span> <span class="p">=</span> <span class="s2">"'person'"</span><span class="p">;</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="n">value</span><span class="err">属性表示使用哪个缓存策略，缓存策略在</span><span class="n">ehcache</span><span class="p">.</span><span class="n">xml</span><span class="p">,</span><span class="err">现在存放在下面的实体类中，在启动的时候自动加载了</span>
+     <span class="p">*</span> <span class="err">也叫缓存存放位置名称，不能为空</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">static</span> <span class="n">final</span> <span class="k">String</span> <span class="n">DEMO_CACHE_NAME</span> <span class="p">=</span> <span class="n">CacheConstants</span><span class="p">.</span><span class="n">CACHE_PUBLIC_PERSON</span><span class="p">;</span>
+
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">保存数据，防止是更新的操作，所以将之前缓存的删除</span><span class="p">,</span><span class="err">事实上，我也并没有很成功的实现它，后来明白啦，哈，原来是</span><span class="n">list</span><span class="err">集合缓存的时候，添加要删除的哦</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">Person</span>
+     <span class="p">*/</span>
+
+    <span class="p">@</span><span class="n">CacheEvict</span><span class="p">(</span><span class="n">value</span><span class="p">=</span><span class="n">DEMO_CACHE_NAME</span><span class="p">,</span><span class="n">key</span><span class="p">=</span><span class="n">CACHE_KEY</span><span class="p">)</span>
+    <span class="k">public</span> <span class="n">Person</span> <span class="n">save</span><span class="p">(</span><span class="n">Person</span> <span class="n">Person</span><span class="p">){</span>
+        <span class="n">return</span> <span class="n">personRepository</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="n">Person</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">查询数据</span><span class="p">.</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">id</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">return</span>
+     <span class="p">*/</span>
+    <span class="p">@</span><span class="n">Cacheable</span><span class="p">(</span><span class="n">value</span><span class="p">=</span><span class="n">DEMO_CACHE_NAME</span> <span class="p">,</span><span class="n">key</span><span class="p">=</span><span class="s2">"'Person_'+#id"</span><span class="p">)</span>
+    <span class="k">public</span> <span class="n">Person</span> <span class="n">findById</span><span class="p">(</span><span class="n">Long</span> <span class="n">id</span><span class="p">){</span>
+        <span class="n">return</span> <span class="n">personRepository</span><span class="p">.</span><span class="n">findOne</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">修改数据</span><span class="p">.</span>
+     <span class="p">*</span> <span class="err">在支持</span><span class="n">Spring</span> <span class="n">Cache</span><span class="err">的环境下，与</span><span class="p">@</span><span class="n">Cacheable</span><span class="err">不同的是使用</span><span class="p">@</span><span class="n">CachePut</span><span class="err">标注的方法在执行前不会去检查缓存中是否存在之前执行过的结果，而是每次都会执行该方法，并将执行结果以键值对的形式存入指定的缓存中。</span>
+     <span class="p">@</span><span class="n">CachePut</span><span class="err">也可以标注在类上和方法上。使用</span><span class="p">@</span><span class="n">CachePut</span><span class="err">时我们可以指定的属性跟</span><span class="p">@</span><span class="n">Cacheable</span><span class="err">是一样的。</span>
+     <span class="p">*/</span>
+    <span class="p">@</span><span class="n">CachePut</span><span class="p">(</span><span class="n">value</span> <span class="p">=</span> <span class="n">DEMO_CACHE_NAME</span><span class="p">,</span><span class="n">key</span> <span class="p">=</span> <span class="s2">"'Person_'+#person.getId()"</span><span class="p">)</span>
+    <span class="k">public</span> <span class="n">Person</span> <span class="n">update</span><span class="p">(</span><span class="n">Person</span> <span class="n">person</span><span class="p">)</span>  <span class="p">{</span>
+        <span class="n">Person</span> <span class="n">Person</span> <span class="p">=</span> <span class="n">personRepository</span><span class="p">.</span><span class="n">findOne</span><span class="p">(</span><span class="n">person</span><span class="p">.</span><span class="nf">getId</span><span class="p">());</span>
+        <span class="n">Person</span><span class="p">.</span><span class="n">setName</span><span class="p">(</span><span class="n">person</span><span class="p">.</span><span class="n">getName</span><span class="p">());</span>
+        <span class="n">Person</span><span class="p">.</span><span class="n">setPwd</span><span class="p">(</span><span class="n">person</span><span class="p">.</span><span class="n">getPwd</span><span class="p">());</span>
+        <span class="n">return</span> <span class="n">Person</span><span class="p">;</span>
+    <span class="p">}</span>
+
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">删除数据</span><span class="p">.</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">id</span>
+     <span class="p">*/</span>
+    <span class="p">@</span><span class="n">CacheEvict</span><span class="p">(</span><span class="n">value</span> <span class="p">=</span> <span class="n">DEMO_CACHE_NAME</span><span class="p">,</span><span class="n">key</span> <span class="p">=</span> <span class="s2">"'Person_'+#id"</span><span class="p">)//</span><span class="err">这是清除缓存</span><span class="p">.</span>
+    <span class="k">public</span> <span class="n">void</span> <span class="n">delete</span><span class="p">(</span><span class="n">Long</span> <span class="n">id</span><span class="p">){</span>
+        <span class="n">personRepository</span><span class="p">.</span><span class="n">delete</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">@</span><span class="n">Cacheable</span><span class="p">(</span><span class="n">value</span><span class="p">=</span><span class="n">DEMO_CACHE_NAME</span> <span class="p">,</span><span class="n">key</span><span class="p">=</span><span class="n">CACHE_KEY</span><span class="p">)</span>
+    <span class="k">public</span> <span class="k">List</span><span class="p">&lt;</span><span class="n">Person</span><span class="p">&gt;</span> <span class="n">listPerson</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">return</span> <span class="n">personRepository</span><span class="p">.</span><span class="n">findAll</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h4 id="43ehcache工具类">4.3、Ehcache工具类</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">duodian</span><span class="p">.</span><span class="n">admore</span><span class="p">.</span><span class="n">dao</span><span class="p">.</span><span class="n">ehcache</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">duodian</span><span class="p">.</span><span class="n">admore</span><span class="p">.</span><span class="n">cache</span><span class="p">.</span><span class="n">CustomEhCacheManager</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">net</span><span class="p">.</span><span class="n">sf</span><span class="p">.</span><span class="n">ehcache</span><span class="p">.</span><span class="n">Cache</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">net</span><span class="p">.</span><span class="n">sf</span><span class="p">.</span><span class="n">ehcache</span><span class="p">.</span><span class="n">CacheManager</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">net</span><span class="p">.</span><span class="n">sf</span><span class="p">.</span><span class="n">ehcache</span><span class="p">.</span><span class="n">Element</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">beans</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">InitializingBean</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">stereotype</span><span class="p">.</span><span class="n">Component</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">javax</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">PostConstruct</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">javax</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Resource</span><span class="p">;</span>
+
+<span class="p">/**</span>
+ <span class="p">*</span> <span class="err">类名称：</span><span class="n">EhCacheObjectData</span>
+ <span class="p">*</span> <span class="err">类描述：</span><span class="n">ehcache</span> <span class="err">对象数据存储</span>
+ <span class="p">*</span>
+ <span class="p">*/</span>
+<span class="p">@</span><span class="n">Component</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">EhCacheObjectData</span> <span class="p">{</span>
+
+    <span class="p">@</span><span class="n">Resource</span>
+    <span class="n">private</span> <span class="n">CustomEhCacheManager</span> <span class="n">customEhCacheManager</span><span class="p">;</span>
+
+    <span class="n">private</span> <span class="n">CacheManager</span> <span class="n">cacheManager</span><span class="p">;</span>
+
+    <span class="p">@</span><span class="n">PostConstruct</span>
+    <span class="k">public</span> <span class="n">void</span> <span class="n">init</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">cacheManager</span> <span class="p">=</span> <span class="n">customEhCacheManager</span><span class="p">.</span><span class="n">getCacheManager</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">Object</span> <span class="n">getData</span><span class="p">(</span><span class="k">String</span> <span class="n">cacheName</span><span class="p">,</span><span class="k">String</span> <span class="n">key</span><span class="p">){</span>
+        <span class="n">Cache</span> <span class="n">cache</span> <span class="p">=</span> <span class="n">cacheManager</span><span class="p">.</span><span class="n">getCache</span><span class="p">(</span><span class="n">cacheName</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">cache</span> <span class="p">==</span> <span class="n">null</span> <span class="p">)</span> <span class="n">return</span> <span class="n">null</span><span class="p">;</span>
+        <span class="n">Element</span> <span class="n">element</span> <span class="p">=</span> <span class="n">cache</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">element</span> <span class="c1">!= null) return element.getObjectValue();
+</span>        <span class="n">return</span> <span class="n">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">void</span> <span class="n">setData</span><span class="p">(</span><span class="k">String</span> <span class="n">cacheName</span><span class="p">,</span><span class="k">String</span> <span class="n">key</span><span class="p">,</span><span class="n">Object</span> <span class="n">data</span><span class="p">){</span>
+        <span class="n">Cache</span> <span class="n">cache</span> <span class="p">=</span> <span class="n">cacheManager</span><span class="p">.</span><span class="n">getCache</span><span class="p">(</span><span class="n">cacheName</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">cache</span> <span class="c1">!= null ) cache.put(new Element(key,data));
+</span>    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">删除缓存下的</span><span class="n">key</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">cacheName</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">key</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">return</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="k">boolean</span> <span class="n">delete</span><span class="p">(</span><span class="k">String</span> <span class="n">cacheName</span><span class="p">,</span><span class="k">String</span> <span class="n">key</span><span class="p">){</span>
+        <span class="n">Cache</span> <span class="n">cache</span> <span class="p">=</span> <span class="n">cacheManager</span><span class="p">.</span><span class="n">getCache</span><span class="p">(</span><span class="n">cacheName</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">cache</span> <span class="c1">!= null ) {
+</span>            <span class="n">return</span> <span class="n">cache</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">duodian</span><span class="p">.</span><span class="n">admore</span><span class="p">.</span><span class="n">dao</span><span class="p">.</span><span class="n">ehcache</span><span class="p">.</span><span class="n">apps</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">duodian</span><span class="p">.</span><span class="n">admore</span><span class="p">.</span><span class="n">cache</span><span class="p">.</span><span class="n">CacheConstants</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">duodian</span><span class="p">.</span><span class="n">admore</span><span class="p">.</span><span class="n">cache</span><span class="p">.</span><span class="n">CustomEhCacheManager</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">net</span><span class="p">.</span><span class="n">sf</span><span class="p">.</span><span class="n">ehcache</span><span class="p">.</span><span class="n">Cache</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">net</span><span class="p">.</span><span class="n">sf</span><span class="p">.</span><span class="n">ehcache</span><span class="p">.</span><span class="n">CacheManager</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">net</span><span class="p">.</span><span class="n">sf</span><span class="p">.</span><span class="n">ehcache</span><span class="p">.</span><span class="n">Element</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">beans</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">InitializingBean</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">stereotype</span><span class="p">.</span><span class="n">Component</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">javax</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">PostConstruct</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">javax</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Resource</span><span class="p">;</span>
+
+<span class="p">/**</span>
+ <span class="p">*</span> <span class="err">类描述：</span> <span class="err">用以存放进程与包名对应关系</span>
+ <span class="p">*/</span>
+<span class="p">@</span><span class="n">Component</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">ProcessPackageCache</span> <span class="p">{</span>
+
+    <span class="p">@</span><span class="n">Resource</span>
+    <span class="n">private</span> <span class="n">CustomEhCacheManager</span> <span class="n">customEhCacheManager</span><span class="p">;</span>
+
+    <span class="n">private</span> <span class="n">Cache</span> <span class="n">cache</span><span class="p">;</span>
+
+    <span class="p">@</span><span class="n">PostConstruct</span>
+    <span class="n">private</span> <span class="n">void</span> <span class="n">init</span><span class="p">(){</span>
+        <span class="n">cache</span> <span class="p">=</span> <span class="n">customEhCacheManager</span><span class="p">.</span><span class="n">getCacheManager</span><span class="p">().</span><span class="n">getCache</span><span class="p">(</span><span class="n">CacheConstants</span><span class="p">.</span><span class="n">CACHE_PUBLIC_DAY</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">private</span> <span class="k">String</span> <span class="n">buildKey</span><span class="p">(</span><span class="k">String</span> <span class="n">processName</span><span class="p">){</span>
+        <span class="n">return</span> <span class="s2">"process."</span> <span class="p">+</span> <span class="n">processName</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">String</span> <span class="n">getPackageName</span><span class="p">(</span><span class="k">String</span> <span class="n">processName</span><span class="p">){</span>
+        <span class="n">Element</span> <span class="n">element</span> <span class="p">=</span> <span class="n">cache</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">buildKey</span><span class="p">(</span><span class="n">processName</span><span class="p">));</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">element</span> <span class="c1">!= null) return element.getObjectValue().toString();
+</span>        <span class="n">return</span> <span class="n">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">void</span> <span class="n">putPackageName</span><span class="p">(</span><span class="k">String</span> <span class="n">processName</span><span class="p">,</span><span class="k">String</span> <span class="n">packageName</span><span class="p">){</span>
+        <span class="n">cache</span><span class="p">.</span><span class="n">putIfAbsent</span><span class="p">(</span><span class="n">new</span> <span class="n">Element</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">buildKey</span><span class="p">(</span><span class="n">processName</span><span class="p">),</span><span class="n">packageName</span><span class="p">));</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+
+
+</code></pre></div></div>
+
+<h2 id="5redis-使用计时器-活着是拦截点击次数过多">5、redis 使用计时器 活着是拦截点击次数过多</h2>
+
+<h3 id="51拦截器配置">5.1、拦截器配置</h3>
+
+<h4 id="1设置要拦截的url和缓存时间10秒">1、设置要拦截的url和缓存时间10秒</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public UrlRequestInterceptor() {
+    super();
+    urlFilter.put("/apps/plan/savePlan",10L);
+    urlFilter.put("/play/plan/savePlan",10L);
+}
+
+</code></pre></div></div>
+
+<h4 id="2添加url缓存并且计数">2、添加url缓存并且计数</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Long count = redisUrlRequestData.increase(userId + uri,urlFilter.get(uri));
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">duodian</span><span class="p">.</span><span class="n">admore</span><span class="p">.</span><span class="n">advertiser</span><span class="p">.</span><span class="n">interceptor</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">duodian</span><span class="p">.</span><span class="n">admore</span><span class="p">.</span><span class="n">common</span><span class="p">.</span><span class="n">utils</span><span class="p">.</span><span class="n">AppSessionHelper</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">duodian</span><span class="p">.</span><span class="n">admore</span><span class="p">.</span><span class="n">dao</span><span class="p">.</span><span class="n">redis</span><span class="p">.</span><span class="n">RedisUrlRequestData</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">apache</span><span class="p">.</span><span class="n">commons</span><span class="p">.</span><span class="n">lang</span><span class="p">.</span><span class="n">StringUtils</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">stereotype</span><span class="p">.</span><span class="n">Component</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">web</span><span class="p">.</span><span class="n">servlet</span><span class="p">.</span><span class="n">HandlerInterceptor</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">web</span><span class="p">.</span><span class="n">servlet</span><span class="p">.</span><span class="n">ModelAndView</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">javax</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Resource</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">javax</span><span class="p">.</span><span class="n">servlet</span><span class="p">.</span><span class="n">http</span><span class="p">.</span><span class="n">HttpServletRequest</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">javax</span><span class="p">.</span><span class="n">servlet</span><span class="p">.</span><span class="n">http</span><span class="p">.</span><span class="n">HttpServletResponse</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">IOException</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">HashMap</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">Map</span><span class="p">;</span>
+
+<span class="p">/**</span>
+ <span class="p">*</span> <span class="err">类描述：</span>
+ <span class="p">*</span> <span class="err">创建人：</span> <span class="n">j</span><span class="p">.</span><span class="n">sh</span>
+ <span class="p">*</span> <span class="err">创建时间：</span> <span class="m">2016</span><span class="p">/</span><span class="m">9</span><span class="p">/</span><span class="m">13</span>
+ <span class="p">*</span> <span class="k">version</span><span class="err">：</span><span class="m">1.0.0</span>
+ <span class="p">*/</span>
+<span class="p">@</span><span class="n">Component</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">UrlRequestInterceptor</span> <span class="n">implements</span> <span class="n">HandlerInterceptor</span> <span class="p">{</span>
+
+    <span class="p">@</span><span class="n">Resource</span>
+    <span class="n">private</span> <span class="n">RedisUrlRequestData</span> <span class="n">redisUrlRequestData</span><span class="p">;</span>
+
+    <span class="n">private</span> <span class="n">Map</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span><span class="n">Long</span><span class="p">&gt;</span> <span class="n">urlFilter</span> <span class="p">=</span> <span class="n">new</span> <span class="n">HashMap</span><span class="p">&lt;&gt;();</span>
+
+    <span class="k">public</span> <span class="n">UrlRequestInterceptor</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">super</span><span class="p">();</span>
+        <span class="n">urlFilter</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="s2">"/apps/plan/savePlan"</span><span class="p">,</span><span class="m">10L</span><span class="p">);</span>
+        <span class="n">urlFilter</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="s2">"/play/plan/savePlan"</span><span class="p">,</span><span class="m">10L</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="p">@</span><span class="n">Override</span>
+    <span class="k">public</span> <span class="k">boolean</span> <span class="n">preHandle</span><span class="p">(</span><span class="n">HttpServletRequest</span> <span class="n">httpServletRequest</span><span class="p">,</span> <span class="n">HttpServletResponse</span> <span class="n">httpServletResponse</span><span class="p">,</span> <span class="n">Object</span> <span class="n">o</span><span class="p">)</span> <span class="n">throws</span> <span class="n">Exception</span> <span class="p">{</span>
+        <span class="k">String</span> <span class="n">uri</span> <span class="p">=</span> <span class="n">httpServletRequest</span><span class="p">.</span><span class="n">getRequestURI</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">urlFilter</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span> <span class="c1">!= null){
+</span>            <span class="n">Long</span> <span class="n">userId</span> <span class="p">=</span> <span class="n">AppSessionHelper</span><span class="p">.</span><span class="n">getRemoteUserId</span><span class="p">();</span>
+            <span class="n">Long</span> <span class="k">count</span> <span class="p">=</span> <span class="n">redisUrlRequestData</span><span class="p">.</span><span class="n">increase</span><span class="p">(</span><span class="n">userId</span> <span class="p">+</span> <span class="n">uri</span><span class="p">,</span><span class="n">urlFilter</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">uri</span><span class="p">));</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">count</span> <span class="p">&gt;</span> <span class="m">1</span><span class="p">){</span>
+                <span class="n">this</span><span class="p">.</span><span class="n">invalidate</span><span class="p">(</span><span class="n">httpServletRequest</span><span class="p">,</span><span class="n">httpServletResponse</span><span class="p">);</span>
+                <span class="n">return</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="n">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">@</span><span class="n">Override</span>
+    <span class="k">public</span> <span class="n">void</span> <span class="n">postHandle</span><span class="p">(</span><span class="n">HttpServletRequest</span> <span class="n">httpServletRequest</span><span class="p">,</span> <span class="n">HttpServletResponse</span> <span class="n">httpServletResponse</span><span class="p">,</span> <span class="n">Object</span> <span class="n">o</span><span class="p">,</span> <span class="n">ModelAndView</span> <span class="n">modelAndView</span><span class="p">)</span> <span class="n">throws</span> <span class="n">Exception</span> <span class="p">{</span>
+
+    <span class="p">}</span>
+
+    <span class="p">@</span><span class="n">Override</span>
+    <span class="k">public</span> <span class="n">void</span> <span class="n">afterCompletion</span><span class="p">(</span><span class="n">HttpServletRequest</span> <span class="n">httpServletRequest</span><span class="p">,</span> <span class="n">HttpServletResponse</span> <span class="n">httpServletResponse</span><span class="p">,</span> <span class="n">Object</span> <span class="n">o</span><span class="p">,</span> <span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="n">throws</span> <span class="n">Exception</span> <span class="p">{</span>
+
+    <span class="p">}</span>
+
+
+    <span class="n">private</span> <span class="n">void</span> <span class="n">invalidate</span><span class="p">(</span><span class="n">HttpServletRequest</span> <span class="n">request</span><span class="p">,</span><span class="n">HttpServletResponse</span> <span class="n">response</span><span class="p">)</span> <span class="n">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">String</span> <span class="n">ajax</span> <span class="p">=</span> <span class="n">request</span><span class="p">.</span><span class="n">getHeader</span><span class="p">(</span><span class="s2">"X-Requested-With"</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">StringUtils</span><span class="p">.</span><span class="n">equals</span><span class="p">(</span><span class="n">ajax</span><span class="p">,</span><span class="s2">"XMLHttpRequest"</span><span class="p">))</span> <span class="p">{</span>
+            <span class="p">//</span><span class="err">设置登陆超时</span><span class="n">header</span>
+            <span class="n">response</span><span class="p">.</span><span class="n">addHeader</span><span class="p">(</span><span class="s2">"resubmit"</span><span class="p">,</span><span class="s2">"true"</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">response</span><span class="p">.</span><span class="n">sendRedirect</span><span class="p">(</span><span class="s2">"/public/resubmit"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+
+
+</code></pre></div></div>
+<h3 id="52配置redis缓存">5.2、配置redis缓存</h3>
+
+<p>1、放入数据为byte[]</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  byte[] keyBytes = stringRedisSerializer.serialize(key);
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@Component
+public class RedisUrlRequestData {
+
+    private static Integer DB_INDEX = EnumRedisIndex.普通临时变量.index;
+
+    @Resource
+    private RedisTemplate&lt;String,Long&gt; redisTemplate;
+
+    private StringRedisSerializer stringRedisSerializer;
+    private GenericToStringSerializer longResisSerializer;
+
+    @PostConstruct
+    private void afterPropertiesSet() throws Exception {
+        stringRedisSerializer = new StringRedisSerializer();
+    }
+
+    /**
+     * 请求次数
+     * @param key
+     * @return
+     */
+    public Long increase(final String key,final Long seconds){
+        return redisTemplate.execute(new RedisCallback&lt;Long&gt;() {
+            @Override
+            public Long doInRedis(RedisConnection redisConnection) throws DataAccessException {
+                redisConnection.select(DB_INDEX);
+                byte[] keyBytes = stringRedisSerializer.serialize(key);
+
+                Long val = redisConnection.incr(keyBytes);
+                redisConnection.expire(keyBytes,seconds);
+                return val;
+            }
+        });
+    }
+}
+</code></pre></div></div>
+
+<p>网上不错的方法</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> public boolean addHcode(final List&lt;Map&lt;String, Object&gt;&gt; list,final String tableName) {
+            boolean result = redisTemplate.execute(new RedisCallback&lt;Boolean&gt;() {
+                public Boolean doInRedis(RedisConnection connection)
+                        throws DataAccessException {
+                    RedisSerializer&lt;String&gt; serializer = redisTemplate.getStringSerializer();
+                    for (Map&lt;String, Object&gt; map : list) {
+                        byte[] key  = serializer.serialize(tableName+":"+map.get("hcode").toString());
+                        byte[] name = serializer.serialize(map.get("pcode").toString());
+                        connection.setNX(key, name);
+                    }
+                    return true;
+                }
+            }, false, true);
+            return result;
+        }
+
+</code></pre></div></div>
+
+<h3 id="代码下载"><a href="https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_20_1_redis%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7%E7%B1%BB%E8%BF%9B%E8%A1%8C%E4%BF%9D%E5%AD%98%E6%95%B0%E6%8D%AE%E5%92%8CEhcache%E6%B3%A8%E8%A7%A3%E7%BC%93%E5%AD%98%E7%B1%BB%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98value/com-hlj-ddkj-redis-ehcache.zip">代码下载</a></h3>
+
+<p><br /><br /><br />
+如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">支付包</th>
+      <th style="text-align: center">微信</th>
+      <th style="text-align: center">微信公众号</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg" alt="支付宝" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg" alt="微信" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg" alt="微信公众号" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Gitalk 评论 start  -->
+
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+<p> </p>
+<div id="gitalk-container"></div>
+<p>  <br />
+ <script type="text/javascript">
+    var gitalk = new Gitalk({
+		clientID: `1d164cd85549874d0e3a`,
+		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
+		id: 'PmGTBiTsWCwEWim1',
+    });
+    gitalk.render('gitalk-container');
+</script> </p>
+
+<!-- Gitalk end -->
+
+  
+	</div>
+	<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <!--
+  <%- list_categories(item.categories, {
+      show_count: false,
+      class: 'article-category',
+      style: 'none',
+      separator: '►'
+  }) %>
+  -->
+  
+  <a class="article-category-link" href="/categories/#Redis">Redis</a>
+  
+  <a class="article-category-link" href="/categories/#Ehcache">Ehcache</a>
+  
+</div>
+
+
+  <div class="article-tags">
+  <!--
+  <% var tags = [];
+    item.tags.forEach(function(tag){
+      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
+    }); %>-->
+  <span></span> <!--<%- tags.join('') %>-->
+  
+  
+  <a href="/tags/#Redis">Redis</a>
+  
+  <a href="/tags/#Ehcache">Ehcache</a>
+  
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://localhost:4000/redis/ehcache/2018/03/20/1_redis%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7%E7%B1%BB%E8%BF%9B%E8%A1%8C%E4%BF%9D%E5%AD%98%E6%95%B0%E6%8D%AE%E5%92%8CEhcache%E6%B3%A8%E8%A7%A3%E7%BC%93%E5%AD%98%E7%B1%BB%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98value/" data-title="redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value | HealeJean的梦想博客" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+   
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/docker/springboot/2018/03/20/3_Docker%E9%83%A8%E7%BD%B2sprinBoot%E9%A1%B9%E7%9B%AE/" title="Docker部署sprinBoot项目">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Docker部署sprinBoot项目</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/druid/springboot/2018/03/21/1_springBoot%E9%9B%86%E6%88%90Durid%E8%BF%9B%E8%A1%8CSQL%E7%9B%91%E6%8E%A7/"  title="springBoot集成Durid进行SQL监控">
+ <strong>下一篇：</strong><br/> 
+ <span>springBoot集成Durid进行SQL监控
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+
+      
+      
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside toc-content">
+ 
+ <!--<%- toc(item.content) %>-->
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+
+  <div class="linkslist">
+  <p class="asidetitle">个人网站</p>
+    <ul>
+        
+          <li>
+            <a href="http://blog.csdn.net/u012954706" target="_blank" title="csdn">csdn</a>
+          </li>
+        
+          <li>
+            <a href="http://www.cnblogs.com/HealerJean/" target="_blank" title="博客园">博客园</a>
+          </li>
+        
+          <li>
+            <a href="https://weibo.com/u/3889598250/" target="_blank" title="微博">微博</a>
+          </li>
+        
+          <li>
+            <a href="https://www.jianshu.com/u/54ba972e92a8" target="_blank" title="简书">简书</a>
+          </li>
+        
+          <li>
+            <a href="https://www.zhihu.com/people/healerjean" target="_blank" title="知乎">知乎</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+
+     <p class="asidetitle">个人信息</p>
+     <script src="/assets/img/person/jquery.js"></script>
+     <script src="/assets/img/person/jquery-github-user-widget.js"></script>
+     <div class="github-widget-user" data-user="HealerJean">	</div>
+
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/#Job" title="Job">Job<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#MarkDown" title="MarkDown">MarkDown<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GitHub" title="GitHub">GitHub<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mac" title="Mac">Mac<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Thread" title="Thread">Thread<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Url" title="Url">Url<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mysql" title="Mysql">Mysql<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Database" title="Database">Database<sup>19</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Annotation" title="Annotation">Annotation<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SortAlgorithm" title="SortAlgorithm">SortAlgorithm<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#CAS" title="CAS">CAS<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Maven" title="Maven">Maven<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#HTML" title="HTML">HTML<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#AngularJs" title="AngularJs">AngularJs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WeChat" title="WeChat">WeChat<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Experience" title="Experience">Experience<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Team" title="Team">Team<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SoftWare" title="SoftWare">SoftWare<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Utils" title="Utils">Utils<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Hibernate" title="Hibernate">Hibernate<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Date" title="Date">Date<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Log" title="Log">Log<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JSON" title="JSON">JSON<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Docker" title="Docker">Docker<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GrayLog" title="GrayLog">GrayLog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpringBoot" title="SpringBoot">SpringBoot<sup>21</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Redis" title="Redis">Redis<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Ehcache" title="Ehcache">Ehcache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Druid" title="Druid">Druid<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Quartz" title="Quartz">Quartz<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Swagger" title="Swagger">Swagger<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Netty" title="Netty">Netty<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#NIO" title="NIO">NIO<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WebSocket" title="WebSocket">WebSocket<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Map" title="Map">Map<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JVM" title="JVM">JVM<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mybatis" title="Mybatis">Mybatis<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Element" title="Element">Element<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Graphics" title="Graphics">Graphics<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linux" title="Linux">Linux<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Databases" title="Databases">Databases<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Nginx" title="Nginx">Nginx<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpirngBoot" title="SpirngBoot">SpirngBoot<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linu" title="Linu">Linu<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Java" title="Java">Java<sup>15</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JAVA" title="JAVA">JAVA<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Google" title="Google">Google<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  
+
+
+  
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+	<!-- 打赏功能 -->
+  <!-- <script src="http://static.tctip.com/tctip-1.0.0.min.js"></script> -->
+  <script src="/assets/img/tctip/tctip-1.0.1.min.js"></script>
+	<script>  
+	new tctip({
+	  top: '20%',
+	  button: {
+	    id: 9,
+	    type: 'dashang',
+	  },
+	  list: [
+	    {
+	      type: 'alipay',
+	      qrImg: '/assets/img/tctip/alpay.jpg'
+	    }, {
+	      type: 'wechat',
+	      qrImg: '/assets/img/tctip/weixin.jpg'
+	    }
+	  ]
+	}).init()
+	</script>
+
+
+
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 欢迎来到  HealerJean 的梦想博客. <br/>
+			------您已走进一个高级软件开发工程师的成长之路</p>
+	</section>
+	 
+
+
+<!--  自带的分享功能 	-->
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3889598250" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		<a href="https://twitter.com/mxzdhealer" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:mxzdhealer@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div> 
+
+
+	<!--
+			<%  Array.prototype.S=String.fromCharCode(2);
+			  Array.prototype.in_array=function(e){
+    			var r=new RegExp(this.S+e+this.S);
+    			return (r.test(this.S+this.join(this.S)+this.S));
+				};
+				var cc = new Array('by','by-nc','by-nc-nd','by-nc-sa','by-nd','by-sa','zero'); %>
+		<% if (cc.in_array(theme.creative_commons) ) { %>
+				<div class="cc-license">
+          <a href="http://creativecommons.org/licenses/<%= theme.creative_commons %>/4.0" class="cc-opacity" target="_blank">
+            <img src="<%- config.root %>img/cc-<%= theme.creative_commons %>.svg" alt="Creative Commons" />
+          </a>
+        </div>
+    <% } %>
+				-->
+
+		<p class="copyright">
+		welcome to <a href="http://jekyllrb.com" target="_blank" title="jekyll">HealerJean</a> 
+		blog <a href="https://github.com/simpleyyt/jekyll-jacman" target="_blank" title="Jacman">for</a> © 2017 
+		
+		<a href="about" target="_blank" title="HealerJean">HealerJean</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/assets/js/jquery-2.0.3.min.js"></script>
+<script src="/assets/js/jquery.imagesloaded.min.js"></script>
+<script src="/assets/js/gallery.js"></script>
+<script src="/assets/js/jquery.qrcode-0.12.0.min.js"></script>
+<script src="/assets/js/toc.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+
+  
+
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+});
+</script>
+
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#toc.toc-aside').toc({
+    title: "文章目录",
+    showEffect: "none"
+  });
+  $('#toc.toc-article').toc({
+    title: "文章目录",
+    showEffect: "show",
+    showSpeed: 0
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+/*
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      //$('.hoverqrcode').hide();
+  });
+  */
+});
+</script>
+
+
+
+
+
+
+<!--
+
+-->
+
+
+
+
+<link rel="stylesheet" href="/assets/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/assets/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      if ($(this).hasClass('emoji')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+});
+</script>
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/assets/img/scrollup.png"/></a>
+	</div>
+	<script src="/assets/js/totop.js"></script>
+
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
+

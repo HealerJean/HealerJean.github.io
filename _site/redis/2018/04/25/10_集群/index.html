@@ -1,0 +1,1713 @@
+
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta name="baidu-site-verification" content="0r55fUD7QR" />
+  <meta charset="UTF-8">
+    
+    
+    
+    
+    <title>10、redis集群 | HealeJean的梦想博客</title>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HealerJean">
+    
+
+    
+    <!--<%- open_graph({twitter_id: theme.author.twitter, google_plus: theme.author.google_plus}) %>-->
+
+    <meta name="description" content="page.description">
+    
+    <meta property="og:type" content="article">
+    
+    <meta property="og:title" content="10、redis集群">
+    <meta property="og:url" content="/redis/2018/04/25/10_%E9%9B%86%E7%BE%A4/">
+    <meta property="og:site_name" content="HealeJean的梦想博客">
+    <meta property="og:description" content="redis集群">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="10、redis集群">
+    <meta name="twitter:description" content="page.description">
+    <meta name="twitter:creator" content="@mxzdhealer">
+    <link rel="publisher" href="">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HealeJean的梦想博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/assets/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/assets/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/assets/img/jacman.jpg">
+    
+
+    <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/highlight.css" type="text/css">
+    
+    
+  <!-- 百度统计 -->
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?19549885065170e0019f01e9975dfc1d";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <!-- 百度联盟 -->
+    <meta name="baidu_union_verify" content="c2f387067cf0849991ea870f73c055f2">
+  
+</head>
+
+  <body>
+    <header>
+        <div>
+		    
+			<div id="imglogo">
+				<a href="/"><img src="/assets/img/logo.png" alt="HealeJean的梦想博客" title="HealeJean的梦想博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HealeJean的梦想博客">HealeJean的梦想博客</a></h1>
+				<h2 class="blog-motto">一个高级软件开发工程师的成长之路</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/categories">技术</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories/#Job">生活日记</a></li>
+					
+						<li><a href="/about">留言板</a></li>
+					
+						<li><a href="/friends">友情链接</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search" method="get" accept-charset="utf-8">
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>
+</div>
+
+    </header>
+    <div id="container">
+      
+
+
+
+<div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+	<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/redis/2018/04/25/10_%E9%9B%86%E7%BE%A4/" title="10、redis集群" itemprop="url">10、redis集群</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="HealerJean" target="_blank" itemprop="author">HealerJean</a>
+		
+  <p class="article-time">
+    <time datetime="2018-04-25 11:33:00 +0800" itemprop="datePublished"> 发表于 2018-04-25</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article toc-content" style="display: none;">
+		
+			<!--<%- toc(item.content) %>-->
+		
+		</div>
+		
+		<!-- image url 
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
+　　首行缩进
+<font color="red">  </font>
+-->
+
+<h2 id="前言">前言</h2>
+
+<p>sentinel是高可用，那么集群的话就是分布式方案了。redis分布方案有两种</p>
+
+<h4 id="客户端分区方案优点是分区逻辑可控缺点是需要自己处理数据路由高可用故障转移等问题">客户端分区方案，优点是分区逻辑可控，缺点是需要自己处理数据路由，高可用，故障转移等问题</h4>
+
+<h4 id="代理方案优点是简化客户端分布式逻辑缺点是加重架构部署复杂度和性能消耗我们公司就是使用的代理负载均衡">代理方案：优点是简化客户端分布式逻辑，缺点是加重架构部署复杂度和性能消耗（我们公司就是使用的代理负载均衡）</h4>
+
+<h2 id="1数据分布redis-cluster采用哈希分区规则">1、数据分布（Redis cluster采用哈希分区规则）</h2>
+
+<h3 id="1节点取余分区">1、节点取余分区</h3>
+
+<p>使用特定的数据，如redis的key，再更加节点的数量N使用公式 hash(key)%N,计算出hash值，用来决定数据映射到哪个节点上（和hashmap有点像）当节点数量变化的时候，如收缩或者扩容，数据节点的映射关系需要重新计算。</p>
+
+<h3 id="2一致性哈希分区">2、一致性哈希分区</h3>
+
+<p>为每个节点分配一个token，范围一般在0-2的32次幂，这些token构成一个哈希换，数据进行读写操作的时候，先根据key计算hash值，然后顺时针找到第一个大于等于该哈希值的toaken节点。</p>
+
+<p>好处：假如和删除节点只影响哈希环中相邻的节点。对其他节点没有影响。
+缺点：加减节点会造成hash环中的部分数据无法命中。需要手动处理或者忽略掉这部分数据。正因为存在这些缺点所以一般采用虚拟槽进行改进</p>
+
+<h3 id="3虚拟槽分区">3、虚拟槽分区</h3>
+<p>当前集群有5个节点，每个及诶单平均复制3276个槽，由于采用高质量的hash算法，每个槽的数据比较均匀，将数据平均分到5个节点进行分区，Redis Cluster就是采用这种分区</p>
+
+<h2 id="2集群功能限制">2、集群功能限制</h2>
+
+<h4 id="1key的事物操作支持有限只支持多个key在同一节点的事物操作当多个key分布在不同的节点上的时候无法使用事物功能">1、key的事物操作支持有限，只支持多个key在同一节点的事物操作，当多个key分布在不同的节点上的时候无法使用事物功能</h4>
+
+<h4 id="2不支持多数据库空间redis也就是说值能使用一个暑假库空间-db等于0">2、不支持多数据库空间，redis，也就是说值能使用一个暑假库空间 db等于0</h4>
+
+<h4 id="3复制结构只支持一层不支持嵌套树状结构从节点只能复制主节点">3、复制结构只支持一层，不支持嵌套树状结构。从节点只能复制主节点</h4>
+
+<h4 id="4批量操作支持有限-mset-mget-目前只支持具有相同slot值的批量操作因为mset-其实也就是多个key的存储可能存储到不同的节点也说不定所以不支持">4、批量操作支持有限 mset ，mget 目前只支持具有相同slot值的批量操作，因为mset 其实也就是多个key的存储，可能存储到不同的节点也说不定。所以不支持</h4>
+
+<h2 id="3搭建集群使用redis-tribrb工具">3、搭建集群（使用redis-trib.rb工具）</h2>
+
+<p>准备工作：
+1、Redis集群节点数量至少为6个才能保证组完成高可用的集群
+2、集群节点统一目录，一般为3个目录，conf，data，log分布存放配置，数据和日志相关配置文件</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>daemonize yes 
+logfile "6379.log"  //也就是说redis-server启动之后的日志放到了dir目录下的6379.log
+dbfilename "dump-6379.rdb"
+dir "/usr/local/redis/dir"
+
+
+cluster-enabled yes   //开启集群模式
+cluster-config-file nodes-6481.conf   //集群内部配置文件
+cluster-node-timeout 15000  //节点超时时间 
+
+
+</code></pre></div></div>
+<p>建议使用linux系统操作</p>
+
+<h3 id="1ruby环境准备">1、Ruby环境准备</h3>
+<p>安装完成之后，看看环境是否正确，重新安装一个redis端口为6379，就用这个redis来操作搭建集群了。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>healerjean$ ./redis-trib.rb
+Usage: redis-trib &lt;command&gt; &lt;options&gt; &lt;arguments ...&gt;
+
+  create          host1:port1 ... hostN:portN
+                  --replicas &lt;arg&gt;
+  check           host:port
+  info            host:port
+  fix             host:port
+                  --timeout &lt;arg&gt;
+  reshard         host:port
+                  --from &lt;arg&gt;
+                  --to &lt;arg&gt;
+                  --slots &lt;arg&gt;
+                  --yes
+                  --timeout &lt;arg&gt;
+                  --pipeline &lt;arg&gt;
+  rebalance       host:port
+                  --weight &lt;arg&gt;
+
+</code></pre></div></div>
+
+<h3 id="2开始创建集群">2、开始创建集群</h3>
+
+<p>1、–replicas 参数指定集群中没给主节点配备几个从节点，这里设置为1，就是说每个主节点分配1个从节点，一般是先主节点，前三个主节点，再从节点，后三个从节点。可以通过下面的命令日志可以观察到</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Using 3 masters:
+127.0.0.1:6481
+127.0.0.1:6482
+127.0.0.1:6483
+Adding replica 127.0.0.1:6484 to 127.0.0.1:6481
+Adding replica 127.0.0.1:6485 to 127.0.0.1:6482
+Adding replica 127.0.0.1:6486 to 127.0.0.1:6483
+</code></pre></div></div>
+
+<p>2、如果部署节点尽量使用不同的IP地址。redis-trib.rb会尽可能保证主从节点不在同一个机器上。因此会重新排列节点的列表的顺序</p>
+
+<p>3、下面应该使用redis服务器所在的Ip，我这里是本机测试使用，所以使用的127.0.0.1，如果是windows加虚拟机就会出问题。尽管连接了虚拟机的IP，但是代码连接不到redis。所以虚拟机也要使用虚拟机所在ip</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./redis-trib.rb  create --replicas 1 127.0.0.1:6481 127.0.0.1:6482 127.0.0.1:6483 127.0.0.1:6484 127.0.0.1:6485 127.0.0.1:6486
+
+</code></pre></div></div>
+
+<h4 id="21开始执行命令">2.1、开始执行命令</h4>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>healerjean$ ./redis-trib.rb  create --replicas 1 127.0.0.1:6481 127.0.0.1:6482 127.0.0.1:6483 127.0.0.1:6484 127.0.0.1:6485 127.0.0.1:6486
+&gt;&gt;&gt; Creating cluster
+&gt;&gt;&gt; Performing hash slots allocation on 6 nodes...
+Using 3 masters:
+127.0.0.1:6481
+127.0.0.1:6482
+127.0.0.1:6483
+Adding replica 127.0.0.1:6484 to 127.0.0.1:6481
+Adding replica 127.0.0.1:6485 to 127.0.0.1:6482
+Adding replica 127.0.0.1:6486 to 127.0.0.1:6483
+M: 518f740fa4823ad65972f0605983be347f9ccc79 127.0.0.1:6481
+   slots:0-5460 (5461 slots) master
+M: 1ed5a33205eac6bcd02672731b8fff55485bd81b 127.0.0.1:6482
+   slots:5461-10922 (5462 slots) master
+M: 4b420c1a34f8d1053e314c05776fbfc50a3cba5e 127.0.0.1:6483
+   slots:10923-16383 (5461 slots) master
+S: 96b105f0e33e3c5ccbe5983c7f65f52e7971eac9 127.0.0.1:6484
+   replicates 518f740fa4823ad65972f0605983be347f9ccc79
+S: 9c8806f52d7e71c0ef2dc7908879dc84fe40e5c8 127.0.0.1:6485
+   replicates 1ed5a33205eac6bcd02672731b8fff55485bd81b
+S: 42e99055fef2fc54030b1764878925ba878551a8 127.0.0.1:6486
+   replicates 4b420c1a34f8d1053e314c05776fbfc50a3cba5e
+Can I set the above configuration? (type 'yes' to accept): 
+</code></pre></div></div>
+
+<h4 id="21执行节点握手和槽的fenpei">2.1、执行节点握手和槽的fenpei</h4>
+<p>可以看到下面的16384个槽全部被分配完毕，而且分配均匀给了master节点</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>输入 yes
+
+Can I set the above configuration? (type 'yes' to accept): yes
+&gt;&gt;&gt; Nodes configuration updated
+&gt;&gt;&gt; Assign a different config epoch to each node
+&gt;&gt;&gt; Sending CLUSTER MEET messages to join the cluster
+Waiting for the cluster to join...
+&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:6481)
+M: 518f740fa4823ad65972f0605983be347f9ccc79 127.0.0.1:6481
+   slots:0-5460 (5461 slots) master
+   1 additional replica(s)
+M: 4b420c1a34f8d1053e314c05776fbfc50a3cba5e 127.0.0.1:6483
+   slots:10923-16383 (5461 slots) master
+   1 additional replica(s)
+S: 42e99055fef2fc54030b1764878925ba878551a8 127.0.0.1:6486
+   slots: (0 slots) slave
+   replicates 4b420c1a34f8d1053e314c05776fbfc50a3cba5e
+S: 9c8806f52d7e71c0ef2dc7908879dc84fe40e5c8 127.0.0.1:6485
+   slots: (0 slots) slave
+   replicates 1ed5a33205eac6bcd02672731b8fff55485bd81b
+S: 96b105f0e33e3c5ccbe5983c7f65f52e7971eac9 127.0.0.1:6484
+   slots: (0 slots) slave
+   replicates 518f740fa4823ad65972f0605983be347f9ccc79
+M: 1ed5a33205eac6bcd02672731b8fff55485bd81b 127.0.0.1:6482
+   slots:5461-10922 (5462 slots) master
+   1 additional replica(s)
+[OK] All nodes agree about slots configuration.
+&gt;&gt;&gt; Check for open slots...
+&gt;&gt;&gt; Check slots coverage...
+[OK] All 16384 slots covered.
+MacBook-Pro:src healerjean$ 
+
+</code></pre></div></div>
+
+<h3 id="3集群完整性检查和master和slave信息查看">3、集群完整性检查和master和slave信息查看</h3>
+
+<p>集群完整性是指所有的槽都分配到了存活的主节点上，只要有一个槽没有分配给主主节点，则表示不完整。使用下面的命令检测，只要给出集群中任意一个节点就也可以看看集群是否完成。6379则不能成功，因为它不属于集群</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./redis-trib.rb check 127.0.0.1:6481
+
+出现结果是：[OK] All 16384 slots covered.则表示集群创建完整
+
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+MacBook-Pro:src healerjean$ ./redis-trib.rb check 127.0.0.1:6379
+[ERR] Node 127.0.0.1:6379 is not configured as a cluster node.
+MacBook-Pro:src healerjean$ ./redis-trib.rb check 127.0.0.1:6481
+&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:6481)
+M: 518f740fa4823ad65972f0605983be347f9ccc79 127.0.0.1:6481
+   slots:0-5460 (5461 slots) master
+   1 additional replica(s)
+M: 4b420c1a34f8d1053e314c05776fbfc50a3cba5e 127.0.0.1:6483
+   slots:10923-16383 (5461 slots) master
+   1 additional replica(s)
+S: 42e99055fef2fc54030b1764878925ba878551a8 127.0.0.1:6486
+   slots: (0 slots) slave
+   replicates 4b420c1a34f8d1053e314c05776fbfc50a3cba5e
+S: 9c8806f52d7e71c0ef2dc7908879dc84fe40e5c8 127.0.0.1:6485
+   slots: (0 slots) slave
+   replicates 1ed5a33205eac6bcd02672731b8fff55485bd81b
+S: 96b105f0e33e3c5ccbe5983c7f65f52e7971eac9 127.0.0.1:6484
+   slots: (0 slots) slave
+   replicates 518f740fa4823ad65972f0605983be347f9ccc79
+M: 1ed5a33205eac6bcd02672731b8fff55485bd81b 127.0.0.1:6482
+   slots:5461-10922 (5462 slots) master
+   1 additional replica(s)
+[OK] All nodes agree about slots configuration.
+&gt;&gt;&gt; Check for open slots...
+&gt;&gt;&gt; Check slots coverage...
+[OK] All 16384 slots covered.
+MacBook-Pro:src healerjean$ 
+</code></pre></div></div>
+
+<h3 id="4集群扩容">4、集群扩容</h3>
+<p>准备连个节点，一个将来是主节点，一个是从节点
+这里为了和上面的的好区分，节点的端口设置为6385和6386</p>
+
+<p>redis为我们提供了一种假如集群的命令但是不建议使用，而是使用ruby的命令，redis提供的命令为如下，当下面的节点已经假如其他集群，下面的命令会将它所在的集群和本集群进行合并。而使用redis-trib.rb则不会，因为他会检查，同时放弃加入集群的操作</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>不建议使用
+cluster meet 127.0.0.1 6385 
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>建议使用：第一个参数为新节点的“”ip:端口“”，第二个参数为集群中的任一有效的节点，也就是随便写
+
+./redis-trib.rb add-node 127.0.0.1:6385 127.0.0.1:6481 
+
+</code></pre></div></div>
+
+<h3 id="41开始扩容加入master主节点">4.1、开始扩容加入master主节点</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>观察到 [OK] New node added correctly. 表示成功
+
+healerjean$ ./redis-trib.rb add-node 127.0.0.1:6385 127.0.0.1:6481 
+&gt;&gt;&gt; Adding node 127.0.0.1:6385 to cluster 127.0.0.1:6481
+&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:6481)
+M: 518f740fa4823ad65972f0605983be347f9ccc79 127.0.0.1:6481
+   slots:0-5460 (5461 slots) master
+   1 additional replica(s)
+M: 4b420c1a34f8d1053e314c05776fbfc50a3cba5e 127.0.0.1:6483
+   slots:10923-16383 (5461 slots) master
+   1 additional replica(s)
+S: 42e99055fef2fc54030b1764878925ba878551a8 127.0.0.1:6486
+   slots: (0 slots) slave
+   replicates 4b420c1a34f8d1053e314c05776fbfc50a3cba5e
+S: 9c8806f52d7e71c0ef2dc7908879dc84fe40e5c8 127.0.0.1:6485
+   slots: (0 slots) slave
+   replicates 1ed5a33205eac6bcd02672731b8fff55485bd81b
+S: 96b105f0e33e3c5ccbe5983c7f65f52e7971eac9 127.0.0.1:6484
+   slots: (0 slots) slave
+   replicates 518f740fa4823ad65972f0605983be347f9ccc79
+M: 1ed5a33205eac6bcd02672731b8fff55485bd81b 127.0.0.1:6482
+   slots:5461-10922 (5462 slots) master
+   1 additional replica(s)
+[OK] All nodes agree about slots configuration.
+&gt;&gt;&gt; Check for open slots...
+&gt;&gt;&gt; Check slots coverage...
+[OK] All 16384 slots covered.
+&gt;&gt;&gt; Send CLUSTER MEET to node 127.0.0.1:6385 to make it join the cluster.
+[OK] New node added correctly.
+MacBook-Pro:src healerjean$ 
+
+</code></pre></div></div>
+
+<h3 id="42检查master节点的槽">4.2、检查master节点的槽</h3>
+
+<p>随便进入一个节点，这里我选了主节点6481，输入下面的命令之后，我们能看到并没有给它分配槽。这个槽后面我们慢慢分配</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cluster nodes，当然也可以使用rb的check命令
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1:6481&gt; cluster nodes
+5041f91a03330df4c0667b91f11151df965cdaad 127.0.0.1:6385 master - 0 1524762381923 0 connected
+4b420c1a34f8d1053e314c05776fbfc50a3cba5e 127.0.0.1:6483 master - 0 1524762386469 3 connected 10923-16383
+518f740fa4823ad65972f0605983be347f9ccc79 127.0.0.1:6481 myself,master - 0 0 1 connected 0-5460
+42e99055fef2fc54030b1764878925ba878551a8 127.0.0.1:6486 slave 4b420c1a34f8d1053e314c05776fbfc50a3cba5e 0 1524762384953 6 connected
+9c8806f52d7e71c0ef2dc7908879dc84fe40e5c8 127.0.0.1:6485 slave 1ed5a33205eac6bcd02672731b8fff55485bd81b 0 1524762388993 5 connected
+96b105f0e33e3c5ccbe5983c7f65f52e7971eac9 127.0.0.1:6484 slave 518f740fa4823ad65972f0605983be347f9ccc79 0 1524762386975 4 connected
+1ed5a33205eac6bcd02672731b8fff55485bd81b 127.0.0.1:6482 master - 0 1524762387983 2 connected 5461-10922
+127.0.0.1:6481&gt; 
+</code></pre></div></div>
+
+<h3 id="43给这个节点分配从节点">4.3、给这个节点分配从节点</h3>
+
+<p>把6386当成slave加入. master-id 为自己作为slave时候，master的id，这里应该是6385主节点的id，可以通过check查看基本信息的id （后面的端口6481从集群中随便写）</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./redis-trib.rb add-node --slave --master-id  5041f91a03330df4c0667b91f11151df965cdaad 127.0.0.1:6386 127.0.0.1:6481  
+
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>healerjean$ ./redis-trib.rb add-node --slave --master-id  5041f91a03330df4c0667b91f11151df965cdaad 127.0.0.1:6386 127.0.0.1:6481  
+&gt;&gt;&gt; Adding node 127.0.0.1:6386 to cluster 127.0.0.1:6481
+&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:6481)
+M: 518f740fa4823ad65972f0605983be347f9ccc79 127.0.0.1:6481
+   slots:0-5460 (5461 slots) master
+   1 additional replica(s)
+M: 5041f91a03330df4c0667b91f11151df965cdaad 127.0.0.1:6385
+   slots: (0 slots) master
+   0 additional replica(s)
+M: 4b420c1a34f8d1053e314c05776fbfc50a3cba5e 127.0.0.1:6483
+   slots:10923-16383 (5461 slots) master
+   1 additional replica(s)
+S: 42e99055fef2fc54030b1764878925ba878551a8 127.0.0.1:6486
+   slots: (0 slots) slave
+   replicates 4b420c1a34f8d1053e314c05776fbfc50a3cba5e
+S: 9c8806f52d7e71c0ef2dc7908879dc84fe40e5c8 127.0.0.1:6485
+   slots: (0 slots) slave
+   replicates 1ed5a33205eac6bcd02672731b8fff55485bd81b
+S: 96b105f0e33e3c5ccbe5983c7f65f52e7971eac9 127.0.0.1:6484
+   slots: (0 slots) slave
+   replicates 518f740fa4823ad65972f0605983be347f9ccc79
+M: 1ed5a33205eac6bcd02672731b8fff55485bd81b 127.0.0.1:6482
+   slots:5461-10922 (5462 slots) master
+   1 additional replica(s)
+[OK] All nodes agree about slots configuration.
+&gt;&gt;&gt; Check for open slots...
+&gt;&gt;&gt; Check slots coverage...
+[OK] All 16384 slots covered.
+&gt;&gt;&gt; Send CLUSTER MEET to node 127.0.0.1:6386 to make it join the cluster.
+Waiting for the cluster to join.
+&gt;&gt;&gt; Configure node as replica of 127.0.0.1:6385.
+[OK] New node added correctly.
+MacBook-Pro:src healerjean$ 
+
+</code></pre></div></div>
+
+<h4 id="431查看master和salve信息可以观察到新加入的已经存在但是却没有分配槽">4.3.1、查看master和salve信息,可以观察到新加入的已经存在，但是却没有分配槽</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./redis-trib check 127.0.0.1 6481
+
+M: 5041f91a03330df4c0667b91f11151df965cdaad 127.0.0.1:6385
+   slots: (0 slots) master
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>可以看到 从节点6386复制的是6385主节点
+S: e4b8e373e245e7297a612b56126fd0e01afc7965 127.0.0.1:6386
+   slots: (0 slots) slave
+   replicates 5041f91a03330df4c0667b91f11151df965cdaad
+M: 5041f91a03330df4c0667b91f11151df965cdaad 127.0.0.1:6385
+
+
+healerjean$ ./redis-trib.rb check 127.0.0.1:6481
+&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:6481)
+M: 518f740fa4823ad65972f0605983be347f9ccc79 127.0.0.1:6481
+   slots:0-5460 (5461 slots) master
+   1 additional replica(s)
+S: e4b8e373e245e7297a612b56126fd0e01afc7965 127.0.0.1:6386
+   slots: (0 slots) slave
+   replicates 5041f91a03330df4c0667b91f11151df965cdaad
+M: 5041f91a03330df4c0667b91f11151df965cdaad 127.0.0.1:6385
+   slots: (0 slots) master
+   1 additional replica(s)
+M: 4b420c1a34f8d1053e314c05776fbfc50a3cba5e 127.0.0.1:6483
+   slots:10923-16383 (5461 slots) master
+   1 additional replica(s)
+S: 42e99055fef2fc54030b1764878925ba878551a8 127.0.0.1:6486
+   slots: (0 slots) slave
+   replicates 4b420c1a34f8d1053e314c05776fbfc50a3cba5e
+S: 9c8806f52d7e71c0ef2dc7908879dc84fe40e5c8 127.0.0.1:6485
+   slots: (0 slots) slave
+   replicates 1ed5a33205eac6bcd02672731b8fff55485bd81b
+S: 96b105f0e33e3c5ccbe5983c7f65f52e7971eac9 127.0.0.1:6484
+   slots: (0 slots) slave
+   replicates 518f740fa4823ad65972f0605983be347f9ccc79
+M: 1ed5a33205eac6bcd02672731b8fff55485bd81b 127.0.0.1:6482
+   slots:5461-10922 (5462 slots) master
+   1 additional replica(s)
+[OK] All nodes agree about slots configuration.
+&gt;&gt;&gt; Check for open slots...
+&gt;&gt;&gt; Check slots coverage...
+[OK] All 16384 slots covered.
+MacBook-Pro:src healerjean$ 
+</code></pre></div></div>
+
+<h3 id="44迁移槽和数据">4.4、迁移槽和数据</h3>
+
+<p>槽在迁移的时候，可以正常提供读写服务，迁移过程是集群扩容最核心的环节。</p>
+
+<h4 id="441槽迁移计划">4.4.1、槽迁移计划</h4>
+<p>首先需要为新及诶单制定槽的迁移计划，确保加入新节点之后每个主节点都负责相等数量的槽。从而保证数据均衡。 这个需要我们手动计算16384 /4  和 16383/3</p>
+
+<h4 id="442迁移数据">4.4.2、迁移数据</h4>
+
+<p>数据迁移的是逐个槽进行的 迁移之前我们应该对槽和每个节点的key进行一个简单的查看,这只能看到主节点的信息；</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> healerjean$ ./redis-trib.rb info 127.0.0.1:6481
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MacBook-Pro:src healerjean$ ./redis-trib.rb info 127.0.0.1:6481
+127.0.0.1:6481 (518f740f...) -&gt; 0 keys | 5461 slots | 1 slaves.
+127.0.0.1:6385 (5041f91a...) -&gt; 0 keys | 0 slots | 1 slaves.
+127.0.0.1:6483 (4b420c1a...) -&gt; 0 keys | 5461 slots | 1 slaves.
+127.0.0.1:6482 (1ed5a332...) -&gt; 0 keys | 5462 slots | 1 slaves.
+[OK] 0 keys in 4 masters.
+0.00 keys per slot on average.
+MacBook-Pro:src healerjean$ 
+</code></pre></div></div>
+
+<p>1、开始分区，下面的和端口随便在集群中找即可，这里还是使用6481，因为这个命令之后要求我们输入节点的运行id。然后 输入槽的数量16384/4=4096</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./redis-trib.rb reshard 127.0.0.1:6481
+
+[OK] All 16384 slots covered.
+How many slots do you want to move (from 1 to 16384)? 4096//1、输入要分配槽的数量
+What is the receiving node ID? 5041f91a03330df4c0667b91f11151df965cdaad//2、输入给哪个节点要分配槽，这里我先选择了6485
+
+Please enter all the source node IDs.
+  Type 'all' to use all the nodes as source nodes for the hash slots.
+  Type 'done' once you entered all the source nodes IDs.
+Source node #1:all //3、表示从所有的节点中取出数据分配给上面的id节点，之前我有点错误，所以下面只能看到正确的6385的槽的数量4096
+
+Do you want to proceed with the proposed reshard plan (yes/no)? yes //4、yes表示分配完成
+
+
+
+</code></pre></div></div>
+
+<p>2、观察6385主节点的槽发现为4096，哈哈</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MacBook-Pro:src healerjean$ ./redis-trib.rb info 127.0.0.1:6481
+127.0.0.1:6481 (518f740f...) -&gt; 0 keys | 10239 slots | 1 slaves.
+127.0.0.1:6385 (5041f91a...) -&gt; 0 keys | 4096 slots | 1 slaves.
+127.0.0.1:6483 (4b420c1a...) -&gt; 0 keys | 1024 slots | 1 slaves.
+127.0.0.1:6482 (1ed5a332...) -&gt; 0 keys | 1025 slots | 1 slaves.
+[OK] 0 keys in 4 masters.
+0.00 keys per slot on average.
+MacBook-Pro:src healerjean$ 
+</code></pre></div></div>
+
+<p>3、给剩下的槽开始分配,其实通过上面选择要分配的节点的时候选择了all，我们可以知道Source node :是要求我们输入源节点分出我们上面输入4096+目标节点的数量 。
+<br />
+所以我们需要计算 比如，我瞎分之后如下，现在我们可以看到主节点6483最少是1024，它需要4096-1024=3072个节点，而6385已结可以了，所以不需要动6385节点，只要从6481或者拾6482中取出3072给它就可以了</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MacBook-Pro:src healerjean$ ./redis-trib.rb info 127.0.0.1:6481
+127.0.0.1:6481 (518f740f...) -&gt; 0 keys | 6143 slots | 1 slaves.
+127.0.0.1:6385 (5041f91a...) -&gt; 0 keys | 4096 slots | 1 slaves.
+127.0.0.1:6483 (4b420c1a...) -&gt; 0 keys | 1024 slots | 1 slaves.
+127.0.0.1:6482 (1ed5a332...) -&gt; 0 keys | 5121 slots | 1 slaves.
+[OK] 0 keys in 4 masters.
+0.00 keys per slot on average.
+MacBook-Pro:src healerjean$ 
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MacBook-Pro:src healerjean$ ./redis-trib.rb reshard 127.0.0.1:6481
+&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:6481)
+M: 518f740fa4823ad65972f0605983be347f9ccc79 127.0.0.1:6481
+   slots:7510-9556,10923-15018 (6143 slots) master
+   1 additional replica(s)
+S: e4b8e373e245e7297a612b56126fd0e01afc7965 127.0.0.1:6386
+   slots: (0 slots) slave
+   replicates 5041f91a03330df4c0667b91f11151df965cdaad
+M: 5041f91a03330df4c0667b91f11151df965cdaad 127.0.0.1:6385
+   slots:0-3413,9557-9897,15019-15359 (4096 slots) master
+   1 additional replica(s)
+M: 4b420c1a34f8d1053e314c05776fbfc50a3cba5e 127.0.0.1:6483
+   slots:15360-16383 (1024 slots) master
+   1 additional replica(s)
+S: 42e99055fef2fc54030b1764878925ba878551a8 127.0.0.1:6486
+   slots: (0 slots) slave
+   replicates 4b420c1a34f8d1053e314c05776fbfc50a3cba5e
+S: 9c8806f52d7e71c0ef2dc7908879dc84fe40e5c8 127.0.0.1:6485
+   slots: (0 slots) slave
+   replicates 1ed5a33205eac6bcd02672731b8fff55485bd81b
+S: 96b105f0e33e3c5ccbe5983c7f65f52e7971eac9 127.0.0.1:6484
+   slots: (0 slots) slave
+   replicates 518f740fa4823ad65972f0605983be347f9ccc79
+M: 1ed5a33205eac6bcd02672731b8fff55485bd81b 127.0.0.1:6482
+   slots:3414-7509,9898-10922 (5121 slots) master
+   1 additional replica(s)
+[OK] All nodes agree about slots configuration.
+&gt;&gt;&gt; Check for open slots...
+&gt;&gt;&gt; Check slots coverage...
+[OK] All 16384 slots covered.
+How many slots do you want to move (from 1 to 16384)? 3072
+What is the receiving node ID? 4b420c1a34f8d1053e314c05776fbfc50a3cba5e //6483节点
+Please enter all the source node IDs.
+  Type 'all' to use all the nodes as source nodes for the hash slots.
+  Type 'done' once you entered all the source nodes IDs.
+Source node #1:518f740fa4823ad65972f0605983be347f9ccc79//这里我选择了6481节点
+Source node #2:done//完成
+ 
+</code></pre></div></div>
+
+<p>4、观察分配给6483成功了，然后6481同样用方法4096-3071=1025个槽从6482中拿，运行过程就不写了</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MacBook-Pro:src healerjean$ ./redis-trib.rb info 127.0.0.1:6481
+127.0.0.1:6481 (518f740f...) -&gt; 0 keys | 3071 slots | 1 slaves.
+127.0.0.1:6385 (5041f91a...) -&gt; 0 keys | 4096 slots | 1 slaves.
+127.0.0.1:6483 (4b420c1a...) -&gt; 0 keys | 4096 slots | 1 slaves.
+127.0.0.1:6482 (1ed5a332...) -&gt; 0 keys | 5121 slots | 1 slaves.
+[OK] 0 keys in 4 masters.
+0.00 keys per slot on average.
+MacBook-Pro:src healerjean$ 
+</code></pre></div></div>
+
+<p>5、分配成功</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MacBook-Pro:src healerjean$ ./redis-trib.rb info 127.0.0.1:6481
+127.0.0.1:6481 (518f740f...) -&gt; 0 keys | 4096 slots | 1 slaves.
+127.0.0.1:6385 (5041f91a...) -&gt; 0 keys | 4096 slots | 1 slaves.
+127.0.0.1:6483 (4b420c1a...) -&gt; 0 keys | 4096 slots | 1 slaves.
+127.0.0.1:6482 (1ed5a332...) -&gt; 0 keys | 4096 slots | 1 slaves.
+[OK] 0 keys in 4 masters.
+0.00 keys per slot on average.
+MacBook-Pro:src healerjean$ 
+
+</code></pre></div></div>
+
+<p>6、检查槽直接的均匀性，其实通过上面齐刷刷的4096可以看到非常均衡了，但是项目中可能没有这么精确。所以我们还是看看吧
+,同样后面的节点随便选择。他给出了在2%左右，已经相当均衡，无须调整</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./redis-trib.rb rebalance  127.0.0.1:6481
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>healerjean$ ./redis-trib.rb rebalance  127.0.0.1:6481
+&gt;&gt;&gt; Performing Cluster Check (using node 127.0.0.1:6481)
+[OK] All nodes agree about slots configuration.
+&gt;&gt;&gt; Check for open slots...
+&gt;&gt;&gt; Check slots coverage...
+[OK] All 16384 slots covered.
+*** No rebalancing needed! All nodes are within the 2.0% threshold.
+MacBook-Pro:src healerjean$ 
+</code></pre></div></div>
+
+<h4 id="42如果不小心加入了两个master节点60006001但是一个需要作为从节点怎么办在一个上面连个一个选择要做从节点比如6000的客户端状态下执行下面命令">4.2、如果不小心加入了两个master节点，6000,6001但是一个需要作为从节点怎么办，在一个上面连个一个选择要做从节点比如6000的客户端状态下执行下面命令</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1:6000&gt; cluster replicate 6001Id
+</code></pre></div></div>
+
+<h3 id="45收缩集群">4.5、收缩集群</h3>
+
+<p>说白了收缩集群就是下线节点</p>
+
+<h4 id="1首先需要观察下线的节点是否有槽如果有则需要将它的槽分给其他节点保证节点下线后数据的完整性">1、首先需要观察下线的节点是否有槽，如果有，则需要将它的槽分给其他节点，保证节点下线后数据的完整性</h4>
+
+<h4 id="2当要下线的节点不在负责槽或者本身是从节点的时候就可以通知集群让其啊节点忘记下线节点当所有节点忘记该节点之后就可以正常关闭">2、当要下线的节点不在负责槽或者本身是从节点的时候，就可以通知集群让其啊节点忘记下线节点，当所有节点忘记该节点之后就可以正常关闭</h4>
+
+<p>1、这里选择下线6381主和6384从节点。则需要将6381的槽平分给其他三个节点 4096/3 = 1365.33 也即 1365 1365 1366。怎么
+分配槽就不讲了，看上面的。下面的操作在分配槽完成的基础上
+,可以看到下面的额6481没有槽了</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>healerjean$ ./redis-trib.rb info 127.0.0.1:6481
+127.0.0.1:6481 (518f740f...) -&gt; 0 keys | 0 slots | 0 slaves.
+127.0.0.1:6385 (5041f91a...) -&gt; 0 keys | 5462 slots | 2 slaves.
+127.0.0.1:6483 (4b420c1a...) -&gt; 0 keys | 5461 slots | 1 slaves.
+127.0.0.1:6482 (1ed5a332...) -&gt; 0 keys | 5461 slots | 1 slaves.
+[OK] 0 keys in 4 masters.
+0.00 keys per slot on average.
+MacBook-Pro:src healerjean$ 
+</code></pre></div></div>
+
+<p>2、del-node后面的ip:port只要是cluster中有效节点即可, ，最后一个参数为目标节点的id</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./redis-trib.rb del-node  127.0.0.1:6482 518f740fa4823ad65972f0605983be347f9ccc79//6481
+
+
+./redis-trib.rb del-node  127.0.0.1:6482 96b105f0e33e3c5ccbe5983c7f65f52e7971eac9 //6484
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MacBook-Pro:src healerjean$ ./redis-trib.rb del-node  127.0.0.1:6482 518f740fa4823ad65972f0605983be347f9ccc79
+&gt;&gt;&gt; Removing node 518f740fa4823ad65972f0605983be347f9ccc79 from cluster 127.0.0.1:6482
+&gt;&gt;&gt; Sending CLUSTER FORGET messages to the cluster...
+&gt;&gt;&gt; SHUTDOWN the node.
+ 
+ healerjean$ ./redis-trib.rb del-node  127.0.0.1:6482 96b105f0e33e3c5ccbe5983c7f65f52e7971eac9
+&gt;&gt;&gt; Removing node 96b105f0e33e3c5ccbe5983c7f65f52e7971eac9 from cluster 127.0.0.1:6482
+&gt;&gt;&gt; Sending CLUSTER FORGET messages to the cluster...
+&gt;&gt;&gt; SHUTDOWN the node.
+MacBook-Pro:src healerjean$ 
+
+</code></pre></div></div>
+
+<p>3、访问6481节点发现已经下线</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MacBook-Pro:src healerjean$ redis-cli -p 6481
+Could not connect to Redis at 127.0.0.1:6481: Connection refused
+Could not connect to Redis at 127.0.0.1:6481: Connection refused
+not connected&gt; 
+</code></pre></div></div>
+
+<p>4、查看已经在线的状态</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1:6482&gt; cluster nodes
+4b420c1a34f8d1053e314c05776fbfc50a3cba5e 127.0.0.1:6483 master - 0 1524841422978 13 connected 7510-9556 10923-11947 12288-13652 15360-16383
+9c8806f52d7e71c0ef2dc7908879dc84fe40e5c8 127.0.0.1:6485 slave 1ed5a33205eac6bcd02672731b8fff55485bd81b 0 1524841428023 12 connected
+5041f91a03330df4c0667b91f11151df965cdaad 127.0.0.1:6385 master - 0 1524841427015 14 connected 0-3413 9557-9897 13653-15359
+1ed5a33205eac6bcd02672731b8fff55485bd81b 127.0.0.1:6482 myself,master - 0 0 12 connected 3414-7509 9898-10922 11948-12287
+e4b8e373e245e7297a612b56126fd0e01afc7965 127.0.0.1:6386 slave 5041f91a03330df4c0667b91f11151df965cdaad 0 1524841423987 14 connected
+42e99055fef2fc54030b1764878925ba878551a8 127.0.0.1:6486 slave 4b420c1a34f8d1053e314c05776fbfc50a3cba5e 0 1524841426511 13 connected
+127.0.0.1:6482&gt; 
+</code></pre></div></div>
+
+<h2 id="3请求路由">3、请求路由</h2>
+
+<h3 id="31请求重定向">3.1、请求重定向</h3>
+
+<font color="red">在集群模式下，Redis接收任何键相关的命令首先计算键对应的槽，再跟进槽找出对应的节点，如果是自身。则执行命令，否则回复MOVED重定向错误，通知客户的请求正确的节点，这个过程为MOVED重定向
+</font>
+<p>目前存活的节点是 6482主 6483主 6484 6485 6486 6385主 6386</p>
+
+<p>1、运行6482的客户端，添加一个key，并通过命令查看key所在的槽
+,通过槽可以看到在那个节点，可发现槽并不是连续的，但是很巧它在6482节点
+<br />
+2、为了避免这种偶然性，我又重新设置了一个值，这些不一样了，它给我们返回了了MOVED的槽和所在的节点6483</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1:6482&gt; set key:test:1 value-1
+OK
+127.0.0.1:6482&gt; cluster keyslot  key:test:1
+(integer) 5191
+127.0.0.1:6482&gt; cluster nodes
+4b420c1a34f8d1053e314c05776fbfc50a3cba5e 127.0.0.1:6483 master - 0 1524842246305 13 connected 7510-9556 10923-11947 12288-13652 15360-16383
+9c8806f52d7e71c0ef2dc7908879dc84fe40e5c8 127.0.0.1:6485 slave 1ed5a33205eac6bcd02672731b8fff55485bd81b 0 1524842251342 12 connected
+5041f91a03330df4c0667b91f11151df965cdaad 127.0.0.1:6385 master - 0 1524842250333 14 connected 0-3413 9557-9897 13653-15359
+1ed5a33205eac6bcd02672731b8fff55485bd81b 127.0.0.1:6482 myself,master - 0 0 12 connected 3414-7509 9898-10922 11948-12287
+e4b8e373e245e7297a612b56126fd0e01afc7965 127.0.0.1:6386 slave 5041f91a03330df4c0667b91f11151df965cdaad 0 1524842252350 14 connected
+42e99055fef2fc54030b1764878925ba878551a8 127.0.0.1:6486 slave 4b420c1a34f8d1053e314c05776fbfc50a3cba5e 0 1524842253360 13 connected
+127.0.0.1:6482&gt; set key:test:2 value-2
+(error) MOVED 9252 127.0.0.1:6483
+127.0.0.1:6482&gt; get key:test:2
+(error) MOVED 9252 127.0.0.1:6483
+127.0.0.1:6482&gt; 
+</code></pre></div></div>
+
+<p>解释：其实是客户端发送set key:test:2 value-2 给6482。6482计算之后发现不在自己应的槽，所以返回给客户端，客户端在6483节点上重新发送到命令到6483</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1:6483&gt; set key:test:2 value-2
+OK
+127.0.0.1:6483&gt; 
+</code></pre></div></div>
+
+<h2 id="4smart客户端">4、Smart客户端</h2>
+
+<p>大多数开发语言的Redis客户端都采用Smart客户端支持集群协议，下面是Smarat客户端操作集群的流程。</p>
+
+<h3 id="41首先在jediscluster初始化的时候选择一个运行节点初始化槽和节点的映射关系使用cluster-slots命令完成">4.1、首先在JedisCluster初始化的时候选择一个运行节点，初始化槽和节点的映射关系。使用<code class="highlighter-rouge">cluster slots</code>命令完成</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1:6482&gt; cluster slots
+ 1) 1) (integer) 7510 //开始槽范围
+    2) (integer) 9556//结束槽范围
+    3) 1) "127.0.0.1"//主节点ip
+       2) (integer) 6483//主节点端口
+       3) "4b420c1a34f8d1053e314c05776fbfc50a3cba5e"
+    4) 1) "127.0.0.1" //从节点ip
+       2) (integer) 6486//从节点端口
+       3) "42e99055fef2fc54030b1764878925ba878551a8"
+ 2) 1) (integer) 10923
+    2) (integer) 11947
+    3) 1) "127.0.0.1"
+       2) (integer) 6483
+       3) "4b420c1a34f8d1053e314c05776fbfc50a3cba5e"
+    4) 1) "127.0.0.1"
+       2) (integer) 6486
+       3) "42e99055fef2fc54030b1764878925ba878551a8"
+ 3) 1) (integer) 12288
+    2) (integer) 13652
+    3) 1) "127.0.0.1"
+       2) (integer) 6483
+       3) "4b420c1a34f8d1053e314c05776fbfc50a3cba5e"
+    4) 1) "127.0.0.1"
+       2) (integer) 6486
+       3) "42e99055fef2fc54030b1764878925ba878551a8"
+ 4) 1) (integer) 15360
+    2) (integer) 16383
+    3) 1) "127.0.0.1"
+       2) (integer) 6483
+       3) "4b420c1a34f8d1053e314c05776fbfc50a3cba5e"
+    4) 1) "127.0.0.1"
+       2) (integer) 6486
+       3) "42e99055fef2fc54030b1764878925ba878551a8"
+ 5) 1) (integer) 0
+    2) (integer) 3413
+    3) 1) "127.0.0.1"
+       2) (integer) 6385
+       3) "5041f91a03330df4c0667b91f11151df965cdaad"
+    4) 1) "127.0.0.1"
+       2) (integer) 6386
+       3) "e4b8e373e245e7297a612b56126fd0e01afc7965"
+ 6) 1) (integer) 9557
+    2) (integer) 9897
+    3) 1) "127.0.0.1"
+       2) (integer) 6385
+       3) "5041f91a03330df4c0667b91f11151df965cdaad"
+    4) 1) "127.0.0.1"
+       2) (integer) 6386
+       3) "e4b8e373e245e7297a612b56126fd0e01afc7965"
+ 7) 1) (integer) 13653
+    2) (integer) 15359
+    3) 1) "127.0.0.1"
+       2) (integer) 6385
+       3) "5041f91a03330df4c0667b91f11151df965cdaad"
+    4) 1) "127.0.0.1"
+       2) (integer) 6386
+       3) "e4b8e373e245e7297a612b56126fd0e01afc7965"
+ 8) 1) (integer) 3414
+    2) (integer) 7509
+    3) 1) "127.0.0.1"
+       2) (integer) 6482
+       3) "1ed5a33205eac6bcd02672731b8fff55485bd81b"
+    4) 1) "127.0.0.1"
+       2) (integer) 6485
+       3) "9c8806f52d7e71c0ef2dc7908879dc84fe40e5c8"
+ 9) 1) (integer) 9898
+    2) (integer) 10922
+    3) 1) "127.0.0.1"
+       2) (integer) 6482
+       3) "1ed5a33205eac6bcd02672731b8fff55485bd81b"
+    4) 1) "127.0.0.1"
+       2) (integer) 6485
+       3) "9c8806f52d7e71c0ef2dc7908879dc84fe40e5c8"
+10) 1) (integer) 11948
+    2) (integer) 12287
+    3) 1) "127.0.0.1"
+       2) (integer) 6482
+       3) "1ed5a33205eac6bcd02672731b8fff55485bd81b"
+    4) 1) "127.0.0.1"
+       2) (integer) 6485
+       3) "9c8806f52d7e71c0ef2dc7908879dc84fe40e5c8"
+127.0.0.1:6482&gt; 
+
+</code></pre></div></div>
+
+<h3 id="42jediscluser解析cluster-slots结果缓存在本地并为每个节点创建唯一的jediispool连接池映射关系在jedisclusterinfocachelei-中">4.2、JedisCluser解析Cluster slots结果缓存在本地，并为每个节点创建唯一的jediisPool连接池，映射关系在JedisClusterInfoCacheLEI 中</h3>
+
+<h3 id="43后面还有很多这里就不过多讲解了">4.3、后面还有很多，这里就不过多讲解了</h3>
+
+<h2 id="5故障转移">5、故障转移</h2>
+
+<p>Redis集群本身就实现了高可用</p>
+
+<h3 id="51故障发现">5.1、故障发现</h3>
+
+<h4 id="511主观下线">5.1.1、主观下线</h4>
+
+<p>当某个节点人为另外一个节点不可用的时候，即下线状态，这个状态并不是最终的故障判定，只能代表一个节点的意见，可能存在误判操作</p>
+
+<p>1、节点a发送ping命令给节点b，如果通信正常将接收到pong消息，节点a更新最近一次与b的通信时间</p>
+
+<p>2、如果a与节点b通信出现问题断开连接，下次会进行重连，如果一直通信失败则通信时间将无法更新</p>
+
+<p>3、当节点通信时间超过cluster-node-timeout时候，更新本地对节点b的状态为主观下线</p>
+
+<p>（每个节点内都会保存其他节点的信息，用于从自身视角判断其他节点的状态）</p>
+
+<h4 id="512客观下线">5.1.2、客观下线</h4>
+
+<p>集群内多个节点都认为该节点不可用，从而达成共识，如果是持有槽的主节点故障，需要为它做故障转移。</p>
+
+<p>1、当一个节点判断另外一个节点主观下线的时候，相应的节点状态会通过消息在集群中传播。半数以上的持有槽的主节点都标记某个节点是主观下线时候，触发客观下线流程。</p>
+
+<p>问：
+1、为什么必须是负责槽的主节点参与故障发现决策
+因为集群模式下只有处理槽的主节点才负责读写请求和集群槽相关的信息维护。</p>
+
+<h3 id="52故障恢复">5.2、故障恢复</h3>
+
+<p>故障节点变为客观下线后，如果下线节点是持有槽的主节点，则需要在他的从节点中选一个替换它，从而保证截取的高可用。</p>
+
+<h4 id="521资格检查">5.2.1、资格检查</h4>
+<p>每个从节点都要检查最后与主节点断线的时间，判断是否有个替换故障的主节点，如果从节点与主节点的断线时间超过cluster-node-time*cluster-slave-validity-factor（从节点有效因子默认为10），则当前节点不具备故障转移资格</p>
+
+<h4 id="522准备选举时间">5.2.2、准备选举时间</h4>
+<p>从节点符合资格之后，会更新触发故障选举时间，只有到达该时间之后才能执行后续的选举和其他工作，之所以使用延迟触发机制，
+主要是通过多个节点使用不同的延迟选举时间来支持优先级的问题，复制偏移量大说明从节点延迟低，那么它就具备更高的优先级来替换主机。也就是说优先级高的延迟时间少，优先发起选举</p>
+
+<h4 id="523发起选举">5.2.3、发起选举</h4>
+
+<h5 id="1更新配置纪元">1、更新配置纪元</h5>
+
+<p>配置纪元是一个只增不减的张数，每个主节点自身维护一个配置纪元，标注当前主节点的版本，所有主节点的配置纪元都不相等，从节点会复制主节点的配置纪元。整个集群又会维护一个劝全局的配置纪元，用于记录集群内所有主节点配置纪元的最大版本（整个版本可能会由于各种原因增长）。
+从节点每次发起投票时都会自增集群的全局配置纪元，用于表示本次从节点发起选举的版本。
+cluster info能否可以查看</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1:6482&gt; cluster info
+cluster_state:ok
+cluster_slots_assigned:16384
+cluster_slots_ok:16384
+cluster_slots_pfail:0
+cluster_slots_fail:0
+cluster_known_nodes:6
+cluster_size:3
+cluster_current_epoch:14//整个集群最大配置纪元
+cluster_my_epoch:12//当前主节点的配置纪元
+cluster_stats_messages_sent:181433
+cluster_stats_messages_received:181403
+127.0.0.1:6482&gt; 
+</code></pre></div></div>
+
+<h5 id="2广播选举消息">2、广播选举消息</h5>
+
+<p>在集群内广播消息，并记发送消息的状态，保证该从节点在一个配置纪元内只能发起一次选举</p>
+
+<h4 id="524投票选举">5.2.4、投票选举</h4>
+
+<p>只有持有槽的主节点才会处理故障转移消息，当第一个从节点请求投票回复成功之后，之后相同配置纪元的其它从节点的选举消息将忽略</p>
+
+<p>所有的节点都只会投给一个从节点，因此只能有一个从节点获取N/2+1的选票，保证能够找出唯一的从节点。每个配置纪元代表了一次选举周期，如果在开始投票之后的cluster-node-timerout*2时间内从及诶单没有获取足够的数量的投票，则本次选举作废。从节点发起配置纪元自增并发起下一轮投票知道选举成功为止</p>
+
+<p>为什么不适用从节点自己进行领导者选举？
+这样的话要求从节点数量过多，有点浪费</p>
+
+<h4 id="525替换主节点">5.2.5、替换主节点</h4>
+
+<p>当前从节点取消复制变成主节点，撤销主节点负责的槽，并将它变成自己的，向其他集群广播自己的pong消息，通过其他节点自己变成了主节点</p>
+
+<h2 id="6集群运维">6、集群运维</h2>
+
+<h4 id="61集群完整性">6.1、集群完整性</h4>
+
+<p>当某个节点在做故障转移的时候，整个集群是不可用的，对于大多数业务无法容忍。因此建议将参数设置为当主节点故障的时候只影响它负责的槽的相关命令，不会影响其他主节点的可用性</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cluster-require-full-coverage  no
+</code></pre></div></div>
+
+<h4 id="62宽带消耗">6.2、宽带消耗</h4>
+
+<p>1、适度提高cluseter-node-timeout降低消息发送频率，同时它太高还影响故障转移速度。因此需要根据自身业务场景兼顾二者</p>
+
+<p>2、满足业务的情况下，尽量避免大集群，同一个系统可以针对不同的业务拆分为多个集群。</p>
+
+<p>3、尽量部署到多个机器上。</p>
+
+<h3 id="63pub广播问题">6.3、pub广播问题</h3>
+
+<p>当发布广播的时候，会对所有的集群节点都会发送消息，这样加大了集群的负担。对这种情况，我们尽量使用sentinel结构用于pub、sub功能</p>
+
+<h3 id="64集群倾斜">6.4、集群倾斜</h3>
+
+<h4 id="数据倾斜">数据倾斜</h4>
+
+<p>1、节点和槽分配不均</p>
+
+<p>2、不同槽对应键数据差异过大,当大量使用hash_tag的时候（因为key是一个，但是value是很多）</p>
+
+<p>3、集合中包含大量元素（–bigkeys）</p>
+
+<h4 id="请求倾斜">请求倾斜</h4>
+
+<p>1、当大量使用hgetall的时候，尽量使用hmget</p>
+
+<h3 id="65集群读写分离">6.5、集群读写分离</h3>
+
+<p>集群模式下从节点不接受任何读写要求，发送过来的命令会重定向到负责槽的主节点上，当需要使用从节点分担主节点读压力的时候，使用命令
+<code class="highlighter-rouge">readonly</code> ,之前在复制章节说的<code class="highlighter-rouge">slave-read-only</code>也在集群模式下无效。</p>
+
+<p>这个命令属于连接级别，因此每次连接时候都需要执行这个命令，执行readwrite可以关闭连接只读状态</p>
+
+<h3 id="66手动故障转移">6.6、手动故障转移</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cluster failover
+</code></pre></div></div>
+
+<h4 id="661强制故障转移">6.6.1、强制故障转移</h4>
+
+<p>1、当主节点宕机且无法自送完成故障转移的情况，从节点直接发起选举，不在跟主节点确认复制便宜量（从及诶单复制延迟的数据会丢失），从节点请求之后，从节点选举成功后替换为主节点，通知其他</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>clusetr failover forced
+</code></pre></div></div>
+
+<p>2、用于集群内超过一半主节点故障的场景，因为从节点无法收半数以上投票。所以无法选举。这种命令会不进行选举而是直接进行根系本地配置，可能会冲突配置纪元（多个执行下面的命令） 所以要谨慎</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cluster failover takeover
+</code></pre></div></div>
+
+<h3 id="67数据迁移">6.7、数据迁移</h3>
+
+<p>数据迁移有很多工具，比如唯品会开发的redis-migrate-tool</p>
+
+<p><br /><br /><br />
+如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">支付包</th>
+      <th style="text-align: center">微信</th>
+      <th style="text-align: center">微信公众号</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg" alt="支付宝" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg" alt="微信" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg" alt="微信公众号" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Gitalk 评论 start  -->
+
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+<p> </p>
+<div id="gitalk-container"></div>
+<p>  <br />
+ <script type="text/javascript">
+    var gitalk = new Gitalk({
+		clientID: `1d164cd85549874d0e3a`,
+		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
+		id: 'IHSSj1AcHEeBDXA9',
+    });
+    gitalk.render('gitalk-container');
+</script> </p>
+
+<!-- Gitalk end -->
+
+  
+	</div>
+	<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <!--
+  <%- list_categories(item.categories, {
+      show_count: false,
+      class: 'article-category',
+      style: 'none',
+      separator: '►'
+  }) %>
+  -->
+  
+  <a class="article-category-link" href="/categories/#Redis">Redis</a>
+  
+</div>
+
+
+  <div class="article-tags">
+  <!--
+  <% var tags = [];
+    item.tags.forEach(function(tag){
+      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
+    }); %>-->
+  <span></span> <!--<%- tags.join('') %>-->
+  
+  
+  <a href="/tags/#Redis">Redis</a>
+  
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://localhost:4000/redis/2018/04/25/10_%E9%9B%86%E7%BE%A4/" data-title="10、redis集群 | HealeJean的梦想博客" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+   
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/redis/2018/04/25/9_sentinel%E5%93%A8%E5%85%B5/" title="9、sentinel哨兵">
+  <strong>上一篇：</strong><br/>
+  <span>
+  9、sentinel哨兵</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/springboot/mybatis/2018/04/26/7_springBoot%E7%BB%A7%E6%89%BFmybatis%E5%AE%9E%E7%8E%B0%E7%B1%BB%E4%BC%BCJPA%E6%96%B9%E6%B3%95/"  title="1、SpringBoot继承mybatis实现类似JPA方法">
+ <strong>下一篇：</strong><br/> 
+ <span>1、SpringBoot继承mybatis实现类似JPA方法
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+
+      
+      
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside toc-content">
+ 
+ <!--<%- toc(item.content) %>-->
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+
+  <div class="linkslist">
+  <p class="asidetitle">个人网站</p>
+    <ul>
+        
+          <li>
+            <a href="http://blog.csdn.net/u012954706" target="_blank" title="csdn">csdn</a>
+          </li>
+        
+          <li>
+            <a href="http://www.cnblogs.com/HealerJean/" target="_blank" title="博客园">博客园</a>
+          </li>
+        
+          <li>
+            <a href="https://weibo.com/u/3889598250/" target="_blank" title="微博">微博</a>
+          </li>
+        
+          <li>
+            <a href="https://www.jianshu.com/u/54ba972e92a8" target="_blank" title="简书">简书</a>
+          </li>
+        
+          <li>
+            <a href="https://www.zhihu.com/people/healerjean" target="_blank" title="知乎">知乎</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+
+     <p class="asidetitle">个人信息</p>
+     <script src="/assets/img/person/jquery.js"></script>
+     <script src="/assets/img/person/jquery-github-user-widget.js"></script>
+     <div class="github-widget-user" data-user="HealerJean">	</div>
+
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/#Job" title="Job">Job<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#MarkDown" title="MarkDown">MarkDown<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GitHub" title="GitHub">GitHub<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mac" title="Mac">Mac<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Thread" title="Thread">Thread<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Url" title="Url">Url<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mysql" title="Mysql">Mysql<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Database" title="Database">Database<sup>19</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Annotation" title="Annotation">Annotation<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SortAlgorithm" title="SortAlgorithm">SortAlgorithm<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#CAS" title="CAS">CAS<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Maven" title="Maven">Maven<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#HTML" title="HTML">HTML<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#AngularJs" title="AngularJs">AngularJs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WeChat" title="WeChat">WeChat<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Experience" title="Experience">Experience<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Team" title="Team">Team<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SoftWare" title="SoftWare">SoftWare<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Utils" title="Utils">Utils<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Hibernate" title="Hibernate">Hibernate<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Date" title="Date">Date<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Log" title="Log">Log<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JSON" title="JSON">JSON<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Docker" title="Docker">Docker<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GrayLog" title="GrayLog">GrayLog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpringBoot" title="SpringBoot">SpringBoot<sup>21</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Redis" title="Redis">Redis<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Ehcache" title="Ehcache">Ehcache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Druid" title="Druid">Druid<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Quartz" title="Quartz">Quartz<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Swagger" title="Swagger">Swagger<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Netty" title="Netty">Netty<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#NIO" title="NIO">NIO<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WebSocket" title="WebSocket">WebSocket<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Map" title="Map">Map<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JVM" title="JVM">JVM<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mybatis" title="Mybatis">Mybatis<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Element" title="Element">Element<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Graphics" title="Graphics">Graphics<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linux" title="Linux">Linux<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Databases" title="Databases">Databases<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Nginx" title="Nginx">Nginx<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpirngBoot" title="SpirngBoot">SpirngBoot<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linu" title="Linu">Linu<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Java" title="Java">Java<sup>15</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JAVA" title="JAVA">JAVA<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Google" title="Google">Google<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  
+
+
+  
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+	<!-- 打赏功能 -->
+  <!-- <script src="http://static.tctip.com/tctip-1.0.0.min.js"></script> -->
+  <script src="/assets/img/tctip/tctip-1.0.1.min.js"></script>
+	<script>  
+	new tctip({
+	  top: '20%',
+	  button: {
+	    id: 9,
+	    type: 'dashang',
+	  },
+	  list: [
+	    {
+	      type: 'alipay',
+	      qrImg: '/assets/img/tctip/alpay.jpg'
+	    }, {
+	      type: 'wechat',
+	      qrImg: '/assets/img/tctip/weixin.jpg'
+	    }
+	  ]
+	}).init()
+	</script>
+
+
+
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 欢迎来到  HealerJean 的梦想博客. <br/>
+			------您已走进一个高级软件开发工程师的成长之路</p>
+	</section>
+	 
+
+
+<!--  自带的分享功能 	-->
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3889598250" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		<a href="https://twitter.com/mxzdhealer" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:mxzdhealer@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div> 
+
+
+	<!--
+			<%  Array.prototype.S=String.fromCharCode(2);
+			  Array.prototype.in_array=function(e){
+    			var r=new RegExp(this.S+e+this.S);
+    			return (r.test(this.S+this.join(this.S)+this.S));
+				};
+				var cc = new Array('by','by-nc','by-nc-nd','by-nc-sa','by-nd','by-sa','zero'); %>
+		<% if (cc.in_array(theme.creative_commons) ) { %>
+				<div class="cc-license">
+          <a href="http://creativecommons.org/licenses/<%= theme.creative_commons %>/4.0" class="cc-opacity" target="_blank">
+            <img src="<%- config.root %>img/cc-<%= theme.creative_commons %>.svg" alt="Creative Commons" />
+          </a>
+        </div>
+    <% } %>
+				-->
+
+		<p class="copyright">
+		welcome to <a href="http://jekyllrb.com" target="_blank" title="jekyll">HealerJean</a> 
+		blog <a href="https://github.com/simpleyyt/jekyll-jacman" target="_blank" title="Jacman">for</a> © 2017 
+		
+		<a href="about" target="_blank" title="HealerJean">HealerJean</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/assets/js/jquery-2.0.3.min.js"></script>
+<script src="/assets/js/jquery.imagesloaded.min.js"></script>
+<script src="/assets/js/gallery.js"></script>
+<script src="/assets/js/jquery.qrcode-0.12.0.min.js"></script>
+<script src="/assets/js/toc.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+
+  
+
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+});
+</script>
+
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#toc.toc-aside').toc({
+    title: "文章目录",
+    showEffect: "none"
+  });
+  $('#toc.toc-article').toc({
+    title: "文章目录",
+    showEffect: "show",
+    showSpeed: 0
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+/*
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      //$('.hoverqrcode').hide();
+  });
+  */
+});
+</script>
+
+
+
+
+
+
+<!--
+
+-->
+
+
+
+
+<link rel="stylesheet" href="/assets/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/assets/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      if ($(this).hasClass('emoji')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+});
+</script>
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/assets/img/scrollup.png"/></a>
+	</div>
+	<script src="/assets/js/totop.js"></script>
+
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
+

@@ -1,0 +1,1236 @@
+
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta name="baidu-site-verification" content="0r55fUD7QR" />
+  <meta charset="UTF-8">
+    
+    
+    
+    
+    <title>springBoot集成Durid进行SQL监控 | HealeJean的梦想博客</title>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HealerJean">
+    
+
+    
+    <!--<%- open_graph({twitter_id: theme.author.twitter, google_plus: theme.author.google_plus}) %>-->
+
+    <meta name="description" content="page.description">
+    
+    <meta property="og:type" content="article">
+    
+    <meta property="og:title" content="springBoot集成Durid进行SQL监控">
+    <meta property="og:url" content="/druid/springboot/2018/03/21/1_springBoot%E9%9B%86%E6%88%90Durid%E8%BF%9B%E8%A1%8CSQL%E7%9B%91%E6%8E%A7/">
+    <meta property="og:site_name" content="HealeJean的梦想博客">
+    <meta property="og:description" content="springBoot集成Durid进行SQL监控">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="springBoot集成Durid进行SQL监控">
+    <meta name="twitter:description" content="page.description">
+    <meta name="twitter:creator" content="@mxzdhealer">
+    <link rel="publisher" href="">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HealeJean的梦想博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/assets/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/assets/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/assets/img/jacman.jpg">
+    
+
+    <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/highlight.css" type="text/css">
+    
+    
+  <!-- 百度统计 -->
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?19549885065170e0019f01e9975dfc1d";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <!-- 百度联盟 -->
+    <meta name="baidu_union_verify" content="c2f387067cf0849991ea870f73c055f2">
+  
+</head>
+
+  <body>
+    <header>
+        <div>
+		    
+			<div id="imglogo">
+				<a href="/"><img src="/assets/img/logo.png" alt="HealeJean的梦想博客" title="HealeJean的梦想博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HealeJean的梦想博客">HealeJean的梦想博客</a></h1>
+				<h2 class="blog-motto">一个高级软件开发工程师的成长之路</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/categories">技术</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories/#Job">生活日记</a></li>
+					
+						<li><a href="/about">留言板</a></li>
+					
+						<li><a href="/friends">友情链接</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search" method="get" accept-charset="utf-8">
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>
+</div>
+
+    </header>
+    <div id="container">
+      
+
+
+
+<div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+	<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/druid/springboot/2018/03/21/1_springBoot%E9%9B%86%E6%88%90Durid%E8%BF%9B%E8%A1%8CSQL%E7%9B%91%E6%8E%A7/" title="springBoot集成Durid进行SQL监控" itemprop="url">springBoot集成Durid进行SQL监控</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="HealerJean" target="_blank" itemprop="author">HealerJean</a>
+		
+  <p class="article-time">
+    <time datetime="2018-03-21 16:33:00 +0800" itemprop="datePublished"> 发表于 2018-03-21</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article toc-content" style="display: none;">
+		
+			<!--<%- toc(item.content) %>-->
+		
+		</div>
+		
+		<!-- image url 
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
+　　首行缩进
+<font color="red">  </font>
+-->
+
+<h2 id="前言">前言</h2>
+
+<p>Druid是阿里巴巴开发的号称为监控而生的数据库连接池！<br /></p>
+
+<p>1、充当数据库连接池<br />
+2、可以监控数据库访问性能<br />
+3、获得SQL执行日志<br /></p>
+
+<h3 id="1pom依赖包">1、pom依赖包<br /></h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;project</span> <span class="na">xmlns=</span><span class="s">"http://maven.apache.org/POM/4.0.0"</span> <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+	<span class="na">xsi:schemaLocation=</span><span class="s">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
+
+	<span class="nt">&lt;groupId&gt;</span>com.hlj.druid<span class="nt">&lt;/groupId&gt;</span>
+	<span class="nt">&lt;artifactId&gt;</span>com-hlj-druid<span class="nt">&lt;/artifactId&gt;</span>
+	<span class="nt">&lt;version&gt;</span>0.0.1-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+	<span class="nt">&lt;packaging&gt;</span>jar<span class="nt">&lt;/packaging&gt;</span>
+
+	<span class="nt">&lt;name&gt;</span>com-hlj-druid<span class="nt">&lt;/name&gt;</span>
+	<span class="nt">&lt;description&gt;</span>Demo project for Spring Boot<span class="nt">&lt;/description&gt;</span>
+
+	<span class="nt">&lt;parent&gt;</span>
+		<span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+		<span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-parent<span class="nt">&lt;/artifactId&gt;</span>
+		<span class="nt">&lt;version&gt;</span>2.0.0.RELEASE<span class="nt">&lt;/version&gt;</span>
+		<span class="nt">&lt;relativePath/&gt;</span> <span class="c">&lt;!-- lookup parent from repository --&gt;</span>
+	<span class="nt">&lt;/parent&gt;</span>
+
+	<span class="nt">&lt;properties&gt;</span>
+		<span class="nt">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="nt">&lt;/project.build.sourceEncoding&gt;</span>
+		<span class="nt">&lt;project.reporting.outputEncoding&gt;</span>UTF-8<span class="nt">&lt;/project.reporting.outputEncoding&gt;</span>
+		<span class="nt">&lt;java.version&gt;</span>1.8<span class="nt">&lt;/java.version&gt;</span>
+	<span class="nt">&lt;/properties&gt;</span>
+
+	<span class="nt">&lt;dependencies&gt;</span>
+		<span class="nt">&lt;dependency&gt;</span>
+			<span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+			<span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-data-jpa<span class="nt">&lt;/artifactId&gt;</span>
+		<span class="nt">&lt;/dependency&gt;</span>
+		<span class="nt">&lt;dependency&gt;</span>
+			<span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+			<span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-web<span class="nt">&lt;/artifactId&gt;</span>
+		<span class="nt">&lt;/dependency&gt;</span>
+
+		<span class="nt">&lt;dependency&gt;</span>
+			<span class="nt">&lt;groupId&gt;</span>mysql<span class="nt">&lt;/groupId&gt;</span>
+			<span class="nt">&lt;artifactId&gt;</span>mysql-connector-java<span class="nt">&lt;/artifactId&gt;</span>
+			<span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span>
+		<span class="nt">&lt;/dependency&gt;</span>
+		<span class="nt">&lt;dependency&gt;</span>
+			<span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+			<span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-test<span class="nt">&lt;/artifactId&gt;</span>
+			<span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+		<span class="nt">&lt;/dependency&gt;</span>
+
+		<span class="c">&lt;!--druid--&gt;</span>
+		<span class="nt">&lt;dependency&gt;</span>
+			<span class="nt">&lt;groupId&gt;</span>com.alibaba<span class="nt">&lt;/groupId&gt;</span>
+			<span class="nt">&lt;artifactId&gt;</span>druid<span class="nt">&lt;/artifactId&gt;</span>
+			<span class="nt">&lt;version&gt;</span>1.0.20<span class="nt">&lt;/version&gt;</span>
+		<span class="nt">&lt;/dependency&gt;</span>
+
+		<span class="c">&lt;!--log4j--&gt;</span>
+		<span class="nt">&lt;dependency&gt;</span>
+			<span class="nt">&lt;groupId&gt;</span>log4j<span class="nt">&lt;/groupId&gt;</span>
+			<span class="nt">&lt;artifactId&gt;</span>log4j<span class="nt">&lt;/artifactId&gt;</span>
+			<span class="nt">&lt;version&gt;</span>1.2.17<span class="nt">&lt;/version&gt;</span>
+		<span class="nt">&lt;/dependency&gt;</span>
+
+
+	<span class="nt">&lt;/dependencies&gt;</span>
+
+	<span class="nt">&lt;build&gt;</span>
+		<span class="nt">&lt;plugins&gt;</span>
+			<span class="nt">&lt;plugin&gt;</span>
+				<span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+				<span class="nt">&lt;artifactId&gt;</span>spring-boot-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+			<span class="nt">&lt;/plugin&gt;</span>
+		<span class="nt">&lt;/plugins&gt;</span>
+	<span class="nt">&lt;/build&gt;</span>
+
+<span class="nt">&lt;/project&gt;</span>
+
+
+</code></pre></div></div>
+
+<h3 id="2配置文件中添加数据源">2、配置文件中添加数据源</h3>
+
+<p>这里我使用了myslq数据库 ，并且利用jpa进行操作。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>########################################################
+###datasource  mysql
+########################################################
+spring.datasource.url=jdbc:mysql://localhost:3306/com_hlj_druid
+spring.datasource.username=root
+spring.datasource.password=123456
+spring.datasource.driverClassName=com.mysql.jdbc.Driver
+
+
+########################################################
+### jpa
+########################################################
+spring.jpa.database=MYSQL
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto =update
+spring.jpa.hibernate.naming-strategy=org.hibernate.cfg.ImprovedNamingStrategy
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+
+
+
+
+
+#使用Druid数据源
+spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
+# 下面为连接池的补充设置，应用到上面所有数据源中
+# 初始化大小，最小，最大
+spring.datasource.initialSize=5
+spring.datasource.minIdle=5
+spring.datasource.maxActive=20
+# 配置获取连接等待超时的时间
+spring.datasource.maxWait=60000
+# 配置一个连接在池中最小生存的时间，单位是毫秒
+spring.datasource.minEvictableIdleTimeMillis=300000
+spring.datasource.validationQuery=SELECT 1 FROM DUAL
+spring.datasource.testWhileIdle=true
+spring.datasource.testOnBorrow=false
+spring.datasource.testOnReturn=false
+# 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+spring.datasource.connectionProperties=druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+# 打开PSCache，并且指定每个连接上PSCache的大小
+spring.datasource.poolPreparedStatements=true
+spring.datasource.maxPoolPreparedStatementPerConnectionSize=20
+# 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+spring.datasource.filters=stat,wall,log4j
+# 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+spring.datasource.timeBetweenEvictionRunsMillis=60000
+# 合并多个DruidDataSource的监控数据
+spring.datasource.useGlobalDataSourceStat=true
+
+
+</code></pre></div></div>
+
+<h3 id="3创建测试数据库表">3、创建测试数据库表</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+CREATE TABLE `person` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `pwd` varchar(255)  DEFAULT NULL,
+  PRIMARY KEY (`id`)
+)
+
+</code></pre></div></div>
+
+<h3 id="4开始配置druid吧">4、开始配置druid吧</h3>
+
+<p>下面其实写的很详细，包括用户名和密码，已经拦截的id和允许的Ip。以及</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">druid</span><span class="p">.</span><span class="n">config</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">alibaba</span><span class="p">.</span><span class="n">druid</span><span class="p">.</span><span class="n">pool</span><span class="p">.</span><span class="n">DruidDataSource</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">alibaba</span><span class="p">.</span><span class="n">druid</span><span class="p">.</span><span class="n">support</span><span class="p">.</span><span class="n">http</span><span class="p">.</span><span class="n">StatViewServlet</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">alibaba</span><span class="p">.</span><span class="n">druid</span><span class="p">.</span><span class="n">support</span><span class="p">.</span><span class="n">http</span><span class="p">.</span><span class="n">WebStatFilter</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">slf4j</span><span class="p">.</span><span class="n">Logger</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">slf4j</span><span class="p">.</span><span class="n">LoggerFactory</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">beans</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Value</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">boot</span><span class="p">.</span><span class="n">web</span><span class="p">.</span><span class="n">servlet</span><span class="p">.</span><span class="n">FilterRegistrationBean</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">boot</span><span class="p">.</span><span class="n">web</span><span class="p">.</span><span class="n">servlet</span><span class="p">.</span><span class="n">ServletRegistrationBean</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Bean</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Configuration</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">context</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Primary</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">javax</span><span class="p">.</span><span class="n">sql</span><span class="p">.</span><span class="n">DataSource</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">sql</span><span class="p">.</span><span class="n">SQLException</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">HashMap</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">Map</span><span class="p">;</span>
+
+<span class="p">@</span><span class="n">Configuration</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">DruidConfiguration</span> <span class="p">{</span>
+
+    <span class="n">Logger</span> <span class="nb">log</span> <span class="p">=</span> <span class="n">LoggerFactory</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">DruidConfiguration</span><span class="p">.</span><span class="n">class</span><span class="p">);</span>
+
+    <span class="p">@</span><span class="n">Bean</span>
+    <span class="k">public</span> <span class="n">ServletRegistrationBean</span> <span class="n">druidServlet</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nb">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"init Druid Servlet Configuration "</span><span class="p">);</span>
+        <span class="n">ServletRegistrationBean</span> <span class="n">servletRegistrationBean</span> <span class="p">=</span> <span class="n">new</span> <span class="n">ServletRegistrationBean</span><span class="p">();</span>
+        <span class="n">servletRegistrationBean</span><span class="p">.</span><span class="n">setServlet</span><span class="p">(</span><span class="n">new</span> <span class="n">StatViewServlet</span><span class="p">());</span>
+        <span class="n">servletRegistrationBean</span><span class="p">.</span><span class="n">addUrlMappings</span><span class="p">(</span><span class="s2">"/druid/*"</span><span class="p">);</span>
+        <span class="n">Map</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span> <span class="k">String</span><span class="p">&gt;</span> <span class="n">initParameters</span> <span class="p">=</span> <span class="n">new</span> <span class="n">HashMap</span><span class="p">&lt;</span><span class="k">String</span><span class="p">,</span> <span class="k">String</span><span class="p">&gt;();</span>
+        <span class="n">initParameters</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="s2">"loginUsername"</span><span class="p">,</span> <span class="s2">"admin"</span><span class="p">);//</span> <span class="err">用户名</span>
+        <span class="n">initParameters</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="s2">"loginPassword"</span><span class="p">,</span> <span class="s2">"admin"</span><span class="p">);//</span> <span class="err">密码</span>
+        <span class="n">initParameters</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="s2">"resetEnable"</span><span class="p">,</span> <span class="s2">"false"</span><span class="p">);//</span> <span class="err">禁用</span><span class="n">HTML</span><span class="err">页面上的“</span><span class="nf">Reset</span> <span class="n">All</span><span class="err">”功能</span>
+        <span class="n">initParameters</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="s2">"allow"</span><span class="p">,</span> <span class="s2">""</span><span class="p">);</span> <span class="p">//</span> <span class="n">IP</span><span class="err">白名单</span> <span class="p">(</span><span class="err">没有配置或者为空，则允许所有访问</span><span class="p">)</span>
+        <span class="p">//</span><span class="n">initParameters</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="s2">"deny"</span><span class="p">,</span> <span class="s2">"192.168.20.38"</span><span class="p">);//</span> <span class="n">IP</span><span class="err">黑名单</span> <span class="p">(</span><span class="err">存在共同时，</span><span class="n">deny</span><span class="err">优先于</span><span class="n">allow</span><span class="p">)</span>
+        <span class="n">servletRegistrationBean</span><span class="p">.</span><span class="n">setInitParameters</span><span class="p">(</span><span class="n">initParameters</span><span class="p">);</span>
+        <span class="n">return</span> <span class="n">servletRegistrationBean</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">@</span><span class="n">Bean</span>
+    <span class="k">public</span> <span class="n">FilterRegistrationBean</span> <span class="n">filterRegistrationBean</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">FilterRegistrationBean</span> <span class="n">filterRegistrationBean</span> <span class="p">=</span> <span class="n">new</span> <span class="n">FilterRegistrationBean</span><span class="p">();</span>
+        <span class="n">filterRegistrationBean</span><span class="p">.</span><span class="n">setFilter</span><span class="p">(</span><span class="n">new</span> <span class="n">WebStatFilter</span><span class="p">());</span>
+        <span class="n">filterRegistrationBean</span><span class="p">.</span><span class="n">addUrlPatterns</span><span class="p">(</span><span class="s2">"/*"</span><span class="p">);</span>
+        <span class="p">//</span> <span class="err">忽略资源</span>
+        <span class="n">filterRegistrationBean</span><span class="p">.</span><span class="n">addInitParameter</span><span class="p">(</span><span class="s2">"exclusions"</span><span class="p">,</span> <span class="s2">"*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"</span><span class="p">);</span>
+        <span class="n">return</span> <span class="n">filterRegistrationBean</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="5这个时候其实就端配置完成了如果你想用springboot集成druid我觉得你应该了解springboot了创建一个controler-插入和查询数据吧">5、这个时候其实就端配置完成了，如果你想用springBoot集成Druid，我觉得你应该了解SpringBoot了。创建一个controler 插入和查询数据吧！</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">druid</span><span class="p">.</span><span class="n">controller</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">druid</span><span class="p">.</span><span class="n">common</span><span class="p">.</span><span class="n">Format</span><span class="p">.</span><span class="n">ResponseBean</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">druid</span><span class="p">.</span><span class="n">common</span><span class="p">.</span><span class="n">bean</span><span class="p">.</span><span class="n">Person</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">hlj</span><span class="p">.</span><span class="n">druid</span><span class="p">.</span><span class="n">common</span><span class="p">.</span><span class="n">repository</span><span class="p">.</span><span class="n">PersonRepository</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">beans</span><span class="p">.</span><span class="n">factory</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">Autowired</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">stereotype</span><span class="p">.</span><span class="n">Controller</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">web</span><span class="p">.</span><span class="n">bind</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">GetMapping</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">org</span><span class="p">.</span><span class="n">springframework</span><span class="p">.</span><span class="n">web</span><span class="p">.</span><span class="n">bind</span><span class="p">.</span><span class="n">annotation</span><span class="p">.</span><span class="n">ResponseBody</span><span class="p">;</span>
+
+<span class="p">/**</span>
+ <span class="p">*</span> <span class="p">@</span><span class="n">Description</span>
+ <span class="p">*</span> <span class="p">@</span><span class="n">Author</span> <span class="n">HealerJean</span>
+ <span class="p">*</span> <span class="p">@</span><span class="n">Date</span> <span class="m">2018</span><span class="p">/</span><span class="m">3</span><span class="p">/</span><span class="m">22</span>  <span class="err">上午</span><span class="m">10</span><span class="p">:</span><span class="m">22.</span>
+ <span class="p">*/</span>
+<span class="p">@</span><span class="n">Controller</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">HomeController</span> <span class="p">{</span>
+
+    <span class="p">@</span><span class="n">Autowired</span>
+    <span class="n">private</span> <span class="n">PersonRepository</span> <span class="n">personRepository</span><span class="p">;</span>
+
+    <span class="p">@</span><span class="n">GetMapping</span><span class="p">(</span><span class="s2">"insert"</span><span class="p">)</span>
+    <span class="k">public</span> <span class="p">@</span><span class="n">ResponseBody</span> <span class="n">ResponseBean</span> <span class="n">insert</span><span class="p">(</span><span class="n">Person</span> <span class="n">person</span><span class="p">){</span>
+        <span class="n">try</span> <span class="p">{</span>
+            <span class="n">return</span>  <span class="n">ResponseBean</span><span class="p">.</span><span class="n">buildSuccess</span><span class="p">(</span><span class="n">personRepository</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="n">person</span><span class="p">));</span>
+        <span class="p">}</span><span class="n">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">){</span>
+            <span class="n">return</span>  <span class="n">ResponseBean</span><span class="p">.</span><span class="n">buildFailure</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">getMessage</span><span class="p">());</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+
+    <span class="p">@</span><span class="n">GetMapping</span><span class="p">(</span><span class="s2">"findById"</span><span class="p">)</span>
+    <span class="p">@</span><span class="n">ResponseBody</span>
+    <span class="k">public</span> <span class="n">ResponseBean</span>  <span class="n">findById</span><span class="p">(</span><span class="n">Long</span> <span class="n">id</span><span class="p">){</span>
+        <span class="n">try</span> <span class="p">{</span>
+            <span class="n">return</span> <span class="n">ResponseBean</span><span class="p">.</span><span class="n">buildSuccess</span><span class="p">(</span><span class="n">personRepository</span><span class="p">.</span><span class="n">findById</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
+        <span class="p">}</span><span class="n">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">){</span>
+            <span class="n">return</span>  <span class="n">ResponseBean</span><span class="p">.</span><span class="n">buildFailure</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">getMessage</span><span class="p">());</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+</code></pre></div></div>
+
+<h3 id="61这个时候我们启动项目吧">6.1、这个时候，我们启动项目吧！</h3>
+<p>浏览器访问 <a href="http://localhost:8080/druid/index.html">http://localhost:8080/druid/index.html</a></p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-110616@2x.png" alt="WX20180322-110616@2x" /></p>
+
+<h3 id="611点开sql监控">6.1.1、点开sql监控</h3>
+<p>浏览器输入，开始进行sql的执行 <a href="http://localhost:8080/insert?name=荒凉">http://localhost:8080/insert?name=荒凉</a></p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-110852@2x.png" alt="WX20180322-110852@2x" /></p>
+
+<font color="red"> 但是，但是，但是，朋友们。在sql监控中是啥也没，原因我觉得你应该能猜得到吧，我们导入的druid的jar包是阿里爸爸的的。druid是阿里开发的。sprinBoot在配置文件中配置数据源不支持也很正常的，但是我们可以重新定义数据源看6.2 </font>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-111024@2x.png" alt="WX20180322-111024@2x" /></p>
+
+<h3 id="62重新定义数据源">6.2、重新定义数据源</h3>
+
+<p>在之前的DruidConfiguration 配置类中重新添加如下</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+@Value("${spring.datasource.url}")
+private String dbUrl;
+@Value("${spring.datasource.username}")
+private String username;
+@Value("${spring.datasource.password}")
+private String password;
+@Value("${spring.datasource.driverClassName}")
+private String driverClassName;
+@Value("${spring.datasource.initialSize}")
+private int initialSize;
+@Value("${spring.datasource.minIdle}")
+private int minIdle;
+@Value("${spring.datasource.maxActive}")
+private int maxActive;
+@Value("${spring.datasource.maxWait}")
+private int maxWait;
+@Value("${spring.datasource.timeBetweenEvictionRunsMillis}")
+private int timeBetweenEvictionRunsMillis;
+@Value("${spring.datasource.minEvictableIdleTimeMillis}")
+private int minEvictableIdleTimeMillis;
+@Value("${spring.datasource.validationQuery}")
+private String validationQuery;
+@Value("${spring.datasource.testWhileIdle}")
+private boolean testWhileIdle;
+@Value("${spring.datasource.testOnBorrow}")
+private boolean testOnBorrow;
+@Value("${spring.datasource.testOnReturn}")
+private boolean testOnReturn;
+@Value("${spring.datasource.poolPreparedStatements}")
+private boolean poolPreparedStatements;
+@Value("${spring.datasource.maxPoolPreparedStatementPerConnectionSize}")
+private int maxPoolPreparedStatementPerConnectionSize;
+@Value("${spring.datasource.filters}")
+private String filters;
+@Value("${spring.datasource.connectionProperties}")
+private String connectionProperties;
+@Value("${spring.datasource.useGlobalDataSourceStat}")
+private boolean useGlobalDataSourceStat;
+
+@Bean     //声明其为Bean实例
+@Primary  //在同样的DataSource中，首先使用被标注的DataSource
+public DataSource dataSource(){
+    DruidDataSource datasource = new DruidDataSource();
+    datasource.setUrl(this.dbUrl);
+    datasource.setUsername(username);
+    datasource.setPassword(password);
+    datasource.setDriverClassName(driverClassName);
+
+    //configuration
+    datasource.setInitialSize(initialSize);
+    datasource.setMinIdle(minIdle);
+    datasource.setMaxActive(maxActive);
+    datasource.setMaxWait(maxWait);
+    datasource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
+    datasource.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
+    datasource.setValidationQuery(validationQuery);
+    datasource.setTestWhileIdle(testWhileIdle);
+    datasource.setTestOnBorrow(testOnBorrow);
+    datasource.setTestOnReturn(testOnReturn);
+    datasource.setPoolPreparedStatements(poolPreparedStatements);
+    datasource.setMaxPoolPreparedStatementPerConnectionSize(maxPoolPreparedStatementPerConnectionSize);
+    datasource.setUseGlobalDataSourceStat(useGlobalDataSourceStat);
+    try {
+        datasource.setFilters(filters);
+    } catch (SQLException e) {
+        System.err.println("druid configuration initialization filter: "+ e);
+    }
+    datasource.setConnectionProperties(connectionProperties);
+    return datasource;
+}
+
+</code></pre></div></div>
+<h4 id="621浏览器访问">6.2.1、浏览器访问</h4>
+
+<p>1、插入数据
+<a href="http://localhost:8080/insert?name=HealerJean">http://localhost:8080/insert?name=HealerJean</a></p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-111622@2x.png" alt="WX20180322-111622@2x" /></p>
+
+<p>2、查找数据
+<a href="http://localhost:8080/findById?id=4">http://localhost:8080/findById?id=4</a></p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-111650@2x.png" alt="WX20180322-111650@2x" /></p>
+
+<p>3、查看sql监控</p>
+
+<p><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-111739@2x.png" alt="WX20180322-111739@2x" /></p>
+
+<h2 id="7至此基本上完成了">7、至此，基本上完成了。</h2>
+
+<h2 id="代码下载"><a href="https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_21_1_springBoot%E9%9B%86%E6%88%90Durid%E8%BF%9B%E8%A1%8C%E7%9B%91%E6%8E%A7/com-hlj-druid.zip">代码下载</a></h2>
+
+<p><br /><br /><br />
+如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">支付包</th>
+      <th style="text-align: center">微信</th>
+      <th style="text-align: center">微信公众号</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg" alt="支付宝" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg" alt="微信" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg" alt="微信公众号" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Gitalk 评论 start  -->
+
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+<p> </p>
+<div id="gitalk-container"></div>
+<p>  <br />
+ <script type="text/javascript">
+    var gitalk = new Gitalk({
+		clientID: `1d164cd85549874d0e3a`,
+		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
+		id: 'tGxbUZwy3PDlWzoz',
+    });
+    gitalk.render('gitalk-container');
+</script> </p>
+
+<!-- Gitalk end -->
+
+  
+	</div>
+	<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <!--
+  <%- list_categories(item.categories, {
+      show_count: false,
+      class: 'article-category',
+      style: 'none',
+      separator: '►'
+  }) %>
+  -->
+  
+  <a class="article-category-link" href="/categories/#Druid">Druid</a>
+  
+  <a class="article-category-link" href="/categories/#SpringBoot">SpringBoot</a>
+  
+</div>
+
+
+  <div class="article-tags">
+  <!--
+  <% var tags = [];
+    item.tags.forEach(function(tag){
+      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
+    }); %>-->
+  <span></span> <!--<%- tags.join('') %>-->
+  
+  
+  <a href="/tags/#Druid">Druid</a>
+  
+  <a href="/tags/#SpringBoot">SpringBoot</a>
+  
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://localhost:4000/druid/springboot/2018/03/21/1_springBoot%E9%9B%86%E6%88%90Durid%E8%BF%9B%E8%A1%8CSQL%E7%9B%91%E6%8E%A7/" data-title="springBoot集成Durid进行SQL监控 | HealeJean的梦想博客" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+   
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/redis/ehcache/2018/03/20/1_redis%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7%E7%B1%BB%E8%BF%9B%E8%A1%8C%E4%BF%9D%E5%AD%98%E6%95%B0%E6%8D%AE%E5%92%8CEhcache%E6%B3%A8%E8%A7%A3%E7%BC%93%E5%AD%98%E7%B1%BB%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98value/" title="redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value">
+  <strong>上一篇：</strong><br/>
+  <span>
+  redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/quartz/2018/03/23/1_springBoot%E6%99%AE%E9%80%9A%E5%AE%9A%E6%97%B6%E5%99%A8/"  title="1、SpringBoot普通定时器">
+ <strong>下一篇：</strong><br/> 
+ <span>1、SpringBoot普通定时器
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+
+      
+      
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside toc-content">
+ 
+ <!--<%- toc(item.content) %>-->
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+
+  <div class="linkslist">
+  <p class="asidetitle">个人网站</p>
+    <ul>
+        
+          <li>
+            <a href="http://blog.csdn.net/u012954706" target="_blank" title="csdn">csdn</a>
+          </li>
+        
+          <li>
+            <a href="http://www.cnblogs.com/HealerJean/" target="_blank" title="博客园">博客园</a>
+          </li>
+        
+          <li>
+            <a href="https://weibo.com/u/3889598250/" target="_blank" title="微博">微博</a>
+          </li>
+        
+          <li>
+            <a href="https://www.jianshu.com/u/54ba972e92a8" target="_blank" title="简书">简书</a>
+          </li>
+        
+          <li>
+            <a href="https://www.zhihu.com/people/healerjean" target="_blank" title="知乎">知乎</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+
+     <p class="asidetitle">个人信息</p>
+     <script src="/assets/img/person/jquery.js"></script>
+     <script src="/assets/img/person/jquery-github-user-widget.js"></script>
+     <div class="github-widget-user" data-user="HealerJean">	</div>
+
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/#Job" title="Job">Job<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#MarkDown" title="MarkDown">MarkDown<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GitHub" title="GitHub">GitHub<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mac" title="Mac">Mac<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Thread" title="Thread">Thread<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Url" title="Url">Url<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mysql" title="Mysql">Mysql<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Database" title="Database">Database<sup>19</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Annotation" title="Annotation">Annotation<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SortAlgorithm" title="SortAlgorithm">SortAlgorithm<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#CAS" title="CAS">CAS<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Maven" title="Maven">Maven<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#HTML" title="HTML">HTML<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#AngularJs" title="AngularJs">AngularJs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WeChat" title="WeChat">WeChat<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Experience" title="Experience">Experience<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Team" title="Team">Team<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SoftWare" title="SoftWare">SoftWare<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Utils" title="Utils">Utils<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Hibernate" title="Hibernate">Hibernate<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Date" title="Date">Date<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Log" title="Log">Log<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JSON" title="JSON">JSON<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Docker" title="Docker">Docker<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GrayLog" title="GrayLog">GrayLog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpringBoot" title="SpringBoot">SpringBoot<sup>21</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Redis" title="Redis">Redis<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Ehcache" title="Ehcache">Ehcache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Druid" title="Druid">Druid<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Quartz" title="Quartz">Quartz<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Swagger" title="Swagger">Swagger<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Netty" title="Netty">Netty<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#NIO" title="NIO">NIO<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WebSocket" title="WebSocket">WebSocket<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Map" title="Map">Map<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JVM" title="JVM">JVM<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mybatis" title="Mybatis">Mybatis<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Element" title="Element">Element<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Graphics" title="Graphics">Graphics<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linux" title="Linux">Linux<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Databases" title="Databases">Databases<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Nginx" title="Nginx">Nginx<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpirngBoot" title="SpirngBoot">SpirngBoot<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linu" title="Linu">Linu<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Java" title="Java">Java<sup>15</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JAVA" title="JAVA">JAVA<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Google" title="Google">Google<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  
+
+
+  
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+	<!-- 打赏功能 -->
+  <!-- <script src="http://static.tctip.com/tctip-1.0.0.min.js"></script> -->
+  <script src="/assets/img/tctip/tctip-1.0.1.min.js"></script>
+	<script>  
+	new tctip({
+	  top: '20%',
+	  button: {
+	    id: 9,
+	    type: 'dashang',
+	  },
+	  list: [
+	    {
+	      type: 'alipay',
+	      qrImg: '/assets/img/tctip/alpay.jpg'
+	    }, {
+	      type: 'wechat',
+	      qrImg: '/assets/img/tctip/weixin.jpg'
+	    }
+	  ]
+	}).init()
+	</script>
+
+
+
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 欢迎来到  HealerJean 的梦想博客. <br/>
+			------您已走进一个高级软件开发工程师的成长之路</p>
+	</section>
+	 
+
+
+<!--  自带的分享功能 	-->
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3889598250" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		<a href="https://twitter.com/mxzdhealer" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:mxzdhealer@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div> 
+
+
+	<!--
+			<%  Array.prototype.S=String.fromCharCode(2);
+			  Array.prototype.in_array=function(e){
+    			var r=new RegExp(this.S+e+this.S);
+    			return (r.test(this.S+this.join(this.S)+this.S));
+				};
+				var cc = new Array('by','by-nc','by-nc-nd','by-nc-sa','by-nd','by-sa','zero'); %>
+		<% if (cc.in_array(theme.creative_commons) ) { %>
+				<div class="cc-license">
+          <a href="http://creativecommons.org/licenses/<%= theme.creative_commons %>/4.0" class="cc-opacity" target="_blank">
+            <img src="<%- config.root %>img/cc-<%= theme.creative_commons %>.svg" alt="Creative Commons" />
+          </a>
+        </div>
+    <% } %>
+				-->
+
+		<p class="copyright">
+		welcome to <a href="http://jekyllrb.com" target="_blank" title="jekyll">HealerJean</a> 
+		blog <a href="https://github.com/simpleyyt/jekyll-jacman" target="_blank" title="Jacman">for</a> © 2017 
+		
+		<a href="about" target="_blank" title="HealerJean">HealerJean</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/assets/js/jquery-2.0.3.min.js"></script>
+<script src="/assets/js/jquery.imagesloaded.min.js"></script>
+<script src="/assets/js/gallery.js"></script>
+<script src="/assets/js/jquery.qrcode-0.12.0.min.js"></script>
+<script src="/assets/js/toc.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+
+  
+
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+});
+</script>
+
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#toc.toc-aside').toc({
+    title: "文章目录",
+    showEffect: "none"
+  });
+  $('#toc.toc-article').toc({
+    title: "文章目录",
+    showEffect: "show",
+    showSpeed: 0
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+/*
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      //$('.hoverqrcode').hide();
+  });
+  */
+});
+</script>
+
+
+
+
+
+
+<!--
+
+-->
+
+
+
+
+<link rel="stylesheet" href="/assets/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/assets/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      if ($(this).hasClass('emoji')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+});
+</script>
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/assets/img/scrollup.png"/></a>
+	</div>
+	<script src="/assets/js/totop.js"></script>
+
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
+
