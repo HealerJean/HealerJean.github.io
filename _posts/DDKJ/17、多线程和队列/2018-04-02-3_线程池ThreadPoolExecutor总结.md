@@ -21,8 +21,8 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 ## 1、知识点
 ### 1.1、ExecutorService中execute()和submit()方法的区别
 >1. 方法execute()没有返回值，而submit()方法可以有返回值（通过Callable和Future接口）
-2. 方法execute()提交的未执行的任务可以通过remove(Runnable)方法删除，而submit()提交的任务即使还未执行也不能通过remove(Runnable)方法删除
-3. 方法execute()在默认情况下异常直接抛出（即打印堆栈信息），不能捕获，但是可以通过自定义ThreadFactory的方式进行捕获（通过setUncaughtExceptionHandler方法设置），而submit()方法在默认的情况下可以捕获异常
+>2. 方法execute()提交的未执行的任务可以通过remove(Runnable)方法删除，而submit()提交的任务即使还未执行也不能通过remove(Runnable)方法删除
+>3. 方法execute()在默认情况下异常直接抛出（即打印堆栈信息），不能捕获，但是可以通过自定义ThreadFactory的方式进行捕获（通过setUncaughtExceptionHandler方法设置），而submit()方法在默认的情况下可以捕获异常
 
 
 线程池的概念是Executor这个接口ExecutorService继承了它，具体实现为ThreadPoolExecutor类，学习Java中的线程池，就可以直接学习对线程池的配置，就是对ThreadPoolExecutor构造函数的参数的配置
