@@ -1,0 +1,9 @@
+{
+  "name" : "blogImages",
+  "fileExtension" : ".md",
+  "autoUploadInsertedImage" : true,
+  "folderType" : 10,
+  "mediaFloder" : "blogImages",
+  "orderBy" : 0,
+  "newlinesToBR" : 1
+}
