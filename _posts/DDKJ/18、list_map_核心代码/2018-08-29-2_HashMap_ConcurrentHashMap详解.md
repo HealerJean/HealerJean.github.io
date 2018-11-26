@@ -19,6 +19,12 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 众所周知 HashMap 底层是基于 `数组 + 链表` 组成的，不过在 jdk1.7 和 1.8 中具体实现稍有不同。
 
+### 1.1、java7
+
+![WX20181126-170834@2x](markdwonImages/WX20181126-170834@2x.png)
+
+
+
 
 
 
