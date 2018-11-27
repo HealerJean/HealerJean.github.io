@@ -113,7 +113,7 @@ ConcurrentHashMap采用了非常精妙的"分段锁"策略，ConcurrentHashMap�
 　在ConcurrentHashMap，一个Segment就是一个子哈希表，Segment里维护了一个HashEntry数组，并发环境下，对于不同Segment的数据进行操作是不用考虑锁竞争的。<br/>
 
 　<font color="red" size="4" >　
-　（就按默认的ConcurrentLeve为16来讲，理论上就允许16个线程并发执行，有木有很酷）
+　（就按默认的ConcurrentLeve为16来讲，理论上就允许16个线程并发执行,因为这样就有16个Segment数组，有木有很酷）
 　</font>
 　<br/>
 　
