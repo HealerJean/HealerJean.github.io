@@ -108,7 +108,7 @@ ConcurrentHashMap采用了非常精妙的"分段锁"策略，ConcurrentHashMap�
 
 　![WX20181126-175152@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20181126-175152@2x.png)
 
-　<font color="red"> Segment继承了ReentrantLock，所以它就是一种可重入锁（ReentrantLock) </font><br/>
+　<font color="red"> Segment继承了ReentrantLock，所以它就是一种可重入锁（ReentrantLock),首先将数据分成一段一段的存储，然后给每一段数据配一把锁，当一个线程占用锁访问其中一个段数据的时候，其他段的数据也能被其他线程访问。 </font><br/>
 　
 　在ConcurrentHashMap，一个Segment就是一个子哈希表，Segment里维护了一个HashEntry数组，并发环境下，对于不同Segment的数据进行操作是不用考虑锁竞争的。<br/>
 
