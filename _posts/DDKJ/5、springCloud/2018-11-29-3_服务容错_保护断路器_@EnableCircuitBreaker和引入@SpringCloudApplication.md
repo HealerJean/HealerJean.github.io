@@ -1,5 +1,5 @@
 ---
-title: 服务容错_保护断路器_@EnableCircuitBreaker和引入@SpringCloudApplication
+title: 3_服务容错_保护断路器_@EnableCircuitBreaker和引入@SpringCloudApplication
 date: 2018-11-29 03:33:00
 tags: 
 - SpringCloud
@@ -17,7 +17,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 <font size="4">   </font>
 -->
-
+**
 ## 前言
 
 前面做了一个简单的服务 注册。服务发现，服务提供者和消费者的项目，现在我们还是准备之前的项目代码
@@ -280,7 +280,7 @@ public String hello() throws InterruptedException {
 
 
 
-
+[HealerJean-代码下载](https://github.com/HealerJean/com-hlj-springcloud/tree/master/3)
 
 
 
@@ -309,7 +309,7 @@ public String hello() throws InterruptedException {
 		repo: `HealerJean.github.io`,
 		owner: 'HealerJean',
 		admin: ['HealerJean'],
-		id: 'AAAAAAAAAAAAAAA',
+		id: 'KSLv1QXsfRrj08Bl',
     });
     gitalk.render('gitalk-container');
 </script> 
