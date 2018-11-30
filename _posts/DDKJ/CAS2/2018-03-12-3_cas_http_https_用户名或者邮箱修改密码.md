@@ -25,6 +25,7 @@ cas自定义通过邮箱修改密码，这里的验证，点击邮箱链接之�
 这里的cas邮箱验证，是通过给用户发邮件，然后用户跳转到服务端，通过密保问题进行修改的。所以需要创建密保问题。这里是我测试的是通过用户名查找邮箱修改密码的。一会我们再测试一遍通过邮箱登录。修改密码
 
 这里还有添加多个密保问题的，一会我们在通过截图观察
+
 ```
 use casnew;
 /*
@@ -47,7 +48,9 @@ INSERT INTO SYS_USER_QUESTION VALUES ('zhangsan', '我在哪里工作？',  'gua
 ## 3、sso-server开始配置邮箱登录
 
 ### 1、首先我们需要一个邮箱，并且开启smpt验证。这里我用了QQ邮箱，有需要的朋友们自己弄哦，因为需要密码所以我就测试完本例就会关闭
+
 ---
+
 ### 2、开启证书验证 
 
 ```
@@ -58,6 +61,7 @@ server.ssl.key-store-password=123456
 server.ssl.keyAlias=passport.sso.com
 
 ```
+
 **证书验证开启之后，下面的这个红色将会消失。
 
 ![WX20180312-153905@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-153905@2x.png)
@@ -80,6 +84,7 @@ cas.authn.pm.policyPattern=\\d{3,10}
 具体配置：
 
 ---
+
 ```
 #  7.1、MD5 密码直接校验,用于邮箱修改密码
 

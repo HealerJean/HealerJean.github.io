@@ -42,7 +42,9 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 </dependency>
 
 ```
+
 添加jdbc依赖后的sso-server的pom.xml如下
+
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -319,7 +321,7 @@ cas.authn.jdbc.query[0].passwordEncoder.encodingAlgorithm=MD5
 
 ## 3、使用自定义的java类进行密码的验证
 
-### 1、自定义的密码校验类
+> ### 1、自定义的密码校验类
 
 ```
 package com.hlj.sso.server.EncoderUtils;
@@ -410,6 +412,7 @@ cas.authn.jdbc.query[0].failFast=true
 ### 2、固定盐生成类
 
 这个类我放到test包下，不知道为什么在main下包不能引入。如果有知道为什么的请帮忙留意下，留言求告知
+
 ```
 package com.hlj.sso.server;
 
@@ -550,6 +553,7 @@ cas.authn.jdbc.encode[0].password=123456
 ### 5、sso-serveer中添加rest配置和测试生成随机盐的shiro 依赖
 
 1、依赖
+
 ```
 <!--restj认证-->
 <dependency>
@@ -567,6 +571,7 @@ cas.authn.jdbc.encode[0].password=123456
 
 ```
 2、配置
+
 ```
 
 #REST 认证开始
