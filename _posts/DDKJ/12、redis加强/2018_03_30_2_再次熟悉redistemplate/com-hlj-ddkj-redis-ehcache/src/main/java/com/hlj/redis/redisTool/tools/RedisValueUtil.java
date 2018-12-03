@@ -1,4 +1,4 @@
-package com.hlj.redis.redisTool;
+package com.hlj.redis.redisTool.tools;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
