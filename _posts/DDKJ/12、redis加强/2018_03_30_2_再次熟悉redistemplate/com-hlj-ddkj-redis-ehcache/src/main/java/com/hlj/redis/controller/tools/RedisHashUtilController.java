@@ -22,7 +22,8 @@ public class RedisHashUtilController {
     Logger logger = LoggerFactory.getLogger(RedisHashUtilController.class);
 
     @Resource
-    private RedisTemplate<String,Object> redisTemplate ;
+    private RedisTemplate<String,Object> redisWithTemplate ;
+
 
     @Resource
     private StringRedisTemplate stringRedisTemplate ;
@@ -33,10 +34,10 @@ public class RedisHashUtilController {
     public ProjectData hashPut(){
 
         ProjectData projectData = new ProjectData().setName("HeaelerJean").setGroup("GROUP");
-        redisTemplate.opsForHash().put("hashKey", 1000000L, projectData); //保存之后，乱码了，建议使用String类型保存
+        redisWithTemplate.opsForHash().put("hashKey", 1000000L, projectData); //保存之后，乱码了，建议使用String类型保存
 
-        //下面这个必须是字符串
-        stringRedisTemplate.opsForHash().put("stringhashKey", 1000000L, JsonUtils.toJson(projectData));
+        //下面这个hashKey必须是字符串，所以是错误的
+//        stringRedisTemplate.opsForHash().put("stringhashKey", 1000000L, JsonUtils.toJson(projectData));
         return  projectData ;
     }
 
@@ -44,14 +45,15 @@ public class RedisHashUtilController {
     @GetMapping("hashGet")
     public ProjectData hashGet(){
         Long lo = 1000000L ;
-        ProjectData projectData = (ProjectData)  redisTemplate.opsForHash().get("hashKey", lo) ;
+        ProjectData projectData = (ProjectData)  redisWithTemplate.opsForHash().get("hashKey", lo) ;
         logger.info(projectData.toString());
 
-        ProjectData stringProject = JsonUtils.toObject( stringRedisTemplate.opsForHash().get("stringhashKey", lo).toString(),ProjectData.class);
-        logger.info(stringProject.toString());
+//        ProjectData stringProject = JsonUtils.toObject( stringRedisTemplate.opsForHash().get("stringhashKey", lo).toString(),ProjectData.class);
+//        logger.info(stringProject.toString());
 
-        return  stringProject ;
+        return  projectData ;
     }
+
 
 
 }
