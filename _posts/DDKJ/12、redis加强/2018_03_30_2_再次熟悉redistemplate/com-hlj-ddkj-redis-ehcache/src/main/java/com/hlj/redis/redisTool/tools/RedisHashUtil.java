@@ -1,4 +1,4 @@
-package com.hlj.redis.redisTool;
+package com.hlj.redis.redisTool.tools;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
