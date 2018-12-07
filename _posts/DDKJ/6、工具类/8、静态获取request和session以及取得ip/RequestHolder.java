@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Created by j.sh on 2015/5/15.
  * 静态获取HttpServletRequest 和 session的方法
  * 要使用此类需要在web.xml注册org.springframework.web.context.request.RequestContextListener
  */
