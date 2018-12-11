@@ -13,7 +13,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Setter
 @ApiModel("分页对象")
 @Accessors(chain = true)
-public class PageQuery {
+public class √ {
 
     @ApiModelProperty(value = "开始页数，从1开始",example = "1", required = true,dataType = "java.lang.Integer")
     private Integer pageNum = 1;
