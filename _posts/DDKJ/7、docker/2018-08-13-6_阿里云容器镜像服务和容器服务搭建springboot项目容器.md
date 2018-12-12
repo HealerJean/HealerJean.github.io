@@ -438,6 +438,30 @@ server-dev:
 
 
 
+
+```
+应用版本:12111735-12121502 上次的版本和本次的版本
+应用描述： 8082-12121502 端口号和本次的版本
+
+duodian-node2-8082:
+  image: 'registry-vpc.cn-qingdao.aliyuncs.com/duodianyouhui/dev-server:12121502'
+  ports:
+    - '8082:8082/tcp'
+  restart: always
+  environment:
+    - LANG=C.UTF-8
+    - JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+    - spring.profiles.active=prod
+    - server.port=8082
+    - 'constraint:aliyun.node_index==2'
+  labels:
+    aliyun.scale: '1'
+    aliyun.routing.port_8082: 'http://server.duoquapp.net;server.dangqugame.cn;duodian;server.z.dangdianyouhui.cn;server.z.dangquyouhui.cn;'
+    
+    
+```
+
+
 <br/><br/><br/>
 如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，添加博主微信哦， 请下方留言吧。可与博主自由讨论哦
 
