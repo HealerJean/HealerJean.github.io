@@ -1,4 +1,3 @@
-package com.hlj.IgnoreNullBean;
 
 import org.junit.platform.commons.util.StringUtils;
 import java.lang.reflect.Field;
@@ -8,19 +7,19 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * ×÷Õß £ºHealerJean
- * ÈÕÆÚ £º2018/12/13  ÉÏÎç10:55.
- * ÀàÃèÊö ·ÀÖ¹·Ç¿Õ×Ö¶Î£¬ÔÚÀàËÆÓÚ new BigDecimal(string))ÖĞ½øĞĞ±¨´í
+ * ä½œè€… ï¼šHealerJean
+ * æ—¥æœŸ ï¼š2018/12/13  ä¸Šåˆ10:55.
+ * ç±»æè¿° é˜²æ­¢éç©ºå­—æ®µï¼Œåœ¨ç±»ä¼¼äº new BigDecimal(string))ä¸­è¿›è¡ŒæŠ¥é”™
  */
 public class JavaBeanUtil {
 
 
     /**
      *
-     * @param object Ô­Ê¼Êı¾İJavaBean
-     * @param originFieldName Ô­Ê¼Êı¾İ ×Ö¶ÎÃû×Ö ±ÈÈç£ºname
-     * @param newObject ĞÂ¸´ÖÆµÄJavaBean
-     * @param newFilldName ĞÂ¸³ÖµµÄ×Ö¶ÎÃû×Ö ±ÈÈç nameNow
+     * @param object åŸå§‹æ•°æ®JavaBean
+     * @param originFieldName åŸå§‹æ•°æ® å­—æ®µåå­— æ¯”å¦‚ï¼šname
+     * @param newObject æ–°å¤åˆ¶çš„JavaBean
+     * @param newFilldName æ–°èµ‹å€¼çš„å­—æ®µåå­— æ¯”å¦‚ nameNow
      */
     public static  void setFieldValue(Object object,String originFieldName,Object newObject,String newFilldName) {
 
