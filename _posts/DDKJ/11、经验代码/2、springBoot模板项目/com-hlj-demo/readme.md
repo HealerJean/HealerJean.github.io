@@ -2,6 +2,10 @@
 
 
 
+### 1、接口详情
+
+[http://localhost:8080/demo/swagger/index.html#/](http://localhost:8080/demo/swagger/index.html#/)
+
 #### 添加实体
 
 [http://localhost:8080/demo/addDemoEntity?name=HealerJean](http://localhost:8080/demo/addDemoEntity?name=HealerJean)

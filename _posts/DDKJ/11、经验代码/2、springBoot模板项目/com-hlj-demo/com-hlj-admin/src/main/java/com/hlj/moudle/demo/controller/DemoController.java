@@ -1,8 +1,8 @@
 package com.hlj.moudle.demo.controller;
 
 
-import com.hlj.data.AppException;
-import com.hlj.data.ResponseBean;
+import com.hlj.data.general.AppException;
+import com.hlj.data.general.ResponseBean;
 import com.hlj.entity.db.demo.DemoEntity;
 import com.hlj.moudle.demo.service.DemoEntityService;
 import com.hlj.utils.ExceptionLogUtils;
