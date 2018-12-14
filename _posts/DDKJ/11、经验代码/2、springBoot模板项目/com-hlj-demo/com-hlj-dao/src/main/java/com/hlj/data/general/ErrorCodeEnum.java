@@ -1,4 +1,4 @@
-package com.hlj.data;
+package com.hlj.data.general;
 
 /**
  * 类名称：ErrorCodeEnum
