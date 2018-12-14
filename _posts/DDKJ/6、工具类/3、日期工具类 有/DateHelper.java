@@ -97,6 +97,25 @@ public class DateHelper extends DateUtils {
     }
 
 
+    /**
+     * 将date类型的日日期格式化 为其他格式
+     * @param pattern
+     * @return
+     */
+    public static Date formatDate(Date date,String pattern){
+        if(date==null){
+            throw new NullPointerException("date is null");
+        }
+        SimpleDateFormat df = new SimpleDateFormat(pattern);
+        String dateStr = df.format(date);
+        try {
+            return df.parse(dateStr);
+        } catch (ParseException pe) {
+            logger.error(pe.getMessage(),pe);
+            throw new RuntimeException("date parse error"+dateStr);
+        }
+    }
+
 
 
 
