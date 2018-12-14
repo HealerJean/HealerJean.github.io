@@ -560,6 +560,12 @@ public class JsonpMain {
 ## 3、，Map和Bean之间的转化
 
 
+```java
+
+Map<String, Object> map = (Map<String, Object>)JSONObject.fromObject(javaBean);
+
+## 
+```
 
 
 
