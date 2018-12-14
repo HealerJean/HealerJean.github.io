@@ -1,11 +1,9 @@
-package com.duodian.youhui.admin.utils;
+package com.hlj.utils;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.duodian.youhui.data.message.Image;
-import com.duodian.youhui.data.message.NewsArticle;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
 import org.w3c.dom.NodeList;
@@ -23,9 +21,27 @@ import java.util.*;
 /**
  * @Desc: 微信消息格式以及xml和对象的转化
  * @Date:  2018/5/24 下午5:54.
+
+
+    <!--对象转xml-->
+    <dependency>
+        <groupId>com.thoughtworks.xstream</groupId>
+        <artifactId>xstream</artifactId>
+        <version>1.4.9</version>
+    </dependency>
+
+    <!--将request流转化为map-->
+    <dependency>
+        <groupId>dom4j</groupId>
+        <artifactId>dom4j</artifactId>
+        <version>1.6.1</version>
+    </dependency>
+
  */
 
 public class XmlUtil {
+
+
 
     /**
      * 将xml转化为Map集合
@@ -96,16 +112,16 @@ public class XmlUtil {
         //默认是包名加类名为标签，这里改为xml为标签
         xstream.alias("xml", object.getClass());
         //默认是包名加类名为标签，这里改为item为标签
-        xstream.alias("item", new NewsArticle().getClass());
+//        xstream.alias("item", new NewsArticle().getClass());
         //这里遇到了一点点挫折，原来官网文档错了
-        xstream.alias("Image", new Image().getClass());
+//        xstream.alias("Image", new Image().getClass());
 
         return xstream.toXML(object);
 
     }
 
     /**
-     * map转化为 string
+     * Map转换为xml
      * @param map
      * @return
      */
@@ -180,7 +196,7 @@ public class XmlUtil {
 
 
     /**
-     * xml转json
+     * xml转json 调用方法
      * @param element
      * @param json
      */
@@ -246,7 +262,21 @@ public class XmlUtil {
     }
 
 
-    // 微信不正规xml转map
+    // 微信不正规xml转map，没有版本号
+/*    <xml>
+        <mch_appid>wxe062425f740c30d8</mch_appid>
+        <mchid>10000098</mchid>
+        <nonce_str>3PG2J4ILTKCH16CQ2502SI8ZNMTM67VS</nonce_str>
+        <partner_trade_no>100000982014120919616</partner_trade_no>
+        <openid>ohO4Gt7wVPxIT1A9GjFaMYMiZY1s</openid>
+        <check_name>FORCE_CHECK</check_name>
+        <re_user_name>张三</re_user_name>
+        <amount>100</amount>
+        <desc>节日快乐!</desc>
+        <spbill_create_ip>10.2.3.10</spbill_create_ip>
+        <sign>C97BDBACF37622775366F38B629F45E3</sign>
+    </xml>
+*/
 
     /**
      * XML格式字符串转换为Map
@@ -294,6 +324,8 @@ public class XmlUtil {
         documentBuilderFactory.setExpandEntityReferences(false);
         return documentBuilderFactory.newDocumentBuilder();
     }
+
+
 
 
 
