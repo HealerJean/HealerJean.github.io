@@ -334,7 +334,7 @@ final V put(K key, int hash, V value, boolean onlyIfAbsent) {
 		repo: `HealerJean.github.io`,
 		owner: 'HealerJean',
 		admin: ['HealerJean'],
-		id: 'AAAAAAAAAAAAAA',
+		id: 'SXPrYHo72dbpFs5w',
     });
     gitalk.render('gitalk-container');
 </script> 
