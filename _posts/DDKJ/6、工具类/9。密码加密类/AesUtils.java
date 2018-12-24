@@ -1,32 +1,35 @@
 package com.duodian.youhui.admin.utils;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import javax.crypto.*;
+import javax.crypto.spec.DESKeySpec;
+import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.security.*;
 
 /**
  * @Desc:各种加密解密
  * @Author HealerJean
  * @Date 2018/5/23  下午3:12.
  */
-
+@Slf4j
 public class AesUtils {
 
 
     private static final String Loginkey = "jDFBsLGArexoYZv6";
-    private static final byte[] Loginiv = "4960432827928592".getBytes();;
+    private static final byte[] Loginiv = "4960432827928592".getBytes();
+    ;
     private static final String Loginmode = "AES/CBC/PKCS5Padding";
 
 
-    public static String LoginEncrypt( String strIn)  {
+    public static String LoginEncrypt(String strIn) {
         try {
             SecretKeySpec skeySpec = getKey(Loginkey);
             Cipher cipher = Cipher.getInstance(Loginmode); //"算法/模式/补码方式"
@@ -35,7 +38,7 @@ public class AesUtils {
             byte[] encrypted = cipher.doFinal(strIn.getBytes());
             return new BASE64Encoder().encode(encrypted);
         } catch (Exception e) {
-            return  null;
+            return null;
         }
     }
 
@@ -67,7 +70,8 @@ public class AesUtils {
 
 
     /**
-     * SHA1 加密
+     * 微信 校验 SHA1 加密
+     *
      * @param decript
      * @return
      */
@@ -96,20 +100,144 @@ public class AesUtils {
     }
 
 
+//    public static void main(String[] args) throws Exception {
+//
+////        String Code = "1";
+////        String codE = AesUtils.LoginEncrypt(Code);
+////        System.out.println("原文：" + Code);
+////        System.out.println("密文：" + codE);
+////        System.out.println("解密：" + AesUtils.LoginDecrypt( codE));
+//
+//
+//    }
 
 
+    private final static String DES = "DES";
+    public final static  String urlKey = "healerejean";
 
-    public static void main(String[] args) throws Exception {
+    /**
+     * Description 根据键值进行加密
+     * @param data
+     * @param key  加密键byte数组
+     * @return
+     * @throws Exception
+     */
+    public static String encrypt(String data, String key) {
+        if(key==null){
+            key  = urlKey ;
+        }
+        byte[] bt = new byte[0];
+        try {
+            bt = encrypt(data.getBytes(), key.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String strs = new BASE64Encoder().encode(bt);
+        return strs;
+    }
 
-//        String Code = "1";
-//        String codE = AesUtils.LoginEncrypt(Code);
-//        System.out.println("原文：" + Code);
-//        System.out.println("密文：" + codE);
-//        System.out.println("解密：" + AesUtils.LoginDecrypt( codE));
+    /**
+     * Description 根据键值进行解密
+     * @param data
+     * @param key  加密键byte数组
+     * @return
+     * @throws IOException
+     * @throws Exception
+     */
+    public static String decrypt(String data, String key)
+    {
+        if(key==null){
+            key  = urlKey ;
+        }
 
+        if (data == null)
+            return null;
+        BASE64Decoder decoder = new BASE64Decoder();
+        byte[] buf = new byte[0];
+        try {
+            buf = decoder.decodeBuffer(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        byte[] bt = new byte[0];
+        try {
+            bt = decrypt(buf,key.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new String(bt);
+    }
 
+    /**
+     * Description 根据键值进行加密
+     * @param data
+     * @param key  加密键byte数组
+     * @return
+     * @throws Exception
+     */
+    private static byte[] encrypt(byte[] data, byte[] key) throws Exception {
+        // 生成一个可信任的随机数源
+        SecureRandom sr = new SecureRandom();
+
+        // 从原始密钥数据创建DESKeySpec对象
+        DESKeySpec dks = new DESKeySpec(key);
+
+        // 创建一个密钥工厂，然后用它把DESKeySpec转换成SecretKey对象
+        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(DES);
+        SecretKey securekey = keyFactory.generateSecret(dks);
+
+        // Cipher对象实际完成加密操作
+        Cipher cipher = Cipher.getInstance(DES);
+
+        // 用密钥初始化Cipher对象
+        cipher.init(Cipher.ENCRYPT_MODE, securekey, sr);
+
+        return cipher.doFinal(data);
     }
 
 
+    /**
+     * Description 根据键值进行解密
+     * @param data
+     * @param key  加密键byte数组
+     * @return
+     * @throws Exception
+     */
+    private static byte[] decrypt(byte[] data, byte[] key) throws Exception {
+        // 生成一个可信任的随机数源
+        SecureRandom sr = new SecureRandom();
 
+        // 从原始密钥数据创建DESKeySpec对象
+        DESKeySpec dks = new DESKeySpec(key);
+
+        // 创建一个密钥工厂，然后用它把DESKeySpec转换成SecretKey对象
+        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(DES);
+        SecretKey securekey = keyFactory.generateSecret(dks);
+
+        // Cipher对象实际完成解密操作
+        Cipher cipher = Cipher.getInstance(DES);
+
+        // 用密钥初始化Cipher对象
+        cipher.init(Cipher.DECRYPT_MODE, securekey, sr);
+
+        return cipher.doFinal(data);
+    }
+
+//
+//    public static void main(String[] args) throws Exception {
+//
+//
+//        String redirectUrl = "http://web.nongfusiquan.cn/login?scope=snsapi_userinfo&fuId=4&dingId=2" ;
+//        System.out.println(redirectUrl);
+//
+//        String data = StringCutUtils.getHttpAfter(redirectUrl);
+//        System.out.println("原来的数据"+data);
+//
+////        String key = "HealerJean";//秘钥
+//        String encode = encrypt(data, null);
+//        System.err.println("加密后"+encode);
+//        String dcode = decrypt(encode, null);
+//        System.err.println("解密后"+dcode);
+//
+//    }
 }
