@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -21,63 +20,43 @@ import java.util.*;
 @Slf4j
 public class TestService {
 
+
     /**
-     * json 转 JavaBean
-     * 1、 date类型的Json转化为对象，必须是Long类型的，不可以是String类型的'2018-12-13 20:31:04'
+     * 一、
+     * 1、date类型不是long是错误的，不能转化成果
+     * 2、如果将有date参数的对象 通过JSONObject 打印成String字符串，则，date会变质，不会变成long类型的了，如下
+     *   但是需要注意的是，这其实只要不转化出String来，这些对象都是可以操作的，不受影响
+     *
+     *     JSONObject.fromObject(tsJsonData).toString()
+     * 3、通过objectMapper的转化，一切正常 ，如下
+     *     JsonUtils.toJson(tsJsonData)
      */
     @Test
-    public void josnToBean() {
+    public void JsonObjectForJsonToBean(){
 
-//  错误的   String jsonStr = "{\"error\":\"0\",\"msg\":\"操作成功\",\"data\":[{\"n_long\":\"3923600074\",\"n_string\":\"小当\",\"n_bigDecimal\":\"5.9000\",\"n_date\":\"2018-12-13 20:31:04\",\"n_integer\":1},{\"n_long\":\"3923600074\",\"n_string\":\"小当\",\"n_bigDecimal\":\"5.9000\",\"n_date\":\"2018-12-13 20:31:04\",\"n_integer\":1}]}";
+        // 1、错误的，转化直接报错 String jsonDataStr = "{\"error\":\"0\",\"msg\":\"操作成功\",\"data\":[{\"n_long\":\"3923600074\",\"n_string\":\"小当\",\"n_bigDecimal\":\"5.9000\",\"n_date\":\"2018-12-13 20:31:04\",\"n_integer\":1},{\"n_long\":\"3923600074\",\"n_string\":\"小当\",\"n_bigDecimal\":\"5.9000\",\"n_date\":\"2018-12-13 20:31:04\",\"n_integer\":1}]}";
         String jsonDataStr = "{\"error\":\"0\",\"msg\":\"操作成功\",\"data\":[{\"n_long\":\"3923600074\",\"n_string\":\"小当\",\"n_bigDecimal\":\"5.9000\",\"n_date\":\"1544782308409\",\"n_integer\":1},{\"n_long\":\"3923600074\",\"n_string\":\"小当\",\"n_bigDecimal\":\"5.9000\",\"n_date\":\"1544782308409\",\"n_integer\":1}]}";
+        log.info("\n1、JsonObjectForJsonToBean\n"+JSONObject.fromObject(jsonDataStr).toString());
+        //打印结果：正常，因为没有经过对象中date的的洗礼
+        //    {"error":"0","msg":"操作成功","data":[{"n_long":"3923600074","n_string":"小当","n_bigDecimal":"5.9000","n_date":"1544782308409","n_integer":1},{"n_long":"3923600074","n_string":"小当","n_bigDecimal":"5.9000","n_date":"1544782308409","n_integer":1}]}
+
+        //2、JSONObject将具有date的对象进行洗礼
         TsJsonData tsJsonData =   JsonUtils.toObject(jsonDataStr, TsJsonData.class );
+        log.info("\n2、JsonObjectForJsonToBean\n"+JSONObject.fromObject(tsJsonData).toString());
+        //打印结果：date变质了哦
+        //{"data":[{"n_bigDecimal":5.9,"n_date":{"date":14,"day":5,"hours":18,"minutes":11,"month":11,"seconds":48,"time":1544782308409,"timezoneOffset":-480,"year":118},"n_integer":1,"n_long":3923600074,"n_string":"小当"},{"n_bigDecimal":5.9,"n_date":{"date":14,"day":5,"hours":18,"minutes":11,"month":11,"seconds":48,"time":1544782308409,"timezoneOffset":-480,"year":118},"n_integer":1,"n_long":3923600074,"n_string":"小当"}],"error":"0","msg":"操作成功"}
 
-        log.info(JSONObject.fromObject(tsJsonData).toString());
-//        {"data":[{"n_bigDecimal":5.9,"n_date":{"date":14,"day":5,"hours":18,"minutes":11,"month":11,"seconds":48,"time":1544782308409,"timezoneOffset":-480,"year":118},"n_integer":1,"n_long":3923600074,"n_string":"小当"},{"n_bigDecimal":5.9,"n_date":{"date":14,"day":5,"hours":18,"minutes":11,"month":11,"seconds":48,"time":1544782308409,"timezoneOffset":-480,"year":118},"n_integer":1,"n_long":3923600074,"n_string":"小当"}],"error":"0","msg":"操作成功"}
-
-        JavaBean javaBean1 = getJavaBean();
-        log.info(JsonUtils.toJson(javaBean1));
-//        {"n_long":10045456456,"n_string":"张宇晋","n_bigDecimal":12.12245,"n_date":1544791847711,"n_integer":100}
-
-    }
-
-
-
-    /**
-     * JavaBean转 json
-     * 1、 JavaBean转内部包含集合
-     */
-    @Test
-    public void beanToJson() {
-
-        TsJsonData tsJsonData = new TsJsonData().setError("0").setMsg("success");
-        TsJsonData.DataBean dataBean = new TsJsonData.DataBean();
-        dataBean.setN_long(10045456456L);
-        dataBean.setN_bigDecimal(new BigDecimal("12.12245"));
-        dataBean.setN_date(new Date());
-        dataBean.setN_integer(100);
-        dataBean.setN_string("张宇晋");
-
-
-        TsJsonData.DataBean dataBean2 = new TsJsonData.DataBean();
-        String []jgnore = {"n_long","n_string"};
-        BeanUtils.copyProperties(dataBean,dataBean2,jgnore );
-        dataBean2.setN_long(45456L);
-        dataBean2.setN_string("HealerJean");
-
-        List< TsJsonData.DataBean> dataBeans = new ArrayList<>();
-        dataBeans.add(dataBean);
-        dataBeans.add(dataBean2);
-        tsJsonData.setData(dataBeans);
-
-        log.info(JSONObject.fromObject(tsJsonData).toString());
-        //只要是经过多层Json的处理 date就会走样
-        //{"data":[{"n_bigDecimal":12.12245,"n_date":{"date":14,"day":5,"hours":20,"minutes":48,"month":11,"seconds":17,"time":1544791697252,"timezoneOffset":-480,"year":118},"n_integer":100,"n_long":10045456456,"n_string":"张宇晋"},{"n_bigDecimal":12.12245,"n_date":{"date":14,"day":5,"hours":20,"minutes":48,"month":11,"seconds":17,"time":1544791697252,"timezoneOffset":-480,"year":118},"n_integer":100,"n_long":45456,"n_string":"HealerJean"}],"error":"0","msg":"success"}
-
+        //3、通过objectMapper的转化
+        log.info("\n3、JsonObjectForJsonToBean\n"+JsonUtils.toJson(tsJsonData));
+        //打印结果： 一切正常
+        //{"error":"0","msg":"操作成功","data":[{"n_long":3923600074,"n_string":"小当","n_bigDecimal":5.9000,"n_date":1544782308409,"n_integer":1},{"n_long":3923600074,"n_string":"小当","n_bigDecimal":5.9000,"n_date":1544782308409,"n_integer":1}]}
 
     }
 
-    /**
+
+
+
+    /** 二.1
      * JavaBean转Map
      * Map<String, Object> map = (Map<String, Object>)JSONObject.fromObject(javaBean);
      * 用法：可以用于Http map传参
@@ -86,27 +65,29 @@ public class TestService {
     public void baenToMap() {
 
         JavaBean javaBean = getJavaBean();
-
         Map<String, Object> map = (Map<String, Object>)JSONObject.fromObject(javaBean);
-
-        log.info(map.toString());//打印出来默认是Json类型的
-        //下面这里发现date 编制了，它自己变成了一个数组
+        log.info(JsonUtils.toJson(map));
+        //下面这里发现date 变质了，但是map还是可以操作的，只是不要将它转化为string字符串，并且将它输出到前台也是正常的long类型的Json数据哦
         //{"n_bigDecimal":12.12245,"n_date":{"date":14,"day":5,"hours":20,"minutes":0,"month":11,"seconds":31,"time":1544788831913,"timezoneOffset":-480,"year":118},"n_integer":100,"n_long":10045456456,"n_string":"张宇晋"}
-
     }
 
 
-
     /**
+     * 二.2
      * Map转JavaBean
      */
     @Test
     public void MapTobaen() {
 
         Map<String, Object> map = getJavaBeanMap();
-        String mapStr = JSONObject.fromObject(map).toString();
+//      String mapStr = JSONObject.fromObject(map).toString();
+       //1、 打印结果：date变质
+       //{"n_date":{"date":28,"day":5,"hours":19,"minutes":22,"month":11,"seconds":56,"time":1545996176773,"timezoneOffset":-480,"year":118},"n_integer":100,"n_bigDecimal":12.12245,"n_string":"张宇晋","n_long":10045456456}
+
+        String mapStr = JsonUtils.toJson(map);
         log.info(mapStr);
-        //{"n_date":{"date":14,"day":5,"hours":20,"minutes":57,"month":11,"seconds":0,"time":1544792220857,"timezoneOffset":-480,"year":118},"n_integer":100,"n_bigDecimal":12.12245,"n_string":"张宇晋","n_long":10045456456}
+        //2、正常，所以不要使用 JSONObject
+        //{"n_date":1545996089637,"n_integer":100,"n_bigDecimal":12.12245,"n_string":"张宇晋","n_long":10045456456}
     }
 
     @Test
@@ -170,7 +151,9 @@ public class TestService {
         javaBean.setN_bigDecimal(new BigDecimal("12.12245"));
         javaBean.setN_date(new Date());
         javaBean.setN_integer(100);
-        javaBean.setN_string("张宇晋");
+//        javaBean.setN_string(null);
+        javaBean.setN_string("");
+
         return javaBean;
     }
 
