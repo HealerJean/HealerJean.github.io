@@ -1,38 +1,3 @@
----
-title: Java操作图片的工具类
-date: 2018-10-29 03:33:00
-tags: 
-- Java
-category: 
-- Java
-description: Java操作图片的工具类
----
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
-
-<font  color="red" size="4">   </font>
-
-
-<font size="4">   </font>
--->
-
-## 前言
-
-
-
-### 1、多个图片合成
-### 2、生成不带logo的二维码
-### 3、读取图片二维码信息
-### 4、生成带logo的二维码
-### 5、图片压缩
-### 6、文字水印到图片
-### 7、图片水印到图片
-
-
-
-```java
 package com.hlj.util.QRcode;
 
 import com.google.zxing.*;
@@ -43,6 +8,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -56,7 +22,7 @@ import java.util.Map;
  * 日期 ：2018/10/29  下午4:31.
  * 类描述：
  */
-public class QrCodeUtils {
+public class BufferedImageUtils {
 
 
     /**
@@ -106,7 +72,7 @@ public class QrCodeUtils {
         // 构建叠加层
         BufferedImage buffImg = null;
         try {
-            buffImg = imageAndImages(ImageIO.read(new File(sourceFilePath)), ImageIO.read(new File(innerImageFilePath)),238, 588,210 ,208, 1.0f);
+            buffImg = imageAndImages(ImageIO.read(new File(sourceFilePath)), ImageIO.read(new File(innerImageFilePath)),595, 1000,245 ,245, 1.0f);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -169,7 +135,7 @@ public class QrCodeUtils {
     @Test
     public void testWriteQRImg(){
         String text = "http://blog.healerjean.top";
-        BufferedImage  noLogoImage = writeQRImg(text,200,200, 4 );
+        BufferedImage  noLogoImage = writeQRImg(text,200,200, 0 );
         //存储到本地
         String saveFilePath = "/Users/healerjean/Desktop/new.png";
         saveImageToLocalDir(noLogoImage, saveFilePath);
@@ -304,6 +270,8 @@ public class QrCodeUtils {
         String saveFilePath = "/Users/healerjean/Desktop/new.png";
         saveImageToLocalDir(logoImage, saveFilePath);
     }
+
+
 
 
     /**
@@ -465,7 +433,7 @@ public class QrCodeUtils {
 
     /**
      * 8、 添加图片水印
-     * @param srcFile 需要家水印的文件路径
+     * @param
      * @return
      */
     public static BufferedImage imageWaterMark(BufferedImage image,BufferedImage imageLogo, boolean... moreMark) {
@@ -532,7 +500,6 @@ public class QrCodeUtils {
             graphics2d.dispose();
 
             return  bufferedImage;
-
     }
 
 
@@ -555,56 +522,52 @@ public class QrCodeUtils {
     }
 
 
+    /**
+     *  9、解决图片红色问题 ，JDK中提供的Image
+     //如果是file
+     Image src=Toolkit.getDefaultToolkit().getImage(file.getPath());?
 
-		/**
-		 *  9、解决图片红色问题 ，JDK中提供的Image
-		
-		 //如果是file
-		 Image src=Toolkit.getDefaultToolkit().getImage(file.getPath()); 
-		
-		 如果是url
-		 URL url = new URL(wechat_erweimaTmail);
-		 java.awt.Image imageTookittitle = Toolkit.getDefaultToolkit().createImage(url);
-		 BufferedImage titleLab = ImageUtils.toBufferedImage(imageTookittitle);
-		
-		 * @param image
-		 * @return
-		 */
-		public static BufferedImage toBufferedImage(Image image) {
-		    if (image instanceof BufferedImage) {
-		        return (BufferedImage) image;
-		    }
-		    // This code ensures that all the pixels in the image are loaded
-		    image = new ImageIcon(image).getImage();
-		    BufferedImage bimage = null;
-		    GraphicsEnvironment ge = GraphicsEnvironment
-		            .getLocalGraphicsEnvironment();
-		    try {
-		        int transparency = Transparency.OPAQUE;
-		        GraphicsDevice gs = ge.getDefaultScreenDevice();
-		        GraphicsConfiguration gc = gs.getDefaultConfiguration();
-		        bimage = gc.createCompatibleImage(image.getWidth(null),
-		                image.getHeight(null), transparency);
-		    } catch (HeadlessException e) {
-		        // The system does not have a screen
-		    }
-		    if (bimage == null) {
-		        // Create a buffered image using the default color model
-		        int type = BufferedImage.TYPE_INT_RGB;
-		        bimage = new BufferedImage(image.getWidth(null),
-		                image.getHeight(null), type);
-		    }
-		    // Copy image to buffered image
-		    Graphics g = bimage.createGraphics();
-		    // Paint the image onto the buffered image
-		    g.drawImage(image, 0, 0, null);
-		    g.dispose();
-		    return bimage;
-		}
-		
-		
-		
-		
+     如果是url
+     URL url = new URL(wechat_erweimaTmail);
+     java.awt.Image imageTookittitle = Toolkit.getDefaultToolkit().createImage(url);
+     BufferedImage titleLab = ImageUtils.toBufferedImage(imageTookittitle);
+
+     * @param image
+     * @return
+     */
+    public static BufferedImage toBufferedImage(Image image) {
+        if (image instanceof BufferedImage) {
+            return (BufferedImage) image;
+        }
+        // This code ensures that all the pixels in the image are loaded
+        image = new ImageIcon(image).getImage();
+        BufferedImage bimage = null;
+        GraphicsEnvironment ge = GraphicsEnvironment
+                .getLocalGraphicsEnvironment();
+        try {
+            int transparency = Transparency.OPAQUE;
+            GraphicsDevice gs = ge.getDefaultScreenDevice();
+            GraphicsConfiguration gc = gs.getDefaultConfiguration();
+            bimage = gc.createCompatibleImage(image.getWidth(null),
+                    image.getHeight(null), transparency);
+        } catch (HeadlessException e) {
+            // The system does not have a screen
+        }
+        if (bimage == null) {
+            // Create a buffered image using the default color model
+            int type = BufferedImage.TYPE_INT_RGB;
+            bimage = new BufferedImage(image.getWidth(null),
+                    image.getHeight(null), type);
+        }
+        // Copy image to buffered image
+        Graphics g = bimage.createGraphics();
+        // Paint the image onto the buffered image
+        g.drawImage(image, 0, 0, null);
+        g.dispose();
+        return bimage;
+    }
+
+
     /**
      * 10、自己做图片 ，根据文本宽度进行换行
      */
@@ -692,47 +655,7 @@ public class QrCodeUtils {
             }
         }
         g.drawString(text, left, top);
-    }****
-		
-		
-		
+    }
+
 
 }
-
-
-
-```
-
-
-<br/><br/><br/><br/>
-<font color="red"> 感兴趣的，欢迎添加博主微信， </font><br/>
-哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。
-<br/>
-请下方留言吧。可与博主自由讨论哦
-
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
-
-
-
-
-<!-- Gitalk 评论 start  -->
-
-<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script> 
-<div id="gitalk-container"></div>    
- <script type="text/javascript">
-    var gitalk = new Gitalk({
-		clientID: `1d164cd85549874d0e3a`,
-		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean.github.io`,
-		owner: 'HealerJean',
-		admin: ['HealerJean'],
-		id: 'q7tkDScgRsoLyI0A',
-    });
-    gitalk.render('gitalk-container');
-</script> 
-
-<!-- Gitalk end -->
-
