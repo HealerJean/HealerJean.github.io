@@ -234,7 +234,7 @@ public void jsonNode() throws IOException {
 #### 1、转化成对象
 
 
-```
+```java
 /**
  *   JsonUtils.toObject
  */
@@ -250,54 +250,45 @@ public static ZbtUser getUser(String json
 ### 4、json数组转化成对象
 
 
-```
-注意一定要防止json数据不全
-List<UserTag> list = JSONArray.toList(tagsArray,new UserTag(),new JsonConfig());
-
-当使用上面的报错的时候，往往是用到了lombok ，可以使用下面的方式进行遍历解决
+```java
 
 
-
-/**
- * 将JSON字符串(数组或者Json) 转换为对象 用到下面这种情况的时候往往是因为使用了lombok 注解二引起
- * 报错 例如
- * 15:54:00.944 [main] INFO net.sf.json.JSONObject - Property 'code' of class com.duodian.youhui.admin.utils.json.data.Person has no write method. SKIPPED.
- * @param json     JSON字符串
- * @param javaType 类型
- * @return 对象
- */
-public static Object toObjectOrList(String json,Class javaType) {
-    Assert.hasText(json, "json 不允许为空");
-    Assert.notNull(javaType, "javaType 不允许为空");
-    try {
-        Object jsonT = new JSONTokener(json).nextValue();
-        if(jsonT instanceof JSONObject){
-            return OBJECT_MAPPER.readValue(json,javaType);
-        }else if (jsonT instanceof JSONArray) {
-            JSONArray jsonArray = (JSONArray) jsonT;
-            List objects = new ArrayList<>();
-            for(int i = 0 ;i <jsonArray.size() ;i++){
-                objects.add(new ObjectMapper().readValue(jsonArray.get(i).toString(),javaType));
-            }
-            return objects ;
-        }
-        return  OBJECT_MAPPER.readValue(json,javaType);
-    } catch (JsonParseException e) {
-        throw new RuntimeException(e.getMessage(), e);
-    } catch (JsonMappingException e) {
-        throw new RuntimeException(e.getMessage(), e);
-    } catch (IOException e) {
-        throw new RuntimeException(e.getMessage(), e);
-    }
-}
+   //2、转化为数组
+   List<JavaBean> lendReco =  JsonUtils.toObject(jsonArrayStr, new TypeReference<List<JavaBean>>() { });
+   String lendRecoStr = JsonUtils.toJson(lendReco);
+   System.out.println(lendRecoStr);
+   //打印结果 正常打印
+   //[{"n_long":10045456456,"n_string":"HealerJean","n_bigDecimal":12.12245,"n_date":1546052196927,"n_integer":100},{"n_long":10045456456,"n_string":"HealerJean","n_bigDecimal":12.12245,"n_date":1546052196927,"n_integer":100}]
 
 
-```
+
+//第一种方式，只针对没有使用lombok注解的情况 ，这种方式不论有没有 date类型 使用了@Data注解 就会出现下面的问题，
+// 有了date那也肯定的会是这种结局 ，
+//      使用的时候下面这种的时候，不要用@Data注解，所以以后就不要使用了，jsonArray来源需要是原生的
+//  javaBeans = JSONArray.toList(jsonArray,new JavaBean() ,new JsonConfig());
+//        net.sf.json.JSONObject - Property 'n_bigDecimal' of class com.hlj.data.res.test.JavaBean has no write method. SKIPPED.
+//        2018-12-14 20:27:08.129 [main] INFO  net.sf.json.JSONObject - Property 'n_date' of class com.hlj.data.res.test.JavaBean has no write method. SKIPPED.
+//        2018-12-14 20:27:08.130 [main] INFO  net.sf.json.JSONObject - Property 'n_integer' of class com.hlj.data.res.test.JavaBean has no write method. SKIPPED.
+//        2018-12-14 20:27:08.130 javaBeans[main] INFO  net.sf.json.JSONObject - Property 'n_long' of class com.hlj.data.res.test.JavaBean has no write method. SKIPPED.
+//        2018-12-14 20:27:08.130 [main] INFO  net.sf.json.JSONObject - Property 'n_string' of class com.hlj.data.res.test.JavaBean has no write method. SKIPPED.
+//        2018-12-14 20:27:08.130 [main] INFO  net.sf.json.JSONObject - Property 'n_bigDecimal' of class com.hlj.data.res.test.JavaBean has no write method. SKIPPED.
+//        2018-12-14 20:27:08.130 [main] INFO  net.sf.json.JSONObject - Property 'n_date' of class com.hlj.data.res.test.JavaBean has no write method. SKIPPED.
+//        2018-12-14 20:27:08.131 [main] INFO  net.sf.json.JSONObject - Property 'n_integer' of class com.hlj.data.res.test.JavaBean has no write method. SKIPPED.
+//        2018-12-14 20:27:08.131 [main] INFO  net.sf.json.JSONObject - Property 'n_long' of class com.hlj.data.res.test.JavaBean has no write method. SKIPPED.
+//        2018-12-14 20:27:08.131 [main] INFO  net.sf.json.JSONObject - Property 'n_string' of class com.hlj.data.res.test.JavaBean has no write method. SKIPPED.
 
 
 
 ```
-package com.hlj.ddkj.Jsonp;
+
+### 5、工具类
+
+
+
+```java
+
+
+package com.hlj.utils;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -305,11 +296,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.util.JSONTokener;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utils - JSON
@@ -378,7 +374,8 @@ public final class JsonUtils {
      * 将JSON字符串转换为对象
      *
      * @param json          JSON字符串
-     * @param typeReference 类型
+     * @param typeReference 类型 可以通过这个转化为List集合 ，举例：
+     * List<JavaBean> list =  JsonUtils.toObject(jsonArrayStr, new TypeReference<List<JavaBean>>() { });
      * @return 对象
      */
     public static <T> T toObject(String json, TypeReference<?> typeReference) {
@@ -394,43 +391,6 @@ public final class JsonUtils {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
-
-
-	
-	/**
-	 * 将JSON字符串(数组或者Json) 转换为对象 用到下面这种情况的时候往往是因为使用了lombok 注解二引起
-	 * 报错 例如
-	 * 15:54:00.944 [main] INFO net.sf.json.JSONObject - Property 'code' of class com.duodian.youhui.admin.utils.json.data.Person has no write method. SKIPPED.
-	 * @param json     JSON字符串
-	 * @param javaType 类型
-	 * @return 对象
-	 */
-	public static Object toObjectOrList(String json,Class javaType) {
-	    Assert.hasText(json, "json 不允许为空");
-	    Assert.notNull(javaType, "javaType 不允许为空");
-	    try {
-	        Object jsonT = new JSONTokener(json).nextValue();
-	        if(jsonT instanceof JSONObject){
-	            return OBJECT_MAPPER.readValue(json,javaType);
-	        }else if (jsonT instanceof JSONArray) {
-	            JSONArray jsonArray = (JSONArray) jsonT;
-	            List objects = new ArrayList<>();
-	            for(int i = 0 ;i <jsonArray.size() ;i++){
-	                objects.add(new ObjectMapper().readValue(jsonArray.get(i).toString(),javaType));
-	            }
-	            return objects ;
-	        }
-	        return  OBJECT_MAPPER.readValue(json,javaType);
-	    } catch (JsonParseException e) {
-	        throw new RuntimeException(e.getMessage(), e);
-	    } catch (JsonMappingException e) {
-	        throw new RuntimeException(e.getMessage(), e);
-	    } catch (IOException e) {
-	        throw new RuntimeException(e.getMessage(), e);
-	    }
-	}
-
-
 
     /**
      * 将JSON字符串转换为对象
@@ -452,6 +412,7 @@ public final class JsonUtils {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
+
 
     /**
      * 将JSON字符串转换为树
@@ -490,10 +451,31 @@ public final class JsonUtils {
         }
     }
 
+
+    /**
+     * 判断是jsonobject还是jsonArrsy
+     * 如果是jsonObject则是1
+     * 如果是jsonArrsy 则是2
+     * 如果二者都不是则返回0
+     * @param json
+     * @return
+     */
+    public Integer judgeJson(String json){
+        Assert.hasText(json, "json 不允许为空");
+        Object jsonT = new JSONTokener(json).nextValue();
+        if(jsonT instanceof JSONObject){
+            return 1;
+        }else if (jsonT instanceof JSONArray) {
+            return 2 ;
+        }else {
+            return  0;
+        }
+    }
+
+
     /**
      * 构造类型
-     *
-     * @param type 类型
+     * @param type 类型,类，接口，枚举字段类型 （java.class）
      * @return 类型
      */
     public static JavaType constructType(Type type) {
@@ -503,8 +485,7 @@ public final class JsonUtils {
 
     /**
      * 构造类型
-     *
-     * @param typeReference 类型
+     * @param typeReference 类型 new TypeReference<List<JavaBean>>() { }
      * @return 类型
      */
     public static JavaType constructType(TypeReference<?> typeReference) {
@@ -512,7 +493,70 @@ public final class JsonUtils {
         return TypeFactory.defaultInstance().constructType(typeReference);
     }
 
+
+
+    /**
+     * @param resString
+     * @return String
+     * @Description Json 格式化到控制台打印
+     *
+     */
+    public static   String responseFormat(String resString){
+
+        StringBuffer jsonForMatStr = new StringBuffer();
+        int level = 0;
+        for(int index=0;index<resString.length();index++)//将字符串中的字符逐个按行输出
+        {
+            //获取s中的每个字符
+            char c = resString.charAt(index);
+
+            //level大于0并且jsonForMatStr中的最后一个字符为\n,jsonForMatStr加入\t
+            if (level > 0  && '\n' == jsonForMatStr.charAt(jsonForMatStr.length() - 1)) {
+                jsonForMatStr.append(getLevelStr(level));
+            }
+            //遇到"{"和"["要增加空格和换行，遇到"}"和"]"要减少空格，以对应，遇到","要换行
+            switch (c) {
+                case '{':
+                case '[':
+                    jsonForMatStr.append(c + "\n");
+                    level++;
+                    break;
+                case ',':
+                    jsonForMatStr.append(c + "\n");
+                    break;
+                case '}':
+                case ']':
+                    jsonForMatStr.append("\n");
+                    level--;
+                    jsonForMatStr.append(getLevelStr(level));
+                    jsonForMatStr.append(c);
+                    break;
+                default:
+                    jsonForMatStr.append(c);
+                    break;
+            }
+        }
+        return jsonForMatStr.toString();
+    }
+        /**
+         * @param level
+         * @return
+         * @throws
+         * @author lgh
+         * @date 2018/10/29-14:29
+         */
+        private static String getLevelStr(int level) {
+            StringBuffer levelStr = new StringBuffer();
+            for (int levelI = 0; levelI < level; levelI++) {
+                levelStr.append("\t");
+            }
+            return levelStr.toString();
+        }
+
+
 }
+
+
 
 ```
 

@@ -1,6 +1,7 @@
 package com.hlj.moudle.demo.controller;
 
 
+import com.hlj.data.res.test.IncludeJavaBean;
 import com.hlj.data.res.test.JavaBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
@@ -57,11 +58,16 @@ public class DemoController {
         javaBean.setN_bigDecimal(new BigDecimal("12.12245"));
         javaBean.setN_date(new Date());
         javaBean.setN_integer(100);
-//        javaBean.setN_string(null);
         javaBean.setN_string("");
 
         return javaBean;
     }
+
+
+
+
+
+
 
 
 }
