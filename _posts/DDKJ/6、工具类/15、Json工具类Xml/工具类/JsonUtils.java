@@ -1,4 +1,4 @@
-package com.hlj.ddkj.Jsonp;
+package com.hlj.utils;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -14,8 +14,6 @@ import org.springframework.util.Assert;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Utils - JSON
@@ -84,7 +82,9 @@ public final class JsonUtils {
      * 将JSON字符串转换为对象
      *
      * @param json          JSON字符串
-     * @param typeReference 类型
+     * @param typeReference 类型 可以通过这个转化为List集合 ，举例：
+     * List<JavaBean> list =  JsonUtils.toObject(jsonArrayStr, new TypeReference<List<JavaBean>>() { });
+     * Map<String, Object> map =  JsonUtils.toObject(JsonUtils.toJson(javaBean),new TypeReference<Map<String, Object>>( ){} );
      * @return 对象
      */
     public static <T> T toObject(String json, TypeReference<?> typeReference) {
@@ -113,41 +113,6 @@ public final class JsonUtils {
         Assert.notNull(javaType, "javaType 不允许为空");
         try {
             return OBJECT_MAPPER.readValue(json, javaType);
-        } catch (JsonParseException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        } catch (JsonMappingException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
-
- /**
-     * 将JSON字符串(数组或者Json) 转换为对象 用到下面这种情况的时候往往是因为使用了lombok 注解二引起
-     * 报错 例如
-     15:54:00.944 [main] INFO net.sf.json.JSONObject - Property 'code' of class com.duodian.youhui.admin.utils.json.data.Person has no write method. SKIPPED.
-     *
-     * @param json     JSON字符串
-     * @param javaType 类型
-     * @return 对象
-     */
-    public static Object toObjectOrList(String json,Class javaType) {
-        Assert.hasText(json, "json 不允许为空");
-        Assert.notNull(javaType, "javaType 不允许为空");
-        try {
-            Object jsonT = new JSONTokener(json).nextValue();
-            if(jsonT instanceof JSONObject){
-                return OBJECT_MAPPER.readValue(json,javaType);
-            }else if (jsonT instanceof JSONArray) {
-                JSONArray jsonArray = (JSONArray) jsonT;
-                List objects = new ArrayList<>();
-                for(int i = 0 ;i <jsonArray.size() ;i++){
-                    objects.add(new ObjectMapper().readValue(jsonArray.get(i).toString(),javaType));
-                }
-                return objects ;
-            }
-            return  OBJECT_MAPPER.readValue(json,javaType);
         } catch (JsonParseException e) {
             throw new RuntimeException(e.getMessage(), e);
         } catch (JsonMappingException e) {
@@ -195,10 +160,31 @@ public final class JsonUtils {
         }
     }
 
+
+    /**
+     * 判断是jsonobject还是jsonArrsy
+     * 如果是jsonObject则是1
+     * 如果是jsonArrsy 则是2
+     * 如果二者都不是则返回0
+     * @param json
+     * @return
+     */
+    public Integer judgeJson(String json){
+        Assert.hasText(json, "json 不允许为空");
+        Object jsonT = new JSONTokener(json).nextValue();
+        if(jsonT instanceof JSONObject){
+            return 1;
+        }else if (jsonT instanceof JSONArray) {
+            return 2 ;
+        }else {
+            return  0;
+        }
+    }
+
+
     /**
      * 构造类型
-     *
-     * @param type 类型
+     * @param type 类型,类，接口，枚举字段类型 （java.class）
      * @return 类型
      */
     public static JavaType constructType(Type type) {
@@ -208,8 +194,7 @@ public final class JsonUtils {
 
     /**
      * 构造类型
-     *
-     * @param typeReference 类型
+     * @param typeReference 类型 new TypeReference<List<JavaBean>>() { }
      * @return 类型
      */
     public static JavaType constructType(TypeReference<?> typeReference) {
