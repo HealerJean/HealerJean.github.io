@@ -251,8 +251,6 @@ public final class JsonUtils {
          * @param level
          * @return
          * @throws
-         * @author lgh
-         * @date 2018/10/29-14:29
          */
         private static String getLevelStr(int level) {
             StringBuffer levelStr = new StringBuffer();
