@@ -1,4 +1,4 @@
-#### ---
+---
 title: Cookie和Session小结
 date: 2018-08-05 03:33:00
 tags: 
@@ -58,7 +58,7 @@ http://www.a.com/b.js</td>
 
 ## 2、Session的小结
 
-2、之前做过一个Nginx，Tomcat，session共享，当时用了的是一个域名，也就是常见的localhost，当时没有考虑过一个域名下的session是不是同一个，但是按照教程做完了。通过配置tomcat和项目，最后得到是一个sessionId。其实现在我才知道，如果没有配置共享session，本来一个localhost，不同端口，如果开启项目的话，每次刷新不同的端口项目，session变了。那是因为当前的端口将之前的端口的sessionId被替换掉了。但是之前的端口的sessionId再刷新的话，就又会变了。
+2、之前做过一个Nginx，Tomcat，session共享，当时用了的是一个域名，也就是常见的localhost，当时没有考虑过一个域名下的session是不是同一个，但是端口不能，得到的正常情况下sessionId不是同一个。通过配置tomcat和项目，最后得到是一个sessionId。其实现在我才知道，如果没有配置共享session，本来一个localhost，不同端口，如果开启项目的话，每次刷新不同的端口项目，session变了。那是因为当前的端口将之前的端口的sessionId被替换掉了。但是之前的端口的sessionId再刷新的话，就又会变了。
 
 ---
 
@@ -84,7 +84,7 @@ http://projectB.com:8080/
 
 
 ## 3、反思
-
+__
 1、单点登录中 两个客户端不同域名，自然分配的是不同的sessionId，因为代表不同的逻辑代码。
 2、如果是负载均衡项目，那么久需要保证我们的Cookie中的 sessionId是同一个，这样才能代表是同一个逻辑代码。
 
