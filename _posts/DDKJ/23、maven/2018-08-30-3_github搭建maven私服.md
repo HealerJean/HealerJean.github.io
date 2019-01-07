@@ -324,7 +324,7 @@ mvn install:install-file -Dfile=taobao-sdk-java-5.2.1.jar -DgroupId=taobao-sdk-j
 
 ```
 
-### 3、解释下如何观察这个依赖包的pom Id如果确认
+## 3、解释下如何观察这个依赖包的pom Id如果确认
 
 #### 3.1、打开这个`maven-metadata.xml`文件
 
