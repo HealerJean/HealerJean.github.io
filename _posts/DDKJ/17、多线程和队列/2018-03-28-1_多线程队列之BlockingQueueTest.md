@@ -16,8 +16,9 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 ## 前言
 
 BlockingQueueTest
-
-　　LinkedBlockingQueue是一个线程安全的阻塞队列，实现了先进先出等特性，是作为生产者消费者的首选，可以指定容量，也可以不指定，不指定的话默认最大是Integer.MAX_VALUE，<br/>
+<font color="red"> 
+　　LinkedBlockingQueue是一个线程安全的阻塞队列，实现了先进先出等特性，是作为生产者消费者的首选，可以指定容量，也可以不指定，不指定的话默认最大是Integer.MAX_VALUE </font>
+，<br/>
 　　其中主要用到put和take方法，put方法将一个对象放到队列尾部，在队列满的时候会阻塞直到有队列成员被消费，take方法从head取一个对象，在队列为空的时候会阻塞，直到有队列成员被放进来。<br/>
 　　
 常用方法如下：<br/>

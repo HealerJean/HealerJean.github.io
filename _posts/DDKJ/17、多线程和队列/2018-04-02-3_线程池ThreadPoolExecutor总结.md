@@ -28,6 +28,16 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 线程池的概念是Executor这个接口ExecutorService继承了它，具体实现为ThreadPoolExecutor类，学习Java中的线程池，就可以直接学习对线程池的配置，就是对ThreadPoolExecutor构造函数的参数的配置
 
 
+```java
+
+public abstract class AbstractExecutorService implements ExecutorService {
+
+public class ThreadPoolExecutor extends AbstractExecutorService {
+
+ExecutorService exec=Executors.newCachedThreadPool();
+
+```
+
 ## 2、获取`ThreadPoolExecutor`的几种构造函数
 
 ### 1、int corePoolSize：该线程池中核心线程数最大值 
@@ -59,10 +69,10 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 ```
 TimeUnit是一个枚举类型，其包括： NANOSECONDS ： 1微毫秒 = 1微秒 / 1000 MICROSECONDS ： 1微秒 = 1毫秒 / 1000 MILLISECONDS ： 1毫秒 = 1秒 /1000 SECONDS ： 秒 MINUTES ： 分 HOURS ： 小时 DAYS ： 天
-```
+```**
 
 ### 5、BlockingQueue workQueue：该线程池中的任务队列：维护着等待执行的Runnable对象
-
+    
 
 ```
 当所有的核心线程都在干活时，新添加的任务会被添加到这个队列中等待处理，
