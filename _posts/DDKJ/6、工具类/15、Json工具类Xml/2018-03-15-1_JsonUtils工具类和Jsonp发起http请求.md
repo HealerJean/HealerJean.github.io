@@ -224,6 +224,32 @@ public void jsonNode() throws IOException {
     System.out.println(mapper.writeValueAsString(rootNode));
 }
 
+
+ private boolean sendSms(String mobile, int tplid, String tpl_value) {
+        String url = "http://v.juhe.cn/sms/send?mobile=" + mobile + "&tpl_id=" + tplid + "&tpl_value=%23code%23%3d" + tpl_value + "&key=" + KEY;
+        SmsRecord smsRecord = new SmsRecord();
+        int errorCode = 0;
+        try {
+            Document document = Jsoup.connect(url).ignoreContentType(true).get();
+            String result = document.body().text();
+            JsonNode jsonNode = JsonUtils.toTree(result);
+            errorCode = jsonNode.get("error_code").intValue();
+            String reason = jsonNode.get("reason").asText();
+            smsRecord.setCdate(new Date()).setErrorCode(errorCode).setReason(reason).setMobile(mobile).setTplId(tplid + "").setValue(tpl_value);
+            if (errorCode == 0){
+                return true;
+            }
+        } catch (IOException e) {
+            log.error("发送短信失败：" + mobile + "\t" + tplid + "\t" + tpl_value, e);
+        } finally {
+            smsRecord.setStatus(errorCode == 0 ? 1 : 0);
+            smsRecordRepository.save(smsRecord);
+        }
+        return false;
+    }
+
+
+
 ```
 
 

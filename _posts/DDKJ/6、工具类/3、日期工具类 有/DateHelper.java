@@ -97,25 +97,6 @@ public class DateHelper extends DateUtils {
     }
 
 
-    /**
-     * 将date类型的日日期格式化 为其他格式
-     * @param pattern
-     * @return
-     */
-    public static Date formatDate(Date date,String pattern){
-        if(date==null){
-            throw new NullPointerException("date is null");
-        }
-        SimpleDateFormat df = new SimpleDateFormat(pattern);
-        String dateStr = df.format(date);
-        try {
-            return df.parse(dateStr);
-        } catch (ParseException pe) {
-            logger.error(pe.getMessage(),pe);
-            throw new RuntimeException("date parse error"+dateStr);
-        }
-    }
-
 
 
 
@@ -380,6 +361,7 @@ public class DateHelper extends DateUtils {
         return date2.getTime() / 86400000 - date1.getTime() / 86400000;
     }
 
+
     public static long differDays(Date date1, Date date2){
         return Days.daysBetween(new DateTime(date1).withTimeAtStartOfDay(),new DateTime(date2).withTimeAtStartOfDay()).getDays();
     }
@@ -404,39 +386,8 @@ public class DateHelper extends DateUtils {
         return StringUtils.equals(convertDate2String(date1,DateHelper.YYYYMMDD),convertDate2String(date2,DateHelper.YYYYMMDD));
     }
 
-    /**
-     * 得到一个理论上软件生命周期无法到达的时间
-     * @return date
-     */
-    public static Date getRemoteDate(){
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, 2999);
-        cal.set(Calendar.MONTH, 11);
-        cal.set(Calendar.DATE, 31);
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 59);
-        cal.set(Calendar.SECOND, 59);
-        cal.set(Calendar.MILLISECOND, 0);
 
-        return cal.getTime();
-    }
 
-    /**
-     * 得到一个多点广告开始的时间
-     * @return date
-     */
-    public static Date getInitDate(){
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, 2016);
-        cal.set(Calendar.MONTH, 11);
-        cal.set(Calendar.DATE, 1);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-
-        return cal.getTime();
-    }
 
 
     /**
@@ -464,6 +415,40 @@ public class DateHelper extends DateUtils {
         }
         return result;
     }
+
+
+    /**
+     * 获取两个日期之间的所有分钟数
+     * @param startDate   开始日期
+     * @param endDate     结束日期
+     * @return      num 为分钟间隔
+     */
+    public static List<String> getMinutes( Date startDate, Date endDate,Integer num) {
+        List<String> result = new ArrayList<>();
+        Calendar startCalendar = Calendar.getInstance();
+        Calendar endCalendar = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
+        startCalendar.setTime(startDate);
+        startCalendar.set(Calendar.SECOND, 0); //清空它的秒
+        startCalendar.set(Calendar.MILLISECOND, 0);
+
+        endCalendar.setTime(endDate);
+        endCalendar.set(Calendar.SECOND, 0);
+        endCalendar.set(Calendar.MILLISECOND, 0);
+
+        result.add(df.format(startCalendar.getTime()));
+        while(true){
+            startCalendar.add(Calendar.MINUTE, num);
+            if(startCalendar.getTimeInMillis() <= endCalendar.getTimeInMillis()){
+                result.add(df.format(startCalendar.getTime()));
+            }else{
+                break;
+            }
+        }
+        return result;
+    }
+
+
 
 
 
@@ -494,18 +479,6 @@ public class DateHelper extends DateUtils {
         return result;
     }
 
-    /**
-     * 根据ios回传的时间获取正常时间
-     * @param apptime
-     * @return
-     */
-    public static Date getValidDateFromIOS(Long apptime){
-        try {
-            return new Date((Long.valueOf(apptime)+978307200)*1000L);
-        } catch (Exception e) {
-            return null;
-        }
-    }
 
     /**
      * 获取传入日期对应月份 总共跨越了几个周
@@ -565,16 +538,8 @@ public class DateHelper extends DateUtils {
         boolean flag = false;
         Calendar curr_calendar = Calendar.getInstance();
         int weeks = curr_calendar.get(Calendar.DAY_OF_WEEK);
-
-//        Integer start_minute = 9 * 60;
-//        Integer end_minute = 18 * 60;
-
-//        Integer current_minute = curr_calendar.get(Calendar.HOUR_OF_DAY) * 60 + curr_calendar.get(Calendar.MINUTE);
-
         if(weeks >=2 && weeks <=6){
-//        if(current_minute >= start_minute && current_minute <= end_minute && ( weeks >=2 && weeks <=6 )){
             flag = true;
-//            System.out.println(String.format("当前时间: [%s] 在工作日9点~18点范围内",curr_calendar.getTime()));
         }
         return flag;
     }
@@ -612,6 +577,49 @@ public class DateHelper extends DateUtils {
         String time  = DateHelper.convertDate2String(calendar.getTime(), DateHelper.YYYY_MM_DD_HH_MM)+":00";
         return DateHelper.convertString2Date(time,DateHelper.YYYY_MM_DD_HH_MM_SS);
     }
+
+    /**
+     * 获取最近前或者后 多少分钟的开始时间
+     * @param num
+     * @return
+     */
+    public static Date getRecentMinuteFirstTime(Date date,Integer num){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE, num);
+        String time  = DateHelper.convertDate2String(calendar.getTime(), DateHelper.YYYY_MM_DD_HH_MM)+":00";
+        return DateHelper.convertString2Date(time,DateHelper.YYYY_MM_DD_HH_MM_SS);
+    }
+
+
+    /**
+     * 获取最近前或者后 多少分钟的时间
+     * @param num
+     * @return
+     */
+    public static Date getRecentMinute(Date date,Integer num){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE, num);
+        return calendar.getTime();
+    }
+
+
+
+    /**
+     * 获取最近前或者后 多少小时的时间
+     * @param num
+     * @return
+     */
+
+    public static Date getRecentHour(Date date, Integer num){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.HOUR, num);
+        return calendar.getTime();
+    }
+
+
 
 
     /**
@@ -676,14 +684,20 @@ public class DateHelper extends DateUtils {
         }
         day = diff / (24 * 60 * 60 * 1000);
         hour = (diff / (60 * 60 * 1000) - day * 24);
+        long distanceHour = hour+day*24;
         min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
+        long distanceMin = min+distanceHour*60;
         sec = (diff/1000-day*24*60*60-hour*60*60-min*60);
+        long distanceSec = sec+distanceMin*60;
 
         System.out.println(day+"天"+hour+"小时"+min+"分钟"+sec+"秒");
+        System.out.println(day+"天"+distanceHour+"小时"+distanceMin+"分钟"+distanceSec+"秒");
 
-        Long[] times = {day, hour, min, sec};
+        Long[] times = {day, distanceHour, distanceMin, distanceSec};
         return times;
     }
+
+
 
 
     /**
@@ -707,5 +721,17 @@ public class DateHelper extends DateUtils {
             return false;
         }
     }
+
+    /**
+     * 当前时间加多少秒
+     * @param date
+     * @return
+     */
+    public static Date addSeconds(Date date,int num){
+       return DateUtils.addSeconds(date, num);
+    }
+
+
+
 
 }

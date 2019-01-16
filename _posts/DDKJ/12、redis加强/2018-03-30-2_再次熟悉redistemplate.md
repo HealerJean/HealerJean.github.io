@@ -1,4 +1,4 @@
----
+****---
 title: 2、再次熟悉redisTemplate
 date: 2018-03-30 23:33:00
 tags: 
@@ -270,7 +270,7 @@ public class SerializerController {
 
 ## 4、value为Long类型的数据
 
-那么 这个时候就不能使用`StringRedisTemplate` 了，使用它会报错的，可以使用使用RedisTemplate，可以使用泛型，也可以不使用
+那么 这个时候就不能使用`StringRedisTemplate` 了，使用它会报错(废话，key当然不能为long类型了，妈的，其他的也不可以)的，可以使用使用RedisTemplate，可以使用泛型，也可以不使用
 
 
 ```java
