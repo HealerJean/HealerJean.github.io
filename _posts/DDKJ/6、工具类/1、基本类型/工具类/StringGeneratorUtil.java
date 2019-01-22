@@ -147,7 +147,9 @@ public class StringGeneratorUtil {
         return sb.toString();
     }
 
-
+    public static void main(String[] args) {
+        System.out.println(generateMixString(6));
+    }
 
 
 
@@ -188,7 +190,7 @@ public class StringGeneratorUtil {
     }
 
     /**
-     *         String requestHeader = request.getHeader("user-agent");
+     *         String requestHeader = req.getHeader("user-agent");
      * @param userAgent
      * @return
      */
@@ -279,10 +281,6 @@ public class StringGeneratorUtil {
 
 
 
-
-
-
-
     /**
      * 把原始字符串分割成指定长度的字符串列表
      * @param inputString  原始字符串
@@ -297,7 +295,6 @@ public class StringGeneratorUtil {
         return getStrList(inputString, length, size);
     }
 
-
     /**
      * 把原始字符串分割成指定长度的字符串列表
      * @param inputString 原始字符串
@@ -305,8 +302,8 @@ public class StringGeneratorUtil {
      * @param size  指定列表大小
      * @return
      */
-    public static List<String> getStrList(String inputString, int length,
-                                          int size) {
+    private static List<String> getStrList(String inputString, int length,
+                                           int size) {
         List<String> list = new ArrayList<String>();
         for (int index = 0; index < size; index++) {
             String childStr = substring(inputString, index * length,
@@ -322,13 +319,46 @@ public class StringGeneratorUtil {
      * @param t  结束位置
      * @return
      */
-    public static String substring(String str, int f, int t) {
+    private static String substring(String str, int f, int t) {
         if (f > str.length())
             return null;
         if (t > str.length()) {
             return str.substring(f, str.length());
         } else {
             return str.substring(f, t);
+        }
+    }
+
+
+
+
+    public static boolean isEnglish(String str){
+
+        //【除英文和数字外无其他字符(只有英文数字的字符串)】返回true 否则false
+        boolean result2 = str.matches("[a-zA-Z0-9]+");
+        return result2 ;
+    }
+
+
+    public static  boolean isHaveEnglish(String str ,Integer type){
+        switch (type){
+            case 1:// 【全为英文】返回true  否则false
+                return str.matches("[a-zA-Z]+");
+            case 2:// 【除英文和数字外无其他字符(只有英文数字的字符串)】返回true 否则false
+                return  str.matches("[a-zA-Z0-9]+");
+            case 3: //【含有英文】true
+                String regex1 = ".*[a-zA-z].*";
+                return str.matches(regex1);
+            case 4:// 【含有数字】true
+                String regex2 = ".*[0-9].*";
+                return str.matches(regex2);
+            case 5://  【 判断是否为纯中文，不是返回false】
+                String regex3 = "[\\u4e00-\\u9fa5]+";
+                return str.matches(regex3);
+            case 6: // 【全为数字】返回true
+                return  str.matches("[0-9]+");
+            default:
+                return false ;
         }
     }
 
