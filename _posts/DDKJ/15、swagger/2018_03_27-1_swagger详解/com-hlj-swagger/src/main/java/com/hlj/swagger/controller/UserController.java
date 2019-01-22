@@ -13,6 +13,13 @@ import java.util.*;
 
 @Api(value = "用户管理",description = "用户管理")
 @RestController
+@ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Successful — 请求已完成"),
+        @ApiResponse(code = 400, message = "请求中有语法问题，或不能满足请求"),
+        @ApiResponse(code = 401, message = "未授权客户机访问数据"),
+        @ApiResponse(code = 404, message = "服务器找不到给定的资源；文档不存在"),
+        @ApiResponse(code = 500, message = "服务器不能完成请求")}
+)
 @RequestMapping("/user")
 public class UserController {
 
@@ -20,7 +27,7 @@ public class UserController {
 
     @ApiOperation(value = "获取用户列表", notes = "根据url的id来获取用户详细信息，返回List<User>类型用户信息的JSON;")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "用户ID", required = true, paramType = "query",dataType = "string")
+            @ApiImplicitParam(name = "id", value = "用户ID",defaultValue = "1", required = true, paramType = "query",dataType = "string")
 
     })
     @GetMapping("one")
@@ -46,13 +53,6 @@ public class UserController {
             @ApiImplicitParam(name = "id", value = "用户ID", required = true, paramType = "query",dataType = "string")
 
     })
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successful — 请求已完成"),
-            @ApiResponse(code = 400, message = "请求中有语法问题，或不能满足请求"),
-            @ApiResponse(code = 401, message = "未授权客户机访问数据"),
-            @ApiResponse(code = 404, message = "服务器找不到给定的资源；文档不存在"),
-            @ApiResponse(code = 500, message = "服务器不能完成请求")}
-    )
     @GetMapping("two")
     public Response<?> getUserBagTwo(String id){
         List<User> users = new ArrayList<>();
@@ -81,9 +81,10 @@ public class UserController {
 
     @ApiOperation(value = "创建用户", notes = "根据User对象创建用户")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "user", value = "用户详细实体user", required = true, dataType = "User"),
+            @ApiImplicitParam(name = "user", value = "用户详细实体user", required = true, dataType = "User",dataTypeClass = User.class),
             @ApiImplicitParam(name = "flag", value = "是否开启标志位", paramType = "query", dataType = "boolean"),
-            @ApiImplicitParam(name = "version", value = "版本号", required = true, paramType = "query", dataType = "string")
+            @ApiImplicitParam(name = "version", value = "版本号", required = true, paramType = "query", dataType = "string"),
+            @ApiImplicitParam(name = "taobao", value = "是否淘宝", required = true, paramType = "query", dataType = "boolean"),
 
     })
     @RequestMapping(value = "", method = RequestMethod.POST)

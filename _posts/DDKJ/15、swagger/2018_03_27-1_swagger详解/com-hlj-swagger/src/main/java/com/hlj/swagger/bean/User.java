@@ -3,7 +3,7 @@ package com.hlj.swagger.bean;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-//@ApiModel(description = "我是User描述")
+@ApiModel(description = "我是User描述")
 public class User {
 
     @ApiModelProperty(value = "用户的姓名，比如'李四'")
@@ -12,6 +12,10 @@ public class User {
     private String id;
     @ApiModelProperty(value = "用户的年龄，比如：20")
     private Integer age;
+
+    private Integer isTamil;
+
+    private Boolean isTaobao ;
 
     @ApiModelProperty(value = "用户的子类，测试用",required = true)
     private Base base;
@@ -49,6 +53,21 @@ public class User {
     }
 
 
+    public Integer getIsTamil() {
+        return isTamil;
+    }
+
+    public void setIsTamil(Integer isTamil) {
+        this.isTamil = isTamil;
+    }
+
+    public Boolean getTaobao() {
+        return isTaobao;
+    }
+
+    public void setTaobao(Boolean taobao) {
+        isTaobao = taobao;
+    }
 
     public User(String name, String id, Integer age, Base base) {
         this.name = name;
