@@ -162,7 +162,32 @@ public interface DemoEntityJapCruRepository extends JpaRepository<DemoEntity,Lon
     boolean exists(Long id);
 
 ```
-**
+
+### 2.3、返回结果为对象
+
+#### 2.3.1、返回Date类型
+
+
+```java
+
+    @Query("select d.cdate from  DemoEntity d  where d.id = :id")
+    Date findDate(@Param("id") Long id);
+    
+```
+
+#### 2.3.2、返回实体对象
+
+下面这种方式不可以使用原生的sql语句，必须使用Hibernate 对象语法。所以尽量使用mybatis 
+****
+```java
+
+@Query("select  new com.hlj.data.res.RspDemoModel(d.id,d.name,d.age)  from DemoEntity  d where d.id  = :id")
+RspDemoModel findDtoModel(@Param("id") Long id) ;
+
+
+```
+
+
 
 ## 3、getOne和上面的findOne区别
 
