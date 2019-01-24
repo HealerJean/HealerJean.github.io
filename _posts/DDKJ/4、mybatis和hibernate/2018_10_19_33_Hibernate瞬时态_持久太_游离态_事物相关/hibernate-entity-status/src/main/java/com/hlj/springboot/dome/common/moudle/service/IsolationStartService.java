@@ -36,12 +36,6 @@ public class IsolationStartService {
 
         //这个时候修改id为1的name为1111，以下查询还没有开启，表明我们的事物目前为止其实还没有开启，因为没有涉及到数据库的操作，有了数据库操作，才会真正开启事物
         DemoEntity demoEntity =  demoEntityRepository.findOne(id);
-
-        //指定id更新不会影响demoEntity 现在的数据
-        isolationService.updateName(id,"zhang123456" );
-
-
-
         demoEntity.setName("startTransactional"); //还没有保存到数据库中，因为事物还没有提交，方法运行结束才会提现目前开启的这个事物，除非中间出现独立事物
         System.out.println(demoEntity);     //DemoEntity(id=1, name=startTransactional, balance=2222)
 
