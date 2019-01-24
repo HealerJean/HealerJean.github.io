@@ -76,6 +76,8 @@ public class DemoEntityServiceImpl implements DemoEntityService {
         demoEntity.setName("persistNoId");
         entityManager.persist(demoEntity); //会向数据库中插入数据，可以获取到id
         System.out.println(demoEntity); //DemoEntity(id=1, name=persistNoId, balance=null)
+
+        demoEntity.setBalance(1500l); //会保存到数据库中，持久化操作 DemoEntity(id=1, name=persistNoId, balance=1500)
     }
 
     @Override
@@ -113,6 +115,9 @@ public class DemoEntityServiceImpl implements DemoEntityService {
         demoEntity.setName("merge");
         entityManager.merge(demoEntity);////会向数据库中插入数据,但是获取不到id
         System.out.println(demoEntity); //DemoEntity(id=null, name=merge, balance=null)
+
+        demoEntity.setBalance(1500l); //不会保存到数据库中，这里表示已经变成了托管状态，因为id，也没，去哪里保存啊，笨死了
+                                      // DemoEntity(id=null, name=merge, balance=null)
 
     }
     @Override
@@ -157,8 +162,10 @@ public class DemoEntityServiceImpl implements DemoEntityService {
 
         demoEntity = demoEntityRepository.findOne(1l);
         demoEntity.setName("refresh");
-        entityManager.refresh(demoEntity); //表示和数据库中同步，呈现的是数据库中的数据，注意下面的name不是refresh
+        entityManager.refresh(demoEntity); //表示和数据库中同步，呈现的是数据库中的数据，注意下面的name不是refresh，所以这个name值refresh 不会保存到数据库中(因为这个方法的事物还没有执行，上面的还没完全保存到数据库中去)
         System.out.println(demoEntity); //DemoEntity(id=1, name=demoEntityID, balance=null)
+
+        demoEntity.setBalance(1500l); //会报错到数据库中去， 也就是说数据库最终会变成 id 1 name demoEntityID balance 1500
 
         DemoEntity persist = new DemoEntity();
         persist.setName("persist");
