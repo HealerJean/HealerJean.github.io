@@ -29,4 +29,8 @@ public interface DemoEntityRepository extends CrudRepository<DemoEntity,Long> {
     int updateLockTest(String name,Long id ,Long version);
 
 
+
+    @Modifying
+    @Query("UPDATE  DemoEntity  d set d.name = ?2 where d.id = ?1")
+    int updateName(Long id ,String name);
 }

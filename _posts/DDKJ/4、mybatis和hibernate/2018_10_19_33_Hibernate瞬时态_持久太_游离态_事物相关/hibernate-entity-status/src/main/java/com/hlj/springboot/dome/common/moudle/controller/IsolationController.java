@@ -19,8 +19,6 @@ import javax.annotation.Resource;
 @RequestMapping(value = "isolation")
 public class IsolationController {
 
-    @Resource
-     private   IsolationService isolationService ;
 
     @Resource
     private IsolationStartService isolationStartService ;
@@ -30,26 +28,6 @@ public class IsolationController {
     @ResponseBody
     public DemoEntity startTransactional(Long id){
        return   isolationStartService.startTransactional(id);
-    }
-
-    @GetMapping("transRequirs")
-    @ResponseBody
-    public DemoEntity transRequirs(Long id){
-        return   isolationService.transRequirs(id);
-    }
-
-
-    @GetMapping("transRequirsNew")
-    @ResponseBody
-    public DemoEntity transRequirsNew(Long id){
-        return   isolationService.transRequirsNew(id);
-    }
-
-
-    @GetMapping("isoLationReadCommited")
-    @ResponseBody
-    public DemoEntity isoLationReadCommited(Long id){
-        return   isolationService.isoLationReadCommited(id);
     }
 
 }

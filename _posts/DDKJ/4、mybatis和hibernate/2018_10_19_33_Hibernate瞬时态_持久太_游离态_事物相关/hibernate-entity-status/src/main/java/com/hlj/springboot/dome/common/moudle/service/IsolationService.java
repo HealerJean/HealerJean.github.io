@@ -1,6 +1,7 @@
 package com.hlj.springboot.dome.common.moudle.service;
 
 import com.hlj.springboot.dome.common.entity.DemoEntity;
+import com.hlj.springboot.dome.common.entity.OtherEntity;
 
 /**
  * 作者 ：HealerJean
@@ -16,14 +17,15 @@ public interface IsolationService {
      * @param id
      * @return
      */
-    DemoEntity  transRequirs(Long id);
+    DemoEntity  transRequirs(Long id,String name);
+    DemoEntity  transRequirsFind(Long id);
 
     /**
      * 开启一个事物
      * @param id
      * @return
      */
-    DemoEntity  transRequirsNew (Long id);
+    DemoEntity  transRequirsNew (Long id,String name);
 
 
     /**
@@ -31,6 +33,12 @@ public interface IsolationService {
      * @param id
      * @return
      */
-    DemoEntity   isoLationReadCommited(Long id) ;
+    DemoEntity   isoLationReadCommitedFind(Long id) ;
+
+
+    int updateName(Long id,String name);
+
+
+    OtherEntity findOther(Long id);
 
 }

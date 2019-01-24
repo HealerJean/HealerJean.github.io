@@ -4,3 +4,10 @@ CREATE TABLE `demo_entity` (
   `balance` bigint(20) DEFAULT '0',
   PRIMARY KEY (`id`)
 );
+
+
+CREATE TABLE `demo_entity_entity` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255)   DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
