@@ -93,12 +93,140 @@ __
 存储在服务器的内存中，tomcat的StandardManager类将session存储在内存中，也可以持久化到file，数据库，memcache，redis等。客户端只保存sessionid到cookie中，而不会保存session，session销毁只能通过invalidate或超时，关掉浏览器并不会关闭session。  Session的默认失效时间是30分钟，
 
 
-
-
 ```
 HttpSession session = request.getSession();
  System.out.println(session.getId());
 ```
+
+
+
+### 1.1、从cookie中获取jssensionid
+
+
+```
+Cookie[] cookies = request.getCookies();
+for(Cookie cookie:cookies){
+    if(cookie.getName().equals("JSESSIONID")){
+        log.info("cookie:"+cookie.getName()+"value:"+cookie.getValue());
+        loginResultData.setJSESSIONID(cookie.getValue());
+    }
+}
+
+cookieName:JSESSIONID-value:E5E7A0895E652C49CE066220680E243E
+ 
+```
+
+### 1.2.1、获取session
+
+根据结果很明显我们可以看session中存放的是单点登录携带的信息
+
+```
+
+//获取session
+HttpSession session   =   request.getSession();
+// 获取session中所有的键值
+Enumeration<String> attrs = session.getAttributeNames();
+    // 遍历attrs中的
+while(attrs.hasMoreElements()){
+    // 获取session键值
+    String name = attrs.nextElement().toString();
+    // 根据键值取session中的值
+    Object vakue = session.getAttribute(name);
+    // 打印结果
+    System.out.println("------" + name + ":" + vakue +"--------\n");
+}
+
+sessionName::_const_cas_assertion_-value:org.jasig.cas.client.validation.AssertionImpl@12d08532
+
+```
+
+### 1.2.2、从session中获取信息
+
+
+```
+Assertion assertion = session != null ? (Assertion) session.getAttribute(AbstractCasFilter.CONST_CAS_ASSERTION):null;
+
+// 判断是否登录过，如果已经登录过，进入if并且退出
+if (assertion != null){
+    log.info("session中获取的"+assertion.getPrincipal().toString());
+}
+
+session中获取的test@test.com
+
+```
+
+
+### 2、客户端验证是否登录 
+
+
+
+```
+  )
+    @ResponseBody
+    @GetMapping(value = "healerjean/validate",produces="application/json;charset=utf-8" )
+    public ResponseBean invalidate(HttpServletRequest request){
+
+
+            Cookie[] cookies = request.getCookies();
+            String  JSESSIONID = null;
+            String loginSessionId = null ;
+            for(Cookie cookie:cookies){
+                if(cookie.getName().equals("JSESSIONID")){
+                    JSESSIONID = cookie.getValue();
+                }
+                if(cookie.getName().equals("loginSessionId")){
+                    loginSessionId = cookie.getValue();
+                }
+            }
+
+
+            LoginResultData loginResultData = new LoginResultData() ;
+            if(StringUtils.isNotBlank(JSESSIONID)&&StringUtils.isNotBlank(loginSessionId)&&StringUtils.equals(JSESSIONID,loginSessionId )){
+
+                loginResultData.setJSESSIONID(JSESSIONID);
+
+                return ResponseBean.buildSuccess(loginResultData);
+
+            }
+
+
+        return ResponseBean.buildFailure("401","未认证，请重新登录");
+    }
+
+
+
+@Value("${server.login.redirect.url}")
+private String server_login_redirect_url;
+/**
+ * 首页面进入之后，跳转到前端url界面，如果是前后端分离用的两个域名的情况下
+ * @return
+ */
+@GetMapping(value = {"/",""} )
+public String loginDev(HttpServletRequest request,HttpServletResponse response){
+
+    Cookie cookieLogin = new Cookie("loginSessionId", getJsessionId(request));
+    cookieLogin.setComment("存储客户端登录状态，防止服务器重启之后，session自动刷新");    // Cookie描述
+    cookieLogin.setMaxAge(24*60*60);            // Cookie有效时间 24小时
+    response.addCookie(cookieLogin); //给客户端添加cookie
+
+    return  "redirect://"+server_login_redirect_url;
+}
+
+
+public String getJsessionId(HttpServletRequest request){
+    Cookie[] cookies = request.getCookies();
+    for(Cookie cookie:cookies){
+        if(cookie.getName().equals("JSESSIONID")){
+            return cookie.getValue();
+        }
+    }
+    return  null ;
+}
+
+
+
+```
+
 
 <br/><br/><br/>
 如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，添加博主微信哦， 请下方留言吧。可与博主自由讨论哦
