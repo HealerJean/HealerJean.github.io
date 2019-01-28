@@ -51,15 +51,16 @@ public class IsolationStartService {
         //解释：即使独立事物修改过，我们这里还是不会变，还是本事物中的数据(因为是两个事物，具有隔离性)
         System.out.println(demoEntity);  //DemoEntity(id=1, name=startTransactional, balance=2222)
 
-        //当前事物下保存数据，上面的额startTransactional 事物还没有提交，所以和一开始的状态是一致的
-        demoEntity = isolationService.transRequirs(id,"transRequirs");
-        System.out.println(demoEntity) ; //DemoEntity(id=1, name=transRequirs, balance=2222)
+
 
         // 目前，直接看数据库中，name应该能是transRequirsNew， 手动修改数据库中的 name为 3333
         //读取已经提交的数据,这里没有开启独立事物，所以即使配置了，读已提交也不会生效，因为再我们这个方法一开始的时候，就已经确定了隔离性质
         demoEntity = isolationService.isoLationReadCommitedFind(id);
         System.out.println(demoEntity); // DemoEntity(id=1, name=transRequirs, balance=2222)
 
+        //只在读已提交测试下面的2行代码,用来看看sql语句会不会造成影响，结果还是不会造成影响，不会读取其他事物修改的最新数据，因为本条记录我们已经拿下了
+        demoEntity = isolationService.sqlFind(id);
+        System.out.println(demoEntity); // DemoEntity(id=1, name=transRequirs, balance=2222)
 
 
         // 可重复读 这个时候我们修改 2中的数据为 bbbb，会发现这个时候查询的时候，下面还为aaa ，

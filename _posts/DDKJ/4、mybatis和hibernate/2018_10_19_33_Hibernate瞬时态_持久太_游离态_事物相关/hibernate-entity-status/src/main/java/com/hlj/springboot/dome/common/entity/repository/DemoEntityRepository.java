@@ -1,6 +1,7 @@
 package com.hlj.springboot.dome.common.entity.repository;
 
 import com.hlj.springboot.dome.common.entity.DemoEntity;
+import com.hlj.springboot.dome.common.entity.OtherEntity;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -33,4 +34,9 @@ public interface DemoEntityRepository extends CrudRepository<DemoEntity,Long> {
     @Modifying
     @Query("UPDATE  DemoEntity  d set d.name = ?2 where d.id = ?1")
     int updateName(Long id ,String name);
+
+
+
+    @Query(value = "select d.* from demo_entity d where d.id = ?1",nativeQuery = true)
+    DemoEntity sqlFind(Long id);
 }

@@ -41,4 +41,6 @@ public interface IsolationService {
 
     OtherEntity findOther(Long id);
 
+
+    DemoEntity sqlFind(Long id) ;
 }

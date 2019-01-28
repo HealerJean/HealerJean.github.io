@@ -69,4 +69,12 @@ public class IsolationServiceImpl  implements IsolationService {
     public OtherEntity findOther(Long id) {
         return otherEntityRepository.findOne(id);
     }
+
+
+
+    @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+    @Override
+    public DemoEntity sqlFind(Long id) {
+        return demoEntityRepository.sqlFind(id);
+    }
 }
