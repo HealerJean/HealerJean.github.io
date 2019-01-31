@@ -69,7 +69,7 @@ ExecutorService exec=Executors.newCachedThreadPool();
 
 ```
 TimeUnit是一个枚举类型，其包括： NANOSECONDS ： 1微毫秒 = 1微秒 / 1000 MICROSECONDS ： 1微秒 = 1毫秒 / 1000 MILLISECONDS ： 1毫秒 = 1秒 /1000 SECONDS ： 秒 MINUTES ： 分 HOURS ： 小时 DAYS ： 天
-```**
+```
 
 ### 5、BlockingQueue workQueue：该线程池中的任务队列：维护着等待执行的Runnable对象
     

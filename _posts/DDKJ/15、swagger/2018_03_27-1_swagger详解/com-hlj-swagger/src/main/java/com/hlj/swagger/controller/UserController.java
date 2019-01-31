@@ -97,4 +97,13 @@ public class UserController {
 
 
 
+    @ApiOperation(value = "testUser", notes = "testUser")
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public User testUser(User user) {
+        log.info(user.toString());
+        return user ;
+    }
+
+
+
 }
