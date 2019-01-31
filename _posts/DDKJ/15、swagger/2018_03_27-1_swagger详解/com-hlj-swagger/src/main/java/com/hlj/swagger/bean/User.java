@@ -3,10 +3,14 @@ package com.hlj.swagger.bean;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Date;
+
 @ApiModel(description = "我是User描述")
 public class User {
 
-    @ApiModelProperty(value = "用户的姓名，比如'李四'")
+
+
+    @ApiModelProperty(value = "用户的姓名，比如'李四'",example = "张三",dataType = "string",notes="notes")
     private String name;
     @ApiModelProperty(value = "id",required = true)
     private String id;
@@ -16,6 +20,9 @@ public class User {
     private Integer isTamil;
 
     private Boolean isTaobao ;
+
+    @ApiModelProperty(dataType = "date")
+    private Date date ;
 
     @ApiModelProperty(value = "用户的子类，测试用",required = true)
     private Base base;
@@ -76,4 +83,24 @@ public class User {
         this.base = base;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", id='" + id + '\'' +
+                ", age=" + age +
+                ", isTamil=" + isTamil +
+                ", isTaobao=" + isTaobao +
+                ", date=" + date +
+                ", base=" + base +
+                '}';
+    }
 }

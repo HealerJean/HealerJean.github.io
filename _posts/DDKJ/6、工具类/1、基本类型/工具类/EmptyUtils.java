@@ -1,6 +1,8 @@
 package com.duodian.youhui.admin.utils;
 
 
+import org.apache.commons.codec.binary.StringUtils;
+
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -49,7 +51,18 @@ public final class EmptyUtils<T> {
         return    (l==null||LONG_0.compareTo(l)==0)?true:false;
     }
 
-
+    public final static  boolean isNotNullAndEquals(String str,String existStr){
+            return (str!=null&&existStr!=null&& StringUtils.equals(existStr, str))?true:false;
+    }
+    public final static  boolean isNotNullAndEquals(BigDecimal decimal,BigDecimal existDecimal){
+        return (decimal!=null&&existDecimal!=null&& existDecimal.compareTo(decimal)==0)?true:false;
+    }
+    public final static  boolean isNotNullAndEquals(Integer integer,Integer existInteger){
+        return (integer!=null&&existInteger!=null&& existInteger.compareTo(integer)==0)?true:false;
+    }
+    public final static  boolean isNotNullAndEquals(Long l,Long existLong){
+        return (l!=null&&existLong!=null&& existLong.compareTo(l)==0)?true:false;
+    }
 
 
 
