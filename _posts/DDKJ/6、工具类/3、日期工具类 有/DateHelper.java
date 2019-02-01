@@ -1,13 +1,12 @@
-package com.duodian.youhui.admin.utils;
+package com.hlj.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.joda.time.*;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -76,27 +75,14 @@ public class DateHelper extends DateUtils {
         }
     }
 
+
     /**
-     * 将String类型的日日期格式化 为其他格式
-     * @param dateStr
-     * @param pattern
+     * 获取当前的字符串日期
      * @return
      */
-    public static String formatDateString(String dateStr,String pattern){
-        if(StringUtils.isBlank(dateStr)){
-            throw new NullPointerException("dateStr is null");
-        }
-        SimpleDateFormat df = new SimpleDateFormat(pattern);
-        try {
-            Date date = new Date(df.parse(dateStr).getTime());
-            return df.format(date);
-        } catch (ParseException pe) {
-            logger.error(pe.getMessage(),pe);
-            throw new RuntimeException("date parse error"+dateStr);
-        }
+    public static String getDateString(){
+        return convertDate2String(new Date(), YYYY_MM_DD_HH_MM_SS);
     }
-
-
 
 
 
@@ -338,6 +324,63 @@ public class DateHelper extends DateUtils {
     }
 
     /**
+     * 时间段转化
+     * 比如 ：天数转化为小时  1, Calendar.DATE ,Calendar.HOUR
+     * 方法：现将它转化为最低的毫秒为单位，再进行转化
+     * @return
+     */
+    public static Long coverLongTOLong(Long start,int startField,int endField){
+
+        Long result =0L ;
+        Long startMillis = 0L;
+        //小时转分钟
+        switch (startField){
+            case Calendar.DATE:
+                startMillis = 1000 * 60 * 60 * 24 * start ;
+                break;
+            case Calendar.HOUR:
+                startMillis = 1000 * 60 *  60 * start ;
+                break;
+            case Calendar.MINUTE:
+                startMillis = 1000 * 60  * start ;
+                break;
+            case Calendar.SECOND:
+                startMillis = 1000 * start ;
+                break;
+            case Calendar.MILLISECOND: //毫秒
+                startMillis = start ;
+                break;
+            default:
+                throw new RuntimeException("没有找到匹配项");
+        }
+
+        switch (endField){
+            case Calendar.DATE:
+                result =  startMillis / (1000 * 60 * 60 * 24);
+                break;
+            case Calendar.HOUR:
+                result = startMillis / (1000 * 60 * 60 );
+                break;
+            case Calendar.MINUTE:
+                result = startMillis / (1000 * 60);
+                break;
+            case Calendar.SECOND:
+                result= startMillis / (1000);
+                break;
+            case Calendar.MILLISECOND: //毫秒
+                result = startMillis ;
+                break;
+            default:
+                break;
+        }
+
+        return result ;
+    }
+
+
+
+
+    /**
      * 通过 long 得到Date
      * @param date one day
      * @return date
@@ -351,6 +394,8 @@ public class DateHelper extends DateUtils {
         return new Date(cal.getTimeInMillis());
     }
 
+
+
     /**
      * 第二个时间相对第一个时间的天数差
      * @param date1
@@ -359,31 +404,6 @@ public class DateHelper extends DateUtils {
      */
     public static long differ(Date date1, Date date2){
         return date2.getTime() / 86400000 - date1.getTime() / 86400000;
-    }
-
-
-    public static long differDays(Date date1, Date date2){
-        return Days.daysBetween(new DateTime(date1).withTimeAtStartOfDay(),new DateTime(date2).withTimeAtStartOfDay()).getDays();
-    }
-
-    public static long differSeconds(Date date1, Date date2){
-        return Seconds.secondsBetween(new DateTime(date1),new DateTime(date2)).getSeconds();
-    }
-
-    public static long differMinutes(Date date1, Date date2){
-        return Minutes.minutesBetween(new DateTime(date1).withSecondOfMinute(0),new DateTime(date2).withSecondOfMinute(0)).getMinutes();
-    }
-
-    public static long differHours(Date date1, Date date2){
-        return Hours.hoursBetween(new DateTime(date1),new DateTime(date2)).getHours();
-    }
-
-    public static double differDoubleHours(Date date1, Date date2){
-        return BigDecimal.valueOf(date2.getTime() - date1.getTime()).divide(BigDecimal.valueOf(3600000),1,BigDecimal.ROUND_HALF_UP).doubleValue();
-    }
-
-    public static boolean isSameDay(Date date1, Date date2) {
-        return StringUtils.equals(convertDate2String(date1,DateHelper.YYYYMMDD),convertDate2String(date2,DateHelper.YYYYMMDD));
     }
 
 
@@ -702,7 +722,8 @@ public class DateHelper extends DateUtils {
 
     /**
      * 判断time是否在from，to之内
-     *
+     * Date1.after(Date2),  当Date1大于Date2时，返回TRUE，当小于等于时，返回false； date1是现在日期 date2是过去日期
+     * Date1.before(Date2)，当Date1小于Date2时，返回TRUE，当大于等于时，返回false；
      * @param time 指定日期
      * @param from 开始日期
      * @param to   结束日期
