@@ -1,6 +1,5 @@
-package com.duodian.admore.core.exceptions;
+package com.hlj.data.general;
 
-import com.duodian.admore.enums.ErrorCodeEnum;
 
 /**
  * Created by j.sh on 2015/5/9.
@@ -10,14 +9,20 @@ public class AppException extends RuntimeException {
 
     private String code;
 
+
     public AppException(String message) {
         super(message);
         this.code = ErrorCodeEnum.逻辑错误.code;
     }
 
-    public AppException(String code,String message) {
+    public AppException(String code, String message) {
         super(message);
         this.code = code;
+    }
+
+    public AppException(String message, Throwable cause) {
+        super(message, cause);
+        this.code = ErrorCodeEnum.逻辑错误.code;
     }
 
     public String getCode() {
