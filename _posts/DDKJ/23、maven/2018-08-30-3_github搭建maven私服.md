@@ -352,19 +352,19 @@ mvn install:install-file -Dfile=taobao-sdk-java-5.2.1.jar -DgroupId=taobao-sdk-j
 
 ## 4、我自己今后的规范
 
-#### 1、groupId `com.hlj.repo`
+#### 1、groupId `com.hlj.proj`
 #### 2、artifactId 工具类名字
 #### 3、版本 0.0.1（初始）
 
 ```xml
 <dependency>
-	<groupId>com.hlj.repo</groupId>
+	<groupId>com.hlj.proj</groupId>
 	<artifactId>logback-access-</artifactId>
 	<version>0.0.1</version>
 </dependency>
 
 <dependency>
-	<groupId>com.hlj.repo</groupId>
+	<groupId>com.hlj.proj</groupId>
 	<artifactId>logback-classic</artifactId>
 	<version>0.0.1</version>
 </dependency>
@@ -394,7 +394,7 @@ mvn install:install-file -Dfile=taobao-sdk-java-5.2.1.jar -DgroupId=taobao-sdk-j
 </repositories>
 
 	<dependency>
-			<groupId>com.hlj.repo</groupId>
+			<groupId>com.hlj.proj</groupId>
 			<artifactId>test-github-maven</artifactId>
 			<version>0.0.1</version>
 	</dependency>
