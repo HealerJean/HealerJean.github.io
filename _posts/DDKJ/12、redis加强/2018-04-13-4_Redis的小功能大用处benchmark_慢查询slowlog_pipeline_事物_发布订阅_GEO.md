@@ -31,7 +31,7 @@ redis命令执行分为4个步奏，发送命令，命令排队，执行命令�
 1、预设阀值如何设置<br/>
 
 慢查询的预设阀值  slowlog-log-slower-than 
-slowlog-log-slower-than参数就是预设阀值，单位是微秒,默认值是1000，也就是10毫秒，如果一条命令的执行时间超过10000微妙，那么它将被记录在慢查询日志中。
+slowlog-log-slower-than参数就是预设阀值，单位是微秒,<font color="red"> 默认值是1000，也就是10毫秒 </font>，如果一条命令的执行时间超过10000微妙，那么它将被记录在慢查询日志中。
 如果slowlog-log-slower-than的值是0，则会记录所有命令。
 如果slowlog-log-slower-than的值小于0，则任何命令都不会记录日志。<br/>
 

@@ -377,7 +377,7 @@ public class CustomJSONStringRedisSerializer implements RedisSerializer<Object> 
 ### 1.4、至此，其实redis就已经搭建好了<br/>
 
 
-## 2、、reids存储对象工具类<br/>
+## 2、reids存储对象工具类<br/>
 
 ### 2.1、工具类<br/>
 
