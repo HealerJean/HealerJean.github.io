@@ -1,4 +1,4 @@
-****---
+---
 title: 2、再次熟悉redisTemplate
 date: 2018-03-30 23:33:00
 tags: 
@@ -51,13 +51,17 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 <br/>
 下面毫无父子兄弟关系的两个类，怎么能互相注入呢？这个是Spring的Editor机制，搜索下ValueOperationsEditor这个类就知道了，Spring在注入的时候调用了Editor的setValue方法。
 <br/>
+
+<font color="red">  
+
+
 可以将redisTemplate注入到ValueOperations，避免了ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue(); 这样来获取ValueOperations；如果是这种方式的话，是用来操作Long,Double类型的，如果不使用这种方式，则会报错（我的就报错了，也不知道为啥，加上就好使了）
 
 <br/>
 2、ValueOperations RedisOperations
 就像他们的名字一样 ，一个是操作数据的值的，一个是操作key的其他（过期，删除等）
  
- 
+ </font>
 
 ```java
 ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue(); 
