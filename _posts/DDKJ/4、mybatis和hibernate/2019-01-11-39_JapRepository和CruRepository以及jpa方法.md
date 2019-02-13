@@ -155,11 +155,18 @@ public interface DemoEntityJapCruRepository extends JpaRepository<DemoEntity,Lon
 }
 ```
 
-### 2.2、exists 检测主键Id存在不存在
+### 2.2、exists 检测数据是否存在
+
+|exists|sql|解释|
+|---|----|---|
+|1| boolean exists(Long id); |判断id的实体是否存在|
+|3|   boolean existsByUserInfoId(Long userInfoId);|判断库里面的匹配项是否存在|
+
 
 
 ```java
     boolean exists(Long id);
+    boolean existsByUserInfoId(Long userInfoId);
 
 ```
 
@@ -178,7 +185,7 @@ public interface DemoEntityJapCruRepository extends JpaRepository<DemoEntity,Lon
 #### 2.3.2、返回实体对象
 
 下面这种方式不可以使用原生的sql语句，必须使用Hibernate 对象语法。所以尽量使用mybatis 
-****
+
 ```java
 
 @Query("select  new com.hlj.data.res.RspDemoModel(d.id,d.name,d.age)  from DemoEntity  d where d.id  = :id")
@@ -356,6 +363,7 @@ Jason转换失败（直接返回前端会造成）,不是没有 implements Seria
 
 
 ### 3.4、总结：
+
 总之以后我们使用的时候，就用findOne，不要使用getOne,查询语句get,find不受影响，随意使用
 
 
