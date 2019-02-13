@@ -1,6 +1,10 @@
 package com.duodian.youhui.admin.utils;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -10,7 +14,6 @@ import java.util.regex.Pattern;
  * @Desc:  字符串工具类
  * @Date:  2018/9/11 上午11:00.
  */
-
 public class StringGeneratorUtil {
 
 
@@ -147,9 +150,6 @@ public class StringGeneratorUtil {
         return sb.toString();
     }
 
-    public static void main(String[] args) {
-        System.out.println(generateMixString(6));
-    }
 
 
 
@@ -303,7 +303,7 @@ public class StringGeneratorUtil {
      * @return
      */
     private static List<String> getStrList(String inputString, int length,
-                                           int size) {
+                                          int size) {
         List<String> list = new ArrayList<String>();
         for (int index = 0; index < size; index++) {
             String childStr = substring(inputString, index * length,
@@ -333,7 +333,6 @@ public class StringGeneratorUtil {
 
 
     public static boolean isEnglish(String str){
-
         //【除英文和数字外无其他字符(只有英文数字的字符串)】返回true 否则false
         boolean result2 = str.matches("[a-zA-Z0-9]+");
         return result2 ;
@@ -361,6 +360,14 @@ public class StringGeneratorUtil {
                 return false ;
         }
     }
+
+
+
+    public static boolean equals(String str,String ... values){
+          Optional<String> val =  Arrays.stream(values).filter(value-> StringUtils.equals(str,value )).findAny();
+          return val.isPresent();
+    }
+
 
 
 }
