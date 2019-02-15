@@ -40,28 +40,56 @@ public final class EmptyUtils<T> {
         return str == null || str.length() <= 0;
     }
 
-    public final static boolean isNullAnd0(BigDecimal decimal){
+    public final static boolean isNullOr0(BigDecimal decimal){
         return    (decimal==null||BIGDECIMAL_0.compareTo(decimal)==0)?true:false;
     }
 
-    public final static boolean isNullAnd0(Integer integer){
+    public final static boolean isNullOr0(Integer integer){
         return    (integer==null||INTEGER_0.compareTo(integer)==0)?true:false;
     }
-    public final static boolean isNullAnd0(Long l){
+    public final static boolean isNullOr0(Long l){
         return    (l==null||LONG_0.compareTo(l)==0)?true:false;
     }
 
-    public final static  boolean isNotNullAndEquals(String str,String existStr){
-            return (str!=null&&existStr!=null&& StringUtils.equals(existStr, str))?true:false;
+    public final static  boolean isNotNullAndEquals(String str,String  ... existStr){
+            if(str!=null){
+                for(String value:existStr){
+                    if(StringUtils.equals(value, str)){
+                        return  true ;
+                    }
+                }
+            }
+            return false ;
     }
-    public final static  boolean isNotNullAndEquals(BigDecimal decimal,BigDecimal existDecimal){
-        return (decimal!=null&&existDecimal!=null&& existDecimal.compareTo(decimal)==0)?true:false;
+    public final static  boolean isNotNullAndEquals(BigDecimal decimal,BigDecimal ... existDecimal){
+        if(decimal!=null){
+            for(BigDecimal value:existDecimal){
+                if(decimal.compareTo(value)==0){
+                    return  true ;
+                }
+            }
+        }
+        return false ;
     }
-    public final static  boolean isNotNullAndEquals(Integer integer,Integer existInteger){
-        return (integer!=null&&existInteger!=null&& existInteger.compareTo(integer)==0)?true:false;
+    public final static  boolean isNotNullAndEquals(Integer integer,Integer... existInteger){
+        if(integer!=null){
+            for(Integer value:existInteger){
+                if(integer.compareTo(value)==0){
+                    return  true ;
+                }
+            }
+        }
+        return false ;
     }
-    public final static  boolean isNotNullAndEquals(Long l,Long existLong){
-        return (l!=null&&existLong!=null&& existLong.compareTo(l)==0)?true:false;
+    public final static  boolean isNotNullAndEquals(Long l,Long... existLong){
+        if(l!=null){
+            for(Long value: existLong){
+                if(l.compareTo(value)==0){
+                    return  true ;
+                }
+            }
+        }
+        return false ;
     }
 
 
