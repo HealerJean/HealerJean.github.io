@@ -163,7 +163,7 @@ public class DatasourceOneData {
     public DataSource primaryDataSource() {
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setUrl(admoreUrl);
-        druidDataSource.setUsername(admoreUsername);
+        druidDataSource.setUsernam~~~~e(admoreUsername);
         druidDataSource.setPassword(admorePassword);
         druidDataSource.setMaxActive(150);
         druidDataSource.setInitialSize(10);
