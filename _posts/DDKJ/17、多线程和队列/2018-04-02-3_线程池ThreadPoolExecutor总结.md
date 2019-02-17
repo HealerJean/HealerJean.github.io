@@ -153,7 +153,7 @@ public ThreadPoolExecutor(int corePoolSize,
 	•	4.队列已满，总线程数又达到了maximumPoolSize，就会由(RejectedExecutionHandler)抛出异常
 
 
-
+    
 ## 4、项目中使用
 
 
