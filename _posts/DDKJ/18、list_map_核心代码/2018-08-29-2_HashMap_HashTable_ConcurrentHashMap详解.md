@@ -20,7 +20,8 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 众所周知 HashMap 底层是基于 `数组 + 链表` 组成的，不过在 jdk1.7 和 1.8 中具体实现稍有不同。
 
 ### 1.1、HashMap为什么线程不安全(hash碰撞与扩容导致)
-HashMap的容量是有限的。当经过多次元素插入，使得HashMap达到一定饱和度时，Key映射位置发生冲突的几率会逐渐提高。<br/>
+
+HashMap的容量是有限的。当经过多次元素插入，使得HashMap的元素达到负载因子0.75*初始数组大小16=12，Key映射位置发生冲突的几率会逐渐提高。<br/>
 
 这时候，HashMap需要扩展它的长度，也就是进行Resize。<br/>
 
@@ -92,7 +93,9 @@ void transfer(Entry[] newTable, boolean rehash) {
 
 ![WX20181126-175036@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20181126-175036@2x.png)
 
+<font color="red">
 　HashTable性能差主要是由于所有操作需要竞争同一把锁，而如果容器中有多把锁，每一把锁锁一段数据，这样在多线程访问时不同段的数据时，就不会存在锁竞争了，这样便可以有效地提高并发效率。这就是ConcurrentHashMap所采用的"分段锁"思想。
+　</font>
 　
 　
 ## 3、ConcurrentHashMap
@@ -102,6 +105,13 @@ ConcurrentHashMap采用了非常精妙的"分段锁"策略，ConcurrentHashMap�
 
 ```java
  final Segment<K,V>[] segments;
+ 
+
+static class Segment<K,V> extends ReentrantLock implements Serializable {
+        private static final long serialVersionUID = 2249069246763182397L;
+        final float loadFactor;
+        Segment(float lf) { this.loadFactor = lf; }
+    }
 
 ```
 
@@ -109,6 +119,9 @@ ConcurrentHashMap采用了非常精妙的"分段锁"策略，ConcurrentHashMap�
 　![WX20181126-175152@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20181126-175152@2x.png)
 
 　<font color="red"> Segment继承了ReentrantLock，所以它就是一种可重入锁（ReentrantLock),首先将数据分成一段一段的存储，然后给每一段数据配一把锁，当一个线程占用锁访问其中一个段数据的时候，其他段的数据也能被其他线程访问。 </font><br/>
+　
+　
+
 　
 　在ConcurrentHashMap，一个Segment就是一个子哈希表，Segment里维护了一个HashEntry数组，并发环境下，对于不同Segment的数据进行操作是不用考虑锁竞争的。<br/>
 
@@ -131,6 +144,8 @@ Segment类似于HashMap，一个Segment维护着一个HashEntry数组,HashEntry�
 
 
 HashEntry是目前我们提到的最小的逻辑处理单元了。一个ConcurrentHashMap维护一个Segment数组，一个Segment维护一个HashEntry数组。
+
+
 ```java
 
  static final class HashEntry<K,V> {
@@ -147,12 +162,15 @@ HashEntry是目前我们提到的最小的逻辑处理单元了。一个Concurre
 　　
 　　初始化方法有三个参数，如果用户不指定则会使用默认值，initialCapacity为16，loadFactor为0.75（负载因子，扩容时需要参考），concurrentLevel为16。
 
+
 ```java
+
 Segment(float lf, int threshold, HashEntry<K,V>[] tab) {
             this.loadFactor = lf;//负载因子
             this.threshold = threshold;//阈值
             this.table = tab;//主干数组即HashEntry数组
         }
+        
 ```
 
 　　
@@ -209,7 +227,7 @@ public ConcurrentHashMap(int initialCapacity,
 ### put方法
 
 　从源码看出，put的主要逻辑也就两步：
-　1.定位segment并确保定位的Segment已初始化 
+　1.根据hash值定位segment并确保定位的Segment已初始化 
 　2.调用Segment的put方法。
 
 
@@ -235,7 +253,12 @@ public V put(K key, V value) {
 
 ### get 方法
 
-　　get方法无需加锁，由于其中涉及到的共享变量都使用volatile修饰，volatile可以保证内存可见性，所以不会读取到过期数据。
+<font color="red">
+
+　get方法无需加锁，由于其中涉及到的共享变量都使用volatile修饰，volatile可以保证内存可见性，所以不会读取到过期数据。
+　
+</font>
+　
 
 
 
