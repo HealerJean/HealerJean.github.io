@@ -92,7 +92,33 @@ public final class EmptyUtils<T> {
         return false ;
     }
 
+    /**
+     * 比较大小
+     * @param classType
+     * @param value
+     * @param otherVale
+     * * 1、如果有一个参数为空，则返回 -2 ,没有匹配的类型返回2
+     *  * 2、大小 返回 1、  = 返回0、 小于 -1
+     */
+    public static  Integer compare(Class classType , Object value, Object otherVale){
+        if(value==null||otherVale==null){
+            return -2;
+        }
+        if(classType.equals(Long.class)){
 
+            return Long.valueOf(value.toString()).compareTo(Long.valueOf(otherVale.toString()));
+
+        }else if(classType.equals(BigDecimal.class)){
+
+            return new BigDecimal(value.toString()).compareTo(new BigDecimal(otherVale.toString()));
+
+        }else if(classType.equals(Integer.class)){
+
+            return Integer.valueOf(value.toString()).compareTo(Integer.valueOf(otherVale.toString()));
+        }
+
+        return 2 ;
+    }
 
 
 }
