@@ -36,6 +36,35 @@ Error无法预期的错误因此，这是不可捕捉的，无法采取任何恢
 
 va提供了两类主要的异常:运行时异常runtime exception和一般异常checked exception。checked 异常。
 
+### 逻辑上分类
+
+Exception分两种，checked检查异常和unchecked非检查异常。
+
+#### checked Exception就是在写代码的时候，IDE(比如Eclipse)会要求你写try catch的那种Exception，比如IOException。这种Exception是Java的设计者要求你的程序去处理的。这种异常一般不会影响程序的主体，容易手动诊断修复，所以Java要求你在catch下面写出处理的代码，以保证程序遇到此类exception之后还可以正常运行
+
+#### unchecked这一类就是你在代码处理了checked exception之后，你在运行时候依然会遇到的exception，所以又叫做RunTimeException，比如NullPointerException, IndexOutOfBoundsException。此类exception相较于前面那种更容易影响程序运行，从设计者角度不提倡从程序中catch出来并处理，当然你也可以这么做。
+
+
+```java
+
+  /**
+     * 将CheckedException转换为UncheckedException
+     * @param e
+     * @return
+     */
+    public static RuntimeException toUncheckedException(Exception e) {
+        if (e instanceof RuntimeException) {
+            return (RuntimeException) e;
+        } else {
+            return new RuntimeException(e);
+        }
+    }
+
+
+```
+
+
+
 ### 2.1、运行时异常
 
 Java程序运行时常常遇到的各种异常的处理，其中包括隐式异常。比如，程序中除数为0引起的错误、数组下标越界错误等，这类异常也称为运行时异常，,因为它们虽然是由程序本身引起的异常，但不是程序主动抛出的，而是在程序运行中产生的。<br/>
