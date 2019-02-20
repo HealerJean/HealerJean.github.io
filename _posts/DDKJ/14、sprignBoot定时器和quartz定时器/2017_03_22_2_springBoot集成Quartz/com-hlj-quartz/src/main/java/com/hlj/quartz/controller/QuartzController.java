@@ -50,13 +50,6 @@ public class QuartzController {
     }
 
 
-
-    @GetMapping("doJob")
-    public String doJob(){
-        quartzService.doJob("job1","gropu1");
-        return "根据出发规则匹配任务，立即执行定时任务，暂停的时候可以用";
-    }
-
     @GetMapping("startAllJob")
     public String startAllJob(){
         quartzService.startAllJob();

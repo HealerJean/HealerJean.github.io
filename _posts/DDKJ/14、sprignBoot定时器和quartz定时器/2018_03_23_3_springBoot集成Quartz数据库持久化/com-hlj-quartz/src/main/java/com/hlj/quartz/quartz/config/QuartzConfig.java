@@ -1,12 +1,11 @@
 package com.hlj.quartz.quartz.config;
 
-import org.quartz.Scheduler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -20,8 +19,11 @@ import java.util.Properties;
 @Configuration
 public class QuartzConfig {
 
-    @Autowired
-    private JobFactory jobFactory;
+
+    @Bean
+    public SpringBeanJobFactory jobFactory (){
+        return new SpringBeanJobFactory();
+    }
 
     @Bean
     public Properties quartzProperties() throws IOException {
@@ -31,27 +33,15 @@ public class QuartzConfig {
         return propertiesFactoryBean.getObject();
     }
 
-
     @Bean
-    public SchedulerFactoryBean schedulerFactoryBean() throws IOException {
+    public SchedulerFactoryBean schedulerFactoryBean(SpringBeanJobFactory jobFactory) throws IOException {
         SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
 
         schedulerFactoryBean.setOverwriteExistingJobs(true);
         schedulerFactoryBean.setQuartzProperties(quartzProperties());
         schedulerFactoryBean.setJobFactory(jobFactory);
-
+        schedulerFactoryBean.setWaitForJobsToCompleteOnShutdown(true);
         return schedulerFactoryBean;
     }
-
-
-
-    // 创建schedule
-    @Bean(name = "scheduler")
-    public Scheduler scheduler() throws IOException {
-        return schedulerFactoryBean().getScheduler();
-    }
-
-
-
 
 }

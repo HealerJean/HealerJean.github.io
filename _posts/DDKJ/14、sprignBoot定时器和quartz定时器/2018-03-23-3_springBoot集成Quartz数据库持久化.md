@@ -345,27 +345,35 @@ commit;
 3、配置文件全部内容如下<br/>
 
 ```
-#使用自己的配置文件
-org.quartz.jobStore.useProperties:true
 
 #默认或是自己改名字都行
-org.quartz.scheduler.instanceName: DefaultQuartzScheduler
+org.quartz.scheduler.instanceName=HeaelrJeanQuartzScheduler
 #如果使用集群，instanceId必须唯一，设置成AUTO
-org.quartz.scheduler.instanceId = AUTO
+org.quartz.scheduler.instanceId=AUTO
+org.quartz.scheduler.jobFactory.class=org.quartz.simpl.SimpleJobFactory
+org.quartz.scheduler.autoStartup=true
+org.quartz.scheduler.skipUpdateCheck=true
 
 
-org.quartz.threadPool.class: org.quartz.simpl.SimpleThreadPool
-org.quartz.threadPool.threadCount: 10
-org.quartz.threadPool.threadPriority: 5
-org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread: true
+
+org.quartz.threadPool.class=org.quartz.simpl.SimpleThreadPool
+org.quartz.threadPool.threadCount=30
+org.quartz.threadPool.threadPriority=5
+
 
 
 #存储方式使用JobStoreTX，也就是数据库
-org.quartz.jobStore.class:org.quartz.impl.jdbcjobstore.JobStoreTX
-org.quartz.jobStore.driverDelegateClass:org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+#存储的JobDataMaps是否都为String类型
+org.quartz.jobStore.useProperties=true
 #是否使用集群（如果项目只部署到 一台服务器，就不用了）
-org.quartz.jobStore.isClustered = true
+org.quartz.jobStore.isClustered=true
 org.quartz.jobStore.clusterCheckinInterval=20000
+#存储方式使用JobStoreTX，也就是数据库
+org.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTX
+org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+#misfireThreshold是用来设置调度引擎对触发器超时的忍耐时间，简单来说 假设misfireThreshold=6000(单位毫秒)。
+#那么它的意思说当一个触发器超时时间如果大于misfireThreshold的值 就认为这个触发器真正的超时(也叫Misfires)。
+org.quartz.jobStore.misfireThreshold=60000
 org.quartz.jobStore.tablePrefix = QRTZ_
 org.quartz.jobStore.dataSource = myDS
 
@@ -378,14 +386,14 @@ org.quartz.dataSource.myDS.user = root
 org.quartz.dataSource.myDS.password = 123456
 org.quartz.dataSource.myDS.maxConnections = 5
 
+
 ```
 
 
 ## 3、定义任务存储类
 
-> 一个任务，主要是有任务名称，任务分组。名称和分组都用来干嘛，哈哈，一开始我也脑子不好使现在突然明白了
+> 一个任务，主要是有任务名称，任务分组。名称和分组都用来干嘛，确认唯一的工作任务，可以只有任务名称，这样默认分组就是Default,
 > 
-> 就好比一个任务它要停止吧，停止了，再怎么关闭呢。那这就是两个任务名称喽，那它应该在同一个组中吧
 > 
 > 我这里其实将任务名称作为一个工作的包和类名去存储了。`com.hlj.quartz.quartz.Job
 .MaTsk`因为确实一个工作的类，才是一个任务。如果看不出来这是干啥的，可以再多加几个字段，进行备注。
@@ -393,13 +401,13 @@ org.quartz.dataSource.myDS.maxConnections = 5
 > 真实项目中，可以将工作类名和工作名字分开写，这样方便观察和配合实际逻辑
 
 
-```
+```sql
 INSERT INTO `c_schedule_triggers` VALUES ('1', '0/1 * * * * ?', 'group1', 'com.hlj.quartz.quartz.Job.MyTask', '1');
 COMMIT;
 
 ```
 
-```
+```java
 package com.hlj.quartz.quartz.Bean;
 
 
@@ -474,53 +482,21 @@ public class CScheduleTrigger {
 
 ## 4、配置定时器吧，朋友
 
-### 4.1、工作工厂 <br/>
 
-
-```
-package com.hlj.quartz.quartz.config;
-
-import org.quartz.spi.TriggerFiredBundle;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.scheduling.quartz.AdaptableJobFactory;
-import org.springframework.stereotype.Component;
-
-/**
- * @Description
- * @Author HealerJean
- * @Date 2018/3/22  下午3:43.
- */
-@Component
-public class JobFactory extends AdaptableJobFactory {
-    @Autowired
-    private AutowireCapableBeanFactory capableBeanFactory;
-
-    @Override
-    protected Object createJobInstance(TriggerFiredBundle bundle) throws Exception {
-        //调用父类的方法
-        Object jobInstance = super.createJobInstance(bundle);
-        //进行注入
-        capableBeanFactory.autowireBean(jobInstance);
-        return jobInstance;
-    }
-}
-
-```
 
 ### 4.2、读取配置文件和生成定时器
 
 
-```
+```java
+
 package com.hlj.quartz.quartz.config;
 
-import org.quartz.Scheduler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -534,8 +510,11 @@ import java.util.Properties;
 @Configuration
 public class QuartzConfig {
 
-    @Autowired
-    private JobFactory jobFactory;
+
+    @Bean
+    public SpringBeanJobFactory jobFactory (){
+        return new SpringBeanJobFactory();
+    }
 
     @Bean
     public Properties quartzProperties() throws IOException {
@@ -545,25 +524,17 @@ public class QuartzConfig {
         return propertiesFactoryBean.getObject();
     }
 
-
     @Bean
-    public SchedulerFactoryBean schedulerFactoryBean() throws IOException {
+    public SchedulerFactoryBean schedulerFactoryBean(SpringBeanJobFactory jobFactory) throws IOException {
         SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
 
         schedulerFactoryBean.setOverwriteExistingJobs(true);
         schedulerFactoryBean.setQuartzProperties(quartzProperties());
         schedulerFactoryBean.setJobFactory(jobFactory);
-
+        schedulerFactoryBean.setWaitForJobsToCompleteOnShutdown(true);
         return schedulerFactoryBean;
     }
 
-
-
-    // 创建schedule
-    @Bean(name = "scheduler")
-    public Scheduler scheduler() throws IOException {
-        return schedulerFactoryBean().getScheduler();
-    }
 }
 
 ```
@@ -805,8 +776,8 @@ public class QuartzController {
 
 > 发现里面有了数据，哈哈，这就是持久化，明白了吧。具体数据就不给大家截图了，自己好好运行吧，下面有代码
 
+## [代码下载 ]()
 
-## [代码下载](https://gitee.com/HealerJean/CodeDownLoad/blob/master/2018_03_23_3_springBoot%E9%9B%86%E6%88%90Quartz%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8C%81%E4%B9%85%E5%8C%96/com-hlj-quartz.zip)
 
 
 
