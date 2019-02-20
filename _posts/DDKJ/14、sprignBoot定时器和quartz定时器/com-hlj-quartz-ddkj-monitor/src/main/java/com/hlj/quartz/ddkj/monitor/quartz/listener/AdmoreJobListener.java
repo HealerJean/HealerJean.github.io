@@ -47,7 +47,6 @@ public class AdmoreJobListener implements JobListener {
     /**
      任务执行完成后执行,jobException如果它不为空则说明任务在执行过程中出现了异常
      */
-
     @Override
     public void jobWasExecuted(JobExecutionContext jobExecutionContext, JobExecutionException e) {
         if (e != null){

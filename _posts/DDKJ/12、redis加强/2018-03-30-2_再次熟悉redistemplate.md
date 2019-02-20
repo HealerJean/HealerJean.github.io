@@ -309,7 +309,7 @@ public class SerializerController {
 
 ## 4、value为Long类型的数据
 
-那么 这个时候就不能使用`StringRedisTemplate` 了，使用它会报错(废话，key当然不能为long类型了，妈的，其他的也不可以)的，可以使用使用RedisTemplate，可以使用泛型，也可以不使用
+那么 这个时候就不能使用`StringRedisTemplate` 了，使用它会报错(废话，key当然不能为long类型了，妈的，除了String其他的也不可以)的，也不可以使用使用RedisTemplate，因为它判断不了是Long还是Integer，但是我们之前自己设置过一次Long的处理工具类进行操作
 
 
 ```java
