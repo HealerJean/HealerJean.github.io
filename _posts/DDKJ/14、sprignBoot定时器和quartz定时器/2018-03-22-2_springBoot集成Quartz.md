@@ -176,7 +176,6 @@ public void haveProperties() throws SchedulerException, InterruptedException{
      */
     // 获取Scheduler实例
     Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
-    scheduler.start();
     System.out.println("scheduler.start");
     //具体任务.
     JobDetail jobDetail = JobBuilder.newJob(HelloJobOne.class).withIdentity("job1","group1").build();
@@ -365,8 +364,6 @@ public class QuartzService {
             // 把作业和触发器注册到任务调度中, 启动调度
             scheduler.scheduleJob(jobDetail,cronTrigger);
         /*
-        // 启动调度
-         scheduler.start();
          Thread.sleep(30000);
         // 停止调度
         scheduler.shutdown();*/
@@ -407,7 +404,7 @@ public class QuartzService {
     }
 
     /****
-     * 暂停重启一个定时器任务
+     * 暂停重启一个定时器任务，shutdown关闭了，或者删除了就不能重启了
      * @param triggerName
      * @param triggerGroupName
      */
@@ -444,20 +441,6 @@ public class QuartzService {
         }
     }
 
-
-
-
-    /***
-     * 根据出发规则匹配任务，立即执行定时任务，暂停的时候可以用
-     */
-    public void doJob(String triggerName,String triggerGroupName){
-        try {
-            JobKey jobKey = JobKey.jobKey(triggerName, triggerGroupName);
-            scheduler.triggerJob(jobKey);
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     /***
@@ -531,7 +514,7 @@ public class QuartzController {
     @GetMapping("resumeJob") //shutdown关闭了，或者删除了就不能重启了
     public String resumeJob(){
         quartzService.resumeJob("job1","gropu1");
-        return "暂停重启一个定时器任务，请注意观察控制台";
+        return "暂停重启一个定时器任务，请注意观察控制台，shutdown关闭了，或者删除了就不能重启了";
     }
 
     @GetMapping("deleteJob")
@@ -542,11 +525,6 @@ public class QuartzController {
 
 
 
-    @GetMapping("doJob")
-    public String doJob(){
-        quartzService.doJob("job1","gropu1");
-        return "根据出发规则匹配任务，立即执行定时任务，暂停的时候可以用";
-    }
 
     @GetMapping("startAllJob")
     public String startAllJob(){

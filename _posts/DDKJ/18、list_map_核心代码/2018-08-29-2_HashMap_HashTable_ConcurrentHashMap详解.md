@@ -201,7 +201,7 @@ public ConcurrentHashMap(int initialCapacity,
              ssize <<= 1;
          }
          //segmentShift和segmentMask这两个变量在定位segment时会用到，后面会详细讲
-         this.segmentShift = 32 - sshift;
+             this.segmentShift = 32 - sshift;
          this.segmentMask = ssize - 1;
          if (initialCapacity > MAXIMUM_CAPACITY)
              initialCapacity = MAXIMUM_CAPACITY;
