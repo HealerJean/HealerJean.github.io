@@ -1,10 +1,10 @@
 package com.hlj.quartz.quartz.config;
 
-import org.quartz.Scheduler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
 
 /**
@@ -15,23 +15,23 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 @Configuration
 public class QuartzConfig {
 
-    @Autowired
-    private JobFactory jobFactory;
-
+    @Bean
+    public SpringBeanJobFactory jobFactory (){
+        return new SpringBeanJobFactory();
+    }
 
     @Bean
-    public SchedulerFactoryBean schedulerFactoryBean() {
+    public SchedulerFactoryBean schedulerFactoryBean(SpringBeanJobFactory jobFactory) {
         SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
-            schedulerFactoryBean.setOverwriteExistingJobs(true);
-            schedulerFactoryBean.setJobFactory(jobFactory);
+
+        schedulerFactoryBean.setOverwriteExistingJobs(true);
+        schedulerFactoryBean.setConfigLocation(new ClassPathResource("quartz.properties"));
+        schedulerFactoryBean.setJobFactory(jobFactory);
+        schedulerFactoryBean.setWaitForJobsToCompleteOnShutdown(true);
+        schedulerFactoryBean.setOverwriteExistingJobs(true);
+
         return schedulerFactoryBean;
     }
 
-
-    // 创建schedule
-    @Bean(name = "scheduler")
-    public Scheduler scheduler() {
-        return schedulerFactoryBean().getScheduler();
-    }
 
 }

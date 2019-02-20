@@ -1,6 +1,7 @@
 package com.hlj;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.hlj.quartz.core.listener.HealerJeanJobListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +37,7 @@ public class QuartzConfig {
         schedulerFactoryBean.setConfigLocation(new ClassPathResource("quartz.properties"));
         schedulerFactoryBean.setJobFactory(jobFactory);
         schedulerFactoryBean.setWaitForJobsToCompleteOnShutdown(true);
-        schedulerFactoryBean.setGlobalJobListeners(new com.duodian.admore.quartz.core.event.HealerJeanJobListener());
+        schedulerFactoryBean.setGlobalJobListeners(new HealerJeanJobListener());
         schedulerFactoryBean.setOverwriteExistingJobs(true);
         return schedulerFactoryBean;
     }

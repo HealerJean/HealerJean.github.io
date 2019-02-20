@@ -95,14 +95,19 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 
 ```
-#scheduler实例名称。
-org.quartz.scheduler.instanceName =MyScheduler
 #配置线程池的容量，即表示同时最多可运行的线程数量
-org.quartz.threadPool.threadCount =3
+org.quartz.threadPool.threadCount = 20
+org.quartz.scheduler.skipUpdateCheck = true
+#scheduler实例名称。
+org.quartz.scheduler.instanceName = HealerJeanQuartzScheduler
+org.quartz.scheduler.jobFactory.class = org.quartz.simpl.SimpleJobFactory
+org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool
 #job存储方式，RAMJobStore是使用JobStore最简单的一种方式，它也是性能最高效的，顾名思义，JobStore是把它的数据都存储在RAM中，
 # 这也是它的快速和简单配置的原因；JDBCJobStore也是一种相当有名的JobStore，它通过JDBC把数据都保存到数据库中，
 # 所以在配置上会比RAMJobStore复杂一些，而且不像RAMJobStore那么快，但是当我们对数据库中的表的主键创建索引时，性能上的缺点就不是很关键的了。
 org.quartz.jobStore.class = org.quartz.simpl.RAMJobStore
+
+
 
 ```
 
@@ -222,54 +227,12 @@ public String haveProperties() throws InterruptedException, SchedulerException {
 ![WX20180322-191414](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180322-191414.png)
 
 
-## 2、没有配置文件，但是很牛逼的真正的quartz
+## 2、开始更多的方法
 
-### 2.1、定义一个工作工厂，`JobFactory`
+### 2.1、开始从定时器工厂中，找到定时器Bean
 
-
+__
 ```
-package com.hlj.quartz.quartz.config;
-
-import org.quartz.spi.TriggerFiredBundle;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.scheduling.quartz.AdaptableJobFactory;
-import org.springframework.stereotype.Component;
-
-/**
- * @Description
- * @Author HealerJean
- * @Date 2018/3/22  下午3:43.
- */
-@Component
-public class JobFactory extends AdaptableJobFactory {
-    @Autowired
-    private AutowireCapableBeanFactory capableBeanFactory;
-
-    @Override
-    protected Object createJobInstance(TriggerFiredBundle bundle) throws Exception {
-        //调用父类的方法
-        Object jobInstance = super.createJobInstance(bundle);
-        //进行注入
-        capableBeanFactory.autowireBean(jobInstance);
-        return jobInstance;
-    }
-}
-
-```
-
-### 2.2、开始从定时器工厂中，找到定时器Bean
-
-```
-package com.hlj.quartz.quartz.config;
-
-import org.quartz.Scheduler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-
-
 /**
  * @Description
  * @Author HealerJean
@@ -278,25 +241,22 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 @Configuration
 public class QuartzConfig {
 
-    @Autowired
-    private JobFactory jobFactory;
-
+    @Bean
+    public SpringBeanJobFactory jobFactory (){
+        return new SpringBeanJobFactory();
+    }
 
     @Bean
-    public SchedulerFactoryBean schedulerFactoryBean() {
+    public SchedulerFactoryBean schedulerFactoryBean(SpringBeanJobFactory jobFactory) {
         SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
-            schedulerFactoryBean.setOverwriteExistingJobs(true);
-            schedulerFactoryBean.setJobFactory(jobFactory);
+
+        schedulerFactoryBean.setOverwriteExistingJobs(true);
+        schedulerFactoryBean.setConfigLocation(new ClassPathResource("quartz.properties"));
+        schedulerFactoryBean.setJobFactory(jobFactory);
+        schedulerFactoryBean.setWaitForJobsToCompleteOnShutdown(true);
+
         return schedulerFactoryBean;
     }
-
-
-    // 创建schedule
-    @Bean(name = "scheduler")
-    public Scheduler scheduler() {
-        return schedulerFactoryBean().getScheduler();
-    }
-
 }
 
 ```
@@ -348,7 +308,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class QuartzService {
 
-    @Autowired
+    @Rewsource
     private Scheduler scheduler;
 
     public void startJob(String time,String jobName,String group,Class job){

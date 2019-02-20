@@ -24,7 +24,6 @@ import java.util.Calendar;
  * @version 1.0.0
  */
 @DisallowConcurrentExecution // 保证多个任务间不会同时执行.所以在多任务执行时最好加上
-
 public class QuartzCheckInterJob implements Job {
     public static final String JOB_KEY = "quartz.inter.job.check";
 

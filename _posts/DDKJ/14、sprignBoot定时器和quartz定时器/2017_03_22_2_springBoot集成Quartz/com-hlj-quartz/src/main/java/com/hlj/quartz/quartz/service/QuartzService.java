@@ -6,6 +6,7 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class QuartzService {
 
-    @Autowired
+    @Resource
     private Scheduler scheduler;
 
     public void startJob(String time,String jobName,String group,Class job){
@@ -37,12 +38,6 @@ public class QuartzService {
             System.out.println(scheduler.getSchedulerName());
             // 把作业和触发器注册到任务调度中, 启动调度
             scheduler.scheduleJob(jobDetail,cronTrigger);
-        /*
-        // 启动调度
-         scheduler.start();
-         Thread.sleep(30000);
-        // 停止调度
-        scheduler.shutdown();*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -118,19 +113,6 @@ public class QuartzService {
     }
 
 
-
-
-    /***
-     * 根据出发规则匹配任务，立即执行定时任务，暂停的时候可以用
-     */
-    public void doJob(String triggerName,String triggerGroupName){
-        try {
-            JobKey jobKey = JobKey.jobKey(triggerName, triggerGroupName);
-            scheduler.triggerJob(jobKey);
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     /***
