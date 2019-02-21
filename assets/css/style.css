@@ -1031,8 +1031,8 @@ article .article-content h1, article .article-content h2 {
 }
 
 article .article-content h3 {
-    font-size: 180%;
-    line-height: 2em;
+    font-size: 140%;
+    line-height: 1em;
     margin-top: 1.3em
 }
 
@@ -1694,7 +1694,7 @@ section.comment {
 #toc {
     line-height: 1.3em;
     font-size: .8em;
-    float: right;
+    /*float: right;*/
 }
 
 #toc .toc {
@@ -2390,7 +2390,7 @@ footer {
 
 @media only screen and (min-width: 568px) {
     .article-content pre, .article-content .highlight, .article-content .highlight pre {
-        font-size: .9em
+        font-size: 1.2em
     }
 }
 
