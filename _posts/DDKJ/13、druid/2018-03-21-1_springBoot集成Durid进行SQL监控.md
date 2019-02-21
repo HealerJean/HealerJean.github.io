@@ -19,13 +19,13 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 Druid是阿里巴巴开发的号称为监控而生的数据库连接池！<br/>
 
-1、充当数据库连接池<br/>
-2、可以监控数据库访问性能<br/>
+1、充当数据库连接池    
+2、可以监控数据库访问性能    
 3、获得SQL执行日志<br/>
 
 ### 1、pom依赖包<br/>
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -108,7 +108,7 @@ Druid是阿里巴巴开发的号称为监控而生的数据库连接池！<br/>
 
 这里我使用了myslq数据库 ，并且利用jpa进行操作。
 
-```
+```properties
 ########################################################
 ###datasource  mysql
 ########################################################
@@ -164,7 +164,7 @@ spring.datasource.useGlobalDataSourceStat=true
 
 ### 3、创建测试数据库表
 
-```
+```sql
 
 CREATE TABLE `person` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -179,7 +179,7 @@ CREATE TABLE `person` (
 
 下面其实写的很详细，包括用户名和密码，已经拦截的id和允许的Ip。以及
 
-```
+```java
 package com.hlj.druid.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
@@ -235,7 +235,7 @@ public class DruidConfiguration {
 ### 5、这个时候其实就端配置完成了，如果你想用springBoot集成Druid，我觉得你应该了解SpringBoot了。创建一个controler 插入和查询数据吧！
 
 
-```
+```java
 package com.hlj.druid.controller;
 
 import com.hlj.druid.common.Format.ResponseBean;
@@ -294,7 +294,7 @@ public class HomeController {
 ![WX20180322-110852@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-110852@2x.png)
 
 
-<font color="red"> 但是，但是，但是，朋友们。在sql监控中是啥也没，原因我觉得你应该能猜得到吧，我们导入的druid的jar包是阿里爸爸的的。druid是阿里开发的。sprinBoot在配置文件中配置数据源不支持也很正常的，但是我们可以重新定义数据源看6.2 </font>
+<font color="red" size="5"> 但是，但是，但是，朋友们。在sql监控中是啥也没，原因我觉得你应该能猜得到吧，我们导入的druid的jar包是阿里爸爸的的。druid是阿里开发的。sprinBoot在配置文件中配置数据源不支持也很正常的，但是我们可以重新定义数据源看6.2 </font>
 
 ![WX20180322-111024@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-111024@2x.png)
 
@@ -303,7 +303,7 @@ public class HomeController {
 
 在之前的DruidConfiguration 配置类中重新添加如下
 
-```
+```java
 
 @Value("${spring.datasource.url}")
 private String dbUrl;
@@ -379,20 +379,22 @@ public DataSource dataSource(){
 ```
 #### 6.2.1、浏览器访问
 
-1、插入数据
+##### 1、插入数据
+
 [http://localhost:8080/insert?name=HealerJean](http://localhost:8080/insert?name=HealerJean)
 
 
 ![WX20180322-111622@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-111622@2x.png)
 
 
-2、查找数据
+##### 2、查找数据
+
 [http://localhost:8080/findById?id=4](http://localhost:8080/findById?id=4)
 
 ![WX20180322-111650@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-111650@2x.png)
 
 
-3、查看sql监控
+##### 3、查看sql监控
 
 ![WX20180322-111739@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-111739@2x.png)
 
