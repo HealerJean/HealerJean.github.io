@@ -1032,16 +1032,15 @@ article .article-content h1, article .article-content h2, article .article-conte
 
 article .article-content h1 {
     font-size: 220%;
-    line-height: 1.2em;
-    padding-bottom: .3em;
-    margin-top: 1.5em;
+    line-height: 1.0em;
+    /*padding-bottom: .3em;*/
+    margin-top: 1.0em;
     margin-bottom: 1.0em;
 }
 article .article-content h2{
     font-size: 190%;
-    line-height: 1.2em;
-    padding-bottom: .3em;
-    margin-top: 1.5em;
+    line-height: 1.0em;
+    margin-top: 1.0em;
     margin-bottom: 1.0em ;
 
 }
