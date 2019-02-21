@@ -3,7 +3,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
     padding: 0;
     border: 0;
     outline: 0;
-    font-weight: inherit;
+    /*font-weight: inherit;*/
     font-style: inherit;
     font-family: inherit;
     font-size: 100%;
@@ -1022,29 +1022,69 @@ article .article-content .kb {
     white-space: nowrap
 }
 
-article .article-content h1, article .article-content h2 {
-    font-size: 180%;
-    line-height: 1.2em;
-    padding-bottom: .3em;
-    margin-top: 1.5em;
-    border-bottom: 2px solid #dbdbdb
-}
-
-article .article-content h3 {
-    font-size: 140%;
-    line-height: 1em;
-    margin-top: 1.3em
-}
-
-article .article-content h4, article .article-content h5, article .article-content h6 {
-    font-size: 140%
-}
 
 article .article-content h1, article .article-content h2, article .article-content h3, article .article-content h4, article .article-content h5, article .article-content h6 {
-    color: #333;
+    color: #1c5fce;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
+
+article .article-content h1 {
+    font-size: 220%;
+    line-height: 1.2em;
+    padding-bottom: .3em;
+    margin-top: 1.5em;
+    margin-bottom: 1.0em;
+}
+article .article-content h2{
+    font-size: 190%;
+    line-height: 1.2em;
+    padding-bottom: .3em;
+    margin-top: 1.5em;
+    margin-bottom: 1.0em ;
+
+}
+
+article .article-content h3 {
+    font-size: 175%;
+    line-height: 1em;
+    margin-top: 1.0em;
+    margin-bottom: 1.0em ;
+    color: #8e62e8;
+
+}
+
+article .article-content h4 {
+    font-size: 150%;
+    line-height: 1em;
+    margin-top: 1.0em;
+    margin-bottom: 1.0em;
+    color: #e863d0;
+
+}
+
+article .article-content h5 {
+    font-size: 130%;
+    line-height: 1em;
+    margin-top: 1.0em;
+    margin-bottom: 1.0em ;
+    color: #e82f4b;
+
+}
+article .article-content h6{
+    font-size: 100%;
+    line-height: 1em;
+    margin-top: 1.3em;
+    margin-bottom: 1.0em ;
+    color: #2aaa15;
+
+}
+
+
+
+
+
 
 article .article-content h1 > code, article .article-content h2 > code, article .article-content h3 > code, article .article-content h4 > code, article .article-content h5 > code, article .article-content h6 > code {
     color: #a3a3a3
@@ -1129,8 +1169,9 @@ article .article-content ul li > code, article .article-content ol li > code, ar
 }
 
 article .article-content p {
-    line-height: 1.5;
+    line-height: 1.6;
     margin-top: .7em;
+    font-size: 1.3em;
 }
 
 @media only screen and (min-width: 1024px) {
@@ -2390,7 +2431,7 @@ footer {
 
 @media only screen and (min-width: 568px) {
     .article-content pre, .article-content .highlight, .article-content .highlight pre {
-        font-size: 1.2em
+        font-size: 1.1em
     }
 }
 
