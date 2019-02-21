@@ -1,0 +1,1047 @@
+
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta name="baidu-site-verification" content="0r55fUD7QR" />
+  <meta charset="UTF-8">
+    
+    
+    
+    
+    <title>Unicode可以用来干什么 | HealeJean的梦想博客</title>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="HealerJean">
+    
+
+    
+    <!--<%- open_graph({twitter_id: theme.author.twitter, google_plus: theme.author.google_plus}) %>-->
+
+    <meta name="description" content="page.description">
+    
+    <meta property="og:type" content="article">
+    
+    <meta property="og:title" content="Unicode可以用来干什么">
+    <meta property="og:url" content="/java/2018/12/24/1_Unicode%E5%8F%AF%E4%BB%A5%E7%94%A8%E6%9D%A5%E5%B9%B2%E4%BB%80%E4%B9%88/">
+    <meta property="og:site_name" content="HealeJean的梦想博客">
+    <meta property="og:description" content="Unicode可以用来干什么">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Unicode可以用来干什么">
+    <meta name="twitter:description" content="page.description">
+    <meta name="twitter:creator" content="@mxzdhealer">
+    <link rel="publisher" href="">
+
+    
+    <link rel="alternative" href="/atom.xml" title="HealeJean的梦想博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/assets/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/assets/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/assets/img/jacman.jpg">
+    
+
+    <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/highlight.css" type="text/css">
+    
+    
+  <!-- 百度统计 -->
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?19549885065170e0019f01e9975dfc1d";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <!-- 百度联盟 -->
+    <meta name="baidu_union_verify" content="c2f387067cf0849991ea870f73c055f2">
+  
+</head>
+
+  <body>
+    <header>
+        <div>
+		    
+			<div id="imglogo">
+				<a href="/"><img src="/assets/img/logo.png" alt="HealeJean的梦想博客" title="HealeJean的梦想博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="HealeJean的梦想博客">HealeJean的梦想博客</a></h1>
+				<h2 class="blog-motto">一个高级软件开发工程师的成长之路</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/categories">技术</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories/#Job">生活日记</a></li>
+					
+						<li><a href="/about">个人简历</a></li>
+					
+						<li><a href="/friends">友情链接</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search" method="get" accept-charset="utf-8">
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>
+</div>
+
+    </header>
+    <div id="container">
+      
+
+
+
+<div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+	<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/java/2018/12/24/1_Unicode%E5%8F%AF%E4%BB%A5%E7%94%A8%E6%9D%A5%E5%B9%B2%E4%BB%80%E4%B9%88/" title="Unicode可以用来干什么" itemprop="url">Unicode可以用来干什么</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="HealerJean" target="_blank" itemprop="author">HealerJean</a>
+		
+  <p class="article-time">
+    <time datetime="2018-12-24 11:33:00 +0800" itemprop="datePublished"> 发表于 2018-12-24</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article toc-content" style="display: none;">
+		
+			<!--<%- toc(item.content) %>-->
+		
+		</div>
+		
+		<!-- image url 
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
+　　首行缩进
+<font color="red">  </font>
+
+<font  color="red" size="4">   </font>
+
+
+<font size="4">   </font>
+-->
+
+<h2 id="前言">前言</h2>
+
+<p>在接到唯一可接口的时候，莫名其妙的将本来好好的中文搞成了乱码，气的我啊，一直找问题，找不到。后来发现日志中的数据变成了一堆类似乱码的，形状，亏我见多识广哈，一眼就知道是Uriencode编码。那么为什么对方要将返回值设置为这种编码呢。</p>
+
+<h2 id="unicode是什么">Unicode是什么</h2>
+
+<p>Unicode（统一码、万国码、单一码）是计算机科学领域里的一项业界标准，包括字符集、编码方案等。<font color="red" size="4">   Unicode 是为了解决传统的字符编码方案的局限而产生的，</font>它为每种语言中的每个字符设定了统一并且唯一的二进制编码，以满足跨语言、跨平台进行文本转换、处理的要求。1990年开始研发，1994年正式公布。 [1]</p>
+
+<p><br />
+Unicode 标准为全球商业领域中广泛使用的大部分字符定义了一个单一编码方案。所有的计算机都用单一的 Unicode 标准 Unicode 数据中的位模式一致地翻译成字符。这保证了同一个位模式在所有的计算机上总是转换成同一个字符。数据可以随意地从一个数据库或计算机传送到另一个数据库或计算机，而不用担心接收系统是否会错误地翻译位模式。
+<br />
+所以明白了吧，为了跨语言，跨平台，Unicode产生了</p>
+
+<h4 id="unicode通常用两个字节表示一个字符原有的英文编码从单字节变成双字节只需要把高字节全部填为0就可以">Unicode通常用两个字节表示一个字符，原有的英文编码从单字节变成双字节，只需要把高字节全部填为0就可以。</h4>
+
+<h4 id="stirnglength">Stirng.length()</h4>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+    <span class="n">String</span><span class="err">类的</span><span class="n">length</span><span class="o">()</span><span class="err">方法是以</span><span class="n">unicode</span><span class="err">统一字符集代码单元</span>
+    <span class="err">换言之就是</span><span class="n">char</span><span class="err">的个数为来统计的。</span>
+    <span class="err">因为</span><span class="n">java</span><span class="err">一个</span><span class="n">char</span><span class="err">类型可以存放一个汉字（</span><span class="mi">2</span><span class="err">个字节）。</span>
+    <span class="err">所以使用</span><span class="n">subString</span><span class="err">等截取出来的子串都不会出现半个汉字的情况，</span>
+
+</code></pre></div></div>
+
+<h2 id="猜想">猜想</h2>
+<p>以后面对国际化开发的时候，我们还是使用Unicode进行编码下给返回结果，这样的话，就不会因为字符编码造成一些字符格式误差了</p>
+
+<h2 id="1项目中的使用测试">1、项目中的使用测试</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">duodian</span><span class="o">.</span><span class="na">youhui</span><span class="o">.</span><span class="na">admin</span><span class="o">.</span><span class="na">utils</span><span class="o">;</span>
+
+<span class="cm">/**
+ * @Desc: 订单接口的时候 9月21日 出现返回接口为Unicode编码的情况，我开始添加的
+ *
+{"msg":"\u64cd\u4f5c\u6210\u529f","error":0,"data":null}
+{"msg":"操作成功","error":0,"data":null}
+
+ * @Author HealerJean
+ * @Date 2018/9/21  下午7:19.
+ */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">UnicodeUtil</span> <span class="o">{</span>
+
+
+
+
+    <span class="cm">/**
+     * 不管是中文还是unicode编码，不管里面夹杂着什么都输出 正确的中文
+     * @param unicodeStr
+     * @return
+     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">decode</span><span class="o">(</span><span class="n">String</span> <span class="n">unicodeStr</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">unicodeStr</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">StringBuffer</span> <span class="n">retBuf</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuffer</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">maxLoop</span> <span class="o">=</span> <span class="n">unicodeStr</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">maxLoop</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">unicodeStr</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">==</span> <span class="sc">'\\'</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">((</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">maxLoop</span> <span class="o">-</span> <span class="mi">5</span><span class="o">)</span>
+                        <span class="o">&amp;&amp;</span> <span class="o">((</span><span class="n">unicodeStr</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">==</span> <span class="sc">'u'</span><span class="o">)</span> <span class="o">||</span> <span class="o">(</span><span class="n">unicodeStr</span>
+                        <span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">==</span> <span class="sc">'U'</span><span class="o">)))</span>
+                    <span class="k">try</span> <span class="o">{</span>
+                        <span class="n">retBuf</span><span class="o">.</span><span class="na">append</span><span class="o">((</span><span class="kt">char</span><span class="o">)</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span>
+                                <span class="n">unicodeStr</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="o">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">6</span><span class="o">),</span> <span class="mi">16</span><span class="o">));</span>
+                        <span class="n">i</span> <span class="o">+=</span> <span class="mi">5</span><span class="o">;</span>
+                    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">NumberFormatException</span> <span class="n">localNumberFormatException</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">retBuf</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">unicodeStr</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">));</span>
+                    <span class="o">}</span>
+                <span class="k">else</span>
+                    <span class="n">retBuf</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">unicodeStr</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">));</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="n">retBuf</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">unicodeStr</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">));</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">retBuf</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
+
+
+
+
+    <span class="cm">/**
+     * 中文，必须是中文
+     * unicode 转 中文，只能转化全部都是unicode编码的
+     * @param unicode
+     * @return
+     */</span>
+    <span class="kd">public</span>  <span class="kd">static</span> <span class="n">String</span> <span class="nf">unicodeToCn</span><span class="o">(</span><span class="n">String</span> <span class="n">unicode</span><span class="o">)</span> <span class="o">{</span>
+        <span class="cm">/** 以 \ u 分割，因为java注释也能识别unicode，因此中间加了一个空格*/</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">strs</span> <span class="o">=</span> <span class="n">unicode</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">"\\\\u"</span><span class="o">);</span>
+        <span class="n">String</span> <span class="n">returnStr</span> <span class="o">=</span> <span class="s">""</span><span class="o">;</span>
+        <span class="c1">// 由于unicode字符串以 \ u 开头，因此分割出的第一个字符是""。</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">strs</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">returnStr</span> <span class="o">+=</span> <span class="o">(</span><span class="kt">char</span><span class="o">)</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strs</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="mi">16</span><span class="o">).</span><span class="na">intValue</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">returnStr</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * 必须是中文
+     * 中文转Unicode
+     * @param cn
+     * @return
+     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">cnToUnicode</span><span class="o">(</span><span class="n">String</span> <span class="n">cn</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">chars</span> <span class="o">=</span> <span class="n">cn</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+        <span class="n">String</span> <span class="n">returnStr</span> <span class="o">=</span> <span class="s">""</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">chars</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">returnStr</span> <span class="o">+=</span> <span class="s">"\\u"</span> <span class="o">+</span> <span class="n">Integer</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="mi">16</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">returnStr</span><span class="o">;</span>
+    <span class="o">}</span>
+
+
+
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">cn</span> <span class="o">=</span> <span class="s">"全部中文"</span><span class="o">;</span>
+        <span class="c1">////\u5168\u90e8\u4e2d\u6587</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">cnToUnicode</span><span class="o">(</span><span class="n">cn</span><span class="o">));</span>
+        <span class="n">String</span> <span class="n">unicode</span> <span class="o">=</span> <span class="s">"\\u5168\\u90e8\\u4e2d\\u6587"</span><span class="o">;</span>
+        <span class="c1">////全部中文</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">unicodeToCn</span><span class="o">(</span><span class="n">unicode</span><span class="o">));</span>
+
+        <span class="n">String</span> <span class="n">someUnicode</span> <span class="o">=</span> <span class="s">"{\"msg\":\"\\u64cd\\u4f5c\\u6210\\u529f\",\"error\":0,\"data\":[{\"adzone_id\":\"1782066627\",\"adzone_name\":\"\\u85cf\\u5b9d\\u9601\",\"alipay_total_price\":\"18.0000\",\"auction_category\":\"\\u7f8e\\u5986-\\u7f8e\\u5bb9\\u62a4\\u80a4\",\"commission\":\"0.00\",\"commission_rate\":\"1.0000\",\"create_time\":\"2018-09-21 19:31:47\",\"income_rate\":\"0.3100\",\"item_num\":1,\"item_title\":\"\\u7f8e\\u533b\\u751f\\u9664\\u87a8\\u8ff7\\u8fed\\u9999\\u6d17\\u9762\\u5976\\u5973\\u7537\\u5b66\\u751f\\u63a7\\u6cb9\\u75d8\\u75d8\\u6e05\\u6d01\\u53bb\\u87a8\\u9ed1\\u5934\\u7c89\\u523a\\u6d01\\u9762\\u4e73\",\"num_iid\":532235400390,\"order_type\":\"\\u6dd8\\u5b9d\",\"pay_price\":\"0.00\",\"price\":\"69.00\",\"pub_share_pre_fee\":\"5.58\",\"seller_nick\":\"\\u5e7f\\u5dde\\u7f8e\\u533b\\u751f\\u751f\\u7269\\u79d1\\u6280\",\"seller_shop_title\":\"\\u7f8e\\u533b\\u751f\\u5b98\\u65b9\\u4f01\\u4e1a\\u5e97\",\"site_id\":\"46766627\",\"site_name\":\"\\u5c0f\\u5f53\\u4f18\\u60e0\\u5238\",\"subsidy_fee\":\"0\",\"subsidy_rate\":\"0.0000\",\"subsidy_type\":\"-1\",\"terminal_type\":\"2\",\"tk3rd_type\":\"--\",\"tk_status\":12,\"total_commission_fee\":\"0\",\"total_commission_rate\":\"0.3100\",\"trade_id\":224003948316112915,\"trade_parent_id\":224003948316112915}]}"</span><span class="o">;</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"一部分英文，一部分 unicode编码"</span><span class="o">+</span><span class="n">decode</span><span class="o">(</span><span class="n">someUnicode</span><span class="o">));</span>
+        <span class="c1">//一部分英文，一部分 unicode编码{"msg":"操作成功","error":0,"data":[{"adzone_id":"1782066627","adzone_name":"藏宝阁","alipay_total_price":"18.0000","auction_category":"美妆-美容护肤","commission":"0.00","commission_rate":"1.0000","create_time":"2018-09-21 19:31:47","income_rate":"0.3100","item_num":1,"item_title":"美医生除螨迷迭香洗面奶女男学生控油痘痘清洁去螨黑头粉刺洁面乳","num_iid":532235400390,"order_type":"淘宝","pay_price":"0.00","price":"69.00","pub_share_pre_fee":"5.58","seller_nick":"广州美医生生物科技","seller_shop_title":"美医生官方企业店","site_id":"46766627","site_name":"小当优惠券","subsidy_fee":"0","subsidy_rate":"0.0000","subsidy_type":"-1","terminal_type":"2","tk3rd_type":"--","tk_status":12,"total_commission_fee":"0","total_commission_rate":"0.3100","trade_id":224003948316112915,"trade_parent_id":224003948316112915}]}</span>
+
+
+        <span class="n">String</span> <span class="n">normal</span> <span class="o">=</span> <span class="s">"{\"msg\":\"操作成功\",\"error\":0,\"data\":[{\"adzone_id\":\"1782066627\",\"adzone_name\":\"藏宝阁\",\"alipay_total_price\":\"18.0000\",\"auction_category\":\"美妆-美容护肤\",\"commission\":\"0.00\",\"commission_rate\":\"1.0000\",\"create_time\":\"2018-09-21 19:31:47\",\"income_rate\":\"0.3100\",\"item_num\":1,\"item_title\":\"美医生除螨迷迭香洗面奶女男学生控油痘痘清洁去螨黑头粉刺洁面乳\",\"num_iid\":532235400390,\"order_type\":\"淘宝\",\"pay_price\":\"0.00\",\"price\":\"69.00\",\"pub_share_pre_fee\":\"5.58\",\"seller_nick\":\"广州美医生生物科技\",\"seller_shop_title\":\"美医生官方企业店\",\"site_id\":\"46766627\",\"site_name\":\"小当优惠券\",\"subsidy_fee\":\"0\",\"subsidy_rate\":\"0.0000\",\"subsidy_type\":\"-1\",\"terminal_type\":\"2\",\"tk3rd_type\":\"--\",\"tk_status\":12,\"total_commission_fee\":\"0\",\"total_commission_rate\":\"0.3100\",\"trade_id\":224003948316112915,\"trade_parent_id\":224003948316112915}]}"</span><span class="o">;</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"一部分英文，一部分 中文编码"</span><span class="o">+</span><span class="n">decode</span><span class="o">(</span><span class="n">normal</span><span class="o">));</span>
+        <span class="c1">//一部分英文，一部分 中文编码{"msg":"操作成功","error":0,"data":[{"adzone_id":"1782066627","adzone_name":"藏宝阁","alipay_total_price":"18.0000","auction_category":"美妆-美容护肤","commission":"0.00","commission_rate":"1.0000","create_time":"2018-09-21 19:31:47","income_rate":"0.3100","item_num":1,"item_title":"美医生除螨迷迭香洗面奶女男学生控油痘痘清洁去螨黑头粉刺洁面乳","num_iid":532235400390,"order_type":"淘宝","pay_price":"0.00","price":"69.00","pub_share_pre_fee":"5.58","seller_nick":"广州美医生生物科技","seller_shop_title":"美医生官方企业店","site_id":"46766627","site_name":"小当优惠券","subsidy_fee":"0","subsidy_rate":"0.0000","subsidy_type":"-1","terminal_type":"2","tk3rd_type":"--","tk_status":12,"total_commission_fee":"0","total_commission_rate":"0.3100","trade_id":224003948316112915,"trade_parent_id":224003948316112915}]}</span>
+
+    <span class="o">}</span>
+
+
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p><br /><br /><br /></p>
+<font color="red"> 感兴趣的，欢迎添加博主微信， </font>
+<p><br />
+哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。
+<br />
+请下方留言吧。可与博主自由讨论哦</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">微信</th>
+      <th style="text-align: center">微信公众号</th>
+      <th style="text-align: center">支付宝</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg" alt="微信" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg" alt="微信公众号" /></td>
+      <td style="text-align: center"><img src="https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg" alt="支付宝" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Gitalk 评论 start  -->
+
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+<p> </p>
+<div id="gitalk-container"></div>
+<p>  <br />
+ <script type="text/javascript">
+    var gitalk = new Gitalk({
+		clientID: `1d164cd85549874d0e3a`,
+		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
+		id: '6UK4jgoQCSI5bPeV',
+    });
+    gitalk.render('gitalk-container');
+</script> </p>
+
+<!-- Gitalk end -->
+
+  
+	</div>
+	<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <!--
+  <%- list_categories(item.categories, {
+      show_count: false,
+      class: 'article-category',
+      style: 'none',
+      separator: '►'
+  }) %>
+  -->
+  
+  <a class="article-category-link" href="/categories/#Java">Java</a>
+  
+</div>
+
+
+  <div class="article-tags">
+  <!--
+  <% var tags = [];
+    item.tags.forEach(function(tag){
+      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
+    }); %>-->
+  <span></span> <!--<%- tags.join('') %>-->
+  
+  
+  <a href="/tags/#Java">Java</a>
+  
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://localhost:4000/java/2018/12/24/1_Unicode%E5%8F%AF%E4%BB%A5%E7%94%A8%E6%9D%A5%E5%B9%B2%E4%BB%80%E4%B9%88/" data-title="Unicode可以用来干什么 | HealeJean的梦想博客" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+   
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/java/2018/12/20/8_%E5%87%A0%E7%A7%8D%E5%B8%B8%E8%A7%81%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%88%AA%E5%8F%96/" title="几种常见的字符串的截取">
+  <strong>上一篇：</strong><br/>
+  <span>
+  几种常见的字符串的截取</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/java/2018/12/26/9_String%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%A0%B9%E6%8D%AE%E5%AD%97%E6%95%B0%E8%BF%9B%E8%A1%8C%E5%88%86%E7%BB%84/"  title="String字符串根据字数进行分隔">
+ <strong>下一篇：</strong><br/> 
+ <span>String字符串根据字数进行分隔
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+
+      
+      
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside toc-content">
+ 
+ <!--<%- toc(item.content) %>-->
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+
+  <div class="linkslist">
+  <p class="asidetitle">个人网站</p>
+    <ul>
+        
+          <li>
+            <a href="http://blog.csdn.net/u012954706" target="_blank" title="csdn">csdn</a>
+          </li>
+        
+          <li>
+            <a href="http://www.cnblogs.com/HealerJean/" target="_blank" title="博客园">博客园</a>
+          </li>
+        
+          <li>
+            <a href="https://weibo.com/u/3889598250/" target="_blank" title="微博">微博</a>
+          </li>
+        
+          <li>
+            <a href="https://www.jianshu.com/u/54ba972e92a8" target="_blank" title="简书">简书</a>
+          </li>
+        
+          <li>
+            <a href="https://www.zhihu.com/people/healerjean" target="_blank" title="知乎">知乎</a>
+          </li>
+        
+    </ul>
+</div>
+
+  <div class="weiboshow">
+
+     <p class="asidetitle">个人信息</p>
+     <script src="/assets/img/person/jquery.js"></script>
+     <script src="/assets/img/person/jquery-github-user-widget.js"></script>
+     <div class="github-widget-user" data-user="HealerJean">	</div>
+
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/#Java" title="Java">Java<sup>28</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#MarkDown" title="MarkDown">MarkDown<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpringBoot" title="SpringBoot">SpringBoot<sup>24</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Docker" title="Docker">Docker<sup>17</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#server" title="server">server<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Quartz" title="Quartz">Quartz<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#database" title="database">database<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SoftWare" title="SoftWare">SoftWare<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GitHub" title="GitHub">GitHub<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Mac" title="Mac">Mac<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Thread" title="Thread">Thread<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Url" title="Url">Url<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Annotation" title="Annotation">Annotation<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SortAlgorithm" title="SortAlgorithm">SortAlgorithm<sup>12</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#CAS" title="CAS">CAS<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Maven" title="Maven">Maven<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#HTML" title="HTML">HTML<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#AngularJs" title="AngularJs">AngularJs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WeChat" title="WeChat">WeChat<sup>13</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Experience" title="Experience">Experience<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Team" title="Team">Team<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Utils" title="Utils">Utils<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Hibernate" title="Hibernate">Hibernate<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Date" title="Date">Date<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Log" title="Log">Log<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JSON" title="JSON">JSON<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#GrayLog" title="GrayLog">GrayLog<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Database" title="Database">Database<sup>18</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Redis" title="Redis">Redis<sup>16</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Ehcache" title="Ehcache">Ehcache<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Druid" title="Druid">Druid<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Swagger" title="Swagger">Swagger<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Netty" title="Netty">Netty<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#NIO" title="NIO">NIO<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#WebSocket" title="WebSocket">WebSocket<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Map" title="Map">Map<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JVM" title="JVM">JVM<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Element" title="Element">Element<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Job" title="Job">Job<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Graphics" title="Graphics">Graphics<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linux" title="Linux">Linux<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Databases" title="Databases">Databases<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Nginx" title="Nginx">Nginx<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpirngBoot" title="SpirngBoot">SpirngBoot<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Linu" title="Linu">Linu<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#JAVA" title="JAVA">JAVA<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Server" title="Server">Server<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Google" title="Google">Google<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Git" title="Git">Git<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#分布式" title="分布式">分布式<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#SpringCloud" title="SpringCloud">SpringCloud<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#http" title="http">http<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#docker" title="docker">docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Json" title="Json">Json<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Database~~~~" title="Database~~~~">Database~~~~<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#weChat" title="weChat">weChat<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  
+
+
+  
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+
+	<!-- 打赏功能 -->
+  <!-- <script src="http://static.tctip.com/tctip-1.0.0.min.js"></script> -->
+  <script src="/assets/img/tctip/tctip-1.0.1.min.js"></script>
+	<script>  
+	new tctip({
+	  top: '20%',
+	  button: {
+	    id: 9,
+	    type: 'dashang',
+	  },
+	  list: [
+	    {
+	      type: 'alipay',
+	      qrImg: '/assets/img/tctip/alpay.jpg'
+	    }, {
+	      type: 'wechat',
+	      qrImg: '/assets/img/tctip/weixin.jpg'
+	    }
+	  ]
+	}).init()
+	</script>
+
+
+
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 欢迎来到  HealerJean 的梦想博客. <br/>
+			------您已走进一个高级软件开发工程师的成长之路</p>
+	</section>
+	 
+
+
+<!--  自带的分享功能 	-->
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3889598250" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		
+		
+		<a href="https://twitter.com/mxzdhealer" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:healerjean@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div> 
+
+
+	<!--
+			<%  Array.prototype.S=String.fromCharCode(2);
+			  Array.prototype.in_array=function(e){
+    			var r=new RegExp(this.S+e+this.S);
+    			return (r.test(this.S+this.join(this.S)+this.S));
+				};
+				var cc = new Array('by','by-nc','by-nc-nd','by-nc-sa','by-nd','by-sa','zero'); %>
+		<% if (cc.in_array(theme.creative_commons) ) { %>
+				<div class="cc-license">
+          <a href="http://creativecommons.org/licenses/<%= theme.creative_commons %>/4.0" class="cc-opacity" target="_blank">
+            <img src="<%- config.root %>img/cc-<%= theme.creative_commons %>.svg" alt="Creative Commons" />
+          </a>
+        </div>
+    <% } %>
+				-->
+
+		<p class="copyright">
+		welcome to <a href="http://jekyllrb.com" target="_blank" title="jekyll">HealerJean</a> 
+		blog <a href="https://github.com/simpleyyt/jekyll-jacman" target="_blank" title="Jacman">for</a> © 2017 
+		
+		<a href="about" target="_blank" title="HealerJean">HealerJean</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/assets/js/jquery-2.0.3.min.js"></script>
+<script src="/assets/js/jquery.imagesloaded.min.js"></script>
+<script src="/assets/js/gallery.js"></script>
+<script src="/assets/js/jquery.qrcode-0.12.0.min.js"></script>
+<script src="/assets/js/toc.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+
+  
+
+  $(window).resize(function(){
+    getSize();
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+});
+</script>
+
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#toc.toc-aside').toc({
+    title: "文章目录",
+    showEffect: "none"
+  });
+  $('#toc.toc-article').toc({
+    title: "文章目录",
+    showEffect: "show",
+    showSpeed: 0
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+/*
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      //$('.hoverqrcode').hide();
+  });
+  */
+});
+</script>
+
+
+
+
+
+
+<!--
+
+-->
+
+
+
+
+<link rel="stylesheet" href="/assets/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/assets/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      if ($(this).hasClass('emoji')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+});
+</script>
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/assets/img/scrollup.png"/></a>
+	</div>
+	<script src="/assets/js/totop.js"></script>
+
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
+
