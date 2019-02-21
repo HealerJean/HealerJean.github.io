@@ -2,9 +2,9 @@
 title: git点亮绿色contribute
 date: 2018-10-10 03:33:00
 tags: 
-- Git
+- GitHub
 category: 
-- Git
+- GitHub
 description: git点亮绿色contribute
 ---
 <!-- image url 
