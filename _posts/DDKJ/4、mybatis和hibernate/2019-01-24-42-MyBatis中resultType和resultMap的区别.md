@@ -2,9 +2,9 @@
 title: MyBatis中resultType和resultMap的区别
 date: 2019-01-24 03:33:00
 tags: 
-- database
+- Database
 category: 
-- database
+- Database
 description: MyBatis中resultType和resultMap的区别
 ---
 <!-- image url 

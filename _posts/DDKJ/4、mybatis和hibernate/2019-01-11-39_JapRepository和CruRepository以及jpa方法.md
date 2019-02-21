@@ -2,9 +2,9 @@
 title: JapRepository和CruRepository以及jpa方法
 date: 2019-01-11 03:33:00
 tags: 
-- database
+- Database
 category: 
-- database
+- Database
 description: JapRepository和CruRepository以及jpa方法
 ---
 <!-- image url 

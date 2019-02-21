@@ -2,9 +2,9 @@
 title: Mysql中Update和Delete返回值的问题
 date: 2018-01-09 03:33:00
 tags: 
-- database
+- Database
 category: 
-- database
+- Database
 description: Mysql中Update和Delete返回值的问题
 ---
 <!-- image url 
