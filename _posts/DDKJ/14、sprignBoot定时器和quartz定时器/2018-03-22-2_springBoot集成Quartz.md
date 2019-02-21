@@ -231,7 +231,8 @@ public String haveProperties() throws InterruptedException, SchedulerException {
 
 ### 2.1、开始从定时器工厂中，找到定时器Bean
 
-__
+
+
 ```
 /**
  * @Description
@@ -600,7 +601,7 @@ public class QuartzController {
 
 
 
-## [代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2017_03_22_2_springBoot%E9%9B%86%E6%88%90Quartz/com-hlj-quartz.zip)
+## [代码下载](https://gitee.com/HealerJean/CodeDownLoad/tree/master/2017_03_22_2_springBoot%E9%9B%86%E6%88%90Quartz)
 
 
 
