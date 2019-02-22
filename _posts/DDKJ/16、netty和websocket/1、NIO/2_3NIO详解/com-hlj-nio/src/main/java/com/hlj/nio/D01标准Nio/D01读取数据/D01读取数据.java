@@ -1,4 +1,4 @@
-package com.hlj.nio.D01Nio.D01读取数据;
+package com.hlj.nio.D01标准Nio.D01读取数据;
 
 import org.junit.Test;
 
@@ -30,7 +30,7 @@ public class D01读取数据 {
     public void readFileByChannelToBuffer(){
 
         try {
-            FileInputStream fileInputStream = new FileInputStream("src/main/java/com/hlj/nio/D01Nio/D01读取数据/read.txt") ;
+            FileInputStream fileInputStream = new FileInputStream("src/main/java/com/hlj/nio/D01标准Nio/D01读取数据/read.txt") ;
             // 1、获取通道
             FileChannel channel = fileInputStream.getChannel();
 

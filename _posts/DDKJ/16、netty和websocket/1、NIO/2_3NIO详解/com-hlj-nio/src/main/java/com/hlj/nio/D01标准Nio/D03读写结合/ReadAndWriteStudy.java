@@ -1,6 +1,5 @@
-package com.hlj.nio.D01Nio.D03读写结合;
+package com.hlj.nio.D01标准Nio.D03读写结合;
 
-import org.apache.tomcat.jni.Buffer;
 import org.junit.Test;
 
 import java.io.*;
@@ -18,8 +17,8 @@ public class ReadAndWriteStudy {
 
     @Test
     public void readToWrite(){
-        String read = "src/main/java/com/hlj/nio/D01Nio/D03读写结合/read.txt";
-        String write = "src/main/java/com/hlj/nio/D01Nio/D03读写结合/write.txt";
+        String read = "src/main/java/com/hlj/nio/D01标准Nio/D03读写结合/read.txt";
+        String write = "src/main/java/com/hlj/nio/D01标准Nio/D03读写结合/write.txt";
         copyFileUseNIO(read,write);
     }
 
