@@ -1,8 +1,7 @@
-package com.hlj.nio.D01Nio.D02写入数据;
+package com.hlj.nio.D01标准Nio.D02写入数据;
 
 import org.junit.Test;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,7 +20,7 @@ public class D02写入数据 {
     @Test
     public void writeFileByChannelToBuffer(){
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream("src/main/java/com/hlj/nio/D01Nio/D02写入数据/write.txt") ;
+            FileOutputStream fileOutputStream = new FileOutputStream("src/main/java/com/hlj/nio/D01标准Nio/D02写入数据/write.txt") ;
             // 1、获取通道
             FileChannel channel = fileOutputStream.getChannel();
 
