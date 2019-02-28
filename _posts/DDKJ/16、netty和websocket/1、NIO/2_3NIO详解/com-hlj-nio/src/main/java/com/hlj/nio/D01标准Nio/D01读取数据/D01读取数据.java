@@ -43,6 +43,11 @@ public class D01读取数据 {
             //4、读取模式
             buffer.flip();
 
+//            返回的 array 长度为 ByteBuffer allocate的长度，并不是里面所含的内容的长度
+//            byte[] data = buffer.array();
+//            String msg = new String(data).trim();
+//            System.out.println(msg);
+
             //5、按照缓冲区字节读取
             while (buffer.remaining()>0) {
                 byte b = buffer.get();

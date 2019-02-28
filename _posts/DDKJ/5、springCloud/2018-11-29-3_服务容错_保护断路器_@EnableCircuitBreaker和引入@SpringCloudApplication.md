@@ -1,5 +1,5 @@
 ---
-title: 3_服务容错_保护断路器_@EnableCircuitBreaker和引入@SpringCloudApplication
+title: 3_服务容错_保护断路器@EnableCircuitBreaker和引入@SpringCloudApplication
 date: 2018-11-29 03:33:00
 tags: 
 - SpringCloud
@@ -243,6 +243,8 @@ public class ConsumerController {
 <font  color="red" size="4">  
 
 这个时候我们将8081的服务提供者挂掉，继续访问，发现一会正常，一会显示error，但是时间长了，就还是只会显示hello ，出现这种情况，应该是注册中心没有及时检测到挂掉了8081，还继续提供给消费者服务。但是时间长了，就肯定原型毕露
+
+
 
  </font>
 
