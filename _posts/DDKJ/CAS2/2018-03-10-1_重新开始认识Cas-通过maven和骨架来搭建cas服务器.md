@@ -34,7 +34,9 @@ https://casinitializr.herokuapp.com/
 ### 4、修改这个com.hlj.sso-server的pom，让它继承总司令并被总司令聚合
 
 #### 1.sso-server的pom放入parent，总司令com.hlj.cas中放入来自它的propertis,这里注意的是我用的cas版本为5.1.3，所以需要修改下propertis 中cas的版本号（默认为5.1.0），否则有些依赖不能下载，因为已经没有在维护了
+
 #### 2、这里我去掉了关于springBoot的一些东西（也就是自动生成的java文件，后面会进行删除），我修改了sso-server的pom。复制下面的即可。
+
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

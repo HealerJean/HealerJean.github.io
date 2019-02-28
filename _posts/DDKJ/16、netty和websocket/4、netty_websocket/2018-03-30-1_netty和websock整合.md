@@ -239,7 +239,7 @@ public class ChannelStatusHandler implements ChannelInboundHandler {
     private Logger logger = LoggerFactory.getLogger(ChannelStatusHandler.class);
 
 
-    @Override/**/
+    @Override
     public void channelRegistered(ChannelHandlerContext channelHandlerContext) throws Exception {
     }
     //Channel已创建，还未注册到一个EventLoop上

@@ -62,7 +62,7 @@ server.ssl.keyAlias=passport.sso.com
 
 ```
 
-**证书验证开启之后，下面的这个红色将会消失。
+证书验证开启之后，下面的这个红色将会消失。
 
 ![WX20180312-153905@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-153905@2x.png)
 
