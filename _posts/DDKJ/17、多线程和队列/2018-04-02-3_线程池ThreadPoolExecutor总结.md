@@ -99,9 +99,20 @@ TimeUnit是一个枚举类型，其包括： NANOSECONDS ： 1微毫秒 = 1微
 
 ### 7、RejectedExecutionHandler handler：
 
+RejectedExecutionHandler：饱和策略
 
 ```
 //任务拒绝策略，这玩意儿就是抛出异常专用的，比如上面提到的两个错误发生了，就会由这个handler抛出异常，根本用不上。
+
+
+
+1、AbortPolicy：直接抛出异常   
+2、CallerRunsPolicy：只用调用所在的线程运行任务
+3、DiscardOldestPolicy：丢弃队列里最近的一个任务，并执行当前任务。
+4、DiscardPolicy：不处理，丢弃掉。在某些重要的场景下，可以采用记录日志或者存储到数据库中，而不应该直接丢弃。
+
+
+
 ```
 
 
@@ -286,9 +297,123 @@ public class ThradMain {
 ```java
 newFixedThreadPool创建的线程池corePoolSize和maximumPoolSize值是相等的，它使用的LinkedBlockingQueue；
 newSingleThreadExecutor将corePoolSize和maximumPoolSize都设置为1，也使用的LinkedBlockingQueue；
-newCachedThreadPool将corePoolSize设置为0，将maximumPoolSize设置为Integer.MAX_VALUE，使用的SynchronousQueue，
+newCachedThreadPool将corePoolSize设置为0，将maximumPoolSize设置为Integer.MAX_VALUE，使用的SynchronousQueue，(SynchronousQueue：不存储元素的阻塞队列 ,每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态,每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态)
 
 ```
+
+## 5、线程池原理解读
+
+### 1、ThreadPoolExecutor的execute()方法
+
+
+
+```java
+
+    public void execute(Runnable command) {
+        if (command == null)
+            throw new NullPointerException();
+            //c为核心线程
+             int c = ctl.get();
+             //如果工作线程的数量少于核心线程数量，addWorker添加核心线程,true为核心线程
+        if (workerCountOf(c) < corePoolSize) {
+            if (addWorker(command, true))
+                return;
+            c = ctl.get();
+        }
+        
+        //线程池处于运行状态（说明没有关闭）并且加入队列成功
+        if (isRunning(c) && workQueue.offer(command)) {
+            int recheck = ctl.get();
+            //
+            
+            if (! isRunning(recheck) && remove(command))
+                reject(command);
+            else if (workerCountOf(recheck) == 0)
+                addWorker(null, false);
+        }//否则添加非核心线程，如果添加不成功则，执行拒绝策略
+        else if (!addWorker(command, false))
+            reject(command);
+    }
+
+
+
+```
+
+### 2、添加线程执行任务（第二个参数为是否核心线程）
+
+
+```java
+
+ private boolean addWorker(Runnable firstTask, boolean core) {
+        retry:
+        for (;;) {
+            int c = ctl.get();
+            int rs = runStateOf(c);
+
+            // Check if queue empty only if necessary.
+            if (rs >= SHUTDOWN &&
+                ! (rs == SHUTDOWN &&
+                   firstTask == null &&
+                   ! workQueue.isEmpty()))
+                return false;
+
+            for (;;) {
+                int wc = workerCountOf(c);
+                if (wc >= CAPACITY ||
+                    wc >= (core ? corePoolSize : maximumPoolSize))
+                    return false;
+                if (compareAndIncrementWorkerCount(c))
+                    break retry;
+                c = ctl.get();  // Re-read ctl
+                if (runStateOf(c) != rs)
+                    continue retry;
+                // else CAS failed due to workerCount change; retry inner loop
+            }
+        }
+
+        boolean workerStarted = false;
+        boolean workerAdded = false;
+        Worker w = null;
+        try {
+            w = new Worker(firstTask);
+            final Thread t = w.thread;
+            if (t != null) {
+                final ReentrantLock mainLock = this.mainLock;
+                mainLock.lock();
+                try {
+                    // Recheck while holding lock.
+                    // Back out on ThreadFactory failure or if
+                    // shut down before lock acquired.
+                    int rs = runStateOf(ctl.get());
+
+                    if (rs < SHUTDOWN ||
+                        (rs == SHUTDOWN && firstTask == null)) {
+                        if (t.isAlive()) // precheck that t is startable
+                            throw new IllegalThreadStateException();
+                        workers.add(w);
+                        int s = workers.size();
+                        if (s > largestPoolSize)
+                            largestPoolSize = s;
+                        workerAdded = true;
+                    }
+                } finally {
+                    mainLock.unlock();
+                }
+                if (workerAdded) {
+                    t.start();
+                    workerStarted = true;
+                }
+            }
+        } finally {
+            if (! workerStarted)
+                addWorkerFailed(w);
+        }
+        return workerStarted;
+    }
+```
+
+ 
+
 
 <br/><br/><br/>
 如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦

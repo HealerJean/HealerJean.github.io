@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("static")
 public class StaticController {
+
     @Resource
     private    StaticService staticService ;
 
