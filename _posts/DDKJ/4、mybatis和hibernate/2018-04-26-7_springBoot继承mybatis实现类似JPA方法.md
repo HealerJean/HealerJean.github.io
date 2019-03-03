@@ -1,4 +1,4 @@
-#### __---
+---
 title: 1、SpringBoot继承mybatis实现类似JPA方法
 date: 2018-04-26 11:29:00
 tags: 
