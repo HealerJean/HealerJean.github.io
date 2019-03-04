@@ -374,7 +374,7 @@ Jason转换失败（直接返回前端会造成）,不是没有 implements Seria
 
 这样一看想起来hibernate中get和load区别
 
-![WX20190111-155653@2x](MarkDownImage/WX20190111-155653@2x.png)
+![WX20190111-155653@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20190111-155653@2x.png)
 
 
 
