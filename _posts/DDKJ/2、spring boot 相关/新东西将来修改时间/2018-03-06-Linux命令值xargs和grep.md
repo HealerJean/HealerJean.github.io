@@ -127,14 +127,21 @@ a b c d e f g
 
 ```
 
+### 2.2、查询
 
+
+```
+healerjean$ find . -name '*.txt' |grep test
+./study/cant-breathe/13、redis/7/1、spring redis/spring-redis-test.txt
+./study/HealerJean.github.io/_posts/DDKJ/3、AngularJS_Vue/Vue/模板/element-starter/node_modules/hoek/test/modules/ignore.txt
+```
 
 
 ## 3、find
 
 ### 3.1、-name 通过名字查询
 
-f -iname 不区分大小写
+#### -iname 不区分大小写
 
 
 
