@@ -1,6 +1,5 @@
 ---
-title: 
-一个http请求过来springMVC是如何处理的
+title: 一个http请求过来springMVC是如何处理的
 date: 2018-03-06 03:33:00
 tags: 
 - SpringBoot
@@ -177,6 +176,7 @@ HttpMessageConveter： 将请求消息（如Json、xml等数据）转换成一�
 数据验证： 验证数据的有效性（长度、格式等），验证结果存储到BindingResult或Error中
 
 ```  
+
 
 #### 第四步：Handler执行完给处理器适配器返回ModelAndView （handle会对这里面的数据进行）    
 
