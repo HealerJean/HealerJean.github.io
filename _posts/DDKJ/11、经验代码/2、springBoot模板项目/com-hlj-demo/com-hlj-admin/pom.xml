@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.hlj.demo</groupId>
+        <groupId>com.hlj.proj</groupId>
         <artifactId>com-hlj-demo</artifactId>
         <version>0.0.1</version>
     </parent>
@@ -16,7 +16,7 @@
 
 
         <dependency>
-            <groupId>com.hlj.demo</groupId>
+            <groupId>com.hlj.proj</groupId>
             <artifactId>com-hlj-dao</artifactId>
             <version>0.0.1</version>
         </dependency>
