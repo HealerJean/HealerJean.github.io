@@ -241,7 +241,7 @@ key 使用弱引用：引用的ThreadLocal的对象被回收了，由于ThreadLo
 		repo: `HealerJean.github.io`,
 		owner: 'HealerJean',
 		admin: ['HealerJean'],
-		id: 'AAAAAAAAAAAAAAA',
+		id: '7WolTUqcuxa6D1rQ',
     });
     gitalk.render('gitalk-container');
 </script> 
