@@ -1,0 +1,157 @@
+#多点优惠服务器支持
+#创建硬链接
+
+upstream mysite {  
+     server serverduodianyouhui.dangqugame.cn ;  
+     server beiyongduodianyouhui.dangqugame.cn backup;   
+ }
+
+server {
+    listen 80;
+    server_name  keke.ssaayy.cn;
+    location ~\.php$ {
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME /usr/local/dataoke$fastcgi_script_name;
+            include        fastcgi_params;
+    }
+    location / {
+        root           /usr/local/dataoke;
+        index  index.php;
+    }
+}
+
+
+server {
+        listen       80;
+        server_name  server.duoquapp.net server.dangqugame.cn servertwo.duoquapp.net serverthree.duoquapp.net  rongqiserver.dangqugame.cn;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header REMOTE-HOST $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        location / {
+         proxy_pass http://mysite;
+        }
+  }
+
+
+# 测试端 运营前端
+server {
+        listen       80;
+        server_name  testquan.dangqugame.cn;
+
+        root        /usr/local/VueWebProject/;
+        index      index.html,index.htm;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header REMOTE-HOST $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+     
+     	location / {
+            try_files $uri /index.html;
+        }
+}
+
+# 测试端 H5前端
+server {
+        listen       80;
+        server_name  testquanid.dangqugame.cn;
+
+        root        /usr/local/VueWebInfoProject/;
+        index       index.html,index.htm;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header REMOTE-HOST $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+     
+        location / {
+            try_files $uri /index.html;
+        }
+}
+
+
+# 测试端 直播
+server {
+        listen       80;
+        server_name  testzhibo.dangqugame.cn;
+
+        root        /usr/local/VueZhiBoProject/;
+        index       index.html,index.htm;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header REMOTE-HOST $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+     
+        location / {
+            try_files $uri /index.html;
+        }
+}
+
+
+
+
+server {
+        listen       80;
+        server_name  healejean.dangqugame.cn;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header REMOTE-HOST $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+
+#       rewrite ^(.*)$ https://$host$1 permanent;        #最早支持的写法
+#      return 301 https://$server_name$request_uri;      #这是nginx最新支持的写法
+#       return 301 https://$host$request_uri;
+
+        return 301 http://testzhibo.dangqugame.cn$request_uri;
+       
+ }
+
+#web-h5
+server {
+        listen       80;
+        server_name  web.nongfusiquan.cn;
+
+        root        /usr/local/web-h5/;
+        index       index.html,index.htm;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header REMOTE-HOST $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+     
+        location / {
+            try_files $uri /index.html;
+        }
+
+}
+
+
+#评论
+server {
+        listen       80;
+        server_name  testestimate.latl.site;
+
+        root        /usr/local/estimate/;
+        index       index.html,index.htm;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header REMOTE-HOST $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+     
+        location / {
+            try_files $uri /index.html;
+        }
+
+}
+
+
+
