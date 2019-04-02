@@ -87,6 +87,19 @@ void transfer(Entry[] newTable, boolean rehash) {
 [具体图解](https://mp.weixin.qq.com/s?__biz=MzI2NjA3NTc4Ng==&mid=2652079766&idx=1&sn=879783e0b0ebf11bf1a5767933d4e61f&chksm=f1748d73c6030465fe6b9b3fa7fc816d4704c91bfe46cb287aefccee459153d3287172d91d23&scene=21#wechat_redirect)
 
 
+
+### 1.2、hash详解
+
+
+```java
+
+ static final int hash(Object key) {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+}
+
+```
+
 ## 2、HashTable是线程安全的
 
 但是HashTable线程安全的策略实现代价却太大了，简单粗暴，<font color="red">  get/put所有相关操作都是synchronized的，这相当于给整个哈希表加了一把大锁，</font>多线程访问时候，只要有一个线程访问或操作该对象，那其他线程只能阻塞，相当于将所有的操作串行化，在竞争激烈的并发场景中性能就会非常差。
