@@ -1,6 +1,6 @@
 ---
 title: ThradLocal
-date: 2018-03-13 03:33:00
+date: 2019-03-13 03:33:00
 tags: 
 - Thread
 category: 
@@ -25,8 +25,8 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 #### [博主github](https://github.com/HealerJean)
 #### [博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)    
 
-     
-     
+
+​     
 ThreadLocal翻译成中文比较准确的叫法应该是：线程局部变量。
 
 
@@ -81,11 +81,11 @@ public final class ContextHolder {
 
 1、先看set方法，先获取当前线程，然后通过getMap(Thread t)方法获取一个和当前线程相关的ThreadLocalMap，然后将变量的值设置到这个ThreadLocalMap对象中，当然如果获取到的ThreadLocalMap对象为空，就通过createMap方法创建。
 
-     
+
 ThreadLocalMap是ThreadLocal类的一个静态内部类，它实现了键值对的设置和获取（对比Map对象来理解），      
 
 <font  clalss="healerColor" color="red" size="5" >   
-  
+
 每个线程中都有一个独立的ThreadLocalMap副本，它所存储的值，只能被当前线程读取和修改。ThreadLocal类通过操作每一个线程特有的ThreadLocalMap副本，从而实现了变量访问在不同线程中的隔离。因为每个线程的变量都是自己特有的，完全不会有并发错误。还有一点就是    
 
 ThreadLocalMap存储的键值对中的键是this对象指向的ThreadLocal对象，而值就是你所设置的对象了。
@@ -116,10 +116,10 @@ ThreadLocalMap存储的键值对中的键是this对象指向的ThreadLocal对象
     
 ThreadLocal.ThreadLocalMap threadLocals = null; （在Thread类中）
 
-```   
+```
 
 ### 2、get方法
-    
+
 
 
 ```java
@@ -156,7 +156,7 @@ protected T initialValue() {
   }
 
 
-```     
+```
 
 ### 3、总结：
 
@@ -202,7 +202,7 @@ key 使用弱引用：引用的ThreadLocal的对象被回收了，由于ThreadLo
 
 1、JVM利用设置ThreadLocalMap的Key为弱引用，来避免内存泄露。JVM利用调用remove、get、set方法的时候，回收弱引用。当ThreadLocal存储很多Key为null的Entry的时候，而不再去调用remove、get、set方法，那么将导致内存泄漏。   
 
-   
+
 3、当使用static ThreadLocal的时候，延长ThreadLocal的生命周期，那也可能导致内存泄漏。因为，static变量在类未加载的时候，它就已经加载，当线程结束的时候，static变量不一定会回收。那么，比起普通成员变量使用的时候才加载，static的生命周期加长将更容易导致内存泄漏危机。
 
 在线程消失之后，其线程局部实例的所有副本都会被垃圾回收，这样的话就不会造成影响   
@@ -211,9 +211,9 @@ key 使用弱引用：引用的ThreadLocal的对象被回收了，由于ThreadLo
 
 开始前重新set值，以及结束后要记得remove
 
-     
-     
-     
+
+​     
+​     
 <br><br>    
 <font  color="red" size="5" >     
 感兴趣的，欢迎添加博主微信
