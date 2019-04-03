@@ -127,6 +127,23 @@ tcp        0      0 127.0.0.1:9000          0.0.0.0:*               LISTEN      
 
 ## 6、浏览器中访问吧
 
+关于出现下面问题的解决方法
+
+![https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages20190328165623.png](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages20190328165623.png)
+
+cms 版本：11
+php 版本：7.0.33-0ubuntu0.16.04.2
+curl 未开启,请先开启curl扩展，否则无法运行,请联系您的空间或者服务器提供商
+mbstring 未开启,请先开启mbstring扩展，否则无法运行
+cache 无效,请先设置目录读写权限,请联系您的空间或者服务器提供商
+
+
+apt-cache search curl，等具体看版本
+
+apt-get install php7.0-curl
+apt-get install php7.0-mbstring
+apt-get install php7.0-cache
+
 
 
 
