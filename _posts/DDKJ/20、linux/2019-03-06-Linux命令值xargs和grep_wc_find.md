@@ -1,6 +1,6 @@
 ---
-title: Linux命令值xargs和grep
-date: 2018-03-06 03:33:00
+title: Linux命令值xargs和grep_wc_find
+date: 2019-03-06 03:33:00
 tags: 
 - Linux
 category: 
@@ -24,8 +24,8 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 #### [博主github](https://github.com/HealerJean)
 #### [博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)    
-     
-     
+
+​     
 
 ## 1、xargs
 
@@ -190,8 +190,8 @@ h i j k l m n
 o p q
 r s t
 
-```     
-     
+```
+
 ### 4.1、-l 统计行数
 
 
@@ -212,14 +212,14 @@ healerjean$ cat text.txt| wc -l
 healerjean$ wc -w text.txt 
 20 text.txt
 ```
-     
+
 ### 4.3、-c 统计字符数（只显示Bytes数；）
 
 
 ```
 healerjean$ wc -c text.txt 
 40 text.txt
-```     
+```
 
 ### 4.3、 wc 直接打印
 
@@ -253,9 +253,9 @@ healerjean$ cat -n text.txt
 3	o p q
 4	r s t
 
-```     
-     
-     
+```
+
+
 <br><br>    
 <font  color="red" size="5" >     
 感兴趣的，欢迎添加博主微信
