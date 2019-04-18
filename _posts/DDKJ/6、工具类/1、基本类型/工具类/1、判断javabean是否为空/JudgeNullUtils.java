@@ -1,14 +1,13 @@
 package com.duodian.youhui.admin.utils;
 
 import com.duodian.youhui.admin.Exceptions.AppException;
-import com.duodian.youhui.entity.db.taobao.TaobaoWechat;
 
 import java.lang.reflect.Field;
 
 /**
  * 作者 ：HealerJean
  * 日期 ：2019/1/24  下午4:30.
- * 类描述：判断是否为空 或者是null 工具
+ * 类描述：判断是否为null 工具
  */
 public class JudgeNullUtils {
 
@@ -33,9 +32,5 @@ public class JudgeNullUtils {
         }
         return false ;
     }
-
-
-
-
 
 }
