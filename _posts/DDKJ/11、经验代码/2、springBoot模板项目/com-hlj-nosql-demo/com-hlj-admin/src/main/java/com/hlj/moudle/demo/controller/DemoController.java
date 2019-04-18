@@ -70,7 +70,7 @@ public class DemoController {
     @ResponseBody
     public ResponseBean get(String params){
         try {
-            return ResponseBean.buildSuccess("Get_Ok");
+            return ResponseBean.buildSuccess(params);
         } catch (AppException e) {
             log.error(e.getMessage(),e);
             return ResponseBean.buildFailure(e.getCode(),e.getMessage());
