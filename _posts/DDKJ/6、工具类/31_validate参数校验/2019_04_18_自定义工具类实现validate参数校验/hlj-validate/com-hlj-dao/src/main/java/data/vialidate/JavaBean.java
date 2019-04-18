@@ -11,12 +11,6 @@ import java.util.List;
  * @author HealerJean
  * @version 1.0v
  * @Description
-
- @Size(min = 1,max = 2    字符串、Collection、Map、数组等  #验证注解的元素值的在min和max（包含）指定区间之内，如字符长度、集合大小
- @Length(min = 1,max = 5, CharSequence(Stirng)子类型      #验证注解的元素值长度在min和max区间内
- @Range(min = 1,max = 10   BigDecimal,BigInteger,CharSequence(Stirng), byte, short, int, long等原子类型和包装类型    # 验证注解的元素值在最小值和最大值之间
- @Digits(integer = 10,fraction = 10)
-
  * @ClassName JavaBean
  * @date 2019/4/17  14:08.
  */

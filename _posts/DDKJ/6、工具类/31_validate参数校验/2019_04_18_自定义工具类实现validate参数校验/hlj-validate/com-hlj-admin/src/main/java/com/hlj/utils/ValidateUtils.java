@@ -9,9 +9,6 @@ import javax.validation.Validator;
 import java.util.Set;
 
 /**
- * @ClassName ValidateUtils
- * @Author TD
- * @Date 2019/1/15 17:15
  * @Description 校验工具
  */
 public class ValidateUtils {
