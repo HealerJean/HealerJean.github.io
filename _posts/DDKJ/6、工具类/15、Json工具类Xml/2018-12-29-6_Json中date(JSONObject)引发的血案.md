@@ -20,6 +20,17 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 ## 前言
 
+1、通过objectMapper的转化，如果对象有字段为null，则不会打印  
+
+```json
+   JsonUtils.toJson(tsJsonData)
+```
+
+2、@JsonInclude(JsonInclude.Include.NON_NULL)，在下面的操作中，其实是给前段返回的过程中失效的，而下面的有的地方操作中如果是null了，该字段本身就不会打印，需要注意
+     
+
+
+
 ## 1、测试bean
 
 ### 1、包含集合的测试bean
@@ -233,9 +244,6 @@ public class IncludeJavaBean {
      *   但是需要注意的是，这其实只要不转化出String来，这些对象都是可以操作的，不受影响
      *
      *     JSONObject.fromObject(tsJsonData).toString()
-     * 3、通过objectMapper的转化，一切正常 ，如下，如果对象有字段为null，则不会打印，上面的@JsonInclude(JsonInclude.Include.NON_NULL)这里用法不正确，其实是给前段返回的过程中失效的，因为如果是null了，该字段本身就不会toJson
-     
-     *     JsonUtils.toJson(tsJsonData)
      */
     @Test
     public void JsonObjectForJsonToBean(){
@@ -346,7 +354,7 @@ public class IncludeJavaBean {
 
 
 
-### 3.5、@JsonInclude(JsonInclude.Include.NON_NULL)
+### 3.5、@JsonInclude(JsonInclude.Include.NON_NULL)（这里用上其实是错误的，不是因为它生效的）
 
 
 
