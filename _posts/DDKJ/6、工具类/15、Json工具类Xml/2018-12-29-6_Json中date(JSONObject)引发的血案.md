@@ -551,7 +551,7 @@ public final class JsonUtils {
      *
      * @param json          JSON字符串
      * @param typeReference 类型 可以通过这个转化为List集合 ，举例：
-     * List<JavaBean> list =  JsonUtils.toObject(jsonArrayStr, new TypeReference<List<JavaBean>>() { });
+     * List<JavaBean> list =  JsonUtils.toObject(jsonArrayStr, new TypeReference<List>() { });
      * Map<String, Object> map =  JsonUtils.toObject(JsonUtils.toJson(javaBean),new TypeReference<Map<String, Object>>( ){} );
      * @return 对象
      */
@@ -662,7 +662,7 @@ public final class JsonUtils {
 
     /**
      * 构造类型
-     * @param typeReference 类型 new TypeReference<List<JavaBean>>() { }
+     * @param typeReference 类型 new TypeReference<List>() { }
      * @return 类型
      */
     public static JavaType constructType(TypeReference<?> typeReference) {
