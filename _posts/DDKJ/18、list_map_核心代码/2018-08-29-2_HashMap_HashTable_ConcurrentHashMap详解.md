@@ -100,6 +100,18 @@ void transfer(Entry[] newTable, boolean rehash) {
 
 ```
 
+### 1.3、HashMap的时间复杂度O(1)的思考
+
+分四步：      
+1.判断key，根据key算出索引。     
+2.根据索引获得索引位置所对应的键值对链表。      
+3.遍历键值对链表，根据key找到对应的Entry键值对。    
+4.拿到value。    
+分析：     
+
+以上四步要保证HashMap的时间复杂度O(1)，需要保证每一步都是O(1)，现在看起来就第三步对链表的循环的时间复杂度影响最大，链表查找的时间复杂度为O(n)，与链表长度有关。我们要保证那个链表长度为1，才可以说时间复杂度能满足O(1)。但这么说来只有那个hash算法尽量减少冲突，才能使链表长度尽可能短，理想状态为1。因此可以得出结论：HashMap的查找时间复杂度只有在最理想的情况下才会为O(1)，而要保证这个理想状态不是我们开发者控制的。
+
+
 ## 2、HashTable是线程安全的
 
 但是HashTable线程安全的策略实现代价却太大了，简单粗暴，<font color="red">  get/put所有相关操作都是synchronized的，这相当于给整个哈希表加了一把大锁，</font>多线程访问时候，只要有一个线程访问或操作该对象，那其他线程只能阻塞，相当于将所有的操作串行化，在竞争激烈的并发场景中性能就会非常差。
@@ -112,6 +124,10 @@ void transfer(Entry[] newTable, boolean rehash) {
 　
 　
 ## 3、ConcurrentHashMap
+
+ **从1.7到1.8版本，由于HashEntry从链表 变成了红黑树所以 concurrentHashMap的时间复杂度从O(n)到O(log(n))**
+
+
 
 ConcurrentHashMap采用了非常精妙的"分段锁"策略，ConcurrentHashMap的主干是个Segment数组。
 
@@ -135,7 +151,7 @@ static class Segment<K,V> extends ReentrantLock implements Serializable {
 　
 　
 
-　
+
 　在ConcurrentHashMap，一个Segment就是一个子哈希表，Segment里维护了一个HashEntry数组，并发环境下，对于不同Segment的数据进行操作是不用考虑锁竞争的。<br/>
 
 　<font color="red" size="4" >　
