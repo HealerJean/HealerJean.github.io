@@ -156,19 +156,13 @@ explain  	 select * from d001_index_user_info union select * from d001_index_use
 
 3、`id = 3` `UNION RESULT` 很明显为联合查询的结果
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>PRIMARY</td><td>d001_index_user_info</td><td>NULL</td><td>range</td><td>PRIMARY</td><td>PRIMARY</td><td>8</td><td>NULL</td><td>4</td><td>100</td><td>Using where</td></tr>
 <tr><td>2</td><td>UNION</td><td>d001_index_user_info</td><td>NULL</td><td>range</td><td>PRIMARY</td><td>PRIMARY</td><td>8</td><td>NULL</td><td>2</td><td>100</td><td>Using where</td></tr>
 <tr><td>NULL</td><td>UNION RESULT</td><td>&lt;union1,2&gt;</td><td>NULL</td><td>ALL</td><td>NULL</td><td>NULL</td><td>NULL</td><td>NULL</td><td>NULL</td><td>NULL</td><td>Using temporary</td></tr></table>
-</body>
-</html>
+
 
 
 
@@ -184,20 +178,15 @@ explain select *
 
 1、第一个 select 为最 `PRIMARY` 外层查询      
 
-2、第二个 select 为 `SUBQUERY `子查询
+2、第二个 select 为 `SUBQUERY `子查询     
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>PRIMARY</td><td>d001_index_user_info</td><td>NULL</td><td>range</td><td>PRIMARY</td><td>PRIMARY</td><td>8</td><td>NULL</td><td>5</td><td>100</td><td>Using where</td></tr>
 <tr><td>2</td><td>SUBQUERY</td><td>b</td><td>NULL</td><td>const</td><td>PRIMARY</td><td>PRIMARY</td><td>8</td><td>const</td><td>1</td><td>100</td><td>Using index</td></tr></table>
-</body>
-</html>
+
 
 
 
@@ -231,17 +220,13 @@ explain select *
 explain SELECT * from d001_index_user_info ;
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
+
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_user_info</td><td>NULL</td><td>ALL</td><td>NULL</td><td>NULL</td><td>NULL</td><td>NULL</td><td>10</td><td>100</td><td>NULL</td></tr></table>
-</body>
-</html>
+
 
 #### 1.2.3、index： 表示全索引扫描 （索引覆盖）和ALL类似
 
@@ -257,17 +242,11 @@ explain SELECT * from d001_index_user_info ;
 explain SELECT name FROM  d001_index_user_info
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_user_info</td><td>NULL</td><td>index</td><td>NULL</td><td>idx_name</td><td>82</td><td>NULL</td><td>10</td><td>100</td><td>Using index</td></tr></table>
-</body>
-</html>
+
 
 
 #### 1.2.4、range ：索引范围内查询 
@@ -284,17 +263,11 @@ explain SELECT name FROM  d001_index_user_info
 EXPLAIN SELECT * FROM  d001_index_user_info where id  > 1 ;
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_user_info</td><td>NULL</td><td>range</td><td>PRIMARY</td><td>PRIMARY</td><td>8</td><td>NULL</td><td>9</td><td>100</td><td>Using where</td></tr></table>
-</body>
-</html>
+
 
 
 
@@ -304,17 +277,11 @@ EXPLAIN SELECT * FROM  d001_index_user_info where id  > 1 ;
 EXPLAIN SELECT * FROM  d001_index_user_info where id  = 1  or name = 'b';
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_user_info</td><td>NULL</td><td>index_merge</td><td>PRIMARY,idx_name</td><td>PRIMARY,idx_name</td><td>8,82</td><td>NULL</td><td>2</td><td>100</td><td>Using union(PRIMARY,idx_name); Using where</td></tr></table>
-</body>
-</html>
+
 
 
 
@@ -324,17 +291,11 @@ EXPLAIN SELECT * FROM  d001_index_user_info where id  = 1  or name = 'b';
 EXPLAIN SELECT * FROM  d001_index_user_info where name  = 'a' ;
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_user_info</td><td>NULL</td><td>ref</td><td>idx_name</td><td>idx_name</td><td>82</td><td>const</td><td>1</td><td>100</td><td>NULL</td></tr></table>
-</body>
-</html>
+
 
 
 
@@ -346,18 +307,12 @@ EXPLAIN SELECT *
                join d001_index_order_info b on a.id = b.ref_user_id;
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>b</td><td>NULL</td><td>index</td><td>idx_uid_proname_price_num</td><td>idx_uid_proname_price_num</td><td>225</td><td>NULL</td><td>1</td><td>100</td><td>Using index</td></tr>
 <tr><td>1</td><td>SIMPLE</td><td>a</td><td>NULL</td><td>eq_ref</td><td>PRIMARY</td><td>PRIMARY</td><td>8</td><td>hlj-mysql.b.ref_user_id</td><td>1</td><td>100</td><td>Using where</td></tr></table>
-</body>
-</html>
+
 
 
 
@@ -367,17 +322,11 @@ EXPLAIN SELECT *
 EXPLAIN SELECT * FROM d001_index_user_info  where  id =1 ;
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_user_info</td><td>NULL</td><td>const</td><td>PRIMARY</td><td>PRIMARY</td><td>8</td><td>const</td><td>1</td><td>100</td><td>NULL</td></tr></table>
-</body>
-</html>
+
 
 
 
@@ -404,17 +353,11 @@ EXPLAIN select * from d001_index_order_info where id =1 and ref_user_id = 1 ;
 
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>const</td><td>PRIMARY,idx_uid_proname_price_num</td><td>PRIMARY</td><td>8</td><td>const</td><td>1</td><td>100</td><td>NULL</td></tr></table>
-</body>
-</html>
+
 
 
 ### 1.5、key_len：使用索引字节长度
@@ -496,17 +439,11 @@ using index & using where：查找使用了索引，但是需要的数据都在�
 explain SELECT *  from d001_index_order_info  WHERE ref_user_id = 1 ;
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>ref</td><td>idx_uid_proname_price_num</td><td>idx_uid_proname_price_num</td><td>8</td><td>const</td><td>3</td><td>100</td><td>NULL</td></tr></table>
-</body>
-</html>
+
 
 
 #### 1.7.2、Using where：
@@ -524,34 +461,20 @@ explain SELECT ref_user_id from d001_index_order_info where param = '1' ;
 
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>ALL</td><td>NULL</td><td>NULL</td><td>NULL</td><td>NULL</td><td>10</td><td>10</td><td>Using where</td></tr></table>
-</body>
-</html>
+
 
 
 ```sql
 explain SELECT ref_user_id from d001_index_order_info where ref_user_id = 1 and param = '1' ;
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>ref</td><td>idx_uid_proname_price_num</td><td>idx_uid_proname_price_num</td><td>8</td><td>const</td><td>3</td><td>10</td><td>Using where</td></tr></table>
-</body>
-</html>
 
 
 
@@ -562,17 +485,11 @@ explain SELECT ref_user_id from d001_index_order_info where ref_user_id = 1 and 
 explain SELECT * from d001_index_order_info where ref_user_id >  1 ;
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>ALL</td><td>idx_uid_proname_price_num</td><td>NULL</td><td>NULL</td><td>NULL</td><td>10</td><td>70</td><td>Using where</td></tr></table>
-</body>
-</html>
+
 
 
 
@@ -588,17 +505,10 @@ explain SELECT * from d001_index_order_info where ref_user_id >  1 ;
 explain SELECT name FROM  d001_index_user_info
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_user_info</td><td>NULL</td><td>index</td><td>NULL</td><td>idx_name</td><td>82</td><td>NULL</td><td>10</td><td>100</td><td>Using index</td></tr></table>
-</body>
-</html>
+
 
 
 #### 1.7.4、Using where, Using index ：
@@ -611,17 +521,11 @@ explain SELECT ref_user_id  from d001_index_order_info  WHERE product_name = 1 ;
 
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>index</td><td>NULL</td><td>idx_uid_proname_price_num</td><td>225</td><td>NULL</td><td>10</td><td>10</td><td>Using where; Using index</td></tr></table>
-</body>
-</html>
+
 
 ```sql
 下面这个注意只使用到了ref_user_id 作为索引，最左优先原则
@@ -629,17 +533,11 @@ explain SELECT ref_user_id  from d001_index_order_info  WHERE ref_user_id > 2  a
 ```
 
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>range</td><td>idx_uid_proname_price_num</td><td>idx_uid_proname_price_num</td><td>8</td><td>NULL</td><td>5</td><td>10</td><td>Using where; Using index</td></tr></table>
-</body>
-</html>
+
 
 
 
@@ -651,17 +549,11 @@ explain SELECT ref_user_id from d001_index_order_info where ref_user_id >  1 ;
 
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>range</td><td>idx_uid_proname_price_num</td><td>idx_uid_proname_price_num</td><td>8</td><td>NULL</td><td>7</td><td>100</td><td>Using where; Using index</td></tr></table>
-</body>
-</html>
+
 
 
 
@@ -673,34 +565,22 @@ explain SELECT * from d001_index_order_info where ref_user_id <  9  and  ref_use
 
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>range</td><td>idx_uid_proname_price_num</td><td>idx_uid_proname_price_num</td><td>8</td><td>NULL</td><td>3</td><td>100</td><td>Using index condition</td></tr></table>
-</body>
-</html>
+
 
 ```sql
 explain select * from d001_index_order_info  where ref_user_id = 1  order by  product_name ;
 
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>ref</td><td>idx_uid_proname_price_num</td><td>idx_uid_proname_price_num</td><td>8</td><td>const</td><td>3</td><td>100</td><td>Using index condition</td></tr></table>
-</body>
-</html>
+
 
 
 
@@ -731,17 +611,11 @@ explain select * from d001_index_order_info  order by  param ;
 
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>ALL</td><td>NULL</td><td>NULL</td><td>NULL</td><td>NULL</td><td>10</td><td>100</td><td>Using filesort</td></tr></table>
-</body>
-</html>
+
 
 
 
@@ -758,17 +632,10 @@ explain select * from d001_index_order_info  where ref_user_id > 1  order by  re
 
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>ALL</td><td>idx_uid_proname_price_num</td><td>NULL</td><td>NULL</td><td>NULL</td><td>10</td><td>70</td><td>Using where; Using filesort</td></tr></table>
-</body>
-</html>
 
 ```sql
 explain select * from d001_index_order_info  where ref_user_id > 1  order by  ref_user_id  LIMIT 1  ;
@@ -776,33 +643,21 @@ explain select * from d001_index_order_info  where ref_user_id > 1  order by  re
 explain select * from d001_index_order_info  where ref_user_id > 5  order by  ref_user_id
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>range</td><td>idx_uid_proname_price_num</td><td>idx_uid_proname_price_num</td><td>8</td><td>NULL</td><td>7</td><td>100</td><td>Using index condition</td></tr></table>
-</body>
-</html>
+
 
 ```sql
 explain select * from d001_index_order_info  where ref_user_id = 1  order by  product_name ;
 ```
 
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
+
 <table border="1" style="border-collapse:collapse">
 <tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>ref</td><td>idx_uid_proname_price_num</td><td>idx_uid_proname_price_num</td><td>8</td><td>const</td><td>3</td><td>100</td><td>Using index condition</td></tr></table>
-</body>
-</html>
+
 
 
 
