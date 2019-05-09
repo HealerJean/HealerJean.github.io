@@ -21,7 +21,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 
 
-## 前言
+## 前言 mysql优化器在数据量不同的情况下，也会到结果产生影响
 
 #### [博主github](https://github.com/HealerJean)
 #### [博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)    
@@ -624,7 +624,8 @@ explain SELECT ref_user_id  from d001_index_order_info  WHERE product_name = 1 ;
 </html>
 
 ```sql
-explain SELECT ref_user_id  from d001_index_order_info  WHERE ref_user_id > 2  and product_name = 1 ;
+下面这个注意只使用到了ref_user_id 作为索引，最左优先原则
+explain SELECT ref_user_id  from d001_index_order_info  WHERE ref_user_id > 2  and product_name = 1 ; 
 ```
 
 
@@ -684,16 +685,33 @@ explain SELECT * from d001_index_order_info where ref_user_id <  9  and  ref_use
 </body>
 </html>
 
+```sql
+explain select * from d001_index_order_info  where ref_user_id = 1  order by  product_name ;
+
+```
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+<table border="1" style="border-collapse:collapse">
+<tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
+<tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>ref</td><td>idx_uid_proname_price_num</td><td>idx_uid_proname_price_num</td><td>8</td><td>const</td><td>3</td><td>100</td><td>Using index condition</td></tr></table>
+</body>
+</html>
 
 
 
-
-#### 1.7.1、Using filesort 
+#### 1.7.6、Using filesort 
 
 ##### 解释：表示我们的排序 不能通过索引达到排序效果，一般有 `Using filesort`, 都建议优化去掉, 因为这样的查询 CPU 资源消耗大.
 
+##### 原因：Mysql对于排序记录的大小太多了，而且Myslq优化器也会造成一定的影响
+
 ```sql
-关于这个 使用了索引的排序，大师却没有达到排序效果，在索引的入门文章中将会有说明
+关于这个 使用了索引的排序，但是却没有使用，由于 Using filesort是使用算法在 内存中进行排序，MySQL对于排序的记录的大小也是有做限制：而且mysql会根据记录数进行自动优化选择，当数据量大的时候情况可能就会不一样
 explain select * from d001_index_order_info order by  ref_user_id ;
 
 explain select * from d001_index_order_info  order by  param ;
@@ -711,6 +729,62 @@ explain select * from d001_index_order_info  order by  param ;
 <tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>ALL</td><td>NULL</td><td>NULL</td><td>NULL</td><td>NULL</td><td>10</td><td>100</td><td>Using filesort</td></tr></table>
 </body>
 </html>
+
+
+##### 1.7.6.1、情况1、
+
+```sql
+//这里的 limit是10 或者没有limit的时候 都会出现 Using filesort  ，因为我的数据库中数据量比较小，一共也没有10条记录
+explain select * from d001_index_order_info  where ref_user_id > 1  order by  ref_user_id  LIMIT 10  ;
+
+
+```
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+<table border="1" style="border-collapse:collapse">
+<tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
+<tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>ALL</td><td>idx_uid_proname_price_num</td><td>NULL</td><td>NULL</td><td>NULL</td><td>10</td><td>70</td><td>Using where; Using filesort</td></tr></table>
+</body>
+</html>
+
+```sql
+explain select * from d001_index_order_info  where ref_user_id > 1  order by  ref_user_id  LIMIT 1  ;
+```
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+<table border="1" style="border-collapse:collapse">
+<tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
+<tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>range</td><td>idx_uid_proname_price_num</td><td>idx_uid_proname_price_num</td><td>8</td><td>NULL</td><td>7</td><td>100</td><td>Using index condition</td></tr></table>
+</body>
+</html>
+
+```sql
+explain select * from d001_index_order_info  where ref_user_id = 1  order by  product_name ;
+```
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+<table border="1" style="border-collapse:collapse">
+<tr><th>id</th><th>select_type</th><th>table</th><th>partitions</th><th>type</th><th>possible_keys</th><th>key</th><th>key_len</th><th>ref</th><th>rows</th><th>filtered</th><th>Extra</th></tr>
+<tr><td>1</td><td>SIMPLE</td><td>d001_index_order_info</td><td>NULL</td><td>ref</td><td>idx_uid_proname_price_num</td><td>idx_uid_proname_price_num</td><td>8</td><td>const</td><td>3</td><td>100</td><td>Using index condition</td></tr></table>
+</body>
+</html>
+
+
 
 
 
