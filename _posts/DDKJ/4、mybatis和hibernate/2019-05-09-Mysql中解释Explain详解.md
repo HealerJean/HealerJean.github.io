@@ -1,11 +1,11 @@
 ---
-title: Mysql中解释Expline详解
+title: Mysql中解释Explain详解
 date: 2019-05-08 03:33:00
 tags: 
 - Database
 category: 
 - Database
-description: Mysql中解释Expline详解
+description: Mysql中解释Explain详解
 ---
 
 <!-- 

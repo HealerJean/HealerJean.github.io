@@ -58,9 +58,30 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 
 
+#### 5、pom引入resource
 
+```xml
 
+</build>
+	<resources>
+		<resource>
+			<directory>src/main/i18n</directory>
+		</resource>
+		<resource>
+			<directory>src/main/resources</directory>
+		</resource>
+		<resource>
+			<directory>src/main/java</directory>
+			<includes>
+				<include>**/*.properties</include>
+				<include>**/*.xml</include>
+			</includes>
+			<filtering>false</filtering>
+		</resource>
+	</resources>
+</build>
 
+```
 
 
 

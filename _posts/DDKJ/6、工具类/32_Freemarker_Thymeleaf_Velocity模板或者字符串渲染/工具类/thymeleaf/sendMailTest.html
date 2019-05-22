@@ -1,0 +1,39 @@
+
+信贷信息(loan_debit_record)
+字段名	备注
+${name}	借款合同号
+${debit.loan_contract_no}	借款合同号
+${NU.format($debit.loan_amount)}	借款合同金额（小写）
+${NU.digitUppercase($debit.loan_amount)}	借款合同金额（大写）
+${DU.dateFormat($debit.contract_start_time)}	合同生效日期
+${DU.dateFormat($debit.contract_end_time)}	合同结束日期
+${debit.loan_apr}	借款年利率
+${coreAcc.open_bank}	回款账户开户行
+${coreAcc.open_name}	回款账户账户名称
+${coreAcc.account}	回款账户账户号
+${NU.format($repay.amount_total)}	本息金额
+${capital.company_name}	资方名称
+
+客户信息(company)
+字段名	备注
+${company.legal_name}	授信企业法定代表人姓名
+${company.company_area}	授信企业公司注册所在地
+${company.company_address}	授信企业公司注册详细地址
+${company.work_area}	授信企业公司所在地
+${company.company_work_address}	授信企业公司详细地址
+${core.legal_name}	核心企业法定代表人姓名
+${core.company_area}	核心企业注册所在地
+${core.company_address}	核心企业公司注册详细地址
+${core.work_area}	核心企业所在地
+${core.company_work_address}	核心企业公司详细地址
+${capital.contact_name}	资方负责人姓名
+${capital.company_area}	资方公司注册所在地
+${capital.company_address}	资方公司注册详细地址
+${capital.work_area}	资方公司所在地
+${capital.company_work_address}	资方公司详细地址
+
+部门信息
+字段名	备注
+${orgUser.dept_name}	经办机构
+${orgUser.phone}	经办人联系电话
+	
