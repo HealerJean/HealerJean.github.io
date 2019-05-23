@@ -54,7 +54,9 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 #### 2.1.1、@RequestBody  
 
- 不写的话，按照下面的正常调用就行了，但是如果写上了里面参数使用了required=true，一定不能让**DTO对象**为null，否则就会报错`**org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing**` 或者将它设置为**required=false**
+ 不写的话，按照下面的正常调用就行了，但是如果写上了里面参数使用了required=true，一定不能让**DTO对象**为null，否则就会报错`**org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing**` 或者将它设置为**required=false**      
+
+如果使用了它，传递的必须为json，postman讲传递失败，不能传入
 
 
 
