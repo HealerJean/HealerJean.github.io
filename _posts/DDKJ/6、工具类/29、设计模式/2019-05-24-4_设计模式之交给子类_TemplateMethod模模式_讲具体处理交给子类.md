@@ -44,7 +44,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 #### 1.1、UML图
 
-![1558691657273](D:\study\HealerJean.github.io\blogImages\1558691657273.png)
+![1558691657273](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1558691657273.png)
 
 
 
@@ -171,7 +171,7 @@ public class Main {
 
 ### 3、UML图
 
-![1558693456672](D:\study\HealerJean.github.io\blogImages\1558693456672.png)
+![1558693456672](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1558693456672.png)
 
  
 
