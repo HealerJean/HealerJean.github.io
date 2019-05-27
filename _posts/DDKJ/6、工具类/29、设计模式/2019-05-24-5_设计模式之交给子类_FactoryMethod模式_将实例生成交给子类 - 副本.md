@@ -1,11 +1,11 @@
 ---
-title: 设计模式之工厂方法模式
-date: 2018-10-15 03:33:00
+title: 设计模式之交给子类_FactoryMethod模式_将实例生成交给子类
+date: 2019-05-24 03:33:00
 tags: 
-- Java
+- DesignPattern
 category: 
-- Java
-description: 设计模式之工厂方法模式
+- DesignPattern
+description: 设计模式之交给子类_FactoryMethod模式_将实例生成交给子类
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
@@ -17,6 +17,10 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 ## 前言
 
+**讲实例的生成交给子类 ，父类决定实例的生成方式，但并不决定所要生成的具体的类**
+
+
+
 个人觉得工厂方法，我们平常在开发中或多或少都会用到 
 
 工厂方法(Factory Method)模式的意义是定义一个创建产品对象的工厂接口，将实际创建工作推迟到子类当中。核心工厂类不再负责产品的创建，这样核心类成为一个抽象工厂角色，仅负责具体工厂子类必须实现的接口，这样进一步抽象化的好处是使得工厂方法模式可以使系统在不修改具体工厂角色的情况下引进新的产品。
@@ -27,7 +31,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 ## 1、普通工厂模式
 
 ### 1.1、创建一个接口`Sender`
- 
+
 
 ```java
 public interface Sender {  
@@ -40,7 +44,7 @@ public interface Sender {
 
 
 #### 1.2.1、发送实现类1`MailSender`
- 
+
 
 ```
 public class MailSender implements Sender {  
@@ -56,7 +60,7 @@ public class MailSender implements Sender {
 ```
 
 #### 1.2.2、发送实现类2`SmsSender`
- 
+
 
 ```java
 public class SmsSender implements Sender {  
@@ -72,7 +76,7 @@ public class SmsSender implements Sender {
 
 
 ### 1.3、创建工厂类`SendFactory`
- 
+
 
 #### <font color="red">通过传入的字符串常亮进行匹配  </font>
 
@@ -96,7 +100,7 @@ public class SendFactory {
 ```
 
 ### 1.4、测试使用
- 
+
 
 ```java
 public class FactoryTest {  
@@ -112,10 +116,10 @@ public class FactoryTest {
 
 
 ## 2、多个工厂方法模式
- 
+
 
 ### 2.1、改变上面的工厂类
- 
+
 
 
 ```java
@@ -132,7 +136,7 @@ public class SendFactory {
 ```
 
 ### 2.2、测试使用
- 
+
 
 ```java
 
@@ -149,10 +153,10 @@ public class FactoryTest {
 
 
 ## 3、静态工厂方法
- 
+
 
 ### 3.1、修改静态工厂方法
- 
+
 
 ```java
 
@@ -171,7 +175,7 @@ public class SendFactory {
 ```
 
 ### 3.2、测试使用
- 
+
 
 ```java
 
@@ -189,13 +193,15 @@ public class FactoryTest {
 ## 总结：
 
 总体来说，工厂模式适合：凡是出现了大量的产品需要创建，并且具有共同的接口时，可以通过工厂方法模式进行创建。 
-在以上的三种模式中，第一种如果传入的字符串有误，不能正确创建对象，第三种相对于第二种，不需要实例化工厂类，所以，大多数情况下，我们会选用第三种——静态工厂方法模式。
+在以上的三种模式中，第一种如果传入的字符串有误，不能正确创建对象，     
+
+第三种相对于第二种，不需要实例化工厂类，所以，大多数情况下，我们会选用第三种——静态工厂方法模式。
 
 ## 缺点：
 
 每次增加一个产品时，都需要增加一个具体类和对象实现工厂，使得系统中类的个数成倍增加，在一定程度上增加了系统的复杂度，同时也增加了系统具体类的依赖。这并不是什么好事。
- 
-个人理解：每增加一个接口实现类，都需要在工厂类中添加对应的获取接口实现类的方法。这样就会改变代码的结构。
+
+**个人理解：每增加一个接口实现类，都需要在工厂类中添加对应的获取接口实现类的方法。这样就会改变代码的结构**。
 
 
 
