@@ -54,7 +54,12 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 #### 2.1.1、@RequestBody  
 
- 不写的话，按照下面的正常调用就行了，但是如果写上了里面参数使用了required=true，一定不能让**DTO对象**为null，否则就会报错`**org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing**` 或者将它设置为**required=false**      
+   @requestbody的含义是在当前对象获取整个http请求的body里面的所有数据，因此spring就不可能将这个数据强制包装成Course或者List类型，并且从@requestbody设计上来说，只获取一次就可以拿到请求body里面的所有数据，就没必要出现有多个@requestbody出现在controller的函数的形参列表当中
+
+---------------------
+
+
+ 不写的话，按照下面的正常调用就行了，但是如果写上了里面参数使用了required=true，一定不能让**DTO对象**为null，否则就会报错`org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing` 或者将它设置为**required=false**      
 
 如果使用了它，传递的必须为json，postman讲传递失败，不能传入
 
@@ -76,7 +81,7 @@ Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json; charset=UTF-8
 Cookie: JSESSIONID=e1fd90bf-1148-4368-9fe9-018dcaf1aa0d
-#请求参数,注意这里要空一样，否则就不会调用成功，因为如果和上面的参数紧挨着，就会被认为是参数的一种
+#请求参数,注意这里要空一行，否则就不会调用成功，因为如果和上面的参数紧挨着，就会被认为是参数的一种
 
 {"typeKey":"country","dataKey":"china","dataValue":"中国"}
 
@@ -137,8 +142,8 @@ Cookie: JSESSIONID=e1fd90bf-1148-4368-9fe9-018dcaf1aa0d
 ### 2.4、PUT请求
 
 ```java
-@PutMapping("updateData")
-public String updateData(@RequestBody(required = false)DictionaryTypeDTO typeDTO){
+@PutMapping("updateData/{id}")
+public String updateData(@PathVariable Long id @RequestBody(required = false)DictionaryTypeDTO typeDTO){
 
 }
 ```
@@ -146,14 +151,14 @@ public String updateData(@RequestBody(required = false)DictionaryTypeDTO typeDTO
 
 
 ```http
-PUT http://localhost.admin/api/sys/updateDictType
+PUT http://localhost.admin/api/sys/updateData/1
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json; charset=UTF-8
 Cookie: JSESSIONID=e1fd90bf-1148-4368-9fe9-018dcaf1aa0d
 #请求参数
 
-{"id":1,"typeKey":"country","typeDesc":"国际"}
+{"typeKey":"country","typeDesc":"国际"}
 ```
 
 

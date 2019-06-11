@@ -167,6 +167,44 @@ public class HttpUtils {
     }
 
 
+    
+        /**
+         *  Post调用（支持上传文件）
+         *
+         * @param url
+         * @param params 发送参数
+         * @return string
+         */
+        public static HttpEntity doPostFromFile(String url, Map<String, Object> params,Map<String,File>  fileMap, Map<String,String> fileMediaTypeMap , Map<String, String> headersParams ) throws ScfException {
+            MultipartBody.Builder multiBuilder = new MultipartBody.Builder();
+            multiBuilder.setType(MultipartBody.FORM);
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                multiBuilder.addFormDataPart(key, value.toString());
+            }
+
+            for (Map.Entry<String,File>  entry :fileMap.entrySet()){
+                String key = entry.getKey();
+                File file = entry.getValue();
+                multiBuilder.addFormDataPart(key, file.getName(), MultipartBody.create( MediaType.parse (fileMediaTypeMap.get(key))  , file));
+            }
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(multiBuilder.build())
+                    .headers(setHeaders(headersParams))
+                    .build();
+            try {
+                Response response = client.newCall(request).execute();
+                return new HttpEntity(response.code(),response.body().string());
+            } catch (Exception e) {
+                throw  new ScfException(e, SystemEnum.ResponseEnum.SYSTEM_ERROR.getCode() , "调用Http异常");
+            }
+    }
+
+
+
     /**
      *  Post调用 根据 xml 或 json 调用
      * @param type  类型
