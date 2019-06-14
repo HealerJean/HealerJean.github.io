@@ -1,11 +1,13 @@
-package com.hlj.util.Z010异常;
+package com.hlj.proj.exception;
 
 
+import com.hlj.proj.enums.ResponseEnum;
 
 /**
- * 业务异常
+ * 系统业务异常
  */
 public class BusinessException extends RuntimeException {
+
 
     private int code;
 
@@ -13,10 +15,9 @@ public class BusinessException extends RuntimeException {
         this.code = code;
     }
 
-
     public BusinessException(String message) {
         super(message);
-        this.code = ResponseEnum.逻辑错误.getCode();
+        this.code = ResponseEnum.逻辑错误.code;
     }
 
     public BusinessException(int code, String message) {
@@ -25,13 +26,13 @@ public class BusinessException extends RuntimeException {
     }
 
     public BusinessException(ResponseEnum responseEnum) {
-        super(responseEnum.getMsg());
-        this.code = responseEnum.getCode() ;
+        super(responseEnum.msg);
+        this.code = responseEnum.code ;
     }
 
     public BusinessException(String message, Throwable cause) {
         super(message, cause);
-        this.code = ResponseEnum.逻辑错误.getCode();
+        this.code = ResponseEnum.逻辑错误.code;
     }
 
     public BusinessException(int code ,Throwable e) {

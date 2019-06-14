@@ -30,6 +30,7 @@ import javax.sql.DataSource;
  * version：1.0.0
  */
 @Configuration
+
 @EnableTransactionManagement
 @EnableJpaRepositories(
         entityManagerFactoryRef="admoreEMF",
@@ -40,7 +41,7 @@ public class DatasourceOneData {
 
     @Value("${admore.datasource.url}")
     private String admoreUrl;
-    @Value("${admore.datasource.username}")
+    @Value("${admore.datasource.username}")s
     private String admoreUsername;
     @Value("${admore.datasource.password}")
     private String admorePassword;
@@ -62,7 +63,7 @@ public class DatasourceOneData {
 
         return druidDataSource;
     }
-
+//主要是为了配置实体扫描  和@EntityScan一样
     @Primary
     @Bean(name = "admoreEMF")
     public LocalContainerEntityManagerFactoryBean admoreEMF(EntityManagerFactoryBuilder builder, @Qualifier("admore") DataSource dataSource) {
@@ -72,13 +73,15 @@ public class DatasourceOneData {
                 .persistenceUnit("admore")
                 .build();
     }
-
-
     @Primary
     @Bean(name = "admoreTM")
     public PlatformTransactionManager admoreTransactionManager(@Qualifier("admoreEMF") LocalContainerEntityManagerFactoryBean entityManagerFactoryBean ) {
         return new JpaTransactionManager(entityManagerFactoryBean.getObject());
     }
+
+
+
+
 
     @Primary
     @Bean(name = "admoreSessionFactory")
@@ -100,5 +103,6 @@ public class DatasourceOneData {
     public SqlSessionTemplate testSqlSessionTemplate(@Qualifier("admoreSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
+
 
 }
