@@ -1,22 +1,19 @@
-package com.duodian.admore.core.bean;
+package com.hlj.proj.dto;
 
-import com.duodian.admore.core.helper.DateHelper;
-import com.duodian.admore.enums.ErrorCodeEnum;
 
-import java.util.Calendar;
+import com.hlj.proj.enums.ResponseEnum;
 
 /**
- * Created by j.sh on 2015/4/23.
+ * 返回对象
  */
 public class ResponseBean {
 
     private ResponseBean() {
     }
-
     public static ResponseBean buildSuccess() {
         ResponseBean responseBean = new ResponseBean();
         responseBean.setSuccess(true);
-        responseBean.setCode(ErrorCodeEnum.正常.code);
+        responseBean.setCode(ResponseEnum.正常.code);
         responseBean.setDate(System.currentTimeMillis()+"");
         return responseBean;
     }
@@ -24,7 +21,7 @@ public class ResponseBean {
     public static ResponseBean buildSuccess(Object result) {
         ResponseBean responseBean = new ResponseBean();
         responseBean.setSuccess(true);
-        responseBean.setCode(ErrorCodeEnum.正常.code);
+        responseBean.setCode(ResponseEnum.正常.code);
         responseBean.setResult(result);
         responseBean.setDate(System.currentTimeMillis()+"");
         return responseBean;
@@ -33,42 +30,42 @@ public class ResponseBean {
     public static ResponseBean buildFailure() {
         ResponseBean responseBean = new ResponseBean();
         responseBean.setSuccess(false);
-        responseBean.setCode(ErrorCodeEnum.系统错误.code);
+        responseBean.setCode(ResponseEnum.系统错误.code);
         responseBean.setDate(System.currentTimeMillis()+"");
         return responseBean;
     }
 
-    public static ResponseBean buildFailure(String message) {
+    public static ResponseBean buildFailure(String msg) {
         ResponseBean responseBean = new ResponseBean();
         responseBean.setSuccess(false);
-        responseBean.setCode(ErrorCodeEnum.系统错误.code);
-        responseBean.setMessage(message);
+        responseBean.setCode(ResponseEnum.系统错误.code);
+        responseBean.setMsg(msg);
         responseBean.setDate(System.currentTimeMillis()+"");
         return responseBean;
     }
 
-    public static ResponseBean buildFailure(ErrorCodeEnum errorCodeEnum) {
+    public static ResponseBean buildFailure(ResponseEnum responseEnum) {
         ResponseBean responseBean = new ResponseBean();
         responseBean.setSuccess(false);
-        responseBean.setCode(errorCodeEnum.code);
-        responseBean.setMessage(errorCodeEnum.desc);
+        responseBean.setCode(responseEnum.code);
+        responseBean.setMsg(responseEnum.msg);
         responseBean.setDate(System.currentTimeMillis()+"");
         return responseBean;
     }
 
-    public static ResponseBean buildFailure(String code,String message) {
+    public static ResponseBean buildFailure(int code, String msg) {
         ResponseBean responseBean = new ResponseBean();
         responseBean.setSuccess(false);
         responseBean.setCode(code);
-        responseBean.setMessage(message);
+        responseBean.setMsg(msg);
         responseBean.setDate(System.currentTimeMillis()+"");
         return responseBean;
     }
 
     private boolean success;
     private Object result = "{}";
-    private String message = "";
-    private String code = "";
+    private String msg = "";
+    private int code ;
     private String date ;
 
     public boolean isSuccess() {
@@ -87,19 +84,19 @@ public class ResponseBean {
         this.result = result;
     }
 
-    public String getMessage() {
-        return message;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(int code) {
         this.code = code;
     }
 
