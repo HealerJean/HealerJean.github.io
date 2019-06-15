@@ -1,5 +1,6 @@
 package com.hlj.proj.api.demo;
 
+import com.hlj.proj.common.page.PageDTO;
 import com.hlj.proj.dto.Demo.DemoDTO;
 
 import java.util.List;
@@ -13,7 +14,9 @@ public interface DemoEntityService {
 
     DemoDTO addDemoEntity(DemoDTO demoEntity);
 
-    List<DemoDTO> findAll();
+    List<DemoDTO> queryDemoList(DemoDTO demoDTO);
+
+    PageDTO<DemoDTO> queryDemoPage(DemoDTO demoDTO);
 
     DemoDTO findById(Long id);
 

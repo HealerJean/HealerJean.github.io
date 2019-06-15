@@ -63,16 +63,22 @@ public class DemoController {
     }
 
 
-    @ApiOperation(notes = "所有Demo实体类",
-            value = "所有Demo实体类",
+    @ApiOperation(notes = "查询Demo实体类-列表",
+            value = "查询Demo实体类-列表",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             response = DemoDTO.class)
     @GetMapping("demos")
     @ResponseBody
-    public ResponseBean findAll(DemoDTO demoDTO) {
-        log.info("样例--------查询Demo列表数据------数据信息", demoDTO);
-        return ResponseBean.buildSuccess(demoEntityService.findAll());
+    public ResponseBean queryDemoList(DemoDTO demoDTO) {
+        log.info("样例--------查询Demo实体类-列表------数据信息", demoDTO);
+        if(demoDTO.getPage()){
+            return ResponseBean.buildSuccess(demoEntityService.queryDemoPage(demoDTO));
+        }
+        return ResponseBean.buildSuccess(demoEntityService.queryDemoList(demoDTO));
+
+
     }
+
 
 }

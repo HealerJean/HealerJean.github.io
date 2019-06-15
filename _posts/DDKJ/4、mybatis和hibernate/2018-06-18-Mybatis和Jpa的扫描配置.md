@@ -8,7 +8,7 @@ category:
 description: Mybatis和Jpa的扫描配置
 ---
 
-<!-- 
+<!-- __
 
 https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/
 　　首行缩进
@@ -217,6 +217,28 @@ mybatis.type-aliases-package=com.fintech.scf.data.pojo
 
 ```
 
+
+```java
+@Value("${mybatis.mapper-locations}")
+private String mapperLocation;
+
+@Value("${mybatis.type-aliases-package}")
+private String typeAliasesPackage;
+    
+    
+
+@Bean(name = "sqlSessionFactory")
+public SqlSessionFactory clusterSqlSessionFactory(@Qualifier("masterDataSource") DataSource dataSource)
+    throws Exception {
+    final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+    sessionFactory.setDataSource(dataSource);
+    sessionFactory.setMapperLocations(
+        new PathMatchingResourcePatternResolver().getResources(mapperLocation));
+    sessionFactory.setTypeAliasesPackage(typeAliasesPackage);
+    return sessionFactory.getObject();
+}
+
+```
 
 
 ### 2、Jpa扫描
