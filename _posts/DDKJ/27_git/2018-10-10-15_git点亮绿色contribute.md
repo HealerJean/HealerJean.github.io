@@ -15,8 +15,22 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 ## 前言
 
+
+
+设置当前仓库的user.name/user.email
+
 ```
-git config --global user.email "mxzdhealer@gmail.com"
+git config  user.email "healerjean@gmail.com"
+
+git config  user.name "HealerJean"
+```
+
+
+
+设置全局
+
+```
+git config --global user.email "healerjean@gmail.com"
 
 git config --global user.name "HealerJean"
 

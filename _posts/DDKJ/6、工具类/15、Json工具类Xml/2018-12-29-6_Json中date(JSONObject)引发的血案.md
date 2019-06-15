@@ -744,6 +744,57 @@ public final class JsonUtils {
 ```
 
 
+
+## 4、Json的一常见问题
+
+
+
+### 4.1、集合和数组其实打印出来是一样的
+
+```
+public static void main(String[] args) {
+
+     List<String> longs = new ArrayList<>();
+     longs.add("a");
+     longs.add("b");
+
+     String []arary = {"a","b"};
+
+     System.out.println(JsonUtils.toJsonString(longs));
+     System.out.println(JsonUtils.toJsonString(arary));
+
+ }
+ 
+ 打印结果
+ 
+["a","b"]
+["a","b"]
+```
+
+### 4.2、JSONArray,当做一个普通的数组（不一定内部是JSONObject）
+
+
+
+
+
+```
+ [
+ { "id" : "123", "courseID" : "huangt-test", "title" : "提交作业" } ,
+ { "content" : null, "beginTime" : 1398873600000 "endTime" } 
+ ] ； 
+ 
+ 
+使用
+
+ 大家可以把JSONArray当成一般的数组来对待，只是获取的数据内数据的方法不一样
+，但是也有内部不是JsonObjec的情况，一定要注意
+ JSONObject jsonObject = (JSONObject)jsonArray.get(i);
+ JSONObject jsonObject = jsonArray.getJSONObject(i) ; 
+
+```
+
+
+
 <br/><br/><br/>
 <font color="red"> 感兴趣的，欢迎添加博主微信， </font><br/>
 哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。

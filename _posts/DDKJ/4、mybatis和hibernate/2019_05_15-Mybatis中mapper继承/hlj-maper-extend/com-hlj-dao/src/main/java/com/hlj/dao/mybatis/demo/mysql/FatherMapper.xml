@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hlj.dao.mybatis.demo.FatherMapper">
+
+    <select id="findById1" resultType="com.hlj.entity.db.demo.DemoEntity">
+        select * from demo_entity d where d.id = 1
+    </select>
+
+    <select id="extendMethod" resultType="com.hlj.entity.db.demo.DemoEntity">
+        select * from demo_entity d where d.id = 2
+    </select>
+
+</mapper>
+

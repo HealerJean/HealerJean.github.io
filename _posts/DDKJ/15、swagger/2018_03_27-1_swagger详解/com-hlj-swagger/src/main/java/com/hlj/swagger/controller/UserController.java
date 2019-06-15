@@ -72,7 +72,7 @@ public class UserController {
 
     @ApiOperation(value = "根据id获取用户详细信息", notes = "根据url的id来获取用户详细信息")
     //描述容器
-    @ApiImplicitParam(name = "id", value = "用户ID", required = true,  paramType = "query",dataType = "path")
+    @ApiImplicitParam(name = "id", value = "用户ID", required = true,  paramType = "path",dataType = "long",dataTypeClass = Long.class)
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public User getUser(String id) {
         return new User("HealerJean", id, 24, new Base(1));
