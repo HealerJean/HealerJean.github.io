@@ -1,7 +1,7 @@
 package com.hlj.proj.data.dao.mybatis.demo;
 
+import com.hlj.proj.data.dao.mybatis.demo.query.DemoEntityQuery;
 import com.hlj.proj.data.pojo.demo.DemoEntity;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -12,9 +12,12 @@ import java.util.List;
  */
 public interface DemoEntityMapper {
 
-    List<DemoEntity> findAll();
 
-    DemoEntity findById(@Param("id") Long id);
+    Long countQueryContion(DemoEntityQuery query) ;
+
+    DemoEntity findByQueryContion(DemoEntityQuery query);
+
+    List<DemoEntity> queryList(DemoEntityQuery query) ;
 
 
 }

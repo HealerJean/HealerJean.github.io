@@ -55,7 +55,7 @@ public enum ResponseEnum   {
     }
 
 
-    public static ResponseEnum getStatus(int code){
+    public static ResponseEnum toEnum(int code){
         for (ResponseEnum value : ResponseEnum.values()){
             if (value.code == code){
                 return value;
@@ -64,7 +64,7 @@ public enum ResponseEnum   {
         return ResponseEnum.未知错误;
     }
 
-    public static String getmsg(int code){
+    public static String getMsg(int code){
         for (ResponseEnum value : ResponseEnum.values()){
             if (value.code == code){
                 return value.msg;

@@ -3,12 +3,86 @@
 <mapper namespace="com.hlj.proj.data.dao.mybatis.demo.DemoEntityMapper">
 
 
-    <select id="findAll" resultType="com.hlj.proj.data.pojo.demo.DemoEntity">
-        select * from demo_entity d
+
+    <sql id="Example_Where_Clause">
+        <where>
+            <trim prefix="(" prefixOverrides="and" suffix=")">
+                <if test="name != null">
+                    and name = #{name,jdbcType=VARCHAR}
+                </if>
+                <if test="phone != null">
+                    and phone = #{phone,jdbcType=VARCHAR}
+                </if>
+                <if test="email != null">
+                    and email = #{email,jdbcType=VARCHAR}
+                </if>
+                <if test="age != null and age != ''">
+                    and age = #{age,jdbcType=INTEGER}
+                </if>
+                <if test="delFlag != null">
+                    and del_flag = #{delFlag,jdbcType=VARCHAR}
+                </if>
+                <if test="createUser != null and createUser != ''">
+                    and create_user = #{createUser,jdbcType=BIGINT}
+                </if>
+                <if test="createName != null">
+                    and create_name = #{createName,jdbcType=VARCHAR}
+                </if>
+                <if test="updateUser != null and updateUser != ''">
+                    and update_user = #{updateUser,jdbcType=BIGINT}
+                </if>
+                <if test="updateName != null">
+                    and update_name = #{updateName,jdbcType=VARCHAR}
+                </if>
+            </trim>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+		id,
+		name,
+		phone,
+		email,
+		age,
+		del_flag,
+		create_user,
+		create_name,
+		create_time,
+		update_user,
+		update_name,
+		update_time
+	</sql>
+
+
+
+
+    <select id="countQueryContion" resultType="java.lang.Long">
+        select count(*) from hlj_demo_entity
+        <include refid="Example_Where_Clause" />
     </select>
 
-    <select id="findById" resultType="com.hlj.proj.data.pojo.demo.DemoEntity">
-        select * from demo_entity d where d.id = #{id}
+    <select id="findByQueryContion" resultType="com.hlj.proj.data.pojo.demo.DemoEntity">
+        select
+        <trim suffixOverrides=",">
+            <include refid="Base_Column_List" />
+        </trim>
+        from hlj_demo_entity
+        <include refid="Example_Where_Clause" />
     </select>
+
+
+    <select id="queryList" resultType="com.hlj.proj.data.pojo.demo.DemoEntity">
+        select
+        <trim suffixOverrides=",">
+            <include refid="Base_Column_List" />
+        </trim>
+        from hlj_demo_entity
+        <include refid="Example_Where_Clause" />
+        <if test="startRow != null and endRow != ''">
+            limit #{startRow}, #{endRow}
+        </if>        <!-- order by CREATE_DATE -->
+    </select>
+
+
+
 
 </mapper>

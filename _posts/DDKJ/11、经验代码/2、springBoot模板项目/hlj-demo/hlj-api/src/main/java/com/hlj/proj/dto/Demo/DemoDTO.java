@@ -1,9 +1,9 @@
 package com.hlj.proj.dto.Demo;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hlj.proj.common.page.query.PageQuery;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -19,7 +19,8 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @ApiModel(value = "demo实体类")
-public class DemoDTO {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class DemoDTO extends PageQuery {
 
     @ApiModelProperty(value = "demo 主键",hidden = true)
     private Long id;
@@ -28,14 +29,33 @@ public class DemoDTO {
     private String name;
 
     @ApiModelProperty(value = "年龄")
-    private Long age ;
+    private Integer age ;
 
-    @JsonIgnore
-    @ApiModelProperty(hidden = true)
-    private Date cdate;
+    @ApiModelProperty(value = "手机号")
+    private String phone;
 
-    @JsonIgnore
+    @ApiModelProperty(value = "邮箱")
+    private String email;
+
+    @ApiModelProperty(value = "是否删除，10可用，99删除 ",hidden = true)
+    private String delFlag;
+
+    @ApiModelProperty(value = "创建人",hidden = true)
+    private Long createUser;
+
+    @ApiModelProperty(value = "创建人名字",hidden = true)
+    private String createName;
+
+    @ApiModelProperty(value = "创建时间",hidden = true)
+    private LocalDateTime createTime;
+
+    @ApiModelProperty(value = "更新人",hidden = true)
+    private Long updateUser;
+
+    @ApiModelProperty(value = "更新人名称",hidden = true)
+    private String updateName;
+
     @ApiModelProperty(hidden = true)
-    private Date udate;
+    private LocalDateTime updateTime;
 
 }
