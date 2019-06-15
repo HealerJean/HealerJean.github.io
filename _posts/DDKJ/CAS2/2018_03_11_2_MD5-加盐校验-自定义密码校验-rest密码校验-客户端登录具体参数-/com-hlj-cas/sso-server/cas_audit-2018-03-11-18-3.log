@@ -1,0 +1,48 @@
+2018-03-11 18:18:09,404 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Sun Mar 11 18:18:09 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Sun Mar 11 18:18:09 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+
+2018-03-11 18:18:42,606 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: Supplied credentials: [mxzdhealer@gmail.com]
+ACTION: AUTHENTICATION_SUCCESS
+APPLICATION: CAS
+WHEN: Sun Mar 11 18:18:42 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+
+2018-03-11 18:18:42,714 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: TGT-**********************************************04Gb6N6Yyv-MacBook-Pro
+ACTION: TICKET_GRANTING_TICKET_CREATED
+APPLICATION: CAS
+WHEN: Sun Mar 11 18:18:42 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+
+2018-03-11 18:18:42,747 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: ST-1-qpt0N1soiu30HQQDcnUh-MacBook-Pro for http://casclienttone:8081/hello
+ACTION: SERVICE_TICKET_CREATED
+APPLICATION: CAS
+WHEN: Sun Mar 11 18:18:42 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+
