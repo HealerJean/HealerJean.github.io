@@ -1,0 +1,72 @@
+2018-03-11 18:16:44,780 WARN [org.apereo.cas.config.CasCoreTicketsConfiguration] - <Runtime memory is used as the persistence storage for retrieving and managing tickets. Tickets that are issued during runtime will be LOST upon container restarts. This MAY impact SSO functionality.>
+2018-03-11 18:17:14,778 WARN [org.apereo.cas.config.support.authentication.AcceptUsersAuthenticationEventExecutionPlanConfiguration] - <[36m>
+2018-03-11 18:17:14,783 WARN [org.apereo.cas.config.support.authentication.AcceptUsersAuthenticationEventExecutionPlanConfiguration] - <
+
+  ____    _____    ___    ____    _ 
+ / ___|  |_   _|  / _ \  |  _ \  | |
+ \___ \    | |   | | | | | |_) | | |
+  ___) |   | |   | |_| | |  __/  |_|
+ |____/    |_|    \___/  |_|     (_)
+                                    
+
+CAS is configured to accept a static list of credentials for authentication. While this is generally useful for demo purposes, it is STRONGLY recommended that you DISABLE this authentication method (by SETTING 'cas.authn.accept.users' to a blank value) and switch to a mode that is more suitable for production.>
+2018-03-11 18:17:14,784 WARN [org.apereo.cas.config.support.authentication.AcceptUsersAuthenticationEventExecutionPlanConfiguration] - <[0m>
+2018-03-11 18:17:15,635 WARN [org.apereo.cas.config.CasCoreServicesConfiguration] - <Runtime memory is used as the persistence storage for retrieving and persisting service definitions. Changes that are made to service definitions during runtime WILL be LOST upon container restarts.>
+2018-03-11 18:17:46,621 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Secret key for encryption is not defined for [Ticket-granting Cookie]; CAS will attempt to auto-generate the encryption key>
+2018-03-11 18:17:46,637 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Generated encryption key [d7rjdGYfTAuNRsTByeOmVRocbFGoNe4aPQrhK-Oy3gw] of size [256] for [Ticket-granting Cookie]. The generated key MUST be added to CAS settings.>
+2018-03-11 18:17:46,637 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Secret key for signing is not defined for [Ticket-granting Cookie]. CAS will attempt to auto-generate the signing key>
+2018-03-11 18:17:46,637 WARN [org.apereo.cas.util.cipher.BaseStringCipherExecutor] - <Generated signing key [PeGS_AOEMCM4p42HRFXlXaE3Div6EUEs8Zyn2blVqXtFdm0qosXFA2W19dimmkL1PIoA8X4Enup-F8XKsKdGlA] of size [512] for [Ticket-granting Cookie]. The generated key MUST be added to CAS settings.>
+2018-03-11 18:17:47,138 WARN [org.apereo.cas.util.cipher.BaseBinaryCipherExecutor] - <Secret key for signing is not defined. CAS will attempt to auto-generate the signing key>
+2018-03-11 18:17:47,138 WARN [org.apereo.cas.util.cipher.BaseBinaryCipherExecutor] - <Generated signing key [saJvnfqpZZKDVP4caGctPr5Ka4-XgLFQWdcL2Lk_yyZYn59wFqqpySknFHhM7UW_NH1NIR9S5oRQNO4AhIvuQg] of size [512]. The generated key MUST be added to CAS settings.>
+2018-03-11 18:17:47,139 WARN [org.apereo.cas.util.cipher.BaseBinaryCipherExecutor] - <No encryption key is defined. CAS will attempt to auto-generate keys>
+2018-03-11 18:17:47,140 WARN [org.apereo.cas.util.cipher.BaseBinaryCipherExecutor] - <Generated encryption key [ADVjJGzrFtzYQkob] of size [16]. The generated key MUST be added to CAS settings.>
+2018-03-11 18:18:09,366 INFO [org.apereo.cas.web.flow.InitialFlowSetupAction] - <Setting path for cookies for warn cookie generator to: [/cas/] >
+2018-03-11 18:18:09,404 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Sun Mar 11 18:18:09 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Sun Mar 11 18:18:09 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+>
+2018-03-11 18:18:10,541 WARN [nz.net.ultraq.thymeleaf.expressions.ExpressionProcessor] - <Fragment expression "layout" is being wrapped as a Thymeleaf 3 fragment expression (~{...}) for backwards compatibility purposes.  This wrapping will be dropped in the next major version of the expression processor, so please rewrite as a Thymeleaf 3 fragment expression to future-proof your code.  See https://github.com/thymeleaf/thymeleaf/issues/451 for more information.>
+2018-03-11 18:18:42,606 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: Supplied credentials: [mxzdhealer@gmail.com]
+ACTION: AUTHENTICATION_SUCCESS
+APPLICATION: CAS
+WHEN: Sun Mar 11 18:18:42 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+>
+2018-03-11 18:18:42,714 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: TGT-**********************************************04Gb6N6Yyv-MacBook-Pro
+ACTION: TICKET_GRANTING_TICKET_CREATED
+APPLICATION: CAS
+WHEN: Sun Mar 11 18:18:42 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+>
+2018-03-11 18:18:42,747 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - <Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: ST-1-qpt0N1soiu30HQQDcnUh-MacBook-Pro for http://casclienttone:8081/hello
+ACTION: SERVICE_TICKET_CREATED
+APPLICATION: CAS
+WHEN: Sun Mar 11 18:18:42 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+>
