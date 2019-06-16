@@ -5,10 +5,6 @@ import com.hlj.proj.data.dao.mybatis.demo.query.DemoEntityQuery;
 import com.hlj.proj.data.pojo.demo.DemoEntity;
 import com.hlj.proj.dto.Demo.DemoDTO;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import sun.security.krb5.internal.PAData;
-
-import java.util.List;
 
 /**
  * @author HealerJean
@@ -44,6 +40,7 @@ public class BeanUtils {
         result.setUpdateUser(demoDTO.getUpdateUser());
         result.setUpdateName(demoDTO.getUpdateName());
         result.setUpdateTime(demoDTO.getUpdateTime());
+
         return result ;
     }
 
@@ -62,6 +59,9 @@ public class BeanUtils {
             dto.setUpdateUser(demoEntity.getUpdateUser());
             dto.setUpdateName(demoEntity.getUpdateName());
             dto.setUpdateTime(demoEntity.getUpdateTime());
+            dto.setPage(null);
+            dto.setPageSize(null);
+            dto.setPageNo(null);
         }
         return dto ;
     }
@@ -77,6 +77,13 @@ public class BeanUtils {
         query.setCreateName(demoDTO.getCreateName());
         query.setUpdateUser(demoDTO.getUpdateUser());
         query.setUpdateName(demoDTO.getUpdateName());
+        if(demoDTO.getPage()){
+            query.setPageSize(demoDTO.getPageSize());
+            query.setPageNo(demoDTO.getPageNo());
+        }else {
+            query.setPageSize(null);
+            query.setPageNo(null);
+        }
         return query ;
     }
 }

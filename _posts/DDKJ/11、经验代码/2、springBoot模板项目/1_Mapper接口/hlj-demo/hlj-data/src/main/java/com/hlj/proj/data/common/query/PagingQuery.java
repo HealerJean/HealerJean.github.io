@@ -21,7 +21,7 @@ public abstract class PagingQuery implements Serializable{
 	/**
 	 * 数据记录总数
 	 */
-	private Integer itemCount;
+	private Long itemCount;
 	private Integer startRow;
 	private Integer endRow;
 	
@@ -31,7 +31,7 @@ public abstract class PagingQuery implements Serializable{
 	}
 
 
-    public void setItemCount(Integer itemCount){
+    public void setItemCount(Long itemCount){
     	this.itemCount = itemCount;
     	startRow = (pageNo - 1) * pageSize;
     	endRow = pageSize;

@@ -15,7 +15,7 @@ public class DemoEntityQuery extends PagingQuery {
 	private static final long serialVersionUID = 1L;
 
 	public DemoEntityQuery(){
-		super(1, 10);
+		super(1, 5);
 	}
 
 	public DemoEntityQuery(int pageNo, int pageSize){

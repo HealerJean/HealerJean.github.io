@@ -55,7 +55,7 @@ public enum ResponseEnum   {
     }
 
 
-    public static ResponseEnum getStatus(int code){
+    public static ResponseEnum toEnum(int code){
         for (ResponseEnum value : ResponseEnum.values()){
             if (value.code == code){
                 return value;

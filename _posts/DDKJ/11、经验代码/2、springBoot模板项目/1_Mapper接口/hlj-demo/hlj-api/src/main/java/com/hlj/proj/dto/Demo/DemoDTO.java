@@ -1,6 +1,5 @@
 package com.hlj.proj.dto.Demo;
 
-import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hlj.proj.common.page.query.PageQuery;
@@ -47,7 +46,7 @@ public class DemoDTO extends PageQuery {
     private String createName;
 
     @ApiModelProperty(value = "创建时间",hidden = true)
-    private LocalDateTime createTime;
+    private java.util.Date createTime;
 
     @ApiModelProperty(value = "更新人",hidden = true)
     private Long updateUser;
@@ -56,6 +55,6 @@ public class DemoDTO extends PageQuery {
     private String updateName;
 
     @ApiModelProperty(hidden = true)
-    private LocalDateTime updateTime;
+    private java.util.Date updateTime;
 
 }

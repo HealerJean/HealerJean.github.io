@@ -44,19 +44,20 @@
 		email,
 		age,
 		del_flag,
-		create_user,
-		create_name,
-		create_time,
-		update_user,
-		update_name,
-		update_time
+		create_user as createUser,
+		create_name as createName,
+		create_time as createTime,
+		update_user as updateUser,
+		update_name as updateName,
+		update_time as updateTime
 	</sql>
 
 
 
 
+
     <select id="countQueryContion" resultType="java.lang.Long">
-        select count(*) from hlj_demo_entity
+        select count(*) from demo_entity
         <include refid="Example_Where_Clause" />
     </select>
 
@@ -65,7 +66,7 @@
         <trim suffixOverrides=",">
             <include refid="Base_Column_List" />
         </trim>
-        from hlj_demo_entity
+        from demo_entity
         <include refid="Example_Where_Clause" />
     </select>
 
@@ -75,7 +76,7 @@
         <trim suffixOverrides=",">
             <include refid="Base_Column_List" />
         </trim>
-        from hlj_demo_entity
+        from demo_entity
         <include refid="Example_Where_Clause" />
         <if test="startRow != null and endRow != ''">
             limit #{startRow}, #{endRow}
