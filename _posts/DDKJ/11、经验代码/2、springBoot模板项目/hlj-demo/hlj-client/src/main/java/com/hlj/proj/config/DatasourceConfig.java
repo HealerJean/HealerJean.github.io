@@ -1,6 +1,7 @@
 package com.hlj.proj.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.hlj.proj.data.dao.mybatis.dao.BaseDao;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import javax.sql.DataSource;
@@ -31,7 +33,6 @@ import javax.sql.DataSource;
 @EnableJpaRepositories(basePackages = {"com.hlj.proj.data.dao.db"})
 @EntityScan(basePackages = {"com.hlj.proj.data.pojo"})
 
-@MapperScan(basePackages = {"com.hlj.proj.data.dao.mybatis"})
 @PropertySource("classpath:db.properties")
 public class DatasourceConfig {
 
@@ -42,6 +43,12 @@ public class DatasourceConfig {
     @Value("${hlj.datasource.password}")
     private String admorePassword;
 
+
+    @Value("${mybatis.mapper-locations}")
+    private String mapperLocation;
+
+    @Value("${mybatis.type-aliases-package}")
+    private String typeAliasesPackage;
 
     @Bean(name = "dataSource")
     public DataSource dataSource() {
@@ -60,24 +67,36 @@ public class DatasourceConfig {
     }
 
 
+
     /**
-     * 配置mybatis
+     * 整合myBatis
      *
      * @param dataSource
-     * @param applicationContext
      * @return
      * @throws Exception
      */
     @Bean(name = "sqlSessionFactory")
-    public SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource, ApplicationContext applicationContext) throws Exception {
-        SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
-        sessionFactoryBean.setDataSource(dataSource);
-        sessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:mybatis.xml"));
-        Resource[] resources = ArrayUtils.addAll(
-                applicationContext.getResources("classpath*:com/hlj/proj/data/dao/mybatis/**/mysql/*.xml")
-        );
-        sessionFactoryBean.setMapperLocations(resources);
-        return sessionFactoryBean.getObject();
+    public SqlSessionFactory clusterSqlSessionFactory(@Qualifier("dataSource") DataSource dataSource)
+            throws Exception {
+        final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+        sessionFactory.setDataSource(dataSource);
+        sessionFactory.setMapperLocations(
+                new PathMatchingResourcePatternResolver().getResources(mapperLocation));
+        sessionFactory.setTypeAliasesPackage(typeAliasesPackage);
+        return sessionFactory.getObject();
+    }
+
+    /**
+     * 初始化BaseDao
+     * @param sqlSessionFactory
+     * @return
+     */
+    @Bean
+    public BaseDao initBaseDao(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        BaseDao baseDao = new BaseDao();
+        baseDao.setBatchSqlSessionFactory(sqlSessionFactory);
+        baseDao.setSqlSessionFactory(sqlSessionFactory);
+        return baseDao;
     }
 
 }
