@@ -1,14 +1,14 @@
 package com.hlj.proj.utils;
 
 import com.hlj.proj.common.page.PageDTO;
-import com.hlj.proj.data.dao.mybatis.demo.query.DemoEntityQuery;
+import com.hlj.proj.data.common.paging.Pagenation;
+import com.hlj.proj.data.common.result.PageListResult;
 import com.hlj.proj.data.pojo.demo.DemoEntity;
+import com.hlj.proj.data.pojo.demo.DemoEntityQuery;
 import com.hlj.proj.dto.Demo.DemoDTO;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import sun.security.krb5.internal.PAData;
 
 import java.util.List;
+
 
 /**
  * @author HealerJean
@@ -20,13 +20,20 @@ import java.util.List;
 public class BeanUtils {
 
 
-    public static<T> PageDTO<T> toPageDTO(Page<T> page){
-
-            if(page==null||page.getContent()==null||page.getContent().size()==0){
-                return new PageDTO(null);
-            }
-            return new PageDTO(page.getNumber(),page.getSize(),page.getSize(),page.getTotalPages(),page.getContent()) ;
+    public static <T> PageDTO<T> toPageDTO(PageListResult pageView, List<T> datas) {
+        if (pageView == null && (datas == null || datas.isEmpty())) {
+            return null;
+        } else if (pageView == null) {
+            return new PageDTO<>(datas);
+        } else if (pageView.getPagenation() == null) {
+            return new PageDTO<>(datas);
+        } else {
+            Pagenation pagenation = pageView.getPagenation();
+            return new PageDTO(pagenation.getPageNo(), pagenation.getPageSize(), pagenation.getItemCount(),
+                    pagenation.getPageCount(), datas);
+        }
     }
+
 
 
 
@@ -62,6 +69,9 @@ public class BeanUtils {
             dto.setUpdateUser(demoEntity.getUpdateUser());
             dto.setUpdateName(demoEntity.getUpdateName());
             dto.setUpdateTime(demoEntity.getUpdateTime());
+            dto.setPage(null);
+            dto.setPageSize(null);
+            dto.setPage(null);
         }
         return dto ;
     }
@@ -77,6 +87,8 @@ public class BeanUtils {
         query.setCreateName(demoDTO.getCreateName());
         query.setUpdateUser(demoDTO.getUpdateUser());
         query.setUpdateName(demoDTO.getUpdateName());
+        query.setPageNo(demoDTO.getPageNo());
+        query.setPageSize(demoDTO.getPageSize());
         return query ;
     }
 }

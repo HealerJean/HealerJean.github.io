@@ -3,25 +3,28 @@
  */package com.hlj.proj.data.pojo.demo;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 
 /**
- * 测试实体类;
+ * @author zhangyujin
+ * @ClassName: DemoEntity
+ * @date 2099/1/1
+ * @Description: DemoEntity
  */
 @Entity
-@Table(name = "hlj_demo_entity")
-@Data
+@Table(name = "demo_entity")
 @Accessors(chain = true)
+@Data
 public class DemoEntity implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	/** 主键 */
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -40,34 +43,17 @@ public class DemoEntity implements Serializable{
 	/** 创建人名称 */
 	private String createName;
 	/** 创建时间 */
-	private LocalDateTime createTime;
+	@CreationTimestamp
+	@Column(insertable = true,updatable = false)
+	private java.util.Date createTime;
 	/** 更新人 */
 	private Long updateUser;
 	/** 更新人名称 */
 	private String updateName;
 	/** 更新时间 */
-	private LocalDateTime updateTime;
+	@UpdateTimestamp
+	private java.util.Date updateTime;
+	/**  */
+	private Integer newColumn;
 
 }
-
-/**
-
-
- CREATE TABLE `hlj_demo_entity` (
- `id` bigint(16) unsigned NOT NULL AUTO_INCREMENT,
- `name` varchar(64) NOT NULL,
- `phone` varchar(20) DEFAULT '' COMMENT '手机号',
- `email` varchar(64) DEFAULT '' COMMENT '邮箱',
- `age` int(100) DEFAULT NULL,
- `del_flag` varchar(8) NOT NULL COMMENT '10可用，99删除',
- `create_user` bigint(16) unsigned DEFAULT NULL COMMENT '创建人',
- `create_name` varchar(64) DEFAULT '' COMMENT '创建人名称',
- `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
- `update_user` bigint(16) unsigned DEFAULT NULL COMMENT '更新人',
- `update_name` varchar(64) DEFAULT '' COMMENT '更新人名称',
- `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
- PRIMARY KEY (`id`)
- ) ENGINE=InnoDB DEFAULT CHARSET=latin1
-
-
- */
