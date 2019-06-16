@@ -3,10 +3,11 @@
  */package com.hlj.proj.data.pojo.demo;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 
@@ -14,7 +15,7 @@ import javax.persistence.*;
  * 测试实体类;
  */
 @Entity
-@Table(name = "hlj_demo_entity")
+@Table(name = "demo_entity")
 @Data
 @Accessors(chain = true)
 public class DemoEntity implements Serializable{
@@ -40,13 +41,16 @@ public class DemoEntity implements Serializable{
 	/** 创建人名称 */
 	private String createName;
 	/** 创建时间 */
-	private LocalDateTime createTime;
+	@CreationTimestamp
+	@Column(insertable = true,updatable = false)
+	private java.util.Date createTime;
 	/** 更新人 */
 	private Long updateUser;
 	/** 更新人名称 */
 	private String updateName;
 	/** 更新时间 */
-	private LocalDateTime updateTime;
+	@UpdateTimestamp
+	private java.util.Date updateTime;
 
 }
 

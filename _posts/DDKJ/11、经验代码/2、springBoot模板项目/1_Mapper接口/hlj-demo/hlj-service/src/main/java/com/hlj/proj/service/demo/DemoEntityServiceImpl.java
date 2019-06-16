@@ -57,8 +57,6 @@ public class DemoEntityServiceImpl implements DemoEntityService {
     @Override
     public List<DemoDTO> queryDemoList(DemoDTO demoDTO) {
         DemoEntityQuery    query = BeanUtils.dtoToDemoQuery(demoDTO);
-        query.setPageNo(null);
-        query.setPageSize(null);
         List<DemoDTO> collect = null;
         List<DemoEntity> list = demoEntityMapper.queryList(query);
         if (!EmptyUtil.isEmpty(list)) {
@@ -77,8 +75,10 @@ public class DemoEntityServiceImpl implements DemoEntityService {
         if(count==0){
             collect =  BeanUtils.toPageDTO(null);
         }else {
-            List<DemoDTO> data = demoEntityMapper.queryList(query).stream().map(BeanUtils::demoToDTO).collect(Collectors.toList());
-            collect = BeanUtils.toPageDTO(new PageImpl<>(data,pageable,count));
+            query.setItemCount(count);
+             List<DemoEntity> data = demoEntityMapper.queryList(query) ;
+            List<DemoDTO> dtoDatas =  data.stream().map(BeanUtils::demoToDTO).collect(Collectors.toList());
+            collect = BeanUtils.toPageDTO(new PageImpl<>(dtoDatas,pageable,count));
         }
         return collect;
     }

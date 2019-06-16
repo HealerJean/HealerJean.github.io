@@ -1,5 +1,6 @@
 package com.hlj.proj.common.page.query;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 
@@ -10,8 +11,10 @@ import lombok.Data;
 @Data
 public  class PageQuery {
 
+	@ApiModelProperty(value = "开始页数，从1开始,默认为1", dataType = "java.lang.Integer")
 	private Integer pageNo = 1;
-	private Integer pageSize = 20;
+	@ApiModelProperty(value = "每页数量，默认为5", dataType = "java.lang.Integer")
+	private Integer pageSize = 5;
 	//是否分页，默认false不分页
 	private Boolean page = false;
 
