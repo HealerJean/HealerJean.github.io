@@ -1,0 +1,204 @@
+2018-03-11 16:24:10,990 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Sun Mar 11 16:24:10 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:24:10 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-11 16:24:55,806 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: Supplied credentials: [mxzdhealer@gmail.com]
+ACTION: AUTHENTICATION_FAILED
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:24:55 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-11 16:25:11,148 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: Supplied credentials: [mxzdhealer@gmail.com]
+ACTION: AUTHENTICATION_FAILED
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:25:11 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-11 16:25:13,089 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: Supplied credentials: [mxzdhealer@gmail.com]
+ACTION: AUTHENTICATION_FAILED
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:25:13 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-11 16:25:16,583 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: Supplied credentials: [mxzdhealer@gmail.com]
+ACTION: AUTHENTICATION_FAILED
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:25:16 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-11 16:25:28,712 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Sun Mar 11 16:25:28 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:25:28 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-11 16:25:31,219 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: admin_en
+WHAT: Supplied credentials: [admin_en]
+ACTION: AUTHENTICATION_FAILED
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:25:31 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-11 16:25:32,751 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: admin_en
+WHAT: Supplied credentials: [admin_en]
+ACTION: AUTHENTICATION_FAILED
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:25:32 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-11 16:30:15,144 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: admin_en
+WHAT: Supplied credentials: [admin_en]
+ACTION: AUTHENTICATION_FAILED
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:30:15 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-11 16:31:32,519 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: admin_en
+WHAT: Supplied credentials: [admin_en]
+ACTION: AUTHENTICATION_FAILED
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:31:32 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-11 16:31:48,638 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: Supplied credentials: [mxzdhealer@gmail.com]
+ACTION: AUTHENTICATION_FAILED
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:31:48 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-11 16:37:18,816 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: Supplied credentials: [mxzdhealer@gmail.com]
+ACTION: AUTHENTICATION_SUCCESS
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:37:18 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-11 16:37:18,863 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: TGT-**********************************************TC3eD9nuFI-MacBook-Pro
+ACTION: TICKET_GRANTING_TICKET_CREATED
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:37:18 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-11 16:37:31,598 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Sun Mar 11 16:37:31 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:37:31 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-11 16:37:35,832 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: admin_en
+WHAT: Supplied credentials: [admin_en]
+ACTION: AUTHENTICATION_FAILED
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:37:35 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-11 16:37:51,907 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: admin2
+WHAT: Supplied credentials: [admin2]
+ACTION: AUTHENTICATION_FAILED
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:37:51 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
+2018-03-11 16:39:13,881 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: zhangsan@gmail.com
+WHAT: Supplied credentials: [zhangsan@gmail.com]
+ACTION: AUTHENTICATION_FAILED
+APPLICATION: CAS
+WHEN: Sun Mar 11 16:39:13 CST 2018
+CLIENT IP ADDRESS: 0:0:0:0:0:0:0:1
+SERVER IP ADDRESS: 0:0:0:0:0:0:0:1
+=============================================================
+
+
