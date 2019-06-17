@@ -1,0 +1,84 @@
+2018-03-11 19:18:28,987 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Sun Mar 11 19:18:28 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Sun Mar 11 19:18:28 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+
+2018-03-11 19:18:33,455 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: Supplied credentials: [mxzdhealer@gmail.com]
+ACTION: AUTHENTICATION_SUCCESS
+APPLICATION: CAS
+WHEN: Sun Mar 11 19:18:33 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+
+2018-03-11 19:18:33,715 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: TGT-**********************************************q3hS1kReeR-MacBook-Pro
+ACTION: TICKET_GRANTING_TICKET_CREATED
+APPLICATION: CAS
+WHEN: Sun Mar 11 19:18:33 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+
+2018-03-11 19:18:33,775 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: ST-1-deRaFoay3mHl5vOKeWpq-MacBook-Pro for http://casclientone:8081/hello
+ACTION: SERVICE_TICKET_CREATED
+APPLICATION: CAS
+WHEN: Sun Mar 11 19:18:33 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+
+2018-03-11 19:18:34,429 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: mxzdhealer@gmail.com
+WHAT: ST-1-deRaFoay3mHl5vOKeWpq-MacBook-Pro
+ACTION: SERVICE_TICKET_VALIDATED
+APPLICATION: CAS
+WHEN: Sun Mar 11 19:18:34 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+
+2018-03-11 19:26:17,309 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: audit:unknown
+WHAT: [event=success,timestamp=Sun Mar 11 19:26:17 CST 2018,source=RankedAuthenticationProviderWebflowEventResolver]
+ACTION: AUTHENTICATION_EVENT_TRIGGERED
+APPLICATION: CAS
+WHEN: Sun Mar 11 19:26:17 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+
+2018-03-11 19:26:35,394 INFO [org.apereo.inspektr.audit.support.Slf4jLoggingAuditTrailManager] - Audit trail record BEGIN
+=============================================================
+WHO: huang.wenbin@gmail.com
+WHAT: Supplied credentials: [huang.wenbin@gmail.com]
+ACTION: AUTHENTICATION_FAILED
+APPLICATION: CAS
+WHEN: Sun Mar 11 19:26:35 CST 2018
+CLIENT IP ADDRESS: 127.0.0.1
+SERVER IP ADDRESS: 127.0.0.1
+=============================================================
+
+
