@@ -1,19 +1,27 @@
-package com.hlj.utils;
+package com.fintech.scf.utils;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.util.JSONTokener;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Utils - JSON
@@ -26,10 +34,23 @@ public final class JsonUtils {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     static {
-        // jackson 1.9 and before
-        //objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        // or jackson 2.0
+
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        OBJECT_MAPPER.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS,false);
+
+        //NULL 不打印
+        OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        //LocalDateTime   LocalDate LocalTime 转化成 String
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        javaTimeModule.addSerializer(LocalDateTime.class,new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        javaTimeModule.addSerializer(LocalDate.class,new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        javaTimeModule.addDeserializer(LocalDateTime.class,new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        javaTimeModule.addDeserializer(LocalDate.class,new LocalDateDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+        OBJECT_MAPPER.registerModule(javaTimeModule);
+        OBJECT_MAPPER.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+
     }
 
     public static ObjectMapper getObjectMapper() {
@@ -142,7 +163,6 @@ public final class JsonUtils {
 
     /**
      * 将对象转换为JSON流
-     *
      * @param writer Writer
      * @param value  对象
      */
@@ -160,26 +180,6 @@ public final class JsonUtils {
         }
     }
 
-
-    /**
-     * 判断是jsonobject还是jsonArrsy
-     * 如果是jsonObject则是1
-     * 如果是jsonArrsy 则是2
-     * 如果二者都不是则返回0
-     * @param json
-     * @return
-     */
-    public Integer judgeJson(String json){
-        Assert.hasText(json, "json 不允许为空");
-        Object jsonT = new JSONTokener(json).nextValue();
-        if(jsonT instanceof JSONObject){
-            return 1;
-        }else if (jsonT instanceof JSONArray) {
-            return 2 ;
-        }else {
-            return  0;
-        }
-    }
 
 
     /**
