@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.hlj.domain">
+<class name="IdCard" table="idCard">
+		<!-- 因为我们这里讲的是基于主键的one-to-one, 所以我们使用外键策略 -->
+		<!-- 这里值，是指定更哪个属性one-to-one -->
+		<!--  
+		<id name="id" type="java.lang.Integer">
+		<generator class="foreign"> 
+		<param name="property">person</param>
+		</generator>
+		</id>-->
+			<!-- 基于外键的one-to-one -->
+			<id name="id" type="java.lang.Integer">
+			<generator class="assigned"/>
+			</id>
+		<property name="validateDte" type="java.util.Date">
+				<column name="validateDte"/>
+		</property>
+		<!-- 这里配置IdCard和person属性是一对一的关系constrained没有配置将不会生成 外键 person -->
+		<!--  
+		<one-to-one name="person" constrained="true"/>-->
+			<many-to-one name="person"  unique="true"/> 
+		</class> 
+		 
+</hibernate-mapping> 
