@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN" "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+
+<struts-config>
+  <form-beans >
+    <form-bean name="userForm" type="com.hlj.form.UserForm" />
+
+  </form-beans>
+
+  <global-exceptions />
+  <global-forwards />
+  <action-mappings >
+	<!-- parameter用于将来区分，用户不同的请求 ，这个名字可以所以变化-->
+    <action
+      attribute="userForm"
+      parameter="type"
+      name="userForm"
+      path="/loginAndDis"
+      scope="request"
+      type="com.hlj.action.LoginAndDisAction"
+      validate="false"
+      cancellable="true" />
+
+  </action-mappings>
+
+  <message-resources parameter="com.hlj.struts.ApplicationResources" />
+</struts-config>
+

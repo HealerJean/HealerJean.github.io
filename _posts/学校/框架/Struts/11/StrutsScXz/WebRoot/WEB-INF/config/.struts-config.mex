@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlowViewLayout Version="1.2">
+  <StrutsActivity path="/register.do" location="330,90" dimension="243,104" />
+  <StrutsActivity path="/userlist.do" location="225,360" dimension="238,104" />
+  <StrutsActivity path="/WEB-INF/err.jsp" location="540,285" dimension="150,100" />
+  <StrutsActivity path="/WEB-INF/ok.jsp" location="270,240" dimension="150,100" />
+  <StrutsActivity path="/WEB-INF/register.jsp" location="100,90" dimension="150,100" />
+  <StrutsActivity path="/WEB-INF/userlist.jsp" location="600,405" dimension="150,100" />
+  <StrutsActivity path="/downfile.do" location="825,405" dimension="245,104" />
+  <StrutsTransition id="/WEB-INF/ok.jsp,null,/userlist.do,2" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="344,340" />
+      <AbsolutePoint location="344,360" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
+  <StrutsTransition id="/downfile.do,back,/WEB-INF/userlist.jsp,1" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="825,427" />
+      <AbsolutePoint location="750,427" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
+  <StrutsTransition id="/userlist.do,showuser,/WEB-INF/userlist.jsp,1" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="463,449" />
+      <AbsolutePoint location="600,449" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
+  <StrutsTransition id="/register.do,err,/WEB-INF/err.jsp,1" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="558,194" />
+      <AbsolutePoint location="558,285" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
+  <StrutsTransition id="/WEB-INF/register.jsp,null,/register.do,2" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="250,112" />
+      <AbsolutePoint location="330,112" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
+  <StrutsTransition id="/register.do,ok,/WEB-INF/ok.jsp,1" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="345,194" />
+      <AbsolutePoint location="345,240" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
+  <StrutsTransition id="/WEB-INF/userlist.jsp,null,/downfile.do,2" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="750,457" />
+      <AbsolutePoint location="825,457" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
+</FlowViewLayout>
+
