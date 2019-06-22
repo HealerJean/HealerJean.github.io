@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+				http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+
+<!-- 在容器文件中配置bean(service/dao/domain/action/数据源) -->
+<!-- bean元素的作用是，当我们的spring框架加载时候，
+	spring就会自动的创建一个bean对象，并放入内存 
+	UserService userSerivce=new UserService();
+	userSerivce.setName("韩顺平");
+	--> 
+	
+<bean  id="userService" class="com.hlj.service.UserService">
+<!-- 这里就体现出注入的概念. -->
+	<property name="name">
+		<value>韩顺平</value> 
+	</property>
+	<!-- 在userservice 中引用 下面的bybservice -->
+	<!-- 下面这个是引用 ref  引用了下面的 id 中的bybService ，这样就维护了他们之间的关系  -->
+		<property name="bybService" ref="bybService" />	 
+	
+</bean>
+ 
+<bean  id="bybService" class="com.hlj.service.BybService">
+<!-- 这里就体现出注入的概念. -->
+	<property name="name" value="张宇晋" />	
+
+</bean>
+</beans> 
+
+
