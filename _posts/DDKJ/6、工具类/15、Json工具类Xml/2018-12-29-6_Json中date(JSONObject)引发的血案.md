@@ -26,10 +26,8 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
    JsonUtils.toJson(tsJsonData)
 ```
 
-2、@JsonInclude(JsonInclude.Include.NON_NULL)，在下面的操作中，其实是给前段返回的过程中失效的，而下面的有的地方操作中如果是null了，该字段本身就不会打印，需要注意
+2、@JsonInclude(JsonInclude.Include.NON_NULL) 并且在mapper中配置了，所以它没有起到效果，如果mapper中不配置，那么它在下面是会生效的，
      
-
-
 
 ## 1、测试bean
 
@@ -354,7 +352,7 @@ public class IncludeJavaBean {
 
 
 
-### 3.5、@JsonInclude(JsonInclude.Include.NON_NULL)（这里用上其实是错误的，不是因为它生效的）
+### 3.5、@JsonInclude(JsonInclude.Include.NON_NULL)（这里用上其实是错误的，不是因为它生效的，而是mapper中配置了，如果不配置，则是它生效的）    
 
 
 
