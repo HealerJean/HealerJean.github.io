@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN" "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+
+<struts-config>
+  <form-beans >
+    <form-bean name="userForm" type="com.hlj.struts.form.UserForm" />
+    <form-bean name="massageForm" type="com.hlj.struts.form.MassageForm" />
+
+  </form-beans>
+
+  <global-exceptions />
+  <global-forwards >
+    <forward name="ok" path="/WEB-INF/ok.jsp" />
+
+  </global-forwards>
+
+  <action-mappings >
+    <action 
+      attribute="userForm"
+      input="/WEB-INF/login.jsp"
+      name="userForm"
+      parameter="flag"
+      path="/login"
+      scope="request"
+      type="com.hlj.struts.action.LoginAction"
+      validate="false"
+      cancellable="true" >
+      <forward name="loginok" path="/WEB-INF/main.jsp" />
+      <forward name="loginerr" path="/WEB-INF/login.jsp" />
+    </action>
+    <action
+      attribute="massageForm"
+      input="/WEB-INF/publish.jsp"
+      name="massageForm"
+      parameter="flag"
+      path="/message"
+      scope="request" 
+      type="com.hlj.struts.action.MessageAction"
+      validate="false"
+      cancellable="true">
+      <forward name="gopublish" path="/WEB-INF/publish.jsp" />
+    </action>
+
+  </action-mappings>
+
+  <message-resources parameter="com.hlj.struts.ApplicationResources" />
+</struts-config>
+

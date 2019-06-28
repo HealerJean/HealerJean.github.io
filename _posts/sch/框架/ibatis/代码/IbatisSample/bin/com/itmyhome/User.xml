@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE sqlMap  
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"  
+"http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="User">
+	<typeAlias alias="user" type="com.itmyhome.User" />
+	<!-- 查询 -->
+	<!-- parameterClass 传入参数的类型  int = java.lang.Integer
+	resultClass 返回结果的类型 -->
+	<select id="getUser" parameterClass="int" resultClass="user">
+		    select * from user where id = #id#
+	</select>
+	
+	<!-- 查询所有的 -->
+	<select id="getAllUser" resultClass="user">
+		    select * from user 
+	</select>	
+	
+	<!-- 插入 -->
+	<insert id="insertUser" parameterClass="user">
+		    insert into user(id,name,age) values(#id#,#name#,#age#)
+	</insert>
+	
+	<!-- 更新 -->	
+	<update id="updateUser" parameterClass="user"> 
+			update user SET name=#name#, age=#age# WHERE id = #id# 
+	</update>
+	
+	<!-- 删除 -->
+	<delete id="deleteUser" parameterClass="java.lang.Integer">
+			delete from user where id = #id# 
+	</delete>
+	
+
+	
+	
+	
+	
+	
+	
+<!-- 	oracle中才会使用下面的序列 -->
+	<!-- <insert id="add" parameterType="user">
+			//这里表示将序列中得到的值赋值给id
+		　　<selectKey resultType="int" keyProperty="id">
+		　　　　SELECT SEQ_TEST.NEXTVAL FROM DUAL
+		　　</selectKey>
+　		    insert into user(id,name,age) values(#id#,#name#,#age#)
+  </insert>  -->
+	
+<!-- MySQL Last Insert Id -->  
+<insert id="addNoId" parameterClass="user">  
+  <selectKey resultClass="int" keyProperty="id">  
+     SELECT LAST_INSERT_ID() AS ID  
+    </selectKey>  
+　		    insert into user(name,age) values(#name#,#age#)
+</insert> 
+	
+	
+</sqlMap>
