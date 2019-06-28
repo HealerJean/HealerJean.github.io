@@ -3,6 +3,7 @@
  */
 package com.fintech.core.utils;
 
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,6 +34,19 @@ import com.itextpdf.tool.xml.pipeline.end.PdfWriterPipeline;
 import com.itextpdf.tool.xml.pipeline.html.AbstractImageProvider;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
+
+ /*<!-- itextpdf -->
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>itextpdf</artifactId>
+                <version>${itextpdf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.itextpdf.tool</groupId>
+                <artifactId>xmlworker</artifactId>
+                <version>${itextpdf.version}</version>
+            </dependency>*/
 
 public class Html2PdfUtil {
 	static final Charset UTF8 = Charset.forName("UTF-8");
