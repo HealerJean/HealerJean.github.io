@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.hlj.domain">
+<class name="Department" lazy="false" > 
+<!-- 配置主键属性 -->
+		<id name="id"  type="java.lang.Integer">
+		 
+            <generator class="increment"/>
+		<!-- 指定主键生成策略 -->
+ 
+		</id>  
+		<property name="name" type="java.lang.String">
+		<column name="name" length="64" not-null="true"/>
+		</property>  
+		
+		<set name="studentManys" cascade="save-update">
+			<!-- 指定Student类对应的外键 --> 
+			<key column="dept_id" /> 
+		<one-to-many class="StudentMany" /> 
+		</set>
+</class>
+</hibernate-mapping>

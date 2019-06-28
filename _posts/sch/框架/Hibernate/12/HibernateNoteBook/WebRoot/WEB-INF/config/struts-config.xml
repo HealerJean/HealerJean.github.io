@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN" "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+
+<struts-config>
+  <form-beans >
+    <form-bean name="userForm" type="com.hlj.struts.form.UserForm" />
+
+  </form-beans>
+
+  <global-exceptions />
+  <global-forwards />
+  <action-mappings >
+    <action
+      attribute="userForm"
+      input="/WEB-INF/login.jsp"
+      name="userForm"
+      parameter="flag"
+      path="/login"
+      scope="request"
+      type="com.hlj.struts.action.LoginAction"
+      validate="false"
+      cancellable="true" >
+      <forward name="loginok" path="/goMessageUi.do" />
+      <forward name="goLogin" path="/WEB-INF/login.jsp" />
+    </action>
+
+    <action
+      parameter="flag"
+      path="/goMessageUi"
+      type="com.hlj.struts.action.GoMessageUiAction"
+      validate="false"
+      cancellable="true" >
+      <forward name="goMessageUi" path="/WEB-INF/showMessage.jsp" />
+    </action>
+
+
+  </action-mappings>
+
+  <message-resources parameter="com.hlj.struts.ApplicationResources" />
+</struts-config>
+

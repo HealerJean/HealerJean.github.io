@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 这个我们自己配置的 -->
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+		<session-factory>  
+		<!-- 将来改变的数据库的时候，只要改了下面这个就是可以了啦 -->
+		<!-- 该文件用于配置连接数据的种类,用户名，密码,ul ,驱动.. 连接池,二级缓存.. 有点类似strus  struts-config.xml -->
+		
+			<property name="connection.driver_class">com.mysql.jdbc.Driver</property>		
+		    <property name="connection.url">jdbc:mysql://localhost:3306/hiberate1</property>
+        	<property name="connection.username">root</property>
+        	<property name="connection.password">147094</property> 
+       <!-- 配置数据库的方言/ -->
+			<property name="dialect">org.hibernate.dialect.MySQLDialect</property>	
+		<!-- 配置显示hibernate生成的 sql ,特别说明，在开发阶段设为true利于调试，在使用项目则设为false-->
+			 <property name="show_sql">true</property> 
+			<property name="format_sql">true</property>
+	<!-- 如果更换了数据库下面这条语句将会为我们的新的数据库创建表 -->
+<!-- 			<property name="hbm2ddl.auto">update</property>
+ -->		
+ <!-- 在一个数据库中使用一个session 便于对事物进行管理 ，但是我们有了HibernateUtil.java下面的就不要了-->
+<!--  	<property name="current_session_context_class">thread</property>	 -->
+		<!-- 配置管理的对象映射文件 -->
+		<mapping resource="com/hlj/domain/Employee.hbm.xml"/>	
+		</session-factory> 
+ 
+</hibernate-configuration>
