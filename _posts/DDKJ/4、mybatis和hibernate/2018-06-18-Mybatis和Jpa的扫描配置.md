@@ -154,6 +154,9 @@ public class MybatisConfig {
 
 
 ```java
+
+//可以没有sqlSessionTemplateRef 以及关于它的Bean，使用它的情况是 当你有多个Datasource时，需要指定使用哪一个SqlSessionTemplate
+
 @MapperScan(basePackages = {"com.hlj.proj.data.dao.mybatis"}, sqlSessionTemplateRef  = "sqlSessionTemplate")
 
 
