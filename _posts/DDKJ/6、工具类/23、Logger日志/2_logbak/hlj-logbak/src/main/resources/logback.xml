@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+<!--学习 https://blog.csdn.net/ZYC88888/article/details/85060315-->
+
+    <!--
+     格式化输出：%d表示日期，
+     %thread表示线程名，
+     %-5level：级别从左显示5个字符宽度,
+     %logger{50} 表示 Logger 名字最长36个字符,
+     %msg：日志消息，
+     %n是换行符 -->
+    -->
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg %n "/>
+
+    <property name="LOG_PATH" value="/Users/healerjean/Desktop/logs"/>
+    <property name="FILE_PATH_INFO"  value="${LOG_PATH}/hlj-logback.log"/>
+    <property name="FILE_PATH_ERROR" value="${LOG_PATH}/hlj-logback-error.log"/>
+
+    <!--控制台-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+
+    <appender name="FILE-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志文件输出的文件名 -->
+        <File>${FILE_PATH_INFO}</File>
+        <!--滚动日志 基于时间和文件大小-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 滚动日志文件保存格式 i是超出文件大小MaxFileSize 讲历史日志后缀名从0开始起步，
+            如果超过了最大的totalSizeCap，就会全部删除，重新开始-->
+            <FileNamePattern>${FILE_PATH_INFO}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <MaxFileSize>1MB</MaxFileSize>
+            <totalSizeCap>5GB</totalSizeCap>
+            <!--日志最大的历史 10天 -->
+            <MaxHistory>10</MaxHistory>
+        </rollingPolicy>
+        <!-- 按临界值过滤日志：低于INFO以下级别被抛弃 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+
+    <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${FILE_PATH_ERROR}</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${FILE_PATH_ERROR}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <MaxFileSize>60MB</MaxFileSize>
+            <totalSizeCap>5GB</totalSizeCap>
+            <MaxHistory>10</MaxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+
+
+    <!--以配置文件application.properties 中为主，如果配置文件中不存在以它为主-->
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE-ERROR"/>
+        <appender-ref ref="FILE-INFO"/>
+    </root>
+</configuration>
+
+
+
+

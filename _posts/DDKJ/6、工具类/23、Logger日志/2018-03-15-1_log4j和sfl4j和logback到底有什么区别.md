@@ -30,7 +30,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 sfl4j
 
-```
+```java
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +41,7 @@ Logger logger = LoggerFactory.getLogger(ControllerConfig.class);
 Log4j
 
 
-```
+```java
 import org.apache.log4j.Logger;
 
 Logger logger  = Logger.getLogger(CardBagController.class);
@@ -63,34 +63,6 @@ logback和log4j是非常相似的，Logback的内核重写了，在一些关键�
 
 
 
-
-```
-
-<dependency>
-    <groupId>com.github.pukkaone</groupId>
-    <artifactId>logback-gelf</artifactId>
-    <version>1.1.9</version>
-</dependency>
-
-<dependency>
-    <groupId>ch.qos.logback</groupId>
-    <artifactId>logback-core</artifactId>
-    <version>1.1.6</version>
-</dependency>
-
-<dependency>
-    <groupId>ch.qos.logback</groupId>
-    <artifactId>logback-classic</artifactId>
-    <version>1.1.6</version>
-</dependency>
-
-<dependency>
-    <groupId>ch.qos.logback</groupId>
-    <artifactId>logback-access</artifactId>
-    <version>1.1.6</version>
-</dependency>
-
-```
 springboot 使用介绍
 
 
@@ -110,55 +82,84 @@ prod
 logback-dev.xml
 
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
-    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
-    <root level="INFO">
-        <appender-ref ref="CONSOLE" />
-    </root>
-</configuration>
+<!--学习 https://blog.csdn.net/ZYC88888/article/details/85060315-->
 
-```
+    <!--
+     格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符 -->
+    -->
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg %n "/>
 
-logback-prod.xml
+    <property name="LOG_PATH" value="/Users/healerjean/Desktop/logs"/>
+    <property name="FILE_PATH_INFO"  value="${LOG_PATH}/hlj-logback.log"/>
+    <property name="FILE_PATH_ERROR" value="${LOG_PATH}/hlj-logback-error.log"/>
 
-```
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-
+    <!--控制台-->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+            <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
-    <appender name="logging" class="com.github.pukkaone.gelf.logback.GelfAppender">
-        <graylogHost>localhost</graylogHost>
-        <originHost>admin</originHost>
-        <levelIncluded>true</levelIncluded>
-        <locationIncluded>false</locationIncluded>
-        <loggerIncluded>true</loggerIncluded>
-        <markerIncluded>false</markerIncluded>
-        <mdcIncluded>false</mdcIncluded>
-        <threadIncluded>false</threadIncluded>
-        <facility>gelf-java</facility>
-        <additionalField>application=admin</additionalField>
-        <additionalField>environment=prod</additionalField>
+
+    <appender name="FILE-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志文件输出的文件名 -->
+        <File>${FILE_PATH_INFO}</File>
+        <!--滚动日志 基于时间和文件大小-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 滚动日志文件保存格式 i是超出文件大小MaxFileSize 从0开始起步，
+            如果超过了最大的totalSizeCap，就会全部删除，重新开始-->
+            <FileNamePattern>${FILE_PATH_INFO}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <MaxFileSize>1MB</MaxFileSize>
+            <totalSizeCap>5GB</totalSizeCap>
+            <!--日志最大的历史 10天 -->
+            <MaxHistory>10</MaxHistory>
+        </rollingPolicy>
+        <!-- 按临界值过滤日志：低于INFO以下级别被抛弃 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
     </appender>
 
+
+    <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${FILE_PATH_ERROR}</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${FILE_PATH_ERROR}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <MaxFileSize>60MB</MaxFileSize>
+            <totalSizeCap>5GB</totalSizeCap>
+            <MaxHistory>10</MaxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+
+
+    <!--以配置文件application.properties 中为主，如果配置文件中不存在以它为主-->
     <root level="info">
         <appender-ref ref="STDOUT" />
-        <appender-ref ref="logging" />
+        <appender-ref ref="FILE-ERROR"/>
+        <appender-ref ref="FILE-INFO"/>
     </root>
 </configuration>
 
 
+
+
+
 ```
 
-
-## [logback代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_16_2_Docker%E5%AE%89%E8%A3%85graylog%E5%92%8C%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/com-hlj-graylog.zip)
 
 
 <br/><br/><br/>
