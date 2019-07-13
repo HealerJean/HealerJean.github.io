@@ -1,0 +1,5 @@
+com/hlj/proj/data/dao/mybatis/demo/query/DemoEntityQuery.class
+com/hlj/proj/data/common/query/PagingQuery.class
+com/hlj/proj/data/dao/db/demo/DemoEntityRepository.class
+com/hlj/proj/data/dao/mybatis/demo/DemoEntityMapper.class
+com/hlj/proj/data/pojo/demo/DemoEntity.class
