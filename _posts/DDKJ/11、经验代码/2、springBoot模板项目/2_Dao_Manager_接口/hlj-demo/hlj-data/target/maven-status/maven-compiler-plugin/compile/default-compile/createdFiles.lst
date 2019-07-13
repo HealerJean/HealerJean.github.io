@@ -1,0 +1,12 @@
+com/hlj/proj/data/dao/db/demo/DemoEntityRepository.class
+com/hlj/proj/data/pojo/demo/DemoEntityQuery.class
+com/hlj/proj/data/pojo/demo/DemoEntityPage.class
+com/hlj/proj/data/common/paging/Pagenation.class
+com/hlj/proj/data/common/result/ListResult.class
+com/hlj/proj/data/dao/mybatis/manager/DemoEntityManager.class
+com/hlj/proj/data/common/result/PageListResult.class
+com/hlj/proj/data/common/query/PagingQuery.class
+com/hlj/proj/data/dao/mybatis/dao/BaseDao.class
+com/hlj/proj/data/dao/mybatis/dao/deme/DemoEntityDao.class
+com/hlj/proj/data/common/paging/PageView.class
+com/hlj/proj/data/pojo/demo/DemoEntity.class
