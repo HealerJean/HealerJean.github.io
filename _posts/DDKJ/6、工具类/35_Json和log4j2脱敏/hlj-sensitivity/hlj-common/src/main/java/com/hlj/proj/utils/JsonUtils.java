@@ -257,7 +257,6 @@ public final class JsonUtils {
      * @return
      */
     public static String toJsonStringWithSensitivity(Object propName){
-
         if(propName != null && propName instanceof Map){
             Map map = (Map) propName;
             if(map != null && !map.isEmpty()){
@@ -302,10 +301,10 @@ public final class JsonUtils {
                     substring = mapkey.substring(0,temp);
                 }
                 if(substring.equals(key)) {
-                    return SensitiveInfoUtils.sensitveObject(entry.getValue(), mapValue);
+                    return SensitiveInfoUtils.sensitveValue(entry.getValue(), mapValue);
                 }
             }else if (rule.equals(mapkey)){
-                return SensitiveInfoUtils.sensitveObject(entry.getValue(), mapValue );
+                return SensitiveInfoUtils.sensitveValue(entry.getValue(), mapValue );
             }
         }
         return mapValue;

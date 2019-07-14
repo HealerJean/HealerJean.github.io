@@ -2,6 +2,7 @@ package com.hlj.proj.dto;
 
 
 import com.hlj.proj.enums.ResponseEnum;
+import com.hlj.proj.utils.JsonUtils;
 
 /**
  * 返回对象
@@ -18,7 +19,6 @@ public class ResponseBean {
         return responseBean;
     }
 
-
     public static ResponseBean buildSuccess(Object result) {
         ResponseBean responseBean = new ResponseBean();
         responseBean.setSuccess(true);
@@ -27,19 +27,6 @@ public class ResponseBean {
         responseBean.setDate(System.currentTimeMillis()+"");
         return responseBean;
     }
-
-
-    public static ResponseBean buildSuccess(String msg ,Object result) {
-        ResponseBean responseBean = new ResponseBean();
-        responseBean.setSuccess(true);
-        responseBean.setCode(ResponseEnum.正常.code);
-        responseBean.setMsg(msg);
-        responseBean.setResult(result);
-        responseBean.setDate(System.currentTimeMillis()+"");
-        return responseBean;
-    }
-
-
 
     public static ResponseBean buildFailure() {
         ResponseBean responseBean = new ResponseBean();
@@ -76,7 +63,6 @@ public class ResponseBean {
         return responseBean;
     }
 
-
     /**
      * 脱敏
      * @param result
@@ -90,8 +76,6 @@ public class ResponseBean {
         responseBean.setDate(System.currentTimeMillis()+"");
         return responseBean;
     }
-
-
 
 
     private boolean success;
