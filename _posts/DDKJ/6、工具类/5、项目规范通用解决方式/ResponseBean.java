@@ -76,6 +76,24 @@ public class ResponseBean {
         return responseBean;
     }
 
+
+    /**
+     * 脱敏
+     * @param result
+     * @return
+     */
+    public static ResponseBean buildSensitivitySuccess(Object result){
+        ResponseBean responseBean = new ResponseBean();
+        responseBean.setSuccess(true);
+        responseBean.setCode(ResponseEnum.正常.code);
+        responseBean.setResult(JsonUtils.toJsonStringWithSensitivity(result));
+        responseBean.setDate(System.currentTimeMillis()+"");
+        return responseBean;
+    }
+
+
+
+
     private boolean success;
     private Object result = "{}";
     private String msg = "";
