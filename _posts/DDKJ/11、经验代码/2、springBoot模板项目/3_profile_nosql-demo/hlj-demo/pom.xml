@@ -39,6 +39,8 @@
         <okhttp3.version>3.11.0</okhttp3.version>
         <!--要激活的resoure目录-->
         <profiles.active>src/profiles/local</profiles.active>
+        <com-alibaba-fastjson.version>1.2.58</com-alibaba-fastjson.version>
+
     </properties>
 
     <dependencyManagement>
@@ -80,6 +82,13 @@
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger-ui</artifactId>
                 <version>${io.springfox.version}</version>
+            </dependency>
+
+            <!--  fastjson  -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${com-alibaba-fastjson.version}</version>
             </dependency>
 
         </dependencies>
