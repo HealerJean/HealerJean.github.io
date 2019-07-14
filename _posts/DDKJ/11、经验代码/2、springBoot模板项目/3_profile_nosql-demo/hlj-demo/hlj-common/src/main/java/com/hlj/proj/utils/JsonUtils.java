@@ -13,6 +13,10 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.hlj.proj.utils.sensitivity.SensitiveInfoUtils;
+import com.hlj.proj.utils.sensitivity.SensitiveSerializerModifier;
+import com.hlj.proj.utils.sensitivity.SensitiveTypeEnum;
+import com.hlj.proj.utils.sensitivity.SensitivityConstants;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -20,6 +24,8 @@ import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Utils - JSON
@@ -30,6 +36,8 @@ public final class JsonUtils {
      * ObjectMapper
      */
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper  objectMapperSensitivity = new ObjectMapper();
+
 
     static {
 
@@ -51,6 +59,18 @@ public final class JsonUtils {
 
         OBJECT_MAPPER.registerModule(javaTimeModule);
         OBJECT_MAPPER.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+
+
+
+
+        //脱敏日志创建
+        objectMapperSensitivity.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS,false);
+        objectMapperSensitivity.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapperSensitivity.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
+        objectMapperSensitivity.registerModule(javaTimeModule);
+        objectMapperSensitivity.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        //脱敏
+        objectMapperSensitivity.setSerializerFactory(objectMapperSensitivity.getSerializerFactory().withSerializerModifier(new SensitiveSerializerModifier()));
 
     }
 
@@ -228,6 +248,66 @@ public final class JsonUtils {
             levelStr.append("\t");
         }
         return levelStr.toString();
+    }
+
+
+
+    /**
+     * 对象转Json格式字符串----脱敏处理(包含map)
+     * @return
+     */
+    public static String toJsonStringWithSensitivity(Object propName){
+        if(propName != null && propName instanceof Map){
+            Map map = (Map) propName;
+            if(map != null && !map.isEmpty()){
+                Set<Map.Entry> set = map.entrySet();
+                for (Map.Entry item: set) {
+                    Object key = item.getKey();
+                    Object value = item.getValue();
+                    if(key instanceof String){
+                        String keyString = key.toString();
+                        String s = dealSensitivity(keyString, value.toString());
+                        map.put(keyString, s);
+                    }
+                }
+            }
+        }
+        try {
+            return objectMapperSensitivity.writeValueAsString(propName);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static String dealSensitivity(String mapkey, String mapValue){
+        //正则匹配
+        for(Map.Entry<String, SensitiveTypeEnum> entry : SensitivityConstants.sensitivityRules.entrySet()){
+            String rule = entry.getKey();
+            int length = rule.length();
+            int propLen = mapkey.length();
+            if(mapkey.length() < length){
+                continue;
+            }
+            int temp = rule.indexOf("*");
+            String key = null;
+            String substring = null;
+            if(temp >= 0 ){
+                if(temp < (length >> 2)){
+                    key = rule.substring(temp+1,length);
+                    substring = mapkey.substring(propLen-key.length(), propLen);
+                }else{
+                    key = rule.substring(0,temp);
+                    substring = mapkey.substring(0,temp);
+                }
+                if(substring.equals(key)) {
+                    return SensitiveInfoUtils.sensitveValue(entry.getValue(), mapValue);
+                }
+            }else if (rule.equals(mapkey)){
+                return SensitiveInfoUtils.sensitveValue(entry.getValue(), mapValue );
+            }
+        }
+        return mapValue;
     }
 
 

@@ -48,6 +48,8 @@
         <org.mybatis.mybatis.spring>1.3.0</org.mybatis.mybatis.spring>
         <!--mybatis-->
         <mybatis-spring-boot-starter.version>1.3.2</mybatis-spring-boot-starter.version>
+        <com-alibaba-fastjson.version>1.2.58</com-alibaba-fastjson.version>
+
 
     </properties>
 
@@ -99,18 +101,6 @@
                 <version>${com-alibaba-druid.version}</version>
             </dependency>
 
-         <!--mybatis-->
-<!--            <dependency>-->
-<!--                <groupId>org.mybatis</groupId>-->
-<!--                <artifactId>mybatis</artifactId>-->
-<!--                <version>${org.mybatis.mybatis}</version>-->
-<!--            </dependency>-->
-
-<!--            <dependency>-->
-<!--                <groupId>org.mybatis</groupId>-->
-<!--                <artifactId>mybatis-spring</artifactId>-->
-<!--                <version>${org.mybatis.mybatis.spring}</version>-->
-<!--            </dependency>-->
 
             <!--mybatis-->
             <dependency>
@@ -118,6 +108,14 @@
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis-spring-boot-starter.version}</version>
             </dependency>
+
+            <!--  fastjson  -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${com-alibaba-fastjson.version}</version>
+            </dependency>
+
 
 
         </dependencies>
