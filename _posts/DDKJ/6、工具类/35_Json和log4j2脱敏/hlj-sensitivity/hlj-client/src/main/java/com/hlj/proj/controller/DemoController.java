@@ -40,9 +40,9 @@ public class DemoController {
     private DemoEntityService demoEntityService;
 
 
-
     /**
      * 建议使用工具类
+     *
      * @param demoDTO
      * @return
      */
@@ -55,13 +55,14 @@ public class DemoController {
     @ResponseBody
     public ResponseBean sensitivity(DemoDTO demoDTO) {
         log.info("脱敏--------Json工具脱敏------数据信息{}", demoDTO);
-        demoEntityService.getDemoDTO(demoDTO) ;
-        return  ResponseBean.buildSensitivitySuccess(demoDTO);
+        demoEntityService.getDemoDTO(demoDTO);
+        return ResponseBean.buildSensitivitySuccess(demoDTO);
     }
 
 
     /**
      * 不建议使用注解
+     *
      * @param demoDTO
      * @return
      */
@@ -74,14 +75,14 @@ public class DemoController {
     @ResponseBody
     public ResponseBean anno(DemoDTO demoDTO) {
         log.info("脱敏--------注解脱敏------数据信息{}", demoDTO);
-        demoEntityService.getDemoDTO(demoDTO) ;
+        demoEntityService.getDemoDTO(demoDTO);
         return ResponseBean.buildSuccess(demoDTO);
     }
 
 
-
     /**
      * 日志脱敏
+     *
      * @param demoDTO
      * @return
      */
@@ -96,7 +97,6 @@ public class DemoController {
         log.info("脱敏--------日志脱敏------脱敏数据{}", demoDTO);
         return ResponseBean.buildSuccess(demoDTO);
     }
-
 
 
 }

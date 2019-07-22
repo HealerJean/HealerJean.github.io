@@ -18,7 +18,7 @@ public class JavaBeanUtil {
 
 
     /**
-     *
+     *字段类型必须一致哦
      * @param object 原始数据JavaBean
      * @param originFieldName 原始数据 字段名字 比如：name
      * @param newObject 新复制的JavaBean
