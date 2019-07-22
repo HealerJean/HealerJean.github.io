@@ -22,7 +22,7 @@ graylog我就不想介绍了，如果你看到graylog就知道它是一个日志
 ## 准备
  安装docker
  安装docker compose
- 
+
 
 ## 1、安装graylog
 
