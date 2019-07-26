@@ -54,14 +54,14 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 #### 2.1.1、@RequestBody  
 
-   @requestbody的含义是在当前对象获取整个http请求的body里面的所有数据，因此spring就不可能将这个数据强制包装成Course或者List类型，并且从@requestbody设计上来说，只获取一次就可以拿到请求body里面的所有数据，就没必要出现有多个@requestbody出现在controller的函数的形参列表当中
+   @requestbody的含义是在当前对象获取整个http请求的body里面的所有数据，从@requestbody设计上来说，只获取一次就可以拿到请求body里面的所有数据，就不能够出现有多个@requestbody出现在controller的函数的形参列表当中，
 
 ---------------------
 
 
- 不写的话，按照下面的正常调用就行了，但是如果写上了里面参数使用了required=true，一定不能让**DTO对象**为null，否则就会报错`org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing` 或者将它设置为**required=false**      
+ 不写的话，按照下面的正常调用就行了   但是如果写上了里面参数使用了required=true，一定不能让**DTO对象**为null，否则就会报错`org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing` 或者将它设置为**required=false**      
 
-如果使用了它，传递的必须为json，postman讲传递失败，不能传入
+如果使用了它，传递的必须为json 
 
 
 
@@ -93,7 +93,7 @@ Cookie: JSESSIONID=e1fd90bf-1148-4368-9fe9-018dcaf1aa0d
 
 #### 2.2.1、**GetMapping 不支持@RequestBody** 
 
-但是我们Get请求如果使用了@RequestBody这种方式，在使用下面post请求的方法也是可以调用成功的。但是前端正常的Get请求使用地址调用则不会成功。所以Get请求，直接写上对象就行了，不要写@RequestBody
+但是我们Get请求如果使用了@RequestBody这种方式，在使用下面Json请求的方法也是可以调用成功的。但是前端正常的Get请求使用地址调用则不会成功。所以Get请求，直接写上对象就行了，不要写@RequestBody,，虽然能调通，但确实错误的代码
 
 ```java
 @GetMapping("getDatas")

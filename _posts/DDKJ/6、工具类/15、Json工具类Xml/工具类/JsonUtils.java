@@ -108,21 +108,45 @@ public final class JsonUtils {
         }
     }
 
+
+
+
+
     /**
-     * 将JSON字符串转换为对象
+     * json格式字符串转对象
+     * @param json
+     * @param c
+     * @return object 仅限于 ArrayList HashSet 等集合对象
+     */
+    public static<T>  T toCollect(String json, Class c ,Class collect){
+        JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructParametricType(collect, c);
+        try {
+            return OBJECT_MAPPER.readValue(json, javaType);
+        } catch (IOException e){
+            throw new RuntimeException("参数格式有误");
+        }
+    }
+
+    
+
+     /**
+     * 将JSON字符串转换为集合（也可以是set） 不可以是对象
      * @param json          JSON字符串
      * @param typeReference 类型 可以通过这个转化为List集合 ，举例：
      *                      List<JavaBean> list =  JsonUtils.toObject(jsonArrayStr, new TypeReference<List<JavaBean>>() { });
      *                      Map<String, Object> map =  JsonUtils.toObject(JsonUtils.toJson(javaBean),new TypeReference<Map<String, Object>>( ){} );
      * @return 对象
      */
-    public static <T> T toObject(String json, TypeReference<?> typeReference) {
+    public static <T> T toObject(String json,  TypeReference<?> typeReference) {
         try {
             return OBJECT_MAPPER.readValue(json, typeReference);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
+
+
+
 
     /**
      * 将JSON字符串转换为对象
@@ -174,23 +198,22 @@ public final class JsonUtils {
     }
 
 
-    /**
-     * 构造类型
-     * @param type 类型,类，接口，枚举字段类型 （java.class）
+      /**
+     * 将来通过 OBJECT_MAPPER.readValue(json, javaType) 转化为对象
+     * @param type  （java.class）
      * @return 类型
      */
     public static JavaType constructType(Type type) {
-        return TypeFactory.defaultInstance().constructType(type);
+        return OBJECT_MAPPER.getTypeFactory().constructType(type);
     }
 
-
     /**
-     * 构造类型
+     * 将来通过 OBJECT_MAPPER.readValue(json, javaType) 转化为 集合
      * @param typeReference 类型 new TypeReference<List<JavaBean>>() { }
      * @return 类型
      */
     public static JavaType constructType(TypeReference<?> typeReference) {
-        return TypeFactory.defaultInstance().constructType(typeReference);
+        return OBJECT_MAPPER.getTypeFactory().constructType(typeReference);
     }
 
 
