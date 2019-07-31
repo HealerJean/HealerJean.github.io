@@ -31,7 +31,7 @@ public enum SensitiveTypeEnum {
     /**
      * 真实姓名
      */
-    REAL_NAME,
+    NAME,
     /**
      * 账户信息
      */

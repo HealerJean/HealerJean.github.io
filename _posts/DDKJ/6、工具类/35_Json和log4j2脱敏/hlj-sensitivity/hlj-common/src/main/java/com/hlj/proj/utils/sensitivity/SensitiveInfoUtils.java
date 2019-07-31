@@ -101,7 +101,7 @@ public class SensitiveInfoUtils {
      */
     public static String sensitveValue(SensitiveTypeEnum type, String value) {
         switch (type) {
-            case REAL_NAME: {
+            case NAME: {
                 return realName(String.valueOf(value));
             }
             case ID_CARD: {

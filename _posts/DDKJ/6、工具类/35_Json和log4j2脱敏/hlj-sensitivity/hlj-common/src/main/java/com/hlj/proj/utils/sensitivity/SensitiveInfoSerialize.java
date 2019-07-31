@@ -52,7 +52,7 @@ public class SensitiveInfoSerialize extends JsonSerializer<Object> implements Co
                 jsonGenerator.writeString(SensitiveInfoUtils.password(String.valueOf(value)));
                 break;
             }
-            case REAL_NAME: {
+            case NAME: {
                 jsonGenerator.writeString(SensitiveInfoUtils.realName(String.valueOf(value)));
                 break;
             }
