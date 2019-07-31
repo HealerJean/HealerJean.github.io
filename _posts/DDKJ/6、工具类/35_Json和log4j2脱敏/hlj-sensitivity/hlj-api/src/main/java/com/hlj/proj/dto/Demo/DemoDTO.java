@@ -26,7 +26,7 @@ public class DemoDTO   {
     private Long id;
 
     @ApiModelProperty(value = "姓名")
-    @SensitiveInfo(SensitiveTypeEnum.REAL_NAME)
+    @SensitiveInfo(SensitiveTypeEnum.NAME)
     private String name;
 
     @ApiModelProperty(value = "年龄")

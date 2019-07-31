@@ -53,7 +53,7 @@ public class DemoController {
             response = DemoDTO.class)
     @GetMapping(value = "sensitivity/jsonUtils", produces = "application/json; charset=utf-8")
     @ResponseBody
-    public ResponseBean sensitivity(DemoDTO demoDTO) {
+    public String sensitivity(DemoDTO demoDTO) {
         log.info("脱敏--------Json工具脱敏------数据信息{}", demoDTO);
         demoEntityService.getDemoDTO(demoDTO);
         return ResponseBean.buildSensitivitySuccess(demoDTO);

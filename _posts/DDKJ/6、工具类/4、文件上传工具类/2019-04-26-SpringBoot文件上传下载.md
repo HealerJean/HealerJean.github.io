@@ -142,8 +142,16 @@ public void downLoad(HttpServletResponse response,String folder) {
         OutputStream outputStream = response.getOutputStream();
 
         response.setContentType("application/x-download");
+        
+        
+        //强制浏览器下载
         response.setHeader("Content-Disposition", "attachment;filename=test.txt");
 
+        
+        //浏览器尝试打开,支持office online或浏览器预览pdf功能
+		response.setHeader("content-disposition", "inline;filename==test.txt");
+        
+        
         IOUtils.copy(inputStream, outputStream);
         outputStream.flush();
     } catch (Exception e) {
