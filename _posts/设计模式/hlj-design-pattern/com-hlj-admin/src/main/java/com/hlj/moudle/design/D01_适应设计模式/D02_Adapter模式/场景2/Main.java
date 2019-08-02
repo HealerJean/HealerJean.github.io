@@ -3,11 +3,11 @@ package com.hlj.moudle.design.D01_适应设计模式.D02_Adapter模式.场景2;
 /**
  * @author HealerJean
  * @version 1.0v
- * @ClassName AdapterPatternDemo
+ * @ClassName Main
  * @date 2019/7/31  20:59.
  * @Description
  */
-public class AdapterPatternDemo {
+public class Main {
     public static void main(String[] args) {
         AudioPlayer audioPlayer = new AudioPlayer();
 
