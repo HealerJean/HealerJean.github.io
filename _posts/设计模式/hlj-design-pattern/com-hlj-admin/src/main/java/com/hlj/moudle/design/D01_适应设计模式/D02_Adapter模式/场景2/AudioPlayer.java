@@ -8,6 +8,7 @@ package com.hlj.moudle.design.D01_适应设计模式.D02_Adapter模式.场景2;
  * @Description
  */
 public class AudioPlayer implements MediaPlayer {
+
     MediaAdapter mediaAdapter;
 
     @Override

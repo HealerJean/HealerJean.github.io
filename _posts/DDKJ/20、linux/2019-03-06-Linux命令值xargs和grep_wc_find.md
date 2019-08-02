@@ -32,7 +32,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 ### 1.1、文本内容相关
 
 
-```shell
+```sh
 healerjean$ cat -n text.txt 
 1	a b c d e f g
 2	h i j k l m n
@@ -45,7 +45,7 @@ healerjean$ cat -n text.txt
 #### 1.1.1、| xargs 单行输出文本所有内容 
 
 
-```shell
+```sh
 healerjean$ cat text.txt | xargs
 a b c d e f g h i j k l m n o p q r s t
 ```
@@ -54,7 +54,7 @@ a b c d e f g h i j k l m n o p q r s t
 
 ##### -n多行输出：后面直接加数字
 
-```
+```sh
 healerjean$ cat text.txt | xargs -n4
 a b c d
 e f g h
@@ -80,7 +80,7 @@ name name name name
 #### 1.1.4、 -d -n 联合使用
 
 
-```shell
+```sh
 
 echo "nameXnameXnameXname" | xargs -dX -n2
  
@@ -95,7 +95,7 @@ name name
 
 #### 1.2.1、（查询->删除）
 
-```
+```sh
 
 删除vedio开头的键
 keys vedio* | xargs redis-cli del
@@ -117,13 +117,45 @@ docker images | grep registry.cn-qingdao.aliyuncs.com/duodianyouhui/dev-server |
 
 ### 2.1、文本内容相关
 
-#### 2.1.1、查看某个字符串所在行的内容
+#### 
 
 
-```
-
+```sh
+1、查看某个字符串所在行的内容
 healerjean$ grep a text.txt 
 a b c d e f g
+a c d e f g
+
+
+2、查看数据并显示行号
+grep -n keyword filename 
+列出所搜索内容的匹配行，搜索过程中不区分大小写
+grep -i keyword filename：
+
+3、显示某个数据的前后多少行
+grep -A 5 foo file  显示foo及后5行
+grep -B 5 foo file  显示foo及前5行
+grep -C 5 foo file  显示file文件中匹配foo字串那行以及上下5行 等于下面的
+grep -20 *keyword filename   显示匹配到的前后20行  
+
+
+4、返回一个文件中字符串的个数， 多个文件中 各自的个数：
+grep -c keyword1 filename 
+grep -c keyword 文件名1 文件名2 
+返回多个文件的个数之和 wc -l(统计行数)
+ grep -c keyword 文件1，文件2 | wc -l  
+ 
+ grep -c keyword 文件1，文件2 | wc -l  
+
+
+5、-o表示只打印匹配到的部 -n显示行号
+grep -o -n *keyword filename > newfilename 
+
+
+6、完全匹配输出
+grep -x option file：，
+grep -x hello a.txt，只会输出某一行存在hello字符串，并且此行仅包含hello的内容。假设a.txt中有一行“hello all”，执行上述命令，此行不会被搜索到。
+
 
 ```
 
@@ -134,6 +166,8 @@ a b c d e f g
 healerjean$ find . -name '*.txt' |grep test
 ./study/cant-breathe/13、redis/7/1、spring redis/spring-redis-test.txt
 ./study/HealerJean.github.io/_posts/DDKJ/3、AngularJS_Vue/Vue/模板/element-starter/node_modules/hoek/test/modules/ignore.txt
+
+
 ```
 
 
@@ -180,7 +214,7 @@ root@AaronWong shell_test]# find /ABC/ -type l -print
 ```
 
 
-## 4、wc 统计文件中的字节数、字数、行数
+## 4、wc 统计文件中的-c字节数、-w字数、-l行数
 
 
 ```
@@ -226,8 +260,14 @@ healerjean$ wc -c text.txt
 分别打印行数，单词书，字符数
 
 ```
-healerjean$ wc text.txt 
-       4      20      40 text.txt
+$ wc testfile           # testfile文件的统计信息  
+3 92 598 testfile       # testfile文件的行数为3、单词数92、字节数598 
+
+$ wc testfile testfile_1 testfile_2  #统计三个文件的信息  
+3 92 598 testfile                    #第一个文件行数为3、单词数92、字节数598  
+9 18 78 testfile_1                   #第二个文件的行数为9、单词数18、字节数78  
+3 6 32 testfile_2                    #第三个文件的行数为3、单词数6、字节数32  
+15 116 708 总用量                    #三个文件总共的行数为15、单词数116、字节数708 
 ```
 
 ## 5、cat
