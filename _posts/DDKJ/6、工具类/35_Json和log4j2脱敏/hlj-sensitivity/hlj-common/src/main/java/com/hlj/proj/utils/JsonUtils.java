@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -164,7 +163,7 @@ public final class JsonUtils {
      * @param json JSON字符串
      * @return 树
      */
-    public static JsonNode toTree(String json) {
+    public static JsonNode toJsonNode(String json) {
         try {
             return OBJECT_MAPPER.readTree(json);
         } catch (JsonProcessingException e) {

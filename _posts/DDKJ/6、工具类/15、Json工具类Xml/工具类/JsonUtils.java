@@ -110,6 +110,21 @@ public final class JsonUtils {
 
 
 
+    /**
+     * 将JSON字符串转换为树
+     * @param json JSON字符串
+     * @return 树
+     */
+    public static JsonNode toTree(String json) {
+        try {
+            return objectMapper.readTree(json);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        } catch (IOException e) {
+            throw new RuntimeException("参数格式有误");
+        }
+    }
+
 
 
     /**
@@ -164,39 +179,7 @@ public final class JsonUtils {
     }
 
 
-    /**
-     * 将JSON字符串转换为树
-     * @param json JSON字符串
-     * @return 树
-     */
-    public static JsonNode toTree(String json) {
-        try {
-            return OBJECT_MAPPER.readTree(json);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * 将对象转换为JSON流
-     *
-     * @param writer Writer
-     * @param value  对象
-     */
-    public static void writeValue(Writer writer, Object value) {
-        try {
-            OBJECT_MAPPER.writeValue(writer, value);
-        } catch (JsonGenerationException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        } catch (JsonMappingException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
+  
 
       /**
      * 将来通过 OBJECT_MAPPER.readValue(json, javaType) 转化为对象
@@ -215,6 +198,27 @@ public final class JsonUtils {
     public static JavaType constructType(TypeReference<?> typeReference) {
         return OBJECT_MAPPER.getTypeFactory().constructType(typeReference);
     }
+
+
+      
+    /**
+     * 将对象转换为JSON流
+     *
+     * @param writer Writer
+     * @param value  对象
+     */
+    public static void writeValue(Writer writer, Object value) {
+        try {
+            OBJECT_MAPPER.writeValue(writer, value);
+        } catch (JsonGenerationException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
 
 
     /**
