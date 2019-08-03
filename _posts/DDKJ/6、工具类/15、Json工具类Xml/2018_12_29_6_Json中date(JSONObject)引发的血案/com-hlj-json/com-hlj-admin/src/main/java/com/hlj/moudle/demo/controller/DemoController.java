@@ -39,17 +39,18 @@ public class DemoController {
 
     @GetMapping("getMapHaveDateFalse")
     @ResponseBody
-    public Map<String ,Object> getMap(){
+    public Map<String, Object> getMap() {
 
         JavaBean javaBean = getJavaBean();
         Map<String, Object> map = (Map<String, Object>) JSONObject.fromObject(javaBean);
 
-        return map ;
+        return map;
     }
 
 
     /**
      * 假数据JavaBean
+     *
      * @return
      */
     private JavaBean getJavaBean() {
@@ -62,12 +63,6 @@ public class DemoController {
 
         return javaBean;
     }
-
-
-
-
-
-
 
 
 }
