@@ -1,4 +1,7 @@
-package com.fintech.client.utils;
+package com.fintech.scf.utils;
+
+import com.fintech.scf.data.pojo.contract.ScfContractSigner;
+import com.fintech.scf.service.core.dto.ContractSignerDTO;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -10,28 +13,24 @@ import java.util.Set;
  * @version 1.0v
  * @ClassName CodeAutoUtils
  * @date 2019/6/28  13:38.
- * @Description
+ * @Description 对象直接set get工具类
  */
 public class CodeAutoUtils {
 
 
-    // /**
-    //  * 使用样例
-    //  * @param args
-    //  */
-    // public static void main(String[] args) {
-    //     DepartmentLimitLogDTO departmentLimitLogDTO = new DepartmentLimitLogDTO();
-    //     DepartmentLimitDTO departmentLimitDTO = new DepartmentLimitDTO();
-    //
-    //     System.out.println( beanUtilsCopy(departmentLimitDTO,departmentLimitLogDTO,"departmentLimitDTO","departmentLimitLogDTO"));
-    //
-    // }
+    /**
+     * 使用样例
+     * @param args
+     */
+    public static void main(String[] args) {
+        beanCopy(ContractSignerDTO.class, ScfContractSigner.class,"dto","contractSigner") ;
+    }
 
 
     /**
      * 对象A赋值到对象B
      */
-    public static String beanUtilsCopy(Object a,Object b,String aObjectName,String bObjectName ){
+    public static String beanCopy(Class a, Class b, String aObjectName, String bObjectName ){
         StringBuilder stringBuilder = new StringBuilder();
         Set<Field> fields = SetEqualsFileds(a, b);
         for(Field field :fields){
@@ -41,6 +40,7 @@ public class CodeAutoUtils {
             String getMethodNmae = ".get"+methodName+"()";
             stringBuilder.append(aObjectName+setMethodName+"("+bObjectName+getMethodNmae+");\n");
         }
+        System.out.println(stringBuilder.toString());
         return stringBuilder.toString();
     }
 
@@ -50,7 +50,7 @@ public class CodeAutoUtils {
      * @param b
      * @return
      */
-    private static Set<Field> SetEqualsFileds(Object a, Object b) {
+    private static Set<Field> SetEqualsFileds(Class a, Class b) {
         Set<Field> aFields = getField(a);
         Set<Field> bFields = getField(b);
         Set<Field> fields = new HashSet<>();
@@ -67,12 +67,11 @@ public class CodeAutoUtils {
 
     /**
      * 获取所有字段名
-     * @param object
      * @return
      */
-    public static  Set<Field>   getField(Object object ){
+    public static  Set<Field>   getField(Class c ){
         Set<Field> declaredFields = new HashSet<>();
-        Class tempClass = object .getClass() ;
+        Class tempClass = c ;
         //反射获取父类里面的属性
         while (tempClass != null && !tempClass.getName().toLowerCase().equals("java.lang.object")) {
             declaredFields.addAll(Arrays.asList(tempClass.getDeclaredFields()));
