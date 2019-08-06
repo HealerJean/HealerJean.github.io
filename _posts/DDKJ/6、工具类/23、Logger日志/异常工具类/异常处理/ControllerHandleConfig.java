@@ -42,7 +42,7 @@ public class ControllerHandleConfig {
 
     /**
      * 所有异常报错
-     * @param e
+     * @param e    可以只写它 @ExceptionHandler 
      * @return
      * @throws Exception
      */
