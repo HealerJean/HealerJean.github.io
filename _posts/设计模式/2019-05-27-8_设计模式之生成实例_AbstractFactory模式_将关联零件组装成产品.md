@@ -230,7 +230,7 @@ public class Main {
 
 ### 2、UML 图
 
-![1559097212752](D:\study\HealerJean.github.io\blogImages\1559097212752.png)
+![1559097212752](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1559097212752.png)
 
 
 
@@ -268,9 +268,11 @@ public class Main {
 
 
 
-![1559098490451](D:\study\HealerJean.github.io\blogImages\1559098490451.png)
+![1559098490451](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1559098490451.png)
 
 **在抽象工厂模式中，假设我们需要增加一个零件**        
+
+**添加产品容易，添加零件难**
 
 假设我们增加耳麦这个零件，则首先我们需要增加耳麦这个父类（或接口），再加上戴尔耳麦，惠普耳麦这两个子类。之后在Factory这个工厂中中，增加生产耳麦的接口。最后在戴尔工厂，惠普工厂这两个类中，分别实现生产戴尔耳麦，惠普耳麦的功能。 以上    已经编写的具体的工厂越多，修改的工作量就会越大    
 
