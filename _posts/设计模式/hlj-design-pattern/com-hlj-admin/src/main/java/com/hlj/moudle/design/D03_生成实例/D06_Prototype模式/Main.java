@@ -1,27 +1,36 @@
 package com.hlj.moudle.design.D03_生成实例.D06_Prototype模式;
 
-
-import com.hlj.moudle.design.D03_生成实例.D06_Prototype模式.framework.Manager;
-import com.hlj.moudle.design.D03_生成实例.D06_Prototype模式.framework.Product;
-
+/**
+ * @author HealerJean
+ * @version 1.0v
+ * @ClassName Main
+ * @date 2019/8/6  11:36.
+ * @Description
+ */
 public class Main {
-    public static void main(String[] args) {
-        // 准备
-        Manager manager = new Manager();
-        UnderlinePen upen = new UnderlinePen('~');
 
-        MessageBox mbox = new MessageBox('*');
-        MessageBox sbox = new MessageBox('/');
-        manager.register("strong message", upen);
-        manager.register("warning box", mbox);
-        manager.register("slash box", sbox);
+        public static void main(String[] args) {
 
-        // 生成
-        Product p1 = manager.create("strong message");
-        p1.use("Hello, world.");
-        Product p2 = manager.create("warning box");
-        p2.use("Hello, world.");
-        Product p3 = manager.create("slash box");
-        p3.use("Hello, world.");
-    }
+            Rectangle rectangle = new Rectangle();
+            rectangle.setType("rectangle");
+            rectangle.setId("1");
+            rectangle.setPectangleName("rectangleName");
+            ShapeCache.create(rectangle);
+            Square square = new Square();
+            square.setType("square");
+            square.setId("2");
+            square.setSquareName("squareName");
+            ShapeCache.create(square);
+
+            rectangle = (Rectangle)ShapeCache.getByType("rectangle") ;
+            rectangle.draw();
+            square =    (Square)ShapeCache.getByType("square") ;
+            square.draw();
+
+            // 1:rectangle:rectangleName
+            // 2:square:squareName
+
+
+
+        }
 }
