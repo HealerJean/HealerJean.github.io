@@ -77,19 +77,10 @@ public class ResponseBean {
     }
 
 
-    /**
-     * 脱敏
-     * @param result
-     * @return
-     */
-    public static ResponseBean buildSensitivitySuccess(Object result){
-        ResponseBean responseBean = new ResponseBean();
-        responseBean.setSuccess(true);
-        responseBean.setCode(ResponseEnum.正常.code);
-        responseBean.setResult(JsonUtils.toJsonStringWithSensitivity(result));
-        responseBean.setDate(System.currentTimeMillis()+"");
-        return responseBean;
+    public static String buildSensitivitySuccess(Object result){
+        return JsonUtils.toJsonStringWithSensitivity(buildSuccess(result))  ;
     }
+
 
 
 
