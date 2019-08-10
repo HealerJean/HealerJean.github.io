@@ -1,14 +1,18 @@
 package com.hlj.proj.service.flow.base.entity;
 
-import com.fintech.scf.data.manager.flow.ScfFlowAuditRecordManager;
-import com.fintech.scf.data.pojo.flow.ScfFlowAuditRecord;
-import com.fintech.scf.data.pojo.flow.ScfFlowAuditRecordQuery;
-import com.fintech.scf.service.common.dto.IdentityInfoDTO;
-import com.fintech.scf.utils.spring.SpringContextHolder;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.hlj.proj.data.dao.mybatis.manager.flow.ScfFlowAuditRecordManager;
+import com.hlj.proj.data.pojo.flow.ScfFlowAuditRecord;
+import com.hlj.proj.data.pojo.flow.ScfFlowAuditRecordQuery;
+import com.hlj.proj.dto.user.IdentityInfoDTO;
+import com.hlj.proj.service.spring.SpringContextHolder;
+import com.hlj.proj.utils.EmptyUtil;
+import com.hlj.proj.utils.JsonUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -28,6 +32,9 @@ public class AuditorFlowNode extends FlowNode {
      */
     private AuditorProcess auditorProcess;
 
+    /**
+     * 初始化审批节点
+     */
     public static AuditorFlowNode of(String nodeCode, String nodeName, String nodeType, String nodeDetail, String instantsNo, int index) {
         AuditorFlowNode auditorFlowNode = new AuditorFlowNode();
         auditorFlowNode.init(nodeCode, nodeName, nodeType);
@@ -39,11 +46,18 @@ public class AuditorFlowNode extends FlowNode {
             query.setInstantsNo(instantsNo);
             query.setNodeCode(nodeCode);
             query.setSept(index + 1);
-            scfFlowAuditRecords =  scfFlowAuditRecordManager.queryList(query);
+            scfFlowAuditRecords = scfFlowAuditRecordManager.queryList(query);
         }
-        AuditorProcess auditorProcess = AuditorProcess.of(nodeDetail);
+
+        AuditorProcess auditorProcess = new AuditorProcess();
+        if (StringUtils.isBlank(nodeDetail)) {
+            auditorProcess.setAuditors(new ArrayList<>(0));
+        } else {
+            ArrayList<Auditor> auditors = JsonUtils.toObject(nodeDetail, new TypeReference<ArrayList<Auditor>>() { });
+            auditorProcess.setAuditors(auditors);
+        }
         List<Auditor> auditors = auditorProcess.getAuditors();
-        if (scfFlowAuditRecords != null && !scfFlowAuditRecords.isEmpty()) {
+        if (EmptyUtil.isEmpty(scfFlowAuditRecords)) {
             int auditorMax = 1;
             for (int i = 0; i < scfFlowAuditRecords.size(); i++) {
                 ScfFlowAuditRecord scfFlowAuditRecord = scfFlowAuditRecords.get(i);
@@ -67,7 +81,6 @@ public class AuditorFlowNode extends FlowNode {
 
     /**
      * 返回流程暂停
-     *
      * @param data
      * @return
      */

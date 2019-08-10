@@ -9,13 +9,15 @@ package com.hlj.proj.service.flow.base.entity;
  */
 public class Result<T> {
 
+    public StatusEnum status;
+
+    public T data;
+
 
     public enum StatusEnum {
         Success("10","成功"),
         Fail("99","失败"),
         Suspend("20","待处理");
-
-
         private String code;
         private String desc;
 
@@ -41,9 +43,7 @@ public class Result<T> {
         }
     }
 
-    public StatusEnum status;
 
-    public T data;
 
     public static <T> Result<T> success(T data){
         Result<T> result = new Result();
