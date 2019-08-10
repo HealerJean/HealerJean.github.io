@@ -6,26 +6,24 @@ package com.hlj.proj.service.flow.service.enums;
  * @Date 2019/6/13 10:08
  * @Description 流程节点枚举
  */
-public enum  FlowServiceEnum {
+public enum FlowDefinitionEnum {
 
-    loanApplicationAutoFund("loanApplicationAutoFund","融资申请(自动请款)"),
-    loanApplicationManualFund("loanApplicationManualFund","融资申请(非自动请款)"),
-    toBadDebtOrChaseDebt("toBadDebtOrChaseDebt","转坏账/追账"),
+    demoJob("demoJob","Demo任务)"),
 
-    authentication("authentication","实名认证"),
-    commpanyRiskLimitApplication("commpanyRiskLimitApplication","企业风控额度操作申请") ;
+    ;
+
 
 
     private String flowCode;
     private String flowName;
 
-    FlowServiceEnum(String flowCode, String flowName) {
+    FlowDefinitionEnum(String flowCode, String flowName) {
         this.flowCode = flowCode;
         this.flowName = flowName;
     }
 
-    public static FlowServiceEnum toEnum(String flowCode) {
-        for (FlowServiceEnum item : FlowServiceEnum.values()) {
+    public static FlowDefinitionEnum toEnum(String flowCode) {
+        for (FlowDefinitionEnum item : FlowDefinitionEnum.values()) {
             if (item.getFlowCode().equals(flowCode)) {
                 return item;
             }

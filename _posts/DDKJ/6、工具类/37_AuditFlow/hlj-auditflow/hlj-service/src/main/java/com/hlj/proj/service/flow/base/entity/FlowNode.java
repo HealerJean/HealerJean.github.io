@@ -3,24 +3,9 @@ package com.hlj.proj.service.flow.base.entity;
 
 import com.hlj.proj.dto.user.IdentityInfoDTO;
 
-/**
- * @ClassName FlowNode
- * @Author TD
- * @Date 2019/6/12 9:41
- * @Description 流程节点
- */
+
 
 public abstract class FlowNode {
-
-    protected FlowNode(){}
-
-    protected FlowNode(String nodeCode,String nodeName,String nodeType ,String nodeServiceType ,String data){
-        this.nodeCode = nodeCode;
-        this.nodeServiceType = nodeServiceType;
-        this.nodeName = nodeName;
-        this.nodeType = nodeType;
-        this.data = data;
-    }
 
     /**
      * 节点编号
@@ -31,10 +16,6 @@ public abstract class FlowNode {
      * 节点名称
      */
     private String nodeName;
-    /**
-     * 节点业务类型
-     */
-    private String nodeServiceType;
 
     /**
      * 节点类型
@@ -47,19 +28,33 @@ public abstract class FlowNode {
     private String data;
 
     /**
-     * 执行该节点业务
+     * 节点业务类型
      */
-    protected abstract Result  deal(String instantsNo, String data, IdentityInfoDTO identityInfo);
+    private String nodeServiceType;
+
+
+    protected FlowNode(){}
+    protected FlowNode(String nodeCode,String nodeName,String nodeType ,String nodeServiceType ,String data){
+        this.nodeCode = nodeCode;
+        this.nodeServiceType = nodeServiceType;
+        this.nodeName = nodeName;
+        this.nodeType = nodeType;
+        this.data = data;
+    }
+
+    protected  void init(String nodeCode,String nodeName,String nodeType ){
+        this.nodeCode = nodeCode;
+        this.nodeName = nodeName;
+        this.nodeType = nodeType;
+    }
+
+
 
     /**
      * 执行该节点业务
      */
-    public Result dealBusiness(String instantsNo, String dataJson, IdentityInfoDTO identityInfo){
-        this.data = dataJson;
-        //查询对应节点数据，修改
-        Result deal = deal(instantsNo, dataJson, identityInfo);
-        return deal;
-    }
+    protected abstract Result  deal(String instantsNo, String data, IdentityInfoDTO identityInfo);
+
 
     /**
      * 节点执行失败，需要处理的业务流程
@@ -68,11 +63,6 @@ public abstract class FlowNode {
 
 
 
-    protected  void init(String nodeCode,String nodeName,String nodeType ){
-        this.nodeCode = nodeCode;
-        this.nodeName = nodeName;
-        this.nodeType = nodeType;
-    }
 
     public String getNodeCode() {
         return nodeCode;

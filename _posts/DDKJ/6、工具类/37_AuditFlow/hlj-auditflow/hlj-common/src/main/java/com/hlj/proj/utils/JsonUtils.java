@@ -7,11 +7,16 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.hlj.proj.utils.sensitivity.SensitiveInfoUtils;
+import com.hlj.proj.utils.sensitivity.SensitiveSerializerModifier;
+import com.hlj.proj.utils.sensitivity.SensitiveTypeEnum;
+import com.hlj.proj.utils.sensitivity.SensitivityConstants;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -57,6 +62,16 @@ public final class JsonUtils {
 
 
 
+
+        //脱敏日志创建
+        objectMapperSensitivity.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS,false);
+        objectMapperSensitivity.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapperSensitivity.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
+        objectMapperSensitivity.registerModule(javaTimeModule);
+        objectMapperSensitivity.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        //脱敏
+        objectMapperSensitivity.setSerializerFactory(objectMapperSensitivity.getSerializerFactory().withSerializerModifier(new SensitiveSerializerModifier()));
+
     }
 
     public static ObjectMapper getObjectMapper() {
@@ -81,8 +96,8 @@ public final class JsonUtils {
     /**
      * 将JSON字符串转换为对象
      *
-     * @param json JSON字符串
-     * @param c    类型
+     * @param json      JSON字符串
+     * @param c 类型
      * @return 对象
      */
     public static <T> T toObject(String json, Class<T> c) {
@@ -93,27 +108,8 @@ public final class JsonUtils {
         }
     }
 
-
     /**
-     * json格式字符串转对象
-     *
-     * @param json
-     * @param c
-     * @return collect 仅限于 ArrayList HashSet 等集合对象
-     */
-    public static <T> T jsonToArray(String json, Class c, Class collect) {
-        JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructParametricType(collect, c);
-        try {
-            return OBJECT_MAPPER.readValue(json, javaType);
-        } catch (IOException e) {
-            throw new RuntimeException("参数格式有误");
-        }
-    }
-
-
-    /**
-     * 将JSON字符串转换为集合（也可以是set） 不可以是对象
-     *
+     * 将JSON字符串转换为对象
      * @param json          JSON字符串
      * @param typeReference 类型 可以通过这个转化为List集合 ，举例：
      *                      List<JavaBean> list =  JsonUtils.toObject(jsonArrayStr, new TypeReference<List<JavaBean>>() { });
@@ -127,7 +123,6 @@ public final class JsonUtils {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
-
 
     /**
      * 将JSON字符串转换为对象
@@ -147,11 +142,10 @@ public final class JsonUtils {
 
     /**
      * 将JSON字符串转换为树
-     *
      * @param json JSON字符串
      * @return 树
      */
-    public static JsonNode toJsonNode(String json) {
+    public static JsonNode toTree(String json) {
         try {
             return OBJECT_MAPPER.readTree(json);
         } catch (JsonProcessingException e) {
@@ -181,23 +175,22 @@ public final class JsonUtils {
 
 
     /**
-     * 将来通过 OBJECT_MAPPER.readValue(json, javaType) 转化为对象
-     *
-     * @param type （java.class）
+     * 构造类型
+     * @param type 类型,类，接口，枚举字段类型 （java.class）
      * @return 类型
      */
-    public static JavaType toJavaType(Type type) {
-        return OBJECT_MAPPER.getTypeFactory().constructType(type);
+    public static JavaType constructType(Type type) {
+        return TypeFactory.defaultInstance().constructType(type);
     }
 
+
     /**
-     * 将来通过 OBJECT_MAPPER.readValue(json, javaType) 转化为 集合
-     *
+     * 构造类型
      * @param typeReference 类型 new TypeReference<List<JavaBean>>() { }
      * @return 类型
      */
-    public static JavaType toJavaType(TypeReference<?> typeReference) {
-        return OBJECT_MAPPER.getTypeFactory().constructType(typeReference);
+    public static JavaType constructType(TypeReference<?> typeReference) {
+        return TypeFactory.defaultInstance().constructType(typeReference);
     }
 
 
@@ -259,6 +252,63 @@ public final class JsonUtils {
 
 
 
+    /**
+     * 对象转Json格式字符串----脱敏处理(包含map)
+     * @return
+     */
+    public static String toJsonStringWithSensitivity(Object propName){
+        if(propName != null && propName instanceof Map){
+            Map map = (Map) propName;
+            if(map != null && !map.isEmpty()){
+                Set<Map.Entry> set = map.entrySet();
+                for (Map.Entry item: set) {
+                    Object key = item.getKey();
+                    Object value = item.getValue();
+                    if(key instanceof String){
+                        String keyString = key.toString();
+                        String s = dealSensitivity(keyString, value.toString());
+                        map.put(keyString, s);
+                    }
+                }
+            }
+        }
+        try {
+            return objectMapperSensitivity.writeValueAsString(propName);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static String dealSensitivity(String mapkey, String mapValue){
+        //正则匹配
+        for(Map.Entry<String, SensitiveTypeEnum> entry : SensitivityConstants.sensitivityRules.entrySet()){
+            String rule = entry.getKey();
+            int length = rule.length();
+            int propLen = mapkey.length();
+            if(mapkey.length() < length){
+                continue;
+            }
+            int temp = rule.indexOf("*");
+            String key = null;
+            String substring = null;
+            if(temp >= 0 ){
+                if(temp < (length >> 2)){
+                    key = rule.substring(temp+1,length);
+                    substring = mapkey.substring(propLen-key.length(), propLen);
+                }else{
+                    key = rule.substring(0,temp);
+                    substring = mapkey.substring(0,temp);
+                }
+                if(substring.equals(key)) {
+                    return SensitiveInfoUtils.sensitveValue(entry.getValue(), mapValue);
+                }
+            }else if (rule.equals(mapkey)){
+                return SensitiveInfoUtils.sensitveValue(entry.getValue(), mapValue );
+            }
+        }
+        return mapValue;
+    }
 
 
 }

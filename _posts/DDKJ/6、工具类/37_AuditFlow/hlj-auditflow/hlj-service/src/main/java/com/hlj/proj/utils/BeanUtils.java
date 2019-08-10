@@ -433,11 +433,7 @@ public class BeanUtils {
         auditRecordDTO.setCreaterUserName(item.getCreateName());
         auditRecordDTO.setCreateTime(item.getCreateTime());
         String auditData = item.getAuditData();
-        try {
-            auditRecordDTO.setData(StringUtils.isBlank(auditData) ? auditData : JsonUtils.objectMapper.readTree(auditData));
-        } catch (IOException e) {
-            log.error("AuditRecordDTO 转化错误",e);
-        }
+        auditRecordDTO.setData(StringUtils.isBlank(auditData) ? auditData : JsonUtils.toTree(auditData));
         auditRecordDTO.setSept(item.getSept());
         auditRecordDTO.setAuditSept(item.getAuditSept());
         auditRecordDTO.setInstantsNo(item.getInstantsNo());

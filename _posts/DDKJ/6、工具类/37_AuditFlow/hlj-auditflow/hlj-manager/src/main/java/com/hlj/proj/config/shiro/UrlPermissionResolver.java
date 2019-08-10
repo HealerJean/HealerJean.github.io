@@ -16,7 +16,7 @@ public class UrlPermissionResolver implements PermissionResolver {
 
     @Override
     public Permission resolvePermission(String s) {
-        UrlPermission urlPermission = JsonUtils.jsonToObject(s, UrlPermission.class);
+        UrlPermission urlPermission = JsonUtils.toObject(s, UrlPermission.class);
         return urlPermission;
     }
 }

@@ -1,6 +1,6 @@
 package com.hlj.proj.service.flow.base.entity;
 
-import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.hlj.proj.data.dao.mybatis.manager.flow.ScfFlowAuditRecordManager;
 import com.hlj.proj.data.dao.mybatis.manager.flow.ScfFlowAuditRecordTempManager;
 import com.hlj.proj.data.dao.mybatis.manager.flow.ScfFlowNodeManager;
@@ -19,7 +19,6 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +33,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Data
 @Slf4j
 public class AuditorProcess {
+
+
     /**
      * 审批链条
      */
@@ -67,23 +68,13 @@ public class AuditorProcess {
         if (StringUtils.isBlank(nodeDetail)) {
             auditorProcess.setAuditors(new ArrayList<>(0));
         } else {
-            ArrayList<Auditor> auditors = getAuditors(nodeDetail);
+            ArrayList<Auditor> auditors =  JsonUtils.toObject(nodeDetail,new TypeReference<ArrayList<Auditor>>() { });
             auditorProcess.setAuditors(auditors);
         }
         auditorProcess.instantsNo = instantsNo;
         return auditorProcess;
     }
 
-    public static AuditorProcess of(String nodeDetail) {
-        AuditorProcess auditorProcessTemp = new AuditorProcess();
-        if (StringUtils.isBlank(nodeDetail)) {
-            auditorProcessTemp.setAuditors(new ArrayList<>(0));
-        } else {
-            ArrayList<Auditor> auditors = getAuditors(nodeDetail);
-            auditorProcessTemp.setAuditors(auditors);
-        }
-        return auditorProcessTemp;
-    }
 
     /**
      * 审核开始
@@ -167,7 +158,7 @@ public class AuditorProcess {
             //当审批流程全部走完时，则触发流程的下一步
             auditSept.incrementAndGet();
             if (isSuccess() || isReject()) {
-                Process process = ProcessDefinition.ofInstant(instantsNo);
+                Process process = ProcessDefinition.ofSuspendInstant(instantsNo);
                 process.nextFlow(instantsNo, auditData, identityInfo);
             } else {
                 //创建下一个审批记录
@@ -185,17 +176,6 @@ public class AuditorProcess {
         }
     }
 
-
-    private static ArrayList<Auditor> getAuditors(String nodeDetail) {
-        JavaType javaType = JsonUtils.objectMapper.getTypeFactory().constructParametricType(ArrayList.class, Auditor.class);
-        try {
-            ArrayList list = JsonUtils.objectMapper.readValue(nodeDetail, javaType);
-            return list;
-        } catch (IOException e) {
-            log.error("审核定义并非标准字符串", e);
-            throw new BusinessException("审核定义并非标准字符串");
-        }
-    }
 
     private void generateAuditRecord(String instantsNo, String nodeCode, Integer auditSept, String data) {
         this.auditSept = new AtomicInteger(auditSept);
