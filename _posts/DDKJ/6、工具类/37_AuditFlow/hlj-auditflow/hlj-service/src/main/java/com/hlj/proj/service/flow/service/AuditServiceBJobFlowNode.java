@@ -8,25 +8,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 
-@Component("demoAJobDeal")
+@Component("auditServiceBJobDeal")
 @Slf4j
-public class DemoAJobDealFlowNode extends ServiceFlowNode {
+public class AuditServiceBJobFlowNode extends ServiceFlowNode {
 
 
-    public DemoAJobDealFlowNode() {
+    public AuditServiceBJobFlowNode() {
         super();
-        init(FlowServiceNodeEnum.demoAJobDeal.getNodeCode(),
-                FlowServiceNodeEnum.demoAJobDeal.getNodeName(),
-                FlowServiceNodeEnum.demoAJobDeal.getNodeType());
+        init(FlowServiceNodeEnum.auditServiceBJobDeal.getNodeCode(),
+                FlowServiceNodeEnum.auditServiceBJobDeal.getNodeName(),
+                FlowServiceNodeEnum.auditServiceBJobDeal.getNodeType());
     }
 
-    public DemoAJobDealFlowNode(String data) {
-        super(FlowServiceNodeEnum.demoAJobDeal.getNodeCode(),
-                FlowServiceNodeEnum.demoAJobDeal.getNodeName(),
-                FlowServiceNodeEnum.demoAJobDeal.getNodeType(), data);
+    public AuditServiceBJobFlowNode(String data) {
+        super(FlowServiceNodeEnum.auditServiceBJobDeal.getNodeCode(),
+                FlowServiceNodeEnum.auditServiceBJobDeal.getNodeName(),
+                FlowServiceNodeEnum.auditServiceBJobDeal.getNodeType(), data);
     }
 
-    public DemoAJobDealFlowNode(String nodeCode, String nodeName, String nodeType, String data) {
+    public AuditServiceBJobFlowNode(String nodeCode, String nodeName, String nodeType, String data) {
         super(nodeCode, nodeName, nodeType, data);
     }
 

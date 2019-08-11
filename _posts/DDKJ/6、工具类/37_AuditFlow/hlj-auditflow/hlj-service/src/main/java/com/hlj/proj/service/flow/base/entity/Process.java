@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -63,13 +62,13 @@ public class Process<F extends FlowNode> {
     /**
      * 初始化保存第一个流程节点 并设置为暂停
      */
-    @Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRES_NEW)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void saveInitFlow(IdentityInfoDTO identityInfoDTO) {
         //查询当前流程是否已经开启
         //执行第一个流程
         log.info("流程初始化 {}, 实例编号：{}", flowName, instantsNo);
         //记录表放入第一个步骤：待处理
-        if(!EmptyUtil.isEmpty(nodes)){
+        if (!EmptyUtil.isEmpty(nodes)) {
             FlowNode flowNode = nodes.get(0);
             ScfFlowRecordManager scfFlowRecordManager = SpringContextHolder.getBean(ScfFlowRecordManager.class);
             ScfFlowRecord scfFlowRecord = new ScfFlowRecord();
@@ -80,12 +79,11 @@ public class Process<F extends FlowNode> {
             scfFlowRecord.setNodeName(flowNode.getNodeName());
             scfFlowRecord.setSept(sept.intValue());
             scfFlowRecord.setStatus(Result.StatusEnum.Suspend.getCode());
-            scfFlowRecord.setCreateName(identityInfoDTO == null ? identityInfoDTO.getRealName() : null);
-            scfFlowRecord.setCreateUser(identityInfoDTO == null ? identityInfoDTO.getUserId() : null);
+            scfFlowRecord.setCreateName(identityInfoDTO == null ? null : identityInfoDTO.getRealName());
+            scfFlowRecord.setCreateUser(identityInfoDTO == null ? null : identityInfoDTO.getUserId());
             scfFlowRecordManager.insertSelective(scfFlowRecord);
         }
     }
-
 
 
     /**
@@ -95,10 +93,10 @@ public class Process<F extends FlowNode> {
      * 3、执行该节点的逻辑
      * 4、
      */
-    @Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRES_NEW)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void nextFlow(String instantsNo, String data, IdentityInfoDTO identityInfo) {
         //1、当步揍小于等于节点的个数的时候就要执行
-        if(sept.intValue() <= nodes.size()) {
+        if (sept.intValue() <= nodes.size()) {
             int index = sept.intValue() - 1;
             F node = nodes.get(index);
             String nodeName = node.getNodeName();
@@ -111,21 +109,21 @@ public class Process<F extends FlowNode> {
             scfFlowRecordQuery.setSept(sept.intValue());
             scfFlowRecordQuery.setStatus(Result.StatusEnum.Suspend.getCode());
             ScfFlowRecord scfFlowRecord = scfFlowRecordManager.findByQueryContion(scfFlowRecordQuery);
-            if(scfFlowRecord == null){
-                log.error("执行时找不到对应的流程记录，instantsNo：{},sept: {}",instantsNo, sept);
+            if (scfFlowRecord == null) {
+                log.error("执行时找不到对应的流程记录，instantsNo：{},sept: {}", instantsNo, sept);
                 throw new BusinessException("执行时找不到对应的流程记录");
             }
 
             //3、执行该节点的逻辑
             log.info("执行流程 {}, 实例编号：{}, 执行第{}步：{}", flowName, instantsNo, sept, nodeName);
             Result deal = node.deal(instantsNo, data, identityInfo);
-            switch (deal.status){
+            switch (deal.status) {
                 case Success:
                     log.info("执行流程 {}, 实例编号：{}, 执行第{}步结果：成功", flowName, instantsNo, sept, nodeName);
                     //将数据库状态修复为成功
                     //创建新的节点
                     successFlow();
-                    if(sept.intValue() <= nodes.size()) {
+                    if (sept.intValue() <= nodes.size()) {
                         nextFlow(instantsNo, data, identityInfo);
                     }
                     break;
@@ -148,7 +146,7 @@ public class Process<F extends FlowNode> {
      * 流程成功结束
      */
     public void successFlow() {
-        F nodeOld = nodes.get(sept.intValue()-1);
+        F nodeOld = nodes.get(sept.intValue() - 1);
         String nodeNameOld = nodeOld.getNodeName();
         log.info("执行流程 {}, 实例编号：{}, 执行第{}步完成：{}", flowName, instantsNo, sept, nodeNameOld);
         ScfFlowRecordManager scfFlowRecordManager = SpringContextHolder.getBean(ScfFlowRecordManager.class);
@@ -160,7 +158,7 @@ public class Process<F extends FlowNode> {
         scfFlowRecordOld.setStatus(Result.StatusEnum.Success.getCode());
         scfFlowRecordManager.updateSelective(scfFlowRecordOld);
         //创建新的记录
-        if(sept.intValue() < nodes.size()) {
+        if (sept.intValue() < nodes.size()) {
             F node = nodes.get(sept.intValue());
             ScfFlowRecord scfFlowRecord = new ScfFlowRecord();
             scfFlowRecord.setFlowName(flowName);
@@ -175,23 +173,20 @@ public class Process<F extends FlowNode> {
             scfFlowRecord.setSept(sept.intValue());
             scfFlowRecord.setStatus(Result.StatusEnum.Suspend.getCode());
             scfFlowRecordManager.insertSelective(scfFlowRecord);
-        }else{
+        } else {
             sept.incrementAndGet();
         }
     }
 
 
-
-
-
     /**
      * 失败流程调用
      */
-    public void failFlow(String instantsNo, String data , IdentityInfoDTO identityInfo) {
+    public void failFlow(String instantsNo, String data, IdentityInfoDTO identityInfo) {
         int index = sept.intValue() - 1;
-        for (int i = index ; i >= 0 ; i--){
+        for (int i = index; i >= 0; i--) {
             F f = nodes.get(i);
-            if(f != null){
+            if (f != null) {
                 f.fail(instantsNo, data, identityInfo);
                 log.error("失败流程发起-----执行节点：{}", i);
             }

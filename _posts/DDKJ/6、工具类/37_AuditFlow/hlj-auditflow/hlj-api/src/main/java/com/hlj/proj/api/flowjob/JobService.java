@@ -11,5 +11,35 @@ import com.hlj.proj.dto.user.IdentityInfoDTO;
  */
 public interface JobService {
 
-    void startJob(DemoJobDTO demoJobDTO ,IdentityInfoDTO identityInfoDTO);
+
+    /**
+     * 启动任务
+     */
+    void startJob(DemoJobDTO demoJobDTO, IdentityInfoDTO identityInfoDTO);
+
+
+    /**
+     * 继续执行任务
+     */
+    void continueJob(DemoJobDTO demoJobDTO, IdentityInfoDTO identityInfoDTO);
+
+
+
+
+
+
+
+
+
+
+    /**
+     * 审核任务的测试启动
+     */
+    void auditFlowStartJob(DemoJobDTO demoJobDTO, IdentityInfoDTO identityInfoDTO);
+
+
+    /**
+     * 审核任务的继续
+     */
+    void continueAuditFlowJob(DemoJobDTO demoJobDTO, IdentityInfoDTO identityInfoDTO);
 }

@@ -10,7 +10,6 @@ import com.hlj.proj.service.spring.SpringContextHolder;
 import com.hlj.proj.utils.JsonUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;
 import java.util.List;

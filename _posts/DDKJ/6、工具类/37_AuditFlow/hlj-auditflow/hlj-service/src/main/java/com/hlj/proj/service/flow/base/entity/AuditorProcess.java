@@ -40,13 +40,14 @@ public class AuditorProcess {
      */
     private String instantsNo;
     /**
-     * 审批链条
+     * 审批人
      */
     private List<Auditor> auditors;
     /**
      * 流程执行步骤号
      */
     private AtomicInteger auditSept;
+
 
     public static AuditorProcess of(String instantsNo, Integer sept, Integer auditSept) {
         ScfFlowAuditRecordManager scfFlowAuditRecordManager = SpringContextHolder.getBean(ScfFlowAuditRecordManager.class);
@@ -76,28 +77,6 @@ public class AuditorProcess {
     }
 
 
-    /**
-     * 审核开始
-     */
-    public void initAudit(AuditorFlowNode auditorFlowNode, String instantsNo, String data) {
-        generateAuditRecord(instantsNo, auditorFlowNode.getNodeCode(), 1, data);
-    }
-
-    public Boolean isSuccess() {
-        int i = auditSept.intValue();
-        if(i > auditors.size() ){
-            return true;
-        }
-        Auditor auditor = auditors.get(i - 1);
-        return auditSept.intValue() == auditors.size()
-                && Result.StatusEnum.Success.getCode().equals(auditor.getStatus());
-    }
-
-    public Boolean isReject() {
-        int i = auditSept.intValue();
-        Auditor auditor = auditors.get(i - 1);
-        return Result.StatusEnum.Fail.getCode().equals(auditor.getStatus());
-    }
 
 
     /**
@@ -175,6 +154,33 @@ public class AuditorProcess {
             throw new BusinessException("审批错误");
         }
     }
+
+
+
+
+    /**
+     * 审核开始
+     */
+    public void initAudit(AuditorFlowNode auditorFlowNode, String instantsNo, String data) {
+        generateAuditRecord(instantsNo, auditorFlowNode.getNodeCode(), 1, data);
+    }
+
+
+    public Boolean isSuccess() {
+        int i = auditSept.intValue();
+        if(i > auditors.size() ){
+            return true;
+        }
+        Auditor auditor = auditors.get(i - 1);
+        return auditSept.intValue() == auditors.size() && Result.StatusEnum.Success.getCode().equals(auditor.getStatus());
+    }
+
+    public Boolean isReject() {
+        int i = auditSept.intValue();
+        Auditor auditor = auditors.get(i - 1);
+        return Result.StatusEnum.Fail.getCode().equals(auditor.getStatus());
+    }
+
 
 
     private void generateAuditRecord(String instantsNo, String nodeCode, Integer auditSept, String data) {

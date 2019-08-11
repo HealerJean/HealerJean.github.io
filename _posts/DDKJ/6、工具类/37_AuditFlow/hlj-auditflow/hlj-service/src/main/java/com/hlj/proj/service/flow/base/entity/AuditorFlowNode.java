@@ -57,7 +57,7 @@ public class AuditorFlowNode extends FlowNode {
             auditorProcess.setAuditors(auditors);
         }
         List<Auditor> auditors = auditorProcess.getAuditors();
-        if (EmptyUtil.isEmpty(scfFlowAuditRecords)) {
+        if (!EmptyUtil.isEmpty(scfFlowAuditRecords)) {
             int auditorMax = 1;
             for (int i = 0; i < scfFlowAuditRecords.size(); i++) {
                 ScfFlowAuditRecord scfFlowAuditRecord = scfFlowAuditRecords.get(i);
@@ -87,6 +87,9 @@ public class AuditorFlowNode extends FlowNode {
     @Override
     public Result deal(String instantsNo, String data, IdentityInfoDTO identityInfo) {
 
+        /***
+         *
+         */
         if (auditorProcess.getAuditSept() == null || auditorProcess.getAuditSept().intValue() == 1) {
             ScfFlowAuditRecord scfFlowAuditRecord = null;
             if(auditorProcess.getAuditSept() != null) {

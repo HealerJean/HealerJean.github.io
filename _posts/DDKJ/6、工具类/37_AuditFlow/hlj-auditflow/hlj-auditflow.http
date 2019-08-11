@@ -1,0 +1,44 @@
+#POST http://localhost:8888/api/user/login
+#Accept: */*
+#Cache-Control: no-cache
+#Content-Type: application/json
+#Cookie: scf-manager_SID=489e370c329b4a15bf847fb8d542fae4
+#
+#{"username":"healerjean","password":"admin"}
+
+
+
+
+#GET http://localhost:8888/api/user/current
+#Cookie: scf-manager_SID=489e370c329b4a15bf847fb8d542fae4
+
+
+
+
+# 执行任务
+#GET http://localhost:8888/api/flow/startJob
+#Cookie: scf-manager_SID=62d055159b524aa8ac610d407101d1c0
+
+###
+
+
+#GET http://localhost:8888/api/flow/continueJob?instanceNo=0107e3772dba42e1893710b3a752abba&nextFlow=true
+#Cookie: scf-manager_SID=62d055159b524aa8ac610d407101d1c0
+
+
+
+#GET http://localhost:8888/api/flow/auditFlowStartJob
+#Cookie: scf-manager_SID=9e3c51b41a4e4723ae8944fb495743bf
+
+#继续流程
+#GET http://localhost:8888/api/flow/continueAuditFlowJob?instanceNo=a23f418d2a47479798748455717d849a&nextFlow=true
+#Cookie: scf-manager_SID=9e3c51b41a4e4723ae8944fb495743bf
+
+
+
+GET http://localhost:8888/api/flow/todo
+Cookie: scf-manager_SID=9e3c51b41a4e4723ae8944fb495743bf
+
+###
+
+

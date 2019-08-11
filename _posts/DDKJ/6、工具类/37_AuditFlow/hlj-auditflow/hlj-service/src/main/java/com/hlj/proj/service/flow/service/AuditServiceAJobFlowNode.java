@@ -11,46 +11,47 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 
-@Component("demoBJobDeal")
+@Component("auditServiceAJobDeal")
 @Slf4j
-public class DemoBJobDealFlowNode extends ServiceFlowNode {
+public class AuditServiceAJobFlowNode extends ServiceFlowNode {
 
-    public DemoBJobDealFlowNode() {
+
+    public AuditServiceAJobFlowNode() {
         super();
-        init(FlowServiceNodeEnum.demoBJobDeal.getNodeCode(),
-                FlowServiceNodeEnum.demoBJobDeal.getNodeName(),
-                FlowServiceNodeEnum.demoBJobDeal.getNodeType());
+        init(FlowServiceNodeEnum.auditServiceAJobDeal.getNodeCode(),
+                FlowServiceNodeEnum.auditServiceAJobDeal.getNodeName(),
+                FlowServiceNodeEnum.auditServiceAJobDeal.getNodeType());
     }
 
-    public DemoBJobDealFlowNode(String data) {
-        super(FlowServiceNodeEnum.demoBJobDeal.getNodeCode(),
-                FlowServiceNodeEnum.demoBJobDeal.getNodeName(),
-                FlowServiceNodeEnum.demoBJobDeal.getNodeType(), data);
+    public AuditServiceAJobFlowNode(String data) {
+        super(FlowServiceNodeEnum.auditServiceAJobDeal.getNodeCode(),
+                FlowServiceNodeEnum.auditServiceAJobDeal.getNodeName(),
+                FlowServiceNodeEnum.auditServiceAJobDeal.getNodeType(), data);
     }
 
-    public DemoBJobDealFlowNode(String nodeCode, String nodeName, String nodeType, String data) {
+    public AuditServiceAJobFlowNode(String nodeCode, String nodeName, String nodeType, String data) {
         super(nodeCode, nodeName, nodeType, data);
     }
+
 
     @Override
     public Result deal(String instantsNo, String data, IdentityInfoDTO identityInfo) {
         if (StringUtils.isNotBlank(data)) {
             DemoJobDTO demoJobDTO = JsonUtils.toObject(data, DemoJobDTO.class);
             if (demoJobDTO.getNextFlow() != null && demoJobDTO.getNextFlow()) {
-                log.info(" DemoJob执行----任务B准备继续任务-------任务B");
+                log.info(" DemoJob执行----auditServiceAJobDeal-------任准备继续任务");
                 return Result.success(data);
             } else {
-                log.info(" DemoJob执行----任务B准备暂停任务-------任务B");
+                log.info(" DemoJob执行----auditServiceAJobDeal-------准备暂停任务");
                 return Result.suspend(data);
             }
         } else {
-            log.info(" DemoJob执行----任务B准备暂停任务-------任务B");
+            log.info(" DemoJob执行----auditServiceAJobDeal-------准备暂停任务");
             return Result.suspend(data);
         }
     }
 
     @Override
     protected void fail(String instantsNo, String data, IdentityInfoDTO identityInfo) {
-
     }
 }
