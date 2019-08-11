@@ -110,11 +110,11 @@ public class Process<F extends FlowNode> {
             }
 
             //3、执行该节点的逻辑
-            log.info("执行流程 {}, 实例编号：{}, 执行第{}步：{}", flowName, instantsNo, sept, nodeName);
+            log.info("执行流程名 {}, 执行第{}步：{}，实例编号：{}", flowName, sept, nodeName, instantsNo);
             Result deal = node.deal(instantsNo, data, identityInfo);
             switch (deal.status) {
                 case Success:
-                    log.info("执行流程 {}, 实例编号：{}, 执行第{}步结果：成功", flowName, instantsNo, sept, nodeName);
+                    log.info("执行流程名 {}, 执行第{}步：{}，结果：成功, 实例编号：{}", flowName, sept, nodeName, instantsNo);
                     //将数据库状态修复为成功
                     //创建新的节点
                     successFlow();
@@ -123,11 +123,11 @@ public class Process<F extends FlowNode> {
                     }
                     break;
                 case Fail:
-                    log.info("执行流程 {}, 实例编号：{}, 执行第{}步结果：失败", flowName, instantsNo, sept, nodeName);
+                    log.info("执行流程名 {}, 执行第{}步：{}，结果：失败, 实例编号：{}", flowName, sept, nodeName, instantsNo);
                     failFlow(instantsNo, data, identityInfo);
                     break;
                 case Suspend:
-                    log.info("执行流程 {}, 实例编号：{}, 执行第{}步结果：暂停", flowName, instantsNo, sept, nodeName);
+                    log.info("执行流程名 {}, 执行第{}步：{}，结果：暂停, 实例编号：{}", flowName, sept, nodeName, instantsNo);
                     break;
                 default:
                     break;
