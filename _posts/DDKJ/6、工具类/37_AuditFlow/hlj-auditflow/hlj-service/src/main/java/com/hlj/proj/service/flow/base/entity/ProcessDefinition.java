@@ -77,12 +77,14 @@ public class ProcessDefinition {
                     flowNode = SpringContextHolder.getBean(nodeCode, FlowNode.class);
                     break;
                 case AuditNode:
-                    flowNode = AuditorFlowNode.of(scfFlowNode.getNodeCode(),scfFlowNode.getNodeName(),
-                                   scfFlowNode.getNodeType(),scfFlowNode.getNodeDetail(), instantsNo, i);
+                    flowNode = AuditorFlowNode.of(scfFlowNode.getNodeCode(),scfFlowNode.getNodeDetail(), instantsNo, i);
                     break;
                 default:
-                    break;
+                    throw new BusinessException("节点类型");
             }
+            flowNode.setNodeCode(scfFlowNode.getNodeCode());
+            flowNode.setNodeName(scfFlowNode.getNodeName());
+            flowNode.setNodeType(nodeType);
             list.add(flowNode);
         }
         return list;

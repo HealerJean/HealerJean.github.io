@@ -15,12 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * @ClassName Process
- * @Author TD
- * @Date 2019/6/12 14:02
- * @Description 流程实例
- */
+
 @Slf4j
 @Data
 public class Process<F extends FlowNode> {
@@ -33,21 +28,21 @@ public class Process<F extends FlowNode> {
      * 流程名称
      */
     private String flowName;
-    /**
-     * 流程执行步骤号
-     */
-    private AtomicInteger sept;
 
     /**
      * 流程实例编号
      */
     private String instantsNo;
 
-
     /**
      * 流程节点链条
      */
     private List<F> nodes;
+
+    /**
+     * 流程执行步骤号
+     */
+    private AtomicInteger sept;
 
 
     /**

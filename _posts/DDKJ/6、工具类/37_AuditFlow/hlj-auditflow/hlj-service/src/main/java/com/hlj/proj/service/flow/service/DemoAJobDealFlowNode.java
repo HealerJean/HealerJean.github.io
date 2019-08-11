@@ -1,34 +1,16 @@
 package com.hlj.proj.service.flow.service;
 
 import com.hlj.proj.dto.user.IdentityInfoDTO;
+import com.hlj.proj.service.flow.base.entity.FlowNode;
 import com.hlj.proj.service.flow.base.entity.Result;
-import com.hlj.proj.service.flow.base.entity.ServiceFlowNode;
-import com.hlj.proj.service.flow.service.enums.FlowServiceNodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 
 @Component("demoAJobDeal")
 @Slf4j
-public class DemoAJobDealFlowNode extends ServiceFlowNode {
+public class DemoAJobDealFlowNode extends FlowNode {
 
-
-    public DemoAJobDealFlowNode() {
-        super();
-        init(FlowServiceNodeEnum.demoAJobDeal.getNodeCode(),
-                FlowServiceNodeEnum.demoAJobDeal.getNodeName(),
-                FlowServiceNodeEnum.demoAJobDeal.getNodeType());
-    }
-
-    public DemoAJobDealFlowNode(String data) {
-        super(FlowServiceNodeEnum.demoAJobDeal.getNodeCode(),
-                FlowServiceNodeEnum.demoAJobDeal.getNodeName(),
-                FlowServiceNodeEnum.demoAJobDeal.getNodeType(), data);
-    }
-
-    public DemoAJobDealFlowNode(String nodeCode, String nodeName, String nodeType, String data) {
-        super(nodeCode, nodeName, nodeType, data);
-    }
 
 
     @Override

@@ -1,34 +1,15 @@
 package com.hlj.proj.service.flow.service;
 
 import com.hlj.proj.dto.user.IdentityInfoDTO;
+import com.hlj.proj.service.flow.base.entity.FlowNode;
 import com.hlj.proj.service.flow.base.entity.Result;
-import com.hlj.proj.service.flow.base.entity.ServiceFlowNode;
-import com.hlj.proj.service.flow.service.enums.FlowServiceNodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 
 @Component("demoJobsuccess")
 @Slf4j
-public class DemoJobSuccessFlowNode extends ServiceFlowNode {
-
-
-    public DemoJobSuccessFlowNode() {
-        super();
-        init(FlowServiceNodeEnum.demoJobsuccess.getNodeCode(),
-                FlowServiceNodeEnum.demoJobsuccess.getNodeName(),
-                FlowServiceNodeEnum.demoJobsuccess.getNodeType());
-    }
-
-    public DemoJobSuccessFlowNode(String data) {
-        super(FlowServiceNodeEnum.demoJobsuccess.getNodeCode(),
-                FlowServiceNodeEnum.demoJobsuccess.getNodeName(),
-                FlowServiceNodeEnum.demoJobsuccess.getNodeType(), data);
-    }
-
-    public DemoJobSuccessFlowNode(String nodeCode, String nodeName, String nodeType, String data) {
-        super(nodeCode, nodeName, nodeType, data);
-    }
+public class DemoJobSuccessFlowNode extends FlowNode {
 
 
     @Override

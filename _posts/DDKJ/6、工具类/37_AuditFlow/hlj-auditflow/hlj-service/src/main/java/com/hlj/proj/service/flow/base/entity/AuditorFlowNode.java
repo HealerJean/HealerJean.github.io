@@ -28,16 +28,22 @@ public class AuditorFlowNode extends FlowNode {
 
 
     /**
+     * 节点业务类型
+     */
+    private String nodeServiceType;
+
+
+    /**
      * 审批流程控制器
      */
     private AuditorProcess auditorProcess;
 
+
     /**
      * 初始化审批节点
      */
-    public static AuditorFlowNode of(String nodeCode, String nodeName, String nodeType, String nodeDetail, String instantsNo, int index) {
+    public static AuditorFlowNode of(String nodeCode, String nodeDetail, String instantsNo, int index) {
         AuditorFlowNode auditorFlowNode = new AuditorFlowNode();
-        auditorFlowNode.init(nodeCode, nodeName, nodeType);
         //初始化审批流程
         ScfFlowAuditRecordManager scfFlowAuditRecordManager = SpringContextHolder.getBean(ScfFlowAuditRecordManager.class);
         List<ScfFlowAuditRecord> scfFlowAuditRecords = null;
@@ -86,10 +92,6 @@ public class AuditorFlowNode extends FlowNode {
      */
     @Override
     public Result deal(String instantsNo, String data, IdentityInfoDTO identityInfo) {
-
-        /***
-         *
-         */
         if (auditorProcess.getAuditSept() == null || auditorProcess.getAuditSept().intValue() == 1) {
             ScfFlowAuditRecord scfFlowAuditRecord = null;
             if(auditorProcess.getAuditSept() != null) {

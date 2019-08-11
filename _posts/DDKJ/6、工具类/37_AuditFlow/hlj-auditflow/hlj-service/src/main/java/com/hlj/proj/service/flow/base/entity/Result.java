@@ -15,9 +15,9 @@ public class Result<T> {
 
 
     public enum StatusEnum {
-        Success("10","成功"),
-        Fail("99","失败"),
-        Suspend("20","待处理");
+        Success("10", "成功"),
+        Fail("99", "失败"),
+        Suspend("20", "待处理");
         private String code;
         private String desc;
 
@@ -44,22 +44,21 @@ public class Result<T> {
     }
 
 
-
-    public static <T> Result<T> success(T data){
+    public static <T> Result<T> success(T data) {
         Result<T> result = new Result();
         result.data = data;
         result.status = StatusEnum.Success;
         return result;
     }
 
-    public static <T> Result<T> fail(T data){
+    public static <T> Result<T> fail(T data) {
         Result<T> result = new Result();
         result.data = data;
         result.status = StatusEnum.Fail;
         return result;
     }
 
-    public static <T> Result<T> suspend(T data){
+    public static <T> Result<T> suspend(T data) {
         Result<T> result = new Result();
         result.data = data;
         result.status = StatusEnum.Suspend;
