@@ -3,7 +3,7 @@ package com.hlj.proj.service.flow.service;
 import com.hlj.proj.dto.user.IdentityInfoDTO;
 import com.hlj.proj.service.flow.base.entity.Result;
 import com.hlj.proj.service.flow.base.entity.ServiceFlowNode;
-import com.hlj.proj.service.flow.service.enums.FlowNodeEnum;
+import com.hlj.proj.service.flow.service.enums.FlowServiceNodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -15,15 +15,15 @@ public class DemoAJobDealFlowNode extends ServiceFlowNode {
 
     public DemoAJobDealFlowNode() {
         super();
-        init(FlowNodeEnum.demoAJobDeal.getNodeCode(),
-                FlowNodeEnum.demoAJobDeal.getNodeName(),
-                FlowNodeEnum.demoAJobDeal.getNodeType());
+        init(FlowServiceNodeEnum.demoAJobDeal.getNodeCode(),
+                FlowServiceNodeEnum.demoAJobDeal.getNodeName(),
+                FlowServiceNodeEnum.demoAJobDeal.getNodeType());
     }
 
     public DemoAJobDealFlowNode(String data) {
-        super(FlowNodeEnum.demoAJobDeal.getNodeCode(),
-                FlowNodeEnum.demoAJobDeal.getNodeName(),
-                FlowNodeEnum.demoAJobDeal.getNodeType(), data);
+        super(FlowServiceNodeEnum.demoAJobDeal.getNodeCode(),
+                FlowServiceNodeEnum.demoAJobDeal.getNodeName(),
+                FlowServiceNodeEnum.demoAJobDeal.getNodeType(), data);
     }
 
     public DemoAJobDealFlowNode(String nodeCode, String nodeName, String nodeType, String data) {

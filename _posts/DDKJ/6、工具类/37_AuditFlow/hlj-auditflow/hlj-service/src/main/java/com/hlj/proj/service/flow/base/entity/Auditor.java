@@ -24,3 +24,4 @@ public class Auditor {
     private String status;
 
 }
+

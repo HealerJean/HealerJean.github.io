@@ -24,6 +24,8 @@ public class FlowJobController {
 
     @Autowired
     private JobService jobService ;
+
+
     @GetMapping("startJob")
     public ResponseBean test(){
         DemoJobDTO demoJobDTO = new DemoJobDTO();
@@ -33,5 +35,38 @@ public class FlowJobController {
         jobService.startJob(demoJobDTO,identityInfoDTO);
         return ResponseBean.buildSuccess();
     }
+
+
+    @GetMapping("continueJob")
+    public ResponseBean continueJob(DemoJobDTO demoJobDTO){
+        IdentityInfoDTO identityInfoDTO = UserUtils.getAuthUser();
+        jobService.continueJob(demoJobDTO,identityInfoDTO);
+        return ResponseBean.buildSuccess();
+    }
+
+
+
+
+
+
+    @GetMapping("auditFlowStartJob")
+    public ResponseBean auditFlowStartJob(){
+        DemoJobDTO demoJobDTO = new DemoJobDTO();
+        demoJobDTO.setId(1L);
+        demoJobDTO.setName("2");
+        IdentityInfoDTO identityInfoDTO = UserUtils.getAuthUser();
+        jobService.auditFlowStartJob(demoJobDTO,identityInfoDTO);
+        return ResponseBean.buildSuccess();
+    }
+
+
+    @GetMapping("continueAuditFlowJob")
+    public ResponseBean auditFlowStartJob(DemoJobDTO demoJobDTO){
+        IdentityInfoDTO identityInfoDTO = UserUtils.getAuthUser();
+        jobService.continueAuditFlowJob(demoJobDTO,identityInfoDTO);
+        return ResponseBean.buildSuccess();
+    }
+
+
 
 }

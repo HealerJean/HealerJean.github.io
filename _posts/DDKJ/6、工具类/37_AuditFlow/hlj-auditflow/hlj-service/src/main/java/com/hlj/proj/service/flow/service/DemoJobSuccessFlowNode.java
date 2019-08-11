@@ -3,7 +3,7 @@ package com.hlj.proj.service.flow.service;
 import com.hlj.proj.dto.user.IdentityInfoDTO;
 import com.hlj.proj.service.flow.base.entity.Result;
 import com.hlj.proj.service.flow.base.entity.ServiceFlowNode;
-import com.hlj.proj.service.flow.service.enums.FlowNodeEnum;
+import com.hlj.proj.service.flow.service.enums.FlowServiceNodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -15,15 +15,15 @@ public class DemoJobSuccessFlowNode extends ServiceFlowNode {
 
     public DemoJobSuccessFlowNode() {
         super();
-        init(FlowNodeEnum.demoJobsuccess.getNodeCode(),
-                FlowNodeEnum.demoJobsuccess.getNodeName(),
-                FlowNodeEnum.demoJobsuccess.getNodeType());
+        init(FlowServiceNodeEnum.demoJobsuccess.getNodeCode(),
+                FlowServiceNodeEnum.demoJobsuccess.getNodeName(),
+                FlowServiceNodeEnum.demoJobsuccess.getNodeType());
     }
 
     public DemoJobSuccessFlowNode(String data) {
-        super(FlowNodeEnum.demoJobsuccess.getNodeCode(),
-                FlowNodeEnum.demoJobsuccess.getNodeName(),
-                FlowNodeEnum.demoJobsuccess.getNodeType(), data);
+        super(FlowServiceNodeEnum.demoJobsuccess.getNodeCode(),
+                FlowServiceNodeEnum.demoJobsuccess.getNodeName(),
+                FlowServiceNodeEnum.demoJobsuccess.getNodeType(), data);
     }
 
     public DemoJobSuccessFlowNode(String nodeCode, String nodeName, String nodeType, String data) {
@@ -33,7 +33,8 @@ public class DemoJobSuccessFlowNode extends ServiceFlowNode {
 
     @Override
     public Result deal(String instantsNo, String data, IdentityInfoDTO identityInfo) {
-        return Result.fail(data);
+        log.info("DemoJob执行----任务DemoSuccess-------DemoSuccess全部完成");
+        return Result.success(data);
     }
 
     @Override

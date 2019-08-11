@@ -42,15 +42,16 @@ public class ScfFlowServiceImpl implements ScfFlowService {
     private ScfFlowNodeManager scfFlowNodeManager;
     @Autowired
     private ScfFlowDefinitionManager scfFlowDefinitionManager;
+
     /**
-     *  查询当前所有待审批节点
+     * 查询当前所有待审批节点
      */
     @Override
     public List<AuditRecordDTO> queryAllGroupBy(IdentityInfoDTO identityInfo) {
         List<RoleDTO> roleDtos = identityInfo.getRoles();
         List<Long> roles = null;
-        if(roleDtos != null && !roleDtos.isEmpty()){
-           roles = roleDtos.stream().map(RoleDTO::getId).collect(Collectors.toList());
+        if (roleDtos != null && !roleDtos.isEmpty()) {
+            roles = roleDtos.stream().map(RoleDTO::getId).collect(Collectors.toList());
         }
         Long userId = identityInfo.getUserId();
         ScfFlowAuditRecordTempQuery query = new ScfFlowAuditRecordTempQuery();
@@ -61,16 +62,16 @@ public class ScfFlowServiceImpl implements ScfFlowService {
         ScfFlowNodeQuery scfFlowNodeQuery = new ScfFlowNodeQuery();
         scfFlowNodeQuery.setNodeType(FlowNodeTypeEnum.AuditNode.getType());
         List<AuditRecordDTO> collect = new ArrayList<>();
-        if(list != null){
+        if (list != null) {
             collect = list.stream().map(item -> BeanUtils.toAuditRecordDTO(item))
                     .collect(Collectors.toList());
         }
         List<ScfFlowNode> scfFlowNodes = scfFlowNodeManager.queryList(scfFlowNodeQuery);
-        for(ScfFlowNode node : scfFlowNodes){
+        for (ScfFlowNode node : scfFlowNodes) {
             String nodeServiceType = node.getNodeServiceType();
             String nodeName = node.getNodeName();
             boolean b = collect.stream().map(item -> item.getNodeServiceType()).noneMatch(item -> item.equals(nodeServiceType));
-            if(b){
+            if (b) {
                 AuditRecordDTO auditRecordDTO = new AuditRecordDTO();
                 auditRecordDTO.setNodeServiceType(nodeServiceType);
                 auditRecordDTO.setNodeName(nodeName);
@@ -82,13 +83,13 @@ public class ScfFlowServiceImpl implements ScfFlowService {
     }
 
     /**
-     *  查询审批结点数据(分页)
+     * 查询审批结点数据(分页)
      */
     @Override
     public PageDTO<AuditRecordDTO> queryForPage(AuditRecordDTO auditRecordDTO, IdentityInfoDTO identityInfo) {
         List<RoleDTO> roleDtos = identityInfo.getRoles();
         List<Long> roles = null;
-        if(roleDtos != null && !roleDtos.isEmpty()){
+        if (roleDtos != null && !roleDtos.isEmpty()) {
             roles = roleDtos.stream().map(RoleDTO::getId).collect(Collectors.toList());
         }
         Long userId = identityInfo.getUserId();
@@ -100,15 +101,15 @@ public class ScfFlowServiceImpl implements ScfFlowService {
         query.setStatus(Result.StatusEnum.Suspend.getCode());
         ScfFlowAuditRecordTempPage page = scfFlowAuditRecordTempManager.queryListPageGroupByByFlowCode(query);
         List<ScfFlowAuditRecordTemp> datas = page.getValues();
-        List<AuditRecordDTO>  collects = null;
-        if(datas!=null&&!datas.isEmpty()){
-            collects = datas.stream().map( item-> BeanUtils.toAuditRecordDTO(item)).collect(Collectors.toList());
+        List<AuditRecordDTO> collects = null;
+        if (datas != null && !datas.isEmpty()) {
+            collects = datas.stream().map(item -> BeanUtils.toAuditRecordDTO(item)).collect(Collectors.toList());
         }
-        return  BeanUtils.toPageDTO(page , collects);
+        return BeanUtils.toPageDTO(page, collects);
     }
 
     /**
-     *  查询指定审批结点详情数据
+     * 查询指定审批结点详情数据
      */
     @Override
     public AuditRecordDTO queryDetail(AuditRecordDTO auditRecordDTO) {
@@ -118,14 +119,14 @@ public class ScfFlowServiceImpl implements ScfFlowService {
     }
 
     /**
-     *  对指定审批节点进行审批
+     * 对指定审批节点进行审批
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void audit(AuditorResult auditorResult, IdentityInfoDTO identityInfo) {
         Long tempId = auditorResult.getTempId();
         ScfFlowAuditRecordTemp scfFlowAuditRecordTemp = scfFlowAuditRecordTempManager.findById(tempId);
-        if(scfFlowAuditRecordTemp == null){
+        if (scfFlowAuditRecordTemp == null) {
             throw new BusinessException("审批对应临时记录不存在");
         }
         String instantsNo = scfFlowAuditRecordTemp.getInstantsNo();
@@ -143,7 +144,7 @@ public class ScfFlowServiceImpl implements ScfFlowService {
     @Override
     public AuditorFlowNode generateAuditorFlowNode(AuditorFlowNode node, IdentityInfoDTO identityInfo) {
         List<Auditor> auditors = node.getAuditorProcess().getAuditors();
-        if(auditors == null || auditors.isEmpty()){
+        if (auditors == null || auditors.isEmpty()) {
             log.error("创建审核节点审批人列表不能为空");
             throw new BusinessException("创建审核节点审批人列表不能为空");
         }
@@ -153,7 +154,7 @@ public class ScfFlowServiceImpl implements ScfFlowService {
         query.setNodeDetail(jsonString);
         query.setStatus(StatusEnum.生效.code);
         ScfFlowNode scfFlowNode = scfFlowNodeManager.findByQueryContion(query);
-        if(scfFlowNode == null){
+        if (scfFlowNode == null) {
             scfFlowNode = new ScfFlowNode();
             scfFlowNode.setNodeCode(node.getNodeCode());
             scfFlowNode.setNodeName(node.getNodeName());
@@ -171,7 +172,7 @@ public class ScfFlowServiceImpl implements ScfFlowService {
     @Override
     public ProcessDefinition createFlowDefinition(ProcessDefinition definition, IdentityInfoDTO identityInfo) {
         List<String> collect = definition.getNodeCodes();
-        if(collect == null || collect.isEmpty()){
+        if (collect == null || collect.isEmpty()) {
             log.error("创建流程节点列表不能为空");
             throw new BusinessException("创建流程节点列表不能为空");
         }
@@ -180,7 +181,7 @@ public class ScfFlowServiceImpl implements ScfFlowService {
         query.setFlowDefinition(jsonString);
         query.setStatus(StatusEnum.生效.code);
         ScfFlowDefinition scfFlowDefinition = scfFlowDefinitionManager.findByQueryContion(query);
-        if(scfFlowDefinition == null){
+        if (scfFlowDefinition == null) {
             scfFlowDefinition = new ScfFlowDefinition();
             scfFlowDefinition.setFlowCode(definition.getFlowCode());
             scfFlowDefinition.setFlowName(definition.getFlowName());
@@ -194,7 +195,7 @@ public class ScfFlowServiceImpl implements ScfFlowService {
 
     @Override
     public ProcessDefinition queryFlowDefinition(String flowCode) {
-        if(StringUtils.isBlank(flowCode)){
+        if (StringUtils.isBlank(flowCode)) {
             return null;
         }
         ScfFlowDefinitionQuery query = new ScfFlowDefinitionQuery();
@@ -205,7 +206,8 @@ public class ScfFlowServiceImpl implements ScfFlowService {
         definition.setFlowCode(scfFlowDefinition.getFlowCode());
         definition.setFlowName(scfFlowDefinition.getFlowName());
         String flowDefinition = scfFlowDefinition.getFlowDefinition();
-        List<String> flowNodeStrings = JsonUtils.toObject(flowDefinition, new  TypeReference<List<String>>() { });
+        List<String> flowNodeStrings = JsonUtils.toObject(flowDefinition, new TypeReference<List<String>>() {
+        });
         definition.setNodeCodes(flowNodeStrings);
         return definition;
     }

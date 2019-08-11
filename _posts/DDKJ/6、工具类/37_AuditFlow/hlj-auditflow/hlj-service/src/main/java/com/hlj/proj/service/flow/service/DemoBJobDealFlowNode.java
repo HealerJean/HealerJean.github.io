@@ -1,10 +1,13 @@
 package com.hlj.proj.service.flow.service;
 
+import com.hlj.proj.dto.flowJob.DemoJobDTO;
 import com.hlj.proj.dto.user.IdentityInfoDTO;
 import com.hlj.proj.service.flow.base.entity.Result;
 import com.hlj.proj.service.flow.base.entity.ServiceFlowNode;
-import com.hlj.proj.service.flow.service.enums.FlowNodeEnum;
+import com.hlj.proj.service.flow.service.enums.FlowServiceNodeEnum;
+import com.hlj.proj.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 
@@ -14,15 +17,15 @@ public class DemoBJobDealFlowNode extends ServiceFlowNode {
 
     public DemoBJobDealFlowNode() {
         super();
-        init(FlowNodeEnum.demoBJobDeal.getNodeCode(),
-                FlowNodeEnum.demoBJobDeal.getNodeName(),
-                FlowNodeEnum.demoBJobDeal.getNodeType());
+        init(FlowServiceNodeEnum.demoBJobDeal.getNodeCode(),
+                FlowServiceNodeEnum.demoBJobDeal.getNodeName(),
+                FlowServiceNodeEnum.demoBJobDeal.getNodeType());
     }
 
     public DemoBJobDealFlowNode(String data) {
-        super(FlowNodeEnum.demoBJobDeal.getNodeCode(),
-                FlowNodeEnum.demoBJobDeal.getNodeName(),
-                FlowNodeEnum.demoBJobDeal.getNodeType(), data);
+        super(FlowServiceNodeEnum.demoBJobDeal.getNodeCode(),
+                FlowServiceNodeEnum.demoBJobDeal.getNodeName(),
+                FlowServiceNodeEnum.demoBJobDeal.getNodeType(), data);
     }
 
     public DemoBJobDealFlowNode(String nodeCode, String nodeName, String nodeType, String data) {
@@ -31,7 +34,19 @@ public class DemoBJobDealFlowNode extends ServiceFlowNode {
 
     @Override
     public Result deal(String instantsNo, String data, IdentityInfoDTO identityInfo) {
-        return Result.fail(data);
+        if (StringUtils.isNotBlank(data)) {
+            DemoJobDTO demoJobDTO = JsonUtils.toObject(data, DemoJobDTO.class);
+            if (demoJobDTO.getNextFlow() != null && demoJobDTO.getNextFlow()) {
+                log.info(" DemoJob执行----任务B准备继续任务-------任务B");
+                return Result.success(data);
+            } else {
+                log.info(" DemoJob执行----任务B准备暂停任务-------任务B");
+                return Result.suspend(data);
+            }
+        } else {
+            log.info(" DemoJob执行----任务B准备暂停任务-------任务B");
+            return Result.suspend(data);
+        }
     }
 
     @Override

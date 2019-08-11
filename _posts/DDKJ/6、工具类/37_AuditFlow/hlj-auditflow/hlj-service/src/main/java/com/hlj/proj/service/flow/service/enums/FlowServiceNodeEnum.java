@@ -1,12 +1,15 @@
 package com.hlj.proj.service.flow.service.enums;
 
+
+
 /**
- * @ClassName ServiceEnum
- * @Author TD
- * @Date 2019/6/13 10:08
+ * @author HealerJean
+ * @ClassName FlowServiceNodeEnum
+ * @Date 2019-08-11  18:48.
  * @Description 流程节点枚举
  */
-public enum FlowNodeEnum {
+
+public enum FlowServiceNodeEnum {
 
 
     demoJobSubmit("demoJobSubmit","任务提交","ServiceNode"),
@@ -14,6 +17,14 @@ public enum FlowNodeEnum {
     demoBJobDeal("demoBJobDeal","任务B处理","ServiceNode"),
     demoCJobDeal("demoCJobDeal","任务C处理","ServiceNode"),
     demoJobsuccess("demoJobsuccess","任务完成","ServiceNode"),
+
+
+
+    auditJobSubmit("auditJobSubmit","审核任务提交","ServiceNode"),
+    auditServiceAJobDeal("auditServiceAJobDeal","审核任务ServiceA处理","ServiceNode"),
+    auditServiceBJobDeal("auditServiceBJobDeal","审核任务ServiceB处理","ServiceNode"),
+    auditJobsuccess("auditJobsuccess","审核任务完成","ServiceNode"),
+
 
 
     ;
@@ -24,14 +35,14 @@ public enum FlowNodeEnum {
     private String nodeName;
     private String nodeType;
 
-    FlowNodeEnum(String nodeCode, String nodeName, String nodeType) {
+    FlowServiceNodeEnum(String nodeCode, String nodeName, String nodeType) {
         this.nodeCode = nodeCode;
         this.nodeName = nodeName;
         this.nodeType = nodeType;
     }
 
-    public static FlowNodeEnum toEnum(String nodeCode) {
-        for (FlowNodeEnum item : FlowNodeEnum.values()) {
+    public static FlowServiceNodeEnum toEnum(String nodeCode) {
+        for (FlowServiceNodeEnum item : FlowServiceNodeEnum.values()) {
             if (item.getNodeCode().equals(nodeCode)) {
                 return item;
             }

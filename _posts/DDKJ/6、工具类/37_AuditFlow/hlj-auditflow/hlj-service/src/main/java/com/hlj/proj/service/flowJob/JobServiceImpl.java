@@ -18,17 +18,43 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Slf4j
-public class JobServiceImpl  implements JobService {
+public class JobServiceImpl implements JobService {
 
+    /**
+     * 启动任务
+     */
     @Override
-    public void startJob(DemoJobDTO demoJobDTO , IdentityInfoDTO identityInfoDTO) {
+    public void startJob(DemoJobDTO demoJobDTO, IdentityInfoDTO identityInfoDTO) {
         ProcessDefinition processDefinition = ProcessDefinition.of(FlowDefinitionEnum.demoJob.getFlowCode());
-        processDefinition.newInstants().startFlow(JsonUtils.toJsonString(demoJobDTO),identityInfoDTO);
+        processDefinition.newInstants().startFlow(JsonUtils.toJsonString(demoJobDTO), identityInfoDTO);
     }
 
-    public void nextFlow(DemoJobDTO demoJobDTO,IdentityInfoDTO identityInfoDTO){
+
+    /**
+     * 继续任务
+     */
+    @Override
+    public void continueJob(DemoJobDTO demoJobDTO, IdentityInfoDTO identityInfoDTO) {
         Process process = ProcessDefinition.ofSuspendInstant(demoJobDTO.getInstanceNo());
         process.nextFlow(demoJobDTO.getInstanceNo(), JsonUtils.toJsonString(demoJobDTO), identityInfoDTO);
     }
 
+
+    /**
+     * 审核任务的测试启动
+     */
+    @Override
+    public void auditFlowStartJob(DemoJobDTO demoJobDTO, IdentityInfoDTO identityInfoDTO) {
+        ProcessDefinition processDefinition = ProcessDefinition.of(FlowDefinitionEnum.auditJob.getFlowCode());
+        processDefinition.newInstants().startFlow(JsonUtils.toJsonString(demoJobDTO), identityInfoDTO);
+    }
+
+    /**
+     * 审核任务的继续
+     */
+    @Override
+    public void continueAuditFlowJob(DemoJobDTO demoJobDTO, IdentityInfoDTO identityInfoDTO) {
+        Process process = ProcessDefinition.ofSuspendInstant(demoJobDTO.getInstanceNo());
+        process.nextFlow(demoJobDTO.getInstanceNo(), JsonUtils.toJsonString(demoJobDTO), identityInfoDTO);
+    }
 }

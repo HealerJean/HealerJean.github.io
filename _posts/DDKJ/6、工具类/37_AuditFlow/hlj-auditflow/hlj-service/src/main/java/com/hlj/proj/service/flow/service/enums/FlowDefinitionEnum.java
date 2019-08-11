@@ -10,6 +10,8 @@ public enum FlowDefinitionEnum {
 
     demoJob("demoJob","Demo任务)"),
 
+    auditJob("auditJob","审核任务)"),
+
     ;
 
 
