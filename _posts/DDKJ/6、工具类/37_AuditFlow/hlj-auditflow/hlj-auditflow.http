@@ -5,8 +5,8 @@
 #Cookie: scf-manager_SID=489e370c329b4a15bf847fb8d542fae4
 #
 #{"username":"healerjean","password":"admin"}
-#
-#
+
+
 
 
 #GET http://localhost:8888/api/user/current
@@ -26,12 +26,12 @@
 
 
 
-GET http://localhost:8888/api/flow/auditFlowStartJob
-Cookie: scf-manager_SID=e343895c9e1e4b9fb9fe5fb75390cf61
+#GET http://localhost:8888/api/flow/auditFlowStartJob
+#Cookie: scf-manager_SID=9e3c51b41a4e4723ae8944fb495743bf
 
 #继续流程
-#GET http://localhost:8888/api/flow/continueAuditFlowJob?instanceNo=a23f418d2a47479798748455717d849a&nextFlow=true
-#Cookie: scf-manager_SID=9e3c51b41a4e4723ae8944fb495743bf
+GET http://localhost:8888/api/flow/continueAuditFlowJob?instanceNo=a8eba208c94246198aa56476adbe5471&nextFlow=true
+Cookie: scf-manager_SID=0b3cc4afca634dbb9b8ceeb6244cd36e
 
 
 
