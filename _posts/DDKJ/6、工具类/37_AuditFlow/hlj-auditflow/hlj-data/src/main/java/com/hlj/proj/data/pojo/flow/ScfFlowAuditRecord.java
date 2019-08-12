@@ -2,8 +2,9 @@
  * Copyright (C) 2019 xiaomi.com, Inc. All Rights Reserved.
  */package com.hlj.proj.data.pojo.flow;
 
-import java.io.Serializable;
 import lombok.Data;
+
+import java.io.Serializable;
 /**
  * @author zhangyujin
  * @ClassName: ScfFlowAuditRecord
@@ -44,6 +45,10 @@ public class ScfFlowAuditRecord implements Serializable{
 	private java.util.Date optTime;
 	/** 审批意见 */
 	private String auditMessage;
+	/** 创建人 */
+	private Long createUser;
+	/** 创建人名称 */
+	private String createName;
 	/** 创建时间 */
 	private java.util.Date createTime;
 	/** 更新时间 */

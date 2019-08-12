@@ -50,6 +50,10 @@ public class ScfFlowAuditRecordQuery extends PagingQuery {
 	private java.util.Date optTime;
 	/** 审批意见 */
 	private String auditMessage;
+	/** 创建人 */
+	private Long createUser;
+	/** 创建人名称 */
+	private String createName;
 
 	/** 计算总记录数 */
 	public int calcItemCount(Object t) {

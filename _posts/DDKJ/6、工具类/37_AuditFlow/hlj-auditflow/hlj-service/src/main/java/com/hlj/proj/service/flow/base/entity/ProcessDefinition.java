@@ -1,4 +1,5 @@
 package com.hlj.proj.service.flow.base.entity;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.hlj.proj.data.dao.mybatis.manager.flow.ScfFlowDefinitionManager;
 import com.hlj.proj.data.dao.mybatis.manager.flow.ScfFlowNodeManager;
@@ -57,6 +58,44 @@ public class ProcessDefinition {
     }
 
 
+    /**
+     * 流程暂停的时候，通过通过流程编号来获取正在进行的节点记录进程
+     * 1、通过通过流程编号 获取暂停中的FlowRecord流程节点记录
+     * 2、组装数据库暂停的流程节点到Process
+     * 3、根据流程FlowCode编号，找到该流程所有的FlowNode节点
+     */
+    public static Process ofSuspendInstant(String instantsNo){
+
+        // 1、通过通过流程编号 获取暂停中的流程节点
+        ScfFlowRecordManager scfFlowRecordManager = SpringContextHolder.getBean(ScfFlowRecordManager.class);
+        ScfFlowRecordQuery scfFlowRecordQuery = new ScfFlowRecordQuery();
+        scfFlowRecordQuery.setInstantsNo(instantsNo);
+        scfFlowRecordQuery.setStatus(Result.StatusEnum.Suspend.getCode());
+        ScfFlowRecord scfFlowRecordOld = scfFlowRecordManager.findByQueryContion(scfFlowRecordQuery);
+        if(scfFlowRecordOld == null){
+            throw new BusinessException("找不到对应的流程(" + instantsNo + ")");
+        }
+
+        //2、组装数据库暂停的流程节点到Process
+        String flowCode = scfFlowRecordOld.getFlowCode();
+        Process process = new Process();
+        process.setFlowName(scfFlowRecordOld.getFlowName());
+        process.setFlowCode(flowCode);
+        process.setSept(new AtomicInteger(scfFlowRecordOld.getSept()));
+        process.setInstantsNo(instantsNo);
+
+        //3、根据流程FlowCode编号，找到该流程所有的FlowNode节点
+        ScfFlowDefinitionManager scfFlowDefinitionManager = SpringContextHolder.getBean(ScfFlowDefinitionManager.class);
+        ScfFlowDefinitionQuery scfFlowDefinitionQuery = new ScfFlowDefinitionQuery();
+        scfFlowDefinitionQuery.setFlowCode(flowCode);
+        ScfFlowDefinition scfFlowDefinition = scfFlowDefinitionManager.findByQueryContion(scfFlowDefinitionQuery);
+        String flowDefinitionString = scfFlowDefinition.getFlowDefinition();
+        List<FlowNode> nodes = getNodeList( instantsNo , flowDefinitionString);
+        process.setNodes( nodes);
+        return process;
+    }
+
+
     private static List<FlowNode> getNodeList(String instantsNo , String flowDefinitionString) {
         List<String> flowDefinitions  = JsonUtils.toObject(flowDefinitionString, new TypeReference<LinkedList<String>>() { });
         ScfFlowNodeManager scfFlowNodeManager = SpringContextHolder.getBean(ScfFlowNodeManager.class);
@@ -107,41 +146,5 @@ public class ProcessDefinition {
     }
 
 
-    /**
-     * 流程暂停的时候，通过通过流程编号来获取正在进行的节点记录进程
-     * 1、通过通过流程编号 获取暂停中的FlowRecord流程节点记录
-     * 2、组装数据库暂停的流程节点到Process
-     * 3、根据流程FlowCode编号，找到该流程所有的FlowNode节点
-     */
-    public static Process ofSuspendInstant(String instantsNo){
-
-        // 1、通过通过流程编号 获取暂停中的流程节点
-        ScfFlowRecordManager scfFlowRecordManager = SpringContextHolder.getBean(ScfFlowRecordManager.class);
-        ScfFlowRecordQuery scfFlowRecordQuery = new ScfFlowRecordQuery();
-        scfFlowRecordQuery.setInstantsNo(instantsNo);
-        scfFlowRecordQuery.setStatus(Result.StatusEnum.Suspend.getCode());
-        ScfFlowRecord scfFlowRecordOld = scfFlowRecordManager.findByQueryContion(scfFlowRecordQuery);
-        if(scfFlowRecordOld == null){
-            throw new BusinessException("找不到对应的流程(" + instantsNo + ")");
-        }
-
-        //2、组装数据库暂停的流程节点到Process
-        String flowCode = scfFlowRecordOld.getFlowCode();
-        Process process = new Process();
-        process.setFlowName(scfFlowRecordOld.getFlowName());
-        process.setFlowCode(flowCode);
-        process.setSept(new AtomicInteger(scfFlowRecordOld.getSept()));
-        process.setInstantsNo(instantsNo);
-
-        //3、根据流程FlowCode编号，找到该流程所有的FlowNode节点
-        ScfFlowDefinitionManager scfFlowDefinitionManager = SpringContextHolder.getBean(ScfFlowDefinitionManager.class);
-        ScfFlowDefinitionQuery scfFlowDefinitionQuery = new ScfFlowDefinitionQuery();
-        scfFlowDefinitionQuery.setFlowCode(flowCode);
-        ScfFlowDefinition scfFlowDefinition = scfFlowDefinitionManager.findByQueryContion(scfFlowDefinitionQuery);
-        String flowDefinitionString = scfFlowDefinition.getFlowDefinition();
-        List<FlowNode> nodes = getNodeList( instantsNo , flowDefinitionString);
-        process.setNodes( nodes);
-        return process;
-    }
 
 }

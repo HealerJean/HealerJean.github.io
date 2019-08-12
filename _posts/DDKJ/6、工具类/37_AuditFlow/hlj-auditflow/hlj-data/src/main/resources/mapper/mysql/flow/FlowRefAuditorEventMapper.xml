@@ -29,6 +29,18 @@
 				<if test="createName != null">
 					and create_name = #{createName,jdbcType=VARCHAR}
 				</if>
+				<if test="roleIds != null and roleIds.size() > 0">
+					and audit_object in
+					<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if>
+				<if test="ids != null and ids.size() > 0">
+					and audit_object in
+					<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if>
 			</trim>
 		</where>
 	</sql>
