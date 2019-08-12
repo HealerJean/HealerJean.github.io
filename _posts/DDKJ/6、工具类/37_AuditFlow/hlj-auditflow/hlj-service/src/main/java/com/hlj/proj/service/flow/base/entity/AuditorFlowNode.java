@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class AuditorFlowNode extends FlowNode {
 
-    /**
+    /**ki
      * 审批流程控制器
      */
     private AuditorProcess auditorProcess;
@@ -38,47 +38,42 @@ public class AuditorFlowNode extends FlowNode {
         AuditorFlowNode auditorFlowNode = new AuditorFlowNode();
         //初始化审批流程
         ScfFlowAuditRecordManager scfFlowAuditRecordManager = SpringContextHolder.getBean(ScfFlowAuditRecordManager.class);
-        List<ScfFlowAuditRecord> scfFlowAuditRecords = null;
+        //查询该节点在该步奏中所有的记录（有可能有多个审批步奏）
+        List<ScfFlowAuditRecord> auditRecords = null;
         if (StringUtils.isNotBlank(instantsNo)) {
             ScfFlowAuditRecordQuery query = new ScfFlowAuditRecordQuery();
             query.setInstantsNo(instantsNo);
             query.setNodeCode(nodeCode);
             query.setSept(index + 1);
-            scfFlowAuditRecords = scfFlowAuditRecordManager.queryList(query);
+            auditRecords = scfFlowAuditRecordManager.queryList(query);
         }
 
         AuditorProcess auditorProcess = new AuditorProcess();
-        if (StringUtils.isBlank(nodeDetail)) {
-            auditorProcess.setAuditors(new ArrayList<>(0));
-        } else {
-            ArrayList<Auditor> auditors = JsonUtils.toObject(nodeDetail, new TypeReference<ArrayList<Auditor>>() { });
-            auditorProcess.setAuditors(auditors);
-        }
-        List<Auditor> auditors = auditorProcess.getAuditors();
-        if (!EmptyUtil.isEmpty(scfFlowAuditRecords)) {
+        ArrayList<Auditor> auditors = JsonUtils.toObject(nodeDetail, new TypeReference<ArrayList<Auditor>>() { });
+        auditorProcess.setAuditors(auditors);
+
+        if (!EmptyUtil.isEmpty(auditRecords)) {
             int auditorMax = 1;
-            for (int i = 0; i < scfFlowAuditRecords.size(); i++) {
-                ScfFlowAuditRecord scfFlowAuditRecord = scfFlowAuditRecords.get(i);
-                String nodeCodeAudit = scfFlowAuditRecord.getNodeCode();
-                Integer sept = scfFlowAuditRecord.getSept();
-                if(nodeCodeAudit.equals(nodeCode) && sept == index + 1) {
-                    Integer auditSept = scfFlowAuditRecord.getAuditSept();
-                    String status = scfFlowAuditRecord.getStatus();
-                    Auditor auditor = auditors.get(auditSept - 1);
-                    auditor.setStatus(status);
-                    if (auditorMax < auditSept) {
-                        auditorMax = auditSept;
-                    }
+            for (int i = 0; i < auditRecords.size(); i++) {
+                ScfFlowAuditRecord scfFlowAuditRecord = auditRecords.get(i);
+                Integer auditSept = scfFlowAuditRecord.getAuditSept();
+                Auditor auditor = auditors.get(auditSept - 1);
+                auditor.setStatus(scfFlowAuditRecord.getStatus());
+                if (auditorMax < auditSept) {
+                    auditorMax = auditSept;
                 }
             }
+            //设置当前审批到了第几步奏
             auditorProcess.setAuditSept(new AtomicInteger(auditorMax));
         }
         auditorFlowNode.setAuditorProcess(auditorProcess);
         return auditorFlowNode;
     }
 
+
     /**
      * 返回流程暂停
+     * 1、最开始创建的审批的饿时候 auditorProcess.getAuditSept()== null
      * @param data
      * @return
      */
@@ -94,7 +89,7 @@ public class AuditorFlowNode extends FlowNode {
                 scfFlowAuditRecords = scfFlowAuditRecordManager.queryList(scfFlowAuditRecordQuery);
             }
             if (EmptyUtil.isEmpty(scfFlowAuditRecords)) {
-                auditorProcess.initAudit(this, instantsNo, data);
+                auditorProcess.initAudit(this, instantsNo, data,identityInfo);
             }
         }
         if (auditorProcess.isReject()) {

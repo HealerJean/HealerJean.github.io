@@ -2,8 +2,6 @@ package com.hlj.proj.service.flow.service.impl;
 
 import com.hlj.proj.data.dao.mybatis.manager.flow.FlowRefAuditorEventManager;
 import com.hlj.proj.data.dao.mybatis.manager.flow.ScfFlowAuditRecordManager;
-import com.hlj.proj.data.dao.mybatis.manager.flow.ScfFlowDefinitionManager;
-import com.hlj.proj.data.dao.mybatis.manager.flow.ScfFlowNodeManager;
 import com.hlj.proj.data.pojo.flow.FlowRefAuditorEvent;
 import com.hlj.proj.data.pojo.flow.FlowRefAuditorEventQuery;
 import com.hlj.proj.data.pojo.flow.ScfFlowAuditRecord;
@@ -68,6 +66,8 @@ public class ScfFlowServiceImpl implements ScfFlowService {
 
         // 3、开始审批
         auditorProcess.audit(auditorResult, identityInfo);
+        auditorResult.setInstantsNo(auditRecord.getInstantsNo());
+        auditorResult.setSept(auditRecord.getSept());
     }
 
 

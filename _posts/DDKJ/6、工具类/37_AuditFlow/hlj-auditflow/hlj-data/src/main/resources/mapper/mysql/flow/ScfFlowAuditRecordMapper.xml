@@ -17,6 +17,8 @@
 		<result column="opt_user_name" jdbcType="VARCHAR" property="optUserName" />
 		<result column="opt_time" jdbcType="TIMESTAMP" property="optTime" />
 		<result column="audit_message" jdbcType="VARCHAR" property="auditMessage" />
+		<result column="create_user" jdbcType="BIGINT" property="createUser" />
+		<result column="create_name" jdbcType="VARCHAR" property="createName" />
 		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
 		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
 	</resultMap>
@@ -61,6 +63,12 @@
 				</if>
 				<if test="optTime != null and optTime != ''">
 					and opt_time = #{optTime,jdbcType=TIMESTAMP}
+				</if>
+				<if test="createUser != null and createUser != ''">
+					and create_user = #{createUser,jdbcType=BIGINT}
+				</if>
+				<if test="createName != null">
+					and create_name = #{createName,jdbcType=VARCHAR}
 				</if>
 				<if test="auditMessage != null">
 					and audit_message = #{auditMessage,jdbcType=VARCHAR}
@@ -113,6 +121,12 @@
 				<if test="auditMessage != null">
 					audit_message = #{auditMessage,jdbcType=VARCHAR},
 				</if>
+				<if test="createUser != null">
+					create_user = #{createUser,jdbcType=BIGINT},
+				</if>
+				<if test="createName != null">
+					create_name = #{createName,jdbcType=VARCHAR},
+				</if>
 				UPDATE_TIME = NOW(),
 			</trim>
 		</set>
@@ -133,6 +147,8 @@
 		opt_user_name,
 		opt_time,
 		audit_message,
+		create_user,
+		create_name,
 		create_time,
 		update_time
 	</sql>
@@ -153,6 +169,8 @@
 				opt_user_name = #{optUserName,jdbcType=VARCHAR},
 				opt_time = #{optTime,jdbcType=TIMESTAMP},
 				audit_message = #{auditMessage,jdbcType=VARCHAR},
+				create_user = #{createUser,jdbcType=BIGINT},
+				create_name = #{createName,jdbcType=VARCHAR},
 			</trim>
 		</set>
 	</sql>
@@ -200,6 +218,12 @@
 		<if test="auditMessage != null">
 			audit_message,
 		</if>
+		<if test="createUser != null">
+			create_user,
+		</if>
+		<if test="createName != null">
+			create_name,
+		</if>
 		CREATE_TIME,
 	</sql>
 	<sql id="Base_Value_List">
@@ -218,6 +242,8 @@
 		#{optUserName,jdbcType=VARCHAR},
 		#{optTime,jdbcType=TIMESTAMP},
 		#{auditMessage,jdbcType=VARCHAR},
+		#{createUser,jdbcType=BIGINT},
+		#{createName,jdbcType=VARCHAR},
 		#{createTime,jdbcType=TIMESTAMP},
 		#{updateTime,jdbcType=TIMESTAMP},
 	</sql>
@@ -264,6 +290,12 @@
 		</if>
 		<if test="auditMessage != null">
 			#{auditMessage,jdbcType=VARCHAR},
+		</if>
+		<if test="createUser != null">
+			#{createUser,jdbcType=BIGINT},
+		</if>
+		<if test="createName != null">
+			#{createName,jdbcType=VARCHAR},
 		</if>
 		NOW(),
 	</sql>

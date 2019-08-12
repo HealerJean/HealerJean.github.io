@@ -13,10 +13,9 @@
 		<result column="audit_sept" jdbcType="INTEGER" property="auditSept" />
 		<result column="audit_data" jdbcType="VARCHAR" property="auditData" />
 		<result column="status" jdbcType="VARCHAR" property="status" />
-		<result column="opt_user" jdbcType="BIGINT" property="optUser" />
-		<result column="opt_user_name" jdbcType="VARCHAR" property="optUserName" />
-		<result column="opt_time" jdbcType="TIMESTAMP" property="optTime" />
 		<result column="audit_message" jdbcType="VARCHAR" property="auditMessage" />
+		<result column="create_user" jdbcType="BIGINT" property="createUser" />
+		<result column="create_name" jdbcType="VARCHAR" property="createName" />
 		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
 		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
 		<result column="ref_flow_audit_record_id" jdbcType="BIGINT" property="refFlowAuditRecordId" />
@@ -54,17 +53,15 @@
 				<if test="status != null">
 					and status = #{status,jdbcType=VARCHAR}
 				</if>
-				<if test="optUser != null and optUser != ''">
-					and opt_user = #{optUser,jdbcType=BIGINT}
-				</if>
-				<if test="optUserName != null">
-					and opt_user_name = #{optUserName,jdbcType=VARCHAR}
-				</if>
-				<if test="optTime != null and optTime != ''">
-					and opt_time = #{optTime,jdbcType=TIMESTAMP}
-				</if>
+
 				<if test="auditMessage != null">
 					and audit_message = #{auditMessage,jdbcType=VARCHAR}
+				</if>
+				<if test="createUser != null and createUser != ''">
+					and create_user = #{createUser,jdbcType=BIGINT}
+				</if>
+				<if test="createName != null">
+					and create_name = #{createName,jdbcType=VARCHAR}
 				</if>
 				<if test="refFlowAuditRecordId != null and refFlowAuditRecordId != ''">
 					and ref_flow_audit_record_id = #{refFlowAuditRecordId,jdbcType=BIGINT}
@@ -105,17 +102,14 @@
 				<if test="status != null">
 					status = #{status,jdbcType=VARCHAR},
 				</if>
-				<if test="optUser != null">
-					opt_user = #{optUser,jdbcType=BIGINT},
-				</if>
-				<if test="optUserName != null">
-					opt_user_name = #{optUserName,jdbcType=VARCHAR},
-				</if>
-				<if test="optTime != null">
-					opt_time = #{optTime,jdbcType=TIMESTAMP},
-				</if>
 				<if test="auditMessage != null">
 					audit_message = #{auditMessage,jdbcType=VARCHAR},
+				</if>
+				<if test="createUser != null">
+					create_user = #{createUser,jdbcType=BIGINT},
+				</if>
+				<if test="createName != null">
+					create_name = #{createName,jdbcType=VARCHAR},
 				</if>
 				UPDATE_TIME = NOW(),
 				<if test="refFlowAuditRecordId != null">
@@ -136,10 +130,9 @@
 		audit_sept,
 		audit_data,
 		status,
-		opt_user,
-		opt_user_name,
-		opt_time,
 		audit_message,
+		create_user,
+		create_name,
 		create_time,
 		update_time,
 		ref_flow_audit_record_id
@@ -157,10 +150,9 @@
 				audit_sept = #{auditSept,jdbcType=INTEGER},
 				audit_data = #{auditData,jdbcType=VARCHAR},
 				status = #{status,jdbcType=VARCHAR},
-				opt_user = #{optUser,jdbcType=BIGINT},
-				opt_user_name = #{optUserName,jdbcType=VARCHAR},
-				opt_time = #{optTime,jdbcType=TIMESTAMP},
 				audit_message = #{auditMessage,jdbcType=VARCHAR},
+				create_user = #{createUser,jdbcType=BIGINT},
+				create_name = #{createName,jdbcType=VARCHAR},
 				ref_flow_audit_record_id = #{refFlowAuditRecordId,jdbcType=BIGINT},
 			</trim>
 		</set>
@@ -197,17 +189,14 @@
 		<if test="status != null">
 			status,
 		</if>
-		<if test="optUser != null">
-			opt_user,
-		</if>
-		<if test="optUserName != null">
-			opt_user_name,
-		</if>
-		<if test="optTime != null">
-			opt_time,
-		</if>
 		<if test="auditMessage != null">
 			audit_message,
+		</if>
+		<if test="createUser != null">
+			create_user,
+		</if>
+		<if test="createName != null">
+			create_name,
 		</if>
 		CREATE_TIME,
 		<if test="refFlowAuditRecordId != null">
@@ -226,10 +215,9 @@
 		#{auditSept,jdbcType=INTEGER},
 		#{auditData,jdbcType=VARCHAR},
 		#{status,jdbcType=VARCHAR},
-		#{optUser,jdbcType=BIGINT},
-		#{optUserName,jdbcType=VARCHAR},
-		#{optTime,jdbcType=TIMESTAMP},
 		#{auditMessage,jdbcType=VARCHAR},
+		#{createUser,jdbcType=BIGINT},
+		#{createName,jdbcType=VARCHAR},
 		#{createTime,jdbcType=TIMESTAMP},
 		#{updateTime,jdbcType=TIMESTAMP},
 		#{refFlowAuditRecordId,jdbcType=BIGINT},
@@ -266,17 +254,14 @@
 		<if test="status != null">
 			#{status,jdbcType=VARCHAR},
 		</if>
-		<if test="optUser != null">
-			#{optUser,jdbcType=BIGINT},
-		</if>
-		<if test="optUserName != null">
-			#{optUserName,jdbcType=VARCHAR},
-		</if>
-		<if test="optTime != null">
-			#{optTime,jdbcType=TIMESTAMP},
-		</if>
 		<if test="auditMessage != null">
 			#{auditMessage,jdbcType=VARCHAR},
+		</if>
+		<if test="createUser != null">
+			#{createUser,jdbcType=BIGINT},
+		</if>
+		<if test="createName != null">
+			#{createName,jdbcType=VARCHAR},
 		</if>
 		NOW(),
 		<if test="refFlowAuditRecordId != null">

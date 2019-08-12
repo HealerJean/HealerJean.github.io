@@ -1,4 +1,4 @@
-#POST http://localhost.admin:8888/api/user/login
+#POST http://localhost:8888/api/user/login
 #Accept: */*
 #Cache-Control: no-cache
 #Content-Type: application/json
@@ -8,12 +8,8 @@
 ###
 
 
-
-
 #GET http://localhost:8888/api/user/current
 #Cookie: scf-manager_SID=489e370c329b4a15bf847fb8d542fae4
-
-//Cookie: scf-manager_SID=458d40daf84944039045d4aaa8de8a25
 
 
 
@@ -27,31 +23,30 @@
 #Cookie: scf-manager_SID=e343895c9e1e4b9fb9fe5fb75390cf61
 
 
-#GET http://localhost:8888/api/flow/auditFlowStartJob
-#Cookie: scf-manager_SID=980605da04154360b980a2dd43461091
 
-###
+
+#GET http://localhost:8888/api/flow/auditFlowStartJob
+#Cookie: scf-manager_SID=838c87f1818249a7a45459ad06eabf8e
+
+
 
 #继续流程
-#GET http://localhost:8888/api/flow/continueAuditFlowJob?instanceNo=4f3e2d4d89054a29ad0c2ad5bea56f5f&nextFlow=true
-#Cookie: scf-manager_SID=980605da04154360b980a2dd43461091
-
-
-
-#GET http://localhost:8888/api/flow/audit?auditRecordId=4
-#Cookie: scf-manager_SID=980605da04154360b980a2dd43461091
-
-###
+#GET http://localhost:8888/api/flow/continueAuditFlowJob?instanceNo=7f4744bd0e264d36b67a3538c9f279a3&nextFlow=true
+#Cookie: scf-manager_SID=838c87f1818249a7a45459ad06eabf8e
 
 POST http://localhost:8888/api/flow/audit
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
-Cookie: scf-manager_SID=980605da04154360b980a2dd43461091
+Cookie: scf-manager_SID=838c87f1818249a7a45459ad06eabf8e
 
-{"auditRecordId":4,"auditResult":true}
+{"auditRecordId":12,"auditResult":true}
 
 ###
+
+
+
+
 
 
 
