@@ -2,7 +2,6 @@ package com.hlj.proj.utils;
 
 import com.hlj.proj.data.common.paging.Pagenation;
 import com.hlj.proj.data.common.result.PageListResult;
-import com.hlj.proj.data.pojo.flow.ScfFlowAuditRecordTemp;
 import com.hlj.proj.data.pojo.system.ScfSysMenu;
 import com.hlj.proj.data.pojo.system.ScfSysRole;
 import com.hlj.proj.data.pojo.user.ScfUserDepartment;
@@ -18,7 +17,6 @@ import com.hlj.proj.service.flow.service.dto.AuditRecordDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -412,32 +410,6 @@ public class BeanUtils {
         departmentDTO.setDepartmentName(scfUserDepartment.getDepartmentName());
         departmentDTO.setDepartmentDesc(scfUserDepartment.getDepartmentDesc());
         return departmentDTO;
-    }
-
-
-
-
-
-
-
-    public static AuditRecordDTO toAuditRecordDTO(ScfFlowAuditRecordTemp item)  {
-        AuditRecordDTO auditRecordDTO = new AuditRecordDTO();
-        auditRecordDTO.setTempId(item.getId());
-        auditRecordDTO.setCount(item.getCount());
-        auditRecordDTO.setFlowName(item.getFlowName());
-        auditRecordDTO.setFlowCode(item.getFlowCode());
-        auditRecordDTO.setNodeServiceType(item.getNodeServiceType());
-        auditRecordDTO.setNodeName(item.getNodeName());
-        auditRecordDTO.setNodeCode(item.getNodeCode());
-        auditRecordDTO.setCreaterUser(item.getCreateUser());
-        auditRecordDTO.setCreaterUserName(item.getCreateName());
-        auditRecordDTO.setCreateTime(item.getCreateTime());
-        String auditData = item.getAuditData();
-        auditRecordDTO.setData(StringUtils.isBlank(auditData) ? auditData : JsonUtils.toTree(auditData));
-        auditRecordDTO.setSept(item.getSept());
-        auditRecordDTO.setAuditSept(item.getAuditSept());
-        auditRecordDTO.setInstantsNo(item.getInstantsNo());
-        return auditRecordDTO;
     }
 
 

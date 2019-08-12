@@ -1,7 +1,11 @@
 package com.hlj.proj.service.flow.base.entity;
 
+import com.hlj.proj.common.ValidateGroup;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -12,6 +16,25 @@ import java.util.List;
  */
 @Data
 public class AuditorResult {
+
+
+    /**
+     * 审批记录Id
+     */
+    private Long auditRecordId;
+
+    /**
+     * 审批结果
+     */
+    private Boolean auditResult;
+    /**
+     * 审批意见
+     */
+    private String auditMessage;
+    /**
+     * 审批附件
+     */
+    private List<String> fileIds;
 
     /**
      * 流程实例流水号
@@ -29,28 +52,4 @@ public class AuditorResult {
      * 节点编号
      */
     private String nodeCode;
-    /**
-     * 审核类型：角色或ID
-     */
-    private String auditType;
-    /**
-     * 审核对象
-     */
-    private Long auditObject;
-    /**
-     * 审批结果
-     */
-    private Boolean auditResult;
-    /**
-     * 审批意见
-     */
-    private String auditMessage;
-    /**
-     * 审批附件
-     */
-    private List<Long> fileIds;
-    /**
-     * 临时ID
-     */
-    private Long tempId;
 }

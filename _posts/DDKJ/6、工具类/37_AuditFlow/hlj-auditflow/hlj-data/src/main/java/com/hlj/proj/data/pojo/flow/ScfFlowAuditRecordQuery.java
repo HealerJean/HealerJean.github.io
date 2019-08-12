@@ -4,8 +4,12 @@
 
 import com.hlj.proj.data.common.query.PagingQuery;
 import lombok.Data;
-
-
+/**
+ * @author zhangyujin
+ * @ClassName: ScfFlowAuditRecordQuery
+ * @date 2099/1/1
+ * @Description: ScfFlowAuditRecordQuery
+ */
 @Data
 public class ScfFlowAuditRecordQuery extends PagingQuery {
 	private static final long serialVersionUID = 1L;
@@ -18,6 +22,8 @@ public class ScfFlowAuditRecordQuery extends PagingQuery {
 		super(pageNo, pageSize);
 	}
 
+	/** 审批附件 */
+	private String refFileIds;
 	/** 流程实例流水号 */
 	private String instantsNo;
 	/** 流程步骤 */
@@ -32,6 +38,8 @@ public class ScfFlowAuditRecordQuery extends PagingQuery {
 	private String nodeName;
 	/** 审核步骤 */
 	private Integer auditSept;
+	/** 审批内容 */
+	private String auditData;
 	/** 状态 */
 	private String status;
 	/** 执行人 */
@@ -42,8 +50,6 @@ public class ScfFlowAuditRecordQuery extends PagingQuery {
 	private java.util.Date optTime;
 	/** 审批意见 */
 	private String auditMessage;
-	/** 审批附件 */
-	private String refFileIds;
 
 	/** 计算总记录数 */
 	public int calcItemCount(Object t) {

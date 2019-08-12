@@ -2,6 +2,8 @@
  * Copyright (C) 2019 xiaomi.com, Inc. All Rights Reserved.
  */package com.hlj.proj.data.dao.mybatis.manager.flow;
 
+import java.util.List;
+
 import com.hlj.proj.data.common.paging.Pagenation;
 import com.hlj.proj.data.dao.mybatis.dao.flow.ScfFlowAuditRecordDao;
 import com.hlj.proj.data.pojo.flow.ScfFlowAuditRecord;
@@ -10,10 +12,12 @@ import com.hlj.proj.data.pojo.flow.ScfFlowAuditRecordQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-
-
+/**
+ * @author zhangyujin
+ * @ClassName: ScfFlowAuditRecordManager
+ * @date 2099/1/1
+ * @Description: ScfFlowAuditRecordManager
+ */
 @Component("scfFlowAuditRecordManager")
 public class ScfFlowAuditRecordManager {
 
