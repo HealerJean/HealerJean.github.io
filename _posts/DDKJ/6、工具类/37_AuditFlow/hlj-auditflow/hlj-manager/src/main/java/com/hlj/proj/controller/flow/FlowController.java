@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 
 @RestController
@@ -27,38 +26,10 @@ public class FlowController  {
     private ScfFlowService scfFlowService;
 
     /**
-     * 查询当前待办任务
-     *
-     * @return
-     */
-    @GetMapping("todo")
-    public ResponseBean todoList() {
-        IdentityInfoDTO authUser = UserUtils.getAuthUser();
-        List<AuditRecordDTO> auditRecordDTOS = scfFlowService.queryAllGroupBy(authUser);
-        log.info("查询当前待办任务成功，{}", auditRecordDTOS);
-        return ResponseBean.buildSuccess("查询当前待办任务成功", auditRecordDTOS);
-    }
-
-
-
-    /**
-     * 查询任务列表
-     *
-     * @return
-     */
-    @GetMapping("audits")
-    public ResponseBean importDict(AuditRecordDTO auditRecordDTO) {
-        IdentityInfoDTO authUser = UserUtils.getAuthUser();
-        PageDTO<AuditRecordDTO> auditRecordDTOPageDTO = scfFlowService.queryForPage(auditRecordDTO, authUser);
-        log.info("查询任务列表成功，{}", auditRecordDTOPageDTO);
-        return ResponseBean.buildSuccess("查询任务列表成功", auditRecordDTOPageDTO);
-    }
-
-    /**
      * 审批
      * @return
      */
-    @PutMapping("audit")
+    @PostMapping("audit")
     public ResponseBean audits(@RequestBody AuditorResult auditorResult) {
         if (auditorResult == null) {
             throw new BusinessException("审批参数不全");

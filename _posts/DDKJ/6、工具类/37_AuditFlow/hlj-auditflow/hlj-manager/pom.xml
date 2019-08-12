@@ -116,6 +116,22 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>validation-api</artifactId>
+                    <groupId>javax.validation</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <artifactId>validation-api</artifactId>
+            <groupId>javax.validation</groupId>
+        </dependency>
+
+
     </dependencies>
 
     <build>

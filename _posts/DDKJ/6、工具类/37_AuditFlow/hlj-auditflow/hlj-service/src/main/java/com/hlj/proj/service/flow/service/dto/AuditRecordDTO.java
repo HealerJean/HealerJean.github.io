@@ -36,10 +36,6 @@ public class AuditRecordDTO {
      */
     private String nodeCode;
     /**
-     * 节点业务类型
-     */
-    private String nodeServiceType;
-    /**
      * 节点名称
      */
     private String nodeName;

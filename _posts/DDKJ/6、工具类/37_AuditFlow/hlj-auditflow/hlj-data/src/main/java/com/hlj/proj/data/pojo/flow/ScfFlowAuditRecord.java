@@ -2,16 +2,22 @@
  * Copyright (C) 2019 xiaomi.com, Inc. All Rights Reserved.
  */package com.hlj.proj.data.pojo.flow;
 
-import lombok.Data;
-
 import java.io.Serializable;
-
+import lombok.Data;
+/**
+ * @author zhangyujin
+ * @ClassName: ScfFlowAuditRecord
+ * @date 2099/1/1
+ * @Description: ScfFlowAuditRecord
+ */
 @Data
 public class ScfFlowAuditRecord implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	/** 主键 */
 	private Long id;
+	/** 审批附件 */
+	private String refFileIds;
 	/** 流程实例流水号 */
 	private String instantsNo;
 	/** 流程步骤 */
@@ -26,10 +32,10 @@ public class ScfFlowAuditRecord implements Serializable{
 	private String nodeName;
 	/** 审核步骤 */
 	private Integer auditSept;
+	/** 审批内容 */
+	private String auditData;
 	/** 状态 */
 	private String status;
-	/** 创建时间 */
-	private java.util.Date createTime;
 	/** 执行人 */
 	private Long optUser;
 	/** 执行人真实名称 */
@@ -38,7 +44,9 @@ public class ScfFlowAuditRecord implements Serializable{
 	private java.util.Date optTime;
 	/** 审批意见 */
 	private String auditMessage;
-	/** 审批附件 */
-	private String refFileIds;
+	/** 创建时间 */
+	private java.util.Date createTime;
+	/** 更新时间 */
+	private java.util.Date updateTime;
 
 }

@@ -5,7 +5,6 @@
 		<id column="ID" jdbcType="BIGINT" property="id" />
 		<result column="node_code" jdbcType="VARCHAR" property="nodeCode" />
 		<result column="node_name" jdbcType="VARCHAR" property="nodeName" />
-		<result column="node_service_type" jdbcType="VARCHAR" property="nodeServiceType" />
 		<result column="node_type" jdbcType="VARCHAR" property="nodeType" />
 		<result column="node_detail" jdbcType="VARCHAR" property="nodeDetail" />
 		<result column="status" jdbcType="VARCHAR" property="status" />
@@ -24,9 +23,6 @@
 				</if>
 				<if test="nodeName != null">
 					and node_name = #{nodeName,jdbcType=VARCHAR}
-				</if>
-				<if test="nodeServiceType != null">
-					and node_service_type = #{nodeServiceType,jdbcType=VARCHAR}
 				</if>
 				<if test="nodeType != null">
 					and node_type = #{nodeType,jdbcType=VARCHAR}
@@ -61,9 +57,6 @@
 				<if test="nodeName != null">
 					node_name = #{nodeName,jdbcType=VARCHAR},
 				</if>
-				<if test="nodeServiceType != null">
-					node_service_type = #{nodeServiceType,jdbcType=VARCHAR},
-				</if>
 				<if test="nodeType != null">
 					node_type = #{nodeType,jdbcType=VARCHAR},
 				</if>
@@ -93,7 +86,6 @@
 		id,
 		node_code,
 		node_name,
-		node_service_type,
 		node_type,
 		node_detail,
 		status,
@@ -110,7 +102,6 @@
 				node_code = #{nodeCode,jdbcType=VARCHAR},
 				node_name = #{nodeName,jdbcType=VARCHAR},
 				node_type = #{nodeType,jdbcType=VARCHAR},
-				node_service_type = #{nodeServiceType,jdbcType=VARCHAR},
 				node_detail = #{nodeDetail,jdbcType=VARCHAR},
 				status = #{status,jdbcType=VARCHAR},
 				create_user = #{createUser,jdbcType=BIGINT},
@@ -127,9 +118,6 @@
 		</if>
 		<if test="nodeName != null">
 			node_name,
-		</if>
-		<if test="nodeServiceType != null">
-			node_service_type,
 		</if>
 		<if test="nodeType != null">
 			node_type,
@@ -158,7 +146,6 @@
 		#{id,jdbcType=BIGINT},
 		#{nodeCode,jdbcType=VARCHAR},
 		#{nodeName,jdbcType=VARCHAR},
-		#{nodeServiceType,jdbcType=VARCHAR},
 		#{nodeType,jdbcType=VARCHAR},
 		#{nodeDetail,jdbcType=VARCHAR},
 		#{status,jdbcType=VARCHAR},
@@ -176,9 +163,6 @@
 		</if>
 		<if test="nodeName != null">
 			#{nodeName,jdbcType=VARCHAR},
-		</if>
-		<if test="nodeServiceType != null">
-			#{nodeServiceType,jdbcType=VARCHAR},
 		</if>
 		<if test="nodeType != null">
 			#{nodeType,jdbcType=VARCHAR},

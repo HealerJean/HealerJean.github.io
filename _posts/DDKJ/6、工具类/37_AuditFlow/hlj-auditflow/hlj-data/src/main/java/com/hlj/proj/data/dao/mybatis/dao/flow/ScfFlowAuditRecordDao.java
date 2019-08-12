@@ -2,13 +2,19 @@
  * Copyright (C) 2019 xiaomi.com, Inc. All Rights Reserved.
  */package com.hlj.proj.data.dao.mybatis.dao.flow;
 
+import java.util.List;
+
 import com.hlj.proj.data.dao.mybatis.dao.BaseDao;
 import com.hlj.proj.data.pojo.flow.ScfFlowAuditRecord;
 import com.hlj.proj.data.pojo.flow.ScfFlowAuditRecordQuery;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
+/**
+ * @author zhangyujin
+ * @ClassName: ScfFlowAuditRecordDao
+ * @date 2099/1/1
+ * @Description: ScfFlowAuditRecordDao
+ */
 @Repository("scfFlowAuditRecordDao")
 public class ScfFlowAuditRecordDao extends BaseDao {
 

@@ -26,18 +26,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class AuditorFlowNode extends FlowNode {
 
-
-    /**
-     * 节点业务类型
-     */
-    private String nodeServiceType;
-
-
     /**
      * 审批流程控制器
      */
     private AuditorProcess auditorProcess;
-
 
     /**
      * 初始化审批节点
@@ -93,15 +85,15 @@ public class AuditorFlowNode extends FlowNode {
     @Override
     public Result deal(String instantsNo, String data, IdentityInfoDTO identityInfo) {
         if (auditorProcess.getAuditSept() == null || auditorProcess.getAuditSept().intValue() == 1) {
-            ScfFlowAuditRecord scfFlowAuditRecord = null;
+            List<ScfFlowAuditRecord> scfFlowAuditRecords = null;
             if(auditorProcess.getAuditSept() != null) {
                 ScfFlowAuditRecordManager scfFlowAuditRecordManager = SpringContextHolder.getBean(ScfFlowAuditRecordManager.class);
                 ScfFlowAuditRecordQuery scfFlowAuditRecordQuery = new ScfFlowAuditRecordQuery();
                 scfFlowAuditRecordQuery.setInstantsNo(instantsNo);
                 //查询审批记录
-                scfFlowAuditRecord = scfFlowAuditRecordManager.findByQueryContion(scfFlowAuditRecordQuery);
+                scfFlowAuditRecords = scfFlowAuditRecordManager.queryList(scfFlowAuditRecordQuery);
             }
-            if (scfFlowAuditRecord == null) {
+            if (EmptyUtil.isEmpty(scfFlowAuditRecords)) {
                 auditorProcess.initAudit(this, instantsNo, data);
             }
         }

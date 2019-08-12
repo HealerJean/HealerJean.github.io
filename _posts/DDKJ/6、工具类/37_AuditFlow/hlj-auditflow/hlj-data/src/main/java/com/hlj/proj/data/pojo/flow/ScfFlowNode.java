@@ -16,8 +16,6 @@ public class ScfFlowNode implements Serializable{
 	private String nodeCode;
 	/** 节点名称 */
 	private String nodeName;
-	/** 节点业务类型 */
-	private String nodeServiceType;
 	/** 流程节点或者审核节点 */
 	private String nodeType;
 	/** 节点内部定义（目前主要是审核节点使用） */
