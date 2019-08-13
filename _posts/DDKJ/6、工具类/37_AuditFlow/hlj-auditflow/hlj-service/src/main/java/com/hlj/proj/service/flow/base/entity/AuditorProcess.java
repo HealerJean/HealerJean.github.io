@@ -242,10 +242,10 @@ public class AuditorProcess {
         scfFlowAuditRecord.setAuditSept(auditSept);
         scfFlowAuditRecord.setStatus(Result.StatusEnum.Suspend.getCode());
         scfFlowAuditRecord.setAuditData(data);
-        scfFlowAuditRecord.setCreateUser(identityInfo == null ? null :identityInfo.getUserId());
-        scfFlowAuditRecord.setCreateName(identityInfo == null ? null :identityInfo.getRealName());
+        scfFlowAuditRecord.setCreateUser(identityInfo == null ? null : identityInfo.getUserId());
+        scfFlowAuditRecord.setCreateName(identityInfo == null ? null : identityInfo.getRealName());
         ScfFlowAuditRecordManager scfFlowAuditRecordManager = SpringContextHolder.getBean(ScfFlowAuditRecordManager.class);
-        scfFlowAuditRecordManager.insertSelective(scfFlowAuditRecord);
+        scfFlowAuditRecordManager.save(scfFlowAuditRecord);
 
         saveAuditLog(scfFlowAuditRecord,identityInfo);
 
