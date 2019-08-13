@@ -27,10 +27,10 @@ public class PasswordHash {
     public static final int PBKDF2_INDEX = 2;
 
     /**
-     * Returns a salted PBKDF2 hash of the password.
+     * Returns a salted PBKDF2 hash ofSuspendAuditorProcess the password.
      *
      * @param password the password to hash
-     * @return a salted PBKDF2 hash of the password
+     * @return a salted PBKDF2 hash ofSuspendAuditorProcess the password
      */
     public static String createHash(String password)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -38,10 +38,10 @@ public class PasswordHash {
     }
 
     /**
-     * Returns a salted PBKDF2 hash of the password.
+     * Returns a salted PBKDF2 hash ofSuspendAuditorProcess the password.
      *
      * @param password the password to hash
-     * @return a salted PBKDF2 hash of the password
+     * @return a salted PBKDF2 hash ofSuspendAuditorProcess the password
      */
     public static String createHash(char[] password)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -60,7 +60,7 @@ public class PasswordHash {
      * Validates a password using a hash.
      *
      * @param password    the password to check
-     * @param correctHash the hash of the valid password
+     * @param correctHash the hash ofSuspendAuditorProcess the valid password
      * @return true if the password is correct, false if not
      */
     public static boolean validatePassword(String password, String correctHash)
@@ -72,7 +72,7 @@ public class PasswordHash {
      * Validates a password using a hash.
      *
      * @param password    the password to check
-     * @param correctHash the hash of the valid password
+     * @param correctHash the hash ofSuspendAuditorProcess the valid password
      * @return true if the password is correct, false if not
      */
     public static boolean validatePassword(char[] password, String correctHash)
@@ -82,7 +82,7 @@ public class PasswordHash {
         int iterations = Integer.parseInt(params[ITERATION_INDEX]);
         byte[] salt = fromHex(params[SALT_INDEX]);
         byte[] hash = fromHex(params[PBKDF2_INDEX]);
-        // Compute the hash of the provided password, using the same salt,
+        // Compute the hash ofSuspendAuditorProcess the provided password, using the same salt,
         // iteration count, and hash length
         byte[] testHash = pbkdf2(password, salt, iterations, hash.length);
         // Compare the hashes in constant time. The password is correct if
@@ -107,13 +107,13 @@ public class PasswordHash {
     }
 
     /**
-     * Computes the PBKDF2 hash of a password.
+     * Computes the PBKDF2 hash ofSuspendAuditorProcess a password.
      *
      * @param password   the password to hash.
      * @param salt       the salt
      * @param iterations the iteration count (slowness factor)
-     * @param bytes      the length of the hash to compute in bytes
-     * @return the PBDKF2 hash of the password
+     * @param bytes      the length ofSuspendAuditorProcess the hash to compute in bytes
+     * @return the PBDKF2 hash ofSuspendAuditorProcess the password
      */
     private static byte[] pbkdf2(char[] password, byte[] salt, int iterations, int bytes)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -123,7 +123,7 @@ public class PasswordHash {
     }
 
     /**
-     * Converts a string of hexadecimal characters into a byte array.
+     * Converts a string ofSuspendAuditorProcess hexadecimal characters into a byte array.
      *
      * @param hex the hex string
      * @return the hex string decoded into a byte array

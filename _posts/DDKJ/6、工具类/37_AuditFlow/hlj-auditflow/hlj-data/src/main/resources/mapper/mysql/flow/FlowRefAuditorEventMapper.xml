@@ -29,6 +29,9 @@
 				<if test="createName != null">
 					and create_name = #{createName,jdbcType=VARCHAR}
 				</if>
+				<if test="id != null">
+					and audit_object = #{id,jdbcType=BIGINT}
+				</if>
 				<if test="roleIds != null and roleIds.size() > 0">
 					and audit_object in
 					<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
@@ -204,4 +207,12 @@
         <![CDATA[ limit #{startRow},#{endRow} ]]>
   		<!-- order by CREATE_DATE -->
 	</select>
+
+
+
+
+
+
+
+
 </mapper>

@@ -42,4 +42,5 @@ public interface JobService {
      * 审核任务的继续
      */
     void continueAuditFlowJob(DemoJobDTO demoJobDTO, IdentityInfoDTO identityInfoDTO);
+
 }

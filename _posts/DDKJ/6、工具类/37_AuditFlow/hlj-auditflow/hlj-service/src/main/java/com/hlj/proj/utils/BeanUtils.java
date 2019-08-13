@@ -2,6 +2,8 @@ package com.hlj.proj.utils;
 
 import com.hlj.proj.data.common.paging.Pagenation;
 import com.hlj.proj.data.common.result.PageListResult;
+import com.hlj.proj.data.pojo.flow.FlowRefAuditorEvent;
+import com.hlj.proj.data.pojo.flow.ScfFlowAuditRecord;
 import com.hlj.proj.data.pojo.system.ScfSysMenu;
 import com.hlj.proj.data.pojo.system.ScfSysRole;
 import com.hlj.proj.data.pojo.user.ScfUserDepartment;
@@ -13,7 +15,9 @@ import com.hlj.proj.dto.system.MenuDTO;
 import com.hlj.proj.dto.system.RoleDTO;
 import com.hlj.proj.dto.user.UserDTO;
 import com.hlj.proj.enums.StatusEnum;
+import com.hlj.proj.service.flow.service.dto.AuditJobCollectDTO;
 import com.hlj.proj.service.flow.service.dto.AuditRecordDTO;
+import com.hlj.proj.service.flow.service.dto.AuditorResultDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -413,4 +417,28 @@ public class BeanUtils {
     }
 
 
+    public static AuditJobCollectDTO toAuditJobCollectDTO(ScfFlowAuditRecord auditRecord) {
+        AuditJobCollectDTO result = new AuditJobCollectDTO();
+        result.setNodeCode(auditRecord.getNodeCode());
+        result.setNodeName(auditRecord.getNodeName());
+        result.setCount(auditRecord.getCount());
+        return result;
+    }
+
+    public static AuditRecordDTO toAuditRecordDTO(ScfFlowAuditRecord auditRecord) {
+        AuditRecordDTO resultDTO = new AuditRecordDTO();
+        resultDTO.setAuditRecordId(auditRecord.getId());
+        resultDTO.setFlowName(auditRecord.getFlowName());
+        resultDTO.setFlowCode(auditRecord.getFlowCode());
+        resultDTO.setNodeCode(auditRecord.getNodeCode());
+        resultDTO.setNodeName(auditRecord.getNodeName());
+        resultDTO.setCreaterUser(auditRecord.getCreateUser());
+        resultDTO.setCreaterUserName(auditRecord.getCreateName());
+        resultDTO.setCreateTime(auditRecord.getCreateTime());
+        resultDTO.setData(auditRecord.getAuditData());
+        resultDTO.setSept(auditRecord.getSept());
+        resultDTO.setAuditSept(auditRecord.getAuditSept());
+        resultDTO.setInstantsNo(auditRecord.getInstantsNo());
+        return  resultDTO ;
+    }
 }

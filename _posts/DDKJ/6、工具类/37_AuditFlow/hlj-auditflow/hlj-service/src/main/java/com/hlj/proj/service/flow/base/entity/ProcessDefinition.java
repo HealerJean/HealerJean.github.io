@@ -21,40 +21,28 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class ProcessDefinition {
 
-    /**
-     * 流程编号
-     */
-    private String flowCode;
-    /**
-     * 流程名称
-     */
-    private String flowName;
-    /**
-     * 流程节点
-     */
-    private List<FlowNode> nodes;
-    /**
-     * 流程节点编号
-     */
-    private List<String> nodeCodes;
-
 
     /**
     /**
      * 通过流程节点名从数据库中初始化一个流程
      */
-    public static ProcessDefinition of(String flowCode) {
+    public static Process initProcess(String flowCode) {
+        //获取流程定义
         ScfFlowDefinitionManager scfFlowDefinitionManager = SpringContextHolder.getBean(ScfFlowDefinitionManager.class);
         ScfFlowDefinitionQuery scfFlowDefinitionQuery = new ScfFlowDefinitionQuery();
         scfFlowDefinitionQuery.setFlowCode(flowCode);
-        //获取流程定义
-        ScfFlowDefinition scfFlowDefinition = scfFlowDefinitionManager.findByQueryContion(scfFlowDefinitionQuery);
-        ProcessDefinition processDefinition = new ProcessDefinition();
-        processDefinition.setFlowName(scfFlowDefinition.getFlowName());
-        processDefinition.setFlowCode(scfFlowDefinition.getFlowCode());
-        List<FlowNode> list = getNodeList(null , scfFlowDefinition.getFlowDefinition());
-        processDefinition.setNodes(list);
-        return processDefinition;
+        ScfFlowDefinition definition = scfFlowDefinitionManager.findByQueryContion(scfFlowDefinitionQuery);
+
+        //创建对应的审批进程实例
+        String instantsNo = UUID.randomUUID().toString().replace("-","");
+        List<FlowNode> nodes = getNodeList(instantsNo , definition.getFlowDefinition());
+        Process process = new Process();
+        process.setInstantsNo(instantsNo);
+        process.setFlowCode(flowCode);
+        process.setFlowName(definition.getFlowName());
+        process.setNodes(nodes);
+        process.setSept(new AtomicInteger(1));
+        return process;
     }
 
 
@@ -64,34 +52,34 @@ public class ProcessDefinition {
      * 2、组装数据库暂停的流程节点到Process
      * 3、根据流程FlowCode编号，找到该流程所有的FlowNode节点
      */
-    public static Process ofSuspendInstant(String instantsNo){
+    public static Process ofSuspendProcess(String instantsNo){
 
         // 1、通过通过流程编号 获取暂停中的流程节点
         ScfFlowRecordManager scfFlowRecordManager = SpringContextHolder.getBean(ScfFlowRecordManager.class);
         ScfFlowRecordQuery scfFlowRecordQuery = new ScfFlowRecordQuery();
         scfFlowRecordQuery.setInstantsNo(instantsNo);
         scfFlowRecordQuery.setStatus(Result.StatusEnum.Suspend.getCode());
-        ScfFlowRecord scfFlowRecordOld = scfFlowRecordManager.findByQueryContion(scfFlowRecordQuery);
-        if(scfFlowRecordOld == null){
+        ScfFlowRecord oldFlowRecord = scfFlowRecordManager.findByQueryContion(scfFlowRecordQuery);
+        if(oldFlowRecord == null){
             throw new BusinessException("找不到对应的流程(" + instantsNo + ")");
         }
 
-        //2、组装数据库暂停的流程节点到Process
-        String flowCode = scfFlowRecordOld.getFlowCode();
-        Process process = new Process();
-        process.setFlowName(scfFlowRecordOld.getFlowName());
-        process.setFlowCode(flowCode);
-        process.setSept(new AtomicInteger(scfFlowRecordOld.getSept()));
-        process.setInstantsNo(instantsNo);
-
-        //3、根据流程FlowCode编号，找到该流程所有的FlowNode节点
+        //2、根据流程FlowCode编号，找到该流程所有的FlowNode节点
+        String flowCode = oldFlowRecord.getFlowCode();
         ScfFlowDefinitionManager scfFlowDefinitionManager = SpringContextHolder.getBean(ScfFlowDefinitionManager.class);
         ScfFlowDefinitionQuery scfFlowDefinitionQuery = new ScfFlowDefinitionQuery();
         scfFlowDefinitionQuery.setFlowCode(flowCode);
         ScfFlowDefinition scfFlowDefinition = scfFlowDefinitionManager.findByQueryContion(scfFlowDefinitionQuery);
         String flowDefinitionString = scfFlowDefinition.getFlowDefinition();
         List<FlowNode> nodes = getNodeList( instantsNo , flowDefinitionString);
+
+        //3、组装数据库暂停的流程节点到Process
+        Process process = new Process();
+        process.setInstantsNo(instantsNo);
+        process.setFlowCode(flowCode);
+        process.setFlowName(oldFlowRecord.getFlowName());
         process.setNodes( nodes);
+        process.setSept(new AtomicInteger(oldFlowRecord.getSept()));
         return process;
     }
 
@@ -116,7 +104,10 @@ public class ProcessDefinition {
                     flowNode = SpringContextHolder.getBean(nodeCode, FlowNode.class);
                     break;
                 case AuditNode:
-                    flowNode = AuditorFlowNode.of(scfFlowNode.getNodeCode(),scfFlowNode.getNodeDetail(), instantsNo, i);
+                    AuditorProcess auditorProcess =  AuditorProcess.initAuditProcess(scfFlowNode.getNodeCode(),scfFlowNode.getNodeDetail(), instantsNo, i);
+                    AuditorFlowNode auditorFlowNode = new AuditorFlowNode();
+                    auditorFlowNode.setAuditorProcess(auditorProcess);
+                    flowNode = auditorFlowNode;
                     break;
                 default:
                     throw new BusinessException("节点类型");
@@ -129,21 +120,6 @@ public class ProcessDefinition {
         return list;
     }
 
-
-    /**
-     * 创建一个流程并设置为第一步
-     */
-    public Process newInstants() {
-        //创建对应的审批结点实例
-        String instantsNo = UUID.randomUUID().toString().replace("-","");
-        Process process = new Process();
-        process.setFlowName(flowName);
-        process.setFlowCode(flowCode);
-        process.setInstantsNo(instantsNo);
-        process.setNodes(nodes);
-        process.setSept(new AtomicInteger(1));
-        return process;
-    }
 
 
 

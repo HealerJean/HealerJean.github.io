@@ -21,6 +21,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Process<F extends FlowNode> {
 
     /**
+     * 流程实例编号
+     */
+    private String instantsNo;
+
+    /**
      * 流程编号
      */
     private String flowCode;
@@ -28,11 +33,6 @@ public class Process<F extends FlowNode> {
      * 流程名称
      */
     private String flowName;
-
-    /**
-     * 流程实例编号
-     */
-    private String instantsNo;
 
     /**
      * 流程节点链条
@@ -103,8 +103,8 @@ public class Process<F extends FlowNode> {
             scfFlowRecordQuery.setInstantsNo(instantsNo);
             scfFlowRecordQuery.setSept(sept.intValue());
             scfFlowRecordQuery.setStatus(Result.StatusEnum.Suspend.getCode());
-            ScfFlowRecord scfFlowRecord = scfFlowRecordManager.findByQueryContion(scfFlowRecordQuery);
-            if (scfFlowRecord == null) {
+            ScfFlowRecord flowRecord = scfFlowRecordManager.findByQueryContion(scfFlowRecordQuery);
+            if (flowRecord == null) {
                 log.error("执行时找不到对应的流程记录，instantsNo：{},sept: {}", instantsNo, sept);
                 throw new BusinessException("执行时找不到对应的流程记录");
             }

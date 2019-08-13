@@ -7,6 +7,7 @@ import java.util.List;
 import com.hlj.proj.data.dao.mybatis.dao.BaseDao;
 import com.hlj.proj.data.pojo.flow.FlowRefAuditorEvent;
 import com.hlj.proj.data.pojo.flow.FlowRefAuditorEventQuery;
+import com.hlj.proj.data.pojo.flow.ScfFlowNode;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -65,4 +66,6 @@ public class FlowRefAuditorEventDao extends BaseDao {
     public int batchUpdate(List<FlowRefAuditorEvent> list) {
 		return super.batchUpdate("FlowRefAuditorEventMapper.updateByPrimaryKeySelective", list);
 	}
+
+
 }

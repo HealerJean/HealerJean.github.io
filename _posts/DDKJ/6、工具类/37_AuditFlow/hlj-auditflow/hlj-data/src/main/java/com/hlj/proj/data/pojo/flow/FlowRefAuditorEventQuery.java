@@ -44,6 +44,8 @@ public class FlowRefAuditorEventQuery extends PagingQuery {
 	/**
 	 * 额外
 	 */
+	private Long id ;
+
 	private List<Long> roleIds;
 
 	private List<Long> ids;

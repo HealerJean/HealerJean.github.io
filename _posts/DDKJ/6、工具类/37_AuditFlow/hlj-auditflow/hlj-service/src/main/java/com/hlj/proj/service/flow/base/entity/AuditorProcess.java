@@ -5,6 +5,7 @@ import com.hlj.proj.data.dao.mybatis.manager.flow.*;
 import com.hlj.proj.data.pojo.flow.*;
 import com.hlj.proj.dto.user.IdentityInfoDTO;
 import com.hlj.proj.exception.BusinessException;
+import com.hlj.proj.service.flow.service.dto.AuditorResultDTO;
 import com.hlj.proj.service.flow.service.enums.FlowAuditType;
 import com.hlj.proj.service.spring.SpringContextHolder;
 import com.hlj.proj.utils.EmptyUtil;
@@ -23,8 +24,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @ClassName AuditorProcess
- * @Author TD
- * @Date 2019/6/12 15:15
  * @Description 审批流程
  */
 @Data
@@ -39,27 +38,94 @@ public class AuditorProcess {
      * 审批人
      */
     private List<Auditor> auditors;
+
     /**
      * 审批执行步骤
      */
     private AtomicInteger auditSept;
 
+    /**
+     * 初始化审批节点
+     * 1、有审批记录，将它的审批步揍以及审批状态赋值给Auditors
+     * 2、无审批记录，只保存Auditors ，不需要设置审批步揍，审批步揍为NULL
+     */
+    public static AuditorProcess initAuditProcess(String nodeCode, String nodeDetail, String instantsNo, int index) {
+        AuditorProcess auditorProcess = new AuditorProcess();
 
-    public static AuditorProcess of(Long auditRecordId) {
+        //初始化审批流程
+        ScfFlowAuditRecordManager scfFlowAuditRecordManager = SpringContextHolder.getBean(ScfFlowAuditRecordManager.class);
+        //查询该节点在该步奏中所有的记录（有可能有多个审批步奏）
+        ScfFlowAuditRecordQuery query = new ScfFlowAuditRecordQuery();
+        query.setInstantsNo(instantsNo);
+        query.setNodeCode(nodeCode);
+        query.setSept(index + 1);
+        List<ScfFlowAuditRecord> auditRecords = scfFlowAuditRecordManager.queryList(query);
+
+        //初始化审批人数据
+        ArrayList<Auditor> auditors = JsonUtils.toObject(nodeDetail, new TypeReference<ArrayList<Auditor>>() { });
+        for (Auditor auditor : auditors) {
+            auditor.setStatus(Result.AuditStatusEnum.UNKNOWN.getCode());
+        }
+        auditorProcess.setAuditSept(new AtomicInteger(0));
+        if (!EmptyUtil.isEmpty(auditRecords)) {
+            int auditSeptMax = 0 ;
+            for (int i = 0; i < auditRecords.size(); i++) {
+                ScfFlowAuditRecord scfFlowAuditRecord = auditRecords.get(i);
+                Integer auditSept = scfFlowAuditRecord.getAuditSept();
+                Auditor auditor = auditors.get(auditSept - 1);
+                auditor.setStatus(scfFlowAuditRecord.getStatus());
+                if (auditSept > auditSeptMax ) {
+                    auditSeptMax = auditSept;
+                }
+            }
+            //设置当前审批到了第几步奏
+            auditorProcess.setAuditSept(new AtomicInteger(auditSeptMax));
+        }
+        auditorProcess.setInstantsNo(instantsNo);
+        auditorProcess.setAuditors(auditors);
+        return auditorProcess ;
+    }
+
+
+    /**
+     * 获取一个正在暂停中等待审批的审批进程
+     * @param auditRecordId
+     * @return
+     */
+    public static AuditorProcess ofSuspendAuditorProcess(Long auditRecordId) {
         AuditorProcess auditorProcess = new AuditorProcess();
         //查询审批记录
         ScfFlowAuditRecordManager scfFlowAuditRecordManager = SpringContextHolder.getBean(ScfFlowAuditRecordManager.class);
         ScfFlowAuditRecord auditRecord = scfFlowAuditRecordManager.findById(auditRecordId);
 
+        //初始化审批流程
+        //查询该节点在该步奏中所有的记录（有可能有多个审批步奏）
+        ScfFlowAuditRecordQuery query = new ScfFlowAuditRecordQuery();
+        query.setInstantsNo(auditRecord.getInstantsNo());
+        query.setNodeCode(auditRecord.getNodeCode());
+        query.setSept(auditRecord.getSept());
+        List<ScfFlowAuditRecord> auditRecords = scfFlowAuditRecordManager.queryList(query);
+
+        //初始化审批人数据
         //查询流程节点
         ScfFlowNodeManager scfFlowNodeManager = SpringContextHolder.getBean(ScfFlowNodeManager.class);
         ScfFlowNodeQuery scfFlowNodeQuery = new ScfFlowNodeQuery();
         scfFlowNodeQuery.setNodeCode(auditRecord.getNodeCode());
         ScfFlowNode scfFlowNode = scfFlowNodeManager.findByQueryContion(scfFlowNodeQuery);
-
-        auditorProcess.setAuditors(JsonUtils.toObject(scfFlowNode.getNodeDetail(), new TypeReference<ArrayList<Auditor>>() { }));
-        auditorProcess.setAuditSept(new AtomicInteger(auditRecord.getAuditSept()));
+        ArrayList<Auditor> auditors = JsonUtils.toObject(scfFlowNode.getNodeDetail(), new TypeReference<ArrayList<Auditor>>() { });
+        for (Auditor auditor : auditors) {
+            auditor.setStatus(Result.AuditStatusEnum.UNKNOWN.getCode());
+        }
+        if (!EmptyUtil.isEmpty(auditRecords)) {
+            for (ScfFlowAuditRecord scfFlowAuditRecord :  auditRecords) {
+                Integer auditSept = scfFlowAuditRecord.getAuditSept();
+                Auditor auditor = auditors.get(auditSept - 1);
+                auditor.setStatus(scfFlowAuditRecord.getStatus());
+            }
+        }
         auditorProcess.setInstantsNo(auditRecord.getInstantsNo());
+        auditorProcess.setAuditors(auditors);
+        auditorProcess.setAuditSept(new AtomicInteger(auditRecord.getAuditSept()));
         return auditorProcess;
     }
 
@@ -67,58 +133,47 @@ public class AuditorProcess {
     /**
      * 同意(true)/(false)拒绝当前审批
      */
-    public void audit(AuditorResult auditorResult, IdentityInfoDTO identityInfo) {
+    public void audit(AuditorResultDTO auditorResultDTO, IdentityInfoDTO identityInfo) {
         JpaTransactionManager transactionManager = SpringContextHolder.getBean(JpaTransactionManager.class);
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
+            //根据审批步揍获取当前审批人
             int i = auditSept.intValue();
-            //获取当前审批人
             Auditor auditor = auditors.get(i - 1);
             //先判断是否成功
-            Boolean auditSuccess = auditorResult.getAuditResult();
+            Boolean auditSuccess = auditorResultDTO.getAuditResult();
             if (auditSuccess) {
-                auditor.setStatus(Result.StatusEnum.Success.getCode());
+                auditor.setStatus(Result.AuditStatusEnum.Success.getCode());
             } else {
-                auditor.setStatus(Result.StatusEnum.Fail.getCode());
+                auditor.setStatus(Result.AuditStatusEnum.Reject.getCode());
             }
+
             ScfFlowAuditRecordManager scfFlowAuditRecordManager = SpringContextHolder.getBean(ScfFlowAuditRecordManager.class);
-            ScfFlowAuditRecord auditRecord = scfFlowAuditRecordManager.findById(auditorResult.getAuditRecordId());
+            ScfFlowAuditRecord auditRecord = scfFlowAuditRecordManager.findById(auditorResultDTO.getAuditRecordId());
             //保存 审核记录 数据
             auditRecord.setStatus(auditor.getStatus());
             auditRecord.setOptUser(identityInfo.getUserId());
             auditRecord.setOptUserName(identityInfo.getRealName());
             auditRecord.setOptTime(new Date());
-            auditRecord.setAuditMessage(auditorResult.getAuditMessage());
-            auditRecord.setRefFileIds(EmptyUtil.isEmpty( auditorResult.getFileIds()) == true ? null : JsonUtils.toJsonString(auditorResult.getFileIds()));
+            auditRecord.setAuditMessage(auditorResultDTO.getAuditMessage());
+            auditRecord.setRefFileIds(EmptyUtil.isEmpty( auditorResultDTO.getFileIds()) == true ? null : JsonUtils.toJsonString(auditorResultDTO.getFileIds()));
             scfFlowAuditRecordManager.updateSelective(auditRecord);
-
-            //将所有审核人计划变成完成
-            FlowRefAuditorEventManager auditorEventManager = SpringContextHolder.getBean(FlowRefAuditorEventManager.class);
-            FlowRefAuditorEventQuery flowRefAuditorEventQuery = new FlowRefAuditorEventQuery();
-            flowRefAuditorEventQuery.setRefFlowAuditRecordId(auditRecord.getId());
-            List<FlowRefAuditorEvent> auditorEvents = auditorEventManager.queryList(flowRefAuditorEventQuery);
-            auditorEvents.stream().map(item -> {
-                item.setStatus(Result.StatusEnum.Success.getCode());
-                return item;
-            });
-            auditorEventManager.batchUpdate(auditorEvents);
 
             //保存审批日志
             saveAuditLog(auditRecord,identityInfo);
 
-
             String auditData = auditRecord.getAuditData();
-            log.info("序列化出来的数据：{}", auditData);
             //当审批流程全部走完时，则触发流程的下一步
-            auditSept.incrementAndGet();
-            if (isSuccess() || isReject()) {
-                Process process = ProcessDefinition.ofSuspendInstant(instantsNo);
+            if (isAuditsComplete()) {
+                Process process = ProcessDefinition.ofSuspendProcess(instantsNo);
                 process.nextFlow(instantsNo, auditData, identityInfo);
-            } else {
+            }else {
                 //创建下一个审批记录
-                createAuditRecord(auditorResult.getInstantsNo(), auditorResult.getNodeCode(), auditSept.intValue(), auditRecord.getAuditData(),identityInfo);
+                //审批步揍 加 1
+                createAuditRecord(auditRecord.getInstantsNo(), auditRecord.getNodeCode(), auditSept.intValue()+1, auditRecord.getAuditData(),identityInfo);
+                log.info("执行流程名 {}, 执行第{}步：{}，实例编号：{}执行下一个审批：执行第{}步", auditRecord.getFlowName(), auditRecord.getSept(), auditRecord.getNodeName(), instantsNo,auditSept.intValue());
             }
             transactionManager.commit(status);
         } catch (BusinessException e) {
@@ -133,40 +188,26 @@ public class AuditorProcess {
     }
 
 
-    /**
-     * 审核开始
-     */
-    public void initAudit(AuditorFlowNode auditorFlowNode, String instantsNo, String data,IdentityInfoDTO identityInfo) {
-        createAuditRecord(instantsNo, auditorFlowNode.getNodeCode(), 1, data,identityInfo);
-    }
-
 
     /**
-     * 判断该审批是否成功并且完成
-     *
+     * 判断该审批节点是否全部完成
      * @return
      */
-    public Boolean isSuccess() {
-        //最后一个审批步奏执行的时候会调用红这个if
+    public Boolean isAuditsComplete() {
         int i = auditSept.intValue();
-        if (i > auditors.size()) {
-            return true;
-        }
-        //获取当前审批对象,当审批的时候，继续执行的时候调用
         Auditor auditor = auditors.get(i - 1);
-        return auditSept.intValue() == auditors.size() && Result.StatusEnum.Success.getCode().equals(auditor.getStatus());
+        return (auditSept.intValue()) == auditors.size() &&
+                (Result.AuditStatusEnum.Success.getCode().equals(auditor.getStatus())
+                        || Result.AuditStatusEnum.Reject.getCode().equals(auditor.getStatus())   ) ;
     }
 
-
     /**
-     * 判断该审批是否失败
-     *
-     * @return
+     * 审批拒绝
      */
-    public Boolean isReject() {
+    public boolean isReject() {
         int i = auditSept.intValue();
         Auditor auditor = auditors.get(i - 1);
-        return Result.StatusEnum.Fail.getCode().equals(auditor.getStatus());
+        return Result.AuditStatusEnum.Reject.getCode().equals(auditor.getStatus());
     }
 
 
@@ -174,8 +215,10 @@ public class AuditorProcess {
      * 创建审批记录
      * 1、
      */
-    private void createAuditRecord(String instantsNo, String nodeCode, Integer auditSept, String data,IdentityInfoDTO identityInfo) {
+    public void createAuditRecord(String instantsNo, String nodeCode, Integer auditSept, String data,IdentityInfoDTO identityInfo) {
         this.auditSept = new AtomicInteger(auditSept);
+        int i = auditSept.intValue() ;
+        auditors.get(i-1).setStatus(Result.AuditStatusEnum.Suspend.getCode());
 
         ScfFlowRecordManager scfFlowRecordManager = SpringContextHolder.getBean(ScfFlowRecordManager.class);
         ScfFlowRecordQuery scfFlowRecordQuery = new ScfFlowRecordQuery();
@@ -203,7 +246,6 @@ public class AuditorProcess {
         scfFlowAuditRecord.setCreateName(identityInfo == null ? null :identityInfo.getRealName());
         ScfFlowAuditRecordManager scfFlowAuditRecordManager = SpringContextHolder.getBean(ScfFlowAuditRecordManager.class);
         scfFlowAuditRecordManager.insertSelective(scfFlowAuditRecord);
-
 
         saveAuditLog(scfFlowAuditRecord,identityInfo);
 
