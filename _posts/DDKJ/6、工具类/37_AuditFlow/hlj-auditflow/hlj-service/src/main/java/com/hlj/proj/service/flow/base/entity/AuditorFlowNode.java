@@ -29,18 +29,11 @@ public class AuditorFlowNode extends FlowNode {
     public Result deal(String instantsNo, String data, IdentityInfoDTO identityInfo) {
         if (auditorProcess.getAuditSept().intValue() == 0) {
             //创建审批记录，并将审批步揍加1
-            auditorProcess.createAuditRecord(instantsNo, this.getNodeCode(), 1, data,identityInfo);
+            auditorProcess.createAuditRecord(instantsNo, this.getNodeCode(), 1, data, identityInfo);
         }
         if (auditorProcess.isReject()) {
-            JsonNode jsonNode = JsonUtils.toTree(data);
-            Boolean again = jsonNode.get("again").asBoolean();
-            if(again != null && again == true){
-                log.info("执行审核流程 ：{}，拒绝，等待重复发起 ", getNodeName());
-                return Result.suspend(data);
-            }else {
-                log.info("执行审核流程 ：{}，拒绝，失败 ", getNodeName());
-                return Result.fail(data);
-           }
+            log.info("执行审核流程 ：{}，拒绝，失败 ", getNodeName());
+            return Result.fail(data);
         } else if (auditorProcess.isAuditsComplete()) {
             log.info("执行审核流程 ：{}，成功 ", getNodeName());
             return Result.success(data);

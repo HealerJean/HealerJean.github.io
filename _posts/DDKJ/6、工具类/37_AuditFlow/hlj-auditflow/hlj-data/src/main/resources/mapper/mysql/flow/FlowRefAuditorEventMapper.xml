@@ -6,6 +6,7 @@
 		<result column="ref_flow_audit_record_id" jdbcType="BIGINT" property="refFlowAuditRecordId" />
 		<result column="audit_type" jdbcType="VARCHAR" property="auditType" />
 		<result column="audit_object" jdbcType="BIGINT" property="auditObject" />
+		<result column="copy" jdbcType="BIT" property="copy" />
 		<result column="create_user" jdbcType="BIGINT" property="createUser" />
 		<result column="create_name" jdbcType="VARCHAR" property="createName" />
 		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -22,6 +23,9 @@
 				</if>
 				<if test="auditObject != null and auditObject != ''">
 					and audit_object = #{auditObject,jdbcType=BIGINT}
+				</if>
+				<if test="copy != null and copy != ''">
+					and copy = #{copy,jdbcType=BIT}
 				</if>
 				<if test="createUser != null and createUser != ''">
 					and create_user = #{createUser,jdbcType=BIGINT}
@@ -59,6 +63,9 @@
 				<if test="auditObject != null">
 					audit_object = #{auditObject,jdbcType=BIGINT},
 				</if>
+				<if test="copy != null">
+					copy = #{copy,jdbcType=BIT},
+				</if>
 				<if test="createUser != null">
 					create_user = #{createUser,jdbcType=BIGINT},
 				</if>
@@ -74,6 +81,7 @@
 		ref_flow_audit_record_id,
 		audit_type,
 		audit_object,
+		copy,
 		create_user,
 		create_name,
 		create_time,
@@ -85,6 +93,7 @@
 				ref_flow_audit_record_id = #{refFlowAuditRecordId,jdbcType=BIGINT},
 				audit_type = #{auditType,jdbcType=VARCHAR},
 				audit_object = #{auditObject,jdbcType=BIGINT},
+				copy = #{copy,jdbcType=BIT},
 				create_user = #{createUser,jdbcType=BIGINT},
 				create_name = #{createName,jdbcType=VARCHAR},
 			</trim>
@@ -101,6 +110,9 @@
 		<if test="auditObject != null">
 			audit_object,
 		</if>
+		<if test="copy != null">
+			copy,
+		</if>
 		<if test="createUser != null">
 			create_user,
 		</if>
@@ -114,6 +126,7 @@
 		#{refFlowAuditRecordId,jdbcType=BIGINT},
 		#{auditType,jdbcType=VARCHAR},
 		#{auditObject,jdbcType=BIGINT},
+		#{copy,jdbcType=BIT},
 		#{createUser,jdbcType=BIGINT},
 		#{createName,jdbcType=VARCHAR},
 		#{createTime,jdbcType=TIMESTAMP},
@@ -129,6 +142,9 @@
 		</if>
 		<if test="auditObject != null">
 			#{auditObject,jdbcType=BIGINT},
+		</if>
+		<if test="copy != null">
+			#{copy,jdbcType=BIT},
 		</if>
 		<if test="createUser != null">
 			#{createUser,jdbcType=BIGINT},

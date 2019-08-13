@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.hlj.proj.data.dao.mybatis.manager.flow.*;
 import com.hlj.proj.data.pojo.flow.*;
 import com.hlj.proj.dto.user.IdentityInfoDTO;
+import com.hlj.proj.enums.StatusEnum;
 import com.hlj.proj.exception.BusinessException;
 import com.hlj.proj.service.flow.service.dto.AuditorResultDTO;
 import com.hlj.proj.service.flow.service.enums.FlowAuditType;
@@ -12,6 +13,7 @@ import com.hlj.proj.utils.EmptyUtil;
 import com.hlj.proj.utils.JsonUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
@@ -112,7 +114,7 @@ public class AuditorProcess {
         ScfFlowNodeQuery scfFlowNodeQuery = new ScfFlowNodeQuery();
         scfFlowNodeQuery.setNodeCode(auditRecord.getNodeCode());
         ScfFlowNode scfFlowNode = scfFlowNodeManager.findByQueryContion(scfFlowNodeQuery);
-        ArrayList<Auditor> auditors = JsonUtils.toObject(scfFlowNode.getNodeDetail(), new TypeReference<ArrayList<Auditor>>() { });
+        ArrayList<Auditor> auditors = JsonUtils.toObject(scfFlowNode.getAuditors(), new TypeReference<ArrayList<Auditor>>() { });
         for (Auditor auditor : auditors) {
             auditor.setStatus(Result.AuditStatusEnum.UNKNOWN.getCode());
         }
@@ -167,6 +169,8 @@ public class AuditorProcess {
             String auditData = auditRecord.getAuditData();
             //当审批流程全部走完时，则触发流程的下一步
             if (isAuditsComplete()) {
+                //审批完成，给抄送人创建信息
+                sendToCopyUser(auditRecord);
                 Process process = ProcessDefinition.ofSuspendProcess(instantsNo);
                 process.nextFlow(instantsNo, auditData, identityInfo);
             }else {
@@ -253,11 +257,31 @@ public class AuditorProcess {
         saveAuditEvent(auditSept, scfFlowAuditRecord);
     }
 
+
+    /**
+     * 审批完成交给抄送人
+     */
+   void sendToCopyUser(ScfFlowAuditRecord scfFlowAuditRecord){
+        ScfFlowNodeManager flowNodeManager = SpringContextHolder.getBean(ScfFlowNodeManager.class);
+       ScfFlowNodeQuery flowNodeQuery = new ScfFlowNodeQuery();
+       flowNodeQuery.setNodeCode(scfFlowAuditRecord.getNodeCode());
+       flowNodeQuery.setStatus(StatusEnum.生效.code);
+       ScfFlowNode auditFlowNode = flowNodeManager.findByQueryContion(flowNodeQuery);
+       if(StringUtils.isNotBlank(auditFlowNode.getCopyTo())){
+           Auditor auditor = JsonUtils.toObject(auditFlowNode.getCopyTo(),Auditor.class);
+           saveAuditEvent(scfFlowAuditRecord,auditor,true);
+       }
+    }
+
     /**
      * 保存审批人关系
      */
     private void saveAuditEvent(Integer auditSept, ScfFlowAuditRecord scfFlowAuditRecord) {
         Auditor auditor = auditors.get(auditSept - 1);
+        saveAuditEvent(scfFlowAuditRecord, auditor,false);
+    }
+
+    private void saveAuditEvent(ScfFlowAuditRecord scfFlowAuditRecord, Auditor auditor, Boolean copy) {
         List<FlowRefAuditorEvent> list = new ArrayList<>();
         List<Long> ids = auditor.getIds();
         if (!EmptyUtil.isEmpty(ids)) {
@@ -266,7 +290,7 @@ public class AuditorProcess {
                 auditorEvent.setRefFlowAuditRecordId(scfFlowAuditRecord.getId());
                 auditorEvent.setAuditType(FlowAuditType.ID.getType());
                 auditorEvent.setAuditObject(id);
-                auditorEvent.setStatus(Result.StatusEnum.Suspend.getCode());
+                auditorEvent.setCopy(copy);
                 list.add(auditorEvent);
             });
         }
@@ -278,7 +302,7 @@ public class AuditorProcess {
                 auditorEvent.setRefFlowAuditRecordId(scfFlowAuditRecord.getId());
                 auditorEvent.setAuditType(FlowAuditType.ROLE.getType());
                 auditorEvent.setAuditObject(role);
-                auditorEvent.setStatus(Result.StatusEnum.Suspend.getCode());
+                auditorEvent.setCopy(copy);
                 list.add(auditorEvent);
             });
         }

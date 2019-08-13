@@ -1,12 +1,12 @@
-#POST http://localhost:8888/api/user/login
-#Accept: */*
-#Cache-Control: no-cache
-#Content-Type: application/json
-#
-#//{"username":"healerjean","password":"admin"}
-#{"username":"operator","password":"admin"}
-#
-####
+POST http://localhost:8888/api/user/login
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+//{"username":"healerjean","password":"admin"}
+{"username":"operator","password":"admin"}
+
+###
 
 
 #GET http://localhost:8888/api/user/current
@@ -29,40 +29,42 @@
 
 
 
-#GET http://localhost:8888/api/flow/auditFlowStartJob
-#Cookie: scf-manager_SID=99cc0e560f3647f4afe5998325b6e763
+GET http://localhost:8888/api/flow/auditFlowStartJob
+Cookie: scf-manager_SID=79c1c941b5d94db9acdde9fcd995e525
 
 ###
 
 
 
 #继续流程
-#GET http://localhost:8888/api/flow/continueAuditFlowJob?instanceNo=7370be6d9560427bafde01d43e5eb477&nextFlow=true
-#Cookie: scf-manager_SID=99cc0e560f3647f4afe5998325b6e763
+GET http://localhost:8888/api/flow/continueAuditFlowJob?instanceNo=b6ad5dacf2454c45a4e1abff660f57cc&nextFlow=true
+Cookie: scf-manager_SID=79c1c941b5d94db9acdde9fcd995e525
 
 ###
-#
 
 
-##
+
+###
 POST http://localhost:8888/api/flow/audit
 Accept: */*
 Cache-Control: no-cache
 Content-Type: application/json
-Cookie: scf-manager_SID=d4df3119d8724ae69bf36b73cd0830f7
+Cookie: scf-manager_SID=8a77ae93a13c42d8872d6304ebe775ad
 
-{"auditRecordId":3,"auditResult":true}
+{"auditRecordId":6,"auditResult":true}
 
 ###
 
 
+GET http://localhost:8888/api/flow/todo
+Cookie: scf-manager_SID=79c1c941b5d94db9acdde9fcd995e525
 
-#GET http://localhost:8888/api/flow/todo
-#Cookie: scf-manager_SID=99cc0e560f3647f4afe5998325b6e763
+###
 
+GET http://localhost:8888/api/flow/audits?nodeCode=auditBJobDeal
+Cookie: scf-manager_SID=8a77ae93a13c42d8872d6304ebe775ad
 
-#GET http://localhost:8888/api/flow/audits?nodeCode=auditBJobDeal
-#Cookie: scf-manager_SID=99cc0e560f3647f4afe5998325b6e763
+###
 
 
 

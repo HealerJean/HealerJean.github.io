@@ -26,8 +26,8 @@ public class FlowRefAuditorEvent implements Serializable{
 	private Long createUser;
 	/** 创建人名称 */
 	private String createName;
-	/**是否审批状态*/
-	private String status ;
+	/**是否抄送人*/
+	private Boolean copy ;
 	/** 创建时间 */
 	private java.util.Date createTime;
 	/** 更新时间 */

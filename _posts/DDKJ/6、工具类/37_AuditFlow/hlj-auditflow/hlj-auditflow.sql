@@ -11,7 +11,7 @@
  Target Server Version : 50725
  File Encoding         : 65001
 
- Date: 13/08/2019 19:09:14
+ Date: 13/08/2019 20:09:23
 */
 
 SET NAMES utf8mb4;
@@ -40,7 +40,7 @@ CREATE TABLE `flow_audit_record_log`  (
   `create_user` bigint(20) UNSIGNED NULL DEFAULT 0 COMMENT '创建人',
   `create_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建人名称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '审批日志' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '审批日志' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of flow_audit_record_log
@@ -51,6 +51,12 @@ INSERT INTO `flow_audit_record_log` VALUES (3, '', '7370be6d9560427bafde01d43e5e
 INSERT INTO `flow_audit_record_log` VALUES (4, '', '7370be6d9560427bafde01d43e5eb477', 5, 'auditJob', '审核任务', 'auditBJobDeal', '审核任务B处理', 1, '{\"instanceNo\":\"7370be6d9560427bafde01d43e5eb477\",\"nextFlow\":true}', '10', '', '2019-08-13 19:06:56', '2019-08-13 19:06:56', 2, 1, 'healerjean');
 INSERT INTO `flow_audit_record_log` VALUES (5, '', '7370be6d9560427bafde01d43e5eb477', 5, 'auditJob', '审核任务', 'auditBJobDeal', '审核任务B处理', 2, '{\"instanceNo\":\"7370be6d9560427bafde01d43e5eb477\",\"nextFlow\":true}', '20', '', '2019-08-13 19:06:56', '2019-08-13 19:06:56', 3, 1, 'healerjean');
 INSERT INTO `flow_audit_record_log` VALUES (6, '', '7370be6d9560427bafde01d43e5eb477', 5, 'auditJob', '审核任务', 'auditBJobDeal', '审核任务B处理', 2, '{\"instanceNo\":\"7370be6d9560427bafde01d43e5eb477\",\"nextFlow\":true}', '10', '', '2019-08-13 19:07:24', '2019-08-13 19:07:24', 3, 2, 'operatorName');
+INSERT INTO `flow_audit_record_log` VALUES (11, '', 'b6ad5dacf2454c45a4e1abff660f57cc', 3, 'auditJob', '审核任务', 'auditAJobDeal', '审核任务A处理', 1, '{\"instanceNo\":\"b6ad5dacf2454c45a4e1abff660f57cc\",\"nextFlow\":true}', '20', '', '2019-08-13 20:01:24', '2019-08-13 20:01:24', 4, 1, 'healerjean');
+INSERT INTO `flow_audit_record_log` VALUES (12, '', 'b6ad5dacf2454c45a4e1abff660f57cc', 3, 'auditJob', '审核任务', 'auditAJobDeal', '审核任务A处理', 1, '{\"instanceNo\":\"b6ad5dacf2454c45a4e1abff660f57cc\",\"nextFlow\":true}', '10', '', '2019-08-13 20:04:43', '2019-08-13 20:04:43', 4, 1, 'healerjean');
+INSERT INTO `flow_audit_record_log` VALUES (13, '', 'b6ad5dacf2454c45a4e1abff660f57cc', 5, 'auditJob', '审核任务', 'auditBJobDeal', '审核任务B处理', 1, '{\"instanceNo\":\"b6ad5dacf2454c45a4e1abff660f57cc\",\"nextFlow\":true}', '20', '', '2019-08-13 20:05:32', '2019-08-13 20:05:32', 5, 1, 'healerjean');
+INSERT INTO `flow_audit_record_log` VALUES (14, '', 'b6ad5dacf2454c45a4e1abff660f57cc', 5, 'auditJob', '审核任务', 'auditBJobDeal', '审核任务B处理', 1, '{\"instanceNo\":\"b6ad5dacf2454c45a4e1abff660f57cc\",\"nextFlow\":true}', '10', '', '2019-08-13 20:06:16', '2019-08-13 20:06:16', 5, 1, 'healerjean');
+INSERT INTO `flow_audit_record_log` VALUES (15, '', 'b6ad5dacf2454c45a4e1abff660f57cc', 5, 'auditJob', '审核任务', 'auditBJobDeal', '审核任务B处理', 2, '{\"instanceNo\":\"b6ad5dacf2454c45a4e1abff660f57cc\",\"nextFlow\":true}', '20', '', '2019-08-13 20:06:16', '2019-08-13 20:06:16', 6, 1, 'healerjean');
+INSERT INTO `flow_audit_record_log` VALUES (17, '', 'b6ad5dacf2454c45a4e1abff660f57cc', 5, 'auditJob', '审核任务', 'auditBJobDeal', '审核任务B处理', 2, '{\"instanceNo\":\"b6ad5dacf2454c45a4e1abff660f57cc\",\"nextFlow\":true}', '10', '', '2019-08-13 20:08:39', '2019-08-13 20:08:39', 6, 2, 'operatorName');
 
 -- ----------------------------
 -- Table structure for flow_ref_auditor_event
@@ -61,24 +67,37 @@ CREATE TABLE `flow_ref_auditor_event`  (
   `ref_flow_audit_record_id` bigint(20) UNSIGNED NOT NULL COMMENT '审批记录表主键',
   `audit_type` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '审核类型：角色或ID',
   `audit_object` bigint(20) UNSIGNED NULL DEFAULT 0 COMMENT '审核对象',
+  `copy` tinyint(1) NOT NULL COMMENT '是否是抄送人 1 表示是，默认为0',
   `create_user` bigint(20) UNSIGNED NULL DEFAULT 0 COMMENT '创建人',
   `create_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建人名称',
   `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '审批人和审批事件关系表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '审批人和审批事件关系表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of flow_ref_auditor_event
 -- ----------------------------
-INSERT INTO `flow_ref_auditor_event` VALUES (1, 1, 'ID', 1, 0, '', '2019-08-13 19:06:33', '2019-08-13 19:06:33');
-INSERT INTO `flow_ref_auditor_event` VALUES (2, 1, 'ID', 2, 0, '', '2019-08-13 19:06:33', '2019-08-13 19:06:33');
-INSERT INTO `flow_ref_auditor_event` VALUES (3, 1, 'ROLE', 1, 0, '', '2019-08-13 19:06:33', '2019-08-13 19:06:33');
-INSERT INTO `flow_ref_auditor_event` VALUES (4, 1, 'ROLE', 2, 0, '', '2019-08-13 19:06:33', '2019-08-13 19:06:33');
-INSERT INTO `flow_ref_auditor_event` VALUES (5, 2, 'ID', 1, 0, '', '2019-08-13 19:06:47', '2019-08-13 19:06:47');
-INSERT INTO `flow_ref_auditor_event` VALUES (6, 2, 'ROLE', 1, 0, '', '2019-08-13 19:06:47', '2019-08-13 19:06:47');
-INSERT INTO `flow_ref_auditor_event` VALUES (7, 3, 'ID', 2, 0, '', '2019-08-13 19:06:56', '2019-08-13 19:06:56');
-INSERT INTO `flow_ref_auditor_event` VALUES (8, 3, 'ROLE', 2, 0, '', '2019-08-13 19:06:56', '2019-08-13 19:06:56');
+INSERT INTO `flow_ref_auditor_event` VALUES (1, 1, 'ID', 1, 0, 0, '', '2019-08-13 19:06:33', '2019-08-13 19:06:33');
+INSERT INTO `flow_ref_auditor_event` VALUES (2, 1, 'ID', 2, 0, 0, '', '2019-08-13 19:06:33', '2019-08-13 19:06:33');
+INSERT INTO `flow_ref_auditor_event` VALUES (3, 1, 'ROLE', 1, 0, 0, '', '2019-08-13 19:06:33', '2019-08-13 19:06:33');
+INSERT INTO `flow_ref_auditor_event` VALUES (4, 1, 'ROLE', 2, 0, 0, '', '2019-08-13 19:06:33', '2019-08-13 19:06:33');
+INSERT INTO `flow_ref_auditor_event` VALUES (5, 2, 'ID', 1, 0, 0, '', '2019-08-13 19:06:47', '2019-08-13 19:06:47');
+INSERT INTO `flow_ref_auditor_event` VALUES (6, 2, 'ROLE', 1, 0, 0, '', '2019-08-13 19:06:47', '2019-08-13 19:06:47');
+INSERT INTO `flow_ref_auditor_event` VALUES (7, 3, 'ID', 2, 0, 0, '', '2019-08-13 19:06:56', '2019-08-13 19:06:56');
+INSERT INTO `flow_ref_auditor_event` VALUES (8, 3, 'ROLE', 2, 0, 0, '', '2019-08-13 19:06:56', '2019-08-13 19:06:56');
+INSERT INTO `flow_ref_auditor_event` VALUES (9, 4, 'ID', 1, 0, 0, '', '2019-08-13 20:01:24', '2019-08-13 20:01:24');
+INSERT INTO `flow_ref_auditor_event` VALUES (10, 4, 'ID', 2, 0, 0, '', '2019-08-13 20:01:25', '2019-08-13 20:01:25');
+INSERT INTO `flow_ref_auditor_event` VALUES (11, 4, 'ROLE', 1, 0, 0, '', '2019-08-13 20:01:25', '2019-08-13 20:01:25');
+INSERT INTO `flow_ref_auditor_event` VALUES (12, 4, 'ROLE', 2, 0, 0, '', '2019-08-13 20:01:25', '2019-08-13 20:01:25');
+INSERT INTO `flow_ref_auditor_event` VALUES (13, 4, 'ID', 1, 1, 0, '', '2019-08-13 20:05:30', '2019-08-13 20:05:30');
+INSERT INTO `flow_ref_auditor_event` VALUES (14, 4, 'ID', 2, 1, 0, '', '2019-08-13 20:05:30', '2019-08-13 20:05:30');
+INSERT INTO `flow_ref_auditor_event` VALUES (15, 4, 'ROLE', 1, 1, 0, '', '2019-08-13 20:05:30', '2019-08-13 20:05:30');
+INSERT INTO `flow_ref_auditor_event` VALUES (16, 4, 'ROLE', 2, 1, 0, '', '2019-08-13 20:05:30', '2019-08-13 20:05:30');
+INSERT INTO `flow_ref_auditor_event` VALUES (17, 5, 'ID', 1, 0, 0, '', '2019-08-13 20:05:32', '2019-08-13 20:05:32');
+INSERT INTO `flow_ref_auditor_event` VALUES (18, 5, 'ROLE', 1, 0, 0, '', '2019-08-13 20:05:32', '2019-08-13 20:05:32');
+INSERT INTO `flow_ref_auditor_event` VALUES (19, 6, 'ID', 2, 0, 0, '', '2019-08-13 20:06:16', '2019-08-13 20:06:16');
+INSERT INTO `flow_ref_auditor_event` VALUES (20, 6, 'ROLE', 2, 0, 0, '', '2019-08-13 20:06:16', '2019-08-13 20:06:16');
 
 -- ----------------------------
 -- Table structure for scf_flow_audit_record
@@ -105,7 +124,7 @@ CREATE TABLE `scf_flow_audit_record`  (
   `create_user` bigint(20) UNSIGNED NULL DEFAULT 0 COMMENT '创建人',
   `create_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建人名称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '审核记录表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '审核记录表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of scf_flow_audit_record
@@ -113,6 +132,9 @@ CREATE TABLE `scf_flow_audit_record`  (
 INSERT INTO `scf_flow_audit_record` VALUES (1, '', '7370be6d9560427bafde01d43e5eb477', 3, 'auditJob', '审核任务', 'auditAJobDeal', '审核任务A处理', 1, '{\"instanceNo\":\"7370be6d9560427bafde01d43e5eb477\",\"nextFlow\":true}', '10', 1, 'healerjean', '2019-08-13 19:06:48', '', '2019-08-13 19:06:33', '2019-08-13 19:06:47', 1, 'healerjean');
 INSERT INTO `scf_flow_audit_record` VALUES (2, '', '7370be6d9560427bafde01d43e5eb477', 5, 'auditJob', '审核任务', 'auditBJobDeal', '审核任务B处理', 1, '{\"instanceNo\":\"7370be6d9560427bafde01d43e5eb477\",\"nextFlow\":true}', '10', 1, 'healerjean', '2019-08-13 19:06:57', '', '2019-08-13 19:06:47', '2019-08-13 19:06:56', 1, 'healerjean');
 INSERT INTO `scf_flow_audit_record` VALUES (3, '', '7370be6d9560427bafde01d43e5eb477', 5, 'auditJob', '审核任务', 'auditBJobDeal', '审核任务B处理', 2, '{\"instanceNo\":\"7370be6d9560427bafde01d43e5eb477\",\"nextFlow\":true}', '10', 2, 'operatorName', '2019-08-13 19:07:25', '', '2019-08-13 19:06:56', '2019-08-13 19:07:24', 1, 'healerjean');
+INSERT INTO `scf_flow_audit_record` VALUES (4, '', 'b6ad5dacf2454c45a4e1abff660f57cc', 3, 'auditJob', '审核任务', 'auditAJobDeal', '审核任务A处理', 1, '{\"instanceNo\":\"b6ad5dacf2454c45a4e1abff660f57cc\",\"nextFlow\":true}', '10', 1, 'healerjean', '2019-08-13 20:04:44', '', '2019-08-13 20:01:24', '2019-08-13 20:04:43', 1, 'healerjean');
+INSERT INTO `scf_flow_audit_record` VALUES (5, '', 'b6ad5dacf2454c45a4e1abff660f57cc', 5, 'auditJob', '审核任务', 'auditBJobDeal', '审核任务B处理', 1, '{\"instanceNo\":\"b6ad5dacf2454c45a4e1abff660f57cc\",\"nextFlow\":true}', '10', 1, 'healerjean', '2019-08-13 20:06:16', '', '2019-08-13 20:05:32', '2019-08-13 20:06:16', 1, 'healerjean');
+INSERT INTO `scf_flow_audit_record` VALUES (6, '', 'b6ad5dacf2454c45a4e1abff660f57cc', 5, 'auditJob', '审核任务', 'auditBJobDeal', '审核任务B处理', 2, '{\"instanceNo\":\"b6ad5dacf2454c45a4e1abff660f57cc\",\"nextFlow\":true}', '10', 2, 'operatorName', '2019-08-13 20:08:39', '', '2019-08-13 20:06:16', '2019-08-13 20:08:39', 1, 'healerjean');
 
 -- ----------------------------
 -- Table structure for scf_flow_definition
@@ -148,7 +170,8 @@ CREATE TABLE `scf_flow_node`  (
   `node_code` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '节点编号',
   `node_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '节点名称',
   `node_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '流程节点或者审核节点',
-  `node_detail` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '节点内部定义（目前主要是审核节点使用）',
+  `auditors` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '节点内部定义（目前主要是审核节点使用）',
+  `copy_to` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '抄送人',
   `status` varchar(8) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '状态',
   `create_user` bigint(20) UNSIGNED NULL DEFAULT 0 COMMENT '创建人',
   `create_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建人名称',
@@ -162,18 +185,18 @@ CREATE TABLE `scf_flow_node`  (
 -- ----------------------------
 -- Records of scf_flow_node
 -- ----------------------------
-INSERT INTO `scf_flow_node` VALUES (1, 'demoJobSubmit', '任务提交', 'ServiceNode', '', '10', 0, '', '2019-08-11 17:50:52', 0, '', '2019-08-11 17:50:52');
-INSERT INTO `scf_flow_node` VALUES (2, 'demoAJobDeal', '任务A处理', 'ServiceNode', '', '10', 0, '', '2019-08-11 17:51:12', 0, '', '2019-08-11 17:51:12');
-INSERT INTO `scf_flow_node` VALUES (3, 'demoBJobDeal', '任务B处理', 'ServiceNode', '', '10', 0, '', '2019-08-11 17:51:26', 0, '', '2019-08-11 17:51:26');
-INSERT INTO `scf_flow_node` VALUES (4, 'demoCJobDeal', '任务C处理', 'ServiceNode', '', '10', 0, '', '2019-08-11 17:51:53', 0, '', '2019-08-11 17:51:53');
-INSERT INTO `scf_flow_node` VALUES (5, 'demoJobsuccess', '任务完成', 'ServiceNode', '', '10', 0, '', '2019-08-11 17:52:06', 0, '', '2019-08-11 17:52:06');
-INSERT INTO `scf_flow_node` VALUES (6, 'auditJobSubmit', '审核任务提交', 'ServiceNode', '', '10', 0, '', '2019-08-11 18:49:28', 0, '', '2019-08-11 18:49:28');
-INSERT INTO `scf_flow_node` VALUES (7, 'auditServiceAJobDeal', '审核任务ServiceA处理', 'ServiceNode', '', '10', 0, '', '2019-08-11 18:49:44', 0, '', '2019-08-11 18:49:58');
-INSERT INTO `scf_flow_node` VALUES (8, 'auditAJobDeal', '审核任务A处理', 'AuditNode', '[{\"roles\" : [1,2], \"ids\":[1,2]}]', '10', 0, '', '2019-08-11 18:50:11', 0, '', '2019-08-11 19:47:30');
-INSERT INTO `scf_flow_node` VALUES (9, 'auditServiceBJobDeal', '审核任务ServiceB处理', 'ServiceNode', '', '10', 0, '', '2019-08-11 18:50:27', 0, '', '2019-08-11 18:53:13');
-INSERT INTO `scf_flow_node` VALUES (10, 'auditBJobDeal', '审核任务B处理', 'AuditNode', '[{\"roles\" : [1], \"ids\":[1]},{\"roles\" : [2], \"ids\":[2]}]', '10', 0, '', '2019-08-11 18:50:35', 0, '', '2019-08-13 18:48:13');
-INSERT INTO `scf_flow_node` VALUES (11, 'auditServiceBJobDeal', '审核任务ServiceB处理', 'ServiceNode', '', '10', 0, '', '2019-08-11 18:50:57', 0, '', '2019-08-11 18:53:17');
-INSERT INTO `scf_flow_node` VALUES (12, 'auditJobsuccess', '审核任务完成', 'ServiceNode', '', '10', 0, '', '2019-08-11 18:51:22', 0, '', '2019-08-11 18:53:19');
+INSERT INTO `scf_flow_node` VALUES (1, 'demoJobSubmit', '任务提交', 'ServiceNode', '', NULL, '10', 0, '', '2019-08-11 17:50:52', 0, '', '2019-08-11 17:50:52');
+INSERT INTO `scf_flow_node` VALUES (2, 'demoAJobDeal', '任务A处理', 'ServiceNode', '', NULL, '10', 0, '', '2019-08-11 17:51:12', 0, '', '2019-08-11 17:51:12');
+INSERT INTO `scf_flow_node` VALUES (3, 'demoBJobDeal', '任务B处理', 'ServiceNode', '', NULL, '10', 0, '', '2019-08-11 17:51:26', 0, '', '2019-08-11 17:51:26');
+INSERT INTO `scf_flow_node` VALUES (4, 'demoCJobDeal', '任务C处理', 'ServiceNode', '', NULL, '10', 0, '', '2019-08-11 17:51:53', 0, '', '2019-08-11 17:51:53');
+INSERT INTO `scf_flow_node` VALUES (5, 'demoJobsuccess', '任务完成', 'ServiceNode', '', NULL, '10', 0, '', '2019-08-11 17:52:06', 0, '', '2019-08-11 17:52:06');
+INSERT INTO `scf_flow_node` VALUES (6, 'auditJobSubmit', '审核任务提交', 'ServiceNode', '', NULL, '10', 0, '', '2019-08-11 18:49:28', 0, '', '2019-08-11 18:49:28');
+INSERT INTO `scf_flow_node` VALUES (7, 'auditServiceAJobDeal', '审核任务ServiceA处理', 'ServiceNode', '', NULL, '10', 0, '', '2019-08-11 18:49:44', 0, '', '2019-08-11 18:49:58');
+INSERT INTO `scf_flow_node` VALUES (8, 'auditAJobDeal', '审核任务A处理', 'AuditNode', '[{\"roles\" : [1,2], \"ids\":[1,2]}]', '{\"roles\" : [1,2], \"ids\":[1,2]}', '10', 0, '', '2019-08-11 18:50:11', 0, '', '2019-08-13 19:45:27');
+INSERT INTO `scf_flow_node` VALUES (9, 'auditServiceBJobDeal', '审核任务ServiceB处理', 'ServiceNode', '', NULL, '10', 0, '', '2019-08-11 18:50:27', 0, '', '2019-08-11 18:53:13');
+INSERT INTO `scf_flow_node` VALUES (10, 'auditBJobDeal', '审核任务B处理', 'AuditNode', '[{\"roles\" : [1], \"ids\":[1]},{\"roles\" : [2], \"ids\":[2]}]', NULL, '10', 0, '', '2019-08-11 18:50:35', 0, '', '2019-08-13 18:48:13');
+INSERT INTO `scf_flow_node` VALUES (11, 'auditServiceBJobDeal', '审核任务ServiceB处理', 'ServiceNode', '', NULL, '10', 0, '', '2019-08-11 18:50:57', 0, '', '2019-08-11 18:53:17');
+INSERT INTO `scf_flow_node` VALUES (12, 'auditJobsuccess', '审核任务完成', 'ServiceNode', '', NULL, '10', 0, '', '2019-08-11 18:51:22', 0, '', '2019-08-11 18:53:19');
 
 -- ----------------------------
 -- Table structure for scf_flow_record
@@ -193,7 +216,7 @@ CREATE TABLE `scf_flow_record`  (
   `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '流程节点表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '流程节点表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of scf_flow_record
@@ -209,6 +232,12 @@ INSERT INTO `scf_flow_record` VALUES (8, '7370be6d9560427bafde01d43e5eb477', 'au
 INSERT INTO `scf_flow_record` VALUES (9, '7370be6d9560427bafde01d43e5eb477', 'auditJob', '审核任务', 4, 'auditServiceBJobDeal', '审核任务ServiceB处理', '10', 1, 'healerjean', '2019-08-13 19:06:47', '2019-08-13 19:06:47');
 INSERT INTO `scf_flow_record` VALUES (10, '7370be6d9560427bafde01d43e5eb477', 'auditJob', '审核任务', 5, 'auditBJobDeal', '审核任务B处理', '10', 1, 'healerjean', '2019-08-13 19:06:47', '2019-08-13 19:07:24');
 INSERT INTO `scf_flow_record` VALUES (11, '7370be6d9560427bafde01d43e5eb477', 'auditJob', '审核任务', 6, 'auditJobsuccess', '审核任务完成', '10', 1, 'healerjean', '2019-08-13 19:07:24', '2019-08-13 19:07:24');
+INSERT INTO `scf_flow_record` VALUES (12, 'b6ad5dacf2454c45a4e1abff660f57cc', 'auditJob', '审核任务', 1, 'auditJobSubmit', '审核任务提交', '10', 1, 'healerjean', '2019-08-13 20:00:51', '2019-08-13 20:00:51');
+INSERT INTO `scf_flow_record` VALUES (13, 'b6ad5dacf2454c45a4e1abff660f57cc', 'auditJob', '审核任务', 2, 'auditServiceAJobDeal', '审核任务ServiceA处理', '10', 1, 'healerjean', '2019-08-13 20:00:51', '2019-08-13 20:01:24');
+INSERT INTO `scf_flow_record` VALUES (14, 'b6ad5dacf2454c45a4e1abff660f57cc', 'auditJob', '审核任务', 3, 'auditAJobDeal', '审核任务A处理', '10', 1, 'healerjean', '2019-08-13 20:01:24', '2019-08-13 20:05:32');
+INSERT INTO `scf_flow_record` VALUES (15, 'b6ad5dacf2454c45a4e1abff660f57cc', 'auditJob', '审核任务', 4, 'auditServiceBJobDeal', '审核任务ServiceB处理', '10', 1, 'healerjean', '2019-08-13 20:05:32', '2019-08-13 20:05:32');
+INSERT INTO `scf_flow_record` VALUES (16, 'b6ad5dacf2454c45a4e1abff660f57cc', 'auditJob', '审核任务', 5, 'auditBJobDeal', '审核任务B处理', '10', 1, 'healerjean', '2019-08-13 20:05:32', '2019-08-13 20:08:42');
+INSERT INTO `scf_flow_record` VALUES (17, 'b6ad5dacf2454c45a4e1abff660f57cc', 'auditJob', '审核任务', 6, 'auditJobsuccess', '审核任务完成', '10', 1, 'healerjean', '2019-08-13 20:08:42', '2019-08-13 20:08:42');
 
 -- ----------------------------
 -- Table structure for scf_sys_menu

@@ -104,7 +104,7 @@ public class ProcessDefinition {
                     flowNode = SpringContextHolder.getBean(nodeCode, FlowNode.class);
                     break;
                 case AuditNode:
-                    AuditorProcess auditorProcess =  AuditorProcess.initAuditProcess(scfFlowNode.getNodeCode(),scfFlowNode.getNodeDetail(), instantsNo, i);
+                    AuditorProcess auditorProcess =  AuditorProcess.initAuditProcess(scfFlowNode.getNodeCode(),scfFlowNode.getAuditors(), instantsNo, i);
                     AuditorFlowNode auditorFlowNode = new AuditorFlowNode();
                     auditorFlowNode.setAuditorProcess(auditorProcess);
                     flowNode = auditorFlowNode;
