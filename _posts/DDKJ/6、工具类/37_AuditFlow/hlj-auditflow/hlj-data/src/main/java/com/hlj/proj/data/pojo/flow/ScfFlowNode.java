@@ -18,6 +18,8 @@ public class ScfFlowNode implements Serializable{
 	private String nodeName;
 	/** 流程节点或者审核节点 */
 	private String nodeType;
+	/** 审批业务业务类型 */
+	private java.lang.String auditBusinessType;
 	/** 节点内部定义（目前主要是审核节点使用） */
 	private String auditors;
 	/**抄送人*/

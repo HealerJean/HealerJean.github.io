@@ -164,23 +164,25 @@ INSERT INTO `scf_flow_definition` VALUES (2, 'auditJob', '审核任务', '[\"aud
 -- ----------------------------
 -- Table structure for scf_flow_node
 -- ----------------------------
-DROP TABLE IF EXISTS `scf_flow_node`;
-CREATE TABLE `scf_flow_node`  (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `node_code` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '节点编号',
-  `node_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '节点名称',
-  `node_type` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '流程节点或者审核节点',
-  `auditors` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '节点内部定义（目前主要是审核节点使用）',
-  `copy_to` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '抄送人',
-  `status` varchar(8) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '状态',
-  `create_user` bigint(20) UNSIGNED NULL DEFAULT 0 COMMENT '创建人',
-  `create_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建人名称',
-  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_user` bigint(20) UNSIGNED NULL DEFAULT 0 COMMENT '更新人',
-  `update_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新人名称',
-  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '流程节点表' ROW_FORMAT = Dynamic;
+drop table if exists `scf_flow_node`;
+create table `scf_flow_node` (
+  `id` bigint(20) unsigned not null auto_increment comment '主键',
+  `node_code` varchar(32) default '' comment '节点编号,当时审批业务的时候，可以使用代码生成无需的',
+  `node_name` varchar(64) default '' comment '节点名称',
+  `node_type` varchar(32) default '' comment '流程节点或者审核节点',
+  `audit_business_type` varchar(32) default null comment '审批业务业务类型,主要目的为用于区分自定添加审批人的业务属于同一种类',
+  `auditors` varchar(128) default '' comment '节点内部定义（目前主要是审核节点使用）',
+  `copy_to` varchar(128) default null comment '抄送人',
+  `status` varchar(8) default '' comment '状态',
+  `create_user` bigint(20) unsigned default '0' comment '创建人',
+  `create_name` varchar(64) default '' comment '创建人名称',
+  `create_time` datetime not null default current_timestamp comment '创建时间',
+  `update_user` bigint(20) unsigned default '0' comment '更新人',
+  `update_name` varchar(64) default '' comment '更新人名称',
+  `update_time` datetime not null default current_timestamp on update current_timestamp comment '更新时间',
+  primary key (`id`) using btree
+) engine=innodb auto_increment=13 default charset=utf8 row_format=dynamic comment='流程节点表';
+
 
 -- ----------------------------
 -- Records of scf_flow_node

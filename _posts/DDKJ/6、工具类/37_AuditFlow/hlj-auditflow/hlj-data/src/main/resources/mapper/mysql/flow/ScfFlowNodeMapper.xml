@@ -6,6 +6,7 @@
 		<result column="node_code" jdbcType="VARCHAR" property="nodeCode" />
 		<result column="node_name" jdbcType="VARCHAR" property="nodeName" />
 		<result column="node_type" jdbcType="VARCHAR" property="nodeType" />
+		<result column="audit_business_type" jdbcType="VARCHAR" property="auditBusinessType" />
 		<result column="auditors" jdbcType="VARCHAR" property="auditors" />
 		<result column="copy_to" jdbcType="VARCHAR" property="copyTo" />
 		<result column="status" jdbcType="VARCHAR" property="status" />
@@ -27,6 +28,9 @@
 				</if>
 				<if test="nodeType != null">
 					and node_type = #{nodeType,jdbcType=VARCHAR}
+				</if>
+				<if test="auditBusinessType != null">
+					and audit_business_type = #{auditBusinessType,jdbcType=VARCHAR}
 				</if>
 				<if test="auditors != null">
 					and auditors = #{auditors,jdbcType=VARCHAR}
@@ -64,6 +68,9 @@
 				<if test="nodeType != null">
 					node_type = #{nodeType,jdbcType=VARCHAR},
 				</if>
+				<if test="auditBusinessType != null">
+					audit_business_type = #{auditBusinessType,jdbcType=VARCHAR},
+				</if>
 				<if test="auditors != null">
 					auditors = #{auditors,jdbcType=VARCHAR},
 				</if>
@@ -94,6 +101,7 @@
 		node_code,
 		node_name,
 		node_type,
+		audit_business_type,
 		auditors,
 		copy_to,
 		status,
@@ -110,6 +118,7 @@
 				node_code = #{nodeCode,jdbcType=VARCHAR},
 				node_name = #{nodeName,jdbcType=VARCHAR},
 				node_type = #{nodeType,jdbcType=VARCHAR},
+				audit_business_type = #{auditBusinessType,jdbcType=VARCHAR},
 				auditors = #{auditors,jdbcType=VARCHAR},
 				copy_to = #{copyTo,jdbcType=VARCHAR},
 				status = #{status,jdbcType=VARCHAR},
@@ -130,6 +139,9 @@
 		</if>
 		<if test="nodeType != null">
 			node_type,
+		</if>
+		<if test="auditBusinessType != null">
+			audit_business_type,
 		</if>
 		<if test="auditors != null">
 			auditors,
@@ -159,6 +171,7 @@
 		#{nodeCode,jdbcType=VARCHAR},
 		#{nodeName,jdbcType=VARCHAR},
 		#{nodeType,jdbcType=VARCHAR},
+		#{auditBusinessType,jdbcType=VARCHAR},
 		#{auditors,jdbcType=VARCHAR},
 		#{copyTo,jdbcType=VARCHAR},
 		#{status,jdbcType=VARCHAR},
@@ -179,6 +192,9 @@
 		</if>
 		<if test="nodeType != null">
 			#{nodeType,jdbcType=VARCHAR},
+		</if>
+		<if test="auditBusinessType != null">
+			#{auditBusinessType,jdbcType=VARCHAR},
 		</if>
 		<if test="auditors != null">
 			#{auditors,jdbcType=VARCHAR},
