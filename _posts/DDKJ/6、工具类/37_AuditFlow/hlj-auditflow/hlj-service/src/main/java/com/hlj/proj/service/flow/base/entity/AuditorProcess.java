@@ -213,7 +213,6 @@ public class AuditorProcess {
 
     /**
      * 创建审批记录
-     * 1、
      */
     public void createAuditRecord(String instantsNo, String nodeCode, Integer auditSept, String data,IdentityInfoDTO identityInfo) {
         this.auditSept = new AtomicInteger(auditSept);
@@ -247,8 +246,17 @@ public class AuditorProcess {
         ScfFlowAuditRecordManager scfFlowAuditRecordManager = SpringContextHolder.getBean(ScfFlowAuditRecordManager.class);
         scfFlowAuditRecordManager.save(scfFlowAuditRecord);
 
+        //保存日志
         saveAuditLog(scfFlowAuditRecord,identityInfo);
 
+        // 保存审批人关系
+        saveAuditEvent(auditSept, scfFlowAuditRecord);
+    }
+
+    /**
+     * 保存审批人关系
+     */
+    private void saveAuditEvent(Integer auditSept, ScfFlowAuditRecord scfFlowAuditRecord) {
         Auditor auditor = auditors.get(auditSept - 1);
         List<FlowRefAuditorEvent> list = new ArrayList<>();
         List<Long> ids = auditor.getIds();
@@ -277,7 +285,6 @@ public class AuditorProcess {
         FlowRefAuditorEventManager flowRefAuditorEventManager = SpringContextHolder.getBean(FlowRefAuditorEventManager.class);
         flowRefAuditorEventManager.batchInsert(list);
     }
-
 
 
     /**

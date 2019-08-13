@@ -114,7 +114,7 @@ public class ScfFlowServiceImpl implements ScfFlowService {
             throw new BusinessException("该用户没有审批该记录权限");
         }
         // 2、启动审批流
-        AuditorProcess auditorProcess = AuditorProcess.ofSuspendAuditorProcess(auditRecord.getId());
+        AuditorProcess auditorProcess = AuditorProcess.ofSuspendAuditorProcess(auditorResultDTO.getAuditRecordId());
         // 3、开始审批
         auditorProcess.audit(auditorResultDTO, identityInfo);
     }

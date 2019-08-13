@@ -22,6 +22,5 @@ public class Auditor {
     private List<Long> ids;
     /** 该节点审批状态 */
     private String status;
-
 }
 
