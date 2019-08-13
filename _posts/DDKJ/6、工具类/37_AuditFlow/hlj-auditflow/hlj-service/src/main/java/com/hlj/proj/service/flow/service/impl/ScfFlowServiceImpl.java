@@ -57,6 +57,7 @@ public class ScfFlowServiceImpl implements ScfFlowService {
         ScfFlowAuditRecordQuery auditRecordQuery = new ScfFlowAuditRecordQuery();
         auditRecordQuery.setId(userId);
         auditRecordQuery.setRoleIds(roles);
+        auditRecordQuery.setStatus(Result.AuditStatusEnum.Suspend.getCode());
         List<ScfFlowAuditRecord> scfFlowNodes = scfFlowAuditRecordManager.jobCollect(auditRecordQuery);
         if (!EmptyUtil.isEmpty(scfFlowNodes)) {
             collect = scfFlowNodes.stream().map(BeanUtils::toAuditJobCollectDTO).collect(Collectors.toList());
