@@ -27,7 +27,9 @@ public class ScfFlowNodeQuery extends PagingQuery {
 	/** 流程节点或者审核节点 */
 	private String nodeType;
 	/** 节点内部定义（目前主要是审核节点使用） */
-	private String nodeDetail;
+	private String auditors;
+	/**抄送人*/
+	private String copyTo;
 	/** 状态 */
 	private String status;
 	/** 创建人 */

@@ -102,7 +102,7 @@ public class ScfFlowServiceImpl implements ScfFlowService {
     public void audit(AuditorResultDTO auditorResultDTO, IdentityInfoDTO identityInfo) {
         // 1、判断该用户是否有审核权限
         ScfFlowAuditRecord auditRecord = scfFlowAuditRecordManager.findById(auditorResultDTO.getAuditRecordId());
-        if (auditorResultDTO == null) {
+        if (auditRecord == null) {
             log.error("执行时找不到对应的审批记录，auditorResultDTO：{}", auditorResultDTO);
             throw new BusinessException("执行时找不到对应的审批记录");
         }
@@ -137,6 +137,7 @@ public class ScfFlowServiceImpl implements ScfFlowService {
         }
         auditorEventQuery.setAuditType(FlowAuditType.ROLE.getType());
         auditorEventQuery.setRoleIds(roles);
+        auditorEventQuery.setCopy(false);
         List<FlowRefAuditorEvent> flowRefAuditorEvents = flowRefAuditorEventManager.queryList(auditorEventQuery);
         if (!EmptyUtil.isEmpty(flowRefAuditorEvents)) {
             return true;
@@ -147,6 +148,7 @@ public class ScfFlowServiceImpl implements ScfFlowService {
         auditorEventQuery.setRoleIds(null);
         auditorEventQuery.setAuditType(FlowAuditType.ID.getType());
         auditorEventQuery.setId(userId);
+        auditorEventQuery.setCopy(false);
         flowRefAuditorEvents = flowRefAuditorEventManager.queryList(auditorEventQuery);
         if (!EmptyUtil.isEmpty(flowRefAuditorEvents)) {
             return true;

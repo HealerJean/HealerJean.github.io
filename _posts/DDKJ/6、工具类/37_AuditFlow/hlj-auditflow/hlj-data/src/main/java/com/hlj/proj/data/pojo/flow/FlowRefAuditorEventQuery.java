@@ -31,6 +31,8 @@ public class FlowRefAuditorEventQuery extends PagingQuery {
 	private String auditType;
 	/** 审核对象 */
 	private Long auditObject;
+	/**是否抄送人*/
+	private Boolean copy ;
 	/** 创建人 */
 	private Long createUser;
 	/** 创建人名称 */

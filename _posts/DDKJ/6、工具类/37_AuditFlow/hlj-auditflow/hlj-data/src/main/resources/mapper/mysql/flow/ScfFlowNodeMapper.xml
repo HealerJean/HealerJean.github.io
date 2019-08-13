@@ -6,7 +6,8 @@
 		<result column="node_code" jdbcType="VARCHAR" property="nodeCode" />
 		<result column="node_name" jdbcType="VARCHAR" property="nodeName" />
 		<result column="node_type" jdbcType="VARCHAR" property="nodeType" />
-		<result column="node_detail" jdbcType="VARCHAR" property="nodeDetail" />
+		<result column="auditors" jdbcType="VARCHAR" property="auditors" />
+		<result column="copy_to" jdbcType="VARCHAR" property="copyTo" />
 		<result column="status" jdbcType="VARCHAR" property="status" />
 		<result column="create_user" jdbcType="BIGINT" property="createUser" />
 		<result column="create_name" jdbcType="VARCHAR" property="createName" />
@@ -27,8 +28,11 @@
 				<if test="nodeType != null">
 					and node_type = #{nodeType,jdbcType=VARCHAR}
 				</if>
-				<if test="nodeDetail != null">
-					and node_detail = #{nodeDetail,jdbcType=VARCHAR}
+				<if test="auditors != null">
+					and auditors = #{auditors,jdbcType=VARCHAR}
+				</if>
+				<if test="copyTo != null">
+					and copy_to = #{copyTo,jdbcType=VARCHAR}
 				</if>
 				<if test="status != null">
 					and status = #{status,jdbcType=VARCHAR}
@@ -60,8 +64,11 @@
 				<if test="nodeType != null">
 					node_type = #{nodeType,jdbcType=VARCHAR},
 				</if>
-				<if test="nodeDetail != null">
-					node_detail = #{nodeDetail,jdbcType=VARCHAR},
+				<if test="auditors != null">
+					auditors = #{auditors,jdbcType=VARCHAR},
+				</if>
+				<if test="copyTo != null">
+					copy_to = #{copyTo,jdbcType=VARCHAR},
 				</if>
 				<if test="status != null">
 					status = #{status,jdbcType=VARCHAR},
@@ -87,7 +94,8 @@
 		node_code,
 		node_name,
 		node_type,
-		node_detail,
+		auditors,
+		copy_to,
 		status,
 		create_user,
 		create_name,
@@ -102,7 +110,8 @@
 				node_code = #{nodeCode,jdbcType=VARCHAR},
 				node_name = #{nodeName,jdbcType=VARCHAR},
 				node_type = #{nodeType,jdbcType=VARCHAR},
-				node_detail = #{nodeDetail,jdbcType=VARCHAR},
+				auditors = #{auditors,jdbcType=VARCHAR},
+				copy_to = #{copyTo,jdbcType=VARCHAR},
 				status = #{status,jdbcType=VARCHAR},
 				create_user = #{createUser,jdbcType=BIGINT},
 				create_name = #{createName,jdbcType=VARCHAR},
@@ -122,8 +131,11 @@
 		<if test="nodeType != null">
 			node_type,
 		</if>
-		<if test="nodeDetail != null">
-			node_detail,
+		<if test="auditors != null">
+			auditors,
+		</if>
+		<if test="copyTo != null">
+			copy_to,
 		</if>
 		<if test="status != null">
 			status,
@@ -147,7 +159,8 @@
 		#{nodeCode,jdbcType=VARCHAR},
 		#{nodeName,jdbcType=VARCHAR},
 		#{nodeType,jdbcType=VARCHAR},
-		#{nodeDetail,jdbcType=VARCHAR},
+		#{auditors,jdbcType=VARCHAR},
+		#{copyTo,jdbcType=VARCHAR},
 		#{status,jdbcType=VARCHAR},
 		#{createUser,jdbcType=BIGINT},
 		#{createName,jdbcType=VARCHAR},
@@ -167,8 +180,11 @@
 		<if test="nodeType != null">
 			#{nodeType,jdbcType=VARCHAR},
 		</if>
-		<if test="nodeDetail != null">
-			#{nodeDetail,jdbcType=VARCHAR},
+		<if test="auditors != null">
+			#{auditors,jdbcType=VARCHAR},
+		</if>
+		<if test="copyTo != null">
+			#{copyTo,jdbcType=VARCHAR},
 		</if>
 		<if test="status != null">
 			#{status,jdbcType=VARCHAR},
@@ -253,7 +269,7 @@
 		</trim>
 		from scf_flow_node
 		<include refid="Example_Where_Clause" />
-        <![CDATA[ limit #{startRow},#{endRow} ]]>
-  		<!-- order by CREATE_DATE -->
+		<![CDATA[ limit #{startRow},#{endRow} ]]>
+		<!-- order by CREATE_DATE -->
 	</select>
 </mapper>
