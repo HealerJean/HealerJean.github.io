@@ -25,28 +25,30 @@ public class JobServiceImpl implements JobService {
      */
     @Override
     public void startJob(DemoJobDTO demoJobDTO, IdentityInfoDTO identityInfoDTO) {
-        ProcessDefinition processDefinition = ProcessDefinition.of(FlowDefinitionEnum.demoJob.getFlowCode());
-        processDefinition.newInstants().startFlow(JsonUtils.toJsonString(demoJobDTO), identityInfoDTO);
+        Process process = ProcessDefinition.initProcess(FlowDefinitionEnum.demoJob.getFlowCode());
+        process.startFlow(JsonUtils.toJsonString(demoJobDTO), identityInfoDTO);
     }
-
 
     /**
      * 继续任务
      */
     @Override
     public void continueJob(DemoJobDTO demoJobDTO, IdentityInfoDTO identityInfoDTO) {
-        Process process = ProcessDefinition.ofSuspendInstant(demoJobDTO.getInstanceNo());
+        Process process = ProcessDefinition.ofSuspendProcess(demoJobDTO.getInstanceNo());
         process.nextFlow(demoJobDTO.getInstanceNo(), JsonUtils.toJsonString(demoJobDTO), identityInfoDTO);
     }
 
+
+
+    //------------------------------------------------------------------------------------------------
 
     /**
      * 审核任务的测试启动
      */
     @Override
     public void auditFlowStartJob(DemoJobDTO demoJobDTO, IdentityInfoDTO identityInfoDTO) {
-        ProcessDefinition processDefinition = ProcessDefinition.of(FlowDefinitionEnum.auditJob.getFlowCode());
-        processDefinition.newInstants().startFlow(JsonUtils.toJsonString(demoJobDTO), identityInfoDTO);
+        Process process = ProcessDefinition.initProcess(FlowDefinitionEnum.auditJob.getFlowCode());
+        process.startFlow(JsonUtils.toJsonString(demoJobDTO), identityInfoDTO);
     }
 
     /**
@@ -54,7 +56,9 @@ public class JobServiceImpl implements JobService {
      */
     @Override
     public void continueAuditFlowJob(DemoJobDTO demoJobDTO, IdentityInfoDTO identityInfoDTO) {
-        Process process = ProcessDefinition.ofSuspendInstant(demoJobDTO.getInstanceNo());
+        Process process = ProcessDefinition.ofSuspendProcess(demoJobDTO.getInstanceNo());
         process.nextFlow(demoJobDTO.getInstanceNo(), JsonUtils.toJsonString(demoJobDTO), identityInfoDTO);
     }
+
+
 }

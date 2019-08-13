@@ -2,6 +2,8 @@ package com.hlj.proj.service.flow.service.dto;
 
 import lombok.Data;
 
+import java.util.Date;
+
 
 /**
  * @ClassName AuditRecordDTO
@@ -11,18 +13,11 @@ import lombok.Data;
  */
 @Data
 public class AuditRecordDTO {
+
     /**
-     * 临时表ID
+     * 记录Id
      */
-    private Long tempId;
-    /**
-     * 客户Id
-     */
-    private String customerId;
-    /**
-     * 客户名称
-     */
-    private String customerName;
+    private Long auditRecordId;
     /**
      * 流程名称
      */
@@ -50,7 +45,7 @@ public class AuditRecordDTO {
     /**
      * 发起时间
      */
-    private java.util.Date createTime;
+    private Date createTime;
     /**
      * 审核参数
      */
@@ -67,8 +62,4 @@ public class AuditRecordDTO {
      * 流程实例编号
      */
     private String instantsNo;
-    /**
-     * 数量
-     */
-    private Integer count;
 }

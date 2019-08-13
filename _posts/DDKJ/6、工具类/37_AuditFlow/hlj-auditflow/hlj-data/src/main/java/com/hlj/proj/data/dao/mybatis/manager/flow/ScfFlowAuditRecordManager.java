@@ -6,9 +6,7 @@ import java.util.List;
 
 import com.hlj.proj.data.common.paging.Pagenation;
 import com.hlj.proj.data.dao.mybatis.dao.flow.ScfFlowAuditRecordDao;
-import com.hlj.proj.data.pojo.flow.ScfFlowAuditRecord;
-import com.hlj.proj.data.pojo.flow.ScfFlowAuditRecordPage;
-import com.hlj.proj.data.pojo.flow.ScfFlowAuditRecordQuery;
+import com.hlj.proj.data.pojo.flow.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -98,4 +96,23 @@ public class ScfFlowAuditRecordManager {
 		return scfFlowAuditRecordPage;
 	}
 
+	public List<ScfFlowAuditRecord> jobCollect(ScfFlowAuditRecordQuery query) {
+		return scfFlowAuditRecordDao.jobCollect(query);
+	}
+
+
+	public ScfFlowAuditRecordPage readyAuditsPage(ScfFlowAuditRecordQuery query) {
+		ScfFlowAuditRecordPage scfFlowAuditRecordPage = new ScfFlowAuditRecordPage();
+		Integer itemCount = scfFlowAuditRecordDao.countReadyAudits(query);
+		query.setItemCount(itemCount);
+
+		if (itemCount == 0) {
+			scfFlowAuditRecordPage.setValues(null);
+		} else {
+			scfFlowAuditRecordPage.setValues(scfFlowAuditRecordDao.readyAudits(query));
+		}
+
+		scfFlowAuditRecordPage.setPagenation(new Pagenation(query.getPageNo(), query.getPageSize(), query.getItemCount()));
+		return scfFlowAuditRecordPage;
+	}
 }

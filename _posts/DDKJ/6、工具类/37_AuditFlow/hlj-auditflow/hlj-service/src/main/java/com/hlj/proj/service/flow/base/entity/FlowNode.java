@@ -29,7 +29,6 @@ public abstract class FlowNode {
      */
     protected abstract Result deal(String instantsNo, String data, IdentityInfoDTO identityInfo);
 
-
     /**
      * 节点执行失败，需要处理的业务流程
      */

@@ -6,9 +6,7 @@ import java.util.List;
 
 import com.hlj.proj.data.common.paging.Pagenation;
 import com.hlj.proj.data.dao.mybatis.dao.flow.FlowRefAuditorEventDao;
-import com.hlj.proj.data.pojo.flow.FlowRefAuditorEvent;
-import com.hlj.proj.data.pojo.flow.FlowRefAuditorEventPage;
-import com.hlj.proj.data.pojo.flow.FlowRefAuditorEventQuery;
+import com.hlj.proj.data.pojo.flow.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -102,5 +100,8 @@ public class FlowRefAuditorEventManager {
 		flowRefAuditorEventPage.setPagenation(new Pagenation(query.getPageNo(), query.getPageSize(), query.getItemCount()));
 		return flowRefAuditorEventPage;
 	}
+
+
+
 
 }

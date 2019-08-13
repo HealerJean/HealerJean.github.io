@@ -54,4 +54,9 @@ public class ScfFlowAuditRecord implements Serializable{
 	/** 更新时间 */
 	private java.util.Date updateTime;
 
+
+	/**
+	 * 额外
+	 */
+	private Integer count;
 }

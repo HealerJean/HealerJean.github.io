@@ -4,6 +4,9 @@
 
 import com.hlj.proj.data.common.query.PagingQuery;
 import lombok.Data;
+
+import java.util.List;
+
 /**
  * @author zhangyujin
  * @ClassName: ScfFlowAuditRecordQuery
@@ -60,6 +63,12 @@ public class ScfFlowAuditRecordQuery extends PagingQuery {
 		return 0;
 	}
 
+	/**
+	 * 额外
+	 */
+	private Long id ;
+
+	private List<Long> roleIds;
 
 
 }

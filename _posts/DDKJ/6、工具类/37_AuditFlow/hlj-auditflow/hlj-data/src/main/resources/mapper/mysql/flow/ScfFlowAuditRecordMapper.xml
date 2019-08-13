@@ -21,6 +21,7 @@
 		<result column="create_name" jdbcType="VARCHAR" property="createName" />
 		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
 		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="count" jdbcType="INTEGER" property="count"/>
 	</resultMap>
 	<sql id="Example_Where_Clause">
 		<where>
@@ -264,9 +265,6 @@
 		<if test="flowName != null">
 			#{flowName,jdbcType=VARCHAR},
 		</if>
-		<if test="nodeCode != null">
-			#{nodeCode,jdbcType=VARCHAR},
-		</if>
 		<if test="nodeName != null">
 			#{nodeName,jdbcType=VARCHAR},
 		</if>
@@ -275,9 +273,6 @@
 		</if>
 		<if test="auditData != null">
 			#{auditData,jdbcType=VARCHAR},
-		</if>
-		<if test="status != null">
-			#{status,jdbcType=VARCHAR},
 		</if>
 		<if test="optUser != null">
 			#{optUser,jdbcType=BIGINT},
@@ -368,4 +363,65 @@
 		<![CDATA[ limit #{startRow},#{endRow} ]]>
 		<!-- order by CREATE_DATE -->
 	</select>
+
+
+
+
+	<select id="jobCollect" parameterType="ScfFlowAuditRecordQuery" resultMap="BaseResultMap">
+		select
+		r.node_code,
+		r.node_name,
+		count(*) as count
+		from scf_flow_audit_record r
+		where r.id in (
+		select distinct e.ref_flow_audit_record_id
+		from flow_ref_auditor_event e
+		where (e.audit_type = 'ROLE'
+		<if test="roleIds != null and roleIds.size() > 0">
+			and e.audit_object in
+			<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		)
+		or (e.audit_type = 'ID' and	e.audit_object = #{id,jdbcType=BIGINT}
+		) and r.status = '20'
+		)
+		group by r.node_code,r.node_name
+	</select>
+
+
+
+
+
+	<select id="countReadyAudits" parameterType="ScfFlowAuditRecordQuery" resultType="java.lang.Integer">
+		select count(*) from scf_flow_audit_record r join (select distinct e.ref_flow_audit_record_id
+		from flow_ref_auditor_event e
+		where (e.audit_type = 'ROLE'
+		<if test="roleIds != null and roleIds.size() > 0">
+			and e.audit_object in
+			<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		)  or (e.audit_type = 'ID'  and    e.audit_object = #{id,jdbcType=BIGINT} )
+		) temp on temp.ref_flow_audit_record_id = r.id where r.node_code = #{nodeCode,jdbcType=VARCHAR} and  r.status = #{status,jdbcType=VARCHAR}
+	</select>
+
+	<select id="readyAudits" parameterType="ScfFlowAuditRecordQuery" resultMap="BaseResultMap">
+	select * from scf_flow_audit_record r join (select distinct e.ref_flow_audit_record_id
+                                            from flow_ref_auditor_event e
+                                            where (e.audit_type = 'ROLE'
+													<if test="roleIds != null and roleIds.size() > 0">
+														and e.audit_object in
+														<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
+															#{item}
+														</foreach>
+													</if>
+                                            )  or (e.audit_type = 'ID'  and    e.audit_object = #{id,jdbcType=BIGINT} )
+			) temp on temp.ref_flow_audit_record_id = r.id where r.node_code = #{nodeCode,jdbcType=VARCHAR} and  r.status = #{status,jdbcType=VARCHAR}
+	</select>
+
+
+
 </mapper>

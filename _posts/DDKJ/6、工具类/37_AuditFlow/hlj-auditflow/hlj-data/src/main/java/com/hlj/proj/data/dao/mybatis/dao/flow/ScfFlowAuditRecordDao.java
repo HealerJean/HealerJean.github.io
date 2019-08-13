@@ -5,8 +5,7 @@
 import java.util.List;
 
 import com.hlj.proj.data.dao.mybatis.dao.BaseDao;
-import com.hlj.proj.data.pojo.flow.ScfFlowAuditRecord;
-import com.hlj.proj.data.pojo.flow.ScfFlowAuditRecordQuery;
+import com.hlj.proj.data.pojo.flow.*;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -62,4 +61,16 @@ public class ScfFlowAuditRecordDao extends BaseDao {
 		return super.getSqlSession().update("ScfFlowAuditRecordMapper.updateByPrimaryKey", record);
 	}
 
+
+	public List<ScfFlowAuditRecord> jobCollect(ScfFlowAuditRecordQuery example) {
+		return super.getSqlSession().selectList("ScfFlowAuditRecordMapper.jobCollect", example);
+	}
+
+	public List<ScfFlowAuditRecord> readyAudits(ScfFlowAuditRecordQuery example) {
+		return super.getSqlSession().selectList("ScfFlowAuditRecordMapper.readyAudits", example);
+	}
+
+	public int countReadyAudits(ScfFlowAuditRecordQuery example) {
+		return super.getSqlSession().selectOne("ScfFlowAuditRecordMapper.countReadyAudits", example);
+	}
 }
