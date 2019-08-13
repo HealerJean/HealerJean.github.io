@@ -204,15 +204,7 @@
 		</trim>
 		from flow_ref_auditor_event
 		<include refid="Example_Where_Clause" />
-        <![CDATA[ limit #{startRow},#{endRow} ]]>
-  		<!-- order by CREATE_DATE -->
+		<![CDATA[ limit #{startRow},#{endRow} ]]>
+		<!-- order by CREATE_DATE -->
 	</select>
-
-
-
-
-
-
-
-
 </mapper>
