@@ -1,4 +1,4 @@
-package com.hlj.moudle.design.D05_一致性.D12Decorator适配器模式;
+package com.hlj.moudle.design.D05_一致性.D12Decorator装饰器模式;
 
 /**
  * @author HealerJean
