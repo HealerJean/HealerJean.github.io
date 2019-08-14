@@ -22,6 +22,11 @@ public class SendMailDTO implements Serializable {
     private String type ;
 
     /**
+     * 发送人邮箱
+     */
+    private String fromMail;
+
+    /**
      * 接受者邮箱，设置数组，可以同时发送给多个人
      */
     private String[] receiveMails;

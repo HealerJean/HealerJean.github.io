@@ -12,6 +12,7 @@ import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Properties;
 
@@ -41,12 +42,12 @@ public class MailUtils {
     @Value("${mail.password}")
     private String mailPassword;
 
+    @Value("${mail.fromName}")
+    private String fromName;
+
 
     /**
      * 发送邮件
-     *
-     * @param sendMailDTO
-     * @throws Exception
      */
     public void sendMail(SendMailDTO sendMailDTO) {
         log.info("=========发送邮件开始=========");
@@ -56,58 +57,61 @@ public class MailUtils {
             MimeMessage message = new MimeMessage(session);
             createMimeMessage(message, sendMailDTO);
             Transport transport = session.getTransport();
-            transport.connect(mailSmtpHost,mailFrom, mailPassword);
+            transport.connect(mailSmtpHost, mailFrom, mailPassword);
             // transport.connect();
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
             log.info("=========发送邮件内容结束=========");
         } catch (NoSuchProviderException e) {
-            throw new RuntimeException(e.getMessage(),e);
+            throw new RuntimeException(e.getMessage(), e);
         } catch (MessagingException e) {
-            throw new RuntimeException(e.getMessage(),e);
+            throw new RuntimeException(e.getMessage(), e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
 
     private Session getSession() {
         Properties props = new Properties();
-        props.setProperty("mail.transport.protocol",mailTransPortProtocol);
+        props.setProperty("mail.transport.protocol", mailTransPortProtocol);
         props.setProperty("mail.smtp.host", mailSmtpHost);
-        props.setProperty("mail.smtp.auth",mailSmtpAuth);
+        props.setProperty("mail.smtp.auth", mailSmtpAuth);
         return Session.getInstance(props);
     }
 
 
-
-    public MimeMessage createMimeMessage( MimeMessage mimeMessage,SendMailDTO sendMailDTO) throws MessagingException {
+    public MimeMessage createMimeMessage(MimeMessage mimeMessage, SendMailDTO sendMailDTO) throws MessagingException, UnsupportedEncodingException {
         log.info("=========创建邮件内容开始=========");
         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-        messageHelper.setFrom(sendMailDTO.getFromMail());
+        //个人发邮箱必须指明来源和小米发送邮件不同，小米发送不需要指定
+        messageHelper.setFrom(sendMailDTO.getFromMail(), fromName);
         messageHelper.setTo(sendMailDTO.getReceiveMails());
         messageHelper.setSubject(sendMailDTO.getSubject());
         messageHelper.setText(sendMailDTO.getContent(), true);
 
+
         /**
          * 发送附件，添加到附件
          */
-        Map<String,Object> attachment = sendMailDTO.getAttachment();
-        if(attachment!=null){
-            for(String key:attachment.keySet()){
-                messageHelper.addAttachment(key, (FileSystemResource)attachment.get(key));
+        Map<String, Object> attachment = sendMailDTO.getAttachment();
+        if (attachment != null) {
+            for (String key : attachment.keySet()) {
+                messageHelper.addAttachment(key, (FileSystemResource) attachment.get(key));
             }
         }
 
         /**
          * 链接中的图片
          */
-        Map<String,Object> imageAttachment = sendMailDTO.getImageAttachment();
-        if(imageAttachment!=null){
-            for(String key:imageAttachment.keySet()){
-                messageHelper.addInline(key, (FileSystemResource)imageAttachment.get(key));
+        Map<String, Object> imageAttachment = sendMailDTO.getImageAttachment();
+        if (imageAttachment != null) {
+            for (String key : imageAttachment.keySet()) {
+                messageHelper.addInline(key, (FileSystemResource) imageAttachment.get(key));
             }
         }
 
-        return  mimeMessage ;
+        return mimeMessage;
     }
 
 
