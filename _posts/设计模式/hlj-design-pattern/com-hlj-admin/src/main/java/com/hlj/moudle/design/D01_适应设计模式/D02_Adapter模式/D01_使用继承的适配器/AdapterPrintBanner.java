@@ -8,7 +8,6 @@ import com.hlj.moudle.design.D01_适应设计模式.D02_Adapter模式.D00_适配
  */
 public class AdapterPrintBanner extends Banner implements Print {
 
-
     public AdapterPrintBanner(String string) {
         super(string);
     }
