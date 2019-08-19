@@ -23,8 +23,9 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 　　第一，当有多个代码块中需要引用相同代码的时候。
 　　第二，发生的这个操作或者代码不需要立即执行的，可以异步的。
 <br/>
+
 ### 使用场景，
- 
+
  在用户注册成功之后，监听，然后发送给用户邮件
 ### 详解原理
 
@@ -228,7 +229,7 @@ public class UserController
 ### 1、注解的方式监听事件
 
 解释：@EventListener 注解的方法中传入的是被注册的事件，通过这个被注册的事件可以获取关注对象的一些信息
- 
+
 ```java
 package com.hlj.applicationevent.ApplicationEvent.Listener;
 

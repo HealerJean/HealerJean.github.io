@@ -392,7 +392,7 @@ BIGINT: 8字节
 #### 1.5.3、时间类型
 
 ```
-DATE: 3字节
+DATE: 1字节
 
 TIMESTAMP: 4字节
 
