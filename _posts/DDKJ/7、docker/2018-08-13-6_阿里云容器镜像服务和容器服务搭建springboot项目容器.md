@@ -65,6 +65,40 @@ echo "镜像${PROJECT}构建并上传至阿里云成功"
 
 
 
+
+
+PREFIX=registry.cn-qingdao.aliyuncs.com/duodianyouhui/dev-server
+PROJECT=dev-server
+MODULE=admin
+#tag=1
+tag=`date +%m%d%H%M`
+
+
+docker login --username=HealerJean registry.cn-qingdao.aliyuncs.com --password=123456789
+#123499916@qq.com
+
+echo "清理项目..."
+mvn clean install
+cd  ${MODULE}/
+echo "开始打包${PROJECT}..."
+mvn package
+
+echo "删除之前保留在电脑中的版本..."
+# 服务器上删除
+docker images | grep registry.cn-qingdao.aliyuncs.com/duodianyouhui/dev-server | xargs docker rmi
+
+echo "开始构建..."
+docker build -t ${PREFIX}:${tag} .
+
+docker -v ${PREFIX}:${tag}
+
+echo "${PROJECT}构建成功，开始上传至阿里云"
+docker push ${PREFIX}:${tag}
+
+echo "镜像${PROJECT}构建并上传至阿里云成功 标签为：${tag} "
+
+
+
 ```
 
 
