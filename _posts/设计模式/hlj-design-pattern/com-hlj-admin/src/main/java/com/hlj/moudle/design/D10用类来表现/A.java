@@ -1,9 +1,9 @@
-package com.hlj.moudle.design.D08管理状态;
+package com.hlj.moudle.design.D10用类来表现;
 
 /**
  * @author HealerJean
  * @ClassName A
- * @date 2019/8/19  19:33.
+ * @date 2019/8/21  17:45.
  * @Description
  */
 public class A {
