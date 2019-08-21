@@ -9,16 +9,6 @@ package com.hlj.moudle.design.D08管理状态.D19Status状态模式;
 
 public class RunningState extends LiftState {
 
-    /**
-     * 电梯门关闭？这是肯定了
-     */
-    @Override
-    public void close() {
-        throw new RuntimeException("电梯在运行状态下门肯定是关闭的");
-    }
-
-
-
     @Override
     public void open() {
         throw new RuntimeException("电梯在运行状态下门不可以打开");
@@ -26,11 +16,14 @@ public class RunningState extends LiftState {
 
 
     @Override
+    public void close() {
+        throw new RuntimeException("电梯在运行状态下门肯定是关闭的");
+    }
+
+    @Override
     public void run() {
         System.out.println("电梯正在开始跑…………………………");
     }
-
-
 
     @Override
     public void stop() {

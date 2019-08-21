@@ -9,6 +9,14 @@ package com.hlj.moudle.design.D08管理状态.D19Status状态模式;
 public class ClosingState extends LiftState {
 
 
+
+    @Override
+    public void open() {
+        System.out.println("电梯准备从Closing状态到Opening状态");
+        super.context.setLiftState(Context.openningState);
+        super.context.getLiftState().open();
+    }
+
     /**
      *  电梯门关闭，这是关闭状态要实现的动作
      */
@@ -17,13 +25,6 @@ public class ClosingState extends LiftState {
         System.out.println("电梯门关闭...");
     }
 
-
-    @Override
-    public void open() {
-        System.out.println("电梯准备从Closing状态到Opening状态");
-        super.context.setLiftState(Context.openningState);
-        super.context.getLiftState().open();
-    }
 
     @Override
     public void run() {

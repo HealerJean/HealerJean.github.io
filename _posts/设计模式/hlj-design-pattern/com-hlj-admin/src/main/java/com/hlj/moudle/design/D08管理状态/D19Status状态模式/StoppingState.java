@@ -8,18 +8,18 @@ package com.hlj.moudle.design.D08管理状态.D19Status状态模式;
  */
 public class StoppingState extends LiftState {
 
-
-    @Override
-    public void close() {
-        throw new RuntimeException("电梯停止状态下们就是关闭的");
-    }
-
     @Override
     public void open() {
         System.out.println("电梯准备从Stopping状态到Opening状态");
         super.context.setLiftState(Context.openningState);
         super.context.getLiftState().open();
     }
+
+    @Override
+    public void close() {
+        throw new RuntimeException("电梯停止状态下们就是关闭的");
+    }
+
 
     @Override
     public void run() {
