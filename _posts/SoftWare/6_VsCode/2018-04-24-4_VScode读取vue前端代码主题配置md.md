@@ -1,11 +1,11 @@
 ---
-title: 1、VScode读取vue前端代码主题配置
+title: VScode读取vue前端代码主题配置
 date: 2018-04-24 03:33:00
 tags: 
 - SoftWare
 category: 
 - SoftWare
-description: 1、VScode读取vue前端代码主题配置
+description: VScode读取vue前端代码主题配置
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
