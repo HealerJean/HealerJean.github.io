@@ -24,16 +24,19 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 ## 前言
 
 #### [博主github](https://github.com/HealerJean)
-#### [博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)    
+#### [博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)         
 
-<br/>
-<br/>
+
+
+
+
+
 
 <font  color="red" size="5" >     
 感兴趣的，欢迎添加博主微信
- </font>
+ </font>       
 
-<br/>
+
 
 
 
