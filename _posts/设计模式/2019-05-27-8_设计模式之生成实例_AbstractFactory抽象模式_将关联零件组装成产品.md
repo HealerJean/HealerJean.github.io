@@ -321,7 +321,7 @@ public class Main {
 		repo: `HealerJean.github.io`,
 		owner: 'HealerJean',
 		admin: ['HealerJean'],
-		id: 'AAAAAAAAAAAAAAA',
+		id: 'QbsDeA2LJyfYh4Mo',
     });
     gitalk.render('gitalk-container');
 </script> 

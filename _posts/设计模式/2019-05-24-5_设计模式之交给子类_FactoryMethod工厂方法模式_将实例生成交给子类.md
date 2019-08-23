@@ -21,7 +21,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 ### 1、将实例的生成交给子类 
 
 ### 2、父类决定实例的生成方式，但并不决定所要生成的具体的类
- 
+
  </font>
 
 
@@ -32,7 +32,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 2、将产品实例生成的交给工厂子类         
 
 3、我们通过子类工厂选择需要的产品，小米用到
-  
+
 好处：使得工厂方法模式可以使系统在不修改具体工厂角色的情况下引进新的产品。
 
 
@@ -204,7 +204,7 @@ public class FactoryTest {
 ## 总结：
 
 总体来说，工厂模式适合：凡是出现了大量的产品需要创建，并且具有共同的接口时，可以通过工厂方法模式进行创建。     
- 
+
 第一种：如果传入的字符串有误，不能正确创建对象，     
 
 第三种相对于第二种，不需要实例化工厂类，所以，大多数情况下，我们会选用第三种——静态工厂方法模式。
