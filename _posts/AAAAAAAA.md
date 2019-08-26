@@ -1,10 +1,10 @@
 ---
 title: AAAAAAAAAA
-date: 2019-05-27 03:33:00
+date: 2019-02-20 03:33:00
 tags: 
-- DesignPattern
+- AAAAAAAAAA
 category: 
-- DesignPattern
+- AAAAAAAAAA
 description: AAAAAAAAAA
 ---
 
@@ -24,7 +24,9 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 ## 前言
 
 #### [博主github](https://github.com/HealerJean)
-#### [博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)         
+#### [博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)    
+
+
 
 
 
@@ -36,7 +38,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 感兴趣的，欢迎添加博主微信
  </font>       
 
-
+​    
 
 
 
@@ -50,9 +52,8 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 
 
-<!-- Gitalk 评论 start  -->
-
 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
 <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script> 
 <div id="gitalk-container"></div>    
  <script type="text/javascript">
@@ -66,6 +67,3 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
     });
     gitalk.render('gitalk-container');
 </script> 
-
-<!-- Gitalk end -->
-
