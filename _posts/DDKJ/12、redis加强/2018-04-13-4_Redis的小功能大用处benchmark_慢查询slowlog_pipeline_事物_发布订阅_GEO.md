@@ -456,7 +456,7 @@ healerjean$ redis-benchmark -c 100 -n 20000
 JeandeMBP:bin healerjean$ 
 
 ```
- 
+
 #### 3、 -q 仅显示上面出现结果的request per second的信息
 
 表示每秒请求多少次
@@ -646,10 +646,10 @@ publish channel message
 ### 2、订阅消息
 
 subscribe channel
- 
+
 ```
 订阅客户端
-subscribe channel:student
+127.0.0.1:6379> subscribe channel:student
 Reading messages... (press Ctrl-C to quit)
 1) "subscribe"
 2) "channel:student"
@@ -690,7 +690,7 @@ Reading messages... (press Ctrl-C to quit)
 unsubscribe channel:student
 ```
 
-### 4、按照匹配模式订阅和曲线订阅
+### 4、按照匹配模式订阅和取消订阅
 
 
 ```
@@ -705,7 +705,7 @@ psubscribe hello*
 
 所谓活跃的频道是指至少有一个频道被订阅，如果没有的被定义则返回0
 pubsub  channels [partten] 
- 
+
 ```
 
 6379> pubsub channels
