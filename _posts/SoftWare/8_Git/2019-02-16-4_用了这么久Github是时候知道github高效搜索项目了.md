@@ -2,9 +2,9 @@
 title: 用了这么久Github是时候知道github高效搜索项目了
 date: 2019-02-16 03:33:00
 tags: 
-- GitHub
+- Git
 category: 
-- GitHub
+- Git
 description: 用了这么久Github是时候知道github高效搜索项目了
 ---
 <!-- image url 
@@ -86,7 +86,7 @@ GitHub Free now includes unlimited private repositories. For the first time, dev
 
 >size:>=5000 Spring Cloud   
 >这里注意下，这个数字代表 K, 5000 代表着5M。
- 
+
  ![WX20190216-133245@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20190216-133245@2x.png)
 
 

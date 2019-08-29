@@ -1,11 +1,11 @@
 ---
-title: git点亮绿色contribute
+title: GitHub点亮绿色Contribute
 date: 2018-10-10 03:33:00
 tags: 
-- GitHub
+- Git
 category: 
-- GitHub
-description: git点亮绿色contribute
+- Git
+description: GitHub点亮绿色Contribute
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
