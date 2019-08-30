@@ -20,7 +20,8 @@
         <module>hlj-common</module>
         <module>hlj-api</module>
         <module>hlj-service</module>
-        <module>hlj-client</module>
+        <module>hlj-consumer</module>
+        <module>hlj-producer</module>
     </modules>
 
 
