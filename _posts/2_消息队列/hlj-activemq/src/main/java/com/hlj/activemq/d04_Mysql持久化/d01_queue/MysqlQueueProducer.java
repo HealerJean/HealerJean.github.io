@@ -1,20 +1,21 @@
-package com.hlj.activemq.d01_简单的生产者消费者_事务的签收;
+package com.hlj.activemq.d04_Mysql持久化.d01_queue;
 
 import com.hlj.activemq.constants.ActiveMqConstant;
-import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
 
 
-public class Producer {
+public class MysqlQueueProducer {
 
     /**
      * 队列的名称
      */
-    public static final String QUEUE_NAME = "FirstQueue";
-    /** 发送消息的数量 */
-    private static final int SEND_NUMBER = 5;
+    public static final String QUEUE_NAME = "MysqlQueue";
+    /**
+     * 发送消息的数量
+     */
+    private static final int SEND_NUMBER = 30;
 
     public static void main(String[] args) {
 
@@ -40,10 +41,7 @@ public class Producer {
             producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
             //构造消息
-            //1 、创建TextMessage
             sendTextMessage(session, producer);
-            //2 、创建MapMessage
-            // sendMapMessage(session, producer);
 
 
             session.commit();
@@ -54,17 +52,6 @@ public class Producer {
         }
     }
 
-    /**
-     * 2、创建MapMessage
-     */
-    private static void sendMapMessage(Session session, MessageProducer producer) throws JMSException {
-        for (int i = 1; i <= SEND_NUMBER; i++) {
-            MapMessage mapMessage = session.createMapMessage();
-            mapMessage.setStringProperty("setStringProperty_key_" + i, "setStringProperty_key_" + i);
-            mapMessage.setString("setString_key_" + i, "setString_value " + i);
-            producer.send(mapMessage);
-        }
-    }
 
     /**
      * 1、创建TextMessage
