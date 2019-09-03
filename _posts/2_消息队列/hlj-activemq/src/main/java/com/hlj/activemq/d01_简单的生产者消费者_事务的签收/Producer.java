@@ -13,9 +13,7 @@ public class Producer {
      * 队列的名称
      */
     public static final String QUEUE_NAME = "FirstQueue";
-    /**
-     * 发送消息的数量
-     */
+    /** 发送消息的数量 */
     private static final int SEND_NUMBER = 5;
 
     public static void main(String[] args) {
