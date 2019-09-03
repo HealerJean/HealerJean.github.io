@@ -38,7 +38,7 @@ public class PdfCreate {
         OutputStream outputStream = null;
         try {
             inputStream = new FileInputStream(template);
-            IXDocReport report =  XDocReportRegistry.getRegistry().loadReport(inputStream, TemplateEngineKind.Freemarker);
+            IXDocReport report = XDocReportRegistry.getRegistry().loadReport(inputStream, TemplateEngineKind.Freemarker);
             IContext context = report.createContext();
             FieldsMetadata fieldsMetadata = report.createFieldsMetadata();
 
@@ -71,7 +71,7 @@ public class PdfCreate {
             img.setSize(200f, 100f);
 
             // IImageProvider img = new FileImageProvider(new File("D:/pdf/img.png"));
-            context.put("img", img);
+            context.put(IMG, img);
 
             //生成word
             // outputStream = new FileOutputStream(new File("D:/pdf/word.docx"));
@@ -98,7 +98,6 @@ public class PdfCreate {
 
         }
     }
-
 
 
 }
