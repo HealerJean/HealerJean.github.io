@@ -20,13 +20,17 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 ## 前言
 
-我们经常再sprinboot中直接写测试用例
 
-## 1、如果直接输入`@Test`就会自动让我将这个版本放到pom中去
+
+## 1、sprinboot中直接写测试用例
+
+
+
+### 1.1、如果直接输入`@Test`就会自动让我将这个版本放到pom中去
 
 ![WX20190131-132859](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20190131-132859.png)
 
-### 1.1、然后`pom.xml`中就出现了下面的
+#### 1.1.1、然后`pom.xml`中就出现了下面的
 
 
 ```xml
@@ -39,7 +43,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
         
 ```
 
-### 1.2、如果运行报下面错误
+#### 1.1.2、如果运行报下面错误
 
 主要是上面的依赖导致的错误
 
@@ -55,10 +59,10 @@ Exception in thread "main" java.lang.NoSuchMethodError: org.junit.platform.commo
     
 ```
 
-## 2、使用新的依赖
+### 1.2、使用新的依赖
 
 
-```java
+```xml
 
              <dependency>
                 <groupId>junit</groupId>
@@ -67,6 +71,60 @@ Exception in thread "main" java.lang.NoSuchMethodError: org.junit.platform.commo
             </dependency>
 
 ```
+
+
+
+## 2、SpringBoot真正测试
+
+### 2.1、maven
+
+```xml
+    <!--springBoot测试-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>5.1.9.RELEASE</version>
+            <scope>text</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>1.5.1.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+```
+
+
+
+### 2.2、开始测试
+
+```java
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = HljActivemqApplication.class)
+public class MainText {
+
+    @Autowired
+    private JMSProducer jmsProducer;
+
+    @Test
+    public void testJms() {
+        Destination destination = new ActiveMQQueue("springboot.queue.test");
+
+        for (int i = 0; i < 10; i++) {
+            jmsProducer.sendMessage(destination, "hello,world!" + i);
+        }
+    }
+
+}
+
+```
+
+
+
 
 
 <br/><br/><br/>
@@ -98,6 +156,5 @@ Exception in thread "main" java.lang.NoSuchMethodError: org.junit.platform.commo
     });
     gitalk.render('gitalk-container');
 </script> 
-
 <!-- Gitalk end -->
 
