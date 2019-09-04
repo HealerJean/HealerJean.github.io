@@ -810,9 +810,43 @@ public class MysqlPersistenceConsumer {
 
 
 
-#### 
+## 4、高速缓存
+
+**持久化topic先放到缓存中，提供给java程序执行，然后再慢慢放入到数据库中， 比如，消息比较多，我们先放到缓存中，提供给已知的订阅者服务，然后再放到数据库中，将来提供给其他未在线的人服务**
 
 
+
+### 4.1、activem.xml配置
+
+
+
+```xml
+<!-- <persistenceAdapter> -->
+<!-- <kahaDB directory="${activemq.data}/kahadb"/> -->
+<!-- mysql持久化-->
+<!-- <jdbcPersistenceAdapter dataSource="#mysql-ds"/> -->
+<!-- </persistenceAdapter> -->
+
+<!-- mysql持久化 + 高速缓存配置 -->
+<persistenceFactory>  
+    <!-- 指定数据文件的路径及数据源 -->  
+    <journalPersistenceAdapterFactory 
+                                      dataDirectory="${activemq.data}/cache-data" 
+                                      dataSource="#mysql-ds"/>  
+</persistenceFactory>
+```
+
+
+
+![1567572757978](D:\study\HealerJean.github.io\blogImages\1567572757978.png)
+
+
+
+### 4.2、自己测试吧
+
+
+
+![1567573162898](D:\study\HealerJean.github.io\blogImages\1567573162898.png)
 
 
 
