@@ -51,6 +51,23 @@ public class Consumer {
         }
     }
 
+    // 同步接收：主线程阻塞式等待下一个消息的到来，可以设置timeout，超时则返回null。
+    // 异步接收：主线程设置MessageListener，然后继续做自己的事，子线程负责监听。
+
+    /**
+     * 3、监听接收消息
+     */
+    private static void reveiveByListeneMessage(MessageConsumer consumer) throws JMSException {
+        consumer.setMessageListener(msg -> {
+            try {
+                TextMessage txtMsg = (TextMessage)msg;
+                System.out.println("Receiver11111===="+txtMsg.getText());
+            } catch (JMSException e) {
+            }
+        });
+    }
+
+
     /**
      * 2、接收MapMessage
      */
@@ -86,6 +103,10 @@ public class Consumer {
             }
         }
     }
+
+
+
+
 }
 
 

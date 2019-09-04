@@ -25,7 +25,7 @@ public class MysqlQueueConsumer {
 
             // 获取操作连接,一个发送或接收消息的线程
             Session session = connection.createSession(
-                    Boolean.TRUE,
+                    Boolean.FALSE,
                     Session.AUTO_ACKNOWLEDGE);
 
             // 消息的目的地;消息发送给谁.
@@ -40,7 +40,7 @@ public class MysqlQueueConsumer {
             reveiveTestMessage(consumer);
 
             // 没有事务，下面提交会报错
-            session.commit();
+            // session.commit();
             session.close();
             connection.close();
         } catch (Exception e) {
