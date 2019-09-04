@@ -29,7 +29,7 @@ public class ConsumerThread extends Thread {
             while (true) {
                 //100s内阻塞等待消息的传入
                 TextMessage message = (TextMessage) consumer.receive();
-               System.out.println("收到消息" + message.getText());
+                System.out.println("收到消息" + message.getText());
             }
 
         }catch(Exception err){

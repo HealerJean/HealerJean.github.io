@@ -13,7 +13,7 @@ public class Producer61616 {
      */
     public static final String QUEUE_NAME = "Thread.Consumer.queue";
     /** 发送消息的数量 */
-    private static final int SEND_NUMBER = 50;
+    private static final int SEND_NUMBER = 100;
 
     public static void main(String[] args) {
 

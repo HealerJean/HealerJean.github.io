@@ -11,7 +11,7 @@ public class Consumer61617 {
 
     public static final String QUEUE_NAME = "Thread.Consumer.queue";
     public static final String TCP_URL = "tcp://localhost:61617";
-    public static final  int THREAD_COUNT = 5 ;
+    public static final  int THREAD_COUNT = 30 ;
 
     public static void main(String[] args) {
         ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
@@ -22,11 +22,6 @@ public class Consumer61617 {
         for (int i = 1; i <= THREAD_COUNT; i++) {
             Thread thread = new ConsumerThread(connectionFactory, QUEUE_NAME);
             thread.start();
-            try {
-                Thread.sleep(1000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             System.out.println("线程"+i+"启动");
         }
     }
