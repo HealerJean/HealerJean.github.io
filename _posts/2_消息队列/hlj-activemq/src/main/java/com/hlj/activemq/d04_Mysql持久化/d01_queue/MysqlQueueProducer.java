@@ -2,10 +2,15 @@ package com.hlj.activemq.d04_Mysql持久化.d01_queue;
 
 import com.hlj.activemq.constants.ActiveMqConstant;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.ActiveMQMessageProducer;
+import org.apache.activemq.MessageTransformer;
 
 import javax.jms.*;
 
 
+/**
+ * queue模式是持久化的
+ */
 public class MysqlQueueProducer {
 
     /**
@@ -15,7 +20,7 @@ public class MysqlQueueProducer {
     /**
      * 发送消息的数量
      */
-    private static final int SEND_NUMBER = 30;
+    private static final int SEND_NUMBER = 5;
 
     public static void main(String[] args) {
 
@@ -38,7 +43,6 @@ public class MysqlQueueProducer {
 
             // 根据目的地获取一个生产者
             MessageProducer producer = session.createProducer(destination);
-            producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
             //构造消息
             sendTextMessage(session, producer);
@@ -64,10 +68,5 @@ public class MysqlQueueProducer {
             producer.send(message);
         }
     }
-
-
-
-
-
 
 }

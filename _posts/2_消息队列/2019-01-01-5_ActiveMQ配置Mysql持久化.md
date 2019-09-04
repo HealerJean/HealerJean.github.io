@@ -2,9 +2,9 @@
 title: ActiveMQ配置Mysql持久化
 date: 2018-01-01 03:33:00
 tags: 
-- ActiveMQ
+- MQ
 category: 
-- ActiveMQ
+- MQ
 description: ActiveMQ配置Mysql持久化
 ---
 
@@ -21,6 +21,11 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 
 
+
+
+
+
+
 ## 前言
 
 #### [博主github](https://github.com/HealerJean)
@@ -31,7 +36,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 ### 1.1、准备mysql相关的jar包
 
-![1567504683878](D:\study\HealerJean.github.io\blogImages\1567504683878.png)
+![1567504683878](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567504683878.png)
 
 
 
@@ -228,7 +233,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 ### 1.3、启动activemq
 
-![1567504945676](D:\study\HealerJean.github.io\blogImages\1567504945676.png)
+![1567504945676](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567504945676.png)
 
 
 
@@ -239,19 +244,63 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 ### 1.4、观察数据库生成了3张表
 
 ```java
-activemq_acks：   ActiveMQ的签收信息。
-activemq_lock:    ActiveMQ的锁信息。
-activemq_msgs:    ActiveMQ的消息的信息
+
+ACTIVEMQ_MSGS ：消息表，queue和topic都存在这个表中，发送后会添加相应记录，消费完后会自动删除
+ACTIVEMQ_ACKS ：存储持久订阅的消息，订阅者和服务器的订阅关系在这个表保存
+ACTIVEMQ_LOCKS ：锁表，ActiveMQ的锁信息，在集群环境中才有用，锁表，用来确保某一时刻，只能有一个ActiveMQ broker实例来访问数据库
 
 ```
 
 
 
-#### 1.4.1、`activemq_acks`
+#### 1.4.1、ACTIVEMQ_MSGS
 
 
 
-**ActiveMQ的签收信息，用于存储订阅关系。如果是持久化Topic，订阅者和服务器的订阅关系在这个表保存**
+**ACTIVEMQ_MSGS：**用于存储消息，Queue和Topic都存储在这个表中，发送后会添加相应记录，消费完后会自动删除
+
+
+
+```sql
+create table `activemq_msgs` (
+    `id` bigint(20) not null,
+    `container` varchar(250) not null,
+    `msgid_prod` varchar(250) default null,
+    `msgid_seq` bigint(20) default null,
+    `expiration` bigint(20) default null,
+    `msg` blob,
+    `priority` bigint(20) default null,
+    `xid` varchar(250) default null,
+    primary key (`id`),
+    key `activemq_msgs_midx` (`msgid_prod`,`msgid_seq`),
+    key `activemq_msgs_cidx` (`container`),
+    key `activemq_msgs_eidx` (`expiration`),
+    key `activemq_msgs_pidx` (`priority`),
+    key `activemq_msgs_xidx` (`xid`)
+) engine=innodb default charset=utf8mb4;
+```
+
+
+
+| 字段名     | 类型     | 含义                            |
+| ---------- | -------- | ------------------------------- |
+| container  | varchar  | 容器，消息的destination         |
+| msgid_prod | varchar  | 消息发送者客户端的主键          |
+| msgid_seq  | bigint   | 发送消息的顺序                  |
+| expiration | varchar  | 消息过期时间，毫秒数            |
+| msg        | longblob | 消息数据，二进制                |
+| priority   | bigint   | 优先级0-9，数值越大，优先级越高 |
+| xid        | varchar  |                                 |
+
+
+
+
+
+#### 1.4.1、`ACTIVEMQ_ACKS`
+
+
+
+**存储持久订阅的消息，订阅者和服务器的订阅关系在这个表保存**
 
 
 
@@ -292,11 +341,11 @@ create table `activemq_acks` (
 
 
 
-#### 1.4.2、`activemq_lock`
+#### 1.4.2、`ACTIVEMQ_LOCKS`
 
 
 
-`activemq_lock：`ActiveMQ的锁信息，在集群环境中才有用，只有一个Broker可以获得消息，称为Master Broker
+锁表，ActiveMQ的锁信息，在集群环境中才有用，锁表，用来确保某一时刻，只能有一个ActiveMQ broker实例来访问数据库
 
 
 
@@ -322,54 +371,247 @@ create table `activemq_lock` (
 
 
 
-#### 1.4.3、activemq_msgs
-
-
-
-**activemq_msgs：**用于存储消息，Queue和Topic都存储在这个表中
-
-
-
-```sql
-
-create table `activemq_msgs` (
-    `id` bigint(20) not null,
-    `container` varchar(250) not null,
-    `msgid_prod` varchar(250) default null,
-    `msgid_seq` bigint(20) default null,
-    `expiration` bigint(20) default null,
-    `msg` blob,
-    `priority` bigint(20) default null,
-    `xid` varchar(250) default null,
-    primary key (`id`),
-    key `activemq_msgs_midx` (`msgid_prod`,`msgid_seq`),
-    key `activemq_msgs_cidx` (`container`),
-    key `activemq_msgs_eidx` (`expiration`),
-    key `activemq_msgs_pidx` (`priority`),
-    key `activemq_msgs_xidx` (`xid`)
-) engine=innodb default charset=utf8mb4;
-```
-
-
-
-| 字段名     | 类型    | 含义                            |
-| ---------- | ------- | ------------------------------- |
-| container  | varchar | 容器，消息的destination         |
-| msgid_prod | varchar | 消息发送者客户端的主键          |
-| msgid_seq  | varchar | 发送消息的顺序                  |
-| expiration | varchar | 消息过期时间，毫秒数            |
-| msg        | varchar | 消息数据，二进制                |
-| priority   | bigint  | 优先级0-9，数值越大，优先级越高 |
-| xid        | varchar |                                 |
-
 
 
 ## 2、Queue测试Mysql持久化
 
+### 2.1、生产者 `MysqlQueueProducer`
+
+
+
+```java
+package com.hlj.activemq.d04_Mysql持久化.d01_queue;
+
+import com.hlj.activemq.constants.ActiveMqConstant;
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.ActiveMQMessageProducer;
+import org.apache.activemq.MessageTransformer;
+
+import javax.jms.*;
+
+
+/**
+ * queue模式是持久化的
+ */
+public class MysqlQueueProducer {
+
+    /**
+     * 队列的名称
+     */
+    public static final String QUEUE_NAME = "MysqlQueue";
+    /**
+     * 发送消息的数量
+     */
+    private static final int SEND_NUMBER = 5;
+
+    public static void main(String[] args) {
+
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMqConstant.USERNAME,
+                ActiveMqConstant.PASSWORD,
+                ActiveMqConstant.BROKER_URL);
+        try {
+            // 构造从工厂得到连接对象
+            Connection connection = connectionFactory.createConnection();
+            connection.start();
+
+            // 获取操作连接,一个发送或接收消息的线程
+            Session session = connection.createSession(
+                    Boolean.TRUE,
+                    Session.AUTO_ACKNOWLEDGE);
+
+            // 消息的目的地;消息发送给谁.
+            Destination destination = session.createQueue(QUEUE_NAME);
+
+            // 根据目的地获取一个生产者
+            MessageProducer producer = session.createProducer(destination);
+
+            //构造消息
+            sendTextMessage(session, producer);
+
+
+            session.commit();
+            session.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 1、创建TextMessage
+     */
+    private static void sendTextMessage(Session session, MessageProducer producer) throws JMSException {
+        for (int i = 1; i <= SEND_NUMBER; i++) {
+            TextMessage message = session.createTextMessage("ActiveMq 发送的消息" + i);
+            // 发送消息到目的地方
+            System.out.println("发送消息：" + "ActiveMq 发送的消息" + i);
+            producer.send(message);
+        }
+    }
+
+}
+
+```
+
+
+
+### 2.2、消费者`MysqlQueueConsumer`
+
+```java
+package com.hlj.activemq.d04_Mysql持久化.d01_queue;
+
+import com.hlj.activemq.constants.ActiveMqConstant;
+import org.apache.activemq.ActiveMQConnectionFactory;
+
+import javax.jms.*;
+
+
+public class MysqlQueueConsumer {
+
+
+    public static final String QUEUE_NAME = "MysqlQueue";
+    public static final Long   WITE_TIME = (100L * 1000L);
+
+
+    public static void main(String[] args) {
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMqConstant.USERNAME,
+                ActiveMqConstant.PASSWORD,
+                ActiveMqConstant.BROKER_URL);
+        try {
+            // 构造从工厂得到连接对象
+            Connection connection = connectionFactory.createConnection();
+            connection.start();
+
+            // 获取操作连接,一个发送或接收消息的线程
+            Session session = connection.createSession(
+                    Boolean.TRUE,
+                    Session.AUTO_ACKNOWLEDGE);
+
+            // 消息的目的地;消息发送给谁.
+            Destination destination = session.createQueue(QUEUE_NAME);
+
+            //根据目的地获取一个消费者
+            MessageConsumer consumer = session.createConsumer(destination);
+
+
+            //消费消息
+            //1、接收TestMessage
+            reveiveTestMessage(consumer);
+
+            // 没有事务，下面提交会报错
+            session.commit();
+            session.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 接收TestMessage
+     */
+    private static void reveiveTestMessage(MessageConsumer consumer) throws JMSException {
+        while (true) {
+            //100s内阻塞等待消息的传入
+            TextMessage message = (TextMessage) consumer.receive(WITE_TIME);
+            if (null != message) {
+                System.out.println("收到消息" + message.getText());
+            } else {
+                break;
+            }
+        }
+    }
+}
 
 
 
 
+```
+
+
+
+### 2.3、运行消费者，等待消息接入
+
+#### 2.3.1、观察浏览器
+
+![1567568602072](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567568602072.png)
+
+
+
+| name       | Number Of Pending Messages | Number Of Consumers | Messages Enqueued | Messages Dequeued |
+| ---------- | -------------------------- | ------------------- | ----------------- | ----------------- |
+| FirstQueue | 0                          | 1                   | 0                 | 0                 |
+
+
+
+#### 2.3.2、数据库中什么都没发生
+
+
+
+
+
+### 2.4、关闭消费者，运行生产者，生成消息
+
+
+
+#### 2.4.1、观察浏览器
+
+![1567568774108](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567568774108.png)
+
+
+
+| name       | Number Of Pending Messages | Number Of Consumers | Messages Enqueued | Messages Dequeued |
+| ---------- | -------------------------- | ------------------- | ----------------- | ----------------- |
+| MysqlQueue | 5                          | 0                   | 5                 | 0                 |
+
+
+
+#### 2.4.2、观察数据库
+
+
+
+![1567568825692](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567568825692.png)
+
+
+
+### 2.5、运行消费者
+
+#### 2.5.1、观察控制台
+
+
+
+```java
+收到消息ActiveMq 发送的消息1
+收到消息ActiveMq 发送的消息2
+收到消息ActiveMq 发送的消息3
+收到消息ActiveMq 发送的消息4
+收到消息ActiveMq 发送的消息5
+```
+
+
+
+#### 2.5.2、观察浏览器
+
+![1567569493646](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567569493646.png)
+
+
+
+| name       | Number Of Pending Messages | Number Of Consumers | Messages Enqueued | Messages Dequeued |
+| ---------- | -------------------------- | ------------------- | ----------------- | ----------------- |
+| MysqlQueue | 0                          | 0                   | 5                 | 5                 |
+
+
+
+
+
+#### 2.5.3、观察数据库，发现已经光光的，说明已经被消费了
+
+
+
+![1567569514221](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567569514221.png)
 
 
 
@@ -377,6 +619,198 @@ create table `activemq_msgs` (
 ## 3、Topic持久化消息
 
 
+
+### 3.1、生产者`MysqlPersistenceProducer`
+
+```java
+package com.hlj.activemq.d04_Mysql持久化.d02_topic持久化;
+
+import com.hlj.activemq.constants.ActiveMqConstant;
+import org.apache.activemq.ActiveMQConnectionFactory;
+
+import javax.jms.*;
+
+public class MysqlPersistenceProducer {
+
+
+    public static final String TOPIC_NAME = "mysql_persiterce_topic_name";
+    /**
+     * 发送消息的数量
+     */
+    private static final int SEND_NUMBER = 5;
+
+    public static void main(String[] args) {
+
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMqConstant.USERNAME,
+                ActiveMqConstant.PASSWORD,
+                ActiveMqConstant.BROKER_URL);
+        try {
+            Connection connection = connectionFactory.createConnection();
+
+            Session session = connection.createSession(
+                    Boolean.TRUE,
+                    Session.AUTO_ACKNOWLEDGE);
+
+            Topic topic = session.createTopic(TOPIC_NAME);
+            MessageProducer producer = session.createProducer(topic);
+            //设置持久化
+            producer.setDeliveryMode(DeliveryMode.PERSISTENT);
+            //一定要砸在上面持久化订阅设置完成之后再start这个connection，否则会有问题
+            connection.start();
+            System.out.println("创建持久化生产者");
+
+            for (int i = 1; i <= SEND_NUMBER; i++) {
+                TextMessage message = session.createTextMessage("message" + i);
+                producer.send(message);
+            }
+
+            session.commit();
+            session.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+```
+
+
+
+### 3.2、消费者`MysqlPersistenceConsumer`
+
+
+
+```java
+package com.hlj.activemq.d04_Mysql持久化.d02_topic持久化;
+
+import com.hlj.activemq.constants.ActiveMqConstant;
+import org.apache.activemq.ActiveMQConnectionFactory;
+
+import javax.jms.*;
+
+public class MysqlPersistenceConsumer {
+
+    public static final String TOPIC_NAME = "mysql_persiterce_topic_name";
+    public static final Long WITE_TIME = (1000L);
+
+
+    public static void main(String[] args) {
+
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMqConstant.USERNAME,
+                ActiveMqConstant.PASSWORD,
+                ActiveMqConstant.BROKER_URL);
+        try {
+            Connection connection = connectionFactory.createConnection();
+            //设置连接客户端 id
+            connection.setClientID("ClientId_Blog");
+
+
+            Session session = connection.createSession(
+                    Boolean.TRUE,
+                    Session.AUTO_ACKNOWLEDGE);
+
+            Topic topic = session.createTopic(TOPIC_NAME);
+            //创建持久化的订阅者，订阅者的名称 name
+            // TopicSubscriber consumer = session.createDurableSubscriber(topic, "name");
+            TopicSubscriber consumer = session.createDurableSubscriber(topic, "Sub_HealerJean");
+            //一定要砸在上面持久化订阅设置（createDurableSubscriber）完成之后再start这个connection，否则会有问题
+            connection.start();
+            System.out.println("创建持久化消费者");
+
+            Message message = consumer.receive();
+            while (message != null) {
+                TextMessage txtMsg = (TextMessage) message;
+                System.out.println("收到消 息：" + txtMsg.getText());
+                message = consumer.receive(WITE_TIME);
+            }
+            session.commit();
+            session.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+
+```
+
+
+
+### 3.3、运行消费者，去订阅
+
+#### 3.3.1、观察浏览器
+
+![1567569921908](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567569921908.png) 
+
+
+
+
+
+| name                        | Number Of Consumers | Messages Enqueued | Messages Dequeued |
+| --------------------------- | ------------------- | ----------------- | ----------------- |
+| mysql_persiterce_topic_name | 1                   | 0                 | 0                 |
+
+
+
+
+
+#### 3.3.2、观察数据库
+
+**activemq_acks**
+
+![1567570120589](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567570120589.png)
+
+
+
+### 3.4、运行生产者
+
+
+
+#### 2.4.1、观察控制台
+
+```java
+收到消 息：message1
+收到消 息：message2
+收到消 息：message3
+收到消 息：message4
+收到消 息：message5
+```
+
+
+
+#### 3.4.2、观察浏览器
+
+
+
+![1567570438335](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567570438335.png)
+
+
+
+
+
+| name                        | Number Of Consumers | Messages Enqueued | Messages Dequeued |
+| --------------------------- | ------------------- | ----------------- | ----------------- |
+| mysql_persiterce_topic_name | 1                   | 5                 | 5                 |
+
+
+
+#### 2.4.3、观察数据库，持久化订阅，会发现这里的数据不会消失
+
+
+
+
+
+![1567570587101](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567570587101.png)
+
+
+
+
+
+#### 
 
 
 
@@ -415,7 +849,8 @@ create table `activemq_msgs` (
 		repo: `HealerJean.github.io`,
 		owner: 'HealerJean',
 		admin: ['HealerJean'],
-		id: 'AAAAAAAAAAAAAAA',
+		id: 'TEcAbMYnwkrpfGsj',
     });
     gitalk.render('gitalk-container');
 </script> 
+

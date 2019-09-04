@@ -37,7 +37,6 @@ public class Producer {
 
             // 根据目的地获取一个生产者
             MessageProducer producer = session.createProducer(destination);
-            producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
             //构造消息
             //1 、创建TextMessage
