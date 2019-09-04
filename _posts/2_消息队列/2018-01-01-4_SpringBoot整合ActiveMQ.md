@@ -2,9 +2,9 @@
 title: SpringBoot整合ActiveMQ
 date: 2018-01-01 03:33:00
 tags: 
-- ActiveMQ
+- MQ
 category: 
-- ActiveMQ
+- MQ
 description: SpringBoot整合ActiveMQ
 ---
 
@@ -262,7 +262,7 @@ public class MainController {
 
 ##### 6.2.1.1.queue
 
-![1567501888012](D:\study\HealerJean.github.io\blogImages\1567501888012.png)
+![1567501888012](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567501888012.png)
 
 
 
@@ -276,7 +276,7 @@ public class MainController {
 
 
 
-![1567501941928](D:\study\HealerJean.github.io\blogImages\1567501941928.png)
+![1567501941928](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567501941928.png)
 
 
 
@@ -284,7 +284,7 @@ public class MainController {
 
 
 
-![1567501979357](D:\study\HealerJean.github.io\blogImages\1567501979357.png)
+![1567501979357](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567501979357.png)
 
 
 
@@ -310,7 +310,7 @@ http://localhost:8888/hlj/activemq/queue?msg=hello
 
 
 
-![1567502025270](D:\study\HealerJean.github.io\blogImages\1567502025270.png)
+![1567502025270](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567502025270.png)
 
 
 
@@ -337,7 +337,7 @@ GET http://localhost:8888/hlj/activemq/topic?msg=hello
 
 ```
 
-![1567502071104](D:\study\HealerJean.github.io\blogImages\1567502071104.png)
+![1567502071104](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567502071104.png)
 
 
 
@@ -347,7 +347,7 @@ GET http://localhost:8888/hlj/activemq/topic?msg=hello
 | ---------------- | ------------------- | ----------------- | ----------------- |
 | SpringBoot:Queue | 1                   | 1                 | 1                 |
 
-![1567502165444](D:\study\HealerJean.github.io\blogImages\1567502165444.png)
+![1567502165444](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567502165444.png)
 
 
 
