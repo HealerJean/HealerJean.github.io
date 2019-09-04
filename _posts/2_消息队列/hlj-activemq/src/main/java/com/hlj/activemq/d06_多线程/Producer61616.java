@@ -1,4 +1,4 @@
-package com.hlj.activemq.d04_Mysql持久化.d01_queue;
+package com.hlj.activemq.d06_多线程;
 
 import com.hlj.activemq.constants.ActiveMqConstant;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -6,14 +6,17 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import javax.jms.*;
 
 
-public class MysqlQueueConsumer {
+public class Producer61616 {
 
-
-    public static final String QUEUE_NAME = "MysqlQueue";
-    public static final Long   WITE_TIME = (100L * 1000L);
-
+    /**
+     * 队列的名称
+     */
+    public static final String QUEUE_NAME = "Thread.Consumer.queue";
+    /** 发送消息的数量 */
+    private static final int SEND_NUMBER = 50;
 
     public static void main(String[] args) {
+
         ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
                 ActiveMqConstant.USERNAME,
                 ActiveMqConstant.PASSWORD,
@@ -25,22 +28,18 @@ public class MysqlQueueConsumer {
 
             // 获取操作连接,一个发送或接收消息的线程
             Session session = connection.createSession(
-                    Boolean.FALSE,
+                    Boolean.TRUE,
                     Session.AUTO_ACKNOWLEDGE);
 
             // 消息的目的地;消息发送给谁.
             Destination destination = session.createQueue(QUEUE_NAME);
 
-            //根据目的地获取一个消费者
-            MessageConsumer consumer = session.createConsumer(destination);
+            // 根据目的地获取一个生产者
+            MessageProducer producer = session.createProducer(destination);
 
-
-            //消费消息
-            //1、接收TestMessage
-            reveiveTestMessage(consumer);
-
-            // 没有事务，下面提交会报错
-            // session.commit();
+            //构造消息
+            sendTextMessage(session, producer);
+            session.commit();
             session.close();
             connection.close();
         } catch (Exception e) {
@@ -48,21 +47,22 @@ public class MysqlQueueConsumer {
         }
     }
 
+
     /**
-     * 接收TestMessage
+     * 1、创建TextMessage
      */
-    private static void reveiveTestMessage(MessageConsumer consumer) throws JMSException {
-        while (true) {
-            //100s内阻塞等待消息的传入
-            TextMessage message = (TextMessage) consumer.receive(WITE_TIME);
-            if (null != message) {
-                System.out.println("收到消息" + message.getText());
-            } else {
-                break;
-            }
+    private static void sendTextMessage(Session session, MessageProducer producer) throws JMSException {
+        for (int i = 1; i <= SEND_NUMBER; i++) {
+            TextMessage message = session.createTextMessage("ActiveMq 发送的消息" + i);
+            // 发送消息到目的地方
+            System.out.println("发送消息：" + "ActiveMq 发送的消息" + i);
+            producer.send(message);
         }
     }
+
+
+
+
+
+
 }
-
-
-

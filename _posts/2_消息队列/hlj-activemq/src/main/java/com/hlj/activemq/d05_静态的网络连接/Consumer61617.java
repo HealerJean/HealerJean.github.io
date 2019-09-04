@@ -1,4 +1,4 @@
-package com.hlj.activemq.d01_简单的生产者消费者_事务的签收;
+package com.hlj.activemq.d05_静态的网络连接;
 
 import com.hlj.activemq.constants.ActiveMqConstant;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -6,18 +6,18 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import javax.jms.*;
 
 
-public class Consumer {
+public class Consumer61617 {
 
 
-    public static final String QUEUE_NAME = "FirstQueue";
+    public static final String QUEUE_NAME = "network_queue";
     public static final Long   WITE_TIME = (100L * 1000L);
-
+    public static final String TCP_URL = "tcp://localhost:61617";
 
     public static void main(String[] args) {
         ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
                 ActiveMqConstant.USERNAME,
                 ActiveMqConstant.PASSWORD,
-                ActiveMqConstant.BROKER_URL);
+                TCP_URL);
         try {
             // 构造从工厂得到连接对象
             Connection connection = connectionFactory.createConnection();
@@ -50,23 +50,6 @@ public class Consumer {
             e.printStackTrace();
         }
     }
-
-    // 同步接收：主线程阻塞式等待下一个消息的到来，可以设置timeout，超时则返回null。
-    // 异步接收：主线程设置MessageListener，然后继续做自己的事，子线程负责监听。
-
-    /**
-     * 3、监听接收消息
-     */
-    private static void reveiveByListeneMessage(MessageConsumer consumer) throws JMSException {
-        consumer.setMessageListener(msg -> {
-            try {
-                TextMessage txtMsg = (TextMessage)msg;
-                System.out.println("Receiver11111===="+txtMsg.getText());
-            } catch (JMSException e) {
-            }
-        });
-    }
-
 
     /**
      * 2、接收MapMessage
@@ -103,10 +86,6 @@ public class Consumer {
             }
         }
     }
-
-
-
-
 }
 
 
