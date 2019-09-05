@@ -1,4 +1,4 @@
-package com.hlj.activemq.d06_多线程;
+package com.hlj.activemq.d06_多线程集群访问ActiveMQ消息和回流功能_容错功能.d01_多线程集群消费;
 
 import com.hlj.activemq.constants.ActiveMqConstant;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -13,7 +13,7 @@ public class Producer61616 {
      */
     public static final String QUEUE_NAME = "Thread.Consumer.queue";
     /** 发送消息的数量 */
-    private static final int SEND_NUMBER = 100;
+    private static final int SEND_NUMBER = 10;
 
     public static void main(String[] args) {
 
@@ -59,10 +59,6 @@ public class Producer61616 {
             producer.send(message);
         }
     }
-
-
-
-
 
 
 }
