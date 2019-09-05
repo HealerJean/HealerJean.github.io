@@ -1,4 +1,4 @@
-package com.hlj.activemq.d06_多线程;
+package com.hlj.activemq.d06_多线程集群访问ActiveMQ消息和回流功能_容错功能.d01_多线程集群消费;
 
 import com.hlj.activemq.constants.ActiveMqConstant;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -22,6 +22,12 @@ public class Consumer61616 {
         for (int i = 1; i <= THREAD_COUNT; i++) {
             Thread thread = new ConsumerThread(connectionFactory, QUEUE_NAME);
             thread.start();
+            //延迟一秒，观察日志，保证正在监听
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             System.out.println("线程"+i+"启动");
         }
     }
