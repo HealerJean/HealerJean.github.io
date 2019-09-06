@@ -1,12 +1,12 @@
 ---
 
-title: Topic持久化和非持久化
+title: Topic持久化和非持久化_虚拟Topic
 date: 2018-01-01 03:33:00
 tags: 
 - MQ
 category: 
 - MQ
-description: Topic持久化和非持久化
+description: Topic持久化和非持久化_虚拟Topic
 ---
 
 <!-- 
@@ -227,7 +227,14 @@ public class NoPersistenceConsumer {
 
 ## 2、持久化的topic消息 ：
 
-### 解释：持久化的topic，即使还没有生产消息，但一般情况下邀请消费者提前订阅，因为这样，即使不在线，下次连接，也可以接受之前从没收过的消息，而已经收到的消息，则不会重复接受
+### 解释：
+
++ **持久化的topic，即使还没有生产消息，但一般情况下邀请消费者提前订阅，因为这样，即使不在线，下次连接，也可以接受之前从没收过的消息，而已经收到的消息，则不会重复接受**  
+
+
+
++ **持久化模式下可有有多个`clientID`同时在线,但是同一个`clientID`,只能同时在线一个消费者，这也是虚拟`topic`产生的原因之一 ：`activemq`区分消费者，是通过`clientID`和订阅客户名称来区分的，使用相同的`clientID`，则认为是同一个消费者。两个程序使用相同的`clientID`，则同时只能有一个连接到activemq，第二个连接的会报错**
+
 
 
 
@@ -341,7 +348,8 @@ public class PersistenceConsumer {
                 ActiveMqConstant.BROKER_URL);
         try {
             Connection connection = connectionFactory.createConnection();
-            //设置连接客户端 id
+            
+             //设置连接客户端 id ,持久化模式下可有有多个clientID,但是同一个clientID,只能同时在线一个消费者
             connection.setClientID("HealerJean");
 
 
@@ -413,7 +421,7 @@ public class PersistenceConsumer {
 
 
 
-会观察到有一个消费者，但是事实上我们的订阅消费者已经挂掉了，不是么，上面消费者控制台都关闭了，虽然控制台关闭了，但是其实我这里认为是一个离线状态的订阅消费者。而且计算它了
+**会观察到有一个消费者，但是事实上我们的订阅消费者已经挂掉了，不是么，上面消费者控制台都关闭了，虽然控制台关闭了，但是其实我这里认为是一个离线状态的订阅消费者。而且计算它了**
 
 | name                  | Number Of Consumers | Messages Enqueued | Messages Dequeued |
 | --------------------- | ------------------- | ----------------- | ----------------- |
@@ -489,7 +497,7 @@ TopicSubscriber consumer = session.createDurableSubscriber(topic, "name2");
 
 
 
-没毛病，消费者不在线，肯定不能消费消息，所以入队信息为10
+**没毛病，消费者不在线，肯定不能消费消息，所以入队信息为10**
 
 | name                  | Number Of Consumers | Messages Enqueued | Messages Dequeued |
 | --------------------- | ------------------- | ----------------- | ----------------- |
@@ -566,6 +574,319 @@ TopicSubscriber consumer = session.createDurableSubscriber(topic, "name2");
 ### 3.0、总结2.8和2.9
 
 这样就证明了2.6.2中的说法是正确的。
+
+
+
+
+
+## 3、VirtualTopic：虚拟topic
+
+
+
+### 3.1、解释
+
+ `VirtualTopic`**是为了解决持久化模式下多消费端同时接收同一条消息的问题。**     
+
+**分布式应用，这样可以避免同一个应用订阅同一个主题时导致必须修改`clientId`的限制(个人理解，其实我们就是在一个客户端下调用，用多个clientId不太好吧)，同时又可以在同一个应用的不同进行负载均衡**    
+
+
+
+
+
+### 3.2、场景分析
+
+生产端产生了一笔订单，作为消息发了出去，这笔订单既要入订单系统归档，又要入结算系统收款，那怎么办呢？
+
+```java
+1、持久化：订单很重要，丢了可不行
+
+2、同时接收：既要归档，又要结算
+
+3、生产端只需向一个Destination发送：一把钥匙开一把锁，保持发送的一致性，否则容易乱套
+
+```
+
+
+
+#### 3.2.1、可能的解决方案
+
++ 方案A: 使用`Topic订阅模式`，虽然满足1对多同时接收，然而持久化模式下只能有一个持有`clientID`的消费者连接，不满足持久化需求（(**个人理解，其实我们就是在一个客户端下调用，用多个clientId不太好吧**)）
+
++ 方案B: 使用单队列，队列是1对1模式，消息只能给一个消费者，不满足多个同时接收的需求
+
++ 方案C: 使用多队列，显然生产者不太愿意一条消息发送很多次，分别发送给不同的队列，万一队列A发送成功，队列B发送失败怎么办？一致性无法保证，容易乱套
+
++ **方案D：就是将Topic和Queue相结合，各取所长。`VirtualTopic`,对生产者而言它是Topic，对消费者而言它是Queue **
+
+
+
+### 3.2、生产者Topic ，`VirtualTopic.Name`
+
+
+
++ **对于消息发布者来说，就是一个正常的topic,名称以VirtualTopic.开始**
+
+```java
+
+Destination destination = session.createTopic("VirtualTopic.Name");
+```
+
+
+
+```java
+
+public class Producer {
+
+    /**
+     * 队列的名称
+     */
+    public static final String VIRTUAL_TOPIC_NAME = "VirtualTopic.Name";
+    /** 发送消息的数量 */
+    private static final int SEND_NUMBER = 5;
+
+    public static void main(String[] args) {
+
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMqConstant.USERNAME,
+                ActiveMqConstant.PASSWORD,
+                ActiveMqConstant.BROKER_URL);
+        try {
+            // 构造从工厂得到连接对象
+            Connection connection = connectionFactory.createConnection();
+            connection.start();
+
+            // 获取操作连接,一个发送或接收消息的线程
+            Session session = connection.createSession(
+                    Boolean.TRUE,
+                    Session.AUTO_ACKNOWLEDGE);
+
+            // 消息的目的地;消息发送给谁.
+            Destination destination = session.createTopic(VIRTUAL_TOPIC_NAME);
+
+            // 根据目的地获取一个生产者
+            MessageProducer producer = session.createProducer(destination);
+
+            //构造消息
+            //1 、创建TextMessage
+            sendTextMessage(session, producer);
+
+            session.commit();
+            session.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private static void sendTextMessage(Session session, MessageProducer producer) throws JMSException {
+        for (int i = 1; i <= SEND_NUMBER; i++) {
+            TextMessage message = session.createTextMessage("ActiveMq的消息" + i);
+            // 发送消息到目的地方
+            System.out.println("发送消息：" + "ActiveMq 发送的消息" + i);
+            producer.send(message);
+        }
+    }
+
+
+}
+
+```
+
+
+
+### 3.3、消费者 A 
+
+
+
++ **对于消息接收端来说，是个队列，不同应用里使用不同的前缀作为队列名称，即可表明自己的身份即可实现消费端应用分组**
+
+  
+
+```java
+ Destination destination = session.createQueue("Consumer.AA.VirtualTopic.Name");
+
+
+Consumer.A.VirtualTopic.Orders说明它是名称为A的消费端，同理Consumer.B VirtualTopic.Orders说明是一名称为B的消费端。可以在同一个应用中使用多个消费者消费这个队列
+```
+
+
+
+```java
+
+public class ConsumerA {
+
+    public static final String CONSUMER_VIRTUAL_TOPIC_NAME = "Consumer.AA.VirtualTopic.Name";
+
+    public static void main(String[] args) {
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMqConstant.USERNAME,
+                ActiveMqConstant.PASSWORD,
+                ActiveMqConstant.BROKER_URL);
+        try {
+            // 构造从工厂得到连接对象
+            Connection connection = connectionFactory.createConnection();
+            connection.start();
+
+            // 获取操作连接,一个发送或接收消息的线程
+            Session session = connection.createSession(
+                    Boolean.FALSE,
+                    Session.AUTO_ACKNOWLEDGE);
+
+            // 消息的目的地;消息发送给谁.//名称为A的区别
+            Destination destination = session.createQueue(CONSUMER_VIRTUAL_TOPIC_NAME);
+
+            //根据目的地获取一个消费者
+            MessageConsumer consumer = session.createConsumer(destination);
+
+
+            //消费消息
+            //1、接收TestMessage
+            reveiveTestMessage(consumer);
+
+            // 没有事务，下面提交会报错
+            // session.commit();
+            session.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void reveiveTestMessage(MessageConsumer consumer) throws JMSException {
+        while (true) {
+            //100s内阻塞等待消息的传入
+            TextMessage message = (TextMessage) consumer.receive();
+            if (null != message) {
+                System.out.println(CONSUMER_VIRTUAL_TOPIC_NAME + "收到消息" + message.getText());
+            } else {
+                break;
+            }
+        }
+    }
+
+}
+```
+
+
+
+### 3.4、消费者B
+
+```java
+
+public class ConsumerB {
+
+    public static final String CONSUMER_VIRTUAL_TOPIC_NAME = "Consumer.BB.VirtualTopic.Name";
+
+    public static void main(String[] args) {
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMqConstant.USERNAME,
+                ActiveMqConstant.PASSWORD,
+                ActiveMqConstant.BROKER_URL);
+        try {
+            // 构造从工厂得到连接对象
+            Connection connection = connectionFactory.createConnection();
+            connection.start();
+
+            // 获取操作连接,一个发送或接收消息的线程
+            Session session = connection.createSession(
+                    Boolean.FALSE,
+                    Session.AUTO_ACKNOWLEDGE);
+
+            // 消息的目的地;消息发送给谁.//名称为A的区别
+            Destination destination = session.createQueue(CONSUMER_VIRTUAL_TOPIC_NAME);
+
+            //根据目的地获取一个消费者
+            MessageConsumer consumer = session.createConsumer(destination);
+
+
+            //消费消息
+            //1、接收TestMessage
+            reveiveTestMessage(consumer);
+
+            // 没有事务，下面提交会报错
+            // session.commit();
+            session.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void reveiveTestMessage(MessageConsumer consumer) throws JMSException {
+        while (true) {
+            //100s内阻塞等待消息的传入
+            TextMessage message = (TextMessage) consumer.receive();
+            if (null != message) {
+                System.out.println(CONSUMER_VIRTUAL_TOPIC_NAME + "收到消息" + message.getText());
+            } else {
+                break;
+            }
+        }
+    }
+
+
+
+
+}
+
+```
+
+
+
+### 3.5、运行两个消费者，之后再运行生产者
+
+
+
+#### 3.4.1、消费者A控制台
+
+```
+Consumer.AA.VirtualTopic.Name收到消息ActiveMq的消息1
+Consumer.AA.VirtualTopic.Name收到消息ActiveMq的消息2
+Consumer.AA.VirtualTopic.Name收到消息ActiveMq的消息3
+Consumer.AA.VirtualTopic.Name收到消息ActiveMq的消息4
+Consumer.AA.VirtualTopic.Name收到消息ActiveMq的消息5
+```
+
+
+
+#### 3.5.1、消费者B控制台
+
+```
+Consumer.BB.VirtualTopic.Name收到消息ActiveMq的消息1
+Consumer.BB.VirtualTopic.Name收到消息ActiveMq的消息2
+Consumer.BB.VirtualTopic.Name收到消息ActiveMq的消息3
+Consumer.BB.VirtualTopic.Name收到消息ActiveMq的消息4
+Consumer.BB.VirtualTopic.Name收到消息ActiveMq的消息5
+```
+
+
+
+#### 2.5.3、8161浏览器 
+
+##### 2.5.3.1、queue
+
+
+
+![1567748451256](D:\study\HealerJean.github.io\blogImages\1567748451256.png)
+
+
+
+
+| name                          | Number Of Pending Messages | Number Of Consumers | Messages Enqueued | Messages Dequeued |
+| ----------------------------- | -------------------------- | ------------------- | ----------------- | ----------------- |
+| Consumer.AA.VirtualTopic.Name | 0                          | 1                   | 5                 | 5                 |
+| Consumer.BB.VirtualTopic.Name | 0                          | 1                   | 5                 | 5                 |
+
+
+
+##### 2.5.3.2、topic
+
+
+
+![1567748684504](D:\study\HealerJean.github.io\blogImages\1567748684504.png)
+
+
 
 
 

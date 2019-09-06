@@ -19,7 +19,7 @@ public class MysqlPersistenceConsumer {
                 ActiveMqConstant.BROKER_URL);
         try {
             Connection connection = connectionFactory.createConnection();
-            //设置连接客户端 id
+            //设置连接客户端 id ,持久化模式下可有有多个clientID,但是同一个clientID,只能同时在线一个消费者
             connection.setClientID("ClientId_Blog");
 
 

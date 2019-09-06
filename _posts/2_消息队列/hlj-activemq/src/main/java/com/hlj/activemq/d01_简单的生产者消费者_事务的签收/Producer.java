@@ -53,6 +53,20 @@ public class Producer {
         }
     }
 
+
+    /**
+     * 2、创建MapMessage
+     */
+    private static void sendGroupMessage(Session session, MessageProducer producer) throws JMSException {
+        for (int i = 1; i <= SEND_NUMBER; i++) {
+            MapMessage mapMessage = session.createMapMessage();
+            mapMessage.setStringProperty("setStringProperty_key_" + i, "setStringProperty_key_" + i);
+            mapMessage.setString("setString_key_" + i, "setString_value " + i);
+            producer.send(mapMessage);
+        }
+    }
+
+
     /**
      * 2、创建MapMessage
      */

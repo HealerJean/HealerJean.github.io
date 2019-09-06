@@ -12,7 +12,7 @@ public class MysqlPersistenceProducer {
     /**
      * 发送消息的数量
      */
-    private static final int SEND_NUMBER = 50000;
+    private static final int SEND_NUMBER = 100;
 
     public static void main(String[] args) {
 
