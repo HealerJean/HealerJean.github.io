@@ -1,7 +1,6 @@
-package com.hlj.activemq.d01_简单的生产者消费者_事务的签收;
+package com.hlj.activemq.d07_destination.d02_不活动的destination删除.d01_queue;
 
 import com.hlj.activemq.constants.ActiveMqConstant;
-import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
@@ -12,7 +11,7 @@ public class Producer {
     /**
      * 队列的名称
      */
-    public static final String QUEUE_NAME = "FirstQueue";
+    public static final String QUEUE_NAME = "queue_expire";
     /** 发送消息的数量 */
     private static final int SEND_NUMBER = 5;
 
@@ -41,9 +40,6 @@ public class Producer {
             //构造消息
             //1 、创建TextMessage
             sendTextMessage(session, producer);
-            //2 、创建MapMessage
-            // sendMapMessage(session, producer);
-
 
             session.commit();
             session.close();
@@ -54,34 +50,6 @@ public class Producer {
     }
 
 
-    /**
-     * 2、创建MapMessage
-     */
-    private static void sendGroupMessage(Session session, MessageProducer producer) throws JMSException {
-        for (int i = 1; i <= SEND_NUMBER; i++) {
-            MapMessage mapMessage = session.createMapMessage();
-            mapMessage.setStringProperty("setStringProperty_key_" + i, "setStringProperty_key_" + i);
-            mapMessage.setString("setString_key_" + i, "setString_value " + i);
-            producer.send(mapMessage);
-        }
-    }
-
-
-    /**
-     * 2、创建MapMessage
-     */
-    private static void sendMapMessage(Session session, MessageProducer producer) throws JMSException {
-        for (int i = 1; i <= SEND_NUMBER; i++) {
-            MapMessage mapMessage = session.createMapMessage();
-            mapMessage.setStringProperty("setStringProperty_key_" + i, "setStringProperty_key_" + i);
-            mapMessage.setString("setString_key_" + i, "setString_value " + i);
-            producer.send(mapMessage);
-        }
-    }
-
-    /**
-     * 1、创建TextMessage
-     */
     private static void sendTextMessage(Session session, MessageProducer producer) throws JMSException {
         for (int i = 1; i <= SEND_NUMBER; i++) {
             TextMessage message = session.createTextMessage("ActiveMq 发送的消息" + i);
@@ -90,10 +58,6 @@ public class Producer {
             producer.send(message);
         }
     }
-
-
-
-
 
 
 }

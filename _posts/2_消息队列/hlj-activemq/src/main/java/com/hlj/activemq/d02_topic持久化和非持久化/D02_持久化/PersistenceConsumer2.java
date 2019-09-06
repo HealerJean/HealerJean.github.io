@@ -1,11 +1,11 @@
-package com.hlj.activemq.d04_Mysql持久化.d02_topic持久化;
+package com.hlj.activemq.d02_topic持久化和非持久化.D02_持久化;
 
 import com.hlj.activemq.constants.ActiveMqConstant;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
 
-public class MysqlPersistenceConsumer {
+public class PersistenceConsumer2 {
 
     public static final String TOPIC_NAME = "mysql_persiterce_topic_name";
     public static final Long WITE_TIME = (1000L);
@@ -19,8 +19,8 @@ public class MysqlPersistenceConsumer {
                 ActiveMqConstant.BROKER_URL);
         try {
             Connection connection = connectionFactory.createConnection();
-            //设置连接客户端 id ,持久化模式下可有有多个clientID,但是同一个clientID,只能同时在线一个消费者
-            connection.setClientID("ClientId_Blog");
+            //设置连接客户端 id
+            connection.setClientID("ClientId_Blog_2");
 
 
             Session session = connection.createSession(
@@ -30,7 +30,7 @@ public class MysqlPersistenceConsumer {
             Topic topic = session.createTopic(TOPIC_NAME);
             //创建持久化的订阅者，订阅者的名称 name
             // TopicSubscriber consumer = session.createDurableSubscriber(topic, "name");
-            TopicSubscriber consumer = session.createDurableSubscriber(topic, "Sub_HealerJean");
+            TopicSubscriber consumer = session.createDurableSubscriber(topic, "Sub_HealerJeanB");
             //一定要砸在上面持久化订阅设置（createDurableSubscriber）完成之后再start这个connection，否则会有问题
             connection.start();
             System.out.println("创建持久化消费者");

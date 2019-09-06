@@ -1,0 +1,740 @@
+---
+title: 多个Queue同时发送_不活动的Destination删除
+date: 2019-01-01 03:33:00
+tags: 
+- MQ
+category: 
+- MQ
+description: 多个Queue同时发送_不活动的Destination删除
+---
+
+<!-- 
+
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/
+　　首行缩进
+
+<font  clalss="healerColor" color="red" size="5" >     </font>
+
+<font  clalss="healerSize"  size="5" >     </font>
+-->
+
+
+
+
+## 前言
+
+#### [博主github](https://github.com/HealerJean)
+#### [博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)    
+
+
+
+## 1、同时发送多个queue，并同时或者分步接收
+
+### 1.1、生产者
+
+
+
+```java
+package com.hlj.activemq.d07_destination.d01_多个queue同时发送;
+
+import com.hlj.activemq.constants.ActiveMqConstant;
+import org.apache.activemq.ActiveMQConnectionFactory;
+
+import javax.jms.*;
+
+
+public class Producer {
+
+    /**
+     * 队列的名称
+     */
+    public static final String QUEUE_NAME = "queue_1,queue_2";
+    /** 发送消息的数量 */
+    private static final int SEND_NUMBER = 5;
+
+    public static void main(String[] args) {
+
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMqConstant.USERNAME,
+                ActiveMqConstant.PASSWORD,
+                ActiveMqConstant.BROKER_URL);
+        try {
+            // 构造从工厂得到连接对象
+            Connection connection = connectionFactory.createConnection();
+            connection.start();
+
+            // 获取操作连接,一个发送或接收消息的线程
+            Session session = connection.createSession(
+                    Boolean.TRUE,
+                    Session.AUTO_ACKNOWLEDGE);
+
+            // 消息的目的地;消息发送给谁.
+            Destination destination = session.createQueue(QUEUE_NAME);
+
+            // 根据目的地获取一个生产者
+            MessageProducer producer = session.createProducer(destination);
+
+            //构造消息
+            //1 、创建TextMessage
+            sendTextMessage(session, producer);
+
+            session.commit();
+            session.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private static void sendTextMessage(Session session, MessageProducer producer) throws JMSException {
+        for (int i = 1; i <= SEND_NUMBER; i++) {
+            TextMessage message = session.createTextMessage("ActiveMq 发送的消息" + i);
+            // 发送消息到目的地方
+            System.out.println("发送消息：" + "ActiveMq 发送的消息" + i);
+            producer.send(message);
+        }
+    }
+
+
+}
+
+```
+
+
+
+### 1.2、消费者 
+
+```java
+package com.hlj.activemq.d07_destination.d01_多个queue同时发送;
+
+import com.hlj.activemq.constants.ActiveMqConstant;
+import org.apache.activemq.ActiveMQConnectionFactory;
+
+import javax.jms.*;
+
+
+public class Consumer {
+
+    public static final String QUEUE_NAME = "queue_1,queue_2";
+    public static final String QUEUE_NAME_1 = "queue_1";
+    public static final String QUEUE_NAME_2 = "queue_2";
+    public static final Long   WITE_TIME = (100L * 1000L);
+
+
+    public static void main(String[] args) {
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMqConstant.USERNAME,
+                ActiveMqConstant.PASSWORD,
+                ActiveMqConstant.BROKER_URL);
+        try {
+            // 构造从工厂得到连接对象
+            Connection connection = connectionFactory.createConnection();
+            connection.start();
+
+            // 获取操作连接,一个发送或接收消息的线程
+            Session session = connection.createSession(
+                    Boolean.FALSE,
+                    Session.AUTO_ACKNOWLEDGE);
+
+            // 消息的目的地;消息发送给谁.
+            Destination destination = session.createQueue(QUEUE_NAME);
+            // Destination destination = session.createQueue(QUEUE_NAME_1);
+            // Destination destination = session.createQueue(QUEUE_NAME_2);
+
+
+            //根据目的地获取一个消费者
+            MessageConsumer consumer = session.createConsumer(destination);
+
+
+            //消费消息
+            //1、接收TestMessage
+            reveiveTestMessage(consumer);
+
+            // 没有事务，下面提交会报错
+            // session.commit();
+            session.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 1、接收TestMessage
+     */
+    private static void reveiveTestMessage(MessageConsumer consumer) throws JMSException {
+        while (true) {
+            //100s内阻塞等待消息的传入
+            TextMessage message = (TextMessage) consumer.receive(WITE_TIME);
+            if (null != message) {
+                System.out.println("收到消息" + message.getText());
+            } else {
+                break;
+            }
+        }
+    }
+
+
+}
+
+
+
+
+```
+
+
+
+### 1.3、启动生产者
+
+#### 1.3.1、观察浏览器
+
+![1567738873099](D:\study\HealerJean.github.io\blogImages\1567738873099.png)
+
+
+
+| name       | Number Of Pending Messages | Number Of Consumers | Messages Enqueued | Messages Dequeued |
+| ---------- | -------------------------- | ------------------- | ----------------- | ----------------- |
+| queue_1 | 5                         | 0                   | 5                 | 0                 |
+| queue_2 | 5 | 0 | 5 | 0 |
+
+
+
+
+
+###  1.4、启动消费者 ：同时接收多个队列
+
+```java
+Destination destination = session.createQueue(QUEUE_NAME);
+```
+
+
+
+#### 1.4.1、观察控制台
+
+```
+收到消息ActiveMq 发送的消息1
+收到消息ActiveMq 发送的消息1
+收到消息ActiveMq 发送的消息2
+收到消息ActiveMq 发送的消息2
+收到消息ActiveMq 发送的消息3
+收到消息ActiveMq 发送的消息3
+收到消息ActiveMq 发送的消息4
+收到消息ActiveMq 发送的消息4
+收到消息ActiveMq 发送的消息5
+收到消息ActiveMq 发送的消息5
+```
+
+ 
+
+#### 1.4.2、观察8161浏览器
+
+![1567739051708](D:\study\HealerJean.github.io\blogImages\1567739051708.png)
+
+
+
+**可以看到相当于启动了两个消费者，然后分别将这10条消息消费调了，所以，我们也分别启动消费者queue_1和消费者queue_2进行处理消息** 
+
+| name    | Number Of Pending Messages | Number Of Consumers | Messages Enqueued | Messages Dequeued |
+| ------- | -------------------------- | ------------------- | ----------------- | ----------------- |
+| queue_1 | 0                          | 1                   | 5                 | 5                 |
+| queue_2 | 0                          | 1                   | 5                 | 5                 |
+
+
+
+## 2、删除空（不活动的）的队列
+
+### 2.1、解释
+
+**在ActiveMQ的消息Queue需要设置三个属性 **
+
++ **web控制台删除（一般没人用的，很傻 **
++ **通过配置，使得broker可以自动探测到无用的队列并删除掉，回收资源（生产使用的方式）。**
+
+
+
+### 2.2、具体参数配置  
+
+
+
+| 参数名                            | 默认值              | 含义                                                         |
+| --------------------------------- | ------------------- | ------------------------------------------------------------ |
+| schedulePeriodForDestinationPurge | 默认为0，不检查     | 设置多长时间检查一次，这里是10秒                             |
+| gcInactiveDestinations            | 默认为false，不删除 | 表示启用清理功能；                                           |
+| inactiveTimoutBeforeGC            | 默认为60秒          | queue或topic的（没有消息产生了）超时后删除 ,在规定的时间内，无有效订阅，没有入队记录，超时后就会被清理。 （如果没有消息，消费者一直在线的话，浏览器控制台不会删除，除非关闭这个消费者，因为消费者一直在读取（相当于我们一直在记录这里的历史记录，我们签收后，真实消息已经不存在了，这里只是空的而已，也没什么影响）） |
+
+
+
+```xml
+
+<broker xmlns="http://activemq.apache.org/schema/core"
+        brokerName="localhost" 
+        dataDirectory="${activemq.data}"
+        schedulePeriodForDestinationPurge="1000"
+        >
+
+      
+<destinationPolicy>
+    <policyMap>
+        <policyEntries>
+            <policyEntry topic=">" >
+
+
+                <pendingMessageLimitStrategy>
+                    <constantPendingMessageLimitStrategy limit="1000"/>
+                </pendingMessageLimitStrategy>
+            </policyEntry>
+            
+            
+            <policyEntry queue=">" 
+                         gcInactiveDestinations="true" 
+                         inactiveTimeoutBeforeGC="30000" />
+        </policyEntries>
+    </policyMap>
+</destinationPolicy>
+
+```
+
+
+
+### 2.3、测试生产者
+
+```JAVA
+
+
+public class Producer {
+
+    /**
+     * 队列的名称
+     */
+    public static final String QUEUE_NAME = "queue_expire";
+    /** 发送消息的数量 */
+    private static final int SEND_NUMBER = 5;
+
+    public static void main(String[] args) {
+
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMqConstant.USERNAME,
+                ActiveMqConstant.PASSWORD,
+                ActiveMqConstant.BROKER_URL);
+        try {
+            // 构造从工厂得到连接对象
+            Connection connection = connectionFactory.createConnection();
+            connection.start();
+
+            // 获取操作连接,一个发送或接收消息的线程
+            Session session = connection.createSession(
+                    Boolean.TRUE,
+                    Session.AUTO_ACKNOWLEDGE);
+
+            // 消息的目的地;消息发送给谁.
+            Destination destination = session.createQueue(QUEUE_NAME);
+
+            // 根据目的地获取一个生产者
+            MessageProducer producer = session.createProducer(destination);
+
+            //构造消息
+            //1 、创建TextMessage
+            sendTextMessage(session, producer);
+
+            session.commit();
+            session.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private static void sendTextMessage(Session session, MessageProducer producer) throws JMSException {
+        for (int i = 1; i <= SEND_NUMBER; i++) {
+            TextMessage message = session.createTextMessage("ActiveMq 发送的消息" + i);
+            // 发送消息到目的地方
+            System.out.println("发送消息：" + "ActiveMq 发送的消息" + i);
+            producer.send(message);
+        }
+    }
+
+
+}
+
+```
+
+### 2.4、消费者
+
+```java
+
+public class Consumer {
+
+    public static final String QUEUE_NAME = "queue_expire";
+
+    public static void main(String[] args) {
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMqConstant.USERNAME,
+                ActiveMqConstant.PASSWORD,
+                ActiveMqConstant.BROKER_URL);
+        try {
+            // 构造从工厂得到连接对象
+            Connection connection = connectionFactory.createConnection();
+            connection.start();
+
+            // 获取操作连接,一个发送或接收消息的线程
+            Session session = connection.createSession(
+                    Boolean.FALSE,
+                    Session.AUTO_ACKNOWLEDGE);
+
+            // 消息的目的地;消息发送给谁.
+            Destination destination = session.createQueue(QUEUE_NAME);
+
+
+            //根据目的地获取一个消费者
+            MessageConsumer consumer = session.createConsumer(destination);
+
+
+            //消费消息
+            //1、接收TestMessage
+            reveiveTestMessage(consumer);
+
+            // 没有事务，下面提交会报错
+            // session.commit();
+            session.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void reveiveTestMessage(MessageConsumer consumer) throws JMSException {
+        while (true) {
+            //100s内阻塞等待消息的传入
+            TextMessage message = (TextMessage) consumer.receive();
+            if (null != message) {
+                System.out.println("收到消息" + message.getText());
+            } else {
+                break;
+            }
+        }
+    }
+
+
+
+}
+
+
+```
+
+
+
+### 2.5、启动生产者
+
+#### 2.5.1、观察 8161浏览器
+
+![1567741045134](D:\study\HealerJean.github.io\blogImages\1567741045134.png)
+
+
+
+
+
+| name    | Number Of Pending Messages | Number Of Consumers | Messages Enqueued | Messages Dequeued |
+| ------- | -------------------------- | ------------------- | ----------------- | ----------------- |
+| queue_expire | 5                         | 0                   | 5                 | 0                 |
+
+
+
+### 2.6、运行消费者（运行完毕，手动关闭）
+
+
+
+**如果没有消息，消费者一直在线的话，也不会删除的，因为是一直读消息的**
+
+
+
+#### 2.6.1、观察 8161浏览器
+
+
+
+![1567741222613](D:\study\HealerJean.github.io\blogImages\1567741222613.png)
+
+
+
+| name         | Number Of Pending Messages | Number Of Consumers | Messages Enqueued | Messages Dequeued |
+| ------------ | -------------------------- | ------------------- | ----------------- | ----------------- |
+| queue_expire | 0                          | 0                   | 5                 | 5                 |
+
+
+
+### 2.7、30秒之后，浏览器找不到这个东西了
+
+
+
+![1567741253457](D:\study\HealerJean.github.io\blogImages\1567741253457.png)
+
+
+
+
+
+## 3、删除不活动的订阅者
+
+**某些Topic消息因为客户端在订阅后却长时间离线，而一直进驻内存，影响系统内存量及稳定性**
+
+
+
+| 参数名                               | 默认       | 含义                   |
+| ------------------------------------ | ---------- | ---------------------- |
+| offlineDurableSubscriberTaskSchedule | 默认300秒  | 多长时间检查一次       |
+| offlineDurableSubscriberTimeout      | —1，不删除 | 离线多长时间就过去删除 |
+
+
+
+```java
+  <broker xmlns="http://activemq.apache.org/schema/core" 
+        brokerName="localhost" 
+        dataDirectory="${activemq.data}" 
+        schedulePeriodForDestinationPurge="1000" 
+        offlineDurableSubscriberTimeout="20000" 
+        offlineDurableSubscriberTaskSchedule="10000"
+
+        >
+```
+
+
+
+
+
+### 3.1、生产者
+
+```java
+
+public class PersistenceProducer {
+
+
+    public static final String TOPIC_NAME = "topic_expire";
+
+    /**
+     * 发送消息的数量
+     */
+    private static final int SEND_NUMBER = 5;
+
+    public static void main(String[] args) {
+
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMqConstant.USERNAME,
+                ActiveMqConstant.PASSWORD,
+                ActiveMqConstant.BROKER_URL);
+        try {
+            Connection connection = connectionFactory.createConnection();
+
+            Session session = connection.createSession(
+                    Boolean.TRUE,
+                    Session.AUTO_ACKNOWLEDGE);
+
+            Topic topic = session.createTopic(TOPIC_NAME);
+            MessageProducer producer = session.createProducer(topic);
+            //设置持久化
+            producer.setDeliveryMode(DeliveryMode.PERSISTENT);
+            //一定要砸在上面持久化订阅设置完成之后再start这个connection，否则会有问题
+            connection.start();
+            System.out.println("创建持久化生产者");
+
+            for (int i = 1; i <= SEND_NUMBER; i++) {
+                TextMessage message = session.createTextMessage("message" + i);
+                producer.send(message);
+            }
+
+            session.commit();
+            session.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+```
+
+
+
+### 3.2、消费者
+
+```java
+	
+public class PersistenceConsumer {
+
+    public static final String TOPIC_NAME = "topic_expire";
+    public static final Long WITE_TIME = (1000L);
+
+
+    public static void main(String[] args) {
+
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+                ActiveMqConstant.USERNAME,
+                ActiveMqConstant.PASSWORD,
+                ActiveMqConstant.BROKER_URL);
+        try {
+            Connection connection = connectionFactory.createConnection();
+            //设置连接客户端 id
+            connection.setClientID("HealerJean");
+
+
+            Session session = connection.createSession(
+                    Boolean.TRUE,
+                    Session.AUTO_ACKNOWLEDGE);
+
+            Topic topic = session.createTopic(TOPIC_NAME);
+            //创建持久化的订阅者，订阅者的名称 name
+            TopicSubscriber consumer = session.createDurableSubscriber(topic, "name");
+            //一定要砸在上面持久化订阅设置（createDurableSubscriber）完成之后再start这个connection，否则会有问题
+            connection.start();
+            System.out.println("创建持久化消费者");
+
+            Message message = consumer.receive();
+            while (message != null) {
+                TextMessage txtMsg = (TextMessage) message;
+                System.out.println("收到消 息：" + txtMsg.getText());
+                message = consumer.receive(WITE_TIME);
+            }
+            session.commit();
+            session.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+
+```
+
+
+
+### 3.3、运行消费者后再运行生产者
+
+
+
+#### 3.3.1、查看消费者控制台
+
+```java
+收到消 息：message1
+收到消 息：message2
+收到消 息：message3
+收到消 息：message4
+收到消 息：message5
+```
+
+
+
+#### 3.3.1、观察浏览器查看订阅者
+
++ **刚运行完**
+
+![1567759733208](D:\study\HealerJean.github.io\blogImages\1567759733208.png)
+
+
+
++ **过20秒，发现还在**
+
+![1567759769088](D:\study\HealerJean.github.io\blogImages\1567759769088.png)
+
+
+
++ **topic记录还在**
+
+
+
+![1567759797472](D:\study\HealerJean.github.io\blogImages\1567759797472.png)
+
+
+
+
+
+## 4、删除挤压的持久层Topic
+
+
+
+### 4.1、为持久化消息设置过期时间
+
+activeMQ提供了一个timeStampingBrokerPlugin插件，通过此插件，我们可以为持久化消息设置过期时间。参考：
+
+
+
+```xml
+
+zeroExpirationOverride      会为没有设置过期时间的消息设置过期时间。
+ttlCeiling                  表示过期时间上限，如果程序中设置的过期时间超过此值，以此值为准。
+
+
+<plugins>
+  <!-- 86,400,000 ms = 1 day -->
+  <timeStampingBrokerPlugin ttlCeiling="86400000" zeroExpirationOverride="86400000"/>
+</plugins>
+```
+
+
+
+
+
+### 4.2、配置消息过期丢弃策略
+
+```xml
+<borker>
+	   <destinationPolicy>
+	       <policyMap>
+	           <policyEntries>
+					<!--expireMessagesPeriod=60000表示每隔60s检查消息是否过期-->
+					<!--topic=>表示对所有topic都生效-->
+	               <policyEntry topic=">" expireMessagesPeriod="60000">
+	                   <deadLetterStrategy>
+					 <!--processExpired为false,表示过期消息不进入死信队列，即执行删除操作-->
+							<sharedDeadLetterStrategy processExpired="false" />
+  	                 </deadLetterStrategy>
+  	             </policyEntry>
+  	         </policyEntries>
+  	     </policyMap>
+  	 </destinationPolicy>
+</borker>
+
+```
+
+
+
+
+
+
+
+
+
+<font  color="red" size="5" >     
+感兴趣的，欢迎添加博主微信
+ </font>       
+
+   
+
+
+
+哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。    
+
+请下方留言吧。可与博主自由讨论哦
+
+|微信 | 微信公众号|支付宝|
+|:-------:|:-------:|:------:|
+| ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) |
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script> 
+<div id="gitalk-container"></div>    
+ <script type="text/javascript">
+    var gitalk = new Gitalk({
+		clientID: `1d164cd85549874d0e3a`,
+		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
+		id: 'xC5cP2ZoXRONBFe3',
+    });
+    gitalk.render('gitalk-container');
+</script> 
+

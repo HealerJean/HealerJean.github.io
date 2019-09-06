@@ -1,18 +1,19 @@
-package com.hlj.activemq.d04_Mysql持久化.d02_topic持久化;
+package com.hlj.activemq.d07_destination.d02_不活动的destination删除.d02_持久化topic;
 
 import com.hlj.activemq.constants.ActiveMqConstant;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
 
-public class MysqlPersistenceProducer {
+public class PersistenceProducer {
 
 
-    public static final String TOPIC_NAME = "mysql_persiterce_topic_name";
+    public static final String TOPIC_NAME = "topic_expire";
+
     /**
      * 发送消息的数量
      */
-    private static final int SEND_NUMBER = 100;
+    private static final int SEND_NUMBER = 5;
 
     public static void main(String[] args) {
 

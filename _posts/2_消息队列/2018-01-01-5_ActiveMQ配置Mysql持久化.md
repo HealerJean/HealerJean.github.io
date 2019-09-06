@@ -332,7 +332,7 @@ create table `activemq_acks` (
 | client_id     | varchar | 订阅者的客户端唯一Id                                         |
 | sub_name      | varchar | 订阅者名称                                                   |
 | selector      | varchar | 用户可以选择只消费满足条件的信息，条件可以用自定义的属性实现 |
-| last_acked_id | bigint  | 记录消费者过的信息Id                                         |
+| last_acked_id | bigint  | 记录消费过的信息Id                                           |
 | priority      | bigint  | 优先级0-9，数值越大，优先级越高                              |
 | xid           | varchar |                                                              |
 |               |         |                                                              |

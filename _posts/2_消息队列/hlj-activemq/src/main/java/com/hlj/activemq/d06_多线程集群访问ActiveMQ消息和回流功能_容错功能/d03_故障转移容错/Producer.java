@@ -1,7 +1,6 @@
-package com.hlj.activemq.d01_简单的生产者消费者_事务的签收;
+package com.hlj.activemq.d06_多线程集群访问ActiveMQ消息和回流功能_容错功能.d03_故障转移容错;
 
 import com.hlj.activemq.constants.ActiveMqConstant;
-import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
@@ -18,10 +17,17 @@ public class Producer {
 
     public static void main(String[] args) {
 
+        String linuxIp = "myLinuxQj";
+        ConnectionFactory cf = new ActiveMQConnectionFactory(
+                );
+
+
+        // failover故障转移
+        // randomize false 不允许随机，如果能够连上61616 则用它，连不上在用61617
         ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
                 ActiveMqConstant.USERNAME,
                 ActiveMqConstant.PASSWORD,
-                ActiveMqConstant.BROKER_URL);
+                "failover:(tcp://localhost:61616,tcp://localhost:61617)?randomize=false");
         try {
             // 构造从工厂得到连接对象
             Connection connection = connectionFactory.createConnection();
@@ -52,20 +58,6 @@ public class Producer {
             e.printStackTrace();
         }
     }
-
-
-    /**
-     * 2、创建MapMessage
-     */
-    private static void sendGroupMessage(Session session, MessageProducer producer) throws JMSException {
-        for (int i = 1; i <= SEND_NUMBER; i++) {
-            MapMessage mapMessage = session.createMapMessage();
-            mapMessage.setStringProperty("setStringProperty_key_" + i, "setStringProperty_key_" + i);
-            mapMessage.setString("setString_key_" + i, "setString_value " + i);
-            producer.send(mapMessage);
-        }
-    }
-
 
     /**
      * 2、创建MapMessage
