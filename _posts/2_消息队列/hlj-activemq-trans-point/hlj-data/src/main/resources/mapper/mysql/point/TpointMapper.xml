@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TpointMapper">
+	<resultMap id="BaseResultMap" type="Tpoint">
+		<id column="ID" jdbcType="BIGINT" property="id" />
+		<result column="user_id" jdbcType="BIGINT" property="userId" />
+		<result column="amount" jdbcType="DECIMAL" property="amount" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<trim prefix="(" prefixOverrides="and" suffix=")">
+				<if test="userId != null and userId != ''">
+					and user_id = #{userId,jdbcType=BIGINT}
+				</if>
+				<if test="amount != null and amount != ''">
+					and amount = #{amount,jdbcType=DECIMAL}
+				</if>
+			</trim>
+		</where>
+	</sql>
+	<sql id="Example_Set_Clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="userId != null">
+					user_id = #{userId,jdbcType=BIGINT},
+				</if>
+				<if test="amount != null">
+					amount = #{amount,jdbcType=DECIMAL},
+				</if>
+			</trim>
+		</set>
+	</sql>
+	<sql id="Base_Column_List">
+		id,
+		user_id,
+		amount
+	</sql>
+	<sql id="Base_Set_Clause">
+		<set>
+			<trim suffixOverrides=",">
+				user_id = #{userId,jdbcType=BIGINT},
+				amount = #{amount,jdbcType=DECIMAL},
+			</trim>
+		</set>
+	</sql>
+	<sql id="Selective_Column_List">
+		ID,
+		<if test="userId != null">
+			user_id,
+		</if>
+		<if test="amount != null">
+			amount,
+		</if>
+	</sql>
+	<sql id="Base_Value_List">
+		#{id,jdbcType=BIGINT},
+		#{userId,jdbcType=BIGINT},
+		#{amount,jdbcType=DECIMAL},
+	</sql>
+	<sql id="Selective_Value_List">
+		#{id},
+		<if test="userId != null">
+			#{userId,jdbcType=BIGINT},
+		</if>
+		<if test="amount != null">
+			#{amount,jdbcType=DECIMAL},
+		</if>
+	</sql>
+
+	<select id="selectByExample" parameterType="TpointQuery" resultMap="BaseResultMap">
+		select
+		<trim suffixOverrides=",">
+			<include refid="Base_Column_List" />
+		</trim>
+		from t_point
+		<include refid="Example_Where_Clause" />
+		<!-- order by CREATE_DATE -->
+	</select>
+	<select id="selectByPrimaryKey" parameterType="Long" resultMap="BaseResultMap">
+		select
+		<trim suffixOverrides=",">
+			<include refid="Base_Column_List" />
+		</trim>
+		from t_point
+		where ID = #{id,jdbcType=SMALLINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="Long">
+		delete from t_point
+		where ID = #{id,jdbcType=SMALLINT}
+	</delete>
+	<delete id="deleteByExample" parameterType="TpointQuery">
+		delete from t_point
+		<include refid="Example_Where_Clause" />
+	</delete>
+	<insert id="insert" parameterType="Tpoint">
+		insert into t_point
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<include refid="Base_Column_List" />
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<include refid="Base_Value_List" />
+		</trim>
+	</insert>
+	<insert id="insertSelective" parameterType="Tpoint" useGeneratedKeys="true" keyProperty="id">
+		insert into t_point
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<include refid="Selective_Column_List" />
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<include refid="Selective_Value_List" />
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="TpointQuery" resultType="java.lang.Integer">
+		select count(*) from t_point
+		<include refid="Example_Where_Clause" />
+	</select>
+	<update id="updateByPrimaryKeySelective" parameterType="Tpoint">
+		update t_point
+		<include refid="Example_Set_Clause" />
+		where ID = #{id,jdbcType=SMALLINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="Tpoint">
+		update t_point
+		<include refid="Base_Set_Clause" />
+		where ID = #{id,jdbcType=SMALLINT}
+	</update>
+
+	<select id="selectPageByExample" parameterType="TpointQuery" resultMap="BaseResultMap">
+		select
+		<trim suffixOverrides=",">
+			<include refid="Base_Column_List" />
+		</trim>
+		from t_point
+		<include refid="Example_Where_Clause" />
+        <![CDATA[ limit #{startRow},#{endRow} ]]>
+  		<!-- order by CREATE_DATE -->
+	</select>
+</mapper>
