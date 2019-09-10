@@ -27,7 +27,22 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 #### [博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)    
 
 
-### 1、Maven
+
+写这篇文件的时候不得不说，网上真的都是闲人啊，基本上是复制粘贴，然后自己也亲自试一试，简直是糟糕透了。所以博主自己开始写了
+
+
+
+## 1、默认的JmsTemplate发送消息
+
+```
+默认的 jmsTemplate 发送queue消息（默认是持久化的）
+默认的 jmsTemplate 发送topic消息（默认是非持久化的）
+```
+
+
+
+
+### 1.1、Maven
 
 ```xml
 
@@ -36,11 +51,6 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-activemq</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
         
 ```
 
@@ -48,26 +58,24 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 
 
-### 2、SpringBoot配置
+### 1.2、SpringBoot配置
 
 ```properties
 server.port=8888
 
-# 将spring boot日志级别调整为debug级别，以便更方便查看打印出来的日志信息(只针对org.springframework及其子包)
-logging.level.org.springframework=info
 
 # ActiveMQ通讯地址
-spring.activemq.broker-url=tcp://localhost:61616
+spring.activemq.broker-url=tcp://127.0.0.1:61616
 spring.activemq.user=admin
 spring.activemq.password=admin
-#最大连接数
-spring.activemq.pool.maxConnections=2
-#空闲时间
-spring.activemq.pool.idleTimeout=30000
-#是否启用内存模式（就是不安装MQ，项目启动时同时启动一个MQ实例）
+#是否启用内存模式,开始消息持久化就必须关闭in-memory选项。
 spring.activemq.in-memory=false
 ##信任所有的包
 spring.activemq.packages.trust-al=true
+#最大连接数
+spring.activemq.pool.maxConnections=50
+#空闲时间
+spring.activemq.pool.idleTimeout=30000
 # 是否替换默认的连接池，使用ActiveMQ的连接池需引入的依赖
 spring.activemq.pool.enabled=false
 
@@ -76,181 +84,537 @@ spring.activemq.pool.enabled=false
 
 
 
-### 3、Config配置
+### 1.3、常亮设置
 
-**springboot默认只配置queue类型消息，如果要使用topic类型的消息，则需要配置该bean**
+```java
+public class JmsConstant {
+
+    /**  默认队列  */
+    public static final String QUEUE_NAME_DEFAULT = "default_queueName";
+    /**  默认名称   */
+    public static final String TOPIC_NAME_DEFAULT  = "default_topicName";
+
+
+    public static final String TOPIC_LISTENER_FACTORY = "topicListenerFactory";
+
+}
+
+
+```
+
+
+
+### 1.4、ActiveMQConfig
 
 ```java
 @Configuration
 @EnableJms
 public class ActiveMQConfig {
 
+    @Value("${spring.activemq.broker-url}")
+    private String brokerUrl;
+
+    @Value("${spring.activemq.user}")
+    private String jmsUser;
+
+    @Value("${spring.activemq.password}")
+    private String jsmPass;
+
+
+    @Bean(name = "connectionFactory")
+    public ActiveMQConnectionFactory connectionFactory() {
+        ActiveMQConnectionFactory activeMQConnectionFactory = 
+            new ActiveMQConnectionFactory(jmsUser, jsmPass, brokerUrl);
+        activeMQConnectionFactory.setTrustAllPackages(true);
+        return activeMQConnectionFactory;
+    }
+
+    @Primary
+    @Bean("jmsTemplate")
+    public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
+        return new JmsTemplate(connectionFactory);
+    }
+   
+
+
+    // springboot默认只配置queue类型消息，如果要使用topic类型的消息，则需要配置bean
     /**
-     * springboot默认只配置queue类型消息，如果要使用topic类型的消息，则需要配置该bean
+     * 发布/订阅 非持久化Topic
      */
-    @Bean(name = "jmsTopicListenerContainerFactory")
-    public JmsListenerContainerFactory jmsTopicListenerContainerFactory(
-        ConnectionFactory connectionFactory) {
+    @Bean(JmsConstant.TOPIC_LISTENER_FACTORY)
+    public JmsListenerContainerFactory topicListenerFactory(ConnectionFactory connectionFactory) {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         //这里必须设置为true，false则表示是queue类型
         factory.setPubSubDomain(true);
+        // 开启非持久化
+        factory.setSubscriptionDurable(false);
         return factory;
     }
 
-}
-
 ```
 
 
 
-### 4、Consumer监听消息（queue和非持久topic消息）
+
+
+### 1.5、监听消息
 
 
 
 ```java
-@JmsListener(destination = QUEUE_NAME)
-
- @JmsListener(destination = TOPIC_NAME, 
-                 containerFactory = "jmsTopicListenerContainerFactory")
-```
-
-
-
-```java
-
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.jms.annotation.JmsListener;
-import org.springframework.stereotype.Component;
-
-/**
- * @author HealerJean
- * @ClassName JMSConsumer
- * @date 2019/9/3  10:27.
- * @Description
- */
-@Slf4j
 @Component
-public class JMSConsumer {
+public class JmsMsgListener {
 
-    public static final String QUEUE_NAME = "SpringBoot:Queue";
-    public static final String TOPIC_NAME = "SpringBoot:Topic";
-
-
-    /**
-     * 接收queue类型消息
-     * destination对应配置类中ActiveMQQueue("SpringBoot:Queue")设置的名字
-     */
-    @JmsListener(destination = QUEUE_NAME)
-    public void listenQueue(String msg) {
-        System.out.println("接收到queue消息：" + msg);
+	//springboot默认只配置queue类型消息，默认就是点对点的，这样在监听的时候，可以不写这个工厂
+    @JmsListener(destination = JmsConstant.QUEUE_NAME_DEFAULT)
+    public void receivedefaultJmsTeamplateQueue(String msg) {
+        System.out.println("[" + JmsConstant.QUEUE_NAME_DEFAULT + "]消息:" + msg);
     }
 
-    /**
-     * 接收topic类型消息
-     * destination对应配置类中ActiveMQTopic("SpringBoot:Topic")设置的名字
-     * containerFactory对应配置类中注册JmsListenerContainerFactory的bean名称
-     */
-    @JmsListener(destination = TOPIC_NAME, 
-                 containerFactory = "jmsTopicListenerContainerFactory")
-    public void listenTopic(String msg) {
-        System.out.println("接收到topic消息：" + msg);
+    @JmsListener(destination = JmsConstant.TOPIC_NAME_DEFAULT, 
+                 containerFactory = JmsConstant.TOPIC_LISTENER_FACTORY)
+    public void receivedefaultJmsTeamplateTopic(String msg) {
+        System.out.println("[" + JmsConstant.TOPIC_NAME_DEFAULT + "]消息:" + msg);
     }
 }
-
 ```
 
 
 
-### 5、producer生产者发送消息
+### 1.6、发送消息接口和服务
+
+#### 1.6.1、发送消息接口
+
+
+
+```java
+public interface ProducerService {
+
+    /**
+     * 默认的 jmsTemplate 发送queue消息（默认是持久化的）
+     */
+    void jmsTemplateSendMsgToQueue(String destination, final String msg);
+    /**
+     * 默认的 jmsTemplate 发送topic消息（默认是非持久化的）
+     */
+    void jmsTemplateSendMsgTopTopic(String destination, String msg);
+
+}
+```
+
+
+
+#### 5.2、 实现接口
 
 ```java
 @Service
-public class JMSProducer {
+public class ProducerServiceImpl implements ProducerService {
 
-
+    /**
+     * 系统默认的 jmsTemplate
+     */
     @Autowired
     private JmsTemplate jmsTemplate;
 
     /**
-     * 发送Queue消息
+     * 默认的 jmsTemplate 发送queue消息（默认是持久化的）
      */
-    public void sendMessage(Destination destination, String message) {
-        this.jmsTemplate.convertAndSend(destination, message);
+    @Override
+    public void jmsTemplateSendMsgToQueue(String destination, final String msg) {
+        jmsTemplate.convertAndSend(new ActiveMQQueue(destination), msg);
     }
-
-
+    /**
+     * 默认的 jmsTemplate 发送topic消息（默认是非持久化的）
+     */
+    @Override
+    public void jmsTemplateSendMsgTopTopic(String destination,  String msg) {
+        jmsTemplate.convertAndSend(new ActiveMQTopic(destination), msg);
+    }
+    
 }
 ```
 
 
 
-### 6、controller测试
+
+
+### 6、测试controller
 
 ```java
-package com.hlj.activemq.d03_SpringBoot配置activemq;
+@RestController
+@RequestMapping("hlj/activemq")
+public class ActiveMQController {
 
-import org.apache.activemq.command.ActiveMQQueue;
-import org.apache.activemq.command.ActiveMQTopic;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+    @Autowired
+    private ProducerService producerService;
 
-import javax.jms.Queue;
-import javax.jms.Topic;
+
+    @RequestMapping("/defaultQueue")
+    public String defaultQueue(String msg) {
+        producerService.jmsTemplateSendMsgToQueue(JmsConstant.QUEUE_NAME_DEFAULT, msg);
+        return "defaultQueue";
+    }
+
+    @RequestMapping("/defaultTopic")
+    public String defaultTopic(String msg) {
+        producerService.jmsTemplateSendMsgTopTopic(JmsConstant.TOPIC_NAME_DEFAULT, msg);
+        return "defaultTopic";
+    }
+}
+```
+
+
+
+#### 1.6..1、http请求
+
+```http
+GET http://localhost:8888/hlj/activemq/defaultQueue?msg=hello
+```
+
+
+
+```http
+GET http://localhost:8888/hlj/activemq/defaultTopic?msg=hello
+```
+
+
+
+## 2、自定义的JmsTemplate发送queue和topic（非持久化和持久化）
+
+
+
+### 2.1、ActiveMQConfig
+
+```java
 
 /**
  * @author HealerJean
- * @ClassName Controller
- * @date 2019/9/3  11:32.
+ * @version 1.0v
+ * @ClassName ActiveMQConfig
+ * @Date 2019/9/10  15:51.
  * @Description
  */
-@RestController
-@RequestMapping("hlj/activemq")
-public class MainController {
+@Configuration
+@EnableJms
+public class ActiveMQConfig {
+
+    @Value("${spring.activemq.broker-url}")
+    private String brokerUrl;
+
+    @Value("${spring.activemq.user}")
+    private String jmsUser;
+
+    @Value("${spring.activemq.password}")
+    private String jsmPass;
+
+
+    @Bean(name = "connectionFactory")
+    public ActiveMQConnectionFactory connectionFactory() {
+        ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory(jmsUser, jsmPass, brokerUrl);
+        activeMQConnectionFactory.setTrustAllPackages(true);
+        return activeMQConnectionFactory;
+    }
+
+    @Primary
+    @Bean("jmsTemplate")
+    public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
+        return new JmsTemplate(connectionFactory);
+    }
+
+
+    /**
+     * 持久化的 prsistentJmsTemplate
+     */
+    @Bean("persistentJmsTemplate")
+    public JmsTemplate persistentJmsTemplate(ConnectionFactory connectionFactory) {
+        JmsTemplate persistentJmsTemplate = new JmsTemplate();
+        persistentJmsTemplate.setConnectionFactory(connectionFactory);
+        //设置为true，deliveryMode, priority, timeToLive等设置才会起作用，否则使用默认的值
+        persistentJmsTemplate.setExplicitQosEnabled(true);
+        persistentJmsTemplate.setDeliveryMode(DeliveryMode.PERSISTENT);
+        return persistentJmsTemplate;
+    }
+
+    /**
+     * 非持久化的 noPrsistentJmsTemplate
+     */
+    @Bean("noPersistentJmsTemplate")
+    public JmsTemplate noPersistentJmsTemplate(ConnectionFactory connectionFactory) {
+        JmsTemplate persistentJmsTemplate = new JmsTemplate();
+        persistentJmsTemplate.setConnectionFactory(connectionFactory);
+        //设置为true，deliveryMode, priority, timeToLive等设置才会起作用，否则使用默认的值
+        persistentJmsTemplate.setExplicitQosEnabled(true);
+        persistentJmsTemplate.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+        return persistentJmsTemplate;
+    }
+
+
+    // springboot默认只配置queue类型消息，如果要使用topic类型的消息，则需要配置bean
+    /**
+     * 发布/订阅 非持久化Topic
+     */
+    @Bean(JmsConstant.TOPIC_LISTENER_FACTORY)
+    public JmsListenerContainerFactory topicListenerFactory(ConnectionFactory connectionFactory) {
+        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        //这里必须设置为true，false则表示是queue类型
+        factory.setPubSubDomain(true);
+        // 开启非持久化
+        factory.setSubscriptionDurable(false);
+        return factory;
+    }
+
+
+
+    /**
+     * 发布/订阅 持久化Topic
+     */
+    @Bean(JmsConstant.PRSISTENT_TOPIC_LISTENER_FACTORY)
+    public DefaultJmsListenerContainerFactory prsistentTopicListenerFactory(ConnectionFactory connectionFactory) {
+        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        //这里必须设置为true，false则表示是queue类型
+        factory.setPubSubDomain(true);
+        // 开启持久化
+        factory.setSubscriptionDurable(true);
+        // 设置clientId
+        factory.setClientId(JmsConstant.PRSISTENT_TOPIC_NAME_CLIENT);
+        return factory;
+    }
+}
+
+```
+
+
+
+### 2.2、变量设置
+
+```java
+public class JmsConstant {
+
+    /**  默认队列  */
+    public static final String QUEUE_NAME_DEFAULT = "default_queueName";
+    /**  默认名称   */
+    public static final String TOPIC_NAME_DEFAULT  = "default_topicName";
+
+
+
+    /**  队列  */
+    public static final String QUEUE_NAME = "queueName";
+    /**  订阅名称   */
+    public static final String TOPIC_NAME = "topicName";
+    /**  持久化topic  */
+    public static final  String PRSISTENT_TOPIC_NAME = "prsistentTopicName";
+    public static final  String PRSISTENT_TOPIC_NAME_CLIENT = "Cliend_HealerJean";
+
+
+    public static final String TOPIC_LISTENER_FACTORY = "topicListenerFactory";
+    public static final String PRSISTENT_TOPIC_LISTENER_FACTORY = "prsistentTopicListenerFactory";
+
+
+}
+```
+
+
+
+
+
+### 2.3、监听消息
+
+```java
+/**
+ * 消息监听器
+ */
+@Component
+public class JmsMsgListener {
+
+    //默认的的JmsTeamplate发送的消息监听
+    @JmsListener(destination = JmsConstant.QUEUE_NAME_DEFAULT)
+    public void receivedefaultJmsTeamplateQueue(String msg) {
+        System.out.println("[" + JmsConstant.QUEUE_NAME_DEFAULT + "]消息:" + msg);
+    }
+
+    @JmsListener(destination = JmsConstant.TOPIC_NAME_DEFAULT, 
+                 containerFactory = JmsConstant.TOPIC_LISTENER_FACTORY)
+    public void receivedefaultJmsTeamplateTopic(String msg) {
+        System.out.println("[" + JmsConstant.TOPIC_NAME_DEFAULT + "]消息:" + msg);
+    }
+
+
+
+    //自定的JmsTeamplate发送的消息监听
+    @JmsListener(destination = JmsConstant.QUEUE_NAME)
+    public void receiveQueue(String msg) {
+        System.out.println("[" + JmsConstant.QUEUE_NAME + "]消息:" + msg);
+    }
+
+    @JmsListener(destination = JmsConstant.TOPIC_NAME, 
+                 containerFactory = JmsConstant.TOPIC_LISTENER_FACTORY)
+    public void receiveTopicName(String msg) {
+        System.out.println("[" + JmsConstant.TOPIC_NAME + "]消费者:receive=" + msg);
+    }
+
+    @JmsListener(destination = JmsConstant.PRSISTENT_TOPIC_NAME, 
+                 containerFactory = JmsConstant.PRSISTENT_TOPIC_LISTENER_FACTORY)
+    public void receivePrsistentTopicName(String msg) {
+        System.out.println("[" + JmsConstant.PRSISTENT_TOPIC_NAME + "]消费者:receive=" + msg);
+    }
+
+}
+```
+
+
+
+### 2.4、发送消息接口和实现
+
+#### 2.4.1、发送消息接口
+
+```java
+public interface ProducerService {
+
+    /**
+     * 默认的 jmsTemplate 发送queue消息（默认是持久化的）
+     */
+    void jmsTemplateSendMsgToQueue(String destination, final String msg);
+    /**
+     * 默认的 jmsTemplate 发送topic消息（默认是非持久化的）
+     */
+    void jmsTemplateSendMsgTopTopic(String destination, String msg);
+
+    
+
+    /**
+     * 发送消息（点对点）
+     */
+    void sendMsgToQueue(String destination, String msg);
+    /**
+     * 发送消息（非持久化 发布-订阅模式）
+     */
+    void sendMsgToTopic(String destination, String msg);
+
+    /**
+     * 发送消息（持久化 发布-订阅模式）
+     */
+    void sendMsgTopPrsistentTopic(String destination, String msg);
+}
+```
+
+
+
+#### 2.4.2、实现
+
+```java
+/**
+ * 消息生产者服务实现类
+ */
+@Service
+public class ProducerServiceImpl implements ProducerService {
+
+    /**
+     * 系统默认的 jmsTemplate *************************************
+     */
+    @Autowired
+    private JmsTemplate jmsTemplate;
+
+    /**
+     * 默认的 jmsTemplate 发送queue消息（默认是持久化的）
+     */
+    @Override
+    public void jmsTemplateSendMsgToQueue(String destination, final String msg) {
+        jmsTemplate.convertAndSend(new ActiveMQQueue(destination), msg);
+    }
+    /**
+     * 默认的 jmsTemplate 发送topic消息（默认是非持久化的）
+     */
+    @Override
+    public void jmsTemplateSendMsgTopTopic(String destination,  String msg) {
+        jmsTemplate.convertAndSend(new ActiveMQTopic(destination), msg);
+    }
+
+
+    /**
+     * 自定义的jmsTemplate *************************************
+     */
 
     @Autowired
-    private JMSProducer jmsProducer;
+    @Qualifier("persistentJmsTemplate")
+    private JmsTemplate persistentJmsTemplate;
 
-    /**
-     * 发送消息的数量
-     */
-    public static final String QUEUE_NAME = "SpringBoot:Queue";
-    public static final String TOPIC_NAME = "SpringBoot:Topic";
+    @Autowired
+    @Qualifier("persistentJmsTemplate")
+    private JmsTemplate noPersistentJmsTemplate;
 
-    /**
-     * 发送queue类型消息
-     */
-    @GetMapping("/queue")
-    @ResponseBody
-    public String sendQueueMsg(String msg) {
-        if (StringUtils.isBlank(msg)) {
-            return "msg不能为空";
-        }
-        Queue destination = new ActiveMQQueue(QUEUE_NAME);
-       jmsProducer.sendMessage(destination, msg);
-        return "queue send success";
+    @Override
+    public void sendMsgToQueue(String destination, final String msg) {
+        persistentJmsTemplate.convertAndSend(new ActiveMQQueue(destination), msg);
+    }
+
+    @Override
+    public void sendMsgToTopic(String destination, final String msg) {
+        noPersistentJmsTemplate.convertAndSend(new ActiveMQTopic(destination), msg);
+    }
+
+    @Override
+    public void sendMsgTopPrsistentTopic(String destination,  String msg) {
+        persistentJmsTemplate.convertAndSend(new ActiveMQTopic(destination), msg);
+    }
+
+}
+```
+
+
+
+### 2.5、测试Controller
+
+```java
+
+@RestController
+@RequestMapping("hlj/activemq")
+public class ActiveMQController {
+
+    @Autowired
+    private ProducerService producerService;
+
+    @RequestMapping("/defaultQueue")
+    public String defaultQueue(String msg) {
+        producerService.jmsTemplateSendMsgToQueue(JmsConstant.QUEUE_NAME_DEFAULT, msg);
+        return "defaultQueue";
+    }
+
+    @RequestMapping("/defaultTopic")
+    public String defaultTopic(String msg) {
+        producerService.jmsTemplateSendMsgTopTopic(JmsConstant.TOPIC_NAME_DEFAULT, msg);
+        return "defaultTopic";
     }
 
 
+
+
     /**
-     * 发送topic类型消息
+     * 点对点
      */
-    @GetMapping("/topic")
-    @ResponseBody
-    public String sendTopicMsg(String msg) {
-        if (StringUtils.isBlank(msg)) {
-            return "msg不能为空";
-        }
-        Topic destination = new ActiveMQTopic(TOPIC_NAME);
-        jmsProducer.sendMessage(destination, msg);
-        return "topic send success";
+    @RequestMapping("/queue")
+    public String queue(String msg) {
+        producerService.sendMsgToQueue(JmsConstant.QUEUE_NAME, msg);
+        return "queue";
     }
-
-
+    /**
+     * 非持久化 发布/订阅
+     */
+    @RequestMapping("/topic")
+    public String topic(String msg) {
+        producerService.sendMsgToTopic(JmsConstant.TOPIC_NAME, msg);
+        return "topic";
+    }
+    /**
+     * 持久化 发布/订阅
+     */
+    @RequestMapping("/persistentTopic")
+    public String persistentTopic(String msg) {
+        producerService.sendMsgTopPrsistentTopic(JmsConstant.PRSISTENT_TOPIC_NAME, msg);
+        return "persistentTopic";
+    }
 
 }
 
@@ -258,106 +622,25 @@ public class MainController {
 
 
 
-### 6.2.1、启动项目
+#### 2.5.1、http
 
-##### 6.2.1.1.queue
-
-![1567501888012](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567501888012.png)
-
+```http
+GET http://localhost:8888/hlj/activemq/queue?msg=hello
 
 
-| name       | Number Of Pending Messages | Number Of Consumers | Messages Enqueued | Messages Dequeued |
-| ---------- | -------------------------- | ------------------- | ----------------- | ----------------- |
-| SpringBoot:Queue | 0                         | 1                   | 0                | 0                 |
-
-
-
-##### 6.2.1.1、topic
-
-
-
-![1567501941928](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567501941928.png)
-
-
-
-#### 6.2.1.2、Subscribers
-
-
-
-![1567501979357](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567501979357.png)
-
-
-
-
-
-
-
-#### 6.2.1、发送queue消息
-
-```
-
-http://localhost:8888/hlj/activemq/queue?msg=hello
-
-控制台 接收到queue消息：hello
-
-浏览器 queue send success
-
-
-
-```
-
-
-
-
-
-![1567502025270](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567502025270.png)
-
-
-
-
-
-| name             | Number Of Pending Messages | Number Of Consumers | Messages Enqueued | Messages Dequeued |
-| ---------------- | -------------------------- | ------------------- | ----------------- | ----------------- |
-| SpringBoot:Queue | 0                          | 1                   | 1                 | 1                 |
-
-
-
-
-
-#### 6.2.2、发送topic消息
-
-```
 GET http://localhost:8888/hlj/activemq/topic?msg=hello
 
-控制台 接收到topic消息：hello
 
-浏览器 topic send success
-
-
-
+GET http://localhost:8888/hlj/activemq/persistentTopic?msg=persistentTopic
 ```
 
-![1567502071104](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567502071104.png)
-
-
-
-
-
-| name             | Number Of Consumers | Messages Enqueued | Messages Dequeued |
-| ---------------- | ------------------- | ----------------- | ----------------- |
-| SpringBoot:Queue | 1                   | 1                 | 1                 |
-
-![1567502165444](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567502165444.png)
 
 
 
 
 
 
-
-<font  color="red" size="5" >     
-感兴趣的，欢迎添加博主微信
- </font>       
+​       
 
    
 
