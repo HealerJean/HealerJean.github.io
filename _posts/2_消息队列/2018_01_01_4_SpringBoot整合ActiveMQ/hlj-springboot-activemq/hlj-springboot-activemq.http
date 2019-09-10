@@ -1,0 +1,24 @@
+
+
+###
+GET http://localhost:8888/hlj/activemq/defaultQueue?msg=hello
+
+###
+GET http://localhost:8888/hlj/activemq/defaultTopic?msg=hello
+
+
+# 发送queue消息
+GET http://localhost:8888/hlj/activemq/queue?msg=hello
+
+###
+
+# 发送topic非持久化消息
+GET http://localhost:8888/hlj/activemq/topic?msg=hello
+
+###
+
+GET http://localhost:8888/hlj/activemq/persistentTopic?msg=persistentTopic
+
+
+###
+
