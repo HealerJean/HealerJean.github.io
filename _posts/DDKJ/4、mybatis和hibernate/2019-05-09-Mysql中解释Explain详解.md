@@ -450,7 +450,7 @@ explain SELECT *  from d001_index_order_info  WHERE ref_user_id = 1 ;
 
 #### 1.7.2、Using where：
 
-##### 1.7.2.1、查询条件不是索引  (即使包含了索引)（最左原则）
+##### 1.7.2.1、查询条件不是索引  (即使包含了联合索引的最左面)（最左原则）
 
 ```
 explain SELECT * from d001_index_order_info where param = '1' ;
@@ -471,6 +471,7 @@ explain SELECT ref_user_id from d001_index_order_info where param = '1' ;
 
 
 ```sql
+ref_user_id 必须是精确的 =  ，否则会变成Using where, Using index 
 explain SELECT ref_user_id from d001_index_order_info where ref_user_id = 1 and param = '1' ;
 ```
 
