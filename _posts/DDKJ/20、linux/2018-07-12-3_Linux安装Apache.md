@@ -64,7 +64,7 @@ tar -zvxf apr-1.4.5.tar.gz
 make && make install
 
 ```
-   
+
 ## 2.解决APR-util not found问题
 
 ```
@@ -74,7 +74,7 @@ tar -zvxf apr-util-1.3.12.tar.gz
 make && make install
 
 ```
- 
+
 ### 3、解决pcre-config for libpcre not found问题
 
 
@@ -85,7 +85,7 @@ cd pcre-8.31 ./configure --prefix=/usr/local/pcre
 make && make install
 
 ```
- 
+
 ## 2、开始安装吧
 
 ```

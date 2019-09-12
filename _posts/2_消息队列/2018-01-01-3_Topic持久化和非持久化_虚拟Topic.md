@@ -868,7 +868,7 @@ Consumer.BB.VirtualTopic.Name收到消息ActiveMq的消息5
 
 
 
-![1567748451256](D:\study\HealerJean.github.io\blogImages\1567748451256.png)
+![1567748451256](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567748451256.png)
 
 
 
@@ -884,7 +884,7 @@ Consumer.BB.VirtualTopic.Name收到消息ActiveMq的消息5
 
 
 
-![1567748684504](D:\study\HealerJean.github.io\blogImages\1567748684504.png)
+![1567748684504](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1567748684504.png)
 
 
 
