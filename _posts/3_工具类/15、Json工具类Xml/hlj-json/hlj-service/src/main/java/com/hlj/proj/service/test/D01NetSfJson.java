@@ -1,22 +1,27 @@
 package com.hlj.proj.service.test;
 
+import com.google.gson.Gson;
+import com.hlj.proj.dto.DateBean;
 import com.hlj.proj.utils.JsonUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author HealerJean
  * @version 1.0v
- * @ClassName D01NetSfJsonUtils
+ * @ClassName D01NetSfJson
  * @date 2019/8/3  12:39.
  * @Description
  */
-public class D01NetSfJsonUtils {
+public class D01NetSfJson {
+
+
 
 
 
@@ -173,11 +178,7 @@ public class D01NetSfJsonUtils {
         // 数组中的JSONObject :{"friendName":"小明","friendSex":"男"}
         // 数组中的JSONObject :{"friendName":"小花","friendSex":"女"}
 
-
     }
-
-
-
 
 
 

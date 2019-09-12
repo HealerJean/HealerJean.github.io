@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.hlj.proj</groupId>
-        <artifactId>hlj-sensitivity</artifactId>
+        <artifactId>hlj-json</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 

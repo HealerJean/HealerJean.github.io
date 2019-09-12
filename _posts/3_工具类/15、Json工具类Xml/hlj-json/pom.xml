@@ -10,9 +10,9 @@
     </parent>
 
     <groupId>com.hlj.proj</groupId>
-    <artifactId>hlj-sensitivity</artifactId>
+    <artifactId>hlj-json</artifactId>
     <version>${project.scf.version}</version>
-    <name>hlj-sensitivity</name>
+    <name>hlj-json</name>
     <description>父工程</description>
     <packaging>pom</packaging>
 
@@ -22,7 +22,6 @@
         <module>hlj-service</module>
         <module>hlj-client</module>
     </modules>
-
 
 
     <properties>
@@ -39,7 +38,11 @@
         <okhttp3.version>3.11.0</okhttp3.version>
         <!--要激活的resoure目录-->
         <profiles.active>src/profiles/local</profiles.active>
+        <!--fastjson-->
         <com-alibaba-fastjson.version>1.2.58</com-alibaba-fastjson.version>
+        <!--gson-->
+        <gson.verson>2.8.5</gson.verson>
+
     </properties>
 
     <dependencyManagement>
@@ -87,9 +90,15 @@
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
-                 <version>${com-alibaba-fastjson.version}</version>
+                <version>${com-alibaba-fastjson.version}</version>
             </dependency>
 
+            <!--gson-->
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson.verson}</version>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>
@@ -155,18 +164,18 @@
             </resource>
         </resources>
 
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.5.1</version>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                        <encoding>UTF-8</encoding>
-                    </configuration>
-                </plugin>
-            </plugins>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
