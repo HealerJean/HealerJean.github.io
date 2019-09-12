@@ -53,10 +53,9 @@ public class GeneralBean {
         List<Friend> friends = new ArrayList<>();
         friends.add(friendOne);
         friends.add(friendTwo);
-        generalBean.setFriends(friends) ;
+        generalBean.setFriends(friends);
 
         System.out.println(JsonUtils.toJsonString(generalBean));
-
 
 
     }

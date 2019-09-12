@@ -17,13 +17,10 @@ import java.util.Map;
  * @version 1.0v
  * @ClassName D02DteErrorJson
  * @date 2019-08-04  16:14.
- *  1、只要是经过JSONObject的对象， date就会走样
- *   但是我们的对象到了前端之后，就会帮我们变成long类型，这是由于HttpMessageCover帮我们做的
+ * 1、只要是经过JSONObject的对象， date就会走样,但是我们的对象到了前端之后，就会帮我们变成long类型，这是由于HttpMessageCover帮我们做的
  */
 @Slf4j
 public class D02DteErrorJson {
-
-
 
 
     /**
@@ -33,10 +30,10 @@ public class D02DteErrorJson {
     public void testStringDateOrLong() throws IOException {
 
         // 报错 String dateJsonSTR = "{\"name\":\"HealerJean\",\"date\":2018-12-13 20:31:04}\n" ;
-        String dateJsonSTR = "{\"name\":\"HealerJean\",\"date\":1544782308409}\n" ;
+        String dateJsonSTR = "{\"name\":\"HealerJean\",\"date\":1544782308409}\n";
 
         ObjectMapper objectMapper = new ObjectMapper();
-        DateBean dateBean = objectMapper.readValue(dateJsonSTR,DateBean.class);
+        DateBean dateBean = objectMapper.readValue(dateJsonSTR, DateBean.class);
 
     }
 
@@ -65,12 +62,10 @@ public class D02DteErrorJson {
     }
 
 
-
-
     /**
      * 5、对象转Map 、Map转JavaBean
-     *  对象转Map ：现将对象转换为Json，在将Json转换为map
-     *  Map转JavaBean ：map转换为Json，再讲Json转换为JavaBean
+     * 对象转Map ：现将对象转换为Json，在将Json转换为map
+     * Map转JavaBean ：map转换为Json，再讲Json转换为JavaBean
      */
     @Test
     public void MapTobaen() {
@@ -79,20 +74,16 @@ public class D02DteErrorJson {
         dateBean.setDate(new Date());
         dateBean.setName("HealerJean");
 
-        Map<String, Object> map = JsonUtils.toObject(JsonUtils.toJsonString(dateBean),  new TypeReference<Map<String, Object>>( ){} );
+        Map<String, Object> map = JsonUtils.toObject(JsonUtils.toJsonString(dateBean), new TypeReference<Map<String, Object>>() {
+        });
         System.out.println(map);
 
         String mapJsonSTR = JsonUtils.toJsonString(map);
-        dateBean = JsonUtils.toObject(mapJsonSTR,DateBean.class);
+        dateBean = JsonUtils.toObject(mapJsonSTR, DateBean.class);
         System.out.println(dateBean);
 
 
     }
-
-
-
-
-
 
 
 }

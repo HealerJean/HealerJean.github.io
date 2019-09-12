@@ -15,8 +15,8 @@ import java.util.Date;
 public class DateBean {
 
 
-        private String name ;
-        private Date date ;
+    private String name;
+    private Date date;
 
 
     public static void main(String[] args) {

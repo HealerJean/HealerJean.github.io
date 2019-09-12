@@ -36,14 +36,16 @@ public class D05Collection {
 
 
         List<DateBean> dateBeans = null;
-        dateBeans = JsonUtils.toObject(jsonSTR, new TypeReference<List<DateBean>>() {});
+        dateBeans = JsonUtils.toObject(jsonSTR, new TypeReference<List<DateBean>>() {
+        });
         System.out.println(dateBeans);
 
-        JavaType javaType  = JsonUtils.toJavaType(new TypeReference<List<DateBean>>() {});
-        dateBeans = JsonUtils.toObject(jsonSTR,javaType);
+        JavaType javaType = JsonUtils.toJavaType(new TypeReference<List<DateBean>>() {
+        });
+        dateBeans = JsonUtils.toObject(jsonSTR, javaType);
         System.out.println(dateBeans);
 
-        dateBeans = JsonUtils.jsonToArray(jsonSTR,DateBean.class, ArrayList.class);
+        dateBeans = JsonUtils.jsonToArray(jsonSTR, DateBean.class, ArrayList.class);
         System.out.println(dateBeans);
 
     }
