@@ -3,6 +3,7 @@ package com.hlj.proj.controller;
 import com.hlj.proj.api.demo.DemoEntityService;
 import com.hlj.proj.dto.Demo.DemoDTO;
 import com.hlj.proj.dto.ResponseBean;
+import com.hlj.proj.utils.JsonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -38,6 +39,23 @@ public class DemoController {
 
     @Autowired
     private DemoEntityService demoEntityService;
+
+    /**
+     * 正常JsonUtils
+     */
+    @ApiOperation(value = "正常JsonUtils",
+            notes = "正常JsonUtils",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            response = DemoDTO.class)
+    @GetMapping(value = "sensitivity/normal", produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public String normal(DemoDTO demoDTO) {
+        log.info("脱敏--------Json工具脱敏------数据信息{}", demoDTO);
+        demoEntityService.getDemoDTO(demoDTO);
+        return JsonUtils.toJsonString(demoDTO);
+    }
+
 
 
     /**
