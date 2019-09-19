@@ -19,6 +19,8 @@ public class TableShardingAlgorithm implements SingleKeyTableShardingAlgorithm<L
 
     /**
      * sql == 规则
+     * tableNames (0 = "goods_0" 1 = "goods_1")
+     * ShardingValue(logicTableName=goods, columnName=goods_type, value=42, values=[], valueRange=null)
      */
     @Override
     public String doEqualSharding(final Collection<String> tableNames, final ShardingValue<Long> shardingValue) {

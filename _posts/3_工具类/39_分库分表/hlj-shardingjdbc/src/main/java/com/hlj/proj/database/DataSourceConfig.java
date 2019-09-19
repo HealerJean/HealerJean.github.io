@@ -1,8 +1,6 @@
 package com.hlj.proj.database;
 
 
-import com.hlj.proj.config.DatabaseShardingAlgorithm;
-import com.hlj.proj.config.TableShardingAlgorithm;
 import com.dangdang.ddframe.rdb.sharding.api.ShardingDataSourceFactory;
 import com.dangdang.ddframe.rdb.sharding.api.rule.DataSourceRule;
 import com.dangdang.ddframe.rdb.sharding.api.rule.ShardingRule;
@@ -11,6 +9,9 @@ import com.dangdang.ddframe.rdb.sharding.api.strategy.database.DatabaseShardingS
 import com.dangdang.ddframe.rdb.sharding.api.strategy.table.TableShardingStrategy;
 import com.dangdang.ddframe.rdb.sharding.keygen.DefaultKeyGenerator;
 import com.dangdang.ddframe.rdb.sharding.keygen.KeyGenerator;
+import com.hlj.proj.config.DatabaseShardingAlgorithm;
+import com.hlj.proj.config.SnowFlake;
+import com.hlj.proj.config.TableShardingAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,10 +26,10 @@ import java.util.Map;
 public class DataSourceConfig {
 
     @Autowired
-    private Database0Config database0Config;
+    private com.hlj.proj.database.Database0Config database0Config;
 
     @Autowired
-    private Database1Config database1Config;
+    private com.hlj.proj.database.Database1Config database1Config;
 
     @Autowired
     private DatabaseShardingAlgorithm databaseShardingAlgorithm;
@@ -47,7 +48,7 @@ public class DataSourceConfig {
         //添加两个数据库database0和database1
         dataSourceMap.put(database0Config.getDatabaseName(), database0Config.createDataSource());
         dataSourceMap.put(database1Config.getDatabaseName(), database1Config.createDataSource());
-        //设置默认数据库
+        //设置默认数据库,也就是不需要分库的话，map里只放一个映射就行了，只有一个库时不需要指定默认库，但2个及以上时必须指定默认库，否则那些没有配置策略的表将无法操作数据
         DataSourceRule dataSourceRule = new DataSourceRule(dataSourceMap, database0Config.getDatabaseName());
 
         //分表设置，大致思想就是将查询虚拟表Goods根据一定规则映射到真实表中去
@@ -69,8 +70,8 @@ public class DataSourceConfig {
 
 
     @Bean
-    public KeyGenerator keyGenerator() {
-        return new DefaultKeyGenerator();
+    public SnowFlake snowFlake() {
+        return new SnowFlake(1, 0);
     }
 
 }
