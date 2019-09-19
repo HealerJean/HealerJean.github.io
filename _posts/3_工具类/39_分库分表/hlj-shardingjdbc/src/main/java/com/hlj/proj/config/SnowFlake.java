@@ -1,10 +1,4 @@
-package com.dalaoyang.config;
-
-
-/**
- * @author Jakeylove3
- * 2017/12/31
- */
+package com.hlj.proj.config;
 
 /**
  * Twitter_Snowflake
@@ -95,8 +89,8 @@ public class SnowFlake {
     /**
      * 构造函数
      *
-     * @param workerId     工作ID (0~31)
-     * @param datacenterId 数据中心ID (0~31)
+     * @param workerId     工作ID (0~31)  这个就是代表了机器id
+     * @param datacenterId 数据中心ID (0~31) 这个就是代表了机房id
      */
     public SnowFlake(long workerId, long datacenterId) {
         if (workerId > maxWorkerId || workerId < 0) {
@@ -172,18 +166,20 @@ public class SnowFlake {
         return System.currentTimeMillis();
     }
 
+
+
     /**
      * 测试
      */
     public static void main(String[] args) {
         System.out.println("开始：" + System.currentTimeMillis());
-        SnowFlake idWorker = new SnowFlake(0, 20);
-        for (int i = 0; i < 3; i++) {
+        SnowFlake idWorker = new SnowFlake(0, 0);
+        for (int i = 0; i < 30; i++) {
             long id = idWorker.nextId();
             System.out.println(id);
         }
         System.out.println("结束：" + System.currentTimeMillis());
-        idWorker = new SnowFlake(0, 21);
+        idWorker = new SnowFlake(0, 0);
         for (int i = 0; i < 3; i++) {
             long id = idWorker.nextId();
             System.out.println(id);
