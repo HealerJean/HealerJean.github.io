@@ -217,6 +217,36 @@ Cookie: JSESSIONID=e1fd90bf-1148-4368-9fe9-018dcaf1aa0d
 
 
 
+#### 2.5、规范
+
++ **三个#号有效分隔Http请求，所以一般在注释上进行添加**
+
+```http
+############ 1、合同 #######################################
+### 1.1、字典类型添加
+POST http://localhost.admin/api/sys/dictType/add
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json; charset=UTF-8
+Cookie: scf-manager_SID=e1fd90bf-1148-4368-9fe9-018dcaf1aa0d
+
+{"typeKey":"sex","typeDesc":"性别"}
+# 返回结果
+#"{\"msg\":\"新增字典数据成功\",\"typeKey\":\"country\",\"typeDesc\":\"国家\",\"id\":null}"
+
+
+### 1.2、字典类型删除
+DELETE http://localhost.admin/api/sys/dictType/1
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json; charset=UTF-8
+Cookie: scf-manager_SID=e1fd90bf-1148-4368-9fe9-018dcaf1aa0d
+# 返回结果
+# "{\"msg\":\"字典类型删除成功\"}"
+```
+
+
+
 
 
 ## 3、PostMan
