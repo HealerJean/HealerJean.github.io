@@ -92,7 +92,8 @@ public class ScfManagerWebStartApplication extends SpringBootServletInitializer 
     @Override
  
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(ScfManagerWebApplication.class);
+              // 注意这里要指向原先用main方法执行的Application启动类
+        return builder.sources(Application.class);
     }
 }
 
