@@ -1,11 +1,11 @@
 ---
-title: ThradLocal
+title: ThreadLocal
 date: 2019-03-13 03:33:00
 tags: 
 - Thread
 category: 
 - Thread
-description: ThradLocal
+description: ThreadLocal
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
@@ -194,7 +194,7 @@ ThreadLocal的remove()方法会先将Entry中对key的弱引用断开，设置�
 
 key 使用强引用：引用的ThreadLocal对象被回收了，这时候Entry中的ThreadLocal理应被回收了，但是如果Entry的key被设置成强引用则该ThreadLocal就不能被回收，这就是将其设置成弱引用的目的。
 
-key 使用弱引用：引用的ThreadLocal的对象被回收了，由于ThreadLocalMap持有ThreadLocal的弱引用，即使没有手动删除，ThreadLocal也会被回收。value在下一次ThreadLocalMap调用set,get，remove的时候会被清除      
+key 使用弱引用：引用的ThreadLocal的对象被回收了，由于ThreadLocalMap持有ThreadLocal的弱引用，即使没有手动删除，ThreadLocal也会被回收。即，value在下一次ThreadLocalMap调用set,get，remove的时候会被清除      
 
 ```
 Entry中的key是弱引用，key 弱指向ThreadLocal<UserInfo> 对象，并且Key只是userInfoLocal强引用的副本（结合第一个问题），value是userInfo对象。
@@ -208,7 +208,7 @@ Entry中的key是弱引用，key 弱指向ThreadLocal<UserInfo> 对象，并且K
 
 ### 3.2、使用和注意事项
 
-1、JVM利用设置ThreadLocalMap的Key为弱引用，来避免内存泄露。JVM利用调用remove、get、set方法的时候，回收弱引用。当ThreadLocal存储很多Key为null的Entry的时候，而不再去调用remove、get、set方法，那么将导致内存泄漏。   
+**1、JVM利用设置ThreadLocalMap的Key为弱引用，来避免内存泄露。JVM利用调用remove、get、set方法的时候，回收弱引用。当ThreadLocal存储很多Key为null的Entry的时候，而不再去调用remove、get、set方法，那么将导致内存泄漏。**   
 
 3、当使用static ThreadLocal的时候，延长ThreadLocal的生命周期，那也可能导致内存泄漏。因为，static变量在类未加载的时候，它就已经加载，当线程结束的时候，static变量不一定会回收。那么，比起普通成员变量使用的时候才加载，static的生命周期加长将更容易导致内存泄漏危机。
 
@@ -219,7 +219,6 @@ Entry中的key是弱引用，key 弱指向ThreadLocal<UserInfo> 对象，并且K
 开始前重新set值，以及结束后要记得remove
 
 
-​     
 ​     
 <br><br>    
 <font  color="red" size="5" >     

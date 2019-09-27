@@ -89,6 +89,60 @@ Cookie: JSESSIONID=e1fd90bf-1148-4368-9fe9-018dcaf1aa0d
 
 
 
+#### 2.2.1、非@RequestBody  请求，正常表单
+
+```http
+POST http://localhost.admin/api/sys/post?type=SingleLoan
+Accept: */*
+Cache-Control: no-cache
+Cookie: scf-client_SID=24c0e5778aaf4902bc6b45c42b977f4a
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+```
+
+
+
+#### 2.2.2、文件上传
+
+
+
+```java
+public String upload(@RequestParam( required = false) MultipartFile file, SysFileDTO fileDTO ) throws Exception {
+
+```
+
+
+
+```http
+# 4.1、文件上传
+POST http://scf-client-web/api/sys/file/upload?type=SingleLoan
+Accept: */*
+Cache-Control: no-cache
+Cookie: scf-client_SID=24c0e5778aaf4902bc6b45c42b977f4a
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+# file 参数名，filename 文件名（我们可以自己取名字）
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="filename.jpg"
+Content-Type: image/jpeg
+
+< C:\Users\HealerJean\Desktop\微信图片_20190830164253.jpg
+--WebAppBoundary--
+
+```
+
+
+
+文件路径选择，然后点击 ，进行复制路径
+
+
+
+![1569579338051](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1569579338051.png)
+
+
+
+
+
 ### 2.2、Get 请求
 
 #### 2.2.1、**GetMapping 不支持@RequestBody** 
@@ -165,16 +219,27 @@ Cookie: JSESSIONID=e1fd90bf-1148-4368-9fe9-018dcaf1aa0d
 
 
 
+## 3、PostMan
+
+
+
+### 3.1、Cookie文件上传测试
+
+
+
+![1569579681814](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1569579681814.png)
+
+![1569579673129](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1569579673129.png)
 
 
 
 
 
+​     
+
+​     
 
 
-
-<br/>
-<br/>
 
 <font  color="red" size="5" >     
 感兴趣的，欢迎添加博主微信
