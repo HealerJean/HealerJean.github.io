@@ -20,6 +20,7 @@ public enum ResponseEnum   {
     操作确认(203,"操作确认"),
 
     逻辑错误(301,"逻辑错误"),
+    参数错误(302,"参数错误"),
 
     登录标识过期(400,"登录标识过期"),
     强制升级(401,"强制升级"),
@@ -41,9 +42,6 @@ public enum ResponseEnum   {
     }
 
 
-    public ResponseEnum value(String enumName){
-        return valueOf( enumName ) ;
-    }
 
     public static boolean checkExist( Integer code){
         for (ResponseEnum value : ResponseEnum.values()){

@@ -1,12 +1,17 @@
 package com.hlj.proj.config;
 
+import com.hlj.proj.config.filter.SpaceFilter;
 import com.hlj.proj.config.interceptor.UrlInterceptor;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.annotation.Resource;
+import javax.servlet.DispatcherType;
 
 /**
  * 拦截器
@@ -16,11 +21,10 @@ import javax.annotation.Resource;
  */
 
 @Configuration
-public class InterceptorConfig extends WebMvcConfigurerAdapter {
+public class InterceptorConfig implements WebMvcConfigurer {
 
     @Resource
     private UrlInterceptor urlInterceptor;
-
 
     /**
      *  swagger增加url映射
@@ -28,7 +32,7 @@ public class InterceptorConfig extends WebMvcConfigurerAdapter {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/hlj/swagger/**")
+        registry.addResourceHandler("/develop/swagger/**")
                 .addResourceLocations("classpath:/swagger/dist/");
     }
 
@@ -36,8 +40,19 @@ public class InterceptorConfig extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(urlInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/hlj/swagger/**");
-        super.addInterceptors(registry);
+                .excludePathPatterns("/develop/swagger/**");
+    }
+
+
+    /**过滤器配置 ，配置了过滤器会让swagger失效，所以我后来讲swagger的路径修改为了/develop/swagge  */
+    @Bean
+    public FilterRegistrationBean spaceFilter() {
+        FilterRegistrationBean fitler = new FilterRegistrationBean();
+        fitler.setFilter(new SpaceFilter());
+        fitler.addUrlPatterns("/hlj/*");
+        fitler.setName("SpaceFilter");
+        fitler.setDispatcherTypes(DispatcherType.REQUEST);
+        return fitler;
     }
 
 }

@@ -1,0 +1,11 @@
+POST http://localhost:8888/hlj/demo/add
+Content-Type: application/json; charset=UTF-8
+
+
+{
+  "age": 0,
+  "email": "string",
+  "phone": "string"
+}
+
+###

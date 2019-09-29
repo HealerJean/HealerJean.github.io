@@ -1,7 +1,9 @@
 package com.hlj.proj.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hlj.proj.enums.ResponseEnum;
+import com.hlj.proj.utils.JsonUtils;
 
 /**
  * 返回对象
@@ -61,6 +63,11 @@ public class ResponseBean {
         responseBean.setDate(System.currentTimeMillis()+"");
         return responseBean;
     }
+
+    public static String buildSensitivitySuccess(Object result){
+        return JsonUtils.toJsonStringWithSensitivity(buildSuccess(result))  ;
+    }
+
 
     private boolean success;
     private Object result = "{}";

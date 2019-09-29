@@ -1,8 +1,13 @@
 package com.hlj.proj.controller;
 
 import com.hlj.proj.api.demo.DemoEntityService;
+import com.hlj.proj.common.group.ValidateGroup;
+import com.hlj.proj.constant.CommonConstants;
 import com.hlj.proj.dto.Demo.DemoDTO;
 import com.hlj.proj.dto.ResponseBean;
+import com.hlj.proj.enums.ResponseEnum;
+import com.hlj.proj.exception.BusinessException;
+import com.hlj.proj.utils.validate.ValidateUtils;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +46,12 @@ public class DemoController {
             response = DemoDTO.class)
     @PostMapping(value = "demo/add", produces = "application/json; charset=utf-8")
     @ResponseBody
-    public ResponseBean insert(DemoDTO demoDTO) {
+    public ResponseBean insert(@RequestBody(required = true)  DemoDTO demoDTO) {
         log.info("样例--------导入Demo数据------数据信息{}", demoDTO);
+        String validate = ValidateUtils.validate(demoDTO, ValidateGroup.HealerJean.class);
+        if (!validate.equals(CommonConstants.COMMON_SUCCESS)){
+           throw new BusinessException(ResponseEnum.参数错误);
+        }
         return ResponseBean.buildSuccess(demoEntityService.addDemoEntity(demoDTO));
     }
 
