@@ -2,10 +2,12 @@ package com.hlj.proj.dto.Demo;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hlj.proj.common.group.ValidateGroup;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * @author HealerJean
@@ -30,6 +32,7 @@ public class DemoDTO   {
     private Integer age;
 
     @ApiModelProperty(value = "手机号")
+    @NotBlank(message = "手机号不能为空", groups = ValidateGroup.HealerJean.class)
     private String phone;
 
     @ApiModelProperty(value = "邮箱")

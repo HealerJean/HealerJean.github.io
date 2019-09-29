@@ -42,11 +42,8 @@ public class ControllerHandleConfig {
 
     /**
      * 所有异常报错
-     * @param e
-     * @return
-     * @throws Exception
      */
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler
     @ResponseStatus(value = HttpStatus.OK)
     public HttpEntity<String> allExceptionHandler(HttpServletResponse response, Exception e) {
         log.error("====系统错误===", e);

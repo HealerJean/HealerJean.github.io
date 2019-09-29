@@ -80,21 +80,21 @@ public class DemoEntity implements Serializable {
 
 
 /**
- CREATE TABLE `demo_entity` (
- `id` bigint(16) unsigned NOT NULL AUTO_INCREMENT,
- `name` varchar(64) NOT NULL,
- `phone` varchar(20) DEFAULT '' COMMENT '手机号',
- `email` varchar(64) DEFAULT '' COMMENT '邮箱',
- `age` int(100) DEFAULT NULL,
- `del_flag` varchar(8) NOT NULL COMMENT '10可用，99删除',
- `create_user` bigint(16) unsigned DEFAULT NULL COMMENT '创建人',
- `create_name` varchar(64) DEFAULT '' COMMENT '创建人名称',
- `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
- `update_user` bigint(16) unsigned DEFAULT NULL COMMENT '更新人',
- `update_name` varchar(64) DEFAULT '' COMMENT '更新人名称',
- `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
- PRIMARY KEY (`id`)
- ) ENGINE=InnoDB DEFAULT CHARSET=latin1
+ create table `demo_entity` (
+ `id` bigint(16) unsigned not null auto_increment,
+ `name` varchar(64) not null,
+ `phone` varchar(20) default '' comment '手机号',
+ `email` varchar(64) default '' comment '邮箱',
+ `age` int(100) default null,
+ `del_flag` varchar(8) not null comment '10可用，99删除',
+ `create_user` bigint(16) unsigned default null comment '创建人',
+ `create_name` varchar(64) default '' comment '创建人名称',
+ `create_time` timestamp not null default current_timestamp comment '创建时间',
+ `update_user` bigint(16) unsigned default null comment '更新人',
+ `update_name` varchar(64) default '' comment '更新人名称',
+ `update_time` timestamp not null default current_timestamp on update current_timestamp comment '更新时间',
+ primary key (`id`)
+ ) engine=innodb default charset=utf8;
  */
 
 

@@ -2,11 +2,13 @@ package com.hlj.proj.dto.Demo;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hlj.proj.common.group.ValidateGroup;
 import com.hlj.proj.common.page.query.PageQuery;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * @author HealerJean
@@ -25,6 +27,7 @@ public class DemoDTO extends PageQuery {
     private Long id;
 
     @ApiModelProperty(value = "姓名")
+    @NotBlank(message = "姓名不能为空", groups = ValidateGroup.HealerJean.class)
     private String name;
 
     @ApiModelProperty(value = "年龄")

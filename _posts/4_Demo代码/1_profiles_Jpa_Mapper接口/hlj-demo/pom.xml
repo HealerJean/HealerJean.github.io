@@ -34,8 +34,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!--swagger 版本-->
         <swagger.version>2.7.0</swagger.version>
-        <!--swagger导出接口文档-->
-        <io.springfox.version>2.9.2</io.springfox.version>
         <!--http工具-->
         <okhttp3.version>3.11.0</okhttp3.version>
         <!--要激活的resoure目录-->
@@ -44,12 +42,11 @@
         <!--数据源-->
         <com-alibaba-druid.version>1.1.9</com-alibaba-druid.version>
         <!--mybatis-->
-        <org.mybatis.mybatis>3.4.0</org.mybatis.mybatis>
-        <org.mybatis.mybatis.spring>1.3.0</org.mybatis.mybatis.spring>
-        <!--mybatis-->
         <mybatis-spring-boot-starter.version>1.3.2</mybatis-spring-boot-starter.version>
         <com-alibaba-fastjson.version>1.2.58</com-alibaba-fastjson.version>
-
+        <javax-validation.version>1.0.0.GA</javax-validation.version>
+        <!--默认的版本是6.0.9.Final 使用过程中NotBlank会显示红色，所以这里讲版本降低，这样就不会显示红色了-->
+        <hibernate-validator.version>4.3.2.Final</hibernate-validator.version>
 
     </properties>
 
@@ -81,19 +78,6 @@
                 <version>${swagger.version}</version>
             </dependency>
 
-            <!--swgger导出接口文档-->
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>${io.springfox.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger-ui</artifactId>
-                <version>${io.springfox.version}</version>
-            </dependency>
-
             <!--数据源-->
             <dependency>
                 <groupId>com.alibaba</groupId>
@@ -116,7 +100,23 @@
                 <version>${com-alibaba-fastjson.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>validation-api</artifactId>
+                        <groupId>javax.validation</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 
+            <dependency>
+                <artifactId>validation-api</artifactId>
+                <groupId>javax.validation</groupId>
+                <version>${javax-validation.version}</version>
+            </dependency>
 
         </dependencies>
 
