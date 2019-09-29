@@ -28,11 +28,23 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 
 
+## swagger.json
+
+```http
+http://localhost:8888/develop/swagger
+```
+
+
+
+![1569757062072](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1569757062072.png)
+
+
+
+
 ### 1、项目1（生成pdf）
 
 
 
-[代码下载]()
 
 #### 1.1、生成
 
@@ -104,7 +116,8 @@ mvn test
 
 
 
-
+## [代码下载](
+[代码下载](https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/DDKJ/15%E3%80%81swagger/2019_09_29_2_swagger%E7%94%9F%E6%88%90pdf%E6%96%87%E6%A1%A3))
 
 
 
