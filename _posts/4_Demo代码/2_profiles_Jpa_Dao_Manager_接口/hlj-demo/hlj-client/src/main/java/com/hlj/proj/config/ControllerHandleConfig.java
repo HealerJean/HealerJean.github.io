@@ -35,10 +35,9 @@ public class ControllerHandleConfig {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ResponseBean businessExceptionHandler(BusinessException e) {
-        log.error("业务异常------------异常信息：{}" , e.getMessage());
+        log.error("业务异常------------异常信息：code:{},message{}" ,e.getCode(), e.getMessage());
         return ResponseBean.buildFailure(e.getCode(),e.getMessage());
     }
-
 
     /**
      * 所有异常报错

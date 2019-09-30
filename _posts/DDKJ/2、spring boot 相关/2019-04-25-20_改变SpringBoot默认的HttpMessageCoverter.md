@@ -72,19 +72,19 @@ public class HttpMessageConverterConfig {
 
         SerializerFeature[] serializerFeatures = new SerializerFeature[]{
                 //    输出key是包含双引号
-                SerializerFeature.QuoteFieldNames,
-                //    是否输出为null的字段,若为null 则显示该字段
-//                SerializerFeature.WriteMapNullValue,
+                //SerializerFeature.QuoteFieldNames,
+                //    是否输出值为null的字段,默认为false。
+               // SerializerFeature.WriteMapNullValue,
                 //    数值字段如果为null，则输出为0
-                SerializerFeature.WriteNullNumberAsZero,
+               // SerializerFeature.WriteNullNumberAsZero,
                 //     List字段如果为null,输出为[],而非null
-                SerializerFeature.WriteNullListAsEmpty,
+               // SerializerFeature.WriteNullListAsEmpty,
                 //    字符类型字段如果为null,输出为"",而非null
-                SerializerFeature.WriteNullStringAsEmpty,
+               // SerializerFeature.WriteNullStringAsEmpty,
                 //    Boolean字段如果为null,输出为false,而非null
-                SerializerFeature.WriteNullBooleanAsFalse,
+               // SerializerFeature.WriteNullBooleanAsFalse,
                 //    Date的日期转换器
-                SerializerFeature.WriteDateUseDateFormat,
+               // SerializerFeature.WriteDateUseDateFormat,
                 //    循环引用
                 SerializerFeature.DisableCircularReferenceDetect,
         };

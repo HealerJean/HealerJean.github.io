@@ -20,6 +20,7 @@ public enum ResponseEnum   {
     操作确认(203,"操作确认"),
 
     逻辑错误(301,"逻辑错误"),
+    参数错误(302,"参数错误"),
 
     登录标识过期(400,"登录标识过期"),
     强制升级(401,"强制升级"),
@@ -64,7 +65,7 @@ public enum ResponseEnum   {
         return ResponseEnum.未知错误;
     }
 
-    public static String getMsg(int code){
+    public static String getmsg(int code){
         for (ResponseEnum value : ResponseEnum.values()){
             if (value.code == code){
                 return value.msg;
