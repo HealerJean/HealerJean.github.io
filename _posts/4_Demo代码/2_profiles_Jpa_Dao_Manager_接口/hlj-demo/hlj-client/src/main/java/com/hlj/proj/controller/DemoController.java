@@ -50,7 +50,7 @@ public class DemoController {
         log.info("样例--------导入Demo数据------数据信息{}", demoDTO);
         String validate = ValidateUtils.validate(demoDTO, ValidateGroup.HealerJean.class);
         if (!validate.equals(CommonConstants.COMMON_SUCCESS)){
-           throw new BusinessException(ResponseEnum.参数错误);
+            throw new BusinessException(ResponseEnum.参数错误,validate);
         }
         return ResponseBean.buildSuccess(demoEntityService.addDemoEntity(demoDTO));
     }
