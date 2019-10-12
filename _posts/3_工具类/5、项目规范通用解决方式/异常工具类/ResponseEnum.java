@@ -13,22 +13,21 @@ import java.util.List;
 public enum ResponseEnum   {
 
 
-    正常(200,"访问正常"),
+   正常(200,"访问正常"),
 
-    条件验证失败(201,"条件验证失败"),
-    参数解析失败(202,"参数解析失败"),
-    操作确认(203,"操作确认"),
+    参数错误(351,"参数错误"),
+    参数格式异常(352, "参数格式异常"),
+    逻辑错误(353,"逻辑错误"),
 
-    逻辑错误(301,"逻辑错误"),
-    参数错误(302,"参数错误"),
-
-    登录标识过期(400,"登录标识过期"),
-    强制升级(401,"强制升级"),
+    请求无法被服务器理解(400,"请求无法被服务器理解"),
+    未授权(401, "未授权"),
     访问禁止(403,"访问禁止"),
     页面丢失(404,"页面丢失"),
-    系统错误(500,"系统内部错误"),
-    未登录(204,"未登录"),
+
+
+    系统错误(500,"系统错误"),
     未知错误(999,"未知错误"),
+
 
      ;
 
@@ -42,9 +41,6 @@ public enum ResponseEnum   {
     }
 
 
-    public ResponseEnum value(String enumName){
-        return valueOf( enumName ) ;
-    }
 
     public static boolean checkExist( Integer code){
         for (ResponseEnum value : ResponseEnum.values()){
@@ -56,7 +52,7 @@ public enum ResponseEnum   {
     }
 
 
-    public static ResponseEnum toEnum(int code){
+    public static ResponseEnum getStatus(int code){
         for (ResponseEnum value : ResponseEnum.values()){
             if (value.code == code){
                 return value;
@@ -65,7 +61,7 @@ public enum ResponseEnum   {
         return ResponseEnum.未知错误;
     }
 
-    public static String getmsg(int code){
+    public static String getMsg(int code){
         for (ResponseEnum value : ResponseEnum.values()){
             if (value.code == code){
                 return value.msg;
@@ -74,8 +70,10 @@ public enum ResponseEnum   {
         return ResponseEnum.未知错误.msg;
     }
 
-    public static List<ResponseEnum> getTypeList(){
+
+    public static List<ResponseEnum> getList(){
         return Arrays.asList(values());
     }
+
 
 }

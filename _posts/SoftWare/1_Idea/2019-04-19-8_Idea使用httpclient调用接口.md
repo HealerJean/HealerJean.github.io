@@ -265,7 +265,33 @@ Cookie: scf-manager_SID=e1fd90bf-1148-4368-9fe9-018dcaf1aa0d
 
 
 
-​     
+### 3.2、postman配置环境变量
+
+
+
+#### 3.2.1、设置添加环境变量
+
+![1570762848691](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1570762848691.png)
+
+
+
+![1570762873858](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1570762873858.png)
+
+
+#### 3.2.2、配置环境变量的值
+
+
+![1570762887604](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1570762887604.png)
+
+
+
+#### 3.2.3、变量访问{{ucenter_url}}
+
+
+
+![1570762979110](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1570762979110.png)
+
+
 
 ​     
 

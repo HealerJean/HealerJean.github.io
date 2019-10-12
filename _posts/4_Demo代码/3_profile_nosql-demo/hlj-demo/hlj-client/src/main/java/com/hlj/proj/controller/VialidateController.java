@@ -4,6 +4,8 @@ package com.hlj.proj.controller;
 import com.hlj.proj.common.group.ValidateGroup;
 import com.hlj.proj.dto.ResponseBean;
 import com.hlj.proj.dto.validate.JavaBean;
+import com.hlj.proj.enums.ResponseEnum;
+import com.hlj.proj.exception.BusinessException;
 import com.hlj.proj.utils.validate.ValidateUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,9 +46,9 @@ public class VialidateController {
     public ResponseBean post(@RequestBody JavaBean javaBean) {
         String validate = ValidateUtils.validate(javaBean, ValidateGroup.HealerJean.class);
         if (!"success".equals(validate)) {
-            log.info("错误信息：{}", validate);
+            throw new BusinessException(ResponseEnum.参数错误,validate);
         }
-        return ResponseBean.buildSuccess(validate);
+        return ResponseBean.buildSuccess(javaBean);
     }
 
 
