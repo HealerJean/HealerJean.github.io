@@ -30,7 +30,6 @@ public class BusinessException extends RuntimeException {
         this.code = responseEnum.code ;
     }
 
-    
     public BusinessException(ResponseEnum responseEnum,String message) {
         super(message);
         this.code = responseEnum.code ;
