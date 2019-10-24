@@ -218,8 +218,6 @@ Entry中的key是弱引用，key 弱指向ThreadLocal<UserInfo> 对象，并且K
 
 开始前重新set值，以及结束后要记得remove
 
-
-​     
 <br><br>    
 <font  color="red" size="5" >     
 感兴趣的，欢迎添加博主微信
