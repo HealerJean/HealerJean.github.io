@@ -107,6 +107,21 @@ public final class JsonUtils {
 
 
     /**
+     * json格式字符串转对象 ArrayList
+     */
+    public static <T> List<T> jsonToArray(String json, Class<T> c) {
+        JavaType javaType = OBJECT_MAPPER.getTypeFactory()
+                .constructParametricType(ArrayList.class, c);
+        List<T> t = null;
+        try {
+            t = OBJECT_MAPPER.readValue(json, javaType);
+        } catch (IOException e) {
+            throw new RuntimeException("参数格式有误");
+        }
+        return t;
+    }
+    
+    /**
      * json格式字符串转对象
      *
      * @param json
