@@ -1,8 +1,8 @@
-package com.hlj.proj.dto.Demo;
+package com.healerjean.proj.dto.Demo;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.hlj.proj.common.group.ValidateGroup;
+import com.healerjean.proj.common.group.ValidateGroup;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.hlj.proj</groupId>
+    <groupId>com.healerjean.proj</groupId>
     <artifactId>hlj-demo</artifactId>
     <version>${project.scf.version}</version>
     <name>hlj-demo</name>

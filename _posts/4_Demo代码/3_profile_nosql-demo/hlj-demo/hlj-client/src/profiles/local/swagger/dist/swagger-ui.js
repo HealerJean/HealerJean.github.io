@@ -21024,7 +21024,7 @@ request.Request = Request;
 request.get = function(url, data, fn){
   var req = request('GET', url);
   if ('function' == typeof data) fn = data, data = null;
-  if (data) com.hlj.proj.common.page.query(data);
+  if (data) com.healerjean.proj.common.page.query(data);
   if (fn) req.end(fn);
   return req;
 };
