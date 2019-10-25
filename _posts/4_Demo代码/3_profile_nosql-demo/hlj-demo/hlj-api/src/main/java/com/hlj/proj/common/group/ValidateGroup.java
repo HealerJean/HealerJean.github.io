@@ -1,4 +1,4 @@
-package com.hlj.proj.common.group;
+package com.healerjean.proj.common.group;
 
 /**
  * @author HealerJean

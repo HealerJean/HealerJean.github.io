@@ -65,6 +65,13 @@ public class DateHelper extends DateUtils {
     }
 
 
+    public static Date longToDate(Long longDate) {
+        if (longDate == null) {
+            return null;
+        }
+        return new Date(longDate);
+    }
+
     /**
      * 滚动日期 加减日期
      *

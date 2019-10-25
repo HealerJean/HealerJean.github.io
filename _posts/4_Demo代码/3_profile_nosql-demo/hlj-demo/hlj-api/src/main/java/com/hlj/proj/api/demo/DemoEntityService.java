@@ -1,6 +1,6 @@
-package com.hlj.proj.api.demo;
+package com.healerjean.proj.api.demo;
 
-import com.hlj.proj.dto.Demo.DemoDTO;
+import com.healerjean.proj.dto.Demo.DemoDTO;
 
 /**
  * @Desc:

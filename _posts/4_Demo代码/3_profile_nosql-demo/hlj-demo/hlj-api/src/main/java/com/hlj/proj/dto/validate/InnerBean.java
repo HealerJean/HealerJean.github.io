@@ -1,6 +1,6 @@
-package com.hlj.proj.dto.validate;
+package com.healerjean.proj.dto.validate;
 
-import com.hlj.proj.common.group.ValidateGroup;
+import com.healerjean.proj.common.group.ValidateGroup;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
