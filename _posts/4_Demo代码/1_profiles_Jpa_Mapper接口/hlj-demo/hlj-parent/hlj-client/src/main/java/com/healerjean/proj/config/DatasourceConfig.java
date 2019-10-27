@@ -4,7 +4,6 @@ import com.alibaba.druid.pool.DruidDataSource;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,10 +28,10 @@ import javax.sql.DataSource;
 @Configuration
 //jpa 扫描配置
 //第一种
-@EnableJpaRepositories(basePackages = {"com.healerjean.proj.data.dao.db"})
+@EnableJpaRepositories(basePackages = {"com.healerjean.proj.data.repository"})
 @EntityScan(basePackages = {"com.healerjean.proj.data.pojo"})
 
-@MapperScan(basePackages = {"com.healerjean.proj.data.dao.mybatis"})
+@MapperScan(basePackages = {"com.healerjean.proj.data.mapper"})
 @PropertySource("classpath:db.properties")
 public class DatasourceConfig {
 
@@ -75,7 +74,7 @@ public class DatasourceConfig {
         sessionFactoryBean.setDataSource(dataSource);
         sessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:mybatis.xml"));
         Resource[] resources = ArrayUtils.addAll(
-                applicationContext.getResources("classpath*:com/hlj/proj/data/dao/mybatis/**/mysql/*.xml")
+                applicationContext.getResources("classpath*:com/hlj/proj/data/**/mysql/*.xml")
         );
         sessionFactoryBean.setMapperLocations(resources);
         return sessionFactoryBean.getObject();

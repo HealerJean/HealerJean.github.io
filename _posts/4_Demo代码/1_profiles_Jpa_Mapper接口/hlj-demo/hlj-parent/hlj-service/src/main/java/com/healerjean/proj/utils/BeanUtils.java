@@ -1,7 +1,7 @@
 package com.healerjean.proj.utils;
 
 import com.healerjean.proj.common.page.PageDTO;
-import com.healerjean.proj.data.dao.mybatis.demo.query.DemoEntityQuery;
+import com.healerjean.proj.data.mapper.demo.query.DemoEntityQuery;
 import com.healerjean.proj.data.pojo.demo.DemoEntity;
 import com.healerjean.proj.dto.Demo.DemoDTO;
 import org.springframework.data.domain.Page;

@@ -1,4 +1,4 @@
-package com.healerjean.proj.data.dao.mybatis.dao;
+package com.healerjean.proj.data.dao;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;

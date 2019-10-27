@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2019 xiaomi.com, Inc. All Rights Reserved.
- */package com.healerjean.proj.data.dao.mybatis.dao.deme;
+ */package com.healerjean.proj.data.dao.deme;
 
-import com.healerjean.proj.data.dao.mybatis.dao.BaseDao;
+import com.healerjean.proj.data.dao.BaseDao;
 import com.healerjean.proj.data.pojo.demo.DemoEntity;
 import com.healerjean.proj.data.pojo.demo.DemoEntityQuery;
 import org.springframework.stereotype.Repository;

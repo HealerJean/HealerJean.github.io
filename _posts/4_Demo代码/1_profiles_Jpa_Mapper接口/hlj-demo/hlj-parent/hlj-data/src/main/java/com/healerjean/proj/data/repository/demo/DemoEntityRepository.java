@@ -1,4 +1,4 @@
-package com.healerjean.proj.data.dao.db.demo;
+package com.healerjean.proj.data.repository.demo;
 
 import com.healerjean.proj.data.pojo.demo.DemoEntity;
 import org.springframework.data.repository.CrudRepository;
