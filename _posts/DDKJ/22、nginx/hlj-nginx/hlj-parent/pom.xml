@@ -22,6 +22,7 @@
         <module>hlj-service</module>
         <module>hlj-client</module>
         <module>hlj-manage</module>
+        <module>hlj-nginx</module>
     </modules>
 
 
