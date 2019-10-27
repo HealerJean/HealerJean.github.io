@@ -1,6 +1,6 @@
-package com.healerjean.proj.data.dao.mybatis.demo;
+package com.healerjean.proj.data.mapper.demo;
 
-import com.healerjean.proj.data.dao.mybatis.demo.query.DemoEntityQuery;
+import com.healerjean.proj.data.mapper.demo.query.DemoEntityQuery;
 import com.healerjean.proj.data.pojo.demo.DemoEntity;
 
 import java.util.List;

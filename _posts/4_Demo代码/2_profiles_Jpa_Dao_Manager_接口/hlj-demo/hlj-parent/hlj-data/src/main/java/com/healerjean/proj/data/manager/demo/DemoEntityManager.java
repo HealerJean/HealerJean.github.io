@@ -1,18 +1,18 @@
 /*
  * Copyright (C) 2019 xiaomi.com, Inc. All Rights Reserved.
  */
-package com.healerjean.proj.data.dao.mybatis.manager;
-
-import java.util.List;
+package com.healerjean.proj.data.manager.demo;
 
 import com.healerjean.proj.data.common.paging.Pagenation;
-import com.healerjean.proj.data.dao.mybatis.dao.deme.DemoEntityDao;
+import com.healerjean.proj.data.dao.deme.DemoEntityDao;
 import com.healerjean.proj.data.pojo.demo.DemoEntity;
 import com.healerjean.proj.data.pojo.demo.DemoEntityPage;
 import com.healerjean.proj.data.pojo.demo.DemoEntityQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * @author zhangyujin

@@ -2,9 +2,9 @@ package com.healerjean.proj.service.demo;
 
 import com.healerjean.proj.api.demo.DemoEntityService;
 import com.healerjean.proj.common.page.PageDTO;
-import com.healerjean.proj.data.dao.db.demo.DemoEntityRepository;
+import com.healerjean.proj.data.repository.demo.DemoEntityRepository;
 import com.healerjean.proj.data.pojo.demo.DemoEntity;
-import com.healerjean.proj.data.dao.mybatis.manager.DemoEntityManager;
+import com.healerjean.proj.data.manager.demo.DemoEntityManager;
 import com.healerjean.proj.data.pojo.demo.DemoEntityPage;
 import com.healerjean.proj.data.pojo.demo.DemoEntityQuery;
 import com.healerjean.proj.dto.Demo.DemoDTO;

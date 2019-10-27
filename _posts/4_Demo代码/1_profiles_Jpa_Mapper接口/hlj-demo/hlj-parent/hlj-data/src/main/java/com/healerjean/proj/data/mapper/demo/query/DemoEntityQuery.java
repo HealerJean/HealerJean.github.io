@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2019 xiaomi.com, Inc. All Rights Reserved.
- */package com.healerjean.proj.data.dao.mybatis.demo.query;
+ */package com.healerjean.proj.data.mapper.demo.query;
 
 import com.healerjean.proj.data.common.query.PagingQuery;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package com.healerjean.proj.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.healerjean.proj.data.dao.mybatis.dao.BaseDao;
+import com.healerjean.proj.data.dao.BaseDao;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,7 +26,7 @@ import javax.sql.DataSource;
 @Configuration
 //jpa 扫描配置
 //第一种
-@EnableJpaRepositories(basePackages = {"com.healerjean.proj.data.dao.db"})
+@EnableJpaRepositories(basePackages = {"com.healerjean.proj.data.repository"})
 @EntityScan(basePackages = {"com.healerjean.proj.data.pojo"})
 
 @PropertySource("classpath:db.properties")
