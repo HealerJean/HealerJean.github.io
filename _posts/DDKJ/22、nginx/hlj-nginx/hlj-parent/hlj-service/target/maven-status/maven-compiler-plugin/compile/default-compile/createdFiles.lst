@@ -1,0 +1,7 @@
+com\hlj\proj\utils\validate\validator\GreaterLessValidator.class
+com\hlj\proj\utils\validate\CustomValidatorFactoryImpl.class
+com\hlj\proj\utils\validate\ValidateUtils.class
+com\hlj\proj\utils\BeanUtils.class
+com\hlj\proj\service\demo\DemoEntityServiceImpl.class
+com\hlj\proj\utils\validate\CustomValidationProvider.class
+com\hlj\proj\utils\validate\validator\NameIncludeValidator.class
