@@ -1,0 +1,9 @@
+com\hlj\proj\common\group\ValidateGroup.class
+com\hlj\proj\validate\anno\GreaterLess.class
+com\hlj\proj\common\group\ValidateGroup$HealerJean.class
+com\hlj\proj\dto\validate\InnerBean.class
+com\hlj\proj\api\demo\DemoEntityService.class
+com\hlj\proj\dto\validate\JavaBean.class
+com\hlj\proj\dto\Demo\DemoDTO.class
+com\hlj\proj\dto\validate\BaseBean.class
+com\hlj\proj\validate\anno\NameInclude.class
