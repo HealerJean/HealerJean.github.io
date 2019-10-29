@@ -100,16 +100,7 @@ public class AesUtils {
     }
 
 
-//    public static void main(String[] args) throws Exception {
-//
-////        String Code = "1";
-////        String codE = AesUtils.LoginEncrypt(Code);
-////        System.out.println("原文：" + Code);
-////        System.out.println("密文：" + codE);
-////        System.out.println("解密：" + AesUtils.LoginDecrypt( codE));
-//
-//
-//    }
+
 
 
     private final static String DES = "DES";
