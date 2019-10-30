@@ -32,6 +32,7 @@ public class D02_JsonTypeMain {
 
 
     /**
+     *
      */
     @Test
     public void testOne() throws IOException {
@@ -39,16 +40,16 @@ public class D02_JsonTypeMain {
         Man man = new Man();
         man.setManField("男人");
         man.setDistrict("北京");
-        man.setType("1");
+        // man.setType("1");
 
         String manJson = mapper.writeValueAsString(man);
         log.info("序列化Man ：【 {} 】", manJson);
-        manJson = "{\"type\":\"man\",\"district\":\"北京\",\"type\":\"1\",\"manField\":\"男人\"} ";
+        // manJson = "{\"type\":\"man\",\"district\":\"北京\",\"type\":\"1\",\"manField\":\"男人\"} ";
         Human human = mapper.readValue(manJson, Human.class);
         log.info("子类转父类 ======================");
         String humanJson = mapper.writeValueAsString(human);
         log.info("反序列化man -> Human ：【 {} 】", humanJson);
-        log.info("human.getDistrict()  ：【 {} 】",  human.getDistrict());
-        log.info("human.getType()  ：【 {} 】",  human.getType());
+        log.info("human.getDistrict()  ：【 {} 】", human.getDistrict());
+        // log.info("human.getType()  ：【 {} 】",  human.getType());
     }
 }
