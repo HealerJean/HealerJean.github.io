@@ -1,28 +1,29 @@
-package com.hlj.proj.utils;
+package com.healerjean.proj.util.json;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.hlj.proj.utils.sensitivity.SensitiveInfoUtils;
-import com.hlj.proj.utils.sensitivity.SensitiveSerializerModifier;
-import com.hlj.proj.utils.sensitivity.SensitiveTypeEnum;
-import com.hlj.proj.utils.sensitivity.SensitivityConstants;
+import com.healerjean.proj.util.sensitivity.SensitiveInfoUtils;
+import com.healerjean.proj.util.sensitivity.SensitiveSerializerModifier;
+import com.healerjean.proj.util.sensitivity.SensitiveTypeEnum;
+import com.healerjean.proj.util.sensitivity.SensitivityConstants;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,52 +36,39 @@ public final class JsonUtils {
      * ObjectMapper
      */
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private static final ObjectMapper objectMapperSensitivity = new ObjectMapper();
-
+    private static final ObjectMapper OBJECT_MAPPER_SENSITIVITY = new ObjectMapper();
 
     static {
-
-
         OBJECT_MAPPER.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-
         //NULL 不打印
         OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         // 排除json字符串中实体类没有的字段
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-
         //LocalDateTime   LocalDate LocalTime 转化成 String
         JavaTimeModule javaTimeModule = new JavaTimeModule();
         javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-
         OBJECT_MAPPER.registerModule(javaTimeModule);
         OBJECT_MAPPER.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
 
-
         //脱敏日志创建
-        objectMapperSensitivity.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        objectMapperSensitivity.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        objectMapperSensitivity.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapperSensitivity.registerModule(javaTimeModule);
-        objectMapperSensitivity.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        OBJECT_MAPPER_SENSITIVITY.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        OBJECT_MAPPER_SENSITIVITY.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        OBJECT_MAPPER_SENSITIVITY.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        OBJECT_MAPPER_SENSITIVITY.registerModule(javaTimeModule);
+        OBJECT_MAPPER_SENSITIVITY.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         //脱敏
-        objectMapperSensitivity.setSerializerFactory(objectMapperSensitivity.getSerializerFactory().withSerializerModifier(new SensitiveSerializerModifier()));
-
+        OBJECT_MAPPER_SENSITIVITY.setSerializerFactory(OBJECT_MAPPER_SENSITIVITY.getSerializerFactory().withSerializerModifier(new SensitiveSerializerModifier()));
     }
 
     public static ObjectMapper getObjectMapper() {
         return OBJECT_MAPPER;
     }
 
-
     /**
-     * 将对象转换为JSON字符串
-     *
-     * @param value 对象
-     * @return JSON字符串
+     * 1、将对象转换为JSON字符串
      */
     public static String toJsonString(Object value) {
         try {
@@ -91,11 +79,7 @@ public final class JsonUtils {
     }
 
     /**
-     * 将JSON字符串转换为对象
-     *
-     * @param json JSON字符串
-     * @param c    类型
-     * @return 对象
+     * 2.1、将JSON字符串转换为对象
      */
     public static <T> T toObject(String json, Class<T> c) {
         try {
@@ -105,11 +89,10 @@ public final class JsonUtils {
         }
     }
 
-
     /**
-     * json格式字符串转对象 ArrayList
+     * 2.2、Json格式字符串转对象 ArrayList
      */
-    public static <T> List<T> jsonToArray(String json, Class<T> c) {
+    public static <T> List<T> toArrayList(String json, Class<T> c) {
         JavaType javaType = OBJECT_MAPPER.getTypeFactory()
                 .constructParametricType(ArrayList.class, c);
         List<T> t = null;
@@ -120,15 +103,12 @@ public final class JsonUtils {
         }
         return t;
     }
-    
+
     /**
-     * json格式字符串转对象
-     *
-     * @param json
-     * @param c
-     * @return collect 仅限于 ArrayList HashSet 等集合对象
+     * 2.3、Json格式字符串转集合
+     * collect 仅限于 ArrayList HashSet 等集合对象
      */
-    public static <T> T jsonToArray(String json, Class c, Class collect) {
+    public static <T> T toArrayList(String json, Class c, Class collect) {
         JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructParametricType(collect, c);
         try {
             return OBJECT_MAPPER.readValue(json, javaType);
@@ -137,31 +117,8 @@ public final class JsonUtils {
         }
     }
 
-
     /**
-     * 将JSON字符串转换为集合（也可以是set） 不可以是对象
-     *
-     * @param json          JSON字符串
-     * @param typeReference 类型 可以通过这个转化为List集合 ，举例：
-     *                      List<JavaBean> list =  JsonUtils.toObject(jsonArrayStr, new TypeReference<List<JavaBean>>() { });
-     *                      Map<String, Object> map =  JsonUtils.toObject(JsonUtils.toJson(javaBean),new TypeReference<Map<String, Object>>( ){} );
-     * @return 对象
-     */
-    public static <T> T toObject(String json, TypeReference<?> typeReference) {
-        try {
-            return OBJECT_MAPPER.readValue(json, typeReference);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
-
-    /**
-     * 将JSON字符串转换为对象
-     *
-     * @param json     JSON字符串
-     * @param javaType 类型
-     * @return 对象
+     * 2.5、将JSON字符串转换为对象
      */
     public static <T> T toObject(String json, JavaType javaType) {
         try {
@@ -171,12 +128,21 @@ public final class JsonUtils {
         }
     }
 
+    /**
+     * 2.4、将JSON字符串转换为集合、map 不可以是对象
+     * List<JavaBean> list =  JsonUtils.toObject(jsonArrayStr, new TypeReference<List<JavaBean>>() { });
+     * Map<String, Object> map =  JsonUtils.toObject(JsonUtils.toJson(javaBean),new TypeReference<Map<String, Object>>( ){} );
+     */
+    public static <T> T toObject(String json, TypeReference<?> typeReference) {
+        try {
+            return OBJECT_MAPPER.readValue(json, typeReference);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
 
     /**
      * 将JSON字符串转换为树
-     *
-     * @param json JSON字符串
-     * @return 树
      */
     public static JsonNode toJsonNode(String json) {
         try {
@@ -189,51 +155,55 @@ public final class JsonUtils {
     }
 
     /**
-     * 将对象转换为JSON流
-     *
-     * @param writer Writer
-     * @param value  对象
+     * 将JSON字符串转换为toObjectNode
      */
-    public static void writeValue(Writer writer, Object value) {
+    public static ObjectNode toObjectNode(String json) {
         try {
-            OBJECT_MAPPER.writeValue(writer, value);
-        } catch (JsonGenerationException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        } catch (JsonMappingException e) {
+            return (ObjectNode) OBJECT_MAPPER.readTree(json);
+        } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage(), e);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
 
+    /**
+     * 放入一个对象
+     */
+    public static String putObject(String jsonString, String key, String replaceString) {
+        ObjectNode jsonNode = null;
+        ObjectNode keyJsonNode = null;
+        try {
+            jsonNode = (ObjectNode) OBJECT_MAPPER.readTree(jsonString);
+            keyJsonNode = (ObjectNode) OBJECT_MAPPER.readTree(replaceString);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        jsonNode.putPOJO(key, keyJsonNode);
+        return JsonUtils.toJsonString(jsonNode);
+    }
+
 
     /**
-     * 将来通过 OBJECT_MAPPER.readValue(json, javaType) 转化为对象
-     *
-     * @param type （java.class）
-     * @return 类型
+     * 通过 OBJECT_MAPPER.readValue(json, javaType) 转化为对象
+     * 参数举例： A.class
      */
     public static JavaType toJavaType(Type type) {
         return OBJECT_MAPPER.getTypeFactory().constructType(type);
     }
 
     /**
-     * 将来通过 OBJECT_MAPPER.readValue(json, javaType) 转化为 集合
-     *
-     * @param typeReference 类型 new TypeReference<List<JavaBean>>() { }
-     * @return 类型
+     * 通过 BJECT_MAPPER.readValue(json, javaType) 转化为 集合、map等
+     * 参数举例：new TypeReference<List<JavaBean>>() { }
      */
     public static JavaType toJavaType(TypeReference<?> typeReference) {
         return OBJECT_MAPPER.getTypeFactory().constructType(typeReference);
     }
 
-
     /**
-     * @param resString
-     * @return String
-     * @Description Json 格式化到控制台打印
+     * 格式化到控制台打印
      */
-    public static String responseFormat(String resString) {
+    public static String formatJson(String resString) {
 
         StringBuffer jsonForMatStr = new StringBuffer();
         int level = 0;
@@ -272,9 +242,7 @@ public final class JsonUtils {
     }
 
     /**
-     * @param level
-     * @return
-     * @throws
+     *
      */
     private static String getLevelStr(int level) {
         StringBuffer levelStr = new StringBuffer();
@@ -284,11 +252,8 @@ public final class JsonUtils {
         return levelStr.toString();
     }
 
-
     /**
      * 对象转Json格式字符串----脱敏处理(包含map)
-     *
-     * @return
      */
     public static String toJsonStringWithSensitivity(Object propName) {
         if (propName != null && propName instanceof Map) {
@@ -307,7 +272,7 @@ public final class JsonUtils {
             }
         }
         try {
-            return objectMapperSensitivity.writeValueAsString(propName);
+            return OBJECT_MAPPER_SENSITIVITY.writeValueAsString(propName);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -343,6 +308,5 @@ public final class JsonUtils {
         }
         return mapValue;
     }
-
 
 }

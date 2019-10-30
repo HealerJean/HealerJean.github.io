@@ -37,6 +37,8 @@ public class D01_JackSon_XML {
 
 
         /**
+         * //XML标签名:使用骆驼命名的属性名，
+         * xmlMapper.setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE);
          * <Class>
          *     <Teacher>
          *         <Name>马老师</Name>
@@ -46,6 +48,22 @@ public class D01_JackSon_XML {
          *         <Stu stu_id="001">
          *             <Name>HealerJean</Name>
          *             <Age>25</Age>
+         *         </Stu>
+         *     </Students>
+         * </Class>
+         *
+         * 自定义的转化转大写并加下划线，强制命令的不可以，比如下面的Class是强制命名的
+         *  xmlMapper.setPropertyNamingStrategy(new UpperCaseSnackNamingStrategy());
+         *
+         * <Class>
+         *     <TEACHER>
+         *         <NAME>马老师</NAME>
+         *         <TypeCode type="语文老师">A</TypeCode>
+         *     </TEACHER>
+         *     <Students>
+         *         <Stu stu_id="001">
+         *             <NAME>HealerJean</NAME>
+         *             <AGE>25</AGE>
          *         </Stu>
          *     </Students>
          * </Class>
