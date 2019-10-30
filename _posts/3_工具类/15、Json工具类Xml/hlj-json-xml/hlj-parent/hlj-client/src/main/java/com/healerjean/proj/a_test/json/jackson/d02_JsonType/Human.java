@@ -9,9 +9,8 @@ import java.math.BigDecimal;
 
 @Data
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "type",
-        visible = true
+        include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
+        property = "type"
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Human.Man.class, name = "man"),
@@ -20,8 +19,6 @@ import java.math.BigDecimal;
 public class Human {
 
     private String district;
-
-    private String type;
 
     @Data
     public static class Man extends Human {

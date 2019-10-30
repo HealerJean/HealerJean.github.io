@@ -1,5 +1,7 @@
 package com.healerjean.proj.controller;
 
+import com.healerjean.proj.a_test.json.JsonDemoDTO;
+import com.healerjean.proj.a_test.json.jackson.d02_JsonType.Human;
 import com.healerjean.proj.common.ValidateGroup;
 import com.healerjean.proj.service.DemoEntityService;
 import com.healerjean.proj.common.constant.CommonConstants;
@@ -32,28 +34,21 @@ import org.springframework.web.bind.annotation.*;
 })
 @Api(description = "demo控制器")
 @Controller
-@RequestMapping("hlj")
+@RequestMapping("hlj/demo/json")
 @Slf4j
 public class DemoController {
 
-    @Autowired
-    private DemoEntityService demoEntityService;
 
-
-    @ApiOperation(value = "demo实体",
-            notes = "demo实体",
+    @ApiOperation(value = "jsonType",
+            notes = "jsonType",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
-            response = DemoDTO.class)
-    @GetMapping(value = "demo/get", produces = "application/json; charset=utf-8")
+            response = ResponseBean.class)
+    @PostMapping(value = "jsonType", produces = "application/json; charset=utf-8")
     @ResponseBody
-    public ResponseBean get(DemoDTO demoDTO) {
-        log.info("样例--------GET请求------数据信息{}", demoDTO);
-        String validate = ValidateUtils.validate(demoDTO, ValidateGroup.HealerJean.class);
-        if (!validate.equals(CommonConstants.COMMON_SUCCESS)){
-            throw new BusinessException(ResponseEnum.参数错误,validate);
-        }
-        return ResponseBean.buildSuccess(demoEntityService.getMmethod(demoDTO));
+    public ResponseBean get(@RequestBody Human human) {
+        log.info("样例--------GET请求------数据信息{}", human);
+        return ResponseBean.buildSuccess(human);
     }
 
 
