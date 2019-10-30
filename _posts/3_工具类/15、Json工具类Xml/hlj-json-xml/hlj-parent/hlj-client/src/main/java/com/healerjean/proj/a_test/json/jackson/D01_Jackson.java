@@ -2,6 +2,8 @@ package com.healerjean.proj.a_test.json.jackson;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -14,6 +16,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -28,15 +31,15 @@ public class D01_Jackson {
 
     /**
      * 1、JsonNode的获取数据以及基本使用
-     *      注意点 JsonNode 使用log打印出的结果不是我们想要的，所以我们要使用 jsonNode.toString()
-     *   1.1、获取数据值（默认取到的是JsonNode）
-     *       JsonNode类型 rootNode.path("fieldName")、  rootNode.get("fieldName") 一般建议使用get
-     *       String类型 node.textValue()  node.asText() node.toString()
-     *       Integer类型 node.intValue()  asInt()
-     *       BigDecimal类型 node.decimalValue() ,所以一般建议使用 基本类型Value()
-     *   1.2、判断是不是数组（对象数组或者普通数组），判断是不是对象,判断是否拥有某个节点
-     *   1.3、简单遍历JsonNode , 获取key的迭代集  rootNode.fieldNames()
-     *   1.4、遍历 JsonNode（数组或者Json等都可以用它）
+     * 注意点 JsonNode 使用log打印出的结果不是我们想要的，所以我们要使用 jsonNode.toString()
+     * 1.1、获取数据值（默认取到的是JsonNode）
+     * JsonNode类型 rootNode.path("fieldName")、  rootNode.get("fieldName") 一般建议使用get
+     * String类型 node.textValue()  node.asText() node.toString()
+     * Integer类型 node.intValue()  asInt()
+     * BigDecimal类型 node.decimalValue() ,所以一般建议使用 基本类型Value()
+     * 1.2、判断是不是数组（对象数组或者普通数组），判断是不是对象,判断是否拥有某个节点
+     * 1.3、简单遍历JsonNode , 获取key的迭代集  rootNode.fieldNames()
+     * 1.4、遍历 JsonNode（数组或者Json等都可以用它）
      */
     @Test
     public void test1() {
@@ -181,7 +184,7 @@ public class D01_Jackson {
      * 3、 复杂JsonNode遍历
      */
     @Test
-    public void test3()  {
+    public void test3() {
         String json = JsonDemoDTO.jsonString();
         log.info("jsonString：【 {} 】", json);
         JsonNode rootNode = JsonUtils.toJsonNode(json);
@@ -255,7 +258,7 @@ public class D01_Jackson {
 
     /**
      * 5、序列化问题：
-     *  对象转Json 序列化的日期 变成 Long 1572343018614
+     * 对象转Json 序列化的日期 变成 Long 1572343018614
      */
     @Test
     public void test5() throws JsonProcessingException {
@@ -266,6 +269,8 @@ public class D01_Jackson {
         log.info("对象转JSON  【 {} 】", json);
         //{"reqSn":null,"code":0,"msg":null,"transDate":1572343018614,"user":null,"strList":null,"companys":null}
     }
+
+
 
 
 }
