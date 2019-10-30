@@ -39,6 +39,9 @@ import org.springframework.web.bind.annotation.*;
 public class DemoController {
 
 
+    /**
+     * {"type":"woman","district":"北京","manField":"男人"}
+     */
     @ApiOperation(value = "jsonType",
             notes = "jsonType",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
