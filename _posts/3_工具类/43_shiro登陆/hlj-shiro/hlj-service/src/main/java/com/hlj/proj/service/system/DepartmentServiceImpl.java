@@ -68,7 +68,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
         department = BeanUtils.departmentDtoToPojo(departmentDTO);
         department.setCreateUser(identityInfoDTO.getUserId());
-        department.setCreateName(identityInfoDTO.getUsername());
+        department.setCreateName(identityInfoDTO.getRealName());
         departmentManager.insertSelective(department);
         departmentDTO.setId(department.getId());
         return departmentDTO;
@@ -91,7 +91,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         department = BeanUtils.departmentDtoToPojo(departmentDTO);
         department.setPid(null);
         department.setUpdateUser(identityInfoDTO.getUserId());
-        department.setUpdateName(identityInfoDTO.getUsername());
+        department.setUpdateName(identityInfoDTO.getRealName());
         int i = departmentManager.updateSelective(department);
         if (i < 1) {
             throw new BusinessException(ResponseEnum.部门不存在);
