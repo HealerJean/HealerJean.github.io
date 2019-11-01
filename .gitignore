@@ -1,3 +1,20 @@
+# java  #
+*.class
+
+# Package Files #
+*.jar
+*.war
+
+### IntelliJ IDEA ###
+.idea
+.idea/
+*.iws
+*.iml
+*.ipr
+
+
+
+# Ç°¶Ë #
 .gradle
 /build/
 node_modules
@@ -5,35 +22,27 @@ node_modules
 
 ### STS ###
 .apt_generated
-.classpath
 .factorypath
-.project
 .settings
 .springBeans
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-*.DS_Store
-### NetBeans ###
-nbproject/private/
-build/
-classes/
-nbbuild/
-#dist/
-#nbdist/
-.nb-gradle/
-node_modules/editorconfig/tests/
-node_modules/webpack 2/node_modules/
 
-src/main/webapp/components/
-src/main/webapp/img/
-src/main/webapp/less/
-src/.DS_Store
-src/main/.DS_Store
-#src/main/java/cn/edu/dlut/career/service/
-src/main/resources/.DS_Store
-src/main/resources/mails/
-src/main/webapp/page/
+######other####
+.project
+!/.project
+.classpath
+.DS_Store
+.settings/
+target/
+bin/
+classess/
+test/
+!.mvn/wrapper/maven-wrapper.jar
+*.log
+*.log.gz
+out/
+overlays/
+MANIFEST.MF
+
+
+
