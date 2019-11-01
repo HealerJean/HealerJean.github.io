@@ -29,7 +29,7 @@ public class SysRoleQuery extends PagingQuery {
 	/** 状态 */
 	private String status;
 	/** 描述 */
-	private String desciption;
+	private String description;
 	/** 创建人 */
 	private Long createUser;
 	/** 创建人名称 */

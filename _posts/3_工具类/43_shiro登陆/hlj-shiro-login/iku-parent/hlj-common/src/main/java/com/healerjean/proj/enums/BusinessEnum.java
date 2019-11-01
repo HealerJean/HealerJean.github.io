@@ -153,7 +153,7 @@ public interface BusinessEnum {
 
         public static MenuTypeEnum toEnum(String code) {
             for (MenuTypeEnum value : MenuTypeEnum.values()) {
-                if (value.code == code) {
+                if (value.code .equals( code)) {
                     return value;
                 }
             }

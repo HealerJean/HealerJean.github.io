@@ -53,11 +53,13 @@ public class RoleServiceImpl implements RoleService {
         query.setStatus(StatusEnum.生效.code);
         List<SysRole> resultList = roleManager.queryList(query);
         if (resultList != null && !resultList.isEmpty()) {
-            throw new BusinessException(ResponseEnum.角色已经存在.code);
+            throw new BusinessException(ResponseEnum.角色已经存在);
         }
         role.setStatus(StatusEnum.生效.code);
         role.setCreateUser(loginUserDTO.getUserId());
         role.setCreateName(loginUserDTO.getRealName());
+        role.setUpdateUser(loginUserDTO.getUserId());
+        role.setUpdateName(loginUserDTO.getRealName());
         roleManager.insertSelective(role);
         roleDTO.setId(role.getId());
     }
@@ -149,7 +151,7 @@ public class RoleServiceImpl implements RoleService {
             return roleDTO;
 
         } else {
-            throw new BusinessException(ResponseEnum.角色不存在.code);
+            throw new BusinessException(ResponseEnum.角色不存在);
         }
     }
 
@@ -167,14 +169,14 @@ public class RoleServiceImpl implements RoleService {
         query.setStatus(StatusEnum.生效.code);
         List<SysRole> resultList = roleManager.queryList(query);
         if (resultList.size() > 1 || (resultList.size() == 1 && !resultList.get(0).getId().equals(roleDTO.getId()))) {
-            throw new BusinessException(ResponseEnum.角色已经存在.code);
+            throw new BusinessException(ResponseEnum.角色已经存在);
         }
         SysRole role = BeanUtils.DTOtoRole(roleDTO);
         role.setUpdateUser(loginUserDTO.getUserId());
         role.setUpdateName(loginUserDTO.getRealName());
         int i = roleManager.updateSelective(role);
         if (i < 1) {
-            throw new BusinessException(ResponseEnum.角色不存在.code);
+            throw new BusinessException(ResponseEnum.角色不存在);
         }
     }
 
@@ -188,7 +190,7 @@ public class RoleServiceImpl implements RoleService {
     public void deleteRole(Long roleId, LoginUserDTO loginUserDTO) {
         SysRole role = roleManager.findById(roleId);
         if (role == null) {
-            throw new BusinessException(ResponseEnum.角色不存在.code);
+            throw new BusinessException(ResponseEnum.角色不存在);
         }
         role.setStatus(StatusEnum.废弃.code);
         role.setUpdateUser(loginUserDTO.getUserId());

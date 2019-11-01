@@ -282,7 +282,7 @@ public class BeanUtils {
         dto.setRoleName(role.getRoleName());
         dto.setSystemCode(role.getRefSystemCode());
         dto.setStatus(role.getStatus());
-        dto.setDescription(role.getDesciption());
+        dto.setDescription(role.getDescription());
         return dto;
     }
 
@@ -295,7 +295,7 @@ public class BeanUtils {
         role.setRoleName(dto.getRoleName());
         role.setRefSystemCode(dto.getSystemCode());
         role.setStatus(dto.getStatus());
-        role.setDesciption(dto.getDescription());
+        role.setDescription(dto.getDescription());
         return role;
     }
 

@@ -27,14 +27,12 @@ import java.util.List;
 @Slf4j
 public class MenuController extends BaseController {
 
-
     @Autowired
     private MenuService menuService;
 
 
-
-    @ApiOperation(value = "菜单管理-新增菜单",
-            notes = "菜单管理-新增菜单",
+    @ApiOperation(value = "菜单管理-菜单添加",
+            notes = "菜单管理-菜单添加",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             response = MenuDTO.class)

@@ -33,16 +33,16 @@ public class RoleController extends BaseController {
 
 
 
-    @ApiOperation(value = "角色管理-新增角色",
-            notes = "角色管理-新增角色",
+    @ApiOperation(value = "角色管理-角色添加",
+            notes = "角色管理-角色添加",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             response = RoleDTO.class)
     @PostMapping(value = "role/add")
     public ResponseBean addRoles(@RequestBody(required = false) RoleDTO roleDTO) {
-        log.info("角色管理--------新增角色--------查询条件：{}", roleDTO);
+        log.info("角色管理--------角色添加--------查询条件：{}", roleDTO);
         roleService.addRole(roleDTO, UserUtils.getLoginUser());
-        return ResponseBean.buildSuccess("新增角色成功", roleDTO);
+        return ResponseBean.buildSuccess("角色角色添加成功", roleDTO);
     }
 
 
@@ -80,7 +80,7 @@ public class RoleController extends BaseController {
     @GetMapping(value = "role/{roleId}")
     public ResponseBean getRole(@PathVariable Long roleId) {
         log.info("角色管理--------角色查询--------查询角色id：{}", roleId);
-        return ResponseBean.buildSuccess("角色列表查询成功", roleService.getRole(roleId));
+        return ResponseBean.buildSuccess("角色查询成功", roleService.getRole(roleId));
     }
 
 

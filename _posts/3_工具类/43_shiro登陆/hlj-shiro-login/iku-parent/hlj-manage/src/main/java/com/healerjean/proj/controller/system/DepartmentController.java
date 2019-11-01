@@ -9,6 +9,7 @@ import com.healerjean.proj.dto.system.DepartmentDTO;
 import com.healerjean.proj.exception.ParameterErrorException;
 import com.healerjean.proj.util.UserUtils;
 import com.healerjean.proj.utils.validate.ValidateUtils;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +23,10 @@ import java.util.List;
  * @Description 部门管理
  * @Version V1.0
  */
+@Api(description = "系统管理-部门管理")
 @Slf4j
 @RestController
-@RequestMapping("/iku/sys/departments")
+@RequestMapping("/hlj/sys/departments")
 public class DepartmentController extends BaseController {
 
     @Autowired

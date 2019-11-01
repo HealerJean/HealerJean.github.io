@@ -39,7 +39,7 @@ public class SysMenuQuery extends PagingQuery {
 	/** 父链id，“,”分隔 */
 	private String pchain;
 	/** 描述 */
-	private String desciption;
+	private String description;
 	/** 显示排序 */
 	private Integer sort;
 	/** 菜单图标 */
