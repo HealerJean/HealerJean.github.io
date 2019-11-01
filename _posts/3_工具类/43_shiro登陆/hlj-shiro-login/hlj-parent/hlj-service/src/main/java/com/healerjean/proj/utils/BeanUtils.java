@@ -419,7 +419,7 @@ public class BeanUtils {
 
 
     public static DepartmentDTO toDepartmentDTO(SysDepartment sysDepartment) {
-        DepartmentDTO departmentDTO = new DepartmentDTO();
+        DepartmentDTO departmentDTO = new DepartmeResponseEnumntDTO();
         if(sysDepartment != null){
             departmentDTO.setId(sysDepartment.getId());
             departmentDTO.setDepartmentName(sysDepartment.getName());

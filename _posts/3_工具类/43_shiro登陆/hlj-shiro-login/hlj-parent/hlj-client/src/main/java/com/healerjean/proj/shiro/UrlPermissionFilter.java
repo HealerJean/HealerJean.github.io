@@ -1,4 +1,6 @@
 package com.healerjean.proj.shiro;
+
+import com.healerjean.proj.dto.ResponseBean;
 import com.healerjean.proj.enums.ResponseEnum;
 import com.healerjean.proj.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 
 /**
@@ -65,9 +68,18 @@ public class UrlPermissionFilter extends AccessControlFilter {
         HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
         httpServletResponse.setStatus(ResponseEnum.未授权.code);
         log.info("用户无权调用：{},{}" ,httpServletRequest.getRequestURI(),httpServletRequest.getMethod());
+        returnNotAllowed(response);
         return false;
     }
 
+    private void returnNotAllowed(ServletResponse response) throws IOException {
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("application/json; charset=utf-8");
+        PrintWriter out = response.getWriter();
+        out.print(JsonUtils.toJsonString(ResponseBean.buildFailure(ResponseEnum.未授权)));
+        out.flush();
+        out.close();
+    }
 
     @Override
     protected boolean isLoginRequest(ServletRequest request, ServletResponse response) {

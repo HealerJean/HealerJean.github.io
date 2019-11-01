@@ -38,15 +38,15 @@ public class DictionaryController extends BaseController {
     @Autowired
     private DictionaryService dictionaryService;
 
-    @ApiOperation(value = "字典管理-字典类型查询",
-            notes = "字典管理-字典类型查询",
+    @ApiOperation(value = "字典类型查询",
+            notes = "字典类型查询",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DictionaryTypeDTO.class
     )
     @GetMapping(value = "dictType/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean getDictType(@PathVariable Long id) {
-        log.info("字典管理--------字典类型查询--------字典类型Id：{}", id);
+        log.info("系统管理-字典管理--------字典类型查询--------字典类型Id：{}", id);
         if (id == null) {
             throw new ParameterErrorException("字典类型Id不能为null");
         }
@@ -56,15 +56,15 @@ public class DictionaryController extends BaseController {
     }
 
 
-    @ApiOperation(value = "字典管理-字典类型列表查询",
-            notes = "字典管理-字典类型列表查询",
+    @ApiOperation(value = "字典类型列表查询",
+            notes = "字典类型列表查询",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DictionaryTypeDTO.class
     )
     @GetMapping(value = "dictTypes", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean getDictTypes(DictionaryTypeDTO type) {
-        log.info("字典管理--------字典类型列表查询--------字典类型信息：{}", type);
+        log.info("系统管理-字典管理--------字典类型列表查询--------请求参数：{}", type);
         if (type != null && type.getFlag() != null && !type.getFlag()) {
             return ResponseBean.buildSuccess("查询字典类型列表成功", dictionaryService.queryDictTypesLikes(type));
         }
@@ -72,15 +72,16 @@ public class DictionaryController extends BaseController {
     }
 
 
-    @ApiOperation(value = "字典管理-字典数据查询",
-            notes = "字典管理-字典数据查询",
+
+    @ApiOperation(value = "字典数据查询",
+            notes = "字典数据查询",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DictionaryDataDTO.class
     )
     @GetMapping(value = "dictData/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean getDictData(@PathVariable Long id) {
-        log.info("字典管理--------字典数据查询--------字典数据Id：{}", id);
+        log.info("系统管理-字典管理--------字典数据查询--------字典数据Id：{}", id);
 
         DictionaryDataDTO dataDTO = new DictionaryDataDTO();
         dataDTO.setId(id);
@@ -88,15 +89,15 @@ public class DictionaryController extends BaseController {
     }
 
 
-    @ApiOperation(value = "字典管理-字典数据列表查询",
-            notes = "字典管理-字典数据列表查询",
+    @ApiOperation(value = "字典数据列表查询",
+            notes = "字典数据列表查询",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DictionaryDataDTO.class
     )
     @GetMapping(value = "dictDatas", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean getDicDatas(DictionaryDataDTO dataDTO) {
-        log.info("字典管理--------字典数据列表查询--------字典信息：{}", dataDTO);
+        log.info("系统管理-字典管理--------字典数据列表查询--------请求参数：{}", dataDTO);
         if ((dataDTO.getTypeKeys() == null || dataDTO.getTypeKeys().isEmpty()) && StringUtils.isBlank(dataDTO.getTypeKey())) {
             throw new ParameterErrorException("typeKey不能为空 或 typeKeys不能为空");
         }
@@ -118,15 +119,15 @@ public class DictionaryController extends BaseController {
     }
 
 
-    @ApiOperation(value = "字典管理-省份数据列表查询",
-            notes = "字典管理-省份数据列表查询",
+    @ApiOperation(value = "省份数据列表查询",
+            notes = "省份数据列表查询",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DictionaryDataDTO.class
     )
     @GetMapping(value = "provinces", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean getProvinces(DistrictDTO district) {
-        log.info("字典管理--------省份数据列表查询--------参数信息：{}", district);
+        log.info("系统管理-字典管理--------省份数据列表查询--------请求参数：{}", district);
         List<ProvinceDTO> provinces = null;
         if (district == null) {
             provinces = dictionaryService.findProvinces(null);
@@ -137,15 +138,15 @@ public class DictionaryController extends BaseController {
     }
 
 
-    @ApiOperation(value = "字典管理-城市数据列表查询",
-            notes = "字典管理-城市数据列表查询",
+    @ApiOperation(value = "城市数据列表查询",
+            notes = "城市数据列表查询",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DictionaryDataDTO.class
     )
     @GetMapping(value = "citys", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean getCitys(DistrictDTO district) {
-        log.info("字典管理--------城市数据列表查询--------参数信息：{}", district);
+        log.info("系统管理-字典管理--------城市数据列表查询--------请求参数：{}", district);
         List<CityDTO> citys = null;
         if (district == null) {
             citys = dictionaryService.findCitys(null, null);
@@ -156,15 +157,15 @@ public class DictionaryController extends BaseController {
     }
 
 
-    @ApiOperation(value = "字典管理-地区数据列表查询",
-            notes = "字典管理-地区数据列表查询",
+    @ApiOperation(value = "地区数据列表查询",
+            notes = "地区数据列表查询",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DictionaryDataDTO.class
     )
     @GetMapping(value = "districts", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean getDistrict(DistrictDTO district) {
-        log.info("字典管理--------地区数据列表查询--------参数信息：{}", district);
+        log.info("系统管理-字典管理--------地区数据列表查询--------请求参数：{}", district);
         List<DistrictDTO> districts = null;
         if (district == null) {
             districts = dictionaryService.findDistricts(null, null, null);
@@ -173,4 +174,5 @@ public class DictionaryController extends BaseController {
         }
         return ResponseBean.buildSuccess("地区数据列表查询成功", districts);
     }
+
 }

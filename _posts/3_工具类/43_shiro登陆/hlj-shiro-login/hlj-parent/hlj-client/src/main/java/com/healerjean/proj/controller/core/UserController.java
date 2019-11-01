@@ -58,8 +58,8 @@ public class UserController extends BaseController {
     private SecurityService securityService;
 
 
-    @ApiOperation(value = "用户管理-用户注册",
-            notes = "用户管理-用户注册",
+    @ApiOperation(value = "用户注册",
+            notes = "用户注册",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = UserDTO.class)
@@ -106,14 +106,14 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "用户管理-用户登陆",
-            notes = "用户管理-用户登陆",
+    @ApiOperation(value = "用户登陆",
+            notes = "用户登陆",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             response = UserDTO.class)
     @PostMapping(value = "user/login", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean login(@RequestBody UserDTO userDTO, HttpServletRequest request) {
-        log.info("用户管理---------用户登陆---------请求参数：{}", userDTO);
+        log.info("用户管理--------用户登陆--------请求参数：{}", userDTO);
         String validate = ValidateUtils.validate(userDTO, ValidateGroup.Login.class);
         if (!CommonConstants.COMMON_SUCCESS.equals(validate)) {
             throw new ParameterErrorException(validate);
@@ -155,8 +155,8 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "用户管理-用户登出",
-            notes = "用户管理-用户登出",
+    @ApiOperation(value = "用户登出",
+            notes = "用户登出",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             response = UserDTO.class
@@ -171,8 +171,8 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "用户管理-当前用户查询",
-            notes = "用户管理-当前用户查询",
+    @ApiOperation(value = "当前用户查询",
+            notes = "当前用户查询",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             response = LoginUserDTO.class
@@ -185,8 +185,8 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "用户管理-当前用户菜单查询",
-            notes = "用户管理-当前用户菜单查询",
+    @ApiOperation(value = "当前用户菜单查询",
+            notes = "当前用户菜单查询",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             response = MenuDTO.class)

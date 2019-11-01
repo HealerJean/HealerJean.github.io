@@ -35,27 +35,27 @@ public class DepartmentController extends BaseController {
     private DepartmentService departmentService;
 
 
-    @ApiOperation(value = "部门管理-获取树形结构所有部门",
-            notes = "部门管理-获取树形结构所有部门",
+    @ApiOperation(value = "获取树形结构所有部门",
+            notes = "获取树形结构所有部门",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DepartmentDTO.class)
     @GetMapping("/tree")
     public ResponseBean getDepartmentTree() {
-        log.info("部门管理--------获取树形结构所有部门");
+        log.info("系统管理-部门管理--------获取树形结构所有部门");
         List<DepartmentDTO> departmentTree = departmentService.getDepartmentTree();
         return ResponseBean.buildSuccess("获取树形结构所有部门成功", departmentTree);
     }
 
 
-    @ApiOperation(value = "部门管理-部门添加",
-            notes = "部门管理-部门添加",
+    @ApiOperation(value = "部门添加",
+            notes = "部门添加",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DepartmentDTO.class)
     @PostMapping("/add")
     public ResponseBean addDepartment(@RequestBody DepartmentDTO departmentDTO) {
-        log.info("部门管理--------部门添加，部门信息：{}", departmentDTO);
+        log.info("系统管理-部门管理--------部门添加--------请求参数：{}", departmentDTO);
         String validate = ValidateUtils.validate(departmentDTO, ValidateGroup.AddDepartment.class);
         if (!CommonConstants.COMMON_SUCCESS.equals(validate)) {
             log.error("添加部门参数错误，错误信息：{}", validate);
@@ -66,14 +66,14 @@ public class DepartmentController extends BaseController {
     }
 
 
-    @ApiOperation(value = "部门管理-部门修改",
-            notes = "部门管理-部门修改",
+    @ApiOperation(value = "部门修改",
+            notes = "部门修改",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DepartmentDTO.class)
     @PutMapping("/{id}")
     public ResponseBean updateDepartment(@PathVariable Long id, @RequestBody DepartmentDTO departmentDTO) {
-        log.info("部门管理--------部门修改，部门信息：{}", departmentDTO);
+        log.info("系统管理-部门管理--------部门修改--------部门Id：{}，请求参数：{}", id, departmentDTO);
         departmentDTO.setId(id);
         String validate = ValidateUtils.validate(departmentDTO, ValidateGroup.UpdateDepartment.class);
         if (!CommonConstants.COMMON_SUCCESS.equals(validate)) {
@@ -85,14 +85,14 @@ public class DepartmentController extends BaseController {
     }
 
 
-    @ApiOperation(value = "部门管理-部门删除",
-            notes = "部门管理-部门删除",
+    @ApiOperation(value = "部门删除",
+            notes = "部门删除",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DepartmentDTO.class)
     @DeleteMapping("/{id}")
     public ResponseBean deleteDepartment(@PathVariable Long id) {
-        log.info("部门管理--------部门删除，部门id：{}", id);
+        log.info("系统管理-部门管理--------部门删除--------部门id：{}", id);
         if (id == null || id == 0L) {
             throw new ParameterErrorException("请选择要删除的部门");
         }

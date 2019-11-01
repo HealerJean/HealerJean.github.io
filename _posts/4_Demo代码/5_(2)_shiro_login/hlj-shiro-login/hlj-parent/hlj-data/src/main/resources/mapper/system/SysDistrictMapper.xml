@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysDistrictMapper">
+	<resultMap id="BaseResultMap" type="SysDistrict">
+		<id column="ID" jdbcType="BIGINT" property="id" />
+		<result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
+		<result column="province_name" jdbcType="VARCHAR" property="provinceName" />
+		<result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+		<result column="city_name" jdbcType="VARCHAR" property="cityName" />
+		<result column="district_code" jdbcType="VARCHAR" property="districtCode" />
+		<result column="district_name" jdbcType="VARCHAR" property="districtName" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<trim prefix="(" prefixOverrides="and" suffix=")">
+				<if test="provinceCode != null">
+					and province_code = #{provinceCode,jdbcType=VARCHAR}
+				</if>
+				<if test="provinceName != null">
+					and province_name = #{provinceName,jdbcType=VARCHAR}
+				</if>
+				<if test="cityCode != null">
+					and city_code = #{cityCode,jdbcType=VARCHAR}
+				</if>
+				<if test="cityName != null">
+					and city_name = #{cityName,jdbcType=VARCHAR}
+				</if>
+				<if test="districtCode != null">
+					and district_code = #{districtCode,jdbcType=VARCHAR}
+				</if>
+				<if test="districtName != null">
+					and district_name = #{districtName,jdbcType=VARCHAR}
+				</if>
+				<if test="status != null">
+					and status = #{status,jdbcType=VARCHAR}
+				</if>
+			</trim>
+		</where>
+	</sql>
+	<sql id="Example_Set_Clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="provinceCode != null">
+					province_code = #{provinceCode,jdbcType=VARCHAR},
+				</if>
+				<if test="provinceName != null">
+					province_name = #{provinceName,jdbcType=VARCHAR},
+				</if>
+				<if test="cityCode != null">
+					city_code = #{cityCode,jdbcType=VARCHAR},
+				</if>
+				<if test="cityName != null">
+					city_name = #{cityName,jdbcType=VARCHAR},
+				</if>
+				<if test="districtCode != null">
+					district_code = #{districtCode,jdbcType=VARCHAR},
+				</if>
+				<if test="districtName != null">
+					district_name = #{districtName,jdbcType=VARCHAR},
+				</if>
+				<if test="status != null">
+					status = #{status,jdbcType=VARCHAR},
+				</if>
+				UPDATE_TIME = NOW(),
+			</trim>
+		</set>
+	</sql>
+	<sql id="Base_Column_List">
+		id,
+		province_code,
+		province_name,
+		city_code,
+		city_name,
+		district_code,
+		district_name,
+		status,
+		update_time
+	</sql>
+	<sql id="Base_Set_Clause">
+		<set>
+			<trim suffixOverrides=",">
+				province_code = #{provinceCode,jdbcType=VARCHAR},
+				province_name = #{provinceName,jdbcType=VARCHAR},
+				city_code = #{cityCode,jdbcType=VARCHAR},
+				city_name = #{cityName,jdbcType=VARCHAR},
+				district_code = #{districtCode,jdbcType=VARCHAR},
+				district_name = #{districtName,jdbcType=VARCHAR},
+				status = #{status,jdbcType=VARCHAR},
+			</trim>
+		</set>
+	</sql>
+	<sql id="Selective_Column_List">
+		ID,
+		<if test="provinceCode != null">
+			province_code,
+		</if>
+		<if test="provinceName != null">
+			province_name,
+		</if>
+		<if test="cityCode != null">
+			city_code,
+		</if>
+		<if test="cityName != null">
+			city_name,
+		</if>
+		<if test="districtCode != null">
+			district_code,
+		</if>
+		<if test="districtName != null">
+			district_name,
+		</if>
+		<if test="status != null">
+			status,
+		</if>
+	</sql>
+	<sql id="Base_Value_List">
+		#{id,jdbcType=BIGINT},
+		#{provinceCode,jdbcType=VARCHAR},
+		#{provinceName,jdbcType=VARCHAR},
+		#{cityCode,jdbcType=VARCHAR},
+		#{cityName,jdbcType=VARCHAR},
+		#{districtCode,jdbcType=VARCHAR},
+		#{districtName,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		#{updateTime,jdbcType=TIMESTAMP},
+	</sql>
+	<sql id="Selective_Value_List">
+		#{id},
+		<if test="provinceCode != null">
+			#{provinceCode,jdbcType=VARCHAR},
+		</if>
+		<if test="provinceName != null">
+			#{provinceName,jdbcType=VARCHAR},
+		</if>
+		<if test="cityCode != null">
+			#{cityCode,jdbcType=VARCHAR},
+		</if>
+		<if test="cityName != null">
+			#{cityName,jdbcType=VARCHAR},
+		</if>
+		<if test="districtCode != null">
+			#{districtCode,jdbcType=VARCHAR},
+		</if>
+		<if test="districtName != null">
+			#{districtName,jdbcType=VARCHAR},
+		</if>
+		<if test="status != null">
+			#{status,jdbcType=VARCHAR},
+		</if>
+	</sql>
+
+	<select id="selectByExample" parameterType="SysDistrictQuery" resultMap="BaseResultMap">
+		select
+		<trim suffixOverrides=",">
+			<include refid="Base_Column_List" />
+		</trim>
+		from sys_district
+		<include refid="Example_Where_Clause" />
+		<!-- order by CREATE_DATE -->
+	</select>
+	<select id="selectByPrimaryKey" parameterType="Long" resultMap="BaseResultMap">
+		select
+		<trim suffixOverrides=",">
+			<include refid="Base_Column_List" />
+		</trim>
+		from sys_district
+		where ID = #{id,jdbcType=SMALLINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="Long">
+		delete from sys_district
+		where ID = #{id,jdbcType=SMALLINT}
+	</delete>
+	<delete id="deleteByExample" parameterType="SysDistrictQuery">
+		delete from sys_district
+		<include refid="Example_Where_Clause" />
+	</delete>
+	<insert id="insert" parameterType="SysDistrict">
+		insert into sys_district
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<include refid="Base_Column_List" />
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<include refid="Base_Value_List" />
+		</trim>
+	</insert>
+	<insert id="insertSelective" parameterType="SysDistrict" useGeneratedKeys="true" keyProperty="id">
+		insert into sys_district
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<include refid="Selective_Column_List" />
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<include refid="Selective_Value_List" />
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="SysDistrictQuery" resultType="java.lang.Integer">
+		select count(*) from sys_district
+		<include refid="Example_Where_Clause" />
+	</select>
+	<update id="updateByPrimaryKeySelective" parameterType="SysDistrict">
+		update sys_district
+		<include refid="Example_Set_Clause" />
+		where ID = #{id,jdbcType=SMALLINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="SysDistrict">
+		update sys_district
+		<include refid="Base_Set_Clause" />
+		where ID = #{id,jdbcType=SMALLINT}
+	</update>
+
+	<select id="selectPageByExample" parameterType="SysDistrictQuery" resultMap="BaseResultMap">
+		select
+		<trim suffixOverrides=",">
+			<include refid="Base_Column_List" />
+		</trim>
+		from sys_district
+		<include refid="Example_Where_Clause" />
+        <![CDATA[ limit #{startRow},#{endRow} ]]>
+  		<!-- order by CREATE_DATE -->
+	</select>
+</mapper>

@@ -58,8 +58,8 @@ public class UserController extends BaseController {
     private SecurityService securityService;
 
 
-    @ApiOperation(value = "用户管理-用户添加",
-            notes = "用户管理-用户添加",
+    @ApiOperation(value = "用户添加",
+            notes = "用户添加",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = LoginUserDTO.class
@@ -83,12 +83,12 @@ public class UserController extends BaseController {
         //将该登录用户的阿里妈妈信息与该添加的用户形成关联
         LoginUserDTO loginUser = UserUtils.getLoginUser();
         userService.addUser(userDTO, loginUser);
-        return ResponseBean.buildSuccess("添加用户成功");
+        return ResponseBean.buildSuccess("用户添加成功");
     }
 
 
-    @ApiOperation(value = "用户管理-用户登陆",
-            notes = "用户管理-用户登陆",
+    @ApiOperation(value = "用户登陆",
+            notes = "用户登陆",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = UserDTO.class)
@@ -136,15 +136,15 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "用户管理-用户登出",
-            notes = "用户管理-用户登出",
+    @ApiOperation(value = "用户登出",
+            notes = "用户登出",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = UserDTO.class
     )
     @GetMapping(value = "user/logout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean logout() {
-        log.info("用户管理--------用户登出--------参数信息信息：{}");
+        log.info("用户管理--------用户登出--------请求参数：{}");
         //shiro登出
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
@@ -152,8 +152,8 @@ public class UserController extends BaseController {
     }
 
 
-    @ApiOperation(value = "用户管理-当前用户查询",
-            notes = "用户管理-当前用户查询",
+    @ApiOperation(value = "当前用户查询",
+            notes = "当前用户查询",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = LoginUserDTO.class
