@@ -33,7 +33,7 @@ node_modules
 .classpath
 .DS_Store
 .settings/
-target/
+
 bin/
 classess/
 test/
