@@ -29,7 +29,7 @@ import java.util.Map;
  * @ClassName A1
  * @date 2019/4/12  17:45.
  */
-@Api(description = "系统管理-字典维护")
+@Api(description = "系统管理-字典管理")
 @RestController
 @RequestMapping("hlj/sys")
 @Slf4j

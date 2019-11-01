@@ -59,15 +59,15 @@ public class UserController extends BaseController {
 
 
 
-    @ApiOperation(value = "用户管理-添加用户",
-            notes = "用户管理-添加用户",
+    @ApiOperation(value = "用户管理-用户添加",
+            notes = "用户管理-用户添加",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             response = LoginUserDTO.class
     )
     @PostMapping(value = "user/add")
     public ResponseBean addUser(@RequestBody UserDTO userDTO) {
-        log.info("用户管理---------添加用户---------请求参数：{}", userDTO);
+        log.info("用户管理---------用户添加---------请求参数：{}", userDTO);
         String validate = ValidateUtils.validate(userDTO, ValidateGroup.ManageAddUser.class);
         if (!CommonConstants.COMMON_SUCCESS.equals(validate)) {
             throw new ParameterErrorException(validate);
@@ -86,15 +86,6 @@ public class UserController extends BaseController {
         userService.addUser(userDTO, loginUser);
         return ResponseBean.buildSuccess("添加用户成功");
     }
-
-    public static void main(String[] args) {
-        SecureRandomNumberGenerator secureRandomNumberGenerator = new SecureRandomNumberGenerator();
-        String salt = secureRandomNumberGenerator.nextBytes().toHex();
-        String password = new Md5Hash("HealerJean123", salt).toString();
-        System.out.println(salt);
-        System.out.println(password);
-    }
-
 
 
 
@@ -153,7 +144,7 @@ public class UserController extends BaseController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             response = UserDTO.class
     )
-    @GetMapping("logout")
+    @GetMapping("user/logout")
     public ResponseBean logout() {
         log.info("用户管理--------用户登出--------参数信息信息：{}");
         //shiro登出

@@ -231,7 +231,7 @@ create table sys_user_department_ref
   status            varchar(8)          not null default '' comment '状态: 10：有效，99：无效',
   update_time       datetime            not null default current_timestamp on update current_timestamp comment '更新时间',
   primary key (id) using btree
-) engine = innodb comment ='系统-用户与部门关系表';
+) engine = innodb comment ='系统模块-用户与部门关系表';
 
 
 

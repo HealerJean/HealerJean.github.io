@@ -6,7 +6,7 @@
 		<result column="role_name" jdbcType="VARCHAR" property="roleName" />
 		<result column="ref_system_code" jdbcType="VARCHAR" property="refSystemCode" />
 		<result column="status" jdbcType="VARCHAR" property="status" />
-		<result column="desciption" jdbcType="VARCHAR" property="desciption" />
+		<result column="description" jdbcType="VARCHAR" property="description" />
 		<result column="create_user" jdbcType="BIGINT" property="createUser" />
 		<result column="create_name" jdbcType="VARCHAR" property="createName" />
 		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -26,8 +26,8 @@
 				<if test="status != null">
 					and status = #{status,jdbcType=VARCHAR}
 				</if>
-				<if test="desciption != null">
-					and desciption = #{desciption,jdbcType=VARCHAR}
+				<if test="description != null">
+					and description = #{description,jdbcType=VARCHAR}
 				</if>
 				<if test="createUser != null and createUser != ''">
 					and create_user = #{createUser,jdbcType=BIGINT}
@@ -40,6 +40,12 @@
 				</if>
 				<if test="updateName != null">
 					and update_name = #{updateName,jdbcType=VARCHAR}
+				</if>
+				<if test="roleIds != null and roleIds.size() > 0">
+					and id in
+					<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
+						#{item}
+					</foreach>
 				</if>
 			</trim>
 		</where>
@@ -56,8 +62,8 @@
 				<if test="status != null">
 					status = #{status,jdbcType=VARCHAR},
 				</if>
-				<if test="desciption != null">
-					desciption = #{desciption,jdbcType=VARCHAR},
+				<if test="description != null">
+					description = #{description,jdbcType=VARCHAR},
 				</if>
 				<if test="createUser != null">
 					create_user = #{createUser,jdbcType=BIGINT},
@@ -80,7 +86,7 @@
 		role_name,
 		ref_system_code,
 		status,
-		desciption,
+		description,
 		create_user,
 		create_name,
 		create_time,
@@ -94,7 +100,7 @@
 				role_name = #{roleName,jdbcType=VARCHAR},
 				ref_system_code = #{refSystemCode,jdbcType=VARCHAR},
 				status = #{status,jdbcType=VARCHAR},
-				desciption = #{desciption,jdbcType=VARCHAR},
+				description = #{description,jdbcType=VARCHAR},
 				create_user = #{createUser,jdbcType=BIGINT},
 				create_name = #{createName,jdbcType=VARCHAR},
 				update_user = #{updateUser,jdbcType=BIGINT},
@@ -113,8 +119,8 @@
 		<if test="status != null">
 			status,
 		</if>
-		<if test="desciption != null">
-			desciption,
+		<if test="description != null">
+			description,
 		</if>
 		<if test="createUser != null">
 			create_user,
@@ -135,7 +141,7 @@
 		#{roleName,jdbcType=VARCHAR},
 		#{refSystemCode,jdbcType=VARCHAR},
 		#{status,jdbcType=VARCHAR},
-		#{desciption,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR},
 		#{createUser,jdbcType=BIGINT},
 		#{createName,jdbcType=VARCHAR},
 		#{createTime,jdbcType=TIMESTAMP},
@@ -154,8 +160,8 @@
 		<if test="status != null">
 			#{status,jdbcType=VARCHAR},
 		</if>
-		<if test="desciption != null">
-			#{desciption,jdbcType=VARCHAR},
+		<if test="description != null">
+			#{description,jdbcType=VARCHAR},
 		</if>
 		<if test="createUser != null">
 			#{createUser,jdbcType=BIGINT},
@@ -240,4 +246,83 @@
 		<![CDATA[ limit #{startRow},#{endRow} ]]>
 		<!-- order by CREATE_DATE -->
 	</select>
+
+
+
+
+	<select id="countByExampleLike" parameterType="SysRoleQuery" resultType="java.lang.Integer">
+		select count(*) from sys_role
+		<include refid="Example_Where_Like_Clause" />
+	</select>
+
+	<select id="selectPageByExampleLike" parameterType="SysRoleQuery" resultMap="BaseResultMap">
+		select
+		id,
+		role_name,
+		ref_system_code,
+		status,
+		description,
+		create_user,
+		create_name,
+		create_time,
+		update_user,
+		update_name,
+		update_time
+		from sys_role
+		<include refid="Example_Where_Like_Clause" />
+		<![CDATA[ limit #{startRow},#{endRow} ]]>
+		<!-- order by CREATE_DATE -->
+	</select>
+
+	<select id="selectByExampleLike" parameterType="SysRoleQuery" resultMap="BaseResultMap">
+		select
+		id,
+		role_name,
+		ref_system_code,
+		status,
+		description,
+		create_user,
+		create_name,
+		create_time,
+		update_user,
+		update_name,
+		update_time
+		from sys_role
+		<include refid="Example_Where_Like_Clause" />
+		<!-- order by CREATE_DATE -->
+	</select>
+
+	<sql id="Example_Where_Like_Clause">
+		<where>
+			<trim prefix="(" prefixOverrides="and" suffix=")">
+				<if test="roleName != null and roleName != ''">
+					and role_name LIKE CONCAT('%',#{roleName,jdbcType=VARCHAR},'%')
+				</if>
+				<if test="refSystemCode != null and refSystemCode != ''">
+					and ref_system_code = #{refSystemCode,jdbcType=VARCHAR}
+				</if>
+				<if test="status != null and status != ''">
+					and status = #{status,jdbcType=VARCHAR}
+				</if>
+				<if test="description != null and description != ''">
+					and description = #{description,jdbcType=VARCHAR}
+				</if>
+				<if test="createUser != null and createUser != ''">
+					and create_user = #{createUser,jdbcType=BIGINT}
+				</if>
+				<if test="createName != null and createName != ''">
+					and create_name = #{createName,jdbcType=VARCHAR}
+				</if>
+				<if test="updateUser != null and updateUser != ''">
+					and update_user = #{updateUser,jdbcType=BIGINT}
+				</if>
+				<if test="updateName != null and updateName != ''">
+					and update_name = #{updateName,jdbcType=VARCHAR}
+				</if>
+			</trim>
+		</where>
+	</sql>
+
+
+
 </mapper>
