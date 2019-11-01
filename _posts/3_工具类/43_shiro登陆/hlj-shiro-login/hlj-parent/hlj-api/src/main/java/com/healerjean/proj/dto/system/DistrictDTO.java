@@ -2,6 +2,7 @@ package com.healerjean.proj.dto.system;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -17,28 +18,21 @@ import lombok.experimental.Accessors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DistrictDTO {
 
-    /**
-     * 省-编码
-     */
+    @ApiModelProperty(value = "省-编码")
     private String provinceCode;
-    /**
-     * 省-名称
-     */
+
+    @ApiModelProperty(value = "省-名称")
     private String provinceName;
-    /**
-     * 城市-编码
-     */
+
+    @ApiModelProperty(value = "城市-编码")
     private String cityCode;
-    /**
-     * 城市-名称
-     */
+
+    @ApiModelProperty(value = "城市-名称")
     private String cityName;
-    /**
-     * 区/县-编码
-     */
+
+    @ApiModelProperty(value = "区/县-编码")
     private String districtCode;
-    /**
-     * 区/县-名称
-     */
+
+    @ApiModelProperty(value = "区/县-名称")
     private String districtName;
 }

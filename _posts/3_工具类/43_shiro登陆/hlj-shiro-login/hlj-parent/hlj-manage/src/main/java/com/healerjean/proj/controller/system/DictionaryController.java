@@ -12,9 +12,11 @@ import com.healerjean.proj.exception.ParameterErrorException;
 import com.healerjean.proj.util.UserUtils;
 import com.healerjean.proj.utils.validate.ValidateUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -39,23 +41,59 @@ public class DictionaryController extends BaseController {
     private DictionaryService dictionaryService;
 
 
-    @PostMapping("dictType/add")
+    @ApiOperation(value = "字典管理-字典类型添加",
+            notes = "字典管理-字典类型添加",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = DictionaryTypeDTO.class
+    )
+    @PostMapping(value = "dictType/add", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean addDictType(@RequestBody(required = false) DictionaryTypeDTO typeDTO) {
-        log.info("字典数据--------新增字典类型--------字典类型信息：{}", typeDTO);
+        log.info("字典管理--------字典类型添加--------字典类型信息：{}", typeDTO);
         String validate = ValidateUtils.validate(typeDTO, ValidateGroup.AddDictType.class);
         if (!CommonConstants.COMMON_SUCCESS.equals(validate)) {
-            log.info("字典数据--------新增字典类型--------参数不完整：{}", validate);
+            log.info("字典管理--------字典类型添加--------参数不完整：{}", validate);
             throw new ParameterErrorException(validate);
         }
         LoginUserDTO loginUserDTO = UserUtils.getLoginUser();
         dictionaryService.addDictType(typeDTO, loginUserDTO);
-        return ResponseBean.buildSuccess("新增字典数据成功");
+        return ResponseBean.buildSuccess("字典类型添加成功");
     }
 
 
-    @DeleteMapping("dictType/{id}")
+    @ApiOperation(value = "字典管理-字典类型修改",
+            notes = "字典管理-字典类型修改",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = DictionaryTypeDTO.class
+    )
+    @PutMapping(value = "dictType/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseBean updateDictType(@PathVariable Long id, @RequestBody(required = false) DictionaryTypeDTO typeDTO) {
+        log.info("字典管理--------字典类型修改--------id{} 字典类型信息：{}", id, typeDTO);
+        String validate = ValidateUtils.validate(typeDTO, ValidateGroup.UpdateDictType.class);
+        if (!CommonConstants.COMMON_SUCCESS.equals(validate)) {
+            log.info("字典管理--------字典类型修改--------参数不完整：{}", validate);
+            throw new ParameterErrorException(validate);
+        }
+        if (id == null) {
+            throw new ParameterErrorException("字典类型Id不能为null");
+        }
+        typeDTO.setId(id);
+        LoginUserDTO loginUserDTO = UserUtils.getLoginUser();
+        dictionaryService.updateDictType(typeDTO, loginUserDTO);
+        return ResponseBean.buildSuccess("字典类型修改成功");
+    }
+
+
+    @ApiOperation(value = "字典管理-字典类型删除",
+            notes = "字典管理-字典类型删除",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = DictionaryTypeDTO.class
+    )
+    @DeleteMapping(value = "dictType/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean deleteDictType(@PathVariable Long id) {
-        log.info("字典数据--------删除字典类型--------字典类型Id：{}", id);
+        log.info("字典管理--------字典类型删除--------字典类型Id：{}", id);
         if (id == null) {
             throw new ParameterErrorException("字典类型Id不能为null");
         }
@@ -65,49 +103,52 @@ public class DictionaryController extends BaseController {
     }
 
 
-    @PutMapping("dictType/{id}")
-    public ResponseBean updateDictType(@PathVariable Long id, @RequestBody(required = false) DictionaryTypeDTO typeDTO) {
-        log.info("字典数据--------更新字典类型--------id{} 字典类型信息：{}", id, typeDTO);
-        String validate = ValidateUtils.validate(typeDTO, ValidateGroup.UpdateDictType.class);
-        if (!CommonConstants.COMMON_SUCCESS.equals(validate)) {
-            log.info("字典数据--------更新字典类型--------参数不完整：{}", validate);
-            throw new ParameterErrorException(validate);
-        }
-        if (id == null) {
-            throw new ParameterErrorException("字典类型Id不能为null");
-        }
-        typeDTO.setId(id);
-        LoginUserDTO loginUserDTO = UserUtils.getLoginUser();
-        dictionaryService.updateDictType(typeDTO, loginUserDTO);
-        return ResponseBean.buildSuccess("更新字典数据成功");
-    }
-
-    @GetMapping("dictType/{id}")
+    @ApiOperation(value = "字典管理-字典类型查询",
+            notes = "字典管理-字典类型查询",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = DictionaryTypeDTO.class
+    )
+    @GetMapping(value = "dictType/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean getDictType(@PathVariable Long id) {
-        log.info("字典数据--------查询字典类型--------字典类型Id：{}", id);
+        log.info("字典管理--------字典类型查询--------字典类型Id：{}", id);
         if (id == null) {
             throw new ParameterErrorException("字典类型Id不能为null");
         }
         DictionaryTypeDTO typeDTO = new DictionaryTypeDTO();
         typeDTO.setId(id);
-        return ResponseBean.buildSuccess("查询字典类型成功", dictionaryService.queryDictionaryTypeSingle(typeDTO));
+        return ResponseBean.buildSuccess("字典类型查询成功", dictionaryService.queryDictionaryTypeSingle(typeDTO));
     }
 
-    @GetMapping("dictTypes")
+
+    @ApiOperation(value = "字典管理-字典类型列表查询",
+            notes = "字典管理-字典类型列表查询",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = DictionaryTypeDTO.class
+    )
+    @GetMapping(value = "dictTypes", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean getDictTypes(DictionaryTypeDTO type) {
-        log.info("字典数据--------查询字典数据列表--------字典类型信息：{}", type);
+        log.info("字典管理--------字典类型列表查询--------字典类型信息：{}", type);
         if (type != null && type.getFlag() != null && !type.getFlag()) {
             return ResponseBean.buildSuccess("查询字典类型列表成功", dictionaryService.queryDictTypesLikes(type));
         }
-        return ResponseBean.buildSuccess("查询字典类型列表成功", dictionaryService.queryDictTypesPageLikes(type));
+        return ResponseBean.buildSuccess("字典类型列表查询成功", dictionaryService.queryDictTypesPageLikes(type));
     }
 
-    @PostMapping("dictData/add")
+
+    @ApiOperation(value = "字典管理-字典数据添加",
+            notes = "字典管理-字典数据添加",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = DictionaryDataDTO.class
+    )
+    @PostMapping(value = "dictData/add", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean addDictData(@RequestBody(required = false) DictionaryDataDTO data) {
-        log.info("字典数据--------新增字典数据--------字典信息：{}", data);
+        log.info("字典管理--------字典数据添加--------字典信息：{}", data);
         String validate = ValidateUtils.validate(data, ValidateGroup.AddDictData.class);
         if (!CommonConstants.COMMON_SUCCESS.equals(validate)) {
-            log.info("字典数据--------新增字典数据--------参数不完整：{}", validate);
+            log.info("字典管理--------字典数据添加--------参数不完整：{}", validate);
             throw new ParameterErrorException(validate);
             //判断typeKey是否可用
         } else {
@@ -120,12 +161,19 @@ public class DictionaryController extends BaseController {
         }
         LoginUserDTO loginUserDTO = UserUtils.getLoginUser();
         dictionaryService.addDictionary(data, loginUserDTO);
-        return ResponseBean.buildSuccess("新增字典数据成功");
+        return ResponseBean.buildSuccess("字典数据添加成功");
     }
 
-    @DeleteMapping("dictData/{id}")
+
+    @ApiOperation(value = "字典管理-字典数据删除",
+            notes = "字典管理-字典数据删除",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = DictionaryDataDTO.class
+    )
+    @DeleteMapping(value = "dictData/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean deleteDictData(@PathVariable Long id) {
-        log.info("字典数据--------删除字典数据--------字典数据Id：{}", id);
+        log.info("字典管理--------字典数据删除--------字典数据Id：{}", id);
         if (id == null) {
             throw new ParameterErrorException("字典数据Id不能为null");
         }
@@ -134,12 +182,19 @@ public class DictionaryController extends BaseController {
         return ResponseBean.buildSuccess("字典数据删除成功");
     }
 
-    @PutMapping("dictData/{id}")
+
+    @ApiOperation(value = "字典管理-字典数据修改",
+            notes = "字典管理-字典数据修改",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = DictionaryDataDTO.class
+    )
+    @PutMapping(value = "dictData/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean updateDictData(@PathVariable Long id, @RequestBody(required = false) DictionaryDataDTO dataDTO) {
-        log.info("字典数据--------更新字典数据--------字典信息：{}", dataDTO);
+        log.info("字典管理--------字典数据修改--------字典信息：{}", dataDTO);
         String validate = ValidateUtils.validate(dataDTO, ValidateGroup.UpdateDictData.class);
         if (!CommonConstants.COMMON_SUCCESS.equals(validate)) {
-            log.info("字典数据--------更新字典数据--------参数不完整：{}", validate);
+            log.info("字典管理--------字典数据修改--------参数不完整：{}", validate);
             throw new ParameterErrorException(validate);
         }
         if (id == null) {
@@ -148,23 +203,35 @@ public class DictionaryController extends BaseController {
         dataDTO.setId(id);
         LoginUserDTO loginUserDTO = UserUtils.getLoginUser();
         dictionaryService.updateDictionary(dataDTO, loginUserDTO);
-        return ResponseBean.buildSuccess("更新字典数据成功");
+        return ResponseBean.buildSuccess("字典数据修改成功");
     }
 
 
-    @GetMapping("dictData/{id}")
+    @ApiOperation(value = "字典管理-字典数据查询",
+            notes = "字典管理-字典数据查询",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = DictionaryDataDTO.class
+    )
+    @GetMapping(value = "dictData/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean getDictData(@PathVariable Long id) {
-        log.info("字典数据--------查询字典数据--------字典数据Id：{}", id);
+        log.info("字典管理--------字典数据查询--------字典数据Id：{}", id);
 
         DictionaryDataDTO dataDTO = new DictionaryDataDTO();
         dataDTO.setId(id);
-        return ResponseBean.buildSuccess("查询字典数据成功", dictionaryService.queryDictionaryDataSingle(dataDTO));
+        return ResponseBean.buildSuccess("字典数据查询成功", dictionaryService.queryDictionaryDataSingle(dataDTO));
     }
 
 
-    @GetMapping("dictDatas")
+    @ApiOperation(value = "字典管理-字典数据列表查询",
+            notes = "字典管理-字典数据列表查询",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = DictionaryDataDTO.class
+    )
+    @GetMapping(value = "dictDatas", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean getDicDatas(DictionaryDataDTO dataDTO) {
-        log.info("字典数据--------查询字典数据列表--------字典信息：{}", dataDTO);
+        log.info("字典管理--------字典数据列表查询--------字典信息：{}", dataDTO);
         if ((dataDTO.getTypeKeys() == null || dataDTO.getTypeKeys().isEmpty()) && StringUtils.isBlank(dataDTO.getTypeKey())) {
             throw new ParameterErrorException("typeKey不能为空 或 typeKeys不能为空");
         }
@@ -172,9 +239,9 @@ public class DictionaryController extends BaseController {
         if (StringUtils.isNotBlank(dataDTO.getTypeKey())) {
             if (dataDTO.getFlag() != null && !dataDTO.getFlag()) {
                 map.put(dataDTO.getTypeKey(), dictionaryService.queryDictDataLikes(dataDTO));
-                return ResponseBean.buildSuccess("查询字典数据列表成功", map);
+                return ResponseBean.buildSuccess("字典数据列表查询成功", map);
             }
-            return ResponseBean.buildSuccess("查询字典数据列表成功", dictionaryService.queryDictDataPageLikes(dataDTO));
+            return ResponseBean.buildSuccess("字典数据列表查询成功", dictionaryService.queryDictDataPageLikes(dataDTO));
         }
 
         DictionaryDataDTO dto = new DictionaryDataDTO();
@@ -185,39 +252,60 @@ public class DictionaryController extends BaseController {
         return ResponseBean.buildSuccess("查询字典数据列表成功", map);
     }
 
-    @GetMapping("provinces")
+
+    @ApiOperation(value = "字典管理-省份数据列表查询",
+            notes = "字典管理-省份数据列表查询",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = DictionaryDataDTO.class
+    )
+    @GetMapping(value = "provinces", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean getProvinces(DistrictDTO district) {
-        log.info("查询省份数据--------查询省份列表--------参数信息：{}", district);
+        log.info("字典管理--------省份数据列表查询--------参数信息：{}", district);
         List<ProvinceDTO> provinces = null;
         if (district == null) {
             provinces = dictionaryService.findProvinces(null);
         } else {
             provinces = dictionaryService.findProvinces(district.getProvinceCode());
         }
-        return ResponseBean.buildSuccess("查询省份数据成功", provinces);
+        return ResponseBean.buildSuccess("省份数据列表查询成功", provinces);
     }
 
-    @GetMapping("citys")
+
+    @ApiOperation(value = "字典管理-城市数据列表查询",
+            notes = "字典管理-城市数据列表查询",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = DictionaryDataDTO.class
+    )
+    @GetMapping(value = "citys", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean getCitys(DistrictDTO district) {
-        log.info("查询城市数据--------查询城市列表--------参数信息：{}", district);
+        log.info("字典管理--------城市数据列表查询--------参数信息：{}", district);
         List<CityDTO> citys = null;
         if (district == null) {
             citys = dictionaryService.findCitys(null, null);
         } else {
             citys = dictionaryService.findCitys(district.getProvinceCode(), district.getCityCode());
         }
-        return ResponseBean.buildSuccess("查询省份数据成功", citys);
+        return ResponseBean.buildSuccess("城市数据列表查询成功", citys);
     }
 
-    @GetMapping("districts")
+
+    @ApiOperation(value = "字典管理-地区数据列表查询",
+            notes = "字典管理-地区数据列表查询",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = DictionaryDataDTO.class
+    )
+    @GetMapping(value = "districts", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean getDistrict(DistrictDTO district) {
-        log.info("查询地区数据--------查询地区列表--------参数信息：{}", district);
+        log.info("字典管理--------地区数据列表查询--------参数信息：{}", district);
         List<DistrictDTO> districts = null;
         if (district == null) {
             districts = dictionaryService.findDistricts(null, null, null);
         } else {
             districts = dictionaryService.findDistricts(district.getProvinceCode(), district.getCityCode(), district.getDistrictCode());
         }
-        return ResponseBean.buildSuccess("查询地区数据成功", districts);
+        return ResponseBean.buildSuccess("地区数据列表查询成功", districts);
     }
 }

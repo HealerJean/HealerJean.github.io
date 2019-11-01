@@ -60,10 +60,10 @@ public class UserController extends BaseController {
 
     @ApiOperation(value = "用户管理-用户注册",
             notes = "用户管理-用户注册",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = UserDTO.class)
-    @PostMapping(value = "user/register", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "user/register", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean register(@RequestBody UserDTO userDTO, HttpServletRequest request) {
         log.info("用户管理---------用户注册---------请求参数：{}", userDTO);
         String validate = ValidateUtils.validate(userDTO, ValidateGroup.RegisterUser.class);
@@ -106,15 +106,12 @@ public class UserController extends BaseController {
     }
 
 
-
-
-
     @ApiOperation(value = "用户管理-用户登陆",
             notes = "用户管理-用户登陆",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             response = UserDTO.class)
-    @PostMapping(value = "user/login", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "user/login", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean login(@RequestBody UserDTO userDTO, HttpServletRequest request) {
         log.info("用户管理---------用户登陆---------请求参数：{}", userDTO);
         String validate = ValidateUtils.validate(userDTO, ValidateGroup.Login.class);
@@ -164,7 +161,7 @@ public class UserController extends BaseController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             response = UserDTO.class
     )
-    @GetMapping("logout")
+    @GetMapping(value = "logout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean logout() {
         log.info("用户管理--------用户登出--------参数信息信息：{}");
         //shiro登出
@@ -174,15 +171,13 @@ public class UserController extends BaseController {
     }
 
 
-
-
     @ApiOperation(value = "用户管理-当前用户查询",
             notes = "用户管理-当前用户查询",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             response = LoginUserDTO.class
     )
-    @GetMapping(value = "user/current")
+    @GetMapping(value = "user/current", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean checkCurrentUser() {
         log.info("用户管理--------获取当前用户信息");
         LoginUserDTO loginUser = UserUtils.getLoginUser();
@@ -195,7 +190,7 @@ public class UserController extends BaseController {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             response = MenuDTO.class)
-    @GetMapping(value = "user/current/menus")
+    @GetMapping(value = "user/current/menus", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean currentUserMenus() {
         log.info("用户管理--------当前用户菜单查询");
         List<MenuDTO> menus = UserUtils.getMenus();

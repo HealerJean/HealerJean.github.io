@@ -1,6 +1,7 @@
 package com.healerjean.proj.dto.system;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,16 +18,21 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DepartmentDTO implements Serializable {
 
-    /** 主键 */
+    @ApiModelProperty(value = "主键Id")
     private Long id;
-    /** 部门名称 */
+
+    @ApiModelProperty(value = "部门名称")
     private String departmentName;
-    /** 部门描述 */
+
+    @ApiModelProperty(value = "部门描述")
     private String departmentDesc;
-    /** 父级部门id */
+
+    @ApiModelProperty(value = "父级部门id")
     private Long pid;
-    /** 状态 */
+
+    @ApiModelProperty(value = "状态")
     private String status;
-    /** 子部门 */
+
+    @ApiModelProperty(value = "子部门")
     private List<DepartmentDTO> childDepartment;
 }

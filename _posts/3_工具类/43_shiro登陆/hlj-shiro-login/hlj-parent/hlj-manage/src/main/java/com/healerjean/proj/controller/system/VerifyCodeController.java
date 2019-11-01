@@ -50,9 +50,6 @@ public class VerifyCodeController extends BaseController {
 
     /**
      * 图片验证码
-     *
-     * @param request
-     * @param response
      */
     @GetMapping(value = "captcha")
     public void createCaptcha(
@@ -76,7 +73,6 @@ public class VerifyCodeController extends BaseController {
             log.info(e.getMessage(), e);
         }
     }
-
 
     @GetMapping(value = "/{verifyType}")
     public ResponseBean createRandomCode(
@@ -112,7 +108,6 @@ public class VerifyCodeController extends BaseController {
         verifyCodeService.generateCaptcha(verifyCodeDTO, loginUserDTO);
         return ResponseBean.buildSuccess("验证码发送成功");
     }
-
 
     /**
      * 找回密码获取手机或邮箱验证码
