@@ -31,12 +31,10 @@ public class RoleController extends BaseController {
     @Autowired
     private RoleService roleService;
 
-
-
     @ApiOperation(value = "角色管理-角色添加",
             notes = "角色管理-角色添加",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = RoleDTO.class)
     @PostMapping(value = "role/add")
     public ResponseBean addRoles(@RequestBody(required = false) RoleDTO roleDTO) {
@@ -48,8 +46,8 @@ public class RoleController extends BaseController {
 
     @ApiOperation(value = "角色管理-角色删除",
             notes = "角色管理-角色删除",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = RoleDTO.class)
     @DeleteMapping(value = "role/{roleId}")
     public ResponseBean deleteRole(@PathVariable Long roleId) {
@@ -71,6 +69,7 @@ public class RoleController extends BaseController {
         roleService.updateRole(roleDTO, UserUtils.getLoginUser());
         return ResponseBean.buildSuccess("角色修改成功");
     }
+
 
     @ApiOperation(value = "角色管理-角色查询",
             notes = "角色管理-角色查询",

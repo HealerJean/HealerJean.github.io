@@ -1,5 +1,6 @@
 package com.healerjean.proj.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Data;
  * @Description
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UcenterFrontMenuMetaDTO {
 
     private String title;

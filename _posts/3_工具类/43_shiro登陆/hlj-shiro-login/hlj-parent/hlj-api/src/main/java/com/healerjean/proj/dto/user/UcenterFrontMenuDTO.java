@@ -1,5 +1,6 @@
 package com.healerjean.proj.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.util.List;
  * @Description 前端菜单
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UcenterFrontMenuDTO  implements Serializable {
 
     private String name;

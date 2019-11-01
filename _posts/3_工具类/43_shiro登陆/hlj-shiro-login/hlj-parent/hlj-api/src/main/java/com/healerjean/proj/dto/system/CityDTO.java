@@ -1,5 +1,6 @@
 package com.healerjean.proj.dto.system;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -11,12 +12,15 @@ import lombok.Data;
 @Data
 public class CityDTO {
 
-    /** 省-编码 */
+    @ApiModelProperty(value = "省-编码")
     private String provinceCode;
-    /** 省-名称 */
+
+    @ApiModelProperty(value = "省-名称")
     private String provinceName;
-    /** 城市-编码 */
+
+    @ApiModelProperty(value = "城市-编码")
     private String cityCode;
-    /** 城市-名称 */
+
+    @ApiModelProperty(value = "城市-名称")
     private String cityName;
 }

@@ -30,38 +30,38 @@ public class MenuController extends BaseController {
     @Autowired
     private MenuService menuService;
 
-
     @ApiOperation(value = "菜单管理-菜单添加",
             notes = "菜单管理-菜单添加",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = MenuDTO.class)
-    @PostMapping(value = "menu/add")
+    @PostMapping(value = "menu/add", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean addMenu(@RequestBody(required = false) MenuDTO menuDTO) {
-        log.info("菜单管理--------新增菜单--------菜单信息：{}", menuDTO);
+        log.info("菜单管理--------菜单添加--------菜单信息：{}", menuDTO);
         menuService.addMenu(menuDTO, UserUtils.getLoginUser());
-        return ResponseBean.buildSuccess("新增菜单成功", menuDTO);
+        return ResponseBean.buildSuccess("菜单添加成功", menuDTO);
     }
 
 
     @ApiOperation(value = "菜单管理-菜单删除",
             notes = "菜单管理-菜单删除",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = MenuDTO.class)
-    @DeleteMapping(value = "menu")
+    @DeleteMapping(value = "menu", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean deleteMenu(@RequestBody(required = false) List<Long> menuIds) {
         log.info("菜单管理--------菜单删除--------菜单id：{}", menuIds);
         menuService.deleteMenu(menuIds);
         return ResponseBean.buildSuccess("菜单删除成功");
     }
 
+
     @ApiOperation(value = "菜单管理-菜单修改",
             notes = "菜单管理-菜单修改",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = MenuDTO.class)
-    @PutMapping(value = "menu/{menuId}")
+    @PutMapping(value = "menu/{menuId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean updateMenu(@PathVariable Long menuId, @RequestBody(required = false) MenuDTO menuDTO) {
         log.info("菜单管理--------菜单修改--------菜单id：{}，修改信息：{}", menuId, menuDTO);
         menuDTO.setId(menuId);
@@ -73,9 +73,9 @@ public class MenuController extends BaseController {
     @ApiOperation(value = "菜单管理-菜单查询",
             notes = "菜单管理-菜单查询",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = MenuDTO.class)
-    @GetMapping(value = "menu/{menuId}")
+    @GetMapping(value = "menu/{menuId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean getMenu(@PathVariable Integer menuId) {
         log.info("菜单管理--------菜单查询--------查询菜单id：{}", menuId);
         return ResponseBean.buildSuccess("菜单查询成功", menuService.getMenu(menuId));
@@ -85,9 +85,9 @@ public class MenuController extends BaseController {
     @ApiOperation(value = "菜单管理-菜单列表查询",
             notes = "菜单管理-菜单列表查询",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = MenuDTO.class)
-    @GetMapping(value = "menus")
+    @GetMapping(value = "menus", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean getUsers(MenuDTO dto) {
         log.info("菜单管理--------菜单列表查询--------查询条件：{}", dto);
         if (dto.getToTree() != null && dto.getToTree()) {
@@ -95,6 +95,5 @@ public class MenuController extends BaseController {
         }
         return ResponseBean.buildSuccess("菜单列表查询成功", menuService.getMenus(dto));
     }
-
 
 }
