@@ -7,7 +7,7 @@ import org.apache.shiro.session.mgt.SessionFactory;
 
 /**
  * @ClassName AuthSessionFactory
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/1/28 15:27
  * @Description Session创建工厂
  * 1、如果session管理器中获取不到session就会来这里进行创建session

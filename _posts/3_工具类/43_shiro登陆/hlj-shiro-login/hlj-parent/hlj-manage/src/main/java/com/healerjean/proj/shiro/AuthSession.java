@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * @ClassName AuthSession
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/1/28 15:29
  * @Description 认证Session
  */

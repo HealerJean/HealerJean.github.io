@@ -10,7 +10,7 @@ import javax.validation.ConstraintValidatorContext;
 
 /**
  * @ClassName DictionaryTownValidator
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/5/7 17:44
  * @Description 区县校验
  */

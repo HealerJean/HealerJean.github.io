@@ -6,7 +6,7 @@ import com.healerjean.proj.dto.user.VerifyCodeDTO;
 
 /**
  * @ClassName VerifyCodeService
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/6/3 14:01
  * @Description 验证码
  */

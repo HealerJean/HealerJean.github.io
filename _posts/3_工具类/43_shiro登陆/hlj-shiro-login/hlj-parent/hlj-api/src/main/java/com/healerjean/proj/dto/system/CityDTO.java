@@ -5,7 +5,7 @@ import lombok.Data;
 
 /**
  * @ClassName CityDTO
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/6/10 10:06
  * @Description 城市
  */

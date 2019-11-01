@@ -7,12 +7,14 @@ import com.healerjean.proj.util.UrlUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
+
 /**
+ * @author HealerJean
  * @ClassName AuthSavedRequest
- * @Author TD
- * @Date 2019/1/30 13:39
+ * @Date 2019-11-02  00:37.
  * @Description 保存请求路径
  */
+
 public class AuthSavedRequest {
 
     private String method;

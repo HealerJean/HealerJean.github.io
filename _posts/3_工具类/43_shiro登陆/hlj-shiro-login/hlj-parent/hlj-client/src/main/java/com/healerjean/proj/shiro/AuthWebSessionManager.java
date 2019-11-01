@@ -16,12 +16,14 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 
+
 /**
+ * @author HealerJean
  * @ClassName AuthWebSessionManager
- * @Author TD
- * @Date 2019/1/28 15:31
+ * @Date 2019-11-02  00:38.
  * @Description 管理session管理类
  */
+
 @Slf4j
 public class AuthWebSessionManager extends DefaultWebSessionManager {
 

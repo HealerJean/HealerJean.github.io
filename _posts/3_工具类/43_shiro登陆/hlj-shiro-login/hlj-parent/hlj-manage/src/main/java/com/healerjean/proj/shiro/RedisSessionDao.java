@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @ClassName RedisSessionDao
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/1/28 15:39
  * @Description Redis共享Session
  */

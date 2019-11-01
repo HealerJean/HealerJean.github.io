@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern;
 
 /**
  * @ClassName VerifyCodeDTO
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/6/3 14:22
  * @Description 验证码传输对象
  */

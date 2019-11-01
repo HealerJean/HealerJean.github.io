@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * @ClassName DictionaryTypeDTO
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/4/11 15:16
  * @Description 字典类型传输实体
  */

@@ -31,10 +31,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+
 /**
+ * @author HealerJean
  * @ClassName VerifyCodeController
- * @Author TD
- * @Date 2019/6/3 13:41
+ * @Date 2019-11-02  00:36.
  * @Description 验证码控制器
  */
 

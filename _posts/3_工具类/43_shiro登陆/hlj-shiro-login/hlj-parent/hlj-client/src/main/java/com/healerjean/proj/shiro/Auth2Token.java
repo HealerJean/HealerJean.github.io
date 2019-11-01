@@ -5,7 +5,7 @@ import org.apache.shiro.authc.RememberMeAuthenticationToken;
 
 /**
  * @ClassName Auth2Token
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/1/29 9:36
  * @Description
  */

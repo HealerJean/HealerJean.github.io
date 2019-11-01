@@ -18,7 +18,7 @@ import java.io.Serializable;
 
 /**
  * @ClassName AuthWebSessionManager
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/1/28 15:31
  * @Description 管理session管理类
  */

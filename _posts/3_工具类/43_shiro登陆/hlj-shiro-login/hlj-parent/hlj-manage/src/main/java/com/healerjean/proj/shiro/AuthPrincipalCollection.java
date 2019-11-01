@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * @ClassName AuthPrincipalCollection
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/1/30 13:52
  * @Description
  */

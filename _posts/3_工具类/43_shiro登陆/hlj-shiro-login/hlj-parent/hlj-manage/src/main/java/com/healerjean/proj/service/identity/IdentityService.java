@@ -5,7 +5,7 @@ import com.healerjean.proj.dto.user.LoginUserDTO;
 
 /**
  * @ClassName IdentityService
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/6/3 20:54
  * @Description 用户认证信息接口
  */

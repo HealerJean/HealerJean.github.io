@@ -25,7 +25,7 @@ import java.time.Duration;
 
 /**
  * @ClassName RedisConfig
- * @Author TD
+ * @Author HealerJean
  * @Date 2018/12/7 17:44
  * @Description
  */

@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 
 /**
  * @ClassName AuthConfiguration
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/6/3 20:11
  * @Description 认证属性
  */

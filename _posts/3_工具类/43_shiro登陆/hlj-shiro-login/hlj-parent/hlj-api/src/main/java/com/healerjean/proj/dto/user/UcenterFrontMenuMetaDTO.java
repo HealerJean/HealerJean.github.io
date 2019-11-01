@@ -5,7 +5,7 @@ import lombok.Data;
 
 /**
  * @ClassName UcenterFrontMenuMetaDto
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/3/21 11:48
  * @Description
  */

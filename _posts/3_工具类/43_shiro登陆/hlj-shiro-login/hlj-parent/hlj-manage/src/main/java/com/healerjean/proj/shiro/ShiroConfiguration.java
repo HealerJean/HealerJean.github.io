@@ -17,7 +17,7 @@ import java.util.Map;
 
 /**
  * @ClassName ShiroConfiguration
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/1/24 11:40
  * @Description Shiro配置
  */
