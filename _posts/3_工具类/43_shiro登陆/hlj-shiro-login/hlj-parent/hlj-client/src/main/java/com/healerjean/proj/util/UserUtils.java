@@ -14,12 +14,14 @@ import org.apache.shiro.subject.Subject;
 import java.util.LinkedList;
 import java.util.List;
 
+
 /**
+ * @author HealerJean
  * @ClassName UserUtils
- * @Author TD
- * @Date 2019/6/4 19:47
+ * @Date 2019-11-02  00:38.
  * @Description 用户工具
  */
+
 @Slf4j
 public class UserUtils {
 

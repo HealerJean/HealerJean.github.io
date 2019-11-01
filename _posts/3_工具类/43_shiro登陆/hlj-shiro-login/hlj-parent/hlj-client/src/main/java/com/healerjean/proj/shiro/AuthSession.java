@@ -10,12 +10,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
+ * @author HealerJean
  * @ClassName AuthSession
- * @Author TD
- * @Date 2019/1/28 15:29
+ * @Date 2019-11-02  00:37.
  * @Description 认证Session
  */
+
 public class AuthSession implements ValidatingSession,Serializable {
 
 

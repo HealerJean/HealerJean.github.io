@@ -32,7 +32,7 @@ import java.io.IOException;
 
 /**
  * @ClassName VerifyCodeController
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/6/3 13:41
  * @Description 验证码控制器
  */

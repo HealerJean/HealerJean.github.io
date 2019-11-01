@@ -23,12 +23,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import java.io.Serializable;
 import java.time.Duration;
 
-/**
- * @ClassName RedisConfig
- * @Author TD
- * @Date 2018/12/7 17:44
- * @Description
- */
 
 @Configuration
 @AutoConfigureAfter(RedisAutoConfiguration.class)

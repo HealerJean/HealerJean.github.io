@@ -15,12 +15,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
+ * @author HealerJean
  * @ClassName ShiroConfiguration
- * @Author TD
- * @Date 2019/1/24 11:40
+ * @Date 2019-11-02  00:38.
  * @Description Shiro配置
  */
+
 @Configuration
 public class ShiroConfiguration {
 

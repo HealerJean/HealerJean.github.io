@@ -9,12 +9,14 @@ import org.apache.shiro.authz.Permission;
 import org.apache.shiro.util.AntPathMatcher;
 import org.apache.shiro.util.PatternMatcher;
 
+
 /**
+ * @author HealerJean
  * @ClassName UrlPermission
- * @Author TD
- * @Date 2019/1/31 17:17
+ * @Date 2019-11-02  00:38.
  * @Description URL权限管理
  */
+
 @Slf4j
 @Data
 @AllArgsConstructor

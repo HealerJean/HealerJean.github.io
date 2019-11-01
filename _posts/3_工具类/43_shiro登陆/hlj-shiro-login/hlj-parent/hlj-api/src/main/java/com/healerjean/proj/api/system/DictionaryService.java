@@ -7,12 +7,14 @@ import com.healerjean.proj.dto.user.LoginUserDTO;
 
 import java.util.List;
 
+
 /**
+ * @author HealerJean
  * @ClassName DictionaryService
- * @Author TD
- * @Date 2019/4/11 15:13
+ * @Date 2019-11-02  00:38.
  * @Description 字典业务类
  */
+
 public interface DictionaryService {
 
 

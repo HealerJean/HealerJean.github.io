@@ -8,7 +8,7 @@ import java.util.UUID;
 
 /**
  * @ClassName UuidSessionIdGenerator
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/1/29 10:16
  * @Description session Key 生成
  */

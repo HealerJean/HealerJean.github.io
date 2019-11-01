@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * @ClassName UcenterFrontMenuDTO
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/3/21 11:41
  * @Description 前端菜单
  */

@@ -1,11 +1,13 @@
 package com.healerjean.proj.shiro;
 
+
 /**
+ * @author HealerJean
  * @ClassName AuthConstants
- * @Author TD
- * @Date 2019/6/3 19:57
+ * @Date 2019-11-02  00:37.
  * @Description 权限拦截常量
  */
+
 public class AuthConstants {
 
     /** 客户端关键字：用户 */

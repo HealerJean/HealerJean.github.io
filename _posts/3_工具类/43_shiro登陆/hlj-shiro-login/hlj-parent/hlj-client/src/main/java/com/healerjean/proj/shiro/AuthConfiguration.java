@@ -5,12 +5,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+
 /**
+ * @author HealerJean
  * @ClassName AuthConfiguration
- * @Author TD
- * @Date 2019/6/3 20:11
+ * @Date 2019-11-02  00:36.
  * @Description 认证属性
  */
+
 @Configuration
 @PropertySource(value = "classpath:shiro.properties", ignoreResourceNotFound = true, encoding = "UTF-8")
 @Data

@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * @ClassName DictionaryDTO
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/4/11 15:15
  * @Description 字典数据传输实体
  */

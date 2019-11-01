@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 
 /**
  * @ClassName DistrictDTO
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/6/10 10:06
  * @Description 地区传输对象
  */

@@ -24,9 +24,9 @@ import java.util.Set;
 import static java.util.stream.Collectors.toSet;
 
 /**
+ * @author HealerJean
  * @ClassName AuthRealm
- * @Author TD
- * @Date 2019/1/24 11:53
+ * @Date 2019-11-02  00:37.
  * @Description
  */
 @Slf4j

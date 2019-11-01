@@ -3,12 +3,14 @@ package com.healerjean.proj.service.identity;
 
 import com.healerjean.proj.dto.user.LoginUserDTO;
 
+
 /**
+ * @author HealerJean
  * @ClassName IdentityService
- * @Author TD
- * @Date 2019/6/3 20:54
- * @Description 用户认证信息接口
+ * @Date 2019-11-02  00:36.
+ * @Description用户认证信息接口
  */
+
 public interface IdentityService {
 
     /**

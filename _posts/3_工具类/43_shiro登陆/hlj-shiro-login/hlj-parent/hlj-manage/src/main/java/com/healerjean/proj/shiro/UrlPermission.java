@@ -11,7 +11,7 @@ import org.apache.shiro.util.PatternMatcher;
 
 /**
  * @ClassName UrlPermission
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/1/31 17:17
  * @Description URL权限管理
  */

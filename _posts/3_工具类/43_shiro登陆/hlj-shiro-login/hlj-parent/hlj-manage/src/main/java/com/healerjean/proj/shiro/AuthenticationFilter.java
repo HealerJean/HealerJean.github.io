@@ -19,7 +19,7 @@ import java.io.PrintWriter;
 
 /**
  * @ClassName OauthAuthenticationFilter
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/1/24 13:47
  * @Description 单点登陆认证
  */

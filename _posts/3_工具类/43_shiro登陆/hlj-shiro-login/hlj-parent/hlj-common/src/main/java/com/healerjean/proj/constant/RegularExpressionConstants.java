@@ -1,11 +1,13 @@
 package com.healerjean.proj.constant;
 
+
 /**
+ * @author HealerJean
  * @ClassName RegularExpressionConstants
- * @Author TD
- * @Date 2019/5/22 10:48
+ * @Date 2019-11-02  00:38.
  * @Description 正则表达式匹配
  */
+
 public class RegularExpressionConstants {
 
     /** 用户名-正则表达式：英文字母开头，包含英文字母或数字或特殊字符(. _ -)，长度4-32位*/

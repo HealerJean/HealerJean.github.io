@@ -6,13 +6,14 @@ import org.apache.shiro.session.mgt.SessionFactory;
 
 
 /**
+ * @author HealerJean
  * @ClassName AuthSessionFactory
- * @Author TD
- * @Date 2019/1/28 15:27
+ * @Date 2019-11-02  00:36.
  * @Description Session创建工厂
  * 1、如果session管理器中获取不到session就会来这里进行创建session
  * 2、接着调用RedisSessionDao 中的 doCreate 进行完全创建
- */
+ * */
+
 public class AuthSessionFactory implements SessionFactory {
     @Override
     public Session createSession(SessionContext sessionContext) {

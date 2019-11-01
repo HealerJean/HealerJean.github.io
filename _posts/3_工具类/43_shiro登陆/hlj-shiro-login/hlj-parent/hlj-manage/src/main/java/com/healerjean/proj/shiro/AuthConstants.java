@@ -2,7 +2,7 @@ package com.healerjean.proj.shiro;
 
 /**
  * @ClassName AuthConstants
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/6/3 19:57
  * @Description 权限拦截常量
  */

@@ -7,7 +7,7 @@ import org.apache.shiro.authz.permission.PermissionResolver;
 
 /**
  * @ClassName UrlPermissionResolver
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/1/31 17:18
  * @Description URL权限解析器
  */

@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @ClassName VerifyCodeServiceImpl
- * @Author TD
+ * @Author HealerJean
  * @Date 2019/6/3 14:37
  * @Description 发送验证码的实现类
  */
