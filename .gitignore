@@ -1,3 +1,23 @@
+<<<<<<< HEAD
+=======
+# java  #
+*.class
+
+# Package Files #
+*.jar
+*.war
+
+### IntelliJ IDEA ###
+.idea
+.idea/
+*.iws
+*.iml
+*.ipr
+
+
+
+# Ç°¶Ë #
+>>>>>>> 3cbfe1bc89905e2cb527aa7a8c5b287c5f2e5ef6
 .gradle
 /build/
 node_modules
@@ -5,6 +25,7 @@ node_modules
 
 ### STS ###
 .apt_generated
+<<<<<<< HEAD
 .classpath
 .factorypath
 .project
@@ -37,3 +58,29 @@ src/main/.DS_Store
 src/main/resources/.DS_Store
 src/main/resources/mails/
 src/main/webapp/page/
+=======
+.factorypath
+.settings
+.springBeans
+
+
+######other####
+.project
+!/.project
+.classpath
+.DS_Store
+.settings/
+target/
+bin/
+classess/
+test/
+!.mvn/wrapper/maven-wrapper.jar
+*.log
+*.log.gz
+out/
+overlays/
+MANIFEST.MF
+HELP.md
+
+
+>>>>>>> 3cbfe1bc89905e2cb527aa7a8c5b287c5f2e5ef6
