@@ -330,7 +330,77 @@ create table flow_audit_record
 
 
 
+drop table if exists  flow_work_node ;
+create table flow_work_node
+(
+    id          bigint(20) unsigned not null auto_increment comment '主键',
+    node_code   varchar(32)         not null default '' comment '节点编号',
+    node_name   varchar(64)         not null default '' comment '节点名称',
+    node_type   varchar(32)         not null default '' comment '流程节点或者审核节点',
+    status      varchar(8)          not null default '' comment '状态',
+    create_user bigint(20) unsigned not null default '0' comment '创建人',
+    create_name varchar(64)         not null default '' comment '创建人名称',
+    create_time datetime            not null default current_timestamp comment '创建时间',
+    update_user bigint(20) unsigned not null default '0' comment '更新人',
+    update_name varchar(64)         not null default '' comment '更新人名称',
+    update_time datetime            not null default current_timestamp on update current_timestamp comment '更新时间',
+    primary key (id) using btree
+) engine = innodb comment ='工作流-流程节点表';
 
+
+
+drop table if exists  flow_work_default_definition ;
+create table flow_work_default_definition
+(
+    id              bigint(20) unsigned not null auto_increment comment '主键',
+    flow_code       varchar(64)         not null default '' comment '工作流编码',
+    flow_name       varchar(64)         not null default '' comment '工作流名称',
+    flow_definition varchar(255)        not null default '' comment '节点顺序流程',
+    status          varchar(8)          not null default '' comment '状态',
+    create_user     bigint(20) unsigned not null default '0' comment '创建人',
+    create_name     varchar(64)         not null default '' comment '创建人名称',
+    create_time     datetime            not null default current_timestamp comment '创建时间',
+    update_user     bigint(20) unsigned not null default '0' comment '更新人',
+    update_name     varchar(64)         not null default '' comment '更新人名称',
+    update_time     datetime            not null default current_timestamp on update current_timestamp comment '更新时间',
+    primary key (id) using btree
+) engine = innodb comment ='工作流-默认流程定义表';
+
+
+drop table if exists  flow_work_definition ;
+create table flow_work_definition
+(
+    id              bigint(20) unsigned not null auto_increment comment '主键',
+    instants_no     varchar(64)         not null default '' comment '流程实例流水号',
+    flow_code       varchar(64)         not null default '' comment '工作流编码',
+    flow_name       varchar(64)         not null default '' comment '工作流名称',
+    flow_definition varchar(255)        not null default '' comment '节点顺序流程',
+    status          varchar(8)          not null default '' comment '状态',
+    create_user     bigint(20) unsigned not null default '0' comment '创建人',
+    create_name     varchar(64)         not null default '' comment '创建人名称',
+    create_time     datetime            not null default current_timestamp comment '创建时间',
+    update_time     datetime            not null default current_timestamp on update current_timestamp comment '更新时间',
+    primary key (id) using btree
+) engine = innodb comment ='工作流-流程定义表';
+
+
+drop table if exists  flow_work_record ;
+create table flow_work_record
+(
+    id          bigint(20) unsigned not null auto_increment comment '主键',
+    instants_no varchar(64)         not null default '' comment '流程实例流水号',
+    flow_code   varchar(64)         not null default '' comment '工作流节点编码',
+    flow_name   varchar(64)         not null default '' comment '工作流节点名称',
+    step        int(10) unsigned    not null default '0' comment '流程步骤',
+    node_code   varchar(32)         not null default '' comment '节点编号',
+    node_name   varchar(64)         not null default '' comment '节点名称',
+    status      varchar(8)          not null default '' comment '状态',
+    create_user bigint(20) unsigned not null default '0' comment '创建人',
+    create_name varchar(64)         not null default '' comment '创建人名称',
+    create_time datetime            not null default current_timestamp comment '创建时间',
+    update_time datetime            not null default current_timestamp on update current_timestamp comment '更新时间',
+    primary key (id) using btree
+) engine = innodb  comment ='工作流-流程节点表';
 
 
 
