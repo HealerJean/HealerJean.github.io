@@ -33,17 +33,44 @@ import javax.validation.UnexpectedTypeException;
 @ControllerAdvice
 public class ControllerHandleConfig {
 
+
     /**
-     * 参数非法
-     * 1、(BindException : 比如 Integer 传入abc  )
+     * 不支持的请求方始
      */
-    @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class, HttpRequestMethodNotSupportedException.class, HttpMessageConversionException.class, BindException.class, UnexpectedTypeException.class})
+    @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
+    public ResponseBean methodNotSupportExceptionHandler(HttpRequestMethodNotSupportedException e) {
+        log.error("不支持的请求方式", e);
+        return ResponseBean.buildFailure(ResponseEnum.不支持的请求方式.code, e.getMessage());
+    }
+
+
+
+    /**
+     * 参数类型错误
+     * 1、(BindException : 比如 Integer 传入String  )
+     * Field error in object 'demoDTO' on field 'age': rejected value [fasdf]; codes [typeMismatch.demoDTO.age,typeMismatch.age,typeMismatch.java.lang.Integer,typeMismatch]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [demoDTO.age,age]; arguments []; default message [age]]; default message [Failed to convert property value of type 'java.lang.String' to required type 'java.lang.Integer' for property 'age'; nested exception is java.lang.NumberFormatException: For input string: "fasdf"]
+     */
+    @ExceptionHandler(value = {BindException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ResponseBean bindExceptionHandler(BindException e) {
+        log.error("====参数类型错误===", e);
+        return ResponseBean.buildFailure(ResponseEnum.参数类型错误.code, e.getMessage());
+    }
+
+
+    /**
+     * 参数格式问题
+     */
+    @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class, HttpMessageConversionException.class, UnexpectedTypeException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ResponseBean httpMessageConversionExceptionHandler(Exception e) {
         log.error("====参数格式异常===", e);
         return ResponseBean.buildFailure(ResponseEnum.参数格式异常.code, e.getMessage());
     }
+
 
 
     /**
@@ -57,6 +84,21 @@ public class ControllerHandleConfig {
         return ResponseBean.buildFailure(e.getCode(), e.getMessage());
     }
 
+
+    /**
+     * 业务异常，给前台返回异常数据
+     */
+    @ExceptionHandler(value = BusinessException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ResponseBean businessExceptionHandler(BusinessException e) {
+        log.error("业务异常------------异常信息：code:{},message{}" ,e.getCode(), e.getMessage());
+        return ResponseBean.buildFailure(e.getCode(),e.getMessage());
+    }
+
+
+
+
     /**
      * 淘宝Api接口错误
      */
@@ -67,16 +109,6 @@ public class ControllerHandleConfig {
         return returnMessage(ResponseBean.buildFailure(e.getCode(), e.getMessage()));
     }
 
-    /**
-     * 业务异常
-     */
-    @ExceptionHandler(value = BusinessException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ResponseBean businessExceptionHandler(HttpServletResponse response, BusinessException e) {
-        log.error("业务异常------------异常信息：code：{},message：{}", e.getCode(), e.getMessage());
-        return ResponseBean.buildFailure(e.getCode(), e.getMessage());
-    }
 
 
     /**
@@ -96,6 +128,28 @@ public class ControllerHandleConfig {
         header.add("Charset", "UTF-8");
         return new HttpEntity<>(responseBean, header);
     }
+
+
+
+    /**
+     * 参数非法
+     * 1、(BindException : 比如 Integer 传入abc  )
+     */
+    // @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class, HttpRequestMethodNotSupportedException.class, HttpMessageConversionException.class, BindException.class, UnexpectedTypeException.class})
+    // @ResponseBody
+    // public HttpEntity<ResponseBean> httpMessageConversionExceptionHandler(HttpServletResponse response, Exception e) {
+    //     log.error("====参数格式异常===", e);
+    //     // 等同于 @ResponseStatus(HttpStatus.BAD_REQUEST)
+    //     // 但是setStatus 不能比随便设置,最好一般情况下不要和HttpStatus 有重复的，这样有可能会造成没有输出Response body
+    //     response.setStatus(ResponseEnum.参数格式异常.code);
+    //     return returnMessage(ResponseBean.buildFailure(ResponseEnum.参数格式异常));
+    // }
+    // @ExceptionHandler(value ={HttpMessageConversionException.class, BindException.class} )
+    // @ResponseBody
+    // public HttpEntity<ResponseBean> httpMessageConversionExceptionHandler(Exception e) {
+    //     log.error("====参数格式异常===", e);
+    //     return new ResponseEntity<>(ResponseBean.buildFailure(ResponseEnum.参数格式异常),HttpStatus.BAD_REQUEST);
+    // }
 
 
 }

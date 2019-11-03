@@ -10,7 +10,7 @@ import java.util.Map;
  * @author  zhangyujin
  * @param <T>
  */
-public final class EmptyUtil<T> {
+public final class EmptyUtils<T> {
     private static final Integer INTEGER_0 = 0;
     private static final Long LONG_0 = 0L;
     private static final BigDecimal BIGDECIMAL_0 = BigDecimal.ZERO;

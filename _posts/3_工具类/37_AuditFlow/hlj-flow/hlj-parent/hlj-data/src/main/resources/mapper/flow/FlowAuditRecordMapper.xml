@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FlowAuditRecordMapper">
+	<resultMap id="BaseResultMap" type="FlowAuditRecord">
+		<id column="ID" jdbcType="BIGINT" property="id" />
+		<result column="ref_audit_task_id" jdbcType="BIGINT" property="refAuditTaskId" />
+		<result column="task_type" jdbcType="VARCHAR" property="taskType" />
+		<result column="task_name" jdbcType="VARCHAR" property="taskName" />
+		<result column="step" jdbcType="INTEGER" property="step" />
+		<result column="audit_message" jdbcType="VARCHAR" property="auditMessage" />
+		<result column="ref_file_ids" jdbcType="VARCHAR" property="refFileIds" />
+		<result column="audit_user_type" jdbcType="VARCHAR" property="auditUserType" />
+		<result column="opt_user__type" jdbcType="VARCHAR" property="optUserType" />
+		<result column="audit_object_id" jdbcType="BIGINT" property="auditObjectId" />
+		<result column="opt_user_id" jdbcType="BIGINT" property="optUserId" />
+		<result column="opt_user_name" jdbcType="VARCHAR" property="optUserName" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<trim prefix="(" prefixOverrides="and" suffix=")">
+				<if test="refAuditTaskId != null and refAuditTaskId != ''">
+					and ref_audit_task_id = #{refAuditTaskId,jdbcType=BIGINT}
+				</if>
+				<if test="taskType != null">
+					and task_type = #{taskType,jdbcType=VARCHAR}
+				</if>
+				<if test="taskName != null">
+					and task_name = #{taskName,jdbcType=VARCHAR}
+				</if>
+				<if test="step != null and step != ''">
+					and step = #{step,jdbcType=INTEGER}
+				</if>
+				<if test="auditMessage != null">
+					and audit_message = #{auditMessage,jdbcType=VARCHAR}
+				</if>
+				<if test="refFileIds != null">
+					and ref_file_ids = #{refFileIds,jdbcType=VARCHAR}
+				</if>
+				<if test="auditUserType != null">
+					and audit_user_type = #{auditUserType,jdbcType=VARCHAR}
+				</if>
+				<if test="optUserType != null">
+					and opt_user__type = #{optUserType,jdbcType=VARCHAR}
+				</if>
+				<if test="auditObjectId != null and auditObjectId != ''">
+					and audit_object_id = #{auditObjectId,jdbcType=BIGINT}
+				</if>
+				<if test="optUserId != null and optUserId != ''">
+					and opt_user_id = #{optUserId,jdbcType=BIGINT}
+				</if>
+				<if test="optUserName != null">
+					and opt_user_name = #{optUserName,jdbcType=VARCHAR}
+				</if>
+				<if test="status != null">
+					and status = #{status,jdbcType=VARCHAR}
+				</if>
+			</trim>
+		</where>
+	</sql>
+	<sql id="Example_Set_Clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="refAuditTaskId != null">
+					ref_audit_task_id = #{refAuditTaskId,jdbcType=BIGINT},
+				</if>
+				<if test="taskType != null">
+					task_type = #{taskType,jdbcType=VARCHAR},
+				</if>
+				<if test="taskName != null">
+					task_name = #{taskName,jdbcType=VARCHAR},
+				</if>
+				<if test="step != null">
+					step = #{step,jdbcType=INTEGER},
+				</if>
+				<if test="auditMessage != null">
+					audit_message = #{auditMessage,jdbcType=VARCHAR},
+				</if>
+				<if test="refFileIds != null">
+					ref_file_ids = #{refFileIds,jdbcType=VARCHAR},
+				</if>
+				<if test="auditUserType != null">
+					audit_user_type = #{auditUserType,jdbcType=VARCHAR},
+				</if>
+				<if test="optUserType != null">
+					opt_user__type = #{optUserType,jdbcType=VARCHAR},
+				</if>
+				<if test="auditObjectId != null">
+					audit_object_id = #{auditObjectId,jdbcType=BIGINT},
+				</if>
+				<if test="optUserId != null">
+					opt_user_id = #{optUserId,jdbcType=BIGINT},
+				</if>
+				<if test="optUserName != null">
+					opt_user_name = #{optUserName,jdbcType=VARCHAR},
+				</if>
+				<if test="status != null">
+					status = #{status,jdbcType=VARCHAR},
+				</if>
+			</trim>
+		</set>
+	</sql>
+	<sql id="Base_Column_List">
+		id,
+		ref_audit_task_id,
+		task_type,
+		task_name,
+		step,
+		audit_message,
+		ref_file_ids,
+		audit_user_type,
+		opt_user__type,
+		audit_object_id,
+		opt_user_id,
+		opt_user_name,
+		status,
+		create_time
+	</sql>
+	<sql id="Base_Set_Clause">
+		<set>
+			<trim suffixOverrides=",">
+				ref_audit_task_id = #{refAuditTaskId,jdbcType=BIGINT},
+				task_type = #{taskType,jdbcType=VARCHAR},
+				task_name = #{taskName,jdbcType=VARCHAR},
+				step = #{step,jdbcType=INTEGER},
+				audit_message = #{auditMessage,jdbcType=VARCHAR},
+				ref_file_ids = #{refFileIds,jdbcType=VARCHAR},
+				audit_user_type = #{auditUserType,jdbcType=VARCHAR},
+				opt_user__type = #{optUserType,jdbcType=VARCHAR},
+				audit_object_id = #{auditObjectId,jdbcType=BIGINT},
+				opt_user_id = #{optUserId,jdbcType=BIGINT},
+				opt_user_name = #{optUserName,jdbcType=VARCHAR},
+				status = #{status,jdbcType=VARCHAR},
+			</trim>
+		</set>
+	</sql>
+	<sql id="Selective_Column_List">
+		ID,
+		<if test="refAuditTaskId != null">
+			ref_audit_task_id,
+		</if>
+		<if test="taskType != null">
+			task_type,
+		</if>
+		<if test="taskName != null">
+			task_name,
+		</if>
+		<if test="step != null">
+			step,
+		</if>
+		<if test="auditMessage != null">
+			audit_message,
+		</if>
+		<if test="refFileIds != null">
+			ref_file_ids,
+		</if>
+		<if test="auditUserType != null">
+			audit_user_type,
+		</if>
+		<if test="optUserType != null">
+			opt_user__type,
+		</if>
+		<if test="auditObjectId != null">
+			audit_object_id,
+		</if>
+		<if test="optUserId != null">
+			opt_user_id,
+		</if>
+		<if test="optUserName != null">
+			opt_user_name,
+		</if>
+		<if test="status != null">
+			status,
+		</if>
+		CREATE_TIME,
+	</sql>
+	<sql id="Base_Value_List">
+		#{id,jdbcType=BIGINT},
+		#{refAuditTaskId,jdbcType=BIGINT},
+		#{taskType,jdbcType=VARCHAR},
+		#{taskName,jdbcType=VARCHAR},
+		#{step,jdbcType=INTEGER},
+		#{auditMessage,jdbcType=VARCHAR},
+		#{refFileIds,jdbcType=VARCHAR},
+		#{auditUserType,jdbcType=VARCHAR},
+		#{optUserType,jdbcType=VARCHAR},
+		#{auditObjectId,jdbcType=BIGINT},
+		#{optUserId,jdbcType=BIGINT},
+		#{optUserName,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+	</sql>
+	<sql id="Selective_Value_List">
+		#{id},
+		<if test="refAuditTaskId != null">
+			#{refAuditTaskId,jdbcType=BIGINT},
+		</if>
+		<if test="taskType != null">
+			#{taskType,jdbcType=VARCHAR},
+		</if>
+		<if test="taskName != null">
+			#{taskName,jdbcType=VARCHAR},
+		</if>
+		<if test="step != null">
+			#{step,jdbcType=INTEGER},
+		</if>
+		<if test="auditMessage != null">
+			#{auditMessage,jdbcType=VARCHAR},
+		</if>
+		<if test="refFileIds != null">
+			#{refFileIds,jdbcType=VARCHAR},
+		</if>
+		<if test="auditUserType != null">
+			#{auditUserType,jdbcType=VARCHAR},
+		</if>
+		<if test="optUserType != null">
+			#{optUserType,jdbcType=VARCHAR},
+		</if>
+		<if test="auditObjectId != null">
+			#{auditObjectId,jdbcType=BIGINT},
+		</if>
+		<if test="optUserId != null">
+			#{optUserId,jdbcType=BIGINT},
+		</if>
+		<if test="optUserName != null">
+			#{optUserName,jdbcType=VARCHAR},
+		</if>
+		<if test="status != null">
+			#{status,jdbcType=VARCHAR},
+		</if>
+		NOW(),
+	</sql>
+
+	<select id="selectByExample" parameterType="FlowAuditRecordQuery" resultMap="BaseResultMap">
+		select
+		<trim suffixOverrides=",">
+			<include refid="Base_Column_List" />
+		</trim>
+		from flow_audit_record
+		<include refid="Example_Where_Clause" />
+		<!-- order by CREATE_DATE -->
+	</select>
+	<select id="selectByPrimaryKey" parameterType="Long" resultMap="BaseResultMap">
+		select
+		<trim suffixOverrides=",">
+			<include refid="Base_Column_List" />
+		</trim>
+		from flow_audit_record
+		where ID = #{id,jdbcType=SMALLINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="Long">
+		delete from flow_audit_record
+		where ID = #{id,jdbcType=SMALLINT}
+	</delete>
+	<delete id="deleteByExample" parameterType="FlowAuditRecordQuery">
+		delete from flow_audit_record
+		<include refid="Example_Where_Clause" />
+	</delete>
+	<insert id="insert" parameterType="FlowAuditRecord">
+		insert into flow_audit_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<include refid="Base_Column_List" />
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<include refid="Base_Value_List" />
+		</trim>
+	</insert>
+	<insert id="insertSelective" parameterType="FlowAuditRecord" useGeneratedKeys="true" keyProperty="id">
+		insert into flow_audit_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<include refid="Selective_Column_List" />
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<include refid="Selective_Value_List" />
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="FlowAuditRecordQuery" resultType="java.lang.Integer">
+		select count(*) from flow_audit_record
+		<include refid="Example_Where_Clause" />
+	</select>
+	<update id="updateByPrimaryKeySelective" parameterType="FlowAuditRecord">
+		update flow_audit_record
+		<include refid="Example_Set_Clause" />
+		where ID = #{id,jdbcType=SMALLINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="FlowAuditRecord">
+		update flow_audit_record
+		<include refid="Base_Set_Clause" />
+		where ID = #{id,jdbcType=SMALLINT}
+	</update>
+
+	<select id="selectPageByExample" parameterType="FlowAuditRecordQuery" resultMap="BaseResultMap">
+		select
+		<trim suffixOverrides=",">
+			<include refid="Base_Column_List" />
+		</trim>
+		from flow_audit_record
+		<include refid="Example_Where_Clause" />
+        <![CDATA[ limit #{startRow},#{endRow} ]]>
+  		<!-- order by CREATE_DATE -->
+	</select>
+</mapper>
