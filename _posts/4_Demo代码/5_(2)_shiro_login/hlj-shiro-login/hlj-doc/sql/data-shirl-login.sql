@@ -132,7 +132,7 @@ INSERT INTO sys_dictionary_data (id, data_key, data_value, ref_type_key, sort, s
 INSERT INTO sys_dictionary_data (id, data_key, data_value, ref_type_key, sort, status) VALUES (2, '99', '废弃', 'Status', 0, '10');
 
 # select id, name, content, type, description, status from  sys_template ;
-INSERT INTO `hlj-shiro-login`.sys_template (id, name, content, type, description, status) VALUES (1, 'VerifyEmail', '注册的验证码为${VerifyCode}', 'Email', '注册邮箱', '10');
+INSERT INTO sys_template (id, name, content, type, description, status) VALUES (1, 'VerifyEmail', '注册的验证码为${VerifyCode}', 'Email', '注册邮箱', '10');
 
 
 INSERT INTO sys_district VALUES (1, '110000', '北京市', '110100', '市辖区', '110101', '东城区', '10', '2019-08-14 20:16:08');
