@@ -1,8 +1,11 @@
 package com.healerjean.proj.data.pojo.system;/*
  * Copyright (C) 2019 xiaomi.com, Inc. All Rights Reserved.
  */
+
 import com.healerjean.proj.data.common.query.PagingQuery;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author zhangyujin
@@ -54,6 +57,7 @@ public class SysUserInfoQuery extends PagingQuery {
 		return 0;
 	}
 
-
+	/*ids*/
+	private List<Long> ids ;
 
 }

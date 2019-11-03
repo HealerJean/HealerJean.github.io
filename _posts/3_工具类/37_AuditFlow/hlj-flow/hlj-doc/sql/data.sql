@@ -124,8 +124,13 @@ INSERT INTO sys_user_role_ref (id, ref_user_id, ref_role_id, status) VALUES (3, 
 INSERT INTO sys_user_role_ref (id, ref_user_id, ref_role_id, status) VALUES (4, 4, 4, '10');
 INSERT INTO sys_user_role_ref (id, ref_user_id, ref_role_id, status) VALUES (5, 5, 5, '10');
 
-# select id, type_key, type_desc, status from  sys_dictionary_type ;
-INSERT INTO sys_dictionary_type (id, type_key, type_desc, status) VALUES (1, 'Status', '状态', '10');
+# select type_key, type_desc, status from  sys_dictionary_type ;
+INSERT INTO sys_dictionary_type ( type_key, type_desc, status) VALUES ( 'Status', '状态', '10');
+INSERT INTO sys_dictionary_type ( type_key, type_desc, status) VALUES ( 'AuditTask', '审批任务', '10');
+INSERT INTO sys_dictionary_type ( type_key, type_desc, status) VALUES ( 'AuditUserType', '审批用户类型', '10');
+INSERT INTO sys_dictionary_type ( type_key, type_desc, status) VALUES ( 'AuditObjectType', '审批对象类型', '10');
+INSERT INTO sys_dictionary_type ( type_key, type_desc, status) VALUES ( 'AuditStatus', '审批状态', '10');
+
 
 # select id, data_key, data_value, ref_type_key, sort, status from sys_dictionary_data ;
 INSERT INTO sys_dictionary_data (id, data_key, data_value, ref_type_key, sort, status) VALUES (1, '10', '有效', 'Status', 0, '10');

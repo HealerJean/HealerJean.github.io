@@ -8,20 +8,7 @@ package com.healerjean.proj.enums;
  */
 public interface BusinessEnum {
 
-    enum WechatTypeEnum {
 
-        订阅号("Subscribe", "订阅号"),
-        服务号("Service", "服务号");
-
-        WechatTypeEnum(String code, String desc) {
-            this.code = code;
-            this.desc = desc;
-        }
-
-        public String code;
-        public String desc;
-
-    }
 
     /**
      * 操作系统枚举
@@ -190,24 +177,6 @@ public interface BusinessEnum {
         }
     }
 
-    /**
-     * 用户类型
-     */
-    enum DomainTypeEnum {
-
-        网站("web", "网站"),
-
-        ;
-
-        DomainTypeEnum(String code, String desc) {
-            this.code = code;
-            this.desc = desc;
-        }
-
-        public String code;
-        public String desc;
-
-    }
 
 
 

@@ -31,8 +31,16 @@ public interface ValidateGroup {
 
      interface AddDictType{}
      interface UpdateDictType{}
-
      interface AddDictData{}
      interface UpdateDictData{}
+
+
+     /** 配置默认审批用户*/
+     interface ConfigDefultAuditUser {}
+    /** 发起审批申请*/
+    interface TaskAuditApply{}
+    /** 审批成功*/
+    interface AuditTask {}
+
 
 }

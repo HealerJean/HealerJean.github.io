@@ -228,3 +228,109 @@ create table sys_user_role_ref
     key idx_user_id (ref_user_id) using btree comment '用户id索引'
 ) engine = innodb comment ='系统模块-用户与角色关系表';
 
+
+
+
+drop table if exists flow_audit_task;
+create table flow_audit_task
+(
+    id          bigint(20) unsigned not null auto_increment comment '主键',
+    task_type   varchar(64)         not null default '' comment '任务类型',
+    task_name   varchar(64)         not null default '' comment '任务名字',
+    task_data   varchar(3000)       not null default '' comment '任务数据Json格式',
+    status      varchar(8)          not null default '' comment '审批状态',
+    create_time datetime            not null default current_timestamp comment '创建时间',
+    create_user bigint(20) unsigned not null default '0' comment '创建人,发起人',
+    create_name varchar(64)         not null default '' comment '创建人名称',
+    update_user bigint(20) unsigned not null default 0 comment '更新人',
+    update_name varchar(64)         not null default '' comment '更新人名称',
+    update_time datetime            not null default current_timestamp on update current_timestamp comment '更新时间',
+    primary key (id) using btree
+) engine = innodb comment ='工作流-审核任务表';
+
+
+drop table if exists flow_audit_default_config;
+create table flow_audit_default_config
+(
+    id          bigint(20) unsigned not null auto_increment comment '主键',
+    task_type   varchar(64)         not null default '' comment '任务类型',
+    task_name   varchar(64)         not null default '' comment '任务名字',
+    modify      tinyint(1)          not null comment '是否可以更改默认审批人',
+    status      varchar(8)          not null default '' comment '状态10有效 99废弃',
+    create_user bigint(20) unsigned not null default 0 comment '创建人',
+    create_name varchar(64)         not null default '' comment '创建人名称',
+    create_time datetime            not null default current_timestamp comment '创建时间',
+    update_user bigint(20) unsigned not null default 0 comment '更新人',
+    update_name varchar(64)         not null default '' comment '更新人名称',
+    update_time datetime            not null default current_timestamp on update current_timestamp comment '更新时间',
+    primary key (id) using btree
+) engine = innodb comment ='工作流-默认审批是否可以修改';
+
+
+drop table if exists flow_audit_default_user;
+create table flow_audit_default_user
+(
+    id                bigint(20) unsigned not null auto_increment comment '主键',
+    task_type         varchar(64)         not null default '' comment '任务类型',
+    task_name         varchar(64)         not null default '' comment '任务名字',
+    audit_user_type   varchar(64)         not null default '' comment '审批类型属性：抄送人、审批人类型',
+    audit_object_type varchar(32)         not null default '' comment '审批对象类型：角色或ID',
+    audit_object_id   bigint(20) unsigned not null default 0 comment '审批对象对应的id',
+    step              int(10) unsigned    not null default '0' comment '处理顺序，抄送人0',
+    status            varchar(8)          not null default '' comment '状态',
+    create_user       bigint(20) unsigned not null default 0 comment '创建人',
+    create_name       varchar(64)         not null default '' comment '创建人名称',
+    create_time       datetime            not null default current_timestamp comment '创建时间',
+    update_user       bigint(20) unsigned not null default 0 comment '更新人',
+    update_name       varchar(64)         not null default '' comment '更新人名称',
+    update_time       datetime            not null default current_timestamp on update current_timestamp comment '更新时间',
+    primary key (id) using btree
+) engine = innodb comment ='工作流-默认审批人';
+
+drop table if exists flow_audit_user_detail;
+create table flow_audit_user_detail
+(
+    id                bigint(20) unsigned not null auto_increment comment '主键',
+    ref_audit_task_id bigint(20) unsigned not null comment '审批任务Id',
+    task_type         varchar(64)         not null default '' comment '任务类型',
+    task_name         varchar(64)         not null default '' comment '任务名字',
+    step              int(10) unsigned    not null default '0' comment '审批到了第几步，抄送人0',
+    audit_user_type   varchar(64)         not null default '' comment '抄送人、审批人类型',
+    audit_object_type varchar(64)         not null default '' comment '审批对象类型：角色或ID',
+    audit_object_id   bigint(20) unsigned not null default 0 comment '审批对象对应的id',
+    status            varchar(8)          not null default '' comment '审批状态',
+    create_user       bigint(20) unsigned not null default 0 comment '创建人',
+    create_name       varchar(64)         not null default '' comment '创建人名称',
+    create_time       datetime            not null default current_timestamp comment '创建时间',
+    update_user       bigint(20) unsigned not null default 0 comment '更新人',
+    update_name       varchar(64)         not null default '' comment '更新人名称',
+    update_time       datetime            not null default current_timestamp on update current_timestamp comment '更新时间',
+    primary key (id) using btree
+) engine = innodb comment ='工作流-审核详情';
+
+drop table if exists flow_audit_record;
+create table flow_audit_record
+(
+    id                bigint(20) unsigned not null auto_increment comment '主键',
+    ref_audit_task_id bigint(20) unsigned not null comment '审批任务Id',
+    task_type         varchar(64)         not null default '' comment '任务类型',
+    task_name         varchar(64)         not null default '' comment '任务名字',
+    step              int(10) unsigned    not null default '0' comment '审批到了第几步，抄送人0',
+    audit_message     varchar(128)        not null default '' comment '审批意见',
+    ref_file_ids      varchar(128)        not null default '' comment '审批附件Josn集合',
+    audit_user_type   varchar(64)         not null default '' comment '抄送人、审批人类型',
+    opt_user__type    varchar(64)         not null default '' comment '审批对象类型：角色或ID',
+    audit_object_id   bigint(20) unsigned not null default 0 comment '审批对象对应的id',
+    opt_user_id       bigint(20) unsigned not null default 0 comment '审批人Id',
+    opt_user_name     varchar(32)         not null default '' comment '审批人名字',
+    status            varchar(8)          not null default '' comment '审批状态',
+    create_time       datetime            not null default current_timestamp comment '创建时间',
+    primary key (id) using btree
+) engine = innodb comment ='工作流-审核记录';
+
+
+
+
+
+
+
