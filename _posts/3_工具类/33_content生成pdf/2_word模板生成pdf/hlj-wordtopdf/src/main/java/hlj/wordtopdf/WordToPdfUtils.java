@@ -14,6 +14,7 @@ import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import lombok.Data;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,7 +122,7 @@ public class WordToPdfUtils {
         String PERSON = "person";
         String TABLE = "table";
         String IMG = "img";
-
+        String BILL = "Bill" ;
 
         File template = new File("D:/pdf/template.docx");
 
@@ -141,6 +142,36 @@ public class WordToPdfUtils {
         table.add(table1);
         table.add(table2);
         wordToPdfUtils.addList(TABLE, Table.class, table);
+
+
+        List<ContractTeamplateBillDTO> contractTeamplateBillDTOS = new ArrayList<>();
+        ContractTeamplateBillDTO contractTeamplateBillDTO = new ContractTeamplateBillDTO();
+        contractTeamplateBillDTO.setIndex(1);
+        contractTeamplateBillDTO.setBuyerCompanyName("爱酷科技");
+        contractTeamplateBillDTO.setBasicTransactionContractNo("基础交易合同及编号1");
+        contractTeamplateBillDTO.setBillType("应收账款种类1");
+        contractTeamplateBillDTO.setValidAmount("10000.36");
+        contractTeamplateBillDTO.setBillEndTime("2019-01-01");
+        contractTeamplateBillDTO.setCreditNo("444441");
+        contractTeamplateBillDTO.setBillAmount("10.36" );
+        contractTeamplateBillDTO.setBillStartTime("2019-02-02");
+
+
+        ContractTeamplateBillDTO contractTeamplateBillDTO2 = new ContractTeamplateBillDTO();
+        contractTeamplateBillDTO2.setIndex(2);
+        contractTeamplateBillDTO2.setBuyerCompanyName("爱酷科技2");
+        contractTeamplateBillDTO2.setBasicTransactionContractNo("基础交易合同及编号12");
+        contractTeamplateBillDTO2.setBillType("应收账款种类12");
+        contractTeamplateBillDTO2.setValidAmount("100020.36");
+        contractTeamplateBillDTO2.setBillEndTime("2019-02-01");
+        contractTeamplateBillDTO2.setCreditNo("4444412");
+        contractTeamplateBillDTO2.setBillAmount("10.32" );
+        contractTeamplateBillDTO2.setBillStartTime("2019-02-03");
+
+        contractTeamplateBillDTOS.add(contractTeamplateBillDTO);
+        contractTeamplateBillDTOS.add(contractTeamplateBillDTO2);
+
+        wordToPdfUtils.addList(BILL, ContractTeamplateBillDTO.class, contractTeamplateBillDTOS);
 
         // 4、 图片
         // wordToPdfUtils.addImage(IMG,new File("D:/pdf/img.png"));
