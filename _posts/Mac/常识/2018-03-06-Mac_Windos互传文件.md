@@ -1,11 +1,11 @@
 ---
-title: mac-windos互传文件
+title: Mac_Windos互传文件
 date: 2018-03-06 03:33:00
 tags: 
 - Mac
 category: 
 - Mac
-description: mac-windos互传文件
+description: Mac_Windos互传文件
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
