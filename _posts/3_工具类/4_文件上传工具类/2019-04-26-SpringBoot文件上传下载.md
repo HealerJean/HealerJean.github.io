@@ -55,30 +55,20 @@ FileUtils.copyInputStreamToFile(file.getInputStream(),localFile);
 #### 2、file.transferTo
 
 ```java
-我使用这种方式报错了，没有深入研究，网上说是jar包问题
-
-<dependency>
-    	<groupId>commons-fileupload</groupId>
-    	<artifactId>commons-fileupload</artifactId>
-    	<version>1.3.1</version>
-</dependency>
-
-
 
 File localFile = new File(tempFile,fileName);
 file.transferTo(localFile);
 ```
 
+
+
 #### 3、正常读取
 
 ```java
 byte[] bytes = file.getBytes();
- 
 File localFile = new File(tempFile,fileName);
-
 BufferedOutputStream stream = new BufferedOutputStream(
     new FileOutputStream(localFile));
-
 stream.write(bytes);
 
 
@@ -99,64 +89,81 @@ while((num = in.read(b)) != -1) {
 
 
 ```java
- @Override
-    public String upload(MultipartFile file){
-
-        String name = UUID.randomUUID().toString().replaceAll("-", "");
-        LocalDateTime dateTime = LocalDateTime.now();
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String localTime = df.format(dateTime);
-
-        //文件存储最终目录
-        File tempFile = new File("/User/healerjean/Desktop"+localTime);
-        if(!tempFile.exists()){
-            tempFile.mkdirs();
-        }
-        
-        String fileName = file.getOriginalFilename();
-        fileName = name+fileName.substring(fileName.lastIndexOf(".") );
-        
-        File localFile = new File(tempFile,fileName);
-        try {
-            FileUtils.copyInputStreamToFile(file.getInputStream(),localFile);
-            
-        
-            //2、 file.transferTo(localFile);
-            
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(),e);
-        }
-      return fileName;
+@ApiOperation(
+    value = "文件上传",
+    notes = "文件上传",
+    consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+    produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+    response = String.class)
+@PostMapping(value = "upload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+public String upload(MultipartFile file) {
+    log.info("文件管理--------文件上传--------请求参数{}", file);
+    //1、确定文件存储目录
+    String javaIoTmpdir = System.getProperty("java.io.tmpdir");
+    File tempFile = new File(javaIoTmpdir);
+    if (!tempFile.exists()) {
+        tempFile.mkdirs();
     }
+
+    // 2、文件上传
+    String fileName = file.getOriginalFilename();
+    File outFile = new File(tempFile, fileName);
+    try {
+        // FileUtils.copyInputStreamToFile(file.getInputStream(), outFile);
+        file.transferTo(outFile);
+        log.info("文件管理--------文件上传成功--------上传文件名{}", file.getOriginalFilename());
+    } catch (IOException e) {
+        log.info("文件上传失败");
+        throw new RuntimeException("文件上传失败", e);
+    }
+    return fileName;
+}
 ```
+
+
 
 
 
 ## 2、下载
 
+
+
 ```java
-@GetMapping("/{id}")
-public void downLoad(HttpServletResponse response,String folder) {
+
+
+@ApiOperation(
+    value = "文件下载",
+    notes = "文件下载",
+    consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+    produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+    response = String.class)
+@GetMapping(value = "download/{fileName}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+public void downLoad(HttpServletResponse response, @PathVariable String fileName, Boolean preview) {
     try {
-        InputStream inputStream = new FileInputStream(new File(folder));
+        log.info("文件管理--------文件下载--------请求参数{}", fileName);
+        String javaIoTmpdir = System.getProperty("java.io.tmpdir");
+        File file = new File(javaIoTmpdir, fileName);
+        if (!file.exists()) {
+            throw new BusinessException("文件不存在");
+        }
+        InputStream inputStream = new FileInputStream(file);
         OutputStream outputStream = response.getOutputStream();
-
-        response.setContentType("application/x-download");
-        
-        
-        //强制浏览器下载
-        response.setHeader("Content-Disposition", "attachment;filename=test.txt");
-
-        
-        //浏览器尝试打开,支持office online或浏览器预览pdf功能
-		response.setHeader("content-disposition", "inline;filename==test.txt");
-        
-        
+        if (preview != null && !preview) {
+            //强制浏览器下载
+            log.info("文件管理--------强制浏览器下载--------文件名{}", fileName);
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+        } else {
+            log.info("文件管理--------文件预览--------文件名{}", fileName);
+            //浏览器尝试打开,支持office online或浏览器预览pdf功能
+            response.setHeader("Content-Disposition", "inline;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+        }
         IOUtils.copy(inputStream, outputStream);
         outputStream.flush();
     } catch (Exception e) {
-
+        log.info("文件：{}，下载失败", fileName, e);
+        throw new RuntimeException("文件上传失败", e);
     }
+}
 }
 
 ```
@@ -166,12 +173,6 @@ public void downLoad(HttpServletResponse response,String folder) {
 
 
 
-
-
-
-
-<br/>
-<br/>
 
 <font  color="red" size="5" >     
 感兴趣的，欢迎添加博主微信
@@ -197,6 +198,7 @@ public void downLoad(HttpServletResponse response,String folder) {
 <!-- Gitalk 评论 start  -->
 
 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
 <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script> 
 <div id="gitalk-container"></div>    
  <script type="text/javascript">

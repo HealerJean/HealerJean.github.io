@@ -164,6 +164,12 @@
             <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
 
+        <!--文件相关-->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
 
     </dependencies>
 
