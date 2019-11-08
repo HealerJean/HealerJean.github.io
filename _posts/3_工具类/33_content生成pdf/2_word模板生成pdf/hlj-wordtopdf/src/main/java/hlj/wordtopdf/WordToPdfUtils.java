@@ -12,11 +12,14 @@ import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import lombok.Data;
+import org.apache.poi.xwpf.converter.pdf.PdfConverter;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.io.*;
-import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author HealerJean
@@ -31,7 +34,6 @@ public class WordToPdfUtils {
     private IXDocReport ixDocReport;
     private IContext iContext;
 
-
     public WordToPdfUtils(InputStream inputStream) {
         try {
             this.ixDocReport = XDocReportRegistry.getRegistry().loadReport(inputStream, TemplateEngineKind.Freemarker);
@@ -42,21 +44,41 @@ public class WordToPdfUtils {
         }
     }
 
+
     /**
-     * 普通对象
+     * 组装map参数到合同模板中
      */
-    public void addText(String fieldName, Object text) {
-        this.iContext.put(fieldName, text);
+    public void assembleMap(Map<String, Object> map) {
+        for (String key : map.keySet()) {
+            Object value = map.get(key);
+            if (value instanceof List) {
+                List list = (List) value;
+                addList(key, list.get(0).getClass(), list);
+            } else if (value instanceof String) {
+                addText(key, value.toString());
+            } else if (value instanceof File) {
+                addImage(key, (File) value);
+            } else {
+                addObject(key, value.getClass(), value);
+            }
+        }
+    }
+
+    /**
+     * 普通文本
+     */
+    public void addText(String key, Object text) {
+        this.iContext.put(key, text);
     }
 
 
     /**
      * 普通对象
      */
-    public void addObject(String fieldName, Class<?> c, Object o) {
+    public void addObject(String key, Class<?> c, Object o) {
         try {
-            this.fieldsMetadata.load(fieldName, c);
-            this.iContext.put(fieldName, o);
+            this.fieldsMetadata.load(key, c);
+            this.iContext.put(key, o);
         } catch (XDocReportException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -66,10 +88,10 @@ public class WordToPdfUtils {
     /**
      * List对象
      */
-    public void addList(String fieldName, Class<?> c, List list) {
+    public void addList(String key, Class<?> c, List list) {
         try {
-            this.fieldsMetadata.load(fieldName, c, true);
-            this.iContext.put(fieldName, list);
+            this.fieldsMetadata.load(key, c, true);
+            this.iContext.put(key, list);
         } catch (XDocReportException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -78,16 +100,17 @@ public class WordToPdfUtils {
     /**
      * 图片
      */
-    public void addImage(String fieldName, File file) {
-        this.fieldsMetadata.addFieldAsImage(fieldName);
+    public void addImage(String key, File file) {
+        this.fieldsMetadata.addFieldAsImage(key);
         IImageProvider img = new FileImageProvider(file);
-        this.iContext.put(fieldName, img);
+        this.iContext.put(key, img);
     }
-    public void addImage(String fieldName, File file, float width, float height) {
-        this.fieldsMetadata.addFieldAsImage(fieldName);
+
+    public void addImage(String key, File file, float width, float height) {
+        this.fieldsMetadata.addFieldAsImage(key);
         IImageProvider img = new FileImageProvider(file, true);
         img.setSize(width, height);
-        this.iContext.put(fieldName, img);
+        this.iContext.put(key, img);
     }
 
 
@@ -102,6 +125,7 @@ public class WordToPdfUtils {
         }
     }
 
+
     /**
      * 生成Pdf
      */
@@ -115,77 +139,53 @@ public class WordToPdfUtils {
         }
     }
 
-
-    public static void main(String[] args) throws IOException, XDocReportException {
-
-        String WORD = "word";
-        String PERSON = "person";
-        String TABLE = "table";
-        String IMG = "img";
-        String BILL = "Bill" ;
-
-        File template = new File("D:/pdf/template.docx");
-
-        WordToPdfUtils wordToPdfUtils = new WordToPdfUtils(new FileInputStream(template));
-        Person person = new Person("HealerJean", "25", "男");
-
-        // 1、普通字符
-        wordToPdfUtils.addText(WORD, "1");
-
-        // 2、对象
-        wordToPdfUtils.addObject(PERSON, Person.class, person);
-
-        // 3、List表格
-        Table table1 = new Table("11", "12", "13");
-        Table table2 = new Table("21", "22", "23");
-        List<Table> table = new ArrayList<>();
-        table.add(table1);
-        table.add(table2);
-        wordToPdfUtils.addList(TABLE, Table.class, table);
+    /**
+     * word(比较胡扯，只支持docx) 转 pdf
+     */
+    public static void wordConverterToPdf(InputStream source, OutputStream target) throws Exception {
+        XWPFDocument doc = new XWPFDocument(source);
+        PdfConverter.getInstance().convert(doc, target, null);
+    }
 
 
-        List<ContractTeamplateBillDTO> contractTeamplateBillDTOS = new ArrayList<>();
-        ContractTeamplateBillDTO contractTeamplateBillDTO = new ContractTeamplateBillDTO();
-        contractTeamplateBillDTO.setIndex(1);
-        contractTeamplateBillDTO.setBuyerCompanyName("爱酷科技");
-        contractTeamplateBillDTO.setBasicTransactionContractNo("基础交易合同及编号1");
-        contractTeamplateBillDTO.setBillType("应收账款种类1");
-        contractTeamplateBillDTO.setValidAmount("10000.36");
-        contractTeamplateBillDTO.setBillEndTime("2019-01-01");
-        contractTeamplateBillDTO.setCreditNo("444441");
-        contractTeamplateBillDTO.setBillAmount("10.36" );
-        contractTeamplateBillDTO.setBillStartTime("2019-02-02");
+    public static void main(String[] args) {
+        try {
+            File template = new File("D:/pdf/template.docx");
+            WordToPdfUtils wordToPdfUtils = new WordToPdfUtils(new FileInputStream(template));
+            Map<String, Object> map = new HashMap<>();
+            // 1、普通字符
+            map.put("word", "helloWord");
+            //  2、对象
+            Person person = new Person("HealerJean", "25", "男");
+            map.put("person", person);
+
+            // 3、List表格
+            Table table1 = new Table("11", "12", "13");
+            Table table2 = new Table("21", "22", "23");
+            List<Table> table = new ArrayList<>();
+            table.add(table1);
+            table.add(table2);
+            map.put("table", table);
+            // 4、 图片
+            map.put("img", new File("D:/pdf/img.png"));
+
+            //组装数据
+            wordToPdfUtils.assembleMap(map);
+
+            //生成pdf
+            File outputFile = new File("D:/pdf/ok_template.pdf");
+            OutputStream outputStream = new FileOutputStream(outputFile);
+            wordToPdfUtils.createPdf(outputStream);
+
+            //生成word
+            // File wordOutputFile = new File("D:/pdf/ok_template.docx");
+            // OutputStream outputStream = new FileOutputStream(wordOutputFile);
+            // wordToPdfUtils.createWord(outputStream);
 
 
-        ContractTeamplateBillDTO contractTeamplateBillDTO2 = new ContractTeamplateBillDTO();
-        contractTeamplateBillDTO2.setIndex(2);
-        contractTeamplateBillDTO2.setBuyerCompanyName("爱酷科技2");
-        contractTeamplateBillDTO2.setBasicTransactionContractNo("基础交易合同及编号12");
-        contractTeamplateBillDTO2.setBillType("应收账款种类12");
-        contractTeamplateBillDTO2.setValidAmount("100020.36");
-        contractTeamplateBillDTO2.setBillEndTime("2019-02-01");
-        contractTeamplateBillDTO2.setCreditNo("4444412");
-        contractTeamplateBillDTO2.setBillAmount("10.32" );
-        contractTeamplateBillDTO2.setBillStartTime("2019-02-03");
-
-        contractTeamplateBillDTOS.add(contractTeamplateBillDTO);
-        contractTeamplateBillDTOS.add(contractTeamplateBillDTO2);
-
-        wordToPdfUtils.addList(BILL, ContractTeamplateBillDTO.class, contractTeamplateBillDTOS);
-
-        // 4、 图片
-        // wordToPdfUtils.addImage(IMG,new File("D:/pdf/img.png"));
-        wordToPdfUtils.addImage(IMG, new File("D:/pdf/img.png"), 200f, 100f);
-
-        //生成pdf
-        File outputFile = new File("D:/pdf/ok_template.pdf");
-        OutputStream outputStream = new FileOutputStream(outputFile);
-        wordToPdfUtils.createPdf(outputStream);
-
-        //生成word
-        // File wordOutputFile = new File("D:/pdf/ok_template.docx");
-        // OutputStream outputStream = new FileOutputStream(wordOutputFile);
-        // wordToPdfUtils.createWord(outputStream);
+        } catch (Exception e) {
+            throw new RuntimeException("word模板生成文件错误", e);
+        }
     }
 
 

@@ -1,4 +1,4 @@
-package com.hlj.utils;
+package com.hlj.util.Z016_Http;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

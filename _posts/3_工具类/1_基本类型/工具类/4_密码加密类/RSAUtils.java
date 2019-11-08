@@ -1,9 +1,9 @@
-package com.fintech.scf.common.utils.rsa;
+package com.healerjean.proj.util.rsa;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.codec.binary.Base64;
 
 import javax.crypto.Cipher;
 import java.io.ByteArrayOutputStream;
@@ -41,6 +41,14 @@ public class RSAUtils {
             }
         }
         return rsaUtils;
+    }
+
+
+    public static void main(String[] args) {
+        SecureRandom random = new SecureRandom();
+        //生成一对密钥对
+        KeyPair keyPair = getInstance().generatorKeyPair(4096, random);
+        System.out.println(keyPair);
     }
 
 
@@ -215,7 +223,6 @@ public class RSAUtils {
         }
         return null;
     }
-
     /**
      * 私钥解密
      *
@@ -367,17 +374,17 @@ class KeyPair {
     /**
      * 私钥
      */
-    String privateKeyStr;
+     String privateKeyStr;
     /**
      * 秘钥keySize
      */
-    int keySize;
+     int keySize;
     /**
      * 最大加密明文大小
      */
-    int maxEncryptSize;
+     int maxEncryptSize;
     /**
      * 最大解密密文大小
      */
-    int maxDecryptSize;
+    private int maxDecryptSize;
 }

@@ -1,6 +1,7 @@
 package com.healerjean.proj.util.gson;
 
 import com.google.gson.*;
+import com.healerjean.proj.dto.Demo.DemoDTO;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -21,7 +22,8 @@ public class GsonUtil {
     static {
         GsonBuilder gb = new GsonBuilder();
         gb.registerTypeAdapter(java.util.Date.class, new DateSerializer()).setDateFormat(DateFormat.LONG);
-        gb.registerTypeAdapter(java.util.Date.class, new DateDeserializer()).setDateFormat(DateFormat.LONG);
+        gb.registerTypeAdapter(java.util.Date.class, new DateDeserializer()).setDateFormat(DateFormat.LONG);gb.disableHtmlEscaping();
+        gb.disableHtmlEscaping(); // 防止= 等特殊字符变成玩过吗Uniencode
         gson = gb.create();
         parser = new JsonParser();
 

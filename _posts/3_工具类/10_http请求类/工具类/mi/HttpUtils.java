@@ -1,5 +1,6 @@
-package com.hlj.utils;
+package com.hlj.util.Z016_Http;
 
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.core.io.ClassPathResource;
 
@@ -9,7 +10,9 @@ import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -23,13 +26,16 @@ import java.util.function.Consumer;
              <version>3.11.0</version>
          </dependency>
  */
+@Slf4j
 public class HttpUtils {
 
     private static OkHttpClient client = null;
 
-    public static final MediaType JSON  = MediaType.parse("application/json; charset=utf-8");
-    public static final MediaType XML   = MediaType.parse("application/xml; charset=utf-8");
-    public static final MediaType FROM  = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");
+
+    public static final MediaType JSON  = MediaType.parse("application/json;charset=utf-8");
+    public static final MediaType XML   = MediaType.parse("application/xml;charset=utf-8");
+    public static final MediaType FROM  = MediaType.parse("application/x-www-form-urlencoded;charset=utf-8");
+    public static final MediaType FROM_DATA  = MediaType.parse("multipart/form-data;charset=utf-8");
 
     static {
 
@@ -41,7 +47,6 @@ public class HttpUtils {
 
                 // 2、添加自己的证书
                 //.sslSocketFactory(createSSLSocketFactory())
-
 
                 //超时配置
                 .readTimeout(50, TimeUnit.SECONDS)
@@ -55,25 +60,6 @@ public class HttpUtils {
 
 
 
-    /**
-    * 返回码验证
-     */
-    private void checkReturnCode (HttpEntity entity){
-        int code = entity.getCode();
-        SysEnum.ResponseEnum  match = SysEnum.ResponseEnum.match(code);
-        if(match == null){
-            throw new ScfException(code);
-        }
-        switch (match) {
-            case OK :
-                break;
-            case BAD_REQUEST :
-                throw new ParameterErrorException("参数错误");
-            default:
-                throw new ScfException(code);
-        }
-    }
-    
 
     /**
      *  Get调用
@@ -81,7 +67,7 @@ public class HttpUtils {
      * @param params 发送内容
      * @return string
      */
-    public static HttpEntity doGet (String url , Map<String,String> params, Map<String, String> headersParams) throws ScfException {
+    public static HttpEntity doGet (String url , Map<String,String> params, Map<String, String> headersParams)  {
         //  url中添加参数
         HttpUrl httpUrl = HttpUrl.parse(url);
         HttpUrl.Builder builder = httpUrl.newBuilder();
@@ -101,7 +87,8 @@ public class HttpUtils {
             Response response = client.newCall(request).execute();
             return new HttpEntity(response.code(),response.body().string());
         } catch (Exception e) {
-            throw  new ScfException(e, SysEnum.ResponseEnum.SYSTEM_ERROR.getCode() , "调用Http异常");
+            log.error("HTTP调用失败,", e);
+            throw new RuntimeException("HTTP调用失败", e);
         }
     }
 
@@ -111,7 +98,7 @@ public class HttpUtils {
      * @param params 发送内容
      * @return string
      */
-    public static void doGetAsyn (String url ,  Map<String,String> headersParams, Map<String,String> params, Consumer<HttpEntity> consumer) throws ScfException {
+    public static void doGetAsyn (String url ,  Map<String,String> headersParams, Map<String,String> params, Consumer<HttpEntity> consumer)  {
         HttpUrl httpUrl = HttpUrl.parse(url);
         HttpUrl.Builder builder = httpUrl.newBuilder();
         for(Map.Entry<String,String> entry : params.entrySet()){
@@ -127,7 +114,8 @@ public class HttpUtils {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                throw  new ScfException(e, SysEnum.ResponseEnum.SYSTEM_ERROR.getCode() , "异步调用Http异常");
+                log.error("HTTP调用失败,", e);
+                throw new RuntimeException("HTTP调用失败", e);
             }
 
             @Override
@@ -145,7 +133,7 @@ public class HttpUtils {
      * @param params 发送参数
      * @return string
      */
-    public static HttpEntity doPostFrom (String url,  Map<String, String> params, Map<String, String> headersParams) throws ScfException {
+    public static HttpEntity doPostFrom (String url,  Map<String, String> params, Map<String, String> headersParams)  {
         FormBody.Builder builder = new FormBody.Builder();
         if(params != null && !params.isEmpty()) {
             for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -162,47 +150,91 @@ public class HttpUtils {
             Response response = client.newCall(request).execute();
             return new HttpEntity(response.code(),response.body().string());
         } catch (Exception e) {
-            throw  new ScfException(e, SysEnum.ResponseEnum.SYSTEM_ERROR.getCode() , "调用Http异常");
+            log.error("HTTP调用失败,", e);
+            throw new RuntimeException("HTTP调用失败", e);
         }
     }
 
 
-    
-        /**
-         *  Post调用（支持上传文件）
-         *
-         * @param url
-         * @param params 发送参数
-         * @return string
-         */
-        public static HttpEntity doPostFromFile(String url, Map<String, Object> params,Map<String,File>  fileMap, Map<String,String> fileMediaTypeMap , Map<String, String> headersParams ) throws ScfException {
-            MultipartBody.Builder multiBuilder = new MultipartBody.Builder();
-            multiBuilder.setType(MultipartBody.FORM);
-            for (Map.Entry<String, Object> entry : params.entrySet()) {
-                String key = entry.getKey();
-                Object value = entry.getValue();
-                multiBuilder.addFormDataPart(key, value.toString());
-            }
 
-            for (Map.Entry<String,File>  entry :fileMap.entrySet()){
+    /**
+     * Post调用（支持上传文件）
+     *
+     * @param url
+     * @param params 发送参数
+     * @return string
+     */
+    public HttpEntity doPostFrom(String url, Map<String, String> params, List<HttpFileEntity> files, Map<String, String> headersParams) {
+        MultipartBody.Builder multiBuilder = new MultipartBody.Builder();
+        multiBuilder.setType(MultipartBody.FORM);
+        if (params != null && !params.isEmpty()) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
                 String key = entry.getKey();
-                File file = entry.getValue();
-                multiBuilder.addFormDataPart(key, file.getName(), MultipartBody.create( MediaType.parse (fileMediaTypeMap.get(key))  , file));
+                String value = entry.getValue();
+                multiBuilder.addFormDataPart(key, value);
             }
-
-            Request request = new Request.Builder()
-                    .url(url)
-                    .post(multiBuilder.build())
-                    .headers(setHeaders(headersParams))
-                    .build();
-            try {
-                Response response = client.newCall(request).execute();
-                return new HttpEntity(response.code(),response.body().string());
-            } catch (Exception e) {
-                throw  new ScfException(e, SystemEnum.ResponseEnum.SYSTEM_ERROR.getCode() , "调用Http异常");
+        }
+        if (files != null && !files.isEmpty()) {
+            for (HttpFileEntity entry : files) {
+                multiBuilder.addFormDataPart(entry.getFileKey(), entry.getFile().getName(),
+                        MultipartBody.create(MediaType.parse(entry.getMime()), entry.getFile()));
             }
+        }
+        if (headersParams == null) {
+            headersParams = new HashMap<>(2);
+        }
+        headersParams.put("charset", "utf-8");
+        Request request = new Request.Builder()
+                .url(url)
+                .post(multiBuilder.build())
+                .headers(setHeaders(headersParams))
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            return new HttpEntity(response.code(), response.body().string());
+        } catch (Exception e) {
+            log.error("HTTP调用失败", e);
+            return null;
+        }
     }
 
+
+    /**
+     * Post调用（支持上传文件）
+     */
+    public HttpEntity doPostFromFile(String url, Map<String, String> params, List<HttpFileEntity> files, Map<String, String> headersParams) {
+        MultipartBody.Builder multiBuilder = new MultipartBody.Builder();
+        multiBuilder.setType(MultipartBody.FORM);
+        if (params != null && !params.isEmpty()) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                multiBuilder.addFormDataPart(key, value);
+            }
+        }
+        if (files != null && !files.isEmpty()) {
+            for (HttpFileEntity entry : files) {
+                multiBuilder.addFormDataPart(entry.getFileKey(), entry.getFile().getName(),
+                        MultipartBody.create(MediaType.parse(entry.getMime()), entry.getFile()));
+            }
+        }
+        if (headersParams == null) {
+            headersParams = new HashMap<>(2);
+        }
+        headersParams.put("charset", "utf-8");
+        Request request = new Request.Builder()
+                .url(url)
+                .post(multiBuilder.build())
+                .headers(setHeaders(headersParams))
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            return new HttpEntity(response.code(), response.body().string());
+        } catch (Exception e) {
+            log.error("HTTP调用失败", e);
+            return null;
+        }
+    }
 
 
     /**
@@ -212,7 +244,7 @@ public class HttpUtils {
      * @param content 发送内容
      * @return string
      */
-    public static HttpEntity doPost (MediaType type, String url, String content, Map<String, String> headersParams) throws ScfException {
+    public static HttpEntity doPost (MediaType type, String url, String content, Map<String, String> headersParams)  {
         RequestBody body = RequestBody.create(type, content);
         Request request = new Request.Builder()
                 .url(url)
@@ -223,7 +255,8 @@ public class HttpUtils {
             Response response = client.newCall(request).execute();
             return new HttpEntity(response.code(),response.body().string());
         } catch (Exception e) {
-            throw  new ScfException(e, SysEnum.ResponseEnum.SYSTEM_ERROR.getCode(), "调用Http异常");
+            log.error("HTTP调用失败,", e);
+            throw new RuntimeException("HTTP调用失败", e);
         }
     }
 
@@ -235,7 +268,7 @@ public class HttpUtils {
      * @param params 发送参数
      * @return string
      */
-    public static HttpEntity doPutForm ( String url,  Map<String, String> params, Map<String, String> headersParams) throws ScfException {
+    public static HttpEntity doPutForm ( String url,  Map<String, String> params, Map<String, String> headersParams)  {
         FormBody.Builder builder = new FormBody.Builder();
         if(params != null && !params.isEmpty()) {
             for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -252,7 +285,8 @@ public class HttpUtils {
             Response response = client.newCall(request).execute();
             return new HttpEntity(response.code(),response.body().string());
         } catch (Exception e) {
-            throw  new ScfException(e,  SysEnum.ResponseEnum.SYSTEM_ERROR.getCode(), "调用Http异常");
+            log.error("HTTP调用失败,", e);
+            throw new RuntimeException("HTTP调用失败", e);
         }
     }
 
@@ -265,7 +299,7 @@ public class HttpUtils {
      * @param content 发送内容
      * @return string
      */
-    public static HttpEntity doPut (MediaType type, String url, String content, Map<String, String> headersParams) throws ScfException {
+    public static HttpEntity doPut (MediaType type, String url, String content, Map<String, String> headersParams)  {
         RequestBody body = RequestBody.create(type, content);
         Request request = new Request.Builder()
                 .url(url)
@@ -276,7 +310,8 @@ public class HttpUtils {
             Response response = client.newCall(request).execute();
             return new HttpEntity(response.code(),response.body().string());
         } catch (Exception e) {
-            throw  new ScfException(e,  SysEnum.ResponseEnum.SYSTEM_ERROR.getCode(), "调用Http异常");
+            log.error("HTTP调用失败,", e);
+            throw new RuntimeException("HTTP调用失败", e);
         }
     }
 
@@ -287,7 +322,7 @@ public class HttpUtils {
      * @param params 发送参数
      * @return string
      */
-    public static HttpEntity doDeleteForm ( String url,  Map<String, String> params, Map<String, String> headersParams) throws ScfException {
+    public static HttpEntity doDeleteForm ( String url,  Map<String, String> params, Map<String, String> headersParams)  {
         FormBody.Builder builder = new FormBody.Builder();
         if(params != null && !params.isEmpty()) {
             for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -304,7 +339,8 @@ public class HttpUtils {
             Response response = client.newCall(request).execute();
             return new HttpEntity(response.code(),response.body().string());
         } catch (Exception e) {
-            throw  new ScfException(e, SysEnum.ResponseEnum.SYSTEM_ERROR.getCode() , "调用Http异常");
+            log.error("HTTP调用失败,", e);
+            throw new RuntimeException("HTTP调用失败", e);
         }
     }
 
@@ -316,7 +352,7 @@ public class HttpUtils {
      * @param content 发送内容
      * @return string
      */
-    public static HttpEntity doDelete (MediaType type, String url, String content, Map<String, String> headersParams) throws ScfException {
+    public static HttpEntity doDelete (MediaType type, String url, String content, Map<String, String> headersParams)  {
         RequestBody body = RequestBody.create(type, content);
         Request request = new Request.Builder()
                 .url(url)
@@ -327,7 +363,8 @@ public class HttpUtils {
             Response response = client.newCall(request).execute();
             return new HttpEntity(response.code(),response.body().string());
         } catch (Exception e) {
-            throw  new ScfException(e, SysEnum.ResponseEnum.SYSTEM_ERROR.getCode(), "调用Http异常");
+            log.error("HTTP调用失败,", e);
+            throw new RuntimeException("HTTP调用失败", e);
         }
     }
 
@@ -349,6 +386,11 @@ public class HttpUtils {
         Headers headers=headersbuilder.build();
         return headers;
     }
+
+
+
+
+
 
     /**
      * 使用okttp3访问https时不配置证书或者忽略证书会报错：java.security.cert.CertPathValidatorException: Trust anchor for certification path not found.
