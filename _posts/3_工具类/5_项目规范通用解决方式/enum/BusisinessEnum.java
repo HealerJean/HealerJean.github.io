@@ -58,7 +58,7 @@ public interface   EnumExample {
 
         public static EnumItem getStatus(Integer status){
             for (EnumItem value : EnumItem.values()){
-                if (value.status == status){
+                if (item.getCode().equals(code)) {
                     return value;
                 }
             }
