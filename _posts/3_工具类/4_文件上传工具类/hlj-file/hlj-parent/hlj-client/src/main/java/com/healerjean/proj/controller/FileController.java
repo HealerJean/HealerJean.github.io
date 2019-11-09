@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -54,13 +55,45 @@ public class FileController {
         // 2、文件上传
         String fileName = file.getOriginalFilename();
         File outFile = new File(tempFile, fileName);
+        // InputStream inputStream = null;
+        // FileOutputStream fileOutputStream = null;
         try {
-            // FileUtils.copyInputStreamToFile(file.getInputStream(), outFile);
-            file.transferTo(outFile);
+            // 1、inputstream -> 本地文件
+            FileUtils.copyInputStreamToFile(file.getInputStream(), outFile);
+
+            // 2、MultipartFile文件  -> 本地文件
+            // file.transferTo(outFile);
+
+            // 3、MultipartFile 文件获取字节 -> OutputStream
+            // byte[] bytes = file.getBytes();
+            // fileOutputStream = (new FileOutputStream(outFile));
+            // fileOutputStream.write(bytes);
+
+            // 4、InputStream -> OutputStream
+            // inputStream = file.getInputStream();
+            // fileOutputStream = (new FileOutputStream(outFile));
+            // IOUtils.copy(inputStream, fileOutputStream);
+
             log.info("文件管理--------文件上传成功--------上传文件名{}", file.getOriginalFilename());
         } catch (IOException e) {
             log.info("文件上传失败");
             throw new RuntimeException("文件上传失败", e);
+        } finally {
+            log.info("准备开始关闭流");
+            // try {
+            //     if (fileOutputStream != null) {
+            //         fileOutputStream.close();
+            //     }
+            // } catch (IOException e) {
+            //     log.error("流关闭失败", e);
+            // }
+            // try {
+            //     if (inputStream != null) {
+            //         inputStream.close();
+            //     }
+            // } catch (IOException e) {
+            //     log.error("流关闭失败", e);
+            // }
         }
         return fileName;
     }
@@ -99,8 +132,6 @@ public class FileController {
             throw new RuntimeException("文件上传失败", e);
         }
     }
-
-
 
 
 }
