@@ -17,15 +17,33 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 ## 1、springboogt项目控制的上传限制
 
-```yml
-#file upload
-spring.http.multipart.max-file-size=30Mb
-spring.http.multipart.max-request-size=30Mb
-spring.http.multipart.resolve-lazily=true
-spring.http.multipart.enabled=true
 
+maxFileSize 是单个文件大小
+maxRequestSize是设置总上传的数据大小
+
++ Spring Boot 1.3 或之前的版本，配置:
+
+```yml
+
+multipart.maxFileSize = 100Mb
+multipart.maxRequestSize=150Mb
 ```
 
++ Spring Boot 1.4 版本后配置更改为:
+
+
+```yml
+spring.http.multipart.maxFileSize = 100Mb
+spring.http.multipart.maxRequestSize = 150Mb
+```
+
++ Spring Boot 2.0 之后的版本配置修改为: 单位Mb改为MB了
+
+
+```yml
+spring.servlet.multipart.max-file-size = 100MB
+spring.servlet.multipart.max-request-size = 150MB
+```
 ## 2、前端也可以自己控制
 
 
