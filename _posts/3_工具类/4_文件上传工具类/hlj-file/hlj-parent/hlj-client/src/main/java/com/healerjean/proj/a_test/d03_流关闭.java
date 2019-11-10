@@ -131,7 +131,6 @@ public class d03_流关闭 {
 
         // 正确关闭姿势
         bufferedWriter.close();
-        //下面两种可以任意
         outputStreamWriter.close();
         fileOutputStream.close();
         log.info("已经正确关闭了流");
