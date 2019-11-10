@@ -127,7 +127,6 @@ public class FileController {
                 response.setHeader("Content-Disposition", "inline;filename=" + URLEncoder.encode(fileName, "UTF-8"));
             }
             IOUtils.copy(inputStream, outputStream);
-            outputStream.flush();
         } catch (Exception e) {
             log.info("文件：{}，下载失败", fileName, e);
             throw new RuntimeException("文件上传失败", e);
