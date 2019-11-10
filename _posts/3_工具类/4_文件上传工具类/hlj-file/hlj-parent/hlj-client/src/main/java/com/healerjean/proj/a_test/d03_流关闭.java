@@ -3,10 +3,7 @@ package com.healerjean.proj.a_test;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * @author HealerJean
@@ -21,7 +18,7 @@ public class d03_流关闭 {
     // 1、流的正确关闭姿势
 
     /**
-     * 1.1、之finaly 中关闭流
+     * 1.1、try catch，要在finaly 中关闭流
      */
     @Test
     public void test1() {
@@ -84,9 +81,62 @@ public class d03_流关闭 {
     }
 
 
+    /**
+     * 2、流的关闭顺序
+     * 1、包装流
+     */
+    @Test
+    public void baozhuang() {
+        FileOutputStream fileOutputStream = null;
+        BufferedOutputStream bufferedOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream("/Users/healerjean/Desktop/test/file.txt");
+            bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+            bufferedOutputStream.write("test write something".getBytes());
+            bufferedOutputStream.flush();
+
+        } catch (Exception e) {
+            if (bufferedOutputStream != null) {
+                //从包装流中关闭流
+                try {
+                    bufferedOutputStream.close();
+                } catch (IOException ex) {
+                    log.error("fileOutputStream未正确关闭", ex);
+                }
+            }
+        }
+        log.info("已经正确关闭了流");
+
+    }
 
 
+    /**
+     * 2、流的关闭顺序
+     * 1、依赖关系
+     */
+    @Test
+    public void baozhuang2() throws Exception {
+        FileOutputStream fileOutputStream = null;
+        BufferedOutputStream bufferedOutputStream = null;
+        fileOutputStream = new FileOutputStream("/Users/healerjean/Desktop/test/file.txt");
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
+        BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+        bufferedWriter.write("java IO close test");
 
+        // // 从内带外顺序顺序会报异常
+        // fileOutputStream.close();
+        // outputStreamWriter.close();
+        // bufferedWriter.close(); //会抛异常
+
+
+        // 正确关闭姿势
+        bufferedWriter.close();
+        //下面两种可以任意
+        outputStreamWriter.close();
+        fileOutputStream.close();
+        log.info("已经正确关闭了流");
+
+    }
 
 
 }
