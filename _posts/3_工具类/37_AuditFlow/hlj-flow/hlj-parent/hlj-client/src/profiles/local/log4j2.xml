@@ -29,8 +29,8 @@
 
 
         <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
-        <RollingRandomAccessFile name="infoFile" fileName="${fileName}/hlj-flow-client.log"
-                    filePattern="${fileGz}/$${date:yyyy-MM}/%d{yyyy-MM-dd}-%i.hlj-flow-client.gz">
+        <RollingRandomAccessFile name="infoFile" fileName="${fileName}/hlj-audit-client.log"
+                    filePattern="${fileGz}/$${date:yyyy-MM}/%d{yyyy-MM-dd}-%i.hlj-audit-client.gz">
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
                 <!-- 基于指定文件大小的滚动策略，size属性用来定义每个日志文件的大小 -->
