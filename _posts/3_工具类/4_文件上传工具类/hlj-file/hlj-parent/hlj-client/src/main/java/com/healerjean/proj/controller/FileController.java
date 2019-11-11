@@ -55,7 +55,6 @@ public class FileController {
         // 2、文件上传
         String fileName = file.getOriginalFilename();
         File outFile = new File(tempFile, fileName);
-        // InputStream inputStream = null;
         // FileOutputStream fileOutputStream = null;
         try {
             // 1、inputstream -> 本地文件
@@ -107,6 +106,8 @@ public class FileController {
             response = String.class)
     @GetMapping(value = "download/{fileName}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void downLoad(HttpServletResponse response, @PathVariable String fileName, Boolean preview) {
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
         try {
             log.info("文件管理--------文件下载--------请求参数{}", fileName);
             String javaIoTmpdir = System.getProperty("java.io.tmpdir");
@@ -114,8 +115,8 @@ public class FileController {
             if (!file.exists()) {
                 throw new BusinessException("文件不存在");
             }
-            InputStream inputStream = new FileInputStream(file);
-            OutputStream outputStream = response.getOutputStream();
+            inputStream = new FileInputStream(file);
+            outputStream = response.getOutputStream();
             if (preview != null && !preview) {
                 //强制浏览器下载
                 log.info("文件管理--------强制浏览器下载--------文件名{}", fileName);
@@ -126,10 +127,24 @@ public class FileController {
                 response.setHeader("Content-Disposition", "inline;filename=" + URLEncoder.encode(fileName, "UTF-8"));
             }
             IOUtils.copy(inputStream, outputStream);
-            outputStream.flush();
         } catch (Exception e) {
             log.info("文件：{}，下载失败", fileName, e);
             throw new RuntimeException("文件上传失败", e);
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    log.error("inputStream未正确关闭");
+                }
+            }
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    log.error("outputStream未正确关闭");
+                }
+            }
         }
     }
 
