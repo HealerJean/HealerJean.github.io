@@ -1,9 +1,13 @@
 package com.healerjean.proj.utils;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  * @Description
@@ -11,26 +15,44 @@ import org.springframework.stereotype.Service;
  * @Date 2018/3/30  下午12:13.
  */
 @Service
-public class SpringHelper implements ApplicationContextAware {
-    private static ApplicationContext context = null;
+public class SpringHelper implements  ApplicationContextAware, BeanFactoryPostProcessor, Ordered {
 
-    public SpringHelper() {
+
+    private static ApplicationContext _applicationContext;
+    private static ConfigurableListableBeanFactory _beanFactory;
+
+    public static WebApplicationContext getWebApplicationContext() {
+        return (WebApplicationContext) _applicationContext;
+    }
+
+    public static ApplicationContext getApplicationContext() {
+        return _applicationContext;
+    }
+
+    public static Object getBean(String beanName) {
+        return _beanFactory.containsBean(beanName) ? _beanFactory.getBean(beanName) : null;
+    }
+
+    public static <T> T getBean(Class<T> clasz) {
+        return _beanFactory.getBean(clasz);
+    }
+
+    public static <T> T getBean(String beanName, Class<T> clasz) {
+        return _beanFactory.containsBean(beanName) ? _beanFactory.getBean(beanName, clasz) : null;
     }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        context = applicationContext;
+        _applicationContext = applicationContext;
     }
 
-    public static <T> T getBean(Class clazz) throws BeansException {
-        return context.getBean((Class<T>) clazz);
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        _beanFactory = beanFactory;
     }
 
-    public static <T> T getBean(String clazz) throws BeansException {
-        return (T) context.getBean(clazz);
-    }
-
-    public static Object getBeanByName(String beanName) throws BeansException {
-        return context.getBean(beanName);
+    @Override
+    public int getOrder() {
+        return 0;
     }
 }

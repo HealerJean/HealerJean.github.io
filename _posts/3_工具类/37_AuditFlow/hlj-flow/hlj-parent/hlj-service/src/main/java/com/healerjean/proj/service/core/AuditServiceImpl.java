@@ -13,7 +13,7 @@ import com.healerjean.proj.dto.flow.AuditDefaultConfigDTO;
 import com.healerjean.proj.dto.flow.AuditTaskDTO;
 import com.healerjean.proj.dto.flow.AuditUserDTO;
 import com.healerjean.proj.dto.user.LoginUserDTO;
-import com.healerjean.proj.enums.FlowEnum;
+import com.healerjean.proj.service.core.flow.enums.FlowEnum;
 import com.healerjean.proj.enums.ResponseEnum;
 import com.healerjean.proj.enums.StatusEnum;
 import com.healerjean.proj.exception.BusinessException;

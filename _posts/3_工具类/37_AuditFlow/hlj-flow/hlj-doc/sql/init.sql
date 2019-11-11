@@ -391,6 +391,7 @@ create table flow_work_record
     instants_no varchar(64)         not null default '' comment '流程实例流水号',
     flow_code   varchar(64)         not null default '' comment '工作流节点编码',
     flow_name   varchar(64)         not null default '' comment '工作流节点名称',
+    task_data   varchar(3000)       not null default '' comment '任务数据Json格式',
     step        int(10) unsigned    not null default '0' comment '流程步骤',
     node_code   varchar(32)         not null default '' comment '节点编号',
     node_name   varchar(64)         not null default '' comment '节点名称',

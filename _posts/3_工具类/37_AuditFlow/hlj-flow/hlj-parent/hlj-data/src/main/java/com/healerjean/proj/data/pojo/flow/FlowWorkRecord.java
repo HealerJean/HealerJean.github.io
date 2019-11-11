@@ -18,6 +18,8 @@ public class FlowWorkRecord implements Serializable{
 	private Long id;
 	/** 流程实例流水号 */
 	private String instantsNo;
+	/**任务数据*/
+	private String taskData;
 	/** 工作流节点编码 */
 	private String flowCode;
 	/** 工作流节点名称 */
@@ -28,6 +30,8 @@ public class FlowWorkRecord implements Serializable{
 	private String nodeCode;
 	/** 节点名称 */
 	private String nodeName;
+	/** 流程节点或者审核节点 */
+	private String nodeType;
 	/** 状态 */
 	private String status;
 	/** 创建人 */
