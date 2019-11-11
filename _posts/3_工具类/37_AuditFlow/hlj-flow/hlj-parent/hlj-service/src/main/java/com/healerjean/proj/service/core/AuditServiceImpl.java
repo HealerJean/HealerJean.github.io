@@ -1,6 +1,6 @@
 package com.healerjean.proj.service.core;
 
-import com.healerjean.proj.api.core.FlowService;
+import com.healerjean.proj.api.core.AuditService;
 import com.healerjean.proj.constant.DictionaryConstants;
 import com.healerjean.proj.data.manager.flow.*;
 import com.healerjean.proj.data.manager.system.SysDictionaryDataManager;
@@ -31,13 +31,13 @@ import java.util.stream.Collectors;
 
 /**
  * @author HealerJean
- * @ClassName FlowServiceImpl
+ * @ClassName AuditServiceImpl
  * @date 2019-11-03  16:37.
  * @Description
  */
 @Slf4j
 @Service
-public class FlowServiceImpl implements FlowService {
+public class AuditServiceImpl implements AuditService {
 
     @Autowired
     private FlowAuditDefaultConfigManager flowAuditDefaultConfigManager;
@@ -207,7 +207,9 @@ public class FlowServiceImpl implements FlowService {
         dictionaryDataQuery.setRefTypeKey(DictionaryConstants.AUDIT_TASK);
         dictionaryDataQuery.setDataKey(auditTaskDTO.getTaskType());
         SysDictionaryData dictionaryData = sysDictionaryDataManager.findByQueryContion(dictionaryDataQuery);
-
+        if(dictionaryData == null){
+            throw new BusinessException(ResponseEnum.字典数据项不存在);
+        }
 
         // 2、添加审批任务
         FlowAuditTask auditTask = new FlowAuditTask();

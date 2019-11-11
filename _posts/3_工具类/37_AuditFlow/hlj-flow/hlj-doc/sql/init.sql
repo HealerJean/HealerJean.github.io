@@ -404,3 +404,23 @@ create table flow_work_record
 
 
 
+drop table if exists  flow_work_audit_ref ;
+create table flow_work_audit_ref
+(
+    id          bigint(20) unsigned not null auto_increment comment '主键',
+    ref_audit_task_id bigint(20) unsigned not null comment '审批任务Id',
+    instants_no varchar(64)         not null default '' comment '流程实例流水号',
+    step        int(10) unsigned    not null default '0' comment '流程步骤',
+    node_code   varchar(32)         not null default '' comment '节点编号',
+    status      varchar(8)          not null default '' comment '状态',
+    create_user bigint(20) unsigned not null default '0' comment '创建人',
+    create_name varchar(64)         not null default '' comment '创建人名称',
+    create_time datetime            not null default current_timestamp comment '创建时间',
+    update_time datetime            not null default current_timestamp on update current_timestamp comment '更新时间',
+    primary key (id) using btree
+) engine = innodb  comment ='工作流-流程节点和审核的关系表';
+
+
+
+
+

@@ -6,11 +6,11 @@ import com.healerjean.proj.dto.user.LoginUserDTO;
 
 /**
  * @author HealerJean
- * @ClassName FlowService
+ * @ClassName AuditService
  * @date 2019-11-03  15:47.
  * @Description 工作流Serivice
  */
-public interface FlowService {
+public interface AuditService {
 
 
     /**

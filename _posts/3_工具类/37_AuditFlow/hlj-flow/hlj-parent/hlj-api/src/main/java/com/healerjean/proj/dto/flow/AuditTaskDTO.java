@@ -33,7 +33,6 @@ public class AuditTaskDTO {
     @NotBlank(message = "任务类型不能为空", groups = {ValidateGroup.TaskAuditApply.class})
     private String taskType;
 
-
     @ApiModelProperty(value = "审批任务名字")
     private String taskName;
 
