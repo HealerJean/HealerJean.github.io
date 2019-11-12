@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author HealerJean
@@ -14,7 +15,7 @@ import java.util.Date;
 @Data
 public class ReflectDTO extends FatherDTO {
 
-    private Long privateid;
+    private Long privateId;
 
     private String privateName;
 
@@ -34,5 +35,7 @@ public class ReflectDTO extends FatherDTO {
     public BigDecimal publicMoney;
 
     public Date publicDate;
+
+    public List<String> list ;
 
 }
