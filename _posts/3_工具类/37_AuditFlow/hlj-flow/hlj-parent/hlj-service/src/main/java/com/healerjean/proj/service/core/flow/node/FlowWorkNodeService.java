@@ -67,7 +67,7 @@ public abstract class FlowWorkNodeService {
      */
     protected abstract void fail(NodeTransferDataDTO nodeTransferDataDTO, LoginUserDTO loginUserDTO);
 
-    public boolean nextFlowNode(NodeTransferDataDTO nodeTransferDataDTO, LoginUserDTO loginUserDTO) {
+    public boolean nextFlowNode(NodeBusisinessEnumTransferDataDTO nodeTransferDataDTO, LoginUserDTO loginUserDTO) {
         if (nodeTransferDataDTO.getNext()) {
             FlowWorkNodeProcess.successForNextWorkNode(instantsNo, loginUserDTO);
             return true;

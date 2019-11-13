@@ -293,9 +293,6 @@ public class DatasourceConfig {
      * 配置实体扫描 和 事务管理器，
      * 1、不配置配置entityManagerFactoryBean， 可以直接使用注解 @EntityScan(basePackages = {"com.hlj.proj.data.pojo"})
      * 2、可以不配置下面的 因为导入的maven是  spring-boot-starter-data-jpa 默认的事务管理器就是 JpaTransactionManager
-     * @param builder
-     * @param dataSource
-     * @return
      */
     @Bean("localEntityManagerFactoryBean")
     public LocalContainerEntityManagerFactoryBean localEntityManagerFactoryBean (EntityManagerFactoryBuilder builder, @Qualifier("dataSource") DataSource dataSource) {

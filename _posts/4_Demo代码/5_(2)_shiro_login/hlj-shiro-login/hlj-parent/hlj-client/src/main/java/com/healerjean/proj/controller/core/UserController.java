@@ -41,7 +41,7 @@ import java.util.List;
  * @author HealerJean
  * @ClassName UserController
  * @date 2019/10/18  14:10.
- * @Description
+ * @Description用户管理
  */
 @RestController
 @RequestMapping("hlj")
