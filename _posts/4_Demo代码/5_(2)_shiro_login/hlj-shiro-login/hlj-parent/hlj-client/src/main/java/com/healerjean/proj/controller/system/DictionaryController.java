@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * @author HealerJean
  * @version 1.0v
- * @Description 字典数据的维护
+ * @Description 系统管理-字典管理
  * @ClassName A1
  * @date 2019/4/12  17:45.
  */
