@@ -26,7 +26,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 
 
-### resultType，  
+### resultType  （可以不传入）
 
 resultType是直接表示返回Java类型的   
 
