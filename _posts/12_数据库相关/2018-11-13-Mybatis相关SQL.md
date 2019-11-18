@@ -1,0 +1,2385 @@
+---
+title: mysql项目相关sql大全_终身受用
+date: 2018-12-17 03:33:00
+tags: 
+- Database
+category: 
+- Database
+description: Mysql项目相关sql大全_终身受用
+---
+<!-- image url 
+https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
+　　首行缩进
+<font color="red">  </font>
+
+<font  color="red" size="4">   </font>
+
+
+<font size="4">   </font>
+-->
+
+
+## 1、数据批量插入
+
+
+### 1、Map类型的数据进行inset插入
+
+有时候需要简单地把一个Map中所有的key和value获取出来，拼到sql语句中。MyBatis提供的一种方法是遍历Map中的entrySet，然后把key扔进index里面，value扔进item中。具体的一个使用的例子如下：
+
+
+```xml
+<insert id="operationName" parameterType="map">  
+	    INSERT INTO table_name(hot_word, cnt)  
+	    VALUES  
+	    <foreach item="value" index="key" collection="mapData.entrySet()" open="(" separator="),(" close=")">  
+	        #{key}, #{value}  
+	    </foreach>  
+	    ON DUPLICATE KEY UPDATE  
+	    cnt=VALUES(cnt)  
+</insert>
+```
+
+
+## 2、获取数据结果为`list<map<String,Object>>`
+
+### 2.1、Mybatis
+
+#### 2.1.1、mapper
+
+
+```java
+
+public interface HealerJeanMapper {
+
+     List<Map<String,Object>> sqlMap();
+}
+```
+
+
+#### 2.1.2、mapper.xml
+
+
+```xml
+<select id="sqlMap" resultType="java.util.HashMap">
+  SELECT h.id as id ,h.subject as subject FROM  healerjean  h;
+</select>
+
+```
+
+#### 2.1.3、解释：
+
++ **1、返回类型必须是java.util.HashMap**
++ **2、map中的value 必须是Objecrt**
+
+#### 2.1.4、controller测试
+
+```java
+
+@RequestMapping("sqlMap")
+@ResponseBody
+public List<Map<String,Object>> sqlMap(){
+    return healerJeanMapper.sqlMap();
+}
+```
+
+![](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WEFASDFUMM.png)
+
+
+
+### 2.2、Jpa
+
+
+
+```java
+ Map<String ,Integer> academyEmploMap=new HashMap<>();
+
+ List<Map<String,Object>> list = destinationRepostiory.getAcademyEmplo(graduateDate);
+ for(Map<String,Object> map:list){
+	String key =  map.get("department").toString() ;
+    String value = Integer.parseInt(map.get("count").toString()) ;
+    emploMap.put(key,value);
+ }
+
+
+@Query(value = "select new map(g.department as department,count(*) as count) from GraduateDestination g  group by g.department")
+ List<Map<String,Object>> getAcademyEmplo(String graduateDate);
+
+
+```
+
+
+
+
+
+
+
+## 3、Mybatis返回类型resultMap
+
++ **`column` 数据库表的列名，或者我们 自己设置的查询结果**
++ **`property`实体类属性名**
+
+
+### 3.1、制作ResultMap
+
+```xml
+
+<resultMap id="BaseResultMap" type="FlowAuditUserDetail">
+		<id column="ID" jdbcType="BIGINT" property="id" />
+		<result column="ref_audit_task_id" jdbcType="BIGINT" property="refAuditTaskId" />
+		<result column="task_type" jdbcType="VARCHAR" property="taskType" />
+		<result column="task_name" jdbcType="VARCHAR" property="taskName" />
+		<result column="step" jdbcType="INTEGER" property="step" />
+		<result column="audit_user_type" jdbcType="VARCHAR" property="auditUserType" />
+		<result column="audit_object_type" jdbcType="VARCHAR" property="auditObjectType" />
+		<result column="audit_object_id" jdbcType="BIGINT" property="auditObjectId" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="create_user" jdbcType="BIGINT" property="createUser" />
+		<result column="create_name" jdbcType="VARCHAR" property="createName" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_user" jdbcType="BIGINT" property="updateUser" />
+		<result column="update_name" jdbcType="VARCHAR" property="updateName" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+	</resultMap>
+
+```
+
+
+
+### 3.2、执行sql
+
+```xml
+<select id="selectPageByExample" parameterType="Query" resultMap="BaseResultMap">
+		select *		from flow_audit_user_detail
+	</select>
+
+```
+
+
+## 4、If的使用
+
+### 1、mapper接口
+
+
+```java
+public interface CustomerMapper {
+
+    List<Customer> findCustomerList( @Param("name") String name,
+                                     @Param("status") Integer status,
+                                     @Param("offset") Integer offset,
+                                     @Param("limit") Integer limit);
+
+}
+```
+
+### 2、mapper.xml sql'语句
+
+```xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="CustomerMapper">
+
+    <select id="findCustomerList" resultType="com.duodian.admore.entity.db.customer.Customer">
+        SELECT t.* from crm_customer t
+        WHERE t.isVisiblisVisiblee = 1
+        <if test="name != null and name != ''">
+            and t.name like CONCAT('%','${name}','%' )
+        </if>
+        <if test="status != null">
+            and t.status = #{status}
+        </if>
+        order by t.id DESC
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="countCustomerList" resultType="java.lang.Long">
+        select count(*) from crm_customer t
+        WHERE t.isVisible = 1
+        <if test="name != null and name != ''">
+            and t.name like CONCAT('%','${name}','%' )
+        </if>
+        <if test="status != null">
+            and t.status = #{status}
+        </if>
+    </select>
+
+</mapper>
+
+```
+
+## 5、where  include的使用<font color="red"> 自动加where</font>
+
+### 5.1、不会去除第一个and，会自动加上where
+
+```java
+
+<select id="findUserAppsSpreadEffectList" resultType="AppsSpreadEffectReport">
+    SELECT t.*,b.trackName,b.smallIcon FROM apps_spread_effect_report t
+    LEFT JOIN apps_user_app a ON a.trackId = t.trackId
+    LEFT JOIN apps_app b ON b.trackId = t.trackId
+    <where>
+        <if test="userId != null">
+            a.userId = #{userId}
+        </if>
+        <if test="startDate != null ">
+            <![CDATA[ and t.spreadDate >=  #{startDate} ]]>
+        </if>
+        <if test="endDate != null ">
+            <![CDATA[ and t.spreadDate <=  #{endDate} ]]>
+        </if>
+    </where>
+    order by a.id desc
+</select>
+
+
+```
+
+#### 5.3.、自动去除第一个and  `<trim prefix="(" prefixOverrides="and" suffix=")">`   
+
+
+
+**prefixOverrides**  如果前面有则，去除     
+
+**prefix**      前面加（可以省略）
+
+ **suffix**   后面加 （可以省略）
+
+
+
+```
+<trim suffixOverrides=",">
+
+<trim prefix="(" prefixOverrides="and" suffix=")">
+
+```
+
+
+
+```
+
+	<select id="selectByExample" parameterType="ScfUserInfoQuery" resultMap="BaseResultMap">
+		select * 
+		from scf_user_info
+		<include refid="Example_Where_Clause" />
+	</select>
+	
+	
+	<sql id="Example_Where_Clause">
+		<where>
+			<trim prefix="(" prefixOverrides="and" suffix=")">
+				<if test="username != null">
+					and username = #{username,jdbcType=VARCHAR}
+				</if>
+				<if test="realName != null">
+					and real_name = #{realName,jdbcType=VARCHAR}
+				</if>
+				<if test="email != null">
+					and email = #{email,jdbcType=VARCHAR}
+				</if>
+				<if test="telephone != null">
+					and telephone = #{telephone,jdbcType=VARCHAR}
+				</if>
+				<if test="gender != null">
+					and gender = #{gender,jdbcType=VARCHAR}
+				</if>
+				<if test="password != null">
+					and password = #{password,jdbcType=VARCHAR}
+				</if>
+				<if test="userType != null">
+					and user_type = #{userType,jdbcType=VARCHAR}
+				</if>
+				<if test="status != null">
+					and status = #{status,jdbcType=VARCHAR}
+				</if>
+				<if test="createUser != null and createUser != ''">
+					and create_user = #{createUser,jdbcType=BIGINT}
+				</if>
+				<if test="createName != null">
+					and create_name = #{createName,jdbcType=VARCHAR}
+				</if>
+				<if test="updateUser != null and updateUser != ''">
+					and update_user = #{updateUser,jdbcType=BIGINT}
+				</if>
+				<if test="updateName != null">
+					and update_name = #{updateName,jdbcType=VARCHAR}
+				</if>
+				<if test="ids != null and ids.size() > 0">
+					and id in
+					<foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if>
+			</trim>
+		</where>
+	</sql>
+	
+	
+```
+
+
+
+## 6、、foreach list结合作为参数在mapper中的查询（taskTypeList 为List<Integer>）
+
+
+```
+ <if test="taskTypeList != null and taskTypeList.size() > 0"> and t.taskType IN
+      <foreach collection="taskTypeList" index="index" item="at" open="(" separator="," close=")">
+            #{at}
+       </foreach>
+</if>
+
+```
+
+```xml
+<sql id="findVerifySignetWhere">
+    <if test="startDate != null">
+        <![CDATA[ and t.cdate >= #{startDate} ]]>
+    </if>
+    <if test="endDate != null">
+        <![CDATA[ and t.cdate <= #{endDate} ]]>
+    </if>
+    <if test="userParam != null and userParam != '' and userParam!= 'undefined'">
+        AND (t.userId = #{userParam} OR d.nickName LIKE CONCAT('%',#{userParam},'%' ) OR e.realName LIKE
+        CONCAT('%',#{userParam},'%' ) OR f.realName LIKE CONCAT('%',#{userParam},'%' ) OR g.email LIKE
+        CONCAT('%',#{userParam},'%' ))
+    </if>
+    <if test="taskType != null">
+        and t.taskType = #{taskType}
+    </if>
+    <if test="taskTypeList != null and taskTypeList.size() > 0"> and t.taskType IN
+      <foreach collection="taskTypeList" index="index" item="at" open="(" separator="," close=")">
+            #{at}
+       </foreach>
+    </if>
+    <if test="signetType != null">
+        and t.type = #{signetType}
+    </if>
+    <if test="status != null">
+        and t.status = #{status}
+    </if>
+    <if test="currAdmId4Auth != null ">
+        <![CDATA[ and (h.admId = #{currAdmId4Auth} OR w.cc > 0) ]]>
+    </if>
+</sql>
+
+
+
+```
+
+
+## 7、choose when (相当于if else)
+
+
+```xml
+    <choose>
+        <when test="flag == 1">
+            and t.status = 0
+        </when>
+        <when test="flag == 2">
+            and t.status = 1
+        </when>
+        <when test="flag == 3">
+            and t.expressStatus = 1
+        </when>
+        <when test="flag == 4">
+            and t.status = -2
+        </when>
+        <otherwise>
+        <y/otherwise>
+    </choose>
+
+```
+
+## 8、ifnull （如果不是空返回第一个，否则返回第二个）
+
+```xml
+    ifnull(b.realName,c.realName) authName,
+
+```
+
+```xml
+
+<select id="findRedStartSpread" parameterType="com.duodian.admore.dao.db.redstart.query.RedStartSpreadQuery" resultType="com.duodian.admore.dao.db.redstart.bean.RedStartHistoryBean">
+    SELECT
+    k.trackId,
+    e.smallIcon,
+    e.formattedPrice,
+    e.price,
+    e.fileSizeBytes,
+    e.trackName,
+    f.name admName,
+    a.nickName userName,
+    ifnull(b.realName,c.realName) authName,
+    DATE_FORMAT(k.spreadDateStart, '%Y-%m-%d') AS ymd,
+    k.userId
+    FROM
+    redstart_spread k
+
+
+```
+
+
+## 9。制作参数为map值进行传入（opt项目SkinsController）
+
+### 1、controller接收参数
+
+
+```java
+@RequestMapping("data")
+@ResponseBody
+public ResponseBean data(String name,
+					  Integer type,
+					  Integer status,@RequestParam(value = "page",defaultValue = "0") Integer page){
+  
+        int pageSize = 15;
+        Pageable pageable = new PageRequest(page,pageSize);
+        Page<SkinAppInfoData> dataPage = skinsService.findSkinAppInfoList(pageable,"name",name,"type",type,"status",status);
+        return ResponseBean.buildSuccess(dataPage);
+
+}
+```
+
+
+### 2、service 制作map参数（下面的功能是模糊查询🏠分页）
+
+1、service接口
+
+```java
+
+public Page<SkinAppInfoData> findSkinAppInfoList(Pageable pageable, Object... param) throws AppException;
+```
+
+2、service开始实现 （pageable 主要是利用里面的参数制作limit参数的）
+
+
+```java
+@Override
+public Page<SkinAppInfoData> findSkinAppInfoList(Pageable pageable, Object... param) throws AppException {
+    Map data = MyBatisHelper.mergeParameterMap(pageable,param);
+
+if(data.get("startDate") != null){
+    Date startDate = (Date) data.get("startDate");
+    data.put("startDate", com.duodian.admore.core.helper.DateHelper.getDateFirstTime(startDate));
+}
+if(data.get("endDate") != null){
+    Date endDate = (Date) data.get("endDate");
+    data.put("endDate", com.duodian.admore.core.helper.DateHelper.getDateLastTime(endDate));
+}
+
+    List<SkinAppInfoData> dataList = skinsMapper.findSkinList(data);
+
+    for(SkinAppInfoData skinAppInfoData :dataList){
+        List<ChannelJson> channelJsonList = new ArrayList<>();
+        if(skinAppInfoData.getChannelJson()!=null&&!"".equals(skinAppInfoData.getChannelJson())) {
+            JSONArray jsonArray = JSONArray.fromObject(skinAppInfoData.getChannelJson());
+            for (int i = 0; i < jsonArray.size(); i++) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                try {
+                    ChannelJson channelJson = objectMapper.readValue(jsonArray.get(i).toString(), ChannelJson.class);
+                    channelJsonList.add(channelJson);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        skinAppInfoData.setChannelJsonList(channelJsonList);
+
+    }
+
+    Long count = skinsMapper.countSkinList(data);
+    return new PageImpl<SkinAppInfoData>(dataList,pageable,count);
+}
+```
+
+
+### 3、MyBatisHelper工具栏
+
+```java
+
+public class MyBatisHelper {
+    public static final String PARAM_OFFSET = "offset";
+    public static final String PARAM_LIMIT = "limit";
+
+    public MyBatisHelper() {
+    }
+
+    public static Map<String, Object> mergeParameterMap(Object... parameter) {
+        if (parameter.length % 2 != 0) {
+            throw new IllegalArgumentException("parameter须为key-value对应参数");
+        } else {
+            Map<String, Object> map = new HashMap();
+
+            for(int i = 0; i < parameter.length; i += 2) {
+                map.put(parameter[i].toString(), parameter[i + 1]);
+            }
+
+            return map;
+        }
+    }
+
+    public static Map<String, Object> mergeParameterMap(Pageable pageable, Object... parameter) {
+        if (parameter.length % 2 != 0) {
+            throw new IllegalArgumentException("parameter须为key-value对应参数");
+        } else {
+            Map<String, Object> map = new HashMap();
+            map.put("offset", pageable.getOffset());
+            map.put("limit", pageable.getPageSize());
+
+            for(int i = 0; i < parameter.length; i += 2) {
+                map.put(parameter[i].toString(), parameter[i + 1]);
+            }
+
+            return map;
+        }
+    }
+}
+```
+
+
+
+### 4、mapper.java （下面这两个其实就是专门用来做制作page分页的）
+
+
+```java
+public interface SkinsMapper {
+
+    public List<SkinAppInfoData> findSkinList(Map param);
+
+    public Long countSkinList(Map param);
+
+}
+```
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.duodian.admore.dao.db.skins.SkinsMapper">
+
+    <select id="findSkinList" resultType="com.duodian.admore.data.skins.SkinAppInfoData">
+        SELECT
+            A1.`appid`,
+            A1.`appSecret`,
+            A1.`icon`,
+            A1.`makerMemo`,
+            A1.`haveBackstage`,
+            A1.`channelJson`,
+            A1.`filePath`
+        FROM  `skin_app_info_check`  a1
+        where A1.status not in (9)
+        <if test="name != null and name != ''">
+            AND (A1.trackId = #{name}
+            OR A1.name LIKE CONCAT('%',#{name},'%' )
+            OR A1.appid LIKE CONCAT('%',#{name},'%' )
+            OR A1.appSecret LIKE CONCAT('%',#{name},'%' )
+            )
+        </if>
+        <if test="type != null and type != '' ">
+            and A1.type = #{type}
+        </if>
+        <if test="status != null and status != '' ">
+            and  A1.status = #{status}
+        </if>
+        order by A1.cdate desc
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="countSkinList" resultType="java.lang.Long">
+        SELECT
+              count(*)
+            FROM   `skin_app_info_check`      A1
+            where A1.status != 9
+            <if test="name != null and name != ''">
+                AND (A1.trackId = #{trackId} OR A1.name LIKE CONCAT('%',#{name},'%' ))
+            </if>
+            <if test="type != null">
+                and A1.type = #{type}
+            </if>
+            <if test="status != null">
+                and A1.status = #{status}
+            </if>
+    </select>
+</mapper>
+
+```
+
+
+### 5、有分组的
+
+
+```xml
+
+
+    <select id="findCouponTaoKeDataByParam" resultType="com.duodian.youhui.data.coupon.CouponTaoKeItemGoodSummaryData">
+        SELECT c.itemTitle,
+        COUNT(c.itemId) as orderSize,
+        sum(c.estimateAmount) AS sumEstimateAmount ,
+        sum(c.payAmount) AS transAmount,
+        c.adzoneName,
+        c.adzonePid,
+        c.createTime,
+        date_format(c.createTime,'%Y-%m-%d') as everyDate,
+        c.itemId  FROM  coupon_taoke_data c
+
+        <where>
+            c.dataType = 1 and c.orderStatus not in ('订单失效') and c.status = 1
+            <include refid="findCouponTaoKeDataByParamSQL"></include>
+        </where>
+
+        <choose>
+            <when test="isLinkCome==1">
+                GROUP by c.itemId, date_format(c.createTime,'%Y-%m-%d'), c.adzonePid
+            </when>
+            <otherwise>
+                GROUP by c.itemId,c.adzonePid
+            </otherwise>
+        </choose>
+
+        <choose>
+            <when  test="order != null">
+                     order by  ${order}
+            </when>
+            <otherwise>
+                <choose>
+                    <when test="isLinkCome==1">
+                        order by date_format(c.createTime,'%Y-%m-%d') DESC
+                    </when>
+                </choose>
+            </otherwise>
+        </choose>
+
+
+
+        <if test="offset != null and limit != ''">
+            limit #{offset}, #{limit}
+        </if>
+
+    </select>
+
+    <select id="countFindCouponTaoKeDataByParam" resultType="java.lang.Long">
+        select count(*) from (
+        SELECT c.itemTitle FROM  coupon_taoke_data c
+        <where>
+            c.dataType = 1 and c.orderStatus not in ('订单失效') and c.status = 1
+            <include refid="findCouponTaoKeDataByParamSQL"></include>
+        </where>
+        <choose>
+            <when test="isLinkCome==1">
+                GROUP by c.itemId, date_format(c.createTime,'%Y-%m-%d'), c.adzonePid
+            </when>
+            <otherwise>
+                GROUP by c.itemId,c.adzonePid
+            </otherwise>
+        </choose>
+        ) as a
+    </select>
+
+
+
+```
+
+## 10、模糊查询，对象作为参数传入，类似于9中的map
+
+### 1、query对象 (查询参数)
+
+
+```java
+public class SysUserQuery implements Serializable {
+
+    private static final long serialVersionUID = -4564423981924197001L;
+
+    private Long id;
+    private Integer offset;
+    private Integer limit;
+    private Date startDate;
+    private Date endDate ;
+    private String userid;
+    private String userParam;
+    private Integer status;
+
+
+}
+
+
+```
+
+### 2、controller层
+
+```java
+@RequestMapping("data")
+@ResponseBody
+public ResponseBean data(@RequestParam(defaultValue = "0")Integer page, @RequestParam(defaultValue = "15")Integer pageSize, SysUserQuery query){
+    try {
+        Pageable pageable = new PageRequest(page,pageSize);
+        return ResponseBean.buildSuccess(sysDingUserService.getDingUserData(pageable,query));
+    } catch (AppException e) {
+        return ResponseBean.buildFailure(e.getMessage());
+    } catch (Exception e) {
+        logger.error(e.getMessage(),e);
+        return ResponseBean.buildFailure(ErrorCodeEnum.系统错误);
+    }
+}
+```
+
+
+
+### 3、service层，将pageable分页对象放入
+
+
+
+```java
+ @Override
+    public Page<SysDingUser> getDingUserData(Pageable pageable, SysUserQuery query) {
+
+        query.setOffset(pageable.getOffset());
+        query.setLimit(pageable.getPageSize());
+
+        List<SysDingUser> list = sysMapper.findSysDingUserList(query);
+
+        Long count = sysMapper.countSysDingUser(query);
+        return new PageImpl<>(list, pageable, count);
+    }
+}
+
+```
+
+### 4、mybatis查询语句
+
+
+```xml
+
+<select id="findSysDingUserList" resultType="com.duodian.admore.entity.db.admin.SysDingUser">
+    SELECT t.*, a.admId,b.name admName FROM sys_ding_user t
+    LEFT JOIN sys_admin_user_ding a ON a.userid = t.userid
+    LEFT JOIN sys_admin_user b ON b.id = a.admId
+    <where>
+        <if test="userParam != null and userParam != ''">
+            and (t.userid = #{userParam} OR t.name LIKE CONCAT('%',#{userParam},'%' ) OR t.email LIKE CONCAT('%',#{userParam},'%' )
+            OR t.orgEmail LIKE CONCAT('%',#{userParam},'%' ) OR t.mobile LIKE CONCAT('%',#{userParam},'%' ) OR t.position LIKE CONCAT('%',#{userParam},'%' ))
+        </if>
+    </where>
+    ORDER BY t.id ASC
+    limit #{offset}, #{limit}
+</select>
+
+
+```
+
+## 11、sql取出制作DTO对象
+
+### 1、对于数据库字段匹配的，可以直接选择
+### 2、对于不匹配的使用 as  转化
+
+
+```xml
+
+<select id="findRedStartSpread" parameterType="com.duodian.admore.dao.db.redstart.query.RedStartSpreadQuery" resultType="com.duodian.admore.dao.db.redstart.bean.RedStartHistoryBean">
+    SELECT
+    k.trackId,
+    e.smallIcon,
+    e.formattedPrice,
+    e.price,
+    e.fileSizeBytes,
+    e.trackName,
+    f.name admName,
+    a.nickName userName,
+
+    DATE_FORMAT(k.spreadDateStart, '%Y-%m-%d') AS ymd,
+    k.userId
+    FROM
+    redstart_spread k
+```
+
+### 11.1、RedStartHistoryBean
+
+
+```java
+public class RedStartHistoryBean implements Serializable {
+
+    private Long userId;
+    private String ymd;
+    private String trackId;
+    private String smallIcon;
+    private String bundleId;
+    private String formattedPrice;
+    private BigDecimal price;
+    private BigInteger fileSizeBytes;
+    private String trackName;
+
+    private String fileSizeDesc;   //文件大小描述
+    private String authName;
+    private String admName;
+    private String userName;
+
+```
+
+### 11.2、RedStartSpreadQuery
+
+
+```java
+public class RedStartSpreadQuery implements Serializable {
+
+    private Long userId;
+    private String trackId;
+    private String trackName;
+    private Date startDate;
+    private Date endDate;
+    private String name;
+    private Integer status;
+
+    private Integer offset;
+    private Integer limit;
+    private Date point;
+
+    private String userParam;
+    private String appParam;
+```
+
+
+## 12、只有一个参数传入的时候，不使用注解@Param,不能直接写参数名字了 而是使用下面的_parameter
+
+### 1、mapepr.java
+
+
+```java
+List<CustomerChance> getCustomerList(Long adminId);
+
+```
+
+
+### 2、mapper.xml
+
+```xml
+
+<select id="getCustomerList" resultType="com.duodian.admore.entity.db.customer.CustomerChance">
+    SELECT *
+    FROM `crm_customer_chance`  c
+    where c.isVisible = 1
+    <if test="_parameter != null">
+        and c.adminId = #{_parameter}
+    </if>
+</select>
+
+```
+
+## 13、加入原生符号
+
+ t.cdate >= #{startDate}
+
+
+
+<![CDATA[]]>和转义字符
+被<![CDATA[]]>这个标记所包含的内容将表示为纯文本，比如<![CDATA[<]]>表示文本内容“<”。 
+　　此标记用于xml文档中，我们先来看看使用转义符的情况。我们知道，在xml中，”<”、”>”、”&”等字符是不能直接存入的，否则xml语法检查时会报错，如果想在xml中使用这些符号，必须将其转义为实体，如”&lt;”、”&gt;”、”&amp;”，这样才能保存进xml文档。 
+　
+
+### 13.1、举例说明
+
+<font  color="red" size="4">但是在mybaits执行的时候，我们没有使用 <![CDATA[>]]>  直接 >=也没有提示报错
+  </font>
+
+```xml
+ <sql id="pageSuffix">
+    ) a where rownum <![CDATA[<=]]> #{end,jdbcType=INTEGER} ) b where b.rn <![CDATA[>]]> #{start,jdbcType=INTEGER}
+  </sql>
+```
+
+## 14、一个条件匹配多个字段
+
+****
+```xml
+
+<if test="userParam != null and userParam != ''">
+    AND (t.userId = #{userParam}
+          OR a.nickName LIKE CONCAT('%',#{userParam},'%' )
+          OR b.realName LIKE CONCAT('%',#{userParam},'%' )
+          OR c.realName LIKE CONCAT('%',#{userParam},'%' )
+          OR t.customerId LIKE CONCAT('%',#{userParam},'%' )
+          OR t.customerName LIKE CONCAT('%',#{userParam},'%'))
+</if>
+
+
+```
+
+## 15、count详解
+
+### 1、这样输出结果只有一行，因为count（*）本来代表的就是一个数字，本身就是一行
+
+
+```sql
+SELECT  count(*) as "count",idfa from apps_click_record a; 
+
+```
+
+
+
+
+
+### 2、使用group分组 （下面二者是一样的） 其实这里就表示分组之后每组的个数
+
+
+```sql
+SELECT  count(*) as "count",idfa from apps_click_record a WHERE  a.keywordId = '169995' GROUP  by idfa ORDER BY count(*) DESC ;
+    
+SELECT  count(idfa) as "count",idfa from apps_click_record a WHERE  a.keywordId = '169995' GROUP  by idfa ORDER BY count(*) DESC ;
+
+```
+
+### 3、count（*） 和 * 的查询 是错误的
+
+
+```sql
+下面是错误的
+
+SELECT  count(*) as "count",* from apps_click_record a; 
+
+```
+
+### 4、查找数group by分组后的个数，使用嵌套
+
+
+```sql
+
+select count(*) from 
+(
+    select sum(b.id) from B b group by b.type
+) m
+
+```
+
+### 5、count(distinct Sname)去掉重复得到唯一的数量
+
+## 18、delete删除表中数据
+
+
+```xml
+1,delete from user as u where u.userid=6; 错误
+2,delete from user u where u.userid=6; 错误
+3,delete from user where userid=6;  正确
+4,delete u.* from user u where u.userid=6; 正确
+5,delete u from user u where u.userid=6; 正确 
+```
+
+## 19、请求分页参数
+
+
+### 19.1、congtroller
+
+```java
+@GetMapping("getOriginData")
+public Wrapper<?> getOriginData(String phone, Integer bankId, PageQuery pageQuery){
+
+```
+
+
+### 19.2、DOTO
+
+```java
+@Setter
+@ApiModel("分页对象")
+@Accessors(chain = true)
+public class PageQuery {
+
+    @ApiModelProperty(value = "开始页数，从1开始",example = "1", required = true,dataType = "java.lang.Integer")
+    private Integer pageNum = 1;
+    @ApiModelProperty(value = "每页数量",example = "20", required = true,dataType = "java.lang.Integer")
+    private Integer pageSize = 20;
+   
+
+    public Integer getPageSize() {
+        return pageSize == null ? 20 : pageSize;
+    }
+
+    public Integer getPageNum() {
+        return pageNum == null ? 1 : pageNum;
+    }
+}
+
+
+```
+
+## 20、timestamp 多个日期，如果可能为空，则建议使用datetime
+
+
+重点：2、@Temporal(TemporalType.DATE)插入数据库中的日期会自动变成 00.00.00，应该使用TIMESTAMP，sql中是datetime
+<br/>
+
+普通字段不要设置为timestamp，timestamp列必须有默认值，默认值可以为“0000-00-00 00:00:00”，但不能为null。如果我们在save实体的时候，没有给相关timestamp设置值，那么他就会自动由mysql将当前时间设置进去， cdate和udate，都是在java基础上控制的
+
+
+```java
+正确数据
+
+createTime datetime default null ,
+clickTime datetime default null,
+
+@Temporal(TemporalType.TIMESTAMP)
+@ApiModelProperty(value = "创建时间")
+private Date createTime;
+
+@Temporal(TemporalType.TIMESTAMP)
+@ApiModelProperty(value = "点击时间")
+private Date clickTime;
+
+
+
+```
+
+
+```java
+下面这个不可能为空，所以也是正确的
+cdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+udate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+
+
+@Temporal(TemporalType.TIMESTAMP)
+@Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",insertable = true,updatable = false)
+@ApiModelProperty(hidden = true)
+private Date cdate;
+
+@UpdateTimestamp
+@Temporal(TemporalType.TIMESTAMP)
+@ApiModelProperty(hidden = true)
+private Date udate;
+
+```
+
+### 20.1、mybatis日期报错
+
+#### 异常：`invalid comparison: java.util.Date and java.lang.String。`
+
+```xml
+<if test="date!= null and date !=''">
+date为Date类型，不能和‘’比较，只判断是不是null就行啦:
+
+<if test="date!= null">
+
+```
+
+## 21、多条件排序
+
+举例：订单降序 1，订单升序 2 ，成交额降序 3，成交额升序 4，
+
+
+```xml
+
+<select id="findCouponTaoKeDataByParam" resultType="com.duodian.youhui.data.coupon.CouponTaoKeItemGoodSummaryData">
+  SELECT c.itemTitle,COUNT(c.itemId) as orderSize,sum(c.estimateAmount) AS sumEstimateAmount ,c.adzoneName,c.adzonePid,c.createTime,c.itemId  FROM  coupon_taoke_data c
+    <where>
+        c.dataType = 1 and  c.status = 1
+        <include refid="findCouponTaoKeDataByParamSQL"></include>
+    </where>
+    GROUP by c.itemId,c.adzonePid
+
+    <if test="order != null">
+        <choose>
+            <when test="order == 1">
+                order by    orderSize DESC
+            </when>
+            <when test="order == 2">
+                order by    orderSize asc
+            </when>
+            <when test="order == 3">
+                order by   sumEstimateAmount DESC
+            </when>
+            <when test="order == 4">
+                order by   sumEstimateAmount asc
+            </when>
+        </choose>
+    </if>
+
+    <if test="offset != null and limit != ''">
+        limit #{offset}, #{limit}
+    </if>
+
+</select>
+
+```
+
+
+### 2、给排序添加非空条件
+
+使用order byorderid desc实现降序时    ,orderid 为null数据的会排在数据的最后面；    
+
+但是，order by orderid升序时，orderid 为null的数据则会排在最前面   ，如果想要将orderid为null的数据排在最后，就需要加上is null。
+
+```sql
+
+select * from b_programme u order by u.orderid is null, u.orderid
+
+```
+
+### 3、正确的多条件排序，排序字段由前端进行传入`${order}`
+
+
+```sql
+    
+        <choose>
+            <when  test="order != null">
+                     order by  ${order}
+            </when>
+            <otherwise>
+                <choose>
+                    <when test="isLinkCome==1">
+                        order by date_format(c.createTime,'%Y-%m-%d') DESC
+                    </when>
+                </choose>
+            </otherwise>
+        </choose>
+
+
+```
+
+### 4、自定义排序规则
+
+
+
+```sql
+order by  field (c.status,'Ready','Part','Completed','Close')
+```
+
+
+
+
+
+## 23、参数传入为0，判断null的时候
+
+<font color="red">
+
+### 23.1、第一种解决方法，不建议
+
+id传值为0时(前提是id对应的类型为long 或者 Integer，String型无此问题)，发现并没有执行if里的sql，因为在mybatis中会自动把0当成‘’空字符串，所以建议以后传入这种类型的数据，最好还是不要传入0，可以将0改变为其他的数字，比如5等  
+
+</font>
+
+
+```sql
+    <if test="status == 5">
+        and c.connectStatus = 0 and c.createAdminId is not NULL
+    </if>
+```
+
+```java
+List<CouponItemGood> dataByParam(@Param("status") Integer status,
+
+
+```
+
+
+```xml
+
+<if test="status !=null and status !=''">
+    <if test="status == 5">
+        and c.connectStatus = 0 and c.createAdminId is not NULL
+    </if>
+    <if test="status == 1">
+        and c.connectStatus = 1 and c.status = 1 and c.createAdminId is not NULL
+    </if>
+    <if test="status == 2">
+        and c.connectStatus = 1 and c.status = 0 and c.createAdminId is not NULL
+    </if>
+    <if test="status == 3">
+        and c.status = 2  and c.createAdminId is not NULL
+    </if>
+    <if test="status == 4">
+        and c.createAdminId  is NULL
+    </if>
+    <if test="status == 6 ">
+        and c.status  not in (0)  and c.zhiboStatus=1
+    </if>
+    <if test="status == 7 ">
+        and c.scheduleDealStatus = 0 and c.createAdminId is not NULL
+    </if>
+</if>
+```
+
+
+
+
+
+
+
+
+### 23.2、第二种解决方法
+
+使用时增加多一个or status == 0判断
+
+```xml
+<if test="status != null and status !=  '' or status == 0">
+
+```
+
+
+## 24、查询性能优化
+
+### 24.1、查询随机数优化
+
+#### 24.1 、性能比较差的一个
+
+RAND()  函数返回的是一个小于1的随机数　　
+
+
+
+```sql
+BY RAND() LIMIT 1
+
+```
+
+```xml
+<!--失效之后，从选品库中随便找一个 -->
+<select id="wechatSuiJiItemGoodImageUrl" resultType="java.lang.String">
+    <![CDATA[
+        SELECT c.erWeiMaInfoUrl FROM coupon_item_good c WHERE
+          TIMESTAMPDIFF(DAY ,cdate,now())  < 5 ORDER BY RAND() LIMIT 1
+    ]]>
+</select>
+
+```
+
+
+#### 24.2、优化
+
+SQL ROUND() 语法
+
+```sql
+SELECT ROUND(column_name,decimals) FROM table_name
+
+```
+
+
+|参数|描述|
+|----|----|----|----|
+|column_name|必需。要舍入的字段|
+|decimals|非必需，规定返回的小数位数，如果不给值，则自动四舍五入取整取整，select round(100.9) ;  101|
+
+
+
+
+```sql
+
+随机选择一个id，然后选择一个大于他的数据，limit控制为1
+随机选择一个推广位，具体条件就是下面and中连接的and t1.status 开始
+
+>     <select id="findUserCouponAdzone" resultType="com.duodian.youhui.entity.db.coupon.CouponAdzone">
+   <![CDATA[
+        SELECT *
+        FROM `coupon_adzone` AS t1
+          JOIN (SELECT ROUND(RAND() * (SELECT MAX(id)
+                                       FROM `coupon_adzone`)) AS id) AS t2
+        WHERE t1.id >= t2.id 
+
+and t1.status = 1 AND  t1.adzoneType = 3  and (TIMESTAMPDIFF(HOUR, t1.userUseTime, now()) > #{timeDiff} OR t1.userInfoId IS NULL )
+        ORDER BY t1.id ASC
+        LIMIT 1;
+   ]]>
+</select>
+```
+
+
+### 24.2、百万级翻页问题
+
+比如：
+
+```java
+
+但在数据达到百万级的时候，这样写会慢死 
+
+SELECT * FROM table ORDER BY id LIMIT 1000000, 10; 
+
+```
+
+
+优化
+```
+SELECT * FROM order WHERE ID > =(select id from order limit 800000, 1) limit 20
+
+
+SELECT * FROM order a JOIN (select id from order limit 800000, 20) b ON a.ID = b.id
+
+```
+
+
+## 25、 GROUP_CONCAT  -sql语句将某一列的值查询成，逗号分隔的字符串
+# 
+
+```sql
+select GROUP_CONCAT(c.id) from coupon_item_good;
+
+
+返回结果
+
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,28,29,30,31,32,33
+
+```
+
+
+## 26、find_in_set  查询字段为逗号隔开的字段属性
+
+
+字段 pnum为逗号隔开的字符串
+
+```sql
+
+1,2,3,4,21,9
+
+select * from test  t where find_in_set(2,t.pnum) ;
+```
+
+查看某个字符串中存在
+
+
+```sql
+
+update site set url =concat('http://',url) where locate('http://',url)=0 
+
+```
+
+
+
+## 27、case when、进行条件判断
+
+
+```sql
+
+ case cp.ssid when 'aa' then '0' else'1' end as flag, "+
+      " case cp.ssid when 'aa' then '3001' else '0000' end  as retCode,"+
+```
+
+```sql
+1、普通员工使用
+"SELECT cp.ssid AS ssid," +
+      " cp.accname AS accname," +
+      " cp.PAYSUMUNTAX AS PAYSUMUNTAX," +
+      " cp.PAYTAX AS PAYTAX," +
+      " cp.payaftersum AS payAmt," +
+      " cp.benetype AS benetype," +
+      " cp.memo AS memo," +
+    " case cp.ssid when 'aa' then '0' else'1' end as flag, "+
+
+" WHERE CPI.INNER_LISTNO = '"+inworkflowno+"'" ;
+
+
+2、复杂条件
+以下场景 我们要扣减金额 operateMoney ，并且要求分配额度和临时额度扣减完成必须大于 0 
+字段说明：
+分配额度 allot_amount
+临时额度 temp_amount
+总额度   total_amount
+
+开始更新语句：
+总额度直接减去total_amount 
+判断临时额度是否 大于等于 扣减的额度，
+		如果大于，那么直接扣减临时额度，分配额度不变
+		如果小于，则是先扣减临时额度，然后再扣减分配额度
+使用主键进行更新，只锁一行，当id和 当分配额度和临时额度扣减后是否大于0 成立的时候更新
+
+update scf_risk_department_limit set
+total_amount = total_amount -  #{operateMoney,jdbcType=DECIMAL},
+available_amount = available_amount -  #{operateMoney,jdbcType=DECIMAL},
+allot_amount = ( 
+    case when   temp_amount  >=   #{operateMoney,jdbcType=DECIMAL} 
+          then allot_amount   
+          else allot_amount -  (  #{operateMoney,jdbcType=DECIMAL} - temp_amount )    
+     end ),
+temp_amount =  ( 
+    case when  temp_amount  >=  #{operateMoney,jdbcType=DECIMAL}  
+   	     then temp_amount -  #{operateMoney,jdbcType=DECIMAL}  
+         else  0 
+    end )
+where id =  #{id,jdbcType=BIGINT} 
+       and (allot_amount + temp_amount ) >  #{operateMoney,jdbcType=DECIMAL}
+
+
+
+
+
+
+3、and关联
+update driver_online 
+set vRemainCapacity = 
+case when (vRemainCapacity>0) and ((vRemainCapacity-0.5) >0) 
+then vRemainCapacity-0.5  else 0 end 
+where driverId = 'DR120161118100001'； 
+
+
+
+4、一个字段匹配多个条件
+update goods
+set price = (
+case 
+  when price between 0 and 99 then price * 1.2
+  when price between 100 and 999 then price * 1.1
+  when price between 1000 and 1999 then price * 1.05
+  when price > 1999 then price * 1.02
+end);
+select * from goods;
+
+
+
+5、case   case substr(t1.area_id, 1, 1) ，中添加判断 
+
+select substr(t1.area_id, 1, 1) type,
+       substr(t1.area_id, 2) id,
+       case substr(t1.area_id, 1, 1)
+         when 'c' then
+          (select t2.country
+             from countnumber.dbtable_countryid t2
+            where t2.id = substr(t1.area_id, 2))
+         else
+          (select distinct t3.province
+             from countnumber.dbtable_provinceid t3
+            where t3.id = substr(t1.area_id, 2))
+       end name
+  from t_ad_area t1
+
+
+```
+
+
+
+
+## 28、#和$项目中使用的区别
+
+
+### 28.1、#{变量名}可以进行预编译、类型匹配等操作，#{变量名}会转化为jdbc的类型,${变量名}不进行数据类型匹配，直接替换。
+
+```sql
+select * from tablename where id = #{id}
+
+
+假设id的值为12，其中如果数据库字段id为字符型，那么#{id}表示的就是'12'，如果id为整型，那么id就是12，并且MyBatis会将上面SQL语句转化为jdbc的select * from tablename where id=?，把?参数设置为id的值。
+
+
+
+select * from tablename where id = ${id}
+如果字段id为整型，sql语句就不会出错，但是如果字段id为字符型， 那么sql语句应该写成select * from table where id = '${id}'。
+
+```
+
+
+### 28.2、方式能够很大程度防止sql注入。因为#会自动转换，而&为直接替换,所以$方式无法防止sql注入。
+
+### 28.3、项目中的使用，尽量使用# ，少用& 臭小子，明白了吧
+
+`#`适用于普通的参数传入
+
+`$`方式一般用于传入数据库对象，例如传入表名。
+
+
+
+```
+order为 A ASC, A DESC ,B DESC ，B asc数据，这里直接使用#是错误的
+
+ <when  test="order != null">
+                     order by  ${order}
+  </when>
+```
+
+
+## 29、mysql除法
+
+余数可以为0，得到的结果为NUll
+
+```java
+SELECT 1/0 from dual ;
+```
+
+![WX20181212-160341](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20181212-160341.png)
+
+
+## 30、mysql 取小数 convert   round  cast
+
+
+
+```sql
+1、convert（四舍五入）
+
+select convert(10000,decimal(10,2));
+
+# 四舍五入，decimal(10,2)后面的代表最大长度10以及保留的小数位数2
+select convert(10569.3645,decimal(10,2));    #10569.36
+select convert(10569.3665555,decimal(10,2)); #10569.37
+
+
+2、round（自动四舍五入）
+# round 第二个表示保留几位，如果之前有小数，那么不足的补上0。肯定是够的。
+#        第二个如果为负数 -1 代表个位数为0             ROUND(114.6,-1) 结果 110，
+#                      -2 代表个位数和十分位 为0 例如 ROUND(114.6,-2) 结果  100
+# 100.35  100 0.60  110
+SELECT ROUND(100.3465,2),ROUND(100,2),ROUND(0.6,2),ROUND(114.6,-1) ;
+
+
+3、cast，强制转换
+select cast(10*1/4 as decimal(18,2)) from dual
+
+
+```
+
+
+## 31、子查询
+
+### 31.1、子查询中的变量是不可以是哦用外面的变量的 
+
+#### 比如下面的 #{userInfoId} 是不可以使用u的。只能是使用已知的参数
+
+
+```sql
+ select
+               o.payAmount,
+               o.estimateAmount,
+               (o3.notValidOrderSize +o.orderSize) as orderSize
+        from user_info u
+                       left join  (select    IFNULL(count(o1.orderNo),0 )  as orderSize ,
+                                             IFNULL(sum(o1.estimateAmount) ,0)  as  estimateAmount ,
+                                             IFNULL(sum(o1.payAmount) ,0) as payAmount,
+                                             o1.userInfoId as userInfoId
+                                     from    user_order o1
+                                     where   o1.userInfoId = #{userInfoId} and
+                                             o1.orderStatus !='订单失效'
+                                  )
+               o on o.userInfoId = u.id
+                       left join   (select IFNULL(count(o2.orderNo),0 ) as notValidOrderSize,
+                                             o2.userInfoId as userInfoId
+                                      from   user_order o2
+                                      where o2.orderStatus ='订单失效'  and o2.userInfoId = #{userInfoId}
+                                   )
+              o3 on o3.userInfoId = u.id
+        where u.id = #{userInfoId};
+ u.id = 
+```
+
+### 31.2、内部查询是可以使用外面的,下面是更新，内部查询是不可以使用被更新对象进行筛选的
+
+
+
+```sql
+update  user_access_erweima_ip_info u set u.dingId = (
+   select c.dingId from  coupon_adzone  c where c.id = u.couponAdzoneId
+ ) where  u.dingId is null ;
+ 
+```
+
+
+
+## 32、sql查询结果加法
+
+尽量每个参数都带上ifNULL，防止null+size造成的数据时null，不显示
+
+```sql
+
+
+
+  select  o.payAmount,
+          o.estimateAmount,
+         (o3.notValidOrderSize +o.orderSize) as orderSize
+        from user_info u
+        
+
+(IFNULL(o3.notValidOrderSize ,0 ) + IFNULL(o.orderSize ,0 ) ) as orderSize
+(o3.notValidOrderSize +o.orderSize) as orderSize
+        
+```
+
+
+## 33、Group by 某一个或者多个字段查找重复数据的sql语句
+
+5.7mysql中可能会遇到取唯一值的问题。一定要注意
+
+
+### 33.1、表中有id和name 两个字段，查询出name重复的所有数据
+
+
+```sql
+
+group by username   having count(*) > 1
+                             
+
+select * 
+from healerjean a 
+where (a.username) in (
+                    select username 
+                    from healerjean 
+                    group by username 
+                             having count(*) > 1
+                    )
+
+```
+
+### 33.2、删除分组中重读的数据，只保留id最小的记录
+
+
+```sql
+
+delete from healerjean 
+where username in (
+                    select username 
+                    from healerjean 
+                    group by username 
+                    having count(username) > 1
+                    )
+      and id not in (
+                    select min(id)   #每组中最小的数据
+                    from healerjean 
+                    group by username 
+                    having count(username)>1)
+
+
+```
+
+### 33.3、查找表中多余的重复记录（多个字段）
+
+
+```sql
+
+下面这个就保证了，肯定是二者同时存在才会出现count(*)>1 
+如果没有having则，会出现先根据peopleId分组，然后组内，再根据seq 分组。
+
+group by peopleId,seq having count(*) > 1
+                            
+select * 
+from vitae a
+where (a.peopleId,a.seq) in (
+                            select peopleId,    
+                                   seq      
+                            from vitae 
+                            group by peopleId,seq 
+                            having count(*) > 1)
+
+
+```
+
+### 33.4、选择表中多余的重复记录（多个字段），只留有id最小的记录
+
+
+```sql
+
+
+select * 
+from vitae a
+where (a.peopleId,a.seq) in (
+                            select peopleId,    
+                                   seq      
+                            from vitae 
+                            group by peopleId,seq 
+                            having count(*) > 1)
+and id not in           ( select min(id)   
+                            from vitae 
+                            group by peopleId,seq 
+                            having count(*) > 1)
+ 
+```
+
+
+
+## 34、ABS取绝对值
+
+有时候项目中出现两个数字相减，可能是负数，但是只是需要这连个数的差值，所以就需要用它
+
+
+```sql
+
+(ABS( TIMESTAMPDIFF(MINUTE,i.cdate,#{createTime}) ))< #{adzoneTime}****
+
+```
+
+
+## 35、MySql判断是否为null或空字符串
+
+
+```sql
+
+# ISNULL(aBegBalRule) || LENGTH(trim(aBegBalRule))<1
+
+```
+
+
+## 36、清表（不要用delete）
+
+delete删除之后还会占用id，
+
+```java
+truncate  income_detail ;
+
+```
+
+## 37、CONCAT、拼接字符串
+
+### 37.1、模糊查询使用`concat('%',#{params},'%'))`
+
+```xml
+
+  <if test="params != null and params != ''">
+                    and (
+                    (u.nickName like  concat('%',#{params},'%')) or
+                    (u.id = #{params})
+                    )
+ </if>
+                
+```
+
+### 37.2、拼接
+
+```sql
+
+ SELECT CONCAT(’My’, NULL, ‘QL’);
+ 
+ MySQL
+ 
+#如果有一个参数为null，则返回结果为null
+SELECT CONCAT(’My’, NULL, ‘QL’);
+
+NULL
+ 
+```
+
+### 37.3、CONCAT_WS ，分隔符连接字符串
+
+    第一个参数是其它参数的分隔符。分隔符的位置放在要连接的两个字符串之间。分隔符可以是一个字符串，也可以是其它参数。如果分隔符为 NULL，则结果为 NULL。函数会忽略任何分隔符参数后的 NULL 值。
+
+```sql
+
+SELECT CONCAT_WS(',','First name','Second name','Last Name');
+
+First name,Second name,Last Name
+
+SELECT CONCAT_WS(',','First name','','Last Name');
+
+First name,,Last Name (空字符串不会忽略)
+
+SELECT CONCAT_WS(',','First name',null ,'Last Name');
+
+First name,Last Name
+
+
+
+
+```
+
+## 38、locate 出现的位置
+
+
+```sql
+
+SELECT LOCATE('bar', 'foobarbar'); #4
+
+SELECT LOCATE('xbar', 'foobarbar'); #0
+
+位置从4开始数起 
+SELECT LOCATE('bar', 'foobarbar',4); # 4
+位置从7开始数起
+SELECT LOCATE('bar', 'foobarbar',5); # 7
+
+
+```
+
+项目使用
+
+
+```sql
+
+查找具有http字段的用户
+
+select * from users where locate('http',itemUrl);
+
+
+判断site表中的url是否包含'http://'子串,如果不包含则拼接在url字符串开头
+
+update site set url =concat('http://',url) where locate('http://',url)=0;
+
+
+```
+
+## 39、UNION 和 UNION ALL 操作符
+
+
+
+### 默认情况下 UNION 操作符已经删除了重复数据。如果允许重复的值，请使用 UNION ALL。
+
+SELECT 语句必须拥有相同数量的列。列也必须拥有相似的数据类型。同时，每条 SELECT 语句中的列的顺序必须相同。
+
+
+```sql
+
+SELECT column_name(s) FROM table_name1
+UNION
+SELECT column_name(s) FROM table_name2
+
+```
+
+
+## 40、内连接 左链接，右连接，全连接
+
+### 40.1、INNER JOIN 和 JOIN 即使右表中没有匹配，也从左表返回所有的行
+
+
+![15515914742853](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/15515914742853.png)
+
+```sql
+ 
+SELECT Persons.LastName, Persons.FirstName, Orders.OrderNo
+FROM Persons
+       INNER JOIN Orders ON Persons.Id_P = Orders.Id_P
+ORDER BY Persons.LastName
+
+```
+![15515916356311](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/15515916356311.png)
+
+
+### 40.2、LEFT JOIN 即使右表中没有匹配，也从左表返回所有的行
+
+
+
+```sql
+select Persons.LastName, Persons.FirstName, Orders.OrderNo
+from Persons
+       left join Orders on Persons.Id_P = Orders.Id_P
+order by Persons.LastName
+
+```
+![15515917585785](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/15515917585785.png)
+
+### 40.3、RIGHT JOIN: 即使左表中没有匹配，也从右表返回所有的行
+
+
+```sql
+select Persons.LastName, Persons.FirstName, Orders.OrderNo
+from Persons
+       right join Orders on Persons.Id_P = Orders.Id_P
+order by Persons.LastName
+
+```
+![15515918393236](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/15515918393236.png)
+
+### 40.4、FULL JOIN: 只要其中一个表中存在匹配，就返回行
+
+
+```sql
+
+select Persons.LastName, Persons.FirstName, Orders.OrderNo
+from Persons full
+       join Orders on Persons.Id_P = Orders.Id_P
+order by Persons.LastName
+
+```
+
+
+![15515919032202](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/15515919032202.png)
+
+
+### 40.5、left join on 后面加 and 
+
+
+```sql
+
+create table department (
+  dept_id int(11) default 0 comment '部门id',
+  dept_name varchar(20) default '' comment '部门名称'
+)comment ='部门' ;
+
+insert into department values(1,'广告部');
+insert into department values(2,'媒体部');
+insert into department values(3,'管理部');
+select * from department ;
+
+
+create table employee (
+  emp_id int(11) default 0 comment '员工id',
+  emp_name varchar(20) default '' comment '员工名字',
+  dept_id int(11) default 0 comment '部门id',
+  emp_wage decimal(19,2) default 0 comment '薪水'
+)comment ='员工表' ;
+
+
+insert into employee values(1,'张宇晋',1,17000);
+insert into employee values(2,'张三丰',1,15000);
+insert into employee values(3,'张翠',2,18000);
+insert into employee values(4,'林徽因',2,12000);
+insert into employee values(5,'赵国强',3,17000);
+
+
+```
+
+<table>
+<tr><th>dept_id</th><th>dept_name</th></tr>
+<tr><td>1</td><td>广告部</td></tr>
+<tr><td>2</td><td>媒体部</td></tr>
+<tr><td>3</td><td>管理部</td></tr></table>
+
+<table>
+<tr><th>emp_id</th><th>emp_name</th><th>dept_id</th><th>emp_wage</th></tr>
+<tr><td>1</td><td>张宇晋</td><td>1</td><td>17000.00</td></tr>
+<tr><td>2</td><td>张三丰</td><td>1</td><td>15000.00</td></tr>
+<tr><td>3</td><td>张翠</td><td>2</td><td>18000.00</td></tr>
+<tr><td>4</td><td>林徽因</td><td>2</td><td>12000.00</td></tr>
+<tr><td>5</td><td>赵国强</td><td>3</td><td>17000.00</td></tr></table>
+
+
+
+
+#### 1、left join
+
+```sql
+select d.dept_id, d.dept_name, e.emp_name, e.emp_wage
+from department d
+       left join employee e on e.dept_id = d.dept_id 
+```
+
+<table>
+<tr><th>dept_id</th><th>dept_name</th><th>emp_name</th><th>emp_wage</th></tr>
+<tr><td>1</td><td>广告部</td><td>张宇晋</td><td>17000.00</td></tr>
+<tr><td>1</td><td>广告部</td><td>张三丰</td><td>15000.00</td></tr>
+<tr><td>2</td><td>媒体部</td><td>张翠</td><td>18000.00</td></tr>
+<tr><td>2</td><td>媒体部</td><td>林徽因</td><td>12000.00</td></tr>
+<tr><td>3</td><td>管理部</td><td>赵国强</td><td>17000.00</td></tr></table>
+
+#### 2、left join on   and 自个表and
+
+
+```sql
+select d.dept_id, d.dept_name, e.emp_name, e.emp_wage
+from department d
+       left join employee e on e.dept_id = d.dept_id and e.emp_wage = 17000
+```
+
+<table>
+<tr><th>dept_id</th><th>dept_name</th><th>emp_name</th><th>emp_wage</th></tr>
+<tr><td>1</td><td>广告部</td><td>张宇晋</td><td>17000.00</td></tr>
+<tr><td>3</td><td>管理部</td><td>赵国强</td><td>17000.00</td></tr>
+<tr><td>2</td><td>媒体部</td><td>NULL</td><td>NULL</td></tr></table>
+
+
+
+```sql
+select d.dept_id, d.dept_name, e.emp_name, e.emp_wage
+from department d
+       left join employee e on e.dept_id = d.dept_id and d.dept_id = 1
+       
+```
+#### 3、left join on   and 第一张表 and
+
+<table>
+<tr><th>dept_id</th><th>dept_name</th><th>emp_name</th><th>emp_wage</th></tr>
+<tr><td>1</td><td>广告部</td><td>张宇晋</td><td>17000.00</td></tr>
+<tr><td>1</td><td>广告部</td><td>张三丰</td><td>15000.00</td></tr>
+<tr><td>2</td><td>媒体部</td><td>NULL</td><td>NULL</td></tr>
+<tr><td>3</td><td>管理部</td><td>NULL</td><td>NULL</td></tr></table>
+
+
+
+#### 4、where后面过滤最后的调节
+
+
+```sql
+
+select d.dept_id, d.dept_name, e.emp_name, e.emp_wage
+from department d
+       left join employee e on e.dept_id = d.dept_id and d.dept_id = 1
+where e.emp_wage = 17000;
+
+```
+
+<table>
+<tr><th>dept_id</th><th>dept_name</th><th>emp_name</th><th>emp_wage</th></tr>
+<tr><td>1</td><td>广告部</td><td>张宇晋</td><td>17000.00</td></tr></table>
+
+
+
+#### 高级sql、每个部门中最大工资和最小工资，最大工资大于17000 最小工资小于16000
+
+
+```sql
+
+select shop, item, max(volumn) max_volumn
+From sales s
+group by shop;
+
+下面的肯定是不好的，记得优化
+
+select d.dept_id, d.dept_name, l.MaxWage, s.MinWage
+from department d
+       left join (select a.dept_id, a.emp_wage as MaxWage
+                  from employee a
+                  where a.emp_wage > 17000
+                    and a.emp_wage = (select max(emp_wage) from employee b where b.dept_id = a.dept_id)
+                  group by a.dept_id) 
+                  l on l.dept_id = d.dept_id
+       left join (select a.dept_id, a.emp_wage as MinWage
+                  from employee a
+                  where a.emp_wage < 16000
+                    and a.emp_wage = (select min(emp_wage) from employee b where b.dept_id = a.dept_id)
+                  group by a.dept_id)
+                  s on s.dept_id = d.dept_id;
+                  
+                  
+                           
+         
+
+第一步：查询每个部门中最大的工资，并且要求大于 17000
+
+select a.dept_id, a.emp_wage as MaxWage
+from employee a
+where a.emp_wage > 17000
+         and a.emp_wage = (
+         select max(emp_wage) 
+         from employee b
+          where b.dept_id = a.dept_id)
+group by a.dept_id
+               
+第二部 ：查询每个部门中报最小工资 要求小于16000
+
+select a.dept_id, a.emp_wage as MinWage
+from employee a
+where a.emp_wage < 16000
+     and a.emp_wage = (
+     select min(emp_wage) 
+     from employee b
+      where b.dept_id = a.dept_id)
+group by a.dept_id
+
+
+                  
+第三部，开始连接查询
+
+
+select d.dept_id, d.dept_name, l.MaxWage, s.MinWage
+from department d
+       left join (select a.dept_id, a.emp_wage as MaxWage
+                  from employee a
+                  where a.emp_wage > 17000
+                    and a.emp_wage = (select max(emp_wage) from employee b where b.dept_id = a.dept_id)
+                  group by a.dept_id) 
+                  l on l.dept_id = d.dept_id
+       left join (select a.dept_id, a.emp_wage as MinWage
+                  from employee a
+                  where a.emp_wage < 16000
+                    and a.emp_wage = (select min(emp_wage) from employee b where b.dept_id = a.dept_id)
+                  group by a.dept_id)
+                  s on s.dept_id = d.dept_id;
+
+              
+
+```
+
+## 41、havaing count用法
+
+
+```sql
+
+create table tb_grade (
+  Sno int(11) default 0 comment '学号',
+  Sname varchar(20) default '' comment '姓名',
+  Cno int(11) default  0  comment '学号',
+  Cname varchar(20) default ''comment '课程名',
+  score int(11) default 0 comment '分数'
+) comment '成绩表' ;
+
+INSERT INTO tb_grade (Sno, Sname, Cno, Cname, score) VALUES (1001, '李菲', 1, '语文', 86);
+INSERT INTO tb_grade (Sno, Sname, Cno, Cname, score) VALUES (1001, '李菲', 2, '数学', 50);
+INSERT INTO tb_grade (Sno, Sname, Cno, Cname, score) VALUES (1001, '李菲', 3, '英语', 41);
+INSERT INTO tb_grade (Sno, Sname, Cno, Cname, score) VALUES (1001, '李菲', 4, '化学', 89);
+INSERT INTO tb_grade (Sno, Sname, Cno, Cname, score) VALUES (1001, '李菲', 5, '物理', 20);
+
+INSERT INTO tb_grade (Sno, Sname, Cno, Cname, score) VALUES (1002, '张宇晋', 1, '语文', 86);
+INSERT INTO tb_grade (Sno, Sname, Cno, Cname, score) VALUES (1002, '张宇晋', 2, '数学', 50);
+INSERT INTO tb_grade (Sno, Sname, Cno, Cname, score) VALUES (1002, '张宇晋', 3, '英语', 70);
+INSERT INTO tb_grade (Sno, Sname, Cno, Cname, score) VALUES (1002, '张宇晋', 4, '化学', 89);
+INSERT INTO tb_grade (Sno, Sname, Cno, Cname, score) VALUES (1002, '张宇晋', 5, '物理', 20);
+
+
+INSERT INTO tb_grade (Sno, Sname, Cno, Cname, score) VALUES (1003, '翠花', 1, '语文', 10);
+INSERT INTO tb_grade (Sno, Sname, Cno, Cname, score) VALUES (1003, '翠花', 2, '数学', 20);
+INSERT INTO tb_grade (Sno, Sname, Cno, Cname, score) VALUES (1003, '翠花', 3, '英语', 70);
+INSERT INTO tb_grade (Sno, Sname, Cno, Cname, score) VALUES (1003, '翠花', 4, '化学', 40);
+INSERT INTO tb_grade (Sno, Sname, Cno, Cname, score) VALUES (1003, '翠花', 5, '物理', 10);
+
+```
+
+<table >
+<tr><th>Sno</th><th>Sname</th><th>Cno</th><th>Cname</th><th>score</th></tr>
+<tr><td>1001</td><td>李菲</td><td>1</td><td>语文</td><td>86</td></tr>
+<tr><td>1001</td><td>李菲</td><td>2</td><td>数学</td><td>50</td></tr>
+<tr><td>1001</td><td>李菲</td><td>3</td><td>英语</td><td>41</td></tr>
+<tr><td>1001</td><td>李菲</td><td>4</td><td>化学</td><td>89</td></tr>
+<tr><td>1001</td><td>李菲</td><td>5</td><td>物理</td><td>20</td></tr>
+<tr><td>1002</td><td>张宇晋</td><td>1</td><td>语文</td><td>86</td></tr>
+<tr><td>1002</td><td>张宇晋</td><td>2</td><td>数学</td><td>50</td></tr>
+<tr><td>1002</td><td>张宇晋</td><td>3</td><td>英语</td><td>70</td></tr>
+<tr><td>1002</td><td>张宇晋</td><td>4</td><td>化学</td><td>89</td></tr>
+<tr><td>1002</td><td>张宇晋</td><td>5</td><td>物理</td><td>20</td></tr>
+<tr><td>1003</td><td>翠花</td><td>1</td><td>语文</td><td>10</td></tr>
+<tr><td>1003</td><td>翠花</td><td>2</td><td>数学</td><td>20</td></tr>
+<tr><td>1003</td><td>翠花</td><td>3</td><td>英语</td><td>70</td></tr>
+<tr><td>1003</td><td>翠花</td><td>4</td><td>化学</td><td>40</td></tr>
+<tr><td>1003</td><td>翠花</td><td>5</td><td>物理</td><td>10</td></tr></table>
+
+
+
+#### 1、查询不及格科目数大于等于2的学生学号和学生姓名：
+
+
+```sql
+select t.Sno,t.Sname 
+       from tb_grade t 
+where t.score < 60 
+group by t.Sno having count(t.Cno) > 2
+
+```
+<table >
+<tr><th>Sno</th><th>Sname</th></tr>
+<tr><td>1001</td><td>李菲</td></tr>
+<tr><td>1003</td><td>翠花</td></tr></table>
+
+#### 2、查询不及格科目数大于等于2的学生学号和不及格科目数量：
+
+
+```sql
+
+where条件中已经筛选出来了不及格的人，后面haveing中开始判断下不及格科目数量大于2的人。
+
+不及格科目数量 ，其实已经帮我筛选出来了，只要签名添加就可以了
+
+select t.Sno,
+     count(t.Cno) as '不及格科目数量' 
+from tb_grade t 
+where t.score < 60 
+group by t.Sno having count(t.Cno) > 2 
+```
+
+<table  style="border-collapse:collapse">
+<tr><th>Sno</th><th>不及格科目数量</th></tr>
+<tr><td>1001</td><td>3</td></tr>
+<tr><td>1003</td><td>4</td></tr></table>
+
+#### 3、查询不及格科目数大于等于2的学生学号、学生姓名、科目号、科目名称和分数，并按学号降序、科目号升序排序
+
+
+
+```sql
+
+select t.Sno, t.Sname, t.Cno, t.Cname, t.score
+from tb_grade t
+where t.score < 60
+  and t.Sno in (select b.Sno from tb_grade b where b.score < 60 group by b.Sno having count(b.Cno) > 2)
+order by t.Sno desc, Cno asc;
+
+
+第一步，查询学生姓名、科目号、科目名称和分数，并按学号降序、科目号升序排序
+
+select t.Sno, t.Sname, t.Cno, t.Cname, t.score
+from tb_grade t
+order by t.Sno desc, Cno asc;
+
+第二部，注意是不及格，添加where筛选
+select t.Sno, t.Sname, t.Cno, t.Cname, t.score
+from tb_grade t
+where t.score < 60
+order by t.Sno desc, Cno asc;
+
+第三部，选出，不及格科目数量大于2的同学，将2中的筛选添加放进来吧
+
+select t.Sno, t.Sname, t.Cno, t.Cname, t.score
+from tb_grade t
+where t.score < 60
+  and t.Sno in (select b.Sno from tb_grade b where b.score < 60 group by b.Sno having count(b.Cno) > 2)
+order by t.Sno desc, Cno asc;
+
+```
+
+#### 4、分组having中添加and
+
+
+```sql
+select t.Sno,t.Sname
+from tb_grade t
+where t.score < 60
+group by t.Sno having count(t.Cno) > 1 and Sname = '李菲';
+
+```
+
+<table>
+<tr><th>Sno</th><th>Sname</th></tr>
+<tr><td>1001</td><td>李菲</td></tr></table>
+
+
+
+## 42、like 匹配
+
+### 42.1、_：表示任意单个字符。匹配单个任意字符
+
+
+![15515944787068](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/15515944787068.png)
+
+
+### 42.2、[charlist]
+
+
+![155159444025](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/155159444025.png)
+
+
+
+
+
+
+
+## 43、If 条件判断
+
+
+
+```sql
+select if( 1 > 0 ,1 ,0 ) ;
+
+IF(expr1,expr2,expr3)
+
+ expr1 是TRUE  返回 expr2 否则返回 expr3
+```
+
+## 44、distinct必须放在开头
+
+### 44.1、 普通用法
+
+```
+   id name 
+   1 a 
+   2 b 
+   3 c 
+   4 c 
+   5 b 
+
+select distinct name from table 
+得到的结果是: 
+
+   name 
+   a 
+   b 
+   c 
+   
+   
+他同时作用了两个字段，也就是必须得id与name都相同的才会被排除   
+select distinct name, id from table
+结果会是:
+
+   id name
+   1 a
+   2 b
+   3 c
+   4 c
+   5 b
+ 
+
+
+
+```
+
+### 44.2、count(distinct colume )
+
+
+```sq;
+
+Company	  OrderNumber
+IBM	       3532
+W3School	    2356
+Apple	       4698
+W3School	    6953
+
+SELECT COUNT(Company) FROM Orders  4
+
+SELECT COUNT(DISTINCT Company) FROM Orders 3
+
+
+SELECT  Company ,count(DISTINCT Company)   from Orders  ;
+
+```
+
+### 44.2、和group by的比较
+
+|id|name|
+|---|---|
+|1|a|
+|2|b|
+|3|c|
+|4|d|
+|5|a|
+|6|b|
+
+
+```sql
+请注意下面这种方式在低版本的sql是错误的写法
+select id ,count(name)  from quancheng_test group by name;
+
+id count(name)
+1   2
+2   2
+3   1
+4   1
+```
+2、distinct 是去重的
+
+```sql
+select id, count(distinct name) from quancheng_test group by name;
+
+id count(distinct name)
+1   1
+2   1
+3   1
+4   1
+```
+
+
+3、group by   是按组查询的，是一种聚合查询，很多时候是为了做统计用，例如：
+对 name 分组，并统计每组 id 的和，
+
+```sql
+select sum(id), name from quancheng_test group by name;
+
+sum(id)	name
+6	      a
+8	      b
+3	      c
+4	      d
+```
+
+
+
+
+```sql
+
+
+```
+
+
+
+<br/><br/>
+<font color="red"> 感兴趣的，欢迎添加博主微信， </font><br/>
+哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。
+<br/>
+请下方留言吧。可与博主自由讨论哦
+
+|支付包 | 微信|微信公众号|
+|:-------:|:-------:|:------:|
+|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+
+
+
+
+<!-- Gitalk 评论 start  -->
+
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script> 
+<div id="gitalk-container"></div>    
+ <script type="text/javascript">
+    var gitalk = new Gitalk({
+		clientID: `1d164cd85549874d0e3a`,
+		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
+		repo: `HealerJean.github.io`,
+		owner: 'HealerJean',
+		admin: ['HealerJean'],
+		id: 'yGteDRHAXmN7alJz',
+    });
+    gitalk.render('gitalk-container');
+</script> 
+
+<!-- Gitalk end -->
+
