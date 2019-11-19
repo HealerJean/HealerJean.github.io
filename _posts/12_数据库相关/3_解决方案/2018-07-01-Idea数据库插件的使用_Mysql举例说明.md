@@ -1,5 +1,5 @@
 ---
-title: idea_数据库插件的使用_mysql举例说明
+title: Idea_数据库插件的使用_Mysql举例说明
 date: 2018-03-06 03:33:00
 tags: 
 - Mysql
@@ -7,8 +7,7 @@ tags:
 category: 
 - Mysql
 - Database
-
-description: idea_数据库插件的使用_mysql举例说明
+description: Idea_数据库插件的使用_Mysql举例说明
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages

@@ -1,11 +1,11 @@
 ---
-title: JAVA一次性读取Mysql几十万条大数据的处理
+title: Jave一次性读取Mysql几十万条大数据的处理
 date: 2018-07-18 03:33:00
 tags: 
 - Database
 category: 
 - Database
-description: JAVA一次性读取Mysql几十万条大数据的处理
+description: Jave一次性读取Mysql几十万条大数据的处理
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
