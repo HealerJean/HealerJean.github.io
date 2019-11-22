@@ -28,17 +28,466 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 
 
+### 1、过滤器和拦截器 
 
 
-### 1、参数修改SpaceHttpServletRequestWrapper
+
+### 1.1、区别
+
+
+　　①拦截器是基于Java的反射机制的，而过滤器是基于函数回调。   
+
+　　②拦截器不依赖与servlet容器，过滤器依赖与servlet容器。   
+
+　　③拦截器只能对action请求起作用，而过滤器则可以对几乎所有的请求起作用。   
+
+　　④拦截器可以访问action上下文、值栈里的对象，而过滤器不能访问。   
+
+　　⑤在action的生命周期中，拦截器可以多次被调用，而过滤器只能在容器初始化时被调用一次。   
+
+　　⑥拦截器可以获取IOC容器中的各个bean，而过滤器就不行，这点很重要，在拦截器里注入一个service，可以调用业务逻辑。   
+
+
+
+#### 1.2、忽略URL配置 
+
+##### 1.2.1、过滤器 
+
+
 
 ```java
-public class SpaceHttpServletRequestWrapper extends HttpServletRequestWrapper {
+public class Filter_1 implements Filter {
 
-    public SpaceHttpServletRequestWrapper(HttpServletRequest servletRequest) {
-        super(servletRequest);
+    private FilterConfig filterConfig;
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        this.filterConfig = filterConfig;
     }
 
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws
+            IOException, ServletException {
+
+        //添加url进行判断忽略下面的方法
+        filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+}
+
+```
+
+##### 1.2.2、拦截器 
+
+
+
+```java
+ @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+
+        registry.addInterceptor(interceptor_1)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/develop/swagger/**");//忽略的
+
+    }
+```
+
+
+
+### 1.3、启动顺序 
+
+**谁先配置，谁先启动，DispatcherServlet之后那就顺序反过来执行了，具体看测试结果**
+
+
+
+
+
+### 1.3、过滤器和拦截器
+
+
+
+#### 1.3.1、过滤器1    
+
+
+
+```java
+package com.hlj.proj.config.filter;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+
+/**
+ * @author HealerJean
+ * @version 1.0v
+ * @ClassName SpaceParamsFilter
+ * @Date 2019/9/29  14:33.
+ * @Description 
+ */
+public class Filter_1 implements Filter {
+
+    private FilterConfig filterConfig;
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        this.filterConfig = filterConfig;
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws
+            IOException, ServletException {
+        System.out.println("############ Filter_1 在DispatcherServlet之前执行############");
+
+        filterChain.doFilter(servletRequest, servletResponse);
+
+        System.out.println("############ Filter_1 在视图页面返回给客户端之前执行，但是执行顺序在Interceptor之后############");
+    }
+
+    @Override
+    public void destroy() {
+        this.filterConfig = null;
+    }
+}
+
+```
+
+
+
+#### 1.3.2、过滤器2
+
+```java
+package com.hlj.proj.config.filter;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+
+/**
+ * @author HealerJean
+ * @version 1.0v
+ * @ClassName SpaceParamsFilter
+ * @Date 2019/9/29  14:33.
+ * @Description 空格过滤
+ */
+public class Filter_2 implements Filter {
+
+    private FilterConfig filterConfig;
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        this.filterConfig = filterConfig;
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws
+            IOException, ServletException {
+        System.out.println("############ Filter_2 在DispatcherServlet之前执行############");
+
+        filterChain.doFilter(servletRequest, servletResponse);
+
+        System.out.println("############ Filter_2 在视图页面返回给客户端之前执行，但是执行顺序在Interceptor之后############");
+    }
+
+    @Override
+    public void destroy() {
+        this.filterConfig = null;
+    }
+}
+
+```
+
+
+
+#### 1.3.3、拦截器1
+
+```java
+package com.hlj.proj.config.interceptor;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * @author HealerJean
+ * @ClassName Interceptor_1
+ * @date 2019/11/21  22:08.
+ * @Description
+ */
+@Component
+@Slf4j
+public class Interceptor_1 implements HandlerInterceptor {
+
+    /**
+     * 在DispatcherServlet之前执行
+     * */
+    public boolean preHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2) throws Exception {
+        System.out.println("************ Interceptor_1  在DispatcherServlet之前执行**********");
+        return true;
+    }
+
+    /**
+     * 在controller执行之后的DispatcherServlet之后执行
+     * */
+    @Override
+    public void postHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, ModelAndView arg3) throws Exception {
+        System.out.println("************ Interceptor_1  在controller执行之后的DispatcherServlet之后执行**********");
+    }
+
+    /**
+     * 在页面渲染完成返回给客户端之前执行
+     * */
+    @Override
+    public void afterCompletion(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, Exception arg3)
+            throws Exception {
+        System.out.println("************ Interceptor_1  在页面渲染完成返回给客户端之前执行**********");
+    }
+}
+
+```
+
+
+
+#### 1.3.4、拦截器2 
+
+```java
+package com.hlj.proj.config.interceptor;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * @author HealerJean
+ * @ClassName Interceptor_1
+ * @date 2019/11/21  22:08.
+ * @Description
+ */
+@Component
+@Slf4j
+public class Interceptor_2 implements HandlerInterceptor {
+
+    /**
+     * 在DispatcherServlet之前执行
+     * */
+    public boolean preHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2) throws Exception {
+        System.out.println("************ Interceptor_2  在DispatcherServlet之前执行**********");
+        return true;
+    }
+
+    /**
+     * 在controller执行之后的DispatcherServlet之后执行
+     * */
+    @Override
+    public void postHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, ModelAndView arg3) throws Exception {
+        System.out.println("************ Interceptor_2  在controller执行之后的DispatcherServlet之后执行**********");
+    }
+
+    /**
+     * 在页面渲染完成返回给客户端之前执行
+     * */
+    @Override
+    public void afterCompletion(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, Exception arg3)
+            throws Exception {
+        System.out.println("************ Interceptor_2  在页面渲染完成返回给客户端之前执行**********");
+    }
+}
+
+```
+
+
+
+
+
+#### 1.3.7、配置：注意配置顺序 
+
+
+
+```java
+@Configuration
+public class InterceptorConfig implements WebMvcConfigurer {
+
+    @Resource
+    private Interceptor_1 interceptor_1;
+    @Resource
+    private Interceptor_2 interceptor_2;
+
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(interceptor_1)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/develop/swagger/**");
+
+        registry.addInterceptor(interceptor_2)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/develop/swagger/**");
+
+    }
+
+
+    @Bean
+    public FilterRegistrationBean filter1() {
+        FilterRegistrationBean fitler = new FilterRegistrationBean();
+        fitler.setFilter(new Filter_1());
+        fitler.addUrlPatterns("/hlj/*");
+        fitler.setName("filter_1");
+        fitler.setDispatcherTypes(DispatcherType.REQUEST);
+        return fitler;
+    }
+
+    @Bean
+    public FilterRegistrationBean filter2() {
+        FilterRegistrationBean fitler = new FilterRegistrationBean();
+        fitler.setFilter(new Filter_2());
+        fitler.addUrlPatterns("/hlj/*");
+        fitler.setName("filter_2");
+        fitler.setDispatcherTypes(DispatcherType.REQUEST);
+        return fitler;
+    }
+
+}
+
+```
+
+
+
+#### 1.3.6、测试启动 
+
+```
+############ Filter_1 在DispatcherServlet之前执行############
+############ Filter_2 在DispatcherServlet之前执行############
+************ Interceptor_1  在DispatcherServlet之前执行**********
+************ Interceptor_2  在DispatcherServlet之前执行**********
+ 样例--------GET请求------请求参数{} com.hlj.proj.controller.DemoController.get[58]
+************ Interceptor_2  在controller执行之后的DispatcherServlet之后执行**********
+************ Interceptor_1  在controller执行之后的DispatcherServlet之后执行**********
+************ Interceptor_2  在页面渲染完成返回给客户端之前执行**********
+************ Interceptor_1  在页面渲染完成返回给客户端之前执行**********
+############ Filter_2 在视图页面返回给客户端之前执行，但是执行顺序在Interceptor之后############
+############ Filter_1 在视图页面返回给客户端之前执行，但是执行顺序在Interceptor之后############
+```
+
+
+
+
+
+**谁配置在前，谁先执行，然后反过来**
+
+
+
+## 2、实用过滤器
+
+
+
+>  主要是重写HttpServletRequestWrapper 
+
+
+
+```java
+// 404是不会进入的
+// 重写getParameterValues方法，通过循环取出每一个请求结果，再对请求结果进行过滤
+@Override
+public String[] getParameterValues(String parameter) {
+
+}
+
+//  404是不会进入的
+//  重写getParameter方法 对请求结果进行过滤
+@Override
+public String getParameter(String name) {
+
+}
+```
+
+
+
+### .2.1、空格过滤器 
+
+
+
+#### 2.1.1、普通请求的空格过滤器
+
+
+
+##### 2.1.1.1、SpaceParamsFilter
+
+
+
+```java
+/**
+ * @author HealerJean
+ * @version 1.0v
+ * @ClassName SpaceParamsFilter
+ * @Date 2019/9/29  14:33.
+ * @Description 普通请求空格过滤
+ */
+public class SpaceParamsFilter implements Filter {
+
+    private FilterConfig filterConfig;
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        this.filterConfig = filterConfig;
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws
+            IOException, ServletException {
+        filterChain.doFilter(new SpaceParameHttpServletRequestWrapper(
+                (HttpServletRequest) servletRequest), servletResponse);
+    }
+
+    @Override
+    public void destroy() {
+        this.filterConfig = null;
+    }
+
+}
+```
+
+
+
+##### 2.11.2、SpaceParameHttpServletRequestWrapper
+
+```java
+
+package com.hlj.proj.config.filter;
+
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * @author HealerJean
+ * @version 1.0v
+ * @ClassName SpaceParameHttpServletRequestWrapper
+ * @Date 2019/9/29  14:44.
+ * 空格过滤处理
+ * 下面的将构造器中将所有的请求的参数获取了（包括404），但是其实并没有进行空格过滤处理），
+ * 一般普通请求空格过滤用下面的就可以了
+ */
+public class SpaceParameHttpServletRequestWrapper extends HttpServletRequestWrapper {
+
+    /**
+     * 下面的将构造器中将所有的请求的参数获取了（包括404），但是其实并没有进行空格过滤处理），
+     * 一般普通请求空格过滤用下面的就可以了
+     */
+    public SpaceParameHttpServletRequestWrapper(HttpServletRequest servletRequest) throws IOException {
+        super(servletRequest);
+    }
     @Override
     public String[] getParameterValues(String parameter) {
         String[] values = super.getParameterValues(parameter);
@@ -54,12 +503,127 @@ public class SpaceHttpServletRequestWrapper extends HttpServletRequestWrapper {
     }
 
     @Override
-    public String getParameter(String parameter) {
-        String value = super.getParameter(parameter);
+    public String getParameter(String name) {
+        String value = super.getParameter(name);
         if (value == null) {
             return null;
         }
         return value.trim();
+    }
+
+
+
+    // private Map<String, String[]> params = new HashMap<>();
+    //
+    // public SpaceParameHttpServletRequestWrapper(HttpServletRequest servletRequest) throws IOException {
+    //     super(servletRequest);
+    //
+    //     Map<String, String[]> requestMap = servletRequest.getParameterMap();
+    //     this.params.putAll(requestMap);
+    //     this.modifyParameterValues();
+    // }
+    //
+    // /**
+    //  *   404是不会进入的
+    //  *  重写getParameterValues方法，通过循环取出每一个请求结果，再对请求结果进行过滤
+    //  */
+    // @Override
+    // public String[] getParameterValues(String name) {
+    //     return params.get(name);
+    // }
+    //
+    // /**
+    //  * 重写getParameter方法 对请求结果进行过滤
+    //  **/
+    // @Override
+    // public String getParameter(String name) {
+    //     String[]values = params.get(name);
+    //     if (values == null || values.length == 0) {
+    //         return null;
+    //     }
+    //     return values[0];
+    // }
+    // public void modifyParameterValues() {
+    //     Set<String> set = params.keySet();
+    //     Iterator<String> it = set.iterator();
+    //     while (it.hasNext()) {
+    //         String key = it.next();
+    //         String[] values = params.get(key);
+    //         values[0] = values[0].trim();
+    //         params.put(key, values);
+    //     }
+    // }
+
+
+}
+
+
+```
+
+
+
+
+
+##### 2.1.1.3、过滤器配置 
+
+```java
+public class InterceptorConfig implements WebMvcConfigurer {
+
+@Bean
+    public FilterRegistrationBean spaceJsonFilter() {
+        FilterRegistrationBean fitler = new FilterRegistrationBean();
+        fitler.setFilter(new SpaceJsonFilter());
+        fitler.addUrlPatterns("/hlj/*");
+        fitler.setName("SpaceJsonFilter");
+        fitler.setDispatcherTypes(DispatcherType.REQUEST);
+        return fitler;
+    }
+}
+```
+
+
+
+#### 2.1.2、Json请求空格过滤 
+
+
+
+##### 2.1.2.1、SpaceJsonFilter
+
+
+
+```java
+package com.hlj.proj.config.filter;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+
+/**
+ * @author HealerJean
+ * @version 1.0v
+ * @ClassName SpaceParamsFilter
+ * @Date 2019/9/29  14:33.
+ * @Description Josn请求空格过滤
+ */
+public class SpaceJsonFilter implements Filter {
+
+    private FilterConfig filterConfig;
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        this.filterConfig = filterConfig;
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws
+            IOException, ServletException {
+        filterChain.doFilter(new SpaceJsonHttpServletRequestWrapper(
+                (HttpServletRequest) servletRequest), servletResponse);
+    }
+
+    @Override
+    public void destroy() {
+        this.filterConfig = null;
     }
 }
 
@@ -67,11 +631,160 @@ public class SpaceHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
 
 
-### 2、空格过滤器
+##### 2.2.2、SpaceJsonHttpServletRequestWrapper
 
 
 
 ```java
+package com.hlj.proj.config.filter;
+
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.hlj.proj.dto.Demo.DemoDTO;
+import com.hlj.proj.utils.JsonUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.*;
+
+/**
+ * @author HealerJean
+ * @version 1.0v
+ * @ClassName SpaceParameHttpServletRequestWrapper
+ * @Date 2019/9/29  14:44.
+ * @Description
+ */
+public class SpaceJsonHttpServletRequestWrapper extends HttpServletRequestWrapper {
+
+    public SpaceJsonHttpServletRequestWrapper(HttpServletRequest servletRequest) throws IOException {
+        super(servletRequest);
+    }
+
+    /**
+     * 重写getInputStream方法  Json类型的请求参数必须通过流才能获取到值
+     */
+    @Override
+    public ServletInputStream getInputStream() throws IOException {
+        //非json类型，直接返回
+        if (!super.getHeader(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase(MediaType.APPLICATION_JSON_VALUE)) {
+            return super.getInputStream();
+        }
+        //为空，直接返回
+        String json = IOUtils.toString(super.getInputStream(), "utf-8");
+        if (StringUtils.isBlank(json)) {
+            return super.getInputStream();
+        }
+        json = JsonUtils.toJsonString(trimSpace(json));
+        ByteArrayInputStream bis = new ByteArrayInputStream(json.getBytes("utf-8"));
+        return new ServletInputStream() {
+            @Override
+            public int read() {
+                return bis.read();
+            }
+
+            @Override
+            public boolean isFinished() {
+                return false;
+            }
+
+            @Override
+            public boolean isReady() {
+                return false;
+            }
+
+            @Override
+            public void setReadListener(ReadListener readListener) {
+            }
+
+        };
+    }
+
+    public static Map<String, Object> trimSpace(String jsonString) {
+        Map<String, Object> map = new HashMap<>();
+        JSONObject jsonObject = JSONObject.parseObject(jsonString);
+        for (Object k : jsonObject.keySet()) {
+            Object o = jsonObject.get(k);
+            if (o instanceof JSONArray) {
+                List<Object> list = new ArrayList<>();
+                Iterator<Object> it = ((JSONArray) o).iterator();
+                while (it.hasNext()) {
+                    Object obj = it.next();
+                    if (obj instanceof JSONObject) {
+                        list.add(trimSpace(obj.toString()));
+                    } else {
+                        list.add(obj.toString().trim());
+                    }
+                }
+                map.put(k.toString(), list);
+            } else if (o instanceof JSONObject) {
+                // 如果内层是json对象的话，继续解析
+                map.put(k.toString(), trimSpace(o.toString()));
+            } else {
+                // 如果内层是普通对象的话，直接放入map中
+                map.put(k.toString(), o.toString().trim());
+            }
+        }
+        return map;
+    }
+}
+
+```
+
+
+
+##### 2.1.2.3、过滤器配置
+
+```java
+@Configuration
+public class WebMvcConfiguration implements WebMvcConfigurer {
+
+    @Bean
+    public FilterRegistrationBean spaceFilter() {
+        FilterRegistrationBean fitler = new FilterRegistrationBean();
+        fitler.setFilter(new SpaceFilter());
+        fitler.addUrlPatterns("/*");
+        fitler.setName("SpaceFilter");
+        fitler.setDispatcherTypes(DispatcherType.REQUEST);
+        return fitler;
+    }
+}
+
+```
+
+
+
+#### 2.1.3、结合上面二者 
+
+
+
+##### 2.1.3.1、SpaceFilter
+
+```java
+package com.hlj.proj.config.filter;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+
+/**
+ * @author HealerJean
+ * @version 1.0v
+ * @ClassName SpaceParamsFilter
+ * @Date 2019/9/29  14:33.
+ * @Description 空格过滤
+ */
 public class SpaceFilter implements Filter {
 
     private FilterConfig filterConfig;
@@ -98,20 +811,201 @@ public class SpaceFilter implements Filter {
 
 
 
-### 3、过滤器初始化
+
+
+##### 2.1.3.2、SpaceHttpServletRequestWrapper
+
+
+
+```java
+package com.hlj.proj.config.filter;
+
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.hlj.proj.utils.JsonUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.*;
+
+/**
+ * @author HealerJean
+ * @version 1.0v
+ * @ClassName SpaceParameHttpServletRequestWrapper
+ * @Date 2019/9/29  14:44.
+ * @Description
+ */
+public class SpaceHttpServletRequestWrapper extends HttpServletRequestWrapper {
+
+    public SpaceHttpServletRequestWrapper(HttpServletRequest servletRequest) throws IOException {
+        super(servletRequest);
+    }
+
+    @Override
+    public String[] getParameterValues(String parameter) {
+        String[] values = super.getParameterValues(parameter);
+        if (values == null) {
+            return new String[0];
+        }
+        int count = values.length;
+        String[] encodedValues = new String[count];
+        for (int i = 0; i < count; i++) {
+            encodedValues[i] = values[i].trim();
+        }
+        return encodedValues;
+    }
+
+    @Override
+    public String getParameter(String name) {
+        String value = super.getParameter(name);
+        if (value == null) {
+            return null;
+        }
+        return value.trim();
+    }
+
+    /**
+     * 重写getInputStream方法  Json类型的请求参数必须通过流才能获取到值
+     */
+    @Override
+    public ServletInputStream getInputStream() throws IOException {
+        //非json类型，直接返回
+        if (!super.getHeader(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase(MediaType.APPLICATION_JSON_VALUE)) {
+            return super.getInputStream();
+        }
+        //为空，直接返回
+        String json = IOUtils.toString(super.getInputStream(), "utf-8");
+        if (StringUtils.isBlank(json)) {
+            return super.getInputStream();
+        }
+        json = JsonUtils.toJsonString(trimSpace(json));
+        ByteArrayInputStream bis = new ByteArrayInputStream(json.getBytes("utf-8"));
+        return new ServletInputStream() {
+            @Override
+            public int read() {
+                return bis.read();
+            }
+
+            @Override
+            public boolean isFinished() {
+                return false;
+            }
+
+            @Override
+            public boolean isReady() {
+                return false;
+            }
+
+            @Override
+            public void setReadListener(ReadListener readListener) {
+            }
+        };
+    }
+
+    public static Map<String, Object> trimSpace(String jsonString) {
+        Map<String, Object> map = new HashMap<>();
+        JSONObject jsonObject = JSONObject.parseObject(jsonString);
+        for (Object k : jsonObject.keySet()) {
+            Object o = jsonObject.get(k);
+            if (o instanceof JSONArray) {
+                List<Object> list = new ArrayList<>();
+                Iterator<Object> it = ((JSONArray) o).iterator();
+                while (it.hasNext()) {
+                    Object obj = it.next();
+                    if (obj instanceof JSONObject) {
+                        list.add(trimSpace(obj.toString()));
+                    } else {
+                        list.add(obj.toString().trim());
+                    }
+                }
+                map.put(k.toString(), list);
+            } else if (o instanceof JSONObject) {
+                // 如果内层是json对象的话，继续解析
+                map.put(k.toString(), trimSpace(o.toString()));
+            } else {
+                // 如果内层是普通对象的话，直接放入map中
+                map.put(k.toString(), o.toString().trim());
+            }
+        }
+        return map;
+    }
+}
+
+```
+
+
+##### 2.1.3.3、配置过滤器
 
 ```java
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
-    @Bean
-    public FilterRegistrationBean spaceFilter() {
+  @Bean
+    public FilterRegistrationBean spaceJsonFilter() {
         FilterRegistrationBean fitler = new FilterRegistrationBean();
         fitler.setFilter(new SpaceFilter());
-        fitler.addUrlPatterns("/*");
-        fitler.setName("SpaceFilter");
+        fitler.addUrlPatterns("/hlj/*");
+        fitler.setName("SpaceJsonFilter");
         fitler.setDispatcherTypes(DispatcherType.REQUEST);
         return fitler;
+    }
+}
+```
+
+
+
+
+
+### 2.2、Xss攻击过滤器
+
+
+
+#### 2.2.1、XssFilter
+
+
+
+```java
+package com.hlj.proj.config.filter;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+
+
+/**
+ * @author HealerJean
+ * @ClassName XssFilter
+ * @Date 2019/11/21  17:38.
+ * @Description 防Xss攻击Filter ，只能阻止普通的http请求，不能阻止Json请求，如果需要组织Json请求则需要按照空格过滤器一样进行配置
+ */
+public class XssFilter implements Filter {
+
+    private FilterConfig filterConfig;
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        this.filterConfig = filterConfig;
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws
+            IOException, ServletException {
+        filterChain.doFilter(new XssHttpServletRequestWrapper(
+                (HttpServletRequest) servletRequest), servletResponse);
+    }
+
+    @Override
+    public void destroy() {
+        this.filterConfig = null;
     }
 }
 
@@ -119,7 +1013,261 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
 
 
+#### 2.2.2、SpaceParameHttpServletRequestWrapper
 
+
+
+```java
+package com.hlj.proj.config.filter;
+
+
+import org.apache.commons.lang3.StringEscapeUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+
+
+public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
+
+    public XssHttpServletRequestWrapper(HttpServletRequest servletRequest) {
+        super(servletRequest);
+    }
+
+    /**
+     * 只有确定的controller才回访问这里
+     */
+    @Override
+    public String[] getParameterValues(String parameter) {
+        String[] values = super.getParameterValues(parameter);
+        if (values == null) {
+            return new String[0];
+        }
+        int count = values.length;
+        String[] encodedValues = new String[count];
+        for (int i = 0; i < count; i++) {
+            encodedValues[i] = cleanXSS(values[i]);
+        }
+        return encodedValues;
+    }
+
+    @Override
+    public String getParameter(String parameter) {
+        String value = super.getParameter(parameter);
+        if (value == null) {
+            return null;
+        }
+        return cleanXSS(value);
+    }
+
+    @Override
+    public String getHeader(String name) {
+        String value = super.getHeader(name);
+        if (value == null) {
+            return null;
+        }
+        return cleanXSS(value);
+    }
+
+    private String cleanXSS(String value) {
+        return StringEscapeUtils.escapeXml10(value);
+    }
+}
+
+```
+
+
+
+#### 2.2.3、配置过滤器
+
+```java
+@Configuration
+public class WebMvcConfiguration implements WebMvcConfigurer {
+
+ @Bean
+    public FilterRegistrationBean xssSqlFilter() {
+        FilterRegistrationBean fitler = new FilterRegistrationBean();
+        fitler.setFilter(new XssFilter());
+        fitler.addUrlPatterns("/hlj/*");
+        fitler.setName("XssFilter");
+        fitler.setDispatcherTypes(DispatcherType.REQUEST);
+        return fitler;
+    }
+}
+```
+
+
+
+
+
+## 3、实用拦截器
+
+
+
+### 3.1、打印访问日志 
+
+```java
+@Component
+@Slf4j
+public class UrlInterceptor implements HandlerInterceptor {
+
+    @Override
+    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
+        log.info("admin:请求地址:[{}];访问ip:[{}]", httpServletRequest.getRequestURL(), IpUtil.getIp());
+        return true;
+    }
+
+}
+```
+
+
+
+### 3.2、自定义注解方法请求次数限制 
+
+
+
+
+
+#### 3.2.1、设置默认方法允许进入的次数
+
+```java
+@Documented
+@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface EntryTimes {
+
+    /**
+     * 方法允许进入的次数
+     * @return
+     */
+    int value() default 1;
+
+    /**
+     * 可以的前缀 url前缀
+     * @return
+     */
+    String prefix() default "";
+}
+
+```
+
+
+
+#### 3.2.2、aop拦截
+
+```java
+import com.duodian.admore.zhaobutong.annotation.EntryTimes;
+import com.duodian.admore.zhaobutong.bean.Code;
+import com.duodian.admore.zhaobutong.bean.Response;
+import com.duodian.admore.zhaobutong.util.AesUtils;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * 控制每个用户访问Controller方法的次数
+ * Created by fengchuanbo on 2017/5/25.
+ */
+@Aspect
+@Component
+public class MethodEntryTimesLimitInterceptor {
+
+    private static final String METHOD_CAN_ENTRY_TIMES_KEY = "method:entry:times:";
+
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
+    /**
+     * 需要有 EntryTimes 标注，并且第一个参数需要是 AuthUser才可以
+     * @param pjp
+     * @return
+     * @throws Throwable
+     */
+    @Around("@annotation(com.duodian.admore.zhaobutong.annotation.EntryTimes)")
+    public Object aroundAdvice(ProceedingJoinPoint pjp) throws Throwable {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String token = request.getParameter("token");
+        String aes = AesUtils.LoginDecrypt(token);
+        Long userId = Long.valueOf(aes.split("#")[0]);
+        MethodSignature signature = (MethodSignature) pjp.getSignature();
+        Method method = signature.getMethod();
+        EntryTimes annotation = method.getAnnotation(EntryTimes.class);
+        int times = annotation.value();
+        String key = METHOD_CAN_ENTRY_TIMES_KEY + ":" + annotation.prefix() + ":" +  userId;
+        // 没有整个方法使用一个redis链接，是为了方式方法执行时间过长一直占用redis链接。
+        Long increment = getEntryTimes(key);
+        Object retVal;
+        try {
+            // 放在try里面，才能执行finally
+            if (increment > times){
+                // 设置十秒钟超时，防止finally在系统崩溃或重启时没有执行造成用户不能操作。
+                expireKey(key,10);
+                return Response.of(Code.ACTION_FREQUENT);
+            }
+            //调用核心逻辑
+            retVal = pjp.proceed();
+        }finally {
+            deleteKey(key);
+        }
+        return retVal;
+    }
+
+    private Long getEntryTimes(String key){
+        return stringRedisTemplate.opsForValue().increment(key,1);
+    }
+
+    private void deleteKey(String key){
+        stringRedisTemplate.delete(key);
+    }
+//添加缓存紧急数据的增加
+    private void expireKey(String key, int seconds){
+        stringRedisTemplate.boundValueOps(key).expire(seconds, TimeUnit.SECONDS);
+    }
+}
+
+
+//或者可以参考 opt项目
+    public Long increase(final String key,final Long seconds){
+        return redisTemplate.execute(new RedisCallback<Long>() {
+            @Override
+            public Long doInRedis(RedisConnection redisConnection) throws DataAccessException {
+                redisConnection.select(DB_INDEX);
+                byte[] keyBytes = stringRedisSerializer.serialize(key);
+
+                Long val = redisConnection.incr(keyBytes);
+                redisConnection.expire(keyBytes,seconds);
+                return val;
+            }
+        });
+    }
+
+
+public String getRunStatus(){
+    return redisTemplate.execute(new RedisCallback<String>() {
+        public String doInRedis(RedisConnection redisConnection) throws DataAccessException {
+            redisConnection.select(DB_INDEX);
+
+            byte[] result = redisConnection.get(stringRedisSerializer.serialize(KEY));
+            return stringRedisSerializer.deserialize(result);
+        }
+    });
+}
+
+
+```
+
+
+
+   
 
 
 

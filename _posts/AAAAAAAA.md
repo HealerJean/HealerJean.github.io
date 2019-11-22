@@ -20,11 +20,10 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 
 
+**前言**
 
-## 前言
-
-#### [博主github](https://github.com/HealerJean)
-#### [博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)    
+[博主github](https://github.com/HealerJean)
+[博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)    
 
 
 

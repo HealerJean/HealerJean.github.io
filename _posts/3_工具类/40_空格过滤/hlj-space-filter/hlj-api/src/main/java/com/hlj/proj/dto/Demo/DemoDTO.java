@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 /**
  * @author HealerJean
  * @version 1.0v
@@ -18,7 +20,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @ApiModel(value = "demo实体类")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DemoDTO   {
+public class DemoDTO {
 
     @ApiModelProperty(value = "demo 主键", hidden = true)
     private Long id;
@@ -34,26 +36,8 @@ public class DemoDTO   {
 
     @ApiModelProperty(value = "邮箱")
     private String email;
-
-    @ApiModelProperty(value = "是否删除，10可用，99删除 ", hidden = true)
-    private String delFlag;
-
-    @ApiModelProperty(value = "创建人", hidden = true)
-    private Long createUser;
-
-    @ApiModelProperty(value = "创建人名字", hidden = true)
-    private String createName;
-
-    @ApiModelProperty(value = "创建时间", hidden = true)
-    private java.util.Date createTime;
-
-    @ApiModelProperty(value = "更新人", hidden = true)
-    private Long updateUser;
-
-    @ApiModelProperty(value = "更新人名称", hidden = true)
-    private String updateName;
-
-    @ApiModelProperty(hidden = true)
-    private java.util.Date updateTime;
-
+    //
+    // private List<String> listString;
+    //
+    // private List<SpaceDTO> spaceDTOS;
 }

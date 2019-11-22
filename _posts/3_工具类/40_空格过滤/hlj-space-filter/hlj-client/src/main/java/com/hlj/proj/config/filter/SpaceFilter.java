@@ -7,9 +7,9 @@ import java.io.IOException;
 /**
  * @author HealerJean
  * @version 1.0v
- * @ClassName SpaceFilter
+ * @ClassName SpaceParamsFilter
  * @Date 2019/9/29  14:33.
- * @Description
+ * @Description 空格过滤
  */
 public class SpaceFilter implements Filter {
 

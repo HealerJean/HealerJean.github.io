@@ -28,9 +28,7 @@ public class D01NetSfJson {
      * 2、JSONArray中获取 JSONObject对象
      * 3、判断JSONObject是否是数组，是否存在节点
      * 4、简单遍历 JSONObject
-     * 5、遍历JSONArray
-     *  5.1.、遍历正常JSONArray
-     *  5.2、遍历String集合的JSONArray
+     * 5、遍历JSONArray（（数组或者Json等都可以用它））
      */
     @Test
     public void test1() {
@@ -82,9 +80,9 @@ public class D01NetSfJson {
             log.info("key：【 {} 】,value：【 {} 】", key, value);
         }
 
-        //5.1.、遍历正常JSONArray
+        //5.1.、遍历JSONArray（（数组或者Json等都可以用它））
         log.info("------------------------------------------------");
-        log.info("5.1.、遍历正常JSONArray");
+        log.info("5.1.、遍历JSONArray（（数组或者Json等都可以用它））");
         Iterator iteratorCompany = companyJSONArray.iterator();
         while (iteratorCompany.hasNext()) {
             Object object = iteratorCompany.next();
@@ -92,34 +90,38 @@ public class D01NetSfJson {
         }
 
 
-        //5.2、遍历String集合的JSONArray
-        log.info("------------------------------------------------");
-        log.info("5.2、遍历String集合的JSONArray");
-        Iterator iteratorCar = strJsonArrayy.iterator();
-        while (iteratorCar.hasNext()) {
-            Object object = iteratorCar.next();
-            log.info("object：【 {} 】", object);
-        }
 
-
-        // jsonString：【 {"reqSn":"91904783a0974f06a7e8afbfb61b24b2","code":200,"msg":"Success","transDate":1572354600148,"integer":100,"bigDecimal":100,"user":{"userId":1,"userName":"HealerJean"},"strList":["奔驰","宝马"],"companys":[{"companyId":1,"companyName":"汽车公司"},{"companyId":2,"companyName":"房产公司"}]} 】 [39]
-        //         ------------------------------------------------ [43]
-        // 1、从JSONObject中获取简单数据 [44]
-        // msg：【 Success 】 [50]
-        // code：【 200 】 [51]
-        // userJsonObject：【 {"userId":1,"userName":"HealerJean"} 】 [52]
-        // companyJsonArray：【 [{"companyId":1,"companyName":"汽车公司"},{"companyId":2,"companyName":"房产公司"}] 】 [53]
-        // strJsonArrayy：【 ["奔驰","宝马"] 】 [54]
-        //         ------------------------------------------------ [57]
-        // 2、JSONArray中获取 JSONObject对象 [58]
-        // company0：【 {"companyId":1,"companyName":"汽车公司"} 】 [60]
-        //         ------------------------------------------------ [68]
-        // 3、判断JSONObject是否是数组，是否存在节点 [69]
-        // flagArray：【 true 】 [73]
-        // flag：【 true 】 [74]
-        // flagContainsKey：【 true 】 [75]
-        //         ------------------------------------------------ [78]
-        // 4、简单遍历 JSONObject [79]
+        // jsonString：【 {"reqSn":"f20b7c4901734a638b9c6ed5e5249f8d","code":200,"msg":"Success","transDate":1574339468774,"integer":100,"bigDecimal":100,"user":{"userId":1,"userName":"HealerJean"},"strList":["奔驰","宝马"],"companys":[{"companyId":1,"companyName":"汽车公司"},{"companyId":2,"companyName":"房产公司"}]} 】[39]
+        //         ------------------------------------------------[43]
+        // 1、从JSONObject中获取简单数据[44]
+        // msg：【 Success 】[50]
+        // code：【 200 】[51]
+        // userJsonObject：【 {"userId":1,"userName":"HealerJean"} 】[52]
+        // companyJsonArray：【 [{"companyId":1,"companyName":"汽车公司"},{"companyId":2,"companyName":"房产公司"}] 】[53]
+        // strJsonArrayy：【 ["奔驰","宝马"] 】[54]
+        //         ------------------------------------------------[57]
+        // 2、JSONArray中获取 JSONObject对象[58]
+        // company0：【 {"companyId":1,"companyName":"汽车公司"} 】[60]
+        //         ------------------------------------------------[68]
+        // 3、判断JSONObject是否是数组，是否存在节点[69]
+        // flagArray：【 true 】[73]
+        // flag：【 true 】[74]
+        // flagContainsKey：【 true 】[75]
+        //         ------------------------------------------------[78]
+        // 4、简单遍历 JSONObject[79]
+        // key：【 reqSn 】,value：【 f20b7c4901734a638b9c6ed5e5249f8d 】[82]
+        // key：【 code 】,value：【 200 】[82]
+        // key：【 msg 】,value：【 Success 】[82]
+        // key：【 transDate 】,value：【 1574339468774 】[82]
+        // key：【 integer 】,value：【 100 】[82]
+        // key：【 bigDecimal 】,value：【 100 】[82]
+        // key：【 user 】,value：【 {"userId":1,"userName":"HealerJean"} 】[82]
+        // key：【 strList 】,value：【 ["奔驰","宝马"] 】[82]
+        // key：【 companys 】,value：【 [{"companyId":1,"companyName":"汽车公司"},{"companyId":2,"companyName":"房产公司"}] 】[82]
+        //         ------------------------------------------------[86]
+        // 5.1.、遍历JSONArray（（数组或者Json等都可以用它））[87]
+        // object：【 {"companyId":1,"companyName":"汽车公司"} 】[91]
+        // object：【 {"companyId":2,"companyName":"房产公司"} 】[91]
 
     }
 

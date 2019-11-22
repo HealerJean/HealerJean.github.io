@@ -27,26 +27,74 @@ import org.springframework.web.bind.annotation.*;
 })
 @Api(description = "demo控制器")
 @Controller
-@RequestMapping("hlj")
+@RequestMapping("hlj/demo")
 @Slf4j
 public class DemoController {
 
     @Autowired
     private DemoEntityService demoEntityService;
 
-
-    @ApiOperation(value = "添加demo实体",
-            notes = "添加demo实体",
+    @ApiOperation(value = "get-param",
+            notes = "get-param",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE,
             response = DemoDTO.class)
-    @GetMapping(value = "demo/get", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "getParam", produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE)
+    @ResponseBody
+    public ResponseBean getParam(String param) {
+        log.info("样例--------GET请求------请求参数{}", param);
+        return ResponseBean.buildSuccess((param));
+    }
+
+
+    @ApiOperation(value = "get",
+            notes = "get",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE,
+            response = DemoDTO.class)
+    @GetMapping(value = "get", produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE)
     @ResponseBody
     public ResponseBean get(DemoDTO demoDTO) {
-        log.info("样例--------GET请求------数据信息{}", demoDTO);
+        log.info("样例--------GET请求------请求参数{}", demoDTO);
         return ResponseBean.buildSuccess(demoEntityService.getMmethod(demoDTO));
     }
 
+    @ApiOperation(value = "post",
+            notes = "post",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE,
+            response = DemoDTO.class)
+    @PostMapping(value = "post", produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE)
+    @ResponseBody
+    public ResponseBean post(@RequestBody DemoDTO demoDTO) {
+        log.info("样例--------POST请求------请求参数{}", demoDTO);
+        return ResponseBean.buildSuccess(demoDTO);
+    }
+
+    @ApiOperation(value = "postForm",
+            notes = "postForm",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE,
+            response = DemoDTO.class)
+    @PostMapping(value = "postForm", produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE)
+    @ResponseBody
+    public ResponseBean postForm(DemoDTO demoDTO) {
+        log.info("样例--------postForm请求------请求参数{}", demoDTO);
+        return ResponseBean.buildSuccess(demoDTO);
+    }
+
+
+    @ApiOperation(value = "无参数GET",
+            notes = "无参数GET",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE,
+            response = DemoDTO.class)
+    @GetMapping(value = "demo/noparam", produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE)
+    @ResponseBody
+    public ResponseBean noparam() {
+        log.info("样例--------GET请求------请求参数{}");
+        return ResponseBean.buildSuccess("无参数");
+    }
 
 
 }

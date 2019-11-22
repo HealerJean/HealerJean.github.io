@@ -37,9 +37,10 @@ public class D01_Jackson {
      * String类型 node.textValue()  node.asText() node.toString()
      * Integer类型 node.intValue()  asInt()
      * BigDecimal类型 node.decimalValue() ,所以一般建议使用 基本类型Value()
-     * 1.2、判断是不是数组（对象数组或者普通数组），判断是不是对象,判断是否拥有某个节点
+     * 1.2、判断是不是数组（对象数组或者普通数组，普通数据值），判断是不是对象,判断是否拥有某个节点
      * 1.3、简单遍历JsonNode , 获取key的迭代集  rootNode.fieldNames()
      * 1.4、遍历 JsonNode（数组或者Json等都可以用它）
+     * 1.5、遍历某个JsonNode的key和value(value可能是字符串也可能是子jsonNode，但如果value是jsonNode数组的话，是无法读取的)
      */
     @Test
     public void test1() {
@@ -79,10 +80,12 @@ public class D01_Jackson {
         log.info("2、判断是不是数组（对象数组或者普通数组），判断是不是对象,判断是否拥有某个节点");
         Boolean flagObject = userJsonNode.isObject();
         Boolean flagArray = strJsonNodeArray.isArray();
+        Boolean flagValue =  userJsonNode.isValueNode();
         Boolean exist = rootNode.has(CommonConstants.msg);
 
         log.info("flagObject：【 {} 】", flagObject);
         log.info("flagArray：【 {} 】", flagArray);
+        log.info("flagValue：【 {} 】", flagValue);
         log.info("exist：【 {} 】", exist);
 
 
@@ -102,8 +105,16 @@ public class D01_Jackson {
         log.info("------------------------------------------------");
         log.info("4、遍历 JsonNode（数组或者Json等都可以用它）");
         for (JsonNode jsonNode : companyJsonNodeArray) {
-            log.info("jsonNode：【 {} 】", jsonNode.toString());
+            log.info("jsonNode1：【 {} 】", jsonNode.toString());
         }
+
+        // 5、遍历某个JsonNode的key和value(value可能是字符串也可能是子jsonNode，但如果value是jsonNode数组的话，是无法读取的)
+        Iterator<Map.Entry<String, JsonNode>> jsonNodes = companyJsonNodeArray.fields();
+        while (jsonNodes.hasNext()) {
+            Map.Entry<String, JsonNode> jsonNode = jsonNodes.next();
+            log.info("jsonNode2：【 {} 】", jsonNode.toString());
+        }
+
 
 
         // jsonString：【 {"reqSn":"9f2aa3a63dcb493b97accc5fd4eee169","code":200,"msg":"Success","transDate":1572347467277,"integer":100,"bigDecimal":100,"user":{"userId":1,"userName":"HealerJean"},"strList":["奔驰","宝马"],"companys":[{"companyId":1,"companyName":"汽车公司"},{"companyId":2,"companyName":"房产公司"}]} 】 [35]
@@ -121,6 +132,7 @@ public class D01_Jackson {
         // 3、判断是不是数组（对象数组或者普通数组），判断是不是对象,判断是否拥有某个节点 [66]
         // flagObject：【 true 】 [75]
         // flagArray：【 true 】 [74]
+        // flagValue：【 false 】
         // exist：【 true 】 [79]
         //         ------------------------------------------------ [83]
         // 3、简单遍历JsonNode , 获取key的迭代集  rootNode.fieldNames() [84]
