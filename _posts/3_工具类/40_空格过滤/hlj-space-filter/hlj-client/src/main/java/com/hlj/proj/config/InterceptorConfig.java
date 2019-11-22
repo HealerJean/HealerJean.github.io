@@ -1,6 +1,7 @@
 package com.hlj.proj.config;
 
 import com.hlj.proj.config.filter.SpaceFilter;
+import com.hlj.proj.config.filter.XssFilter;
 import com.hlj.proj.config.interceptor.UrlInterceptor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.annotation.Resource;
 import javax.servlet.DispatcherType;
@@ -19,7 +19,6 @@ import javax.servlet.DispatcherType;
  * 日期:  2018/11/8 下午3:57.
  * 类描述:
  */
-
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
 
@@ -45,14 +44,42 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
 
     /**过滤器配置 ，配置了过滤器会让swagger失效，所以我后来讲swagger的路径修改为了/develop/swagge  */
+    // @Bean
+    // public FilterRegistrationBean spaceParamsFilter() {
+    //     FilterRegistrationBean fitler = new FilterRegistrationBean();
+    //     fitler.setFilter(new SpaceParamsFilter());
+    //     fitler.addUrlPatterns("/hlj/*");
+    //     fitler.setName("SpaceParamsFilter");
+    //     fitler.setDispatcherTypes(DispatcherType.REQUEST);
+    //     return fitler;
+    // }
+    // @Bean
+    // public FilterRegistrationBean spaceJsonFilter() {
+    //     FilterRegistrationBean fitler = new FilterRegistrationBean();
+    //     fitler.setFilter(new SpaceJsonFilter());
+    //     fitler.addUrlPatterns("/hlj/*");
+    //     fitler.setName("SpaceJsonFilter");
+    //     fitler.setDispatcherTypes(DispatcherType.REQUEST);
+    //     return fitler;
+    // }
+
     @Bean
-    public FilterRegistrationBean spaceFilter() {
+    public FilterRegistrationBean spaceJsonFilter() {
         FilterRegistrationBean fitler = new FilterRegistrationBean();
         fitler.setFilter(new SpaceFilter());
         fitler.addUrlPatterns("/hlj/*");
-        fitler.setName("SpaceFilter");
+        fitler.setName("SpaceJsonFilter");
         fitler.setDispatcherTypes(DispatcherType.REQUEST);
         return fitler;
     }
 
+    @Bean
+    public FilterRegistrationBean xssSqlFilter() {
+        FilterRegistrationBean fitler = new FilterRegistrationBean();
+        fitler.setFilter(new XssFilter());
+        fitler.addUrlPatterns("/hlj/*");
+        fitler.setName("XssFilter");
+        fitler.setDispatcherTypes(DispatcherType.REQUEST);
+        return fitler;
+    }
 }
