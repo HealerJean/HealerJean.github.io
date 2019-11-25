@@ -10,6 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+
 /**
  * @author HealerJean
  * @version 1.0v
@@ -50,9 +53,9 @@ public class DemoController {
     @ApiOperation(value = "get",
             notes = "get",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DemoDTO.class)
-    @GetMapping(value = "get", produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE)
+    @GetMapping(value = "get", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public ResponseBean get(DemoDTO demoDTO) {
         log.info("样例--------GET请求------请求参数{}", demoDTO);
@@ -62,9 +65,9 @@ public class DemoController {
     @ApiOperation(value = "post",
             notes = "post",
             consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DemoDTO.class)
-    @PostMapping(value = "post", produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE)
+    @PostMapping(value = "post", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public ResponseBean post(@RequestBody DemoDTO demoDTO) {
         log.info("样例--------POST请求------请求参数{}", demoDTO);
@@ -74,11 +77,13 @@ public class DemoController {
     @ApiOperation(value = "postForm",
             notes = "postForm",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DemoDTO.class)
-    @PostMapping(value = "postForm", produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE)
+    @PostMapping(value = "postForm",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseBean postForm(DemoDTO demoDTO) {
+    public ResponseBean postForm(DemoDTO demoDTO, HttpServletRequest request) throws IOException {
         log.info("样例--------postForm请求------请求参数{}", demoDTO);
         return ResponseBean.buildSuccess(demoDTO);
     }
@@ -87,9 +92,9 @@ public class DemoController {
     @ApiOperation(value = "无参数GET",
             notes = "无参数GET",
             consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DemoDTO.class)
-    @GetMapping(value = "demo/noparam", produces = MediaType.APPLICATION_PROBLEM_JSON_UTF8_VALUE)
+    @GetMapping(value = "demo/noparam", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public ResponseBean noparam() {
         log.info("样例--------GET请求------请求参数{}");
