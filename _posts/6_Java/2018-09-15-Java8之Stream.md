@@ -15,27 +15,29 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 ## 前言
 
-对我而言，为什么要引入stream，傻子都知道，不好用，还引入干什么for 循环遍历不太好，for循环是形式,\for循环不是进行过滤的必要手段，这里使用stream进行过滤更高效
+对我而言，为什么要引入stream，傻子都知道，不好用，还引入干什么for 循环遍历不太好，for循环是形式,\for循环不是进行过滤的必要手段，这里使用stream进行过滤更高效  
 
-<font color="red"> 
+
 
 
 ### 1、stream是一次使用的，阅后即焚
-### 2、stream方法会返回方法本身
+### 2、stream方法会返回方法本身   
 
-* Stram当中的方法可以分为下面的两类
-* 1、链式方法，返回值任然是Stream接口自身，支持链式调用，只是在进行函数模型拼接
-* 2、终结方法，返回值不在是Stram接口自身，不支持链式滴啊用，会将所有操作都触发（比如Count，forEach）
-
-* Stram 本身不是集合，并不会存储任何元素，本身就是一个函数模型，Stream和labmda一样也有延迟执行的效果
+**Stram 本身不是集合，并不会存储任何元素，本身就是一个函数模型，Stream和labmda一样也有延迟执行的效果**
 
 
-</font>
+
+* **1、链式方法，返回值任然是Stream接口自身，支持链式调用，只是在进行函数模型拼接**   
+* **2、终结方法，返回值不在是Stram接口自身，不支持链式滴啊用，会将所有操作都触发（比如Count，forEach）**
+
+
+
+
 
 
 ## 1、获取Stram的3种方法
 
-### 1.1、1、通过Collection
+### 1.1、Collection
 
 
 ```java
@@ -65,7 +67,7 @@ public class Demo02GetStream {
 
 ```
 
-### 1.2、通过Map
+### 1.2、Map
 
 ```java
 
@@ -100,12 +102,15 @@ public class Demo02GetStream {
 
 ```
 
-### 1.3、通过数组
+### 1.3、数组
 
-1、通过数组 推荐使用Arrays.stream 数组也用的不过，String类型最多
-2、Stream.of(ints)，或者可以使用快捷键 alt+enter自动补全
+**1、通过数组 推荐使用Arrays.stream 数组也用的不过，String类型最多**    
 
- 
+**2、Stream.of(ints)，或者可以使用快捷键 alt+enter自动补全**   
+
+
+
+
 ```java
 package com.hlj.java8.Stream;
 
@@ -140,9 +145,16 @@ public class Demo02GetStream {
 ```
 
 
-## 1、filter：过滤
 
-### 参数是一个predicate 断言 也就是能产生boolean结果的过滤规则,
+## 2、基本方法 
+
+
+
+### 2.1、filter：过滤
+
+> **解释：参数是一个predicate 断言 也就是能产生boolean结果的过滤规则,**   
+
+
 
 
 ```java
@@ -200,7 +212,8 @@ public class Demo01Filter {
 ```
 
 
-## 2、Count：统计stream 执行结果的个数
+
+### 2.2、Count：统计stream 执行结果的个数   
 
 
 
@@ -239,7 +252,12 @@ public class Demo03Count {
 ```
 
 
-## 3、Limit：获取执行结果的前几个 ,，返回值为Stream
+
+
+
+### 2.3、Limit：获取执行结果的前几个 ,，返回值为Stream   
+
+
 
 
 ```java
@@ -282,7 +300,7 @@ public class Demo04Limit {
 
 ```
 
-## 4、skip： skip跳过执行结果的前几个，返回值为Stream
+### 2.4、skip： skip跳过执行结果的前几个，返回值为Stream
 
 
 ```java
@@ -327,9 +345,14 @@ public class Demo05Skip {
 
 ```
 
-##  5、Map：steam映射方法Map，如果希望进行映射操作，使用功能Map方法，，返回值为Stream，
+### 2.5、Map： 映射操作
 
-### 参数是一个Function ,返回结果
+  
+
+> 参数是一个Function ,返回结果   
+>
+> 如果希望进行映射操作，使用功能Map方法，，返回值为Stream，
+
 
 
 
@@ -412,14 +435,13 @@ public class Demo06Map {
 
     }
 
-//    @Test //Demo10Element 类中测试
 
 }
 
 
 ```
 
-## 6、Concat ： Stream.concat 可以可以将两个集合合并成一个整体
+### 2.6、Concat ： Stream.concat 可以可以将两个集合合并成一个整体
 
 
 ```java
@@ -474,9 +496,9 @@ public class Demo07Concat {
 
 ```
 
-## 7、ForEach ：如果希望对流当中的元素，进行逐一挨个处理，（return）
+### 2.7、ForEach：如果希望对流当中的元素，进行逐一挨个处理
 
-#### 参数是一个Consumer接口(方法，lambda，方法引用)
+> 解释：参数是一个Consumer接口(方法，lambda，方法引用)
 
 
 ```java
@@ -561,7 +583,7 @@ public class Demo08ForEach {
     /**
      * for 循环不能终止
      *
-     * 它里面有一个消费者，消费者里面 结束了，但是不能结束for，使用return则是进行下一个数据进行消费
+     * 它里面有一个消费者，消费者里面结束了，但是不能结束for，使用return则是进行下一个数据进行消费
      *    default void forEach(Consumer<? super T> action) {
      *         Objects.requireNonNull(action);
      *         for (T t : this) {
@@ -577,7 +599,6 @@ public class Demo08ForEach {
         list.add("c");
 
 
-
         list.forEach(s->{
             if(StringUtils.equals("a",s )){
               return; //这里的return 相当于continue没有结束循环，而是继续下一个
@@ -586,14 +607,6 @@ public class Demo08ForEach {
 
         });
 
-        System.out.println("-------------------");
-        list.stream().forEach(s->{
-            if(StringUtils.equals("a",s )){
-                return; //这里的return 相当于continue没有结束循环，而是继续下一个
-            }
-            System.out.println(s);
-        });
-
 
     }
 
@@ -604,86 +617,16 @@ public class Demo08ForEach {
 
 ```
 
-## 8、简单练习
-
-
-```java
-package com.hlj.java8.Stream;
-
-import com.hlj.java8.Stream.Demo10ElementPack.Person;
-import org.junit.Test;
-import sun.security.acl.PermissionImpl;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-/**
- * @Desc:
- * @Author HealerJean
- * @Date 2018/9/14  上午11:48.
- */
-public class Demo10Element {
-
-    /**
-     * 1、第一个队伍只要名字为3个字的成员名字
-     * 2、第一个队伍筛选之后只要前三个人
-     * 3、第二个队伍只要姓张的成员姓名
-     * 4、第二个队伍筛选之后不要前两个人
-     * 5、将两个队伍合并为一个队伍
-     * 6、根据性别创建Person对象
-     * 打印整个队伍的Person对象信息
-     */
-    @Test
-    public void demo(){
-        List<String> listOne = new ArrayList<>();
-        listOne.add("迪丽热巴");
-        listOne.add("老子");
-        listOne.add("庄子");
-        listOne.add("丁春秋");
-        listOne.add("习近平");
-        listOne.add("天山童姥");
-        listOne.add("张无忌");
-
-        List<String> listTwo = new ArrayList<>();
-        listTwo.add("古力娜扎");
-        listTwo.add("张宇晋");
-        listTwo.add("张翠山");
-        listTwo.add("张飞");
-        listTwo.add("宋远桥");
-        listTwo.add("包不同");
-
-
-        listOne.stream().filter(s->s.length()==0)
-                        .limit(3);
-        listTwo.stream().filter(s->s.startsWith("张"))
-                            .skip(2);
-
-    List<Person>  personList  =  Stream.concat(
-                listOne.stream().filter(s->s.length()==3).limit(3),
-                listTwo.stream().filter(s->s.startsWith("张")).skip(2))
-                .map(Person::new).collect(Collectors.toList());
-
-        System.out.println(personList);
-        /**
-         [Person{name='丁春秋'}, Person{name='习近平'}, Person{name='张无忌'}, Person{name='张飞'}]
-         */
-
-    }
-}
-
-
-```
-
-
-## 9、并发流的获取和使用
-
-### 打印不是按照顺序进行的
-
-####  * 1、直接获取并发流 list.parallelStream()
  
-#### * 2、list.stream().parallel().先获取普通流，然后变成并发的 
+
+### 2.8、并发流
+
+
+
+> + 直接获取并发流 list.parallelStream()
+> + list.stream().parallel().先获取普通流，然后变成并发的   
+
+
 
 ```java
 package com.hlj.java8.Stream;
@@ -732,10 +675,17 @@ public class Demo11Concurrence {
 
 ```
 
+### 2.9、collect：     
 
-## 10、collect：当中收集集合需要用到collect方法，方法的参数是一个Collector接口
 
-#### Collector接口通常不需要自己实现，借助工具类中的  Collectors.toList() Collectors.toSet() 即可
+
+> **解释 ：当中收集集合需要用到collect方法，方法的参数是一个Collector接口     ，Collector接口通常不需要自己实现，借助工具类中的  Collectors.toList() Collectors.toSet() 即可**     
+
+
+
+#### 2.9.1、收集成Collection
+
+
 
 ```java
 package com.hlj.java8.Stream;
@@ -780,52 +730,39 @@ public class Demo12Collect {
 
 ```
 
+#### 2.9.2、收集成map
 
-## 11、解决泛型数组的限制
+
+##### 2.9.2.1、返回对象中的某一个属性 `Map<String, Map<String, Double>>`
+
 
 
 ```java
-package com.hlj.java8.Stream;
-
-import com.hlj.Arraylist.ArraylistTest;
-import com.hlj.arithmetic.Array;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
-/**
- * @Desc:解决泛型数组的限制
- * @Author HealerJean
- * @Date 2018/9/14  上午11:48.
- */
-public class Demo13Array {
-
-    @Test
-    public void demo(){
-
-        Stream<String> stream = Stream.of("aaa","BBB","CCC");
-        String[] strings = stream.toArray(String[]::new);//数组的构造器引用 和zMap中的Person::new有点像
-
-
-	//数据转换为集合
-	String[] arrays = new String[]{"a", "b", "c"};
-	List<String> list = Arrays.stream(arrays).collect(Collectors.toList());
-	
-	
-	//集合转换为数组
-	strings = list.stream().toArray(String[]::new);
-
-
-
-    }
+//getScores Map<String, Double>
+public Map<String, Map<String, Double>> toConcurrentMapTest(List<Student> students){
+    return students.stream()
+        .collect(Collectors.toConcurrentMap(Student::getName, Student::getScores));
 }
-
 ```
 
 
-## 12、distinct 去重
+
+##### 2.9.2.2、返回对象 `Map<Long, ScfSysRole>`  
+
+
+
+```java
+Map<Long, ScfSysRole> map = sysRoles.stream()
+    .collect(Collectors.toMap(item -> item.getId(), item -> item));
+```
+
+
+
+
+
+### 2.10、distinct 去重  
+
+
 
 ```java
 List<Person> result = list.stream()
@@ -833,11 +770,15 @@ List<Person> result = list.stream()
                     .collect(toList());
 ```
 
-## 13、anyMatch：是否匹配任一元素,allMatch:是否匹配所有元素,noneMatch：是否不匹配的所有元素
 
 
+### 2.11、anyMatch：   
 
-### 参数是一个predicate 断言 也就是能产生boolean结果的过滤规则,返回的是true，或者false
+> **解释 ： 是否匹配任一元素,allMatch:是否匹配所有元素,noneMatch：是否不匹配的所有元素**  
+>
+> **使用：参数是一个predicate 断言 也就是能产生boolean结果的过滤规则,返回的是true，或者false**
+
+
 
 ```java
 
@@ -883,139 +824,96 @@ public class Demo14AnyMatch {
 
 ```
 
-## 14、findAny：能够从流中随便选一个元素出来，它返回一个Optional类型的元素。
+### 2.12、findAny、findFirst ：  
 
-### 14.2、findFirst ：返回集合的第一个对象 返回结果是Optional
+> 能够从流中随便选一个元素出来，它返回一个Optional类型的元素。
+
+
+
+### 2.13、findFirst ：返回集合的第一个对象 返回结果是Optional  
+
+
 
 ```java
-Optional<Person> person = list.stream()
-                                    .findAny();
+Optional<Person> person = list.stream().findAny();
 ```
 
 
-## 15、reduce求和
 
 
-```java
-int age = list.stream().reduce(0, Integer::sum);
-		
-
-```
-
-## 16、min和max ，返回结果是Optional
 
 
-```java
-package com.hlj.java8.Stream;
+## 3、groupby 分组
 
-import org.junit.Test;
+### 3.1、分组计数  
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+#### 3.1.1、分组计数：根据对象中某一属性分组 `Map<String,Long>`    
 
-/**
- * @Desc:
- * @Author HealerJean
- * @Date 2018/9/14  上午11:48.
- */
-public class Demo15MaxMin {
-
-    @Test
-    public void demo(){
-
-        List<Long> list = new ArrayList<>();
-        list.add(1L);
-        list.add(2L);
-
-        Optional<Long> max = list.stream().max((o1, o2)->o1.compareTo(o2));
-        System.out.println(max);
-    }
-    
-    
-    
-    
-     /**
-     *
-     *  返回身高最高的学生
-     */
-    public Student maxByTest(List<Student> students) {
-        return students.stream()
-                .collect(maxBy(Comparator.comparingDouble(Student::getHeight)))
-                .get();
-    }
-    
-    /**
-     * 
-     * 返回体重最轻的学生。
-     */
-    public Student minByTest(List<Student> students) {
-        return students.stream()
-                .collect(minBy(Comparator.comparingDouble(Student::getWeight)))
-                .get();
-    }
-    
-}
-
-
-```
-
-
-## 17、groupby 分组
-
-### 17.1、分组计数
+> 根据某个属性分组计数
 
 ```java
-
-//1.分组计数
 List<Student> list1= Arrays.asList(
       new Student(1,"one","zhao"),new Student(2,"one","qian"),new Student(3,"two","sun"));
       
-// 1 根据某个属性分组计数
-Map<String,Long> result1=list1.stream()
-    .collect(Collectors.groupingBy(Student::getGroupId,Collectors.counting()));
-                
 
-// 2 根据整个实体对象分组计数,当其为String时常使用
+Map<String,Long> result1=list1.stream()
+    .collect(                                    
+   	 Collectors.groupingBy(Student::getGroupId,Collectors.counting()));
+                
+```
+
+
+
+#### 17.1.2、分组计数：根据实体对象分组 
+
+> 根据整个实体对象分组计数,当其为String时常使用
+
+```java
+
+List<Student> list1= Arrays.asList(
+      new Student(1,"one","zhao"),new Student(2,"one","qian"),new Student(3,"two","sun"));
+
+
 Map<Student,Long> result2=list1.stream()
-     .collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
+     .collect(
+    	Collectors.groupingBy(Function.identity(),Collectors.counting()));
 
 
 ```
 
 
-### 17.2、按照某一个属性分组
+### 3.2、按照某一个属性分组
+
+#### 3.2.1、通过某一个属性将学生分组到List中 `Map<String, List<Student>>`  
 
 
-+ 通过省份将学生分组到List中。
 
 ```java
 
-
 public Map<String, List<Student>> groupingByToList(List<Student> students){
    return students.stream()
-           .collect(Collectors.groupingBy(student -> student.getFrom())); //默认是toList
+           .collect(Collectors.groupingBy(Student::getFrom)); //默认是toList
         //.collect(Collectors.groupingBy(student -> student.getFrom(),toList()));
-
 }
 
 
 ```
 
-+ 通过省份将学生分组到Set中。
+#### 3.2.2、通过某一个属性将学生分组到Set中 `Map<String, Set<Student>>`
 
 
 
 ```java
-
- public Map<String, Set<Student>> groupingByToSet(List<Student> students){
+public Map<String, Set<Student>> groupingByToSet(List<Student> students){
         return students.stream()
                 .collect(groupingBy(Student::getFrom, toSet()));
-    }
+}
     
 ```
 
-+ 通过省份将学生分组到Set中。并返回一个TreeMap.
+
+
+#### 3.2.3、通过某一个属性将学生分组到Set中。.`Map<String, Set<Student>>`,并返回一个TreeMap
 
 
 
@@ -1028,7 +926,11 @@ public Map<String, List<Student>> groupingByToList(List<Student> students){
     
 ```
 
-+ 以省份分组，并返回学生姓名的集合。
+
+
+#### 3.2.4、以某一个属性分组，并返回学生姓名的集合`Collectors.mapping`。 `Map<String, List<String>>`
+
+
 
 
 ```java
@@ -1046,39 +948,181 @@ public Map<String, List<Student>> groupingByToList(List<Student> students){
 
 
 
-## 18、求平均值
+## 4、集合元素拼接
 
+
+
+### 4.1、Collectors.joining    
+
+ **将字符串结果用逗号隔开**  
 
 ```java
+public String joining(List<Student> students) {
+		return students.stream()
+				.map(Student::getName)
+				.collect(Collectors.joining(", "));
+	}
+```
 
-public double averagingDoubleTest(List<Student> students) {
-   Objects.requireNonNull(students, "The parameter cannot be empty");
-   return students.stream()
-           .collect(Collectors.averagingDouble(student -> student.getHeight()));
-}
-@Test //171.77272727272728
-public void averagingDoubleTestCase() {
-   System.out.println(collectors.averagingDoubleTest(students));
+
+
+### 4.2、collectingAndThen() 收集之后继续做一些处理。 
+
+> **第一个参数注意，一定是类似于colect后面收集集合对象的参数，而不能是item那种**
+
+```java
+@Test
+public void testCollectingAndThan(){
+    List<String> list2 = Arrays.asList("a", "b", "c");
+    // Collectors.joining(",")的结果是：a,b,c  然后再将结果 x + "d"操作, 最终返回a,b,cd
+    String str= Stream.of("a", "b", "c").
+        collect(Collectors.collectingAndThen(Collectors.joining(","), x -> x + "d"));
+
 }
 
 
 ```
 
-## 19、获取一个map一对一属性
+
+
+## 5、元素聚合  
+
+
+
+### 5.1、maxBy 、minBy  
+
 
 
 ```java
+    @Test
+    public void demo(){
 
-  public Map<String, Date> toMapTest(List<Student> students){
+        List<Long> list = new ArrayList<>();
+        list.add(1L);
+        list.add(2L);
+        Optional<Long> max = list.stream().max((o1, o2)->o1.compareTo(o2));
+        System.out.println(max);
+    }
+    List<Integer> list = Arrays.asList(1, 2, 3); 
+
+    
+    
+    /**
+     *
+     *  返回身高最高的学生
+     */
+    public Student maxByTest(List<Student> students) {
         return students.stream()
-                .collect(toMap(Student::getName, Student::getBirthday));
+                .collect(maxBy(Comparator.comparingDouble(Student::getHeight)))
+                .get();
     }
 
+    Integer maxValue = list.stream().
+        collect(Collectors.collectingAndThen(
+            Collectors.maxBy((a, b) -> a - b), Optional::get));
 
-// 获取主键的map
-Map<Long, ScfSysRole> map = sysRoles.stream().collect(Collectors.toMap(item -> item.getId(), item -> item));
+    
+    /**
+     * 
+     * 返回体重最轻的学生。
+     */
+    public Student minByTest(List<Student> students) {
+        return students.stream()
+                .collect(minBy(Comparator.comparingDouble(Student::getWeight)))
+                .get();
+        
+    }
+
+    Integer minValue = 	list.stream().
+        collect(Collectors.collectingAndThen(
+            Collectors.minBy((a, b) -> a - b), Optional::get));
+
+}
 
 ```
+
+
+
+
+
+### 5.2、`Collectors.averagingDouble`,平均值 
+
+```java
+return students.stream()
+           .collect(Collectors.averagingDouble(student -> student.getHeight()));
+```
+
+
+
+### 5.3、reduce求和  
+
+
+
+```java
+int age = list.stream().reduce(0, Integer::sum);
+		
+
+Integer sumValue = list.stream().collect(Collectors.summingInt(item -> item));
+```
+
+
+
+
+
+### 5.4、mapping   
+
+> **映射：先对集合中的元素进行映射，然后再对映射的结果使用Collectors操作**
+
+
+
+```java
+Stream.of("a", "b", "c").collect(
+        Collectors.mapping(x -> x.toUpperCase(), Collectors.joining(",")));
+    
+// A,B,C
+```
+
+
+
+
+
+## 6、项目使用 
+
+
+
+### 6.1、去重 
+
+#### 6.1.1、单一属性去重
+
+```java
+List<Person> unique = persons.stream().collect(
+            Collectors.collectingAndThen(
+                    Collectors.toCollection(
+                    () -> new TreeSet<>(Comparator.comparing(Person::getName))), 
+                    ArrayList::new)
+);
+
+```
+
+
+
+#### 6.1.2、多个属性去重 
+
+
+
+```java
+// 根据name,sex两个属性去重
+List<Person> unique = persons.stream().collect(
+           Collectors. collectingAndThen(
+                    Collectors.toCollection(
+                        () -> new TreeSet<>(Comparator.comparing(
+                            					o -> o.getName() + ";" + o.getSex()))), 
+               			ArrayList::new)
+);
+
+```
+
+
 
 
 
@@ -1087,7 +1131,8 @@ Map<Long, ScfSysRole> map = sysRoles.stream().collect(Collectors.toMap(item -> i
 
 
 
-<br/><br/><br/>
+​    
+
 如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，添加博主微信哦， 请下方留言吧。可与博主自由讨论哦
 
 |支付包 | 微信|微信公众号|

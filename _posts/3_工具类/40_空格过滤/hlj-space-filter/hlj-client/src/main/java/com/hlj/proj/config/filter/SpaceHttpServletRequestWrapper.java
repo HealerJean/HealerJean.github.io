@@ -4,17 +4,16 @@ package com.hlj.proj.config.filter;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hlj.proj.utils.JsonUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 /**
@@ -26,9 +25,26 @@ import java.util.*;
  */
 public class SpaceHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
+    private byte[] body;
+
+    /**
+     * 预先出初始化数据
+     */
     public SpaceHttpServletRequestWrapper(HttpServletRequest servletRequest) throws IOException {
         super(servletRequest);
+        BufferedReader reader = servletRequest.getReader();
+        String line = null;
+        StringBuilder sb = new StringBuilder();
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
+        }
+        String json = sb.toString();
+        if (StringUtils.isNotBlank(json)) {
+            json = JsonUtils.toJsonString(trimSpace(json));
+        }
+        body = json.getBytes("utf-8");
     }
+
 
     @Override
     public String[] getParameterValues(String parameter) {
@@ -53,22 +69,17 @@ public class SpaceHttpServletRequestWrapper extends HttpServletRequestWrapper {
         return value.trim();
     }
 
+    @Override
+    public BufferedReader getReader() throws IOException {
+        return new BufferedReader(new InputStreamReader(getInputStream()));
+    }
+
     /**
      * 重写getInputStream方法  Json类型的请求参数必须通过流才能获取到值
      */
     @Override
-    public ServletInputStream getInputStream() throws IOException {
-        //非json类型，直接返回
-        if (!super.getHeader(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase(MediaType.APPLICATION_JSON_VALUE)) {
-            return super.getInputStream();
-        }
-        //为空，直接返回
-        String json = IOUtils.toString(super.getInputStream(), "utf-8");
-        if (StringUtils.isBlank(json)) {
-            return super.getInputStream();
-        }
-        json = JsonUtils.toJsonString(trimSpace(json));
-        ByteArrayInputStream bis = new ByteArrayInputStream(json.getBytes("utf-8"));
+    public ServletInputStream getInputStream() {
+        ByteArrayInputStream bis = new ByteArrayInputStream(body);
         return new ServletInputStream() {
             @Override
             public int read() {
@@ -88,8 +99,10 @@ public class SpaceHttpServletRequestWrapper extends HttpServletRequestWrapper {
             @Override
             public void setReadListener(ReadListener readListener) {
             }
+
         };
     }
+
 
     public static Map<String, Object> trimSpace(String jsonString) {
         Map<String, Object> map = new HashMap<>();
@@ -118,4 +131,7 @@ public class SpaceHttpServletRequestWrapper extends HttpServletRequestWrapper {
         }
         return map;
     }
+
+
+
 }

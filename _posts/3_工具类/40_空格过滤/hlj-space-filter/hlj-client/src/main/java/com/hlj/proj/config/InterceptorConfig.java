@@ -64,11 +64,11 @@ public class InterceptorConfig implements WebMvcConfigurer {
     // }
 
     @Bean
-    public FilterRegistrationBean spaceJsonFilter() {
+    public FilterRegistrationBean spaceFilter() {
         FilterRegistrationBean fitler = new FilterRegistrationBean();
         fitler.setFilter(new SpaceFilter());
         fitler.addUrlPatterns("/hlj/*");
-        fitler.setName("SpaceJsonFilter");
+        fitler.setName("SpaceFilter");
         fitler.setDispatcherTypes(DispatcherType.REQUEST);
         return fitler;
     }
