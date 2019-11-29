@@ -15,7 +15,7 @@ import java.io.IOException;
 @Slf4j
 public class RequestFilter implements Filter {
 
-    private FilterConfig filterConfig ;
+    private FilterConfig filterConfig;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -26,19 +26,6 @@ public class RequestFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws
             IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        log.info("request.getHeader(\"host\")： 【{}】", request.getHeader("host"));
-        ////localhost:8081  test.healerjean.cn
-
-        log.info("request.getServerName() ：【{}】", request.getServerName());
-        //localhost    test.healerjean.cn
-
-        log.info("request.getQueryString() ：【{}】", request.getQueryString());
-
-
-        log.info("request.getContentType ： 【{}】", request.getContentType());
-
-        String name = request.getParameter("name");
-
         filterChain.doFilter(new ReuqestFiterHttpServletRequestWrapper(request), servletResponse);
     }
 

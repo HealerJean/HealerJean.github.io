@@ -57,7 +57,7 @@ public interface Sender {
 #### 1.2.1、发送实现类1`MailSender`
 
 
-```
+```java
 public class MailSender implements Sender {  
     @Override  
     public void Send() {  

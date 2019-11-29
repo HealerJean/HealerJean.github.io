@@ -28,7 +28,7 @@ import java.io.IOException;
         @ApiResponse(code = 403, message = "禁止访问"),
         @ApiResponse(code = 404, message = "url错误")
 })
-@Api(description = "demo控制器")
+@Api(description = "demo控制器", value = "DEMO")
 @Controller
 @RequestMapping("hlj/demo")
 @Slf4j
