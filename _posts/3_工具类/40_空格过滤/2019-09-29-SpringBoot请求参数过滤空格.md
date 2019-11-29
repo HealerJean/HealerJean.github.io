@@ -96,9 +96,9 @@ public class Filter_1 implements Filter {
 
 ### 1.3、启动顺序 
 
-**谁先配置，谁先启动，DispatcherServlet之后那就顺序反过来执行了，具体看测试结果**
++ **谁先配置，谁先启动，DispatcherServlet之后那就顺序反过来执行了，具体看测试结果**
 
-
++ **order(2)， 数字越小，越先执行**
 
 
 
