@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class Table {
+public class TableData {
     private String one;
     private String two;
     private String three;
