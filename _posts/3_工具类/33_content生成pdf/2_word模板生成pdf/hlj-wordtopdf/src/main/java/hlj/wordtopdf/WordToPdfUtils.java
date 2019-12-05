@@ -13,7 +13,7 @@ import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import lombok.Data;
 import org.apache.poi.xwpf.converter.pdf.PdfConverter;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -132,7 +132,6 @@ public class WordToPdfUtils {
     public void createPdf(OutputStream outputStream) {
         try {
             Options options = Options.getTo(ConverterTypeTo.PDF).via(ConverterTypeVia.XWPF);
-            this.ixDocReport.setFieldsMetadata(this.fieldsMetadata);
             this.ixDocReport.convert(this.iContext, options, outputStream);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -148,6 +147,81 @@ public class WordToPdfUtils {
     }
 
 
+    /**
+     * 替换word中的字符串
+     *
+     * @param map      其中，key--替换的标记    value--替换的值
+     */
+    public static void replaceAll(InputStream source, OutputStream target, Map<String, String> map) {
+        try {
+            XWPFDocument doc = new XWPFDocument(source);
+
+            //处理段落
+            //------------------------------------------------------------------
+            List<XWPFParagraph> paragraphs = doc.getParagraphs();
+            for (XWPFParagraph paragraph : paragraphs) {
+                List<XWPFRun> runs = paragraph.getRuns();
+                for (XWPFRun run : runs) {
+                    String text = run.getText(0);
+                    if (text != null) {
+                        boolean isSetText = false;
+                        for (Map.Entry<String, String> entry : map.entrySet()) {
+                            String key = entry.getKey();
+                            String value = entry.getValue();
+                            if (text.indexOf(key) != -1) {
+                                isSetText = true;
+                                text = text.replaceAll(key, value);
+                            }
+                            if (isSetText) {
+                                run.setText(text, 0);
+                            }
+                        }
+
+                    }
+
+                }
+            }
+
+            //------------------------------------------------------------------
+
+            //处理表格
+            //------------------------------------------------------------------
+            List<XWPFTable> tables = doc.getTables();
+            for (XWPFTable table : tables) {
+                List<XWPFTableRow> rows = table.getRows();
+                for (XWPFTableRow row : rows) {
+                    List<XWPFTableCell> cells = row.getTableCells();
+                    for (XWPFTableCell cell : cells) {
+
+                        String text = cell.getText();
+                        if (text != null) {
+                            for (Map.Entry<String, String> entry : map.entrySet()) {
+                                String key = entry.getKey();
+                                String value = entry.getValue();
+                                if (text.equals(key)) {
+                                    //删除原单元格值
+                                    cell.removeParagraph(0);
+                                    //设置新单元格的值
+                                    cell.setText(value);
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            PdfConverter.getInstance().convert(doc, target, null);
+
+            //------------------------------------------------------------------
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static void main(String[] args) {
         try {
             File template = new File("D:/pdf/template.docx");
@@ -155,6 +229,9 @@ public class WordToPdfUtils {
             Map<String, Object> map = new HashMap<>();
             // 1、普通字符
             map.put("word", "helloWord");
+            map.put("nihao", "nihao");
+            map.put("kkk", "kkk");
+
             //  2、对象
             Person person = new Person("HealerJean", "25", "男");
             map.put("person", person);
@@ -177,10 +254,12 @@ public class WordToPdfUtils {
             OutputStream outputStream = new FileOutputStream(outputFile);
             wordToPdfUtils.createPdf(outputStream);
 
-            //生成word
+            // 生成word
             // File wordOutputFile = new File("D:/pdf/ok_template.docx");
             // OutputStream outputStream = new FileOutputStream(wordOutputFile);
             // wordToPdfUtils.createWord(outputStream);
+
+
 
 
         } catch (Exception e) {
