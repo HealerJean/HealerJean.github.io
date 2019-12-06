@@ -1,4 +1,4 @@
-package hlj.wordtopdf;
+package hlj.wordtopdf.xdocreport;
 
 import fr.opensagres.xdocreport.converter.ConverterTypeTo;
 import fr.opensagres.xdocreport.converter.ConverterTypeVia;
@@ -11,6 +11,8 @@ import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
+import hlj.wordtopdf.Person;
+import hlj.wordtopdf.TableData;
 import lombok.Data;
 import org.apache.poi.xwpf.converter.pdf.PdfConverter;
 import org.apache.poi.xwpf.usermodel.*;
@@ -147,80 +149,6 @@ public class WordToPdfUtils {
     }
 
 
-    /**
-     * 替换word中的字符串
-     *
-     * @param map      其中，key--替换的标记    value--替换的值
-     */
-    public static void replaceAll(InputStream source, OutputStream target, Map<String, String> map) {
-        try {
-            XWPFDocument doc = new XWPFDocument(source);
-
-            //处理段落
-            //------------------------------------------------------------------
-            List<XWPFParagraph> paragraphs = doc.getParagraphs();
-            for (XWPFParagraph paragraph : paragraphs) {
-                List<XWPFRun> runs = paragraph.getRuns();
-                for (XWPFRun run : runs) {
-                    String text = run.getText(0);
-                    if (text != null) {
-                        boolean isSetText = false;
-                        for (Map.Entry<String, String> entry : map.entrySet()) {
-                            String key = entry.getKey();
-                            String value = entry.getValue();
-                            if (text.indexOf(key) != -1) {
-                                isSetText = true;
-                                text = text.replaceAll(key, value);
-                            }
-                            if (isSetText) {
-                                run.setText(text, 0);
-                            }
-                        }
-
-                    }
-
-                }
-            }
-
-            //------------------------------------------------------------------
-
-            //处理表格
-            //------------------------------------------------------------------
-            List<XWPFTable> tables = doc.getTables();
-            for (XWPFTable table : tables) {
-                List<XWPFTableRow> rows = table.getRows();
-                for (XWPFTableRow row : rows) {
-                    List<XWPFTableCell> cells = row.getTableCells();
-                    for (XWPFTableCell cell : cells) {
-
-                        String text = cell.getText();
-                        if (text != null) {
-                            for (Map.Entry<String, String> entry : map.entrySet()) {
-                                String key = entry.getKey();
-                                String value = entry.getValue();
-                                if (text.equals(key)) {
-                                    //删除原单元格值
-                                    cell.removeParagraph(0);
-                                    //设置新单元格的值
-                                    cell.setText(value);
-                                }
-                            }
-                        }
-                    }
-
-                }
-            }
-
-            PdfConverter.getInstance().convert(doc, target, null);
-
-            //------------------------------------------------------------------
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     public static void main(String[] args) {
         try {
@@ -237,9 +165,9 @@ public class WordToPdfUtils {
             map.put("person", person);
 
             // 3、List表格
-            Table table1 = new Table("11", "12", "13");
-            Table table2 = new Table("21", "22", "23");
-            List<Table> table = new ArrayList<>();
+            TableData table1 = new TableData("11", "12", "13");
+            TableData table2 = new TableData("21", "22", "23");
+            List<TableData> table = new ArrayList<>();
             table.add(table1);
             table.add(table2);
             map.put("table", table);
@@ -258,7 +186,6 @@ public class WordToPdfUtils {
             // File wordOutputFile = new File("D:/pdf/ok_template.docx");
             // OutputStream outputStream = new FileOutputStream(wordOutputFile);
             // wordToPdfUtils.createWord(outputStream);
-
 
 
 

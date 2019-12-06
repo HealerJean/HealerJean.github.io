@@ -9,6 +9,7 @@ import com.deepoove.poi.data.builder.StyleBuilder;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.policy.AbstractRenderPolicy;
 import com.deepoove.poi.util.BytePictureUtils;
+import com.deepoove.poi.util.TableTools;
 import hlj.wordtopdf.Person;
 import hlj.wordtopdf.TableData;
 import org.junit.Test;
@@ -197,6 +198,8 @@ public class PoiTlMainTest {
         template.close();
 
     }
+
+
 
 
 }
