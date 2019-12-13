@@ -3,10 +3,10 @@ title: Github搭建Maven私服
 date: 2018-08-30 03:33:00
 tags: 
 - Maven
-- GitHub
+- Git
 category: 
 - Maven
-- GitHub
+- Git
 description: Github搭建Maven私服
 ---
 <!-- image url 
@@ -17,9 +17,13 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 ## 前言
 
-GitHub的强大，详细很多小伙伴们都知道了，下面我主要讲解的是两种jar包的上传，
-1、第一种是我们自己写的代码想提供给他人或者自己使用
-2、第二种是针对一些平台，比如阿里，百度等知名互联网他们提供的jar包制作成我们的maven包，
+GitHub的强大，详细很多小伙伴们都知道了，下面我主要讲解的是两种jar包的上传，   
+
+1、第一种是我们自己写的代码想提供给他人或者自己使用   
+
+2、第二种是针对一些平台，比如阿里，百度等知名互联网他们提供的jar包制作成我们的maven包     
+
+
 
 ### 1、生成自己的Maven私服
 
@@ -205,23 +209,81 @@ mvn packege
 
 
 
-## 2、jar上传到github制作依赖包
+## 2、jar制作依赖包 
+
+
+
+### 2.1、Jar上传到github制作依赖包
 
 参考下面的，将它先导入本地maven仓库，然后我们直接将生成的文件夹`taobao-sdk-java`上传到上面那个仓库中
 
-```xml
+
+
+```shell
 
 mvn install:install-file -Dfile=taobao-sdk-java-5.2.1.jar -DgroupId=com.healerjean.proj -DartifactId=taobao-api-20191021 -Dversion=1.0.1 -Dpackaging=jar  
  
+
+
+mvn install:install-file 
+-Dfile=taobao-sdk-java-5.2.1.jar 
+-DgroupId=com.healerjean.proj 
+-DartifactId=taobao-api-20191021 
+-Dversion=1.0.1 
+-Dpackaging=jar  
+```
+
+
+
+```xml
 
 <dependency>
     <groupId>com.healerjean.proj</groupId>
     <artifactId>taobao-api-20191021</artifactId>
     <version>1.0.1</version>
 </dependency>
-
-
 ```
+
+
+
+
+
+![1576203896508](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1576203896508.png)
+
+
+
+### 2.2、Jar上传到私服 
+
+
+
+#### 2.2.1、第一步，找到我们项目中deploy的项目在私服的那里 
+
+
+
+![1576204512982](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1576204512982.png)
+
+
+
+```shell
+mvn deploy:deploy-file -Dfile=scf-pdf-1.0.0-SNAPSHOT.jar -DgroupId=com.fintech -DartifactId=scf-pdf -Dversion=1.0.0-SNAPSHOT -Dpackaging=jar -Durl=http://nexus.healerjean..net/nexus/content/repositories/snapshots/ -DrepositoryId=snapshots
+
+
+mvn deploy:deploy-file 
+-Dfile=scf-pdf-1.0.0-SNAPSHOT.jar 
+-DgroupId=com.fintech 
+-DartifactId=scf-pdf 
+-Dversion=1.0.0-SNAPSHOT 
+-Dpackaging=jar 
+-Durl=http://nexus.healerjean..net/nexus/content/repositories/snapshots/ -DrepositoryId=snapshots
+```
+
+
+
+
+
+
+
+
 
 ## 3、解释下如何观察这个依赖包的pom Id如果确认
 
@@ -258,16 +320,14 @@ mvn install:install-file -Dfile=taobao-sdk-java-5.2.1.jar -DgroupId=com.healerje
 
 #### 1、groupId `com.healerjean.proj`
 #### 2、artifactId 工具类名字
-#### 3、版本 0.0.1（初始）
+#### 3、版本 1.0.0（初始）
 
 ```xml
 <dependency>
 	<groupId>com.healerjean.proj</groupId>
 	<artifactId>hlj-access-</artifactId>
-	<version>0.0.1</version>
+	<version>1.0.0</version>
 </dependency>
-
-
 
 ```
 
@@ -279,8 +339,8 @@ mvn install:install-file -Dfile=taobao-sdk-java-5.2.1.jar -DgroupId=com.healerje
 
 <distributionManagement>
     <repository>
-        <id>healerjean-managemaent_id</id>
-        <name>healerjean_managemaent_name</name>
+        <id>hlj-repo</id>
+        <name>hlj-reponame</name>
         <url>file://${project.build.directory}/${distributie.directory}</url>
     </repository>
 </distributionManagement>
@@ -295,7 +355,7 @@ mvn install:install-file -Dfile=taobao-sdk-java-5.2.1.jar -DgroupId=com.healerje
 
 <!--github仓库导入的-->
 <dependency>
-    <groupId>com.hlj.repo</groupId>
+    <groupId>com.healerjean.repo</groupId>
     <artifactId>test-github-maven</artifactId>
     <version>0.0.1</version>
 </dependency>

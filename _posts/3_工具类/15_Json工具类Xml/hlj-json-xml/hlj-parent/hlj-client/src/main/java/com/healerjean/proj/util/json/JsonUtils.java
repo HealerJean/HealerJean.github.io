@@ -95,13 +95,12 @@ public final class JsonUtils {
     public static <T> List<T> toArrayList(String json, Class<T> c) {
         JavaType javaType = OBJECT_MAPPER.getTypeFactory()
                 .constructParametricType(ArrayList.class, c);
-        List<T> t = null;
         try {
-            t = OBJECT_MAPPER.readValue(json, javaType);
+            List<T> t = OBJECT_MAPPER.readValue(json, javaType);
+            return t;
         } catch (IOException e) {
             throw new RuntimeException("参数格式有误");
         }
-        return t;
     }
 
     /**
