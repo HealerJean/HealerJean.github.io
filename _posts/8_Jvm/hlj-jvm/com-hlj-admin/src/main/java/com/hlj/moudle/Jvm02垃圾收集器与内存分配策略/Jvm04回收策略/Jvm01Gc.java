@@ -13,9 +13,11 @@ public class Jvm01Gc {
     public static void main(String[] args)
     {
         testAllocation();
-//        testPretenureSizeThreshold();
-//        testTenuringThreshold();
+       // testPretenureSizeThreshold();
+       // testTenuringThreshold();
     }
+
+
 
     /**
      * 1、对象有限在Eden分配
@@ -30,7 +32,7 @@ public class Jvm01Gc {
         allocation1 = new byte[2 * _1MB];    //申请两兆
         allocation2 = new byte[2 * _1MB];
         allocation3 = new byte[2 * _1MB];
-        //这里我们再eden已经申请了6M的空间，
+        //这里我们在eden已经申请了6M的空间，
         // 而实际上新生代大小是EDEN + 一个survivor= 9M  Eden=8M survivor两块分别1M（因为复制算法的原因）
         allocation4 = new byte[4 * _1MB];
     }
