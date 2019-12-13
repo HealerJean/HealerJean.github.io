@@ -37,11 +37,11 @@ public class VialidateController {
 
     @ApiOperation(value = "Post接口",
             notes = "Post接口",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = ResponseBean.class
     )
-    @PostMapping(value = "validate", produces = "application/json;charset=utf-8")
+    @PostMapping(value = "validate", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean post(@RequestBody JavaBean javaBean) {
         String validate = ValidateUtils.validate(javaBean, ValidateGroup.HealerJean.class);
         if (!"success".equals(validate)) {

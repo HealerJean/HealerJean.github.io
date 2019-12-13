@@ -7,6 +7,7 @@ import com.healerjean.proj.dto.Demo.DemoDTO;
 import com.healerjean.proj.common.ResponseBean;
 import com.healerjean.proj.common.enums.ResponseEnum;
 import com.healerjean.proj.common.exception.BusinessException;
+import com.healerjean.proj.util.json.JsonUtils;
 import com.healerjean.proj.util.validate.ValidateUtils;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -43,9 +44,9 @@ public class DemoController {
     @ApiOperation(value = "demo实体",
             notes = "demo实体",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DemoDTO.class)
-    @GetMapping(value = "demo/get", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "demo/get", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public ResponseBean get(DemoDTO demoDTO) {
         log.info("样例--------GET请求------数据信息{}", demoDTO);
@@ -56,6 +57,24 @@ public class DemoController {
         return ResponseBean.buildSuccess(demoEntityService.getMmethod(demoDTO));
     }
 
+
+
+    @ApiOperation(value = "demo实体",
+            notes = "demo实体",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = DemoDTO.class)
+    @PostMapping(value = "demo/post",consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public DemoDTO post(@RequestBody String message) {
+        log.info("样例--------post------数据信息{}", message);
+        DemoDTO demoDTO = JsonUtils.toObject(message, DemoDTO.class);
+        String validate = ValidateUtils.validate(demoDTO, ValidateGroup.HealerJean.class);
+        if (!validate.equals(CommonConstants.COMMON_SUCCESS)){
+            throw new BusinessException(ResponseEnum.参数错误,validate);
+        }
+        return  demoEntityService.getMmethod(demoDTO);
+    }
 
 
 }

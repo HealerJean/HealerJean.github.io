@@ -2,9 +2,9 @@
 title: GitHub评论Gitalk插件
 date: 2018-03-06 03:33:00
 tags: 
-- GitHub
+- Git
 category: 
-- GitHub
+- Git
 description: GitHub评论Gitalk插件
 ---
 <!-- image url 
