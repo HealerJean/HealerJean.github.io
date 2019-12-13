@@ -13,7 +13,7 @@ public class Jvm01ReferenceCountingGC {
 
     public Object instance = null;
 
-    private static  final int _1MB=1024 * 1024 ;
+    private static  final int _1MB= 1024  ;
 
     /**
      占点内存，以便在日志中看清楚是否被回收
