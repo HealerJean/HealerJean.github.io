@@ -43,7 +43,7 @@ public class ComHljQuartzApplication {
 ### 1.2、准备好定时器开始，执行吧
 
 
-```
+```java
 package com.hlj.quartz.normalschedule;
 
 import org.slf4j.Logger;
@@ -100,8 +100,9 @@ public class MyTaskAnnotation {
 
 > 两个任务共同时候用的同一个线程，也就是这里的定时器任务是串行的，也就是说spirngBoot定时器任务默认是串行的
 
+   
 
-<br/>
+
 
 ![WX20180322-184806](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-184806.png)
 
@@ -114,7 +115,7 @@ public class MyTaskAnnotation {
 
 ### 2.1、开启并行任务支持，进行任务执行器的配置
 
-```
+```java
 package com.hlj.quartz.normalschedule.config;
 
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
@@ -186,16 +187,45 @@ public class ScheduleConfig implements SchedulingConfigurer, AsyncConfigurer
 
 ```
 
-### 2.2、项目启动，开始观察控制台 
 
-发现了吧，定时器的线程改变了，变成多线程的样式，那么这里就代码是多线程喽。也就是实现并行了
+
+### 2.2、项目启动，开始观察控制台  
+
+
+
+**发现了吧，定时器的线程改变了，变成多线程的样式，那么这里就代码是多线程喽。也就是实现并行了**  
+
+
 
 ![WX20180322-185336](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-185336.png)
 
 
 ## [代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_22_1_springBoot%E6%99%AE%E9%80%9A%E5%AE%9A%E6%97%B6%E5%99%A8/com-hlj-schedule.zip)
 
-<br/><br/><br/>
+​     
+
+
+
+## 3、注解解释 
+
+
+
+### 3.1、fixedDelay
+
+fixedDelay控制方法执行的间隔时间，是以上一次方法执行完开始算起，如上一次方法执行阻塞住了，那么直到上一次执行完，并间隔给定的时间后，执行下一次。
+
+### 3.2、fixedRate
+
+fixedRate是按照一定的速率执行，是从上一次方法执行开始的时间算起，如果上一次方法阻塞住了，下一次也是不会执行，但是在阻塞这段时间内累计应该执行的次数，当不再阻塞时，一下子把这些全部执行掉，而后再按照固定速率继续执行。  
+
+### 3.3、cron
+
+cron表达式可以定制化执行任务，但是执行的方式是与fixedDelay相近的，也是会按照上一次方法结束时间开始算起。
+
+
+
+
+
 如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
 
 |支付包 | 微信|微信公众号|
