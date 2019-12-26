@@ -1,5 +1,7 @@
 package com.hlj.moudle.Jvm02垃圾收集器与内存分配策略.Jvm04回收策略;
 
+import org.junit.Test;
+
 /**
  * @Description
  * @Author HealerJean
@@ -12,30 +14,13 @@ public class Jvm01Gc {
 
     public static void main(String[] args)
     {
-        testAllocation();
        // testPretenureSizeThreshold();
        // testTenuringThreshold();
     }
 
 
 
-    /**
-     * 1、对象有限在Eden分配
-     * 参数：-verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8
-     * 输出gc日志， 堆内存初始化大小20M，堆内存最大20M，新生代大小10M，那么剩余分配给老年代就是10M， 输出GC的详细日志，
-     * Eden的区域是一个survivor区域的8倍 就是说比为 8：1 也就是说新生代做多能后去到 8M
-     */
-    public static void testAllocation()
-    {
-        byte[] allocation1, allocation2, allocation3, allocation4;
 
-        allocation1 = new byte[2 * _1MB];    //申请两兆
-        allocation2 = new byte[2 * _1MB];
-        allocation3 = new byte[2 * _1MB];
-        //这里我们在eden已经申请了6M的空间，
-        // 而实际上新生代大小是EDEN + 一个survivor= 9M  Eden=8M survivor两块分别1M（因为复制算法的原因）
-        allocation4 = new byte[4 * _1MB];
-    }
 
     /**
         2、大对象应该直接放到老生代中
