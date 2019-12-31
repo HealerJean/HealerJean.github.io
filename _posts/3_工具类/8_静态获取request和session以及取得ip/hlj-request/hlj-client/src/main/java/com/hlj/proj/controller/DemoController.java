@@ -53,7 +53,7 @@ public class DemoController {
 
     @ApiOperation(value = "postJson",
             notes = "postJson",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DemoDTO.class)
     @PostMapping(value = "postJson", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -81,7 +81,7 @@ public class DemoController {
 
     @ApiOperation(value = "无参数GET",
             notes = "无参数GET",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DemoDTO.class)
     @GetMapping(value = "demo/noparam", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

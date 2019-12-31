@@ -1,6 +1,7 @@
 package com.hlj.proj.config;
 
 import com.hlj.proj.config.filter.RequestFilter;
+import com.hlj.proj.config.interceptor.RefererInterceptor;
 import com.hlj.proj.config.interceptor.UrlInterceptor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +24,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     @Resource
     private UrlInterceptor urlInterceptor;
-
+    @Resource
+    private RefererInterceptor refererInterceptor;
     /**
      *  swagger增加url映射
      * @param registry
@@ -37,6 +39,11 @@ public class InterceptorConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(urlInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/develop/swagger/**");
+
+
+        registry.addInterceptor(refererInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/develop/swagger/**");
     }
