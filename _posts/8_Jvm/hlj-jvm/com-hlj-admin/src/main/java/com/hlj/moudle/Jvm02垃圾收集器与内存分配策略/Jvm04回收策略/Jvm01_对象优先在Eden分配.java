@@ -10,12 +10,11 @@ import org.junit.Test;
  */
 public class Jvm01_对象优先在Eden分配 {
 
-    private static final int _1MB = 1024 * 1024;
 
     /**
      * 1、对象优先在Eden分配
-     * -verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8
-     *
+     * -Xms20M -Xmx20M -Xmn10M -XX:SurvivorRatio=8 -verbose:gc -XX:+PrintGCDetails -XX:+UseSerialGC
+     * <p>
      * 参数解释：
      * -Xms20M -Xmx20M：Java堆大小为20M  不可扩展（Xms表示初始Java堆大小 Xmx为Java堆最大 这里设置相等，就表明不可以扩展，一般建议如此设置）
      * -Xmn10M ：表示分给新生代 （下面表示分给新生到10M，那么剩余的就分配给了老年代）
@@ -23,20 +22,12 @@ public class Jvm01_对象优先在Eden分配 {
      */
     public static void main(String[] args) {
 
-        byte[] allocation1, allocation2, allocation3, allocation4;
-
-        // 申请两兆,eden总共8M 直接分配到eden中，此时eden还剩6M
-        allocation1 = new byte[2 * _1MB];
-
-        // 申请两兆,eden总共8M ，剩余6M 直接分配到eden中，此时eden还剩4M
-        allocation2 = new byte[2 * _1MB];
-
-        // 申请两兆,eden总共8M ，剩余4M 直接分配到eden中，此时eden还剩2M
-        allocation3 = new byte[2 * _1MB];
-
-        // 申请4兆，此时eden还剩2M，已经使用了6M，肯定放不下下面的的了，就会提前发生Minor GC，这3个对象现在是存活的，我们想放到Survivor中，
-        // 但是Survivor才1M放不下，所以只能通过空间分配担保机制讲eden中的6M放到老年代中，然后将下面的4M放到了eden中，这个时候
-        allocation4 = new byte[4 * _1MB];
+        byte[] b1 = new byte[2*1024*1024];
+        byte[] b2 = new byte[2*1024*1024];
+        byte[] b3 = new byte[2*1024*1024];
+        byte[] b4 = new byte[4*1024*1024];
+        //一定要加这个，日志分析更完整
+        System.gc();
     }
 
 
