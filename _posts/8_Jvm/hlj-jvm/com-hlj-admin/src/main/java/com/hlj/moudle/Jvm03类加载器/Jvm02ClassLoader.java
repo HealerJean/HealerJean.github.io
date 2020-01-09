@@ -17,7 +17,6 @@ public class Jvm02ClassLoader {
     public  void testClassLoader (){
 
         ClassLoader classLoader = Jvm02Test.class.getClassLoader();
-
         System.out.println("ClassLoader is:" + classLoader.toString());
         // ClassLoader is:sun.misc.Launcher$AppClassLoader@18b4aac2
     }
