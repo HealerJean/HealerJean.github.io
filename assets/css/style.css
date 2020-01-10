@@ -1170,7 +1170,7 @@ article .article-content ul li > code, article .article-content ol li > code, ar
 article .article-content p {
     line-height: 2;
     margin-top: .7em;
-    font-size: 1.3em;
+    /*font-size: 1.3em;*/
     margin-bottom: 1em;
 }
 
