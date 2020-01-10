@@ -14,11 +14,11 @@ public class Jvm03ClassLoaderTest {
         // TODO Auto-generated method stub
 
         //创建自定义classloader对象。
-        Jvm03DiskClassLoader diskLoader = new Jvm03DiskClassLoader("/Users/healerjean/Desktop");
+        Jvm03DiskClassLoader diskLoader = new Jvm03DiskClassLoader("D:\\study\\HealerJean.github.io\\_posts\\8_Jvm\\hlj-jvm\\com-hlj-admin\\src\\main\\java");
         try {
             //加载class文件
             Class c = diskLoader.loadClass("com.hlj.moudle.Jvm03类加载器.Jvm02Test");
-
+            System.out.println(diskLoader.getParent());
             if (c != null) {
                 try {
                     Object obj = c.newInstance();
