@@ -1,6 +1,6 @@
 ---
 
-title: 6.1、Java的client模式和server模式
+title: Java的client模式和server模式
 date: 2018-03-06 03:33:00
 tags: 
 - JVM
