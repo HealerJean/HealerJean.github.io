@@ -1176,11 +1176,11 @@ article .article-content p {
 
 @media only screen and (min-width: 1024px) {
     article .article-content p {
-        margin-top: 1em
     }
 }
 
 article .article-content img, article .article-content video, article .article-content figure img {
+    margin-top: 1em
     max-width: 100%;
     height: auto;
     vertical-align: middle;
