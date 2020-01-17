@@ -1031,14 +1031,14 @@ article .article-content h1, article .article-content h2, article .article-conte
 
 
 article .article-content h1 {
-    font-size: 220%;
+    font-size: 300%;
     line-height: 1.0em;
     /*padding-bottom: .3em;*/
     margin-top: 1.0em;
     margin-bottom: 1.0em;
 }
 article .article-content h2{
-    font-size: 190%;
+    font-size: 270%;
     line-height: 1.0em;
     margin-top: 1.0em;
     margin-bottom: 1.0em ;
@@ -1046,7 +1046,7 @@ article .article-content h2{
 }
 
 article .article-content h3 {
-    font-size: 175%;
+    font-size: 240%;
     line-height: 1em;
     margin-top: 1.0em;
     margin-bottom: 1.0em ;
@@ -1055,7 +1055,7 @@ article .article-content h3 {
 }
 
 article .article-content h4 {
-    font-size: 150%;
+    font-size: 210%;
     line-height: 1em;
     margin-top: 1.0em;
     margin-bottom: 1.0em;
@@ -1064,7 +1064,7 @@ article .article-content h4 {
 }
 
 article .article-content h5 {
-    font-size: 130%;
+    font-size: 180%;
     line-height: 1em;
     margin-top: 1.0em;
     margin-bottom: 1.0em ;
@@ -1072,7 +1072,7 @@ article .article-content h5 {
 
 }
 article .article-content h6{
-    font-size: 100%;
+    font-size: 150%;
     line-height: 1em;
     margin-top: 1.3em;
     margin-bottom: 1.0em ;
