@@ -38,8 +38,6 @@ public class BeanUtils {
     }
 
 
-
-
     public static List<MenuDTO> menuListToDTOs(List<SysMenu> menuList) {
         List<MenuDTO> menuDTOs = new ArrayList<>();
         for (SysMenu menu : menuList) {
@@ -328,6 +326,7 @@ public class BeanUtils {
         }
         return result;
     }
+
     public static SysDictionaryType dtoToDictionaryType(DictionaryTypeDTO typeDTO) {
         SysDictionaryType result = new SysDictionaryType();
         result.setId(typeDTO.getId());
@@ -419,8 +418,8 @@ public class BeanUtils {
 
 
     public static DepartmentDTO toDepartmentDTO(SysDepartment sysDepartment) {
-        DepartmentDTO departmentDTO = new DepartmeResponseEnumntDTO();
-        if(sysDepartment != null){
+        DepartmentDTO departmentDTO = new DepartmentDTO();
+        if (sysDepartment != null) {
             departmentDTO.setId(sysDepartment.getId());
             departmentDTO.setDepartmentName(sysDepartment.getName());
             departmentDTO.setDepartmentDesc(sysDepartment.getDescription());

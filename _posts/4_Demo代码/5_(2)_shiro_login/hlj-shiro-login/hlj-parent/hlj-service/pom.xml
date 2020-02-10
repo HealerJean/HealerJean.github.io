@@ -75,5 +75,13 @@
 
     </dependencies>
 
-
+    <build>
+        <!-- 定义资源目录 -->
+        <resources>
+            <resource>
+                <directory>src/main/meta-inf</directory>
+                <targetPath>META-INF/</targetPath>
+            </resource>
+        </resources>
+    </build>
 </project>
