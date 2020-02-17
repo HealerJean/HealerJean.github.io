@@ -278,6 +278,10 @@ public class D01_Jackson {
         String json = objectMapper.writeValueAsString(jsonDemoDTO);
         log.info("对象转JSON  【 {} 】", json);
         //{"reqSn":null,"code":0,"msg":null,"transDate":1572343018614,"user":null,"strList":null,"companys":null}
+
+        JsonNode jsonNode = objectMapper.valueToTree(jsonDemoDTO);
+        log.info("对象转JsonNode：【{}】", jsonNode);
+
     }
 
 
