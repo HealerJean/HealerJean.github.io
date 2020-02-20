@@ -11,16 +11,13 @@ import com.healerjean.proj.enums.ResponseEnum;
 public class HaoDanKuApiException extends BusinessException {
 
 
-    public HaoDanKuApiException( ) {
-        super(ResponseEnum.好单库口请求异常);
+    public HaoDanKuApiException(String msg) {
+        super(ResponseEnum.好单库接口返回报错, msg);
     }
 
-    public HaoDanKuApiException(String msg) {
-        super(ResponseEnum.好单库接口数据异常, msg);
-    }
 
     public HaoDanKuApiException(Throwable e) {
-        super(ResponseEnum.好单库口请求异常, e);
+        super(ResponseEnum.好单库接口请求异常, e);
     }
 
 }
