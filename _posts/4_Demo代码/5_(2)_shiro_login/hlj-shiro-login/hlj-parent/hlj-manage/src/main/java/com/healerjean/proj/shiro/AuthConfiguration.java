@@ -18,8 +18,8 @@ public class AuthConfiguration {
 
     @Value("${hlj.auth.loginUrl:}")
     private String loginUrl;
-    @Value("${hlj.auth.clientId:}")
-    private String clientId;
+    @Value("${hlj.auth.clientName:}")
+    private String clientName;
     @Value("${fintech.ucenter.auth.sessionExpire:1800}")
     private Integer sessionExpire;
     @Value("${fintech.ucenter.auth.sessionUserExpire:1800}")

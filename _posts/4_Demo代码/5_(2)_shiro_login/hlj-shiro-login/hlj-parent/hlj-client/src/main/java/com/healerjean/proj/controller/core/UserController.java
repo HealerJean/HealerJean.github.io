@@ -199,4 +199,8 @@ public class UserController extends BaseController {
         return ResponseBean.buildSuccess("当前用户菜单查询成功", result);
     }
 
+    public static void main(String[] args) {
+        String password = new Md5Hash("Admin123456", "8aa8ff7f325e1ac742e108a38948dd9c").toString();
+        System.out.println(password);
+    }
 }

@@ -25,26 +25,21 @@ import java.io.Serializable;
 @Slf4j
 public class AuthWebSessionManager extends DefaultWebSessionManager {
 
-    public static final String AUTHENTICATED = DefaultSubjectContext.class.getName() + ".AUTHENTICATED";
-    public static final String TOKEN_AUTHENTICATED = "TOKEN_AUTHENTICATED";
-    public static final String AUTHENTICATED_SESSION_KEY = DefaultSubjectContext.class.getName() + "_AUTHENTICATED_SESSION_KEY";
-
-    public String DEFAULT_SESSION_ID_NAME = null;
-
+    /**
+     * 是否保存session到cookie中
+     */
     private boolean sessionIdCookieEnabled;
-    private AuthConfiguration authConfiguration;
 
     /**
      * 初始化session管理器
      * 1、初始化session的与系统关联
      * 2、设置sessionIdCookie，将sessionId存储到cookie中
+     *
      * @param authConfiguration
      */
     public AuthWebSessionManager(AuthConfiguration authConfiguration) {
         super();
-        this.authConfiguration = authConfiguration;
-        DEFAULT_SESSION_ID_NAME = authConfiguration.getClientId()+ "_SID";
-        Cookie cookie = new SimpleCookie(DEFAULT_SESSION_ID_NAME);
+        Cookie cookie = new SimpleCookie(authConfiguration.getClientName() + "_SID");
         cookie.setHttpOnly(true);
 
         //设置sessionIdCookie
@@ -59,22 +54,23 @@ public class AuthWebSessionManager extends DefaultWebSessionManager {
     }
 
     /**
-     * 取出Session：当浏览器最开始访问的时候进入获取当前会话session
-     * 1/
+     * 1、取出Session：当浏览器最开始访问的时候进入获取当前会话session(这个方法会被多次执行，反复执行)
+     *  1.1、从浏览器/请求中中获取sessionId，如果浏览器中token为空的话session工厂中创建
+     *  1.2、调用RedisSessionDao进行获取session   -》readSession
+     *  1.3、如果获取不到session，抛出下面的异常
      */
     @Override
     protected Session retrieveSession(SessionKey sessionKey) throws UnknownSessionException {
+        // 1.1、从浏览器/请求中中获取sessionId，如果浏览器中token为空的话session工厂中创建
         Serializable sessionId = getSessionId(sessionKey);
         if (sessionId == null) {
-            log.debug("Unable to resolve session ID from SessionKey [{}].  Returning null to indicate a " +
-                    "session could not be found.", sessionKey);
+            log.debug("Unable to resolve session ID from SessionKey [{}].  Returning null to indicate a session could not be found.", sessionKey);
             return null;
         }
-        String readKey = sessionId.toString();
-        readKey = AuthConstants.SESSION_TYPE_COOKIE + ":" + readKey;
-        //调用RedisSessionDao进行获取session   -》readSession
-        // 如果获取不到session，抛出下面的异常之后会到sesssion工厂中进行创建session
-        Session session = retrieveSessionFromDataSource(readKey);
+        // 1.2、调用RedisSessionDao进行获取session   -》readSession
+        Session session = retrieveSessionFromDataSource(sessionId);
+
+        // 1.3、如果获取不到session，抛出下面的异常
         if (session == null) {
             throw new UnknownSessionException("There is no session with id [" + sessionId + "]");
         }
@@ -82,32 +78,30 @@ public class AuthWebSessionManager extends DefaultWebSessionManager {
     }
 
 
-
     @Override
     public Serializable getSessionId(SessionKey key) {
-        Serializable id = super.getSessionId(key);
-        if (id == null && WebUtils.isWeb(key)) {
+        Serializable sessionId = key.getSessionId();
+        if (sessionId == null && WebUtils.isWeb(key)) {
             ServletRequest request = WebUtils.getRequest(key);
             ServletResponse response = WebUtils.getResponse(key);
-            id = getSessionId(request, response);
+            sessionId = getSessionId(request, response);
         }
-        return id;
+        return sessionId;
     }
 
+    /**
+     * 从浏览器coolie中取sessionId
+     */
     @Override
     protected Serializable getSessionId(ServletRequest request, ServletResponse response) {
         String id = getSessionIdCookieValue(request, response);
         if (id != null) {
             request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_SOURCE,
                     ShiroHttpServletRequest.COOKIE_SESSION_ID_SOURCE);
-        }
-        if (id != null) {
             request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID, id);
             request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_IS_VALID, Boolean.TRUE);
         }
-
         request.setAttribute(ShiroHttpServletRequest.SESSION_ID_URL_REWRITING_ENABLED, isSessionIdUrlRewritingEnabled());
-
         return id;
     }
 
@@ -121,14 +115,6 @@ public class AuthWebSessionManager extends DefaultWebSessionManager {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         return getSessionIdCookie().readValue(httpRequest, WebUtils.toHttp(response));
     }
-
-
-
-
-
-
-
-
 
 
     @Override

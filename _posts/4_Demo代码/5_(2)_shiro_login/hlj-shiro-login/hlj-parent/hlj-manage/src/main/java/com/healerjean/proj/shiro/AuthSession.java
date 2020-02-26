@@ -16,10 +16,8 @@ import java.util.Map;
  * @Date 2019/1/28 15:29
  * @Description 认证Session
  */
-public class AuthSession implements ValidatingSession,Serializable {
+public class AuthSession implements ValidatingSession, Serializable {
 
-
-    private String userId;
     private transient String id;
     private transient String sessionType;
     private transient Date startTimestamp;
@@ -108,13 +106,6 @@ public class AuthSession implements ValidatingSession,Serializable {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     @Override
     public boolean isValid() {

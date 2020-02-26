@@ -18,11 +18,11 @@ public class AuthConfiguration {
 
     @Value("${hlj.auth.loginUrl:}")
     private String loginUrl;
-    @Value("${hlj.auth.clientId:}")
-    private String clientId;
-    @Value("${fintech.ucenter.auth.sessionExpire:1800}")
+    @Value("${hlj.auth.clientName:}")
+    private String clientName;
+    @Value("${hlj.sessionExpire:1800}")
     private Integer sessionExpire;
-    @Value("${fintech.ucenter.auth.sessionUserExpire:1800}")
+    @Value("${hlj.sessionUserExpire:1800}")
     private Integer sessionUserExpire;
     @Value("${hlj.auth.redisTempleName:}")
     private String redisTempleName;

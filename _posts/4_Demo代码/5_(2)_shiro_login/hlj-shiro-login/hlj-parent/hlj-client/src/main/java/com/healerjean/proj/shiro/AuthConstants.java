@@ -14,7 +14,12 @@ public class AuthConstants {
     public static final String AUTH_MENU = "auth_menu";
     /** 客户端关键字：AuthRequest */
     public static final String AUTH_REQUEST = "auth_request";
+    /** 客户端关键字：用户Id */
+    public static final String AUTH_USER_ID = "auth_user_id";
 
 
     public static final String SESSION_TYPE_COOKIE = "COOKIE";
+
+
+
 }

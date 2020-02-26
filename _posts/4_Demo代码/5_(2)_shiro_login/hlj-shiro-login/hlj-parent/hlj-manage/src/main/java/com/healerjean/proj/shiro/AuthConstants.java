@@ -15,6 +15,5 @@ public class AuthConstants {
     /** 客户端关键字：AuthRequest */
     public static final String AUTH_REQUEST = "auth_request";
 
-
     public static final String SESSION_TYPE_COOKIE = "COOKIE";
 }

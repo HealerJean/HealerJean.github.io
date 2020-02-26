@@ -25,17 +25,20 @@ public class RedisSessionDao extends AbstractSessionDAO {
 
     private RedisTemplate redisTemplate;
     private String keyPrefix;
-    private long sessionExpire = 1800L;
-    private long sessionUserExpire = 1800L;
+    private long sessionExpire;
+    private long sessionUserExpire;
 
-    private String applicationName;
-
-    public RedisSessionDao(String applicationName, RedisTemplate redisTemplate) {
+    public RedisSessionDao(AuthConfiguration authConfiguration, RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
-        this.applicationName = applicationName;
+        this.sessionExpire = authConfiguration.getSessionExpire();
+        this.sessionUserExpire = authConfiguration.getSessionUserExpire();
         StringBuffer sb = new StringBuffer();
-        sb.append(CommonConstants.REDIS_HLJ).append(":")
-                .append(applicationName).append(":Session:");
+        sb.append(CommonConstants.REDIS_HLJ)
+                .append(":")
+                .append(authConfiguration.getClientName())
+                .append(":Session:")
+                .append(AuthConstants.SESSION_TYPE_COOKIE)
+                .append(":");
         this.keyPrefix = sb.toString();
         super.setSessionIdGenerator(new UuidSessionIdGenerator());
     }
@@ -46,7 +49,7 @@ public class RedisSessionDao extends AbstractSessionDAO {
     @Override
     protected Serializable doCreate(Session session) {
         Serializable sessionId = session.getId();
-        if(session == null || sessionId == null || StringUtils.isBlank(sessionId.toString())){
+        if (session == null || sessionId == null || StringUtils.isBlank(sessionId.toString())) {
             //UuidSessionIdGenerator 进行创建
             sessionId = generateSessionId(session);
 
@@ -78,8 +81,8 @@ public class RedisSessionDao extends AbstractSessionDAO {
         sessionPrefix.append(keyPrefix);
         sessionPrefix.append(sessionId);
         Object o = redisTemplate.opsForValue().get(sessionPrefix.toString());
-        if(o instanceof Session){
-            return (Session)o;
+        if (o instanceof Session) {
+            return (Session) o;
         }
         return null;
     }
@@ -91,7 +94,7 @@ public class RedisSessionDao extends AbstractSessionDAO {
      */
     @Override
     public void update(Session session) throws UnknownSessionException {
-        if(session == null || session.getId() == null){
+        if (session == null || session.getId() == null) {
             log.error("session or session id is null");
             return;
         }
@@ -100,19 +103,8 @@ public class RedisSessionDao extends AbstractSessionDAO {
         Serializable sessionId = authSession.getId();
         StringBuffer sessionPrefix = new StringBuffer();
         sessionPrefix.append(keyPrefix);
-        String sessionType = authSession.getSessionType();
-        sessionPrefix.append(sessionType).append(":");
-        long expire = sessionExpire;
-        if(StringUtils.isNotBlank(authSession.getUserId())){
-        //登陆状态则是user：sessionID作为key保存，超时时间30分钟（默认）
-            sessionPrefix.append(authSession.getUserId());
-            sessionPrefix.append(sessionId);
-            expire = sessionUserExpire;
-        }else{
-        //非登陆状态则只是sessionID作为需要保存的Key,超时时间3分钟（默认）
-            sessionPrefix.append(sessionId);
-        }
-        redisTemplate.opsForValue().set(sessionPrefix.toString(),session,expire,TimeUnit.SECONDS);
+        sessionPrefix.append(sessionId);
+        redisTemplate.opsForValue().set(sessionPrefix.toString(), session, sessionUserExpire, TimeUnit.SECONDS);
     }
 
 
@@ -121,7 +113,7 @@ public class RedisSessionDao extends AbstractSessionDAO {
      */
     @Override
     public void delete(Session session) {
-        if(session == null || session.getId() == null){
+        if (session == null || session.getId() == null) {
             log.error("session or session id is null");
             return;
         }
@@ -129,16 +121,7 @@ public class RedisSessionDao extends AbstractSessionDAO {
         Serializable sessionId = authSession.getId();
         StringBuffer sessionPrefix = new StringBuffer();
         sessionPrefix.append(keyPrefix);
-        String sessionType = authSession.getSessionType();
-        sessionPrefix.append(sessionType).append(":");
-        if(StringUtils.isNotBlank(authSession.getUserId())){
-            //登陆状态则是user：sessionID作为key保存，超时时间30分钟（默认）
-            sessionPrefix.append(authSession.getUserId());
-            sessionPrefix.append(sessionId);
-        }else{
-            //非登陆状态则只是sessionID作为需要保存的Key,超时时间3分钟（默认）
-            sessionPrefix.append(sessionId);
-        }
+        sessionPrefix.append(sessionId);
         redisTemplate.delete(sessionPrefix.toString());
     }
 
@@ -148,8 +131,8 @@ public class RedisSessionDao extends AbstractSessionDAO {
         return null;
     }
 
-    private AuthSession toAuth(Session session){
-        if(session instanceof AuthSession) {
+    private AuthSession toAuth(Session session) {
+        if (session instanceof AuthSession) {
             return (AuthSession) session;
         }
         throw new BusinessException(ResponseEnum.系统错误.code, "session实现类异常");
