@@ -104,7 +104,12 @@ public class RedisSessionDao extends AbstractSessionDAO {
         StringBuffer sessionPrefix = new StringBuffer();
         sessionPrefix.append(keyPrefix);
         sessionPrefix.append(sessionId);
-        redisTemplate.opsForValue().set(sessionPrefix.toString(), session, sessionUserExpire, TimeUnit.SECONDS);
+        Long expire = sessionUserExpire;
+        Object object = session.getAttribute(AuthConstants.AUTH_USER);
+        if (object == null) {
+            expire = sessionExpire;
+        }
+        redisTemplate.opsForValue().set(sessionPrefix.toString(), session, expire, TimeUnit.SECONDS);
     }
 
 
