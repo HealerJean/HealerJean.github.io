@@ -131,7 +131,7 @@ public class UserController extends BaseController {
         verifyCodeDTO.setSystemCode(ConstantsConfig.application_name);
         boolean verify = verifyCodeService.verify(verifyCodeDTO, userDTO.getVerifyCode());
         if (!verify) {
-            log.info("用户管理--------用户登陆--------验证码：{}；图片验证码不正确：{}", userDTO.getVerifyCode(), verifyCodeDTO);
+            log.error("用户管理--------用户登陆--------验证码：{}；图片验证码不正确：{}", userDTO.getVerifyCode(), verifyCodeDTO);
             throw new ParameterErrorException("图片验证码不正确");
         }
 

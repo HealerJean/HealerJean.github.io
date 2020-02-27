@@ -105,7 +105,12 @@ public class RedisSessionDao extends AbstractSessionDAO {
         sessionPrefix.append(keyPrefix);
         //登陆状态则是user：sessionID作为key保存，超时时间30分钟（默认）
         sessionPrefix.append(sessionId);
-        redisTemplate.opsForValue().set(sessionPrefix.toString(), session, sessionUserExpire, TimeUnit.SECONDS);
+        Long expire = sessionUserExpire;
+        Object object = session.getAttribute(AuthConstants.AUTH_USER);
+        if (object == null) {
+            expire = sessionExpire;
+        }
+        redisTemplate.opsForValue().set(sessionPrefix.toString(), session, expire, TimeUnit.SECONDS);
     }
 
 

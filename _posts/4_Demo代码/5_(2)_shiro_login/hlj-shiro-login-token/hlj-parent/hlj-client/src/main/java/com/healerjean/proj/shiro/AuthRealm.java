@@ -108,8 +108,6 @@ public class AuthRealm extends AuthorizingRealm {
 
         // 4、前台展示的路由菜单menus，用户提供前台显示的菜单放到了session中
         session.setAttribute(AuthConstants.AUTH_MENU, menus);
-        session.setAttribute(AuthConstants.AUTH_USER_ID, loginUserDTO.getUserId());
-
         return authenticationInfo;
     }
 
