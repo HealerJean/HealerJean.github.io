@@ -6,13 +6,7 @@ import com.duodian.admore.entity.db.user.User;
 
 import javax.servlet.http.HttpSession;
 
-/**
- * 类描述：
- * 创建人： j.sh
- * 创建时间： 2016/4/13
- * version：1.0.0
- */
-public class AppSessionHelper {
+public class SessionUtils {
 
    
     public static final String SESSION_USER = "user";
