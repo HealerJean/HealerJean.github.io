@@ -367,7 +367,7 @@ public class CustomPasswordEncoder implements PasswordEncoder {
 
 ```
 ### 2、配置文件中进行配置这个密码校验类，而不是直接写死MD5,但是也有局限性，针对随机盐，我们从这个校验类中查不到盐的值。后面会讲
- 
+
 ```
 
 # 2、使用自定义类进行密码校验
@@ -892,7 +892,7 @@ public class SysUserRestSaltData {
 
 }
 
-``` 
+```
 
 #### 3、controller开始进行登录验证。
 
@@ -1444,7 +1444,7 @@ sso-client-one 8081
 
 
 #### 1、接入service
- 
+
 **cas客户端接入称之为service，必须经过cas的允许才能进行登录**
 
 当然不同的客户端可以做不同的事情，其中包括：
@@ -1570,7 +1570,7 @@ http://casclientone:8081/url
 
 ### 1、服务端配置查询的详细信息
 
- 
+
 ```
 
 # 6、服务端返回客户端详细的用户信息
@@ -1611,7 +1611,7 @@ cas.authn.attributeRepository.jdbc[0].failFast=true
 
 整个 controller如下
 
-```
+```java
 package com.hlj.sso.client.one.controller;
 
 

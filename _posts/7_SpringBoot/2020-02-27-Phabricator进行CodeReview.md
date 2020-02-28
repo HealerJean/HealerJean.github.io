@@ -244,6 +244,7 @@ arc list
 
 ```
 arc land --onto develop
+arc land --onto release/uat0.1 --revision D202484
 ```
 
 
