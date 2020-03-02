@@ -79,18 +79,19 @@ public final class ContextHolder {
 
 线程隔离的秘密，就在于ThreadLocalMap这个类。     
 
-1、先看set方法，先获取当前线程，然后通过getMap(Thread t)方法获取一个和当前线程相关的ThreadLocalMap，然后将变量的值设置到这个ThreadLocalMap对象中，当然如果获取到的ThreadLocalMap对象为空，就通过createMap方法创建。
+1、先看set方法，先获取当前线程，然后通过getMap(Thread t)方法获取一个和当前线程相关的ThreadLocalMap，然后将变量的值设置到这个ThreadLocalMap对象中，当然如果获取到的ThreadLocalMap对象为空，就通过createMap方法创建。    
 
 
-ThreadLocalMap是ThreadLocal类的一个静态内部类，它实现了键值对的设置和获取（对比Map对象来理解），      
 
-<font  clalss="healerColor" color="red" size="5" >   
+ThreadLocalMap是ThreadLocal类的一个静态内部类，它实现了键值对的设置和获取（对比Map对象来理解），          
 
-每个线程中都有一个独立的ThreadLocalMap副本，它所存储的值，只能被当前线程读取和修改。ThreadLocal类通过操作每一个线程特有的ThreadLocalMap副本，从而实现了变量访问在不同线程中的隔离。因为每个线程的变量都是自己特有的，完全不会有并发错误。还有一点就是    
 
-ThreadLocalMap存储的键值对中的键是this对象指向的ThreadLocal对象，而值就是你所设置的对象了。
 
-</font>
+ 每个线程中都有一个独立的ThreadLocalMap副本，它所存储的值，只能被当前线程读取和修改。ThreadLocal类通过操作每一个线程特有的ThreadLocalMap副本，从而实现了变量访问在不同线程中的隔离。因为每个线程的变   量都是自己特有的，完全不会有并发错误。还有一点就是        
+
+
+
+ThreadLocalMap存储的键值对中的键是this对象指向的ThreadLocal对象，而值就是你所设置的对象了
 
 
 
@@ -112,7 +113,7 @@ ThreadLocalMap存储的键值对中的键是this对象指向的ThreadLocal对象
     
   void createMap(Thread t, T firstValue) {	 //this是ThreadLocal对象
     t.threadLocals = new ThreadLocalMap(this, firstValue); 
-    }
+   }
     
 ThreadLocal.ThreadLocalMap threadLocals = null; （在Thread类中）
 
@@ -160,9 +161,12 @@ protected T initialValue() {
 
 ### 3、总结：
 
-当我们调用get方法的时候，其实每个当前线程中都有一个ThreadLocalMap。每次获取或者设置都是对该ThreadLocal进行的操作，是与其他线程分开的。从本质来讲，就是每个线程都维护了一个map，而这个map的key就是threadLocal，而值就是我们set的那个值     
+当我们调用get方法的时候，其实每个当前线程中都有一个ThreadLocalMap。每次获取或者设置都是对该ThreadLocal进行的操作，是与其他线程分开的。从本质来讲，就是每个线程都维护了一个map，而这个map的key就是threadLocal，而值就是我们set的那个值        
 
-每次线程在get的时候，都从自己的变量中取值，既然从自己的变量中取值，那肯定就不存在线程安全问题，总体来讲，ThreadLocal这个变量的状态根本没有发生变化，他仅仅是充当一个key的角色，另外提供给每一个线程一个初始值
+
+
+每次线程在get的时候，都从自己的变量中取值，既然从自己的变量中取值，那肯定就不存在线程安全问题，总体来讲，ThreadLocal这个变量的状态根本没有发生变化，他仅仅是充当一个key的角色，另外提供给每一个线程一个初始值    
+
 　4、应用场景：当很多线程需要多次使用同一个对象，并且需要该对象具有相同初始化值的时候最适合使用ThreadLocal。
 
 
