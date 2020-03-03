@@ -243,11 +243,9 @@ arc list
 > 如果审核通过，在本地执行arc land即可将代码push到中央仓库，并删除当前分支。自动回到push的分支 。
 
 ```
-arc land --onto develop
+
 arc land --onto release/uat0.1 --revision D202484
 ```
-
-
 
 
 

@@ -36,7 +36,9 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 
 
-![1582789284247](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/ 1582789284247.png)
+
+
+![1582789284247](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1582789284247.png)
 
 
 
@@ -52,13 +54,13 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 ## 2.1、设置环境变量
 
-![1582789366440](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/ 1582789366440.png)
+![1582789366440](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1582789366440.png)
 
 
 
 
 
-![1582789435301](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/ 1582789435301.png) 
+![1582789435301](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1582789435301.png) 
 
 
 
@@ -83,7 +85,7 @@ extension=php_curl.dll
 
 
 
-![1582789577708](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/ 1582789577708.png)
+![1582789577708](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1582789577708.png)
 
 
 
