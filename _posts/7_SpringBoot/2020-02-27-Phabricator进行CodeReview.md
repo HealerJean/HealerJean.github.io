@@ -192,7 +192,7 @@ git checkout -b healerjean
 
 **`title：`**              
 
-**`Summary`：默认给的是commit的信息 **     
+**`Summary`：默认给的是commit的信息**     
 
 **`Test Plan` – 必填，详细说明你的测试计划，没有就随便填个no或者skip；**       
 
@@ -224,7 +224,7 @@ arc diff –preview
 
 ```java
 1、arc diff #继续执行这个命令，arc会自动知道是更新操作
-2、arc diff　develop(预期分支名称)  –update D#66666
+2、arc diff　develop(预期分支名称)  –update D66666
 ```
 
 
@@ -243,7 +243,6 @@ arc list
 > 如果审核通过，在本地执行arc land即可将代码push到中央仓库，并删除当前分支。自动回到push的分支 。
 
 ```
-
 arc land --onto release/uat0.1 --revision D202484
 ```
 
