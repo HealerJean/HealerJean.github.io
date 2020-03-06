@@ -11,7 +11,7 @@ import com.healerjean.proj.enums.ResponseEnum;
 public class HaoDanKuApiException extends BusinessException {
 
 
-    public HaoDanKuApiException( ) {
+    public HaoDanKuApiException() {
         super(ResponseEnum.好单库口请求异常);
     }
 

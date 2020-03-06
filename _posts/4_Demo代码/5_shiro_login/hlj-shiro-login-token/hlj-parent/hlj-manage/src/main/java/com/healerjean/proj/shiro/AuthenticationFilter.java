@@ -86,6 +86,7 @@ public class AuthenticationFilter extends FormAuthenticationFilter {
             ((HttpServletResponse) response).sendRedirect(authConfiguration.getLoginUrl());
         }
     }
+
     private void returnNotLogin(ServletResponse response) throws IOException {
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/json; charset=utf-8");
@@ -94,6 +95,7 @@ public class AuthenticationFilter extends FormAuthenticationFilter {
         out.flush();
         out.close();
     }
+
     /**
      * 判断是否是登陆的Url请求：
      *

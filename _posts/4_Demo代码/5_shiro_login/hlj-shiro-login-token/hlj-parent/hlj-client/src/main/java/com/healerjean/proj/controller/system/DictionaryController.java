@@ -72,7 +72,6 @@ public class DictionaryController extends BaseController {
     }
 
 
-
     @ApiOperation(value = "字典数据查询",
             notes = "字典数据查询",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,

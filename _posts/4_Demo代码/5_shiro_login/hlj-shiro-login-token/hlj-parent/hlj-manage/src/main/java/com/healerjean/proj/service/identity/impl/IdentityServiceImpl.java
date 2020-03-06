@@ -35,7 +35,7 @@ public class IdentityServiceImpl implements IdentityService {
     @Autowired
     private SysUserRoleRefManager sysUserRoleRefManager;
     @Autowired
-    private SysMenuManager sysMenuManager ;
+    private SysMenuManager sysMenuManager;
     @Autowired
     private SysUserDepartmentRefManager sysUserUserDepartmentRefManager;
 
@@ -49,13 +49,13 @@ public class IdentityServiceImpl implements IdentityService {
      */
     @Override
     public LoginUserDTO getUserInfo(Long userId) {
-        if(userId == null || userId < 0){
+        if (userId == null || userId < 0) {
             throw new BusinessException("用户ID不能为空");
         }
         //1、用户基本信息
         LoginUserDTO loginUserDTO = new LoginUserDTO();
         SysUserInfo userInfo = sysUserInfoManager.findById(userId);
-        if(userInfo == null ){
+        if (userInfo == null) {
             throw new BusinessException("用户不存在");
         }
         loginUserDTO.setUserId(userInfo.getId());
@@ -90,7 +90,7 @@ public class IdentityServiceImpl implements IdentityService {
             //  3、获取所有角色所对应的所有菜单（这里的菜单指的是所有的url，包括前台菜单）
             SysMenuQuery sysMenuQuery = new SysMenuQuery();
             sysMenuQuery.setRefRoleIds(roles.stream().map(item -> item.getId()).collect(Collectors.toList()));
-            List<SysMenu> menuList = sysMenuManager .queryListToMenu(sysMenuQuery);
+            List<SysMenu> menuList = sysMenuManager.queryListToMenu(sysMenuQuery);
 
             List<SysMenu> menus = new ArrayList<>();
             List<SysMenu> permissions = new ArrayList<>();

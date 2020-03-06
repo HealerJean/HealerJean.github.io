@@ -1,14 +1,13 @@
 package com.healerjean.proj.utils;
 
 
-
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
 
 /**
- * @author  zhangyujin
  * @param <T>
+ * @author zhangyujin
  */
 public final class EmptyUtil<T> {
     private static final Integer INTEGER_0 = 0;

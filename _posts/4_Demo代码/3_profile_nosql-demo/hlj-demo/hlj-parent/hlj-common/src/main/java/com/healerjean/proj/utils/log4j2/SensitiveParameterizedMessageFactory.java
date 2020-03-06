@@ -32,9 +32,8 @@ public class SensitiveParameterizedMessageFactory extends AbstractMessageFactory
      * Creates {@link SensitiveParameterizedMessage} instances.
      *
      * @param message The message pattern.
-     * @param params The message parameters.
+     * @param params  The message parameters.
      * @return The Message.
-     *
      * @see MessageFactory#newMessage(String, Object...)
      */
     @Override

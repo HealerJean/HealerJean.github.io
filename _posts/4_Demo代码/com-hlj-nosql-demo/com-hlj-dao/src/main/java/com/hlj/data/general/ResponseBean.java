@@ -1,7 +1,6 @@
 package com.hlj.data.general;
 
 
-
 /**
  * Created by j.sh on 2015/4/23.
  */
@@ -14,7 +13,7 @@ public class ResponseBean {
         ResponseBean responseBean = new ResponseBean();
         responseBean.setSuccess(true);
         responseBean.setCode(ErrorCodeEnum.正常.code);
-        responseBean.setDate(System.currentTimeMillis()+"");
+        responseBean.setDate(System.currentTimeMillis() + "");
         return responseBean;
     }
 
@@ -23,7 +22,7 @@ public class ResponseBean {
         responseBean.setSuccess(true);
         responseBean.setCode(ErrorCodeEnum.正常.code);
         responseBean.setResult(result);
-        responseBean.setDate(System.currentTimeMillis()+"");
+        responseBean.setDate(System.currentTimeMillis() + "");
         return responseBean;
     }
 
@@ -31,7 +30,7 @@ public class ResponseBean {
         ResponseBean responseBean = new ResponseBean();
         responseBean.setSuccess(false);
         responseBean.setCode(ErrorCodeEnum.系统错误.code);
-        responseBean.setDate(System.currentTimeMillis()+"");
+        responseBean.setDate(System.currentTimeMillis() + "");
         return responseBean;
     }
 
@@ -40,7 +39,7 @@ public class ResponseBean {
         responseBean.setSuccess(false);
         responseBean.setCode(ErrorCodeEnum.系统错误.code);
         responseBean.setMessage(message);
-        responseBean.setDate(System.currentTimeMillis()+"");
+        responseBean.setDate(System.currentTimeMillis() + "");
         return responseBean;
     }
 
@@ -49,7 +48,7 @@ public class ResponseBean {
         responseBean.setSuccess(false);
         responseBean.setCode(errorCodeEnum.code);
         responseBean.setMessage(errorCodeEnum.desc);
-        responseBean.setDate(System.currentTimeMillis()+"");
+        responseBean.setDate(System.currentTimeMillis() + "");
         return responseBean;
     }
 
@@ -58,7 +57,7 @@ public class ResponseBean {
         responseBean.setSuccess(false);
         responseBean.setCode(code);
         responseBean.setMessage(message);
-        responseBean.setDate(System.currentTimeMillis()+"");
+        responseBean.setDate(System.currentTimeMillis() + "");
         return responseBean;
     }
 
@@ -66,7 +65,7 @@ public class ResponseBean {
     private Object result = "{}";
     private String message = "";
     private String code = "";
-    private String date ;
+    private String date;
 
     public boolean isSuccess() {
         return success;

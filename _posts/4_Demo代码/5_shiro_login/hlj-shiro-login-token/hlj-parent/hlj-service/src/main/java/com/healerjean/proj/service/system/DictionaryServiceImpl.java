@@ -92,7 +92,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         query.setStatus(StatusEnum.生效.code);
         SysDictionaryType typeExist = sysDictionaryTypeManager.findByQueryContion(query);
         //判断是是否已经存在数据
-        if (typeExist != null && !typeExist.getId().equals(typeDTO.getId())  ) {
+        if (typeExist != null && !typeExist.getId().equals(typeDTO.getId())) {
             throw new BusinessException(ResponseEnum.字典类型已存在);
         }
         SysDictionaryType type = BeanUtils.dtoToDictionaryType(typeDTO);

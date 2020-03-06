@@ -13,6 +13,7 @@ public interface IdentityService {
 
     /**
      * 根据用户ID获取当前登陆用户信息
+     *
      * @param userId
      * @return
      */

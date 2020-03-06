@@ -107,6 +107,7 @@ public class SensitiveParameterizedMessage implements Message, StringBuilderForm
 
     /**
      * Returns the message pattern.
+     *
      * @return the message pattern.
      */
     @Override
@@ -116,6 +117,7 @@ public class SensitiveParameterizedMessage implements Message, StringBuilderForm
 
     /**
      * Returns the message parameters.
+     *
      * @return the message parameters.
      */
     @Override
@@ -139,6 +141,7 @@ public class SensitiveParameterizedMessage implements Message, StringBuilderForm
 
     /**
      * Returns the formatted message.
+     *
      * @return the formatted message.
      */
     @Override
@@ -227,7 +230,6 @@ public class SensitiveParameterizedMessage implements Message, StringBuilderForm
         return "ParameterizedMessage[messagePattern=" + messagePattern + ", stringArgs=" +
                 Arrays.toString(argArray) + ", throwable=" + throwable + ']';
     }
-
 
 
 }

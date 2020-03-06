@@ -13,9 +13,8 @@ import javax.annotation.PostConstruct;
 public class PostConstructConfig {
 
 
-
     @PostConstruct
-    private void init()  throws Exception {
+    private void init() throws Exception {
 
     }
 

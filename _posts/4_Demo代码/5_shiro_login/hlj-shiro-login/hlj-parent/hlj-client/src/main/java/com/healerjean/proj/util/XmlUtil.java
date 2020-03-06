@@ -34,7 +34,7 @@ public class XmlUtil {
         } catch (DocumentException e1) {
             e1.printStackTrace();
         }
-        if(doc == null){
+        if (doc == null) {
             throw new RuntimeException("消息体为空");
         }
         Element root = doc.getRootElement();

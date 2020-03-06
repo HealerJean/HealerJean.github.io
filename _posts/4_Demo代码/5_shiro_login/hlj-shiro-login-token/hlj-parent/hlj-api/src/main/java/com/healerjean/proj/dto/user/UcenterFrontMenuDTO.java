@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UcenterFrontMenuDTO  implements Serializable {
+public class UcenterFrontMenuDTO implements Serializable {
 
     private String name;
     private String path;

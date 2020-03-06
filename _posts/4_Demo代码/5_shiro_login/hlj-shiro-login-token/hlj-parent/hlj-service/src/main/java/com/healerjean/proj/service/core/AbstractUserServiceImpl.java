@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @date 2019/10/23  19:26.
  * @Description
  */
-public abstract class AbstractUserServiceImpl  implements UserService {
+public abstract class AbstractUserServiceImpl implements UserService {
 
     @Autowired
     private SysUserInfoManager sysUserInfoManager;

@@ -85,6 +85,7 @@ public class AuthenticationFilter extends FormAuthenticationFilter {
             ((HttpServletResponse) response).sendRedirect(authConfiguration.getLoginUrl());
         }
     }
+
     private void returnNotLogin(ServletResponse response) throws IOException {
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/json; charset=utf-8");

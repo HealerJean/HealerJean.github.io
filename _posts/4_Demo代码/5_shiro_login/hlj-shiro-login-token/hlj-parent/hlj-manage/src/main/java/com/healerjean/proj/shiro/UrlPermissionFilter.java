@@ -29,7 +29,7 @@ public class UrlPermissionFilter extends AccessControlFilter {
 
     private AuthConfiguration authConfiguration;
 
-    public UrlPermissionFilter(AuthConfiguration authConfiguration ) {
+    public UrlPermissionFilter(AuthConfiguration authConfiguration) {
         this.authConfiguration = authConfiguration;
     }
 
@@ -37,7 +37,6 @@ public class UrlPermissionFilter extends AccessControlFilter {
      * 请求是否允许访问
      * 1、如果是登录请求，则返回true
      * 2、没有登录则判断是否可以登录
-     *
      */
     @Override
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
@@ -48,15 +47,16 @@ public class UrlPermissionFilter extends AccessControlFilter {
         HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
         String method = httpServletRequest.getMethod().toUpperCase();
         String uri = getPathWithinApplication(request);
-        UrlPermission urlPermission = new UrlPermission(uri,method);
+        UrlPermission urlPermission = new UrlPermission(uri, method);
         Subject subject = SecurityUtils.getSubject();
         // Subject subject = getSubject(request,response);
-        return  subject.isPermitted(JsonUtils.toJsonString(urlPermission));
+        return subject.isPermitted(JsonUtils.toJsonString(urlPermission));
     }
 
 
     /**
      * 当上面拒绝访问的时候调用，我们可以用这个来打印日志
+     *
      * @param request
      * @param response
      * @return
@@ -67,10 +67,11 @@ public class UrlPermissionFilter extends AccessControlFilter {
         HttpServletResponse httpServletResponse = WebUtils.toHttp(response);
         HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
         httpServletResponse.setStatus(ResponseEnum.未授权.code);
-        log.info("用户无权调用：{},{}" ,httpServletRequest.getRequestURI(),httpServletRequest.getMethod());
+        log.info("用户无权调用：{},{}", httpServletRequest.getRequestURI(), httpServletRequest.getMethod());
         returnNotAllowed(response);
         return false;
     }
+
     private void returnNotAllowed(ServletResponse response) throws IOException {
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/json; charset=utf-8");
@@ -84,6 +85,6 @@ public class UrlPermissionFilter extends AccessControlFilter {
     protected boolean isLoginRequest(ServletRequest request, ServletResponse response) {
         String requestURI = this.getPathWithinApplication(request);
         String loginUrl = authConfiguration.getLoginUrl();
-        return  this.pathsMatch(loginUrl, requestURI);
+        return this.pathsMatch(loginUrl, requestURI);
     }
 }

@@ -19,11 +19,13 @@ public class AuthPrincipalCollection extends SimplePrincipalCollection {
     protected Collection getPrincipalsLazy(String realmName) {
         return super.getPrincipalsLazy(realmName);
     }
+
     @JsonIgnore
     @Override
     public Object getPrimaryPrincipal() {
         return super.getPrimaryPrincipal();
     }
+
     @JsonIgnore
     @Override
     public Set<String> getRealmNames() {

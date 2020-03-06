@@ -16,10 +16,12 @@ public interface VerifyCodeService {
      * 创建验证码
      */
     byte[] generateCaptcha(VerifyCodeDTO verifyCodeDTO, LoginUserDTO loginUserDTO);
+
     /**
      * 校验验证码，校验后失效
      */
     boolean verify(VerifyCodeDTO verifyCodeDTO, String verifyCode);
+
     /**
      * 删除验证码
      */

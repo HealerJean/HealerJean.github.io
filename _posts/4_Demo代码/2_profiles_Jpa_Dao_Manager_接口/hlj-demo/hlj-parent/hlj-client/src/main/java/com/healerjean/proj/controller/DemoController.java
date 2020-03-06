@@ -46,11 +46,11 @@ public class DemoController {
             response = DemoDTO.class)
     @PostMapping(value = "demo/add", produces = "application/json; charset=utf-8")
     @ResponseBody
-    public ResponseBean insert(@RequestBody(required = true)  DemoDTO demoDTO) {
+    public ResponseBean insert(@RequestBody(required = true) DemoDTO demoDTO) {
         log.info("样例--------导入Demo数据------数据信息{}", demoDTO);
         String validate = ValidateUtils.validate(demoDTO, ValidateGroup.HealerJean.class);
-        if (!validate.equals(CommonConstants.COMMON_SUCCESS)){
-            throw new BusinessException(ResponseEnum.参数错误,validate);
+        if (!validate.equals(CommonConstants.COMMON_SUCCESS)) {
+            throw new BusinessException(ResponseEnum.参数错误, validate);
         }
         return ResponseBean.buildSuccess(demoEntityService.addDemoEntity(demoDTO));
     }

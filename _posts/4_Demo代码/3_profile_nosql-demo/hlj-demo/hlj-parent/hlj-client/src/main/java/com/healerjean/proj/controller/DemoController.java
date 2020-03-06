@@ -50,12 +50,11 @@ public class DemoController {
     public ResponseBean get(DemoDTO demoDTO) {
         log.info("样例--------GET请求------数据信息{}", demoDTO);
         String validate = ValidateUtils.validate(demoDTO, ValidateGroup.HealerJean.class);
-        if (!validate.equals(CommonConstants.COMMON_SUCCESS)){
-            throw new BusinessException(ResponseEnum.参数错误,validate);
+        if (!validate.equals(CommonConstants.COMMON_SUCCESS)) {
+            throw new BusinessException(ResponseEnum.参数错误, validate);
         }
         return ResponseBean.buildSuccess(demoEntityService.getMmethod(demoDTO));
     }
-
 
 
 }

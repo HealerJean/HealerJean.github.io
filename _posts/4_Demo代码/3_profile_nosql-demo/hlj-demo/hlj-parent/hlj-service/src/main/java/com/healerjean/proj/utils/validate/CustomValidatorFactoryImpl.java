@@ -39,7 +39,6 @@ public class CustomValidatorFactoryImpl implements HibernateValidatorFactory {
     private final boolean failFast;
 
 
-
     public CustomValidatorFactoryImpl(ConfigurationState configurationState) {
         this.messageInterpolator = configurationState.getMessageInterpolator();
         this.constraintValidatorFactory = configurationState.getConstraintValidatorFactory();
@@ -90,14 +89,17 @@ public class CustomValidatorFactoryImpl implements HibernateValidatorFactory {
     public Validator getValidator() {
         return usingContext().getValidator();
     }
+
     @Override
     public MessageInterpolator getMessageInterpolator() {
         return messageInterpolator;
     }
+
     @Override
     public TraversableResolver getTraversableResolver() {
         return traversableResolver;
     }
+
     @Override
     public ConstraintValidatorFactory getConstraintValidatorFactory() {
         return constraintValidatorFactory;

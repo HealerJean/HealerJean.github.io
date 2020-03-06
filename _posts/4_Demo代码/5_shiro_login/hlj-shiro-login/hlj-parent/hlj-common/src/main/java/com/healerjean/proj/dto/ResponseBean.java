@@ -1,6 +1,5 @@
 package com.healerjean.proj.dto;
 
-
 import com.healerjean.proj.enums.ResponseEnum;
 import com.healerjean.proj.utils.JsonUtils;
 

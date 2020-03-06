@@ -55,9 +55,9 @@ public class AuthWebSessionManager extends DefaultWebSessionManager {
 
     /**
      * 1、取出Session：当浏览器最开始访问的时候进入获取当前会话session(这个方法会被多次执行，反复执行)
-     *  1.1、从浏览器/请求中中获取sessionId，如果浏览器中token为空的话session工厂中创建
-     *  1.2、调用RedisSessionDao进行获取session   -》readSession
-     *  1.3、如果获取不到session，抛出下面的异常
+     * 1.1、从浏览器/请求中中获取sessionId，如果浏览器中token为空的话session工厂中创建
+     * 1.2、调用RedisSessionDao进行获取session   -》readSession
+     * 1.3、如果获取不到session，抛出下面的异常
      */
     @Override
     protected Session retrieveSession(SessionKey sessionKey) throws UnknownSessionException {

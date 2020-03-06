@@ -20,7 +20,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @Accessors(chain = true)
 @ApiModel(value = "demo实体类")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DemoDTO   {
+public class DemoDTO {
 
     @ApiModelProperty(value = "demo 主键", hidden = true)
     private Long id;

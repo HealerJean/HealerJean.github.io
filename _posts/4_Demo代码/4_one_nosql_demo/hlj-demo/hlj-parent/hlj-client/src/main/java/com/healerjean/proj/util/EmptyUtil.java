@@ -1,7 +1,6 @@
 package com.healerjean.proj.util;
 
 
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
@@ -9,8 +8,8 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * @author  zhangyujin
  * @param <T>
+ * @author zhangyujin
  */
 public final class EmptyUtil<T> {
 

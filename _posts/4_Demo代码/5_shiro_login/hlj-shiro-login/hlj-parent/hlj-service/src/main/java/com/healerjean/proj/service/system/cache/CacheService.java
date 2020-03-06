@@ -16,7 +16,7 @@ public interface CacheService {
     void set(String key, Object value, long timeout, TimeUnit timeUnit);
 
     /**
-     *  存放不过期数据
+     * 存放不过期数据
      **/
     void set(String key, Object value);
 
@@ -25,14 +25,17 @@ public interface CacheService {
      * 获取缓存数据
      */
     Object get(String key);
+
     /**
      * 删除缓存数据
      */
     void delete(String key);
+
     /**
      * 生成序列号不重复
      */
     String generateSeqNo(String prefixKey);
+
     /**
      * 生成序列号不重复
      */
@@ -50,12 +53,15 @@ public interface CacheService {
 
     /**
      * 分布式锁
+     *
      * @param key
      * @return
      */
     boolean lock(String key, long timeout, TimeUnit timeUnit);
+
     /**
      * 分布式锁-释放锁
+     *
      * @param key
      * @return
      */

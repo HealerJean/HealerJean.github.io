@@ -44,7 +44,6 @@ public interface BusinessEnum {
     }
 
 
-
     /**
      * 菜单类型
      */
@@ -73,7 +72,6 @@ public interface BusinessEnum {
     }
 
 
-
     /**
      * 用户类型
      */
@@ -100,14 +98,6 @@ public interface BusinessEnum {
             return null;
         }
     }
-
-
-
-
-
-
-
-
 
 
 }

@@ -34,25 +34,25 @@ public class DemoController {
 
 
     @Autowired
-    private DemoEntityService  demoEntityService;
+    private DemoEntityService demoEntityService;
 
 
     @ApiOperation(value = "添加demo实体",
-                  notes = "添加demo实体",
-                  consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-                  produces = MediaType.APPLICATION_JSON_VALUE,
-                  response = DemoEntity.class)
-    @GetMapping(value = "addDemoEntity",produces = "application/json; charset=utf-8")
+            notes = "添加demo实体",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            response = DemoEntity.class)
+    @GetMapping(value = "addDemoEntity", produces = "application/json; charset=utf-8")
     @ResponseBody
-    public ResponseBean insert(DemoEntity demoEntity){
+    public ResponseBean insert(DemoEntity demoEntity) {
         try {
-            return  ResponseBean.buildSuccess(demoEntityService.addDemoEntity(demoEntity));
-        }catch (AppException e){
-            ExceptionLogUtils.log(e,this.getClass() );
-            return  ResponseBean.buildFailure(e.getCode(),e.getMessage());
-        }catch (Exception e){
-            ExceptionLogUtils.log(e,this.getClass() );
-            return  ResponseBean.buildFailure(e.getMessage());
+            return ResponseBean.buildSuccess(demoEntityService.addDemoEntity(demoEntity));
+        } catch (AppException e) {
+            ExceptionLogUtils.log(e, this.getClass());
+            return ResponseBean.buildFailure(e.getCode(), e.getMessage());
+        } catch (Exception e) {
+            ExceptionLogUtils.log(e, this.getClass());
+            return ResponseBean.buildFailure(e.getMessage());
         }
     }
 
@@ -63,20 +63,19 @@ public class DemoController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             response = DemoEntity.class)
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id",value = "demo主键",required = true,paramType = "query",dataType = "long"),
+            @ApiImplicitParam(name = "id", value = "demo主键", required = true, paramType = "query", dataType = "long"),
     })
     @GetMapping("findById")
     @ResponseBody
-    public ResponseBean  findById(Long id){
+    public ResponseBean findById(Long id) {
         try {
             return ResponseBean.buildSuccess(demoEntityService.findById(id));
-        }catch (AppException e){
-            ExceptionLogUtils.log(e,this.getClass() );
-            return  ResponseBean.buildFailure(e.getCode(),e.getMessage());
-        }
-        catch (Exception e){
-            ExceptionLogUtils.log(e,this.getClass() );
-            return  ResponseBean.buildFailure(e.getMessage());
+        } catch (AppException e) {
+            ExceptionLogUtils.log(e, this.getClass());
+            return ResponseBean.buildFailure(e.getCode(), e.getMessage());
+        } catch (Exception e) {
+            ExceptionLogUtils.log(e, this.getClass());
+            return ResponseBean.buildFailure(e.getMessage());
         }
     }
 
@@ -88,15 +87,15 @@ public class DemoController {
             response = DemoEntity.class)
     @GetMapping("findAll")
     @ResponseBody
-    public ResponseBean  findAll(){
+    public ResponseBean findAll() {
         try {
             return ResponseBean.buildSuccess(demoEntityService.findAll());
-        }catch (AppException e){
-            ExceptionLogUtils.log(e,this.getClass() );
-            return  ResponseBean.buildFailure(e.getCode(),e.getMessage());
-        }catch (Exception e){
-            ExceptionLogUtils.log(e,this.getClass() );
-            return  ResponseBean.buildFailure(e.getMessage());
+        } catch (AppException e) {
+            ExceptionLogUtils.log(e, this.getClass());
+            return ResponseBean.buildFailure(e.getCode(), e.getMessage());
+        } catch (Exception e) {
+            ExceptionLogUtils.log(e, this.getClass());
+            return ResponseBean.buildFailure(e.getMessage());
         }
     }
 

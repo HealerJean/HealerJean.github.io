@@ -29,7 +29,6 @@ public class ClientUserServiceImpl extends AbstractUserServiceImpl {
     private SysUserInfoRepository sysUserInfoRepository;
 
 
-
     /**
      * 注册用户
      * 1、保存用户信息

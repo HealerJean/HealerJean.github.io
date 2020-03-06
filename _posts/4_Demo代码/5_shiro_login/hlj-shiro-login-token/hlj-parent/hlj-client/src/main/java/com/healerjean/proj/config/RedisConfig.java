@@ -69,7 +69,7 @@ public class RedisConfig {
         redisStandaloneConfiguration.setDatabase(database);
         redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
         JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration = JedisClientConfiguration.builder();
-        jedisClientConfiguration.connectTimeout(Duration.ofMillis(Long.valueOf(timeout.substring(0,timeout.length()-2))));
+        jedisClientConfiguration.connectTimeout(Duration.ofMillis(Long.valueOf(timeout.substring(0, timeout.length() - 2))));
         JedisConnectionFactory factory = new JedisConnectionFactory(redisStandaloneConfiguration,
                 jedisClientConfiguration.build());
         return factory;

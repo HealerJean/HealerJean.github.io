@@ -9,13 +9,13 @@ import org.slf4j.LoggerFactory;
  * @Date 2018/8/21  下午6:41.
  */
 public class ExceptionLogUtils {
-    public static void log(Throwable e, Class c){
+    public static void log(Throwable e, Class c) {
         Logger logger = LoggerFactory.getLogger(c);
-        StackTraceElement s= e.getStackTrace()[0];
-        logger.error("报错的文件是："+s.getFileName()+
-                  "报错方法是："+s.getMethodName()+
-                  "报错的行是："+ s.getLineNumber()+
-                  "报错的信息是："+ e.getMessage());
-      }
+        StackTraceElement s = e.getStackTrace()[0];
+        logger.error("报错的文件是：" + s.getFileName() +
+                "报错方法是：" + s.getMethodName() +
+                "报错的行是：" + s.getLineNumber() +
+                "报错的信息是：" + e.getMessage());
+    }
 
 }

@@ -19,7 +19,7 @@ public class DecimalSerialize extends JsonSerializer<BigDecimal> {
     @Override
     public void serialize(BigDecimal bigDecimal, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         String value = null;
-        if(bigDecimal != null) {
+        if (bigDecimal != null) {
             BigDecimal b = bigDecimal.setScale(0);
             value = b.toString();
         }

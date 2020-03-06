@@ -38,7 +38,7 @@ public class ResponseBean {
         return responseBean;
     }
 
-    public static ResponseBean buildSuccess(ResponseEnum  responseEnum, Object result) {
+    public static ResponseBean buildSuccess(ResponseEnum responseEnum, Object result) {
         ResponseBean responseBean = new ResponseBean();
         responseBean.setSuccess(true);
         responseBean.setCode(ResponseEnum.正常.code);

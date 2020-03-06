@@ -1,208 +1,204 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="SysUserDepartmentRefMapper">
-	<resultMap id="BaseResultMap" type="SysUserDepartmentRef">
-		<id column="ID" jdbcType="BIGINT" property="id" />
-		<result column="ref_user_id" jdbcType="BIGINT" property="refUserId" />
-		<result column="ref_department_id" jdbcType="BIGINT" property="refDepartmentId" />
-		<result column="status" jdbcType="VARCHAR" property="status" />
-		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-	</resultMap>
-	<sql id="Example_Where_Clause">
-		<where>
-			<trim prefix="(" prefixOverrides="and" suffix=")">
-				<if test="refUserId != null and refUserId != ''">
-					and ref_user_id = #{refUserId,jdbcType=BIGINT}
-				</if>
-				<if test="refDepartmentId != null and refDepartmentId != ''">
-					and ref_department_id = #{refDepartmentId,jdbcType=BIGINT}
-				</if>
-				<if test="status != null">
-					and status = #{status,jdbcType=VARCHAR}
-				</if>
-			</trim>
-		</where>
-	</sql>
-	<sql id="Example_Set_Clause">
-		<set>
-			<trim suffixOverrides=",">
-				<if test="refUserId != null">
-					ref_user_id = #{refUserId,jdbcType=BIGINT},
-				</if>
-				<if test="refDepartmentId != null">
-					ref_department_id = #{refDepartmentId,jdbcType=BIGINT},
-				</if>
-				<if test="status != null">
-					status = #{status,jdbcType=VARCHAR},
-				</if>
-				UPDATE_TIME = NOW(),
-			</trim>
-		</set>
-	</sql>
-	<sql id="Base_Column_List">
-		id,
-		ref_user_id,
-		ref_department_id,
-		status,
-		update_time
-	</sql>
-	<sql id="Base_Set_Clause">
-		<set>
-			<trim suffixOverrides=",">
-				ref_user_id = #{refUserId,jdbcType=BIGINT},
-				ref_department_id = #{refDepartmentId,jdbcType=BIGINT},
-				status = #{status,jdbcType=VARCHAR},
-			</trim>
-		</set>
-	</sql>
-	<sql id="Selective_Column_List">
-		ID,
-		<if test="refUserId != null">
-			ref_user_id,
-		</if>
-		<if test="refDepartmentId != null">
-			ref_department_id,
-		</if>
-		<if test="status != null">
-			status,
-		</if>
-	</sql>
-	<sql id="Base_Value_List">
-		#{id,jdbcType=BIGINT},
-		#{refUserId,jdbcType=BIGINT},
-		#{refDepartmentId,jdbcType=BIGINT},
-		#{status,jdbcType=VARCHAR},
-		#{updateTime,jdbcType=TIMESTAMP},
-	</sql>
-	<sql id="Selective_Value_List">
-		#{id},
-		<if test="refUserId != null">
-			#{refUserId,jdbcType=BIGINT},
-		</if>
-		<if test="refDepartmentId != null">
-			#{refDepartmentId,jdbcType=BIGINT},
-		</if>
-		<if test="status != null">
-			#{status,jdbcType=VARCHAR},
-		</if>
-	</sql>
+    <resultMap id="BaseResultMap" type="SysUserDepartmentRef">
+        <id column="ID" jdbcType="BIGINT" property="id"/>
+        <result column="ref_user_id" jdbcType="BIGINT" property="refUserId"/>
+        <result column="ref_department_id" jdbcType="BIGINT" property="refDepartmentId"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <trim prefix="(" prefixOverrides="and" suffix=")">
+                <if test="refUserId != null and refUserId != ''">
+                    and ref_user_id = #{refUserId,jdbcType=BIGINT}
+                </if>
+                <if test="refDepartmentId != null and refDepartmentId != ''">
+                    and ref_department_id = #{refDepartmentId,jdbcType=BIGINT}
+                </if>
+                <if test="status != null">
+                    and status = #{status,jdbcType=VARCHAR}
+                </if>
+            </trim>
+        </where>
+    </sql>
+    <sql id="Example_Set_Clause">
+        <set>
+            <trim suffixOverrides=",">
+                <if test="refUserId != null">
+                    ref_user_id = #{refUserId,jdbcType=BIGINT},
+                </if>
+                <if test="refDepartmentId != null">
+                    ref_department_id = #{refDepartmentId,jdbcType=BIGINT},
+                </if>
+                <if test="status != null">
+                    status = #{status,jdbcType=VARCHAR},
+                </if>
+                UPDATE_TIME = NOW(),
+            </trim>
+        </set>
+    </sql>
+    <sql id="Base_Column_List">
+        id,
+        ref_user_id,
+        ref_department_id,
+        status,
+        update_time
+    </sql>
+    <sql id="Base_Set_Clause">
+        <set>
+            <trim suffixOverrides=",">
+                ref_user_id = #{refUserId,jdbcType=BIGINT},
+                ref_department_id = #{refDepartmentId,jdbcType=BIGINT},
+                status = #{status,jdbcType=VARCHAR},
+            </trim>
+        </set>
+    </sql>
+    <sql id="Selective_Column_List">
+        ID,
+        <if test="refUserId != null">
+            ref_user_id,
+        </if>
+        <if test="refDepartmentId != null">
+            ref_department_id,
+        </if>
+        <if test="status != null">
+            status,
+        </if>
+    </sql>
+    <sql id="Base_Value_List">
+        #{id,jdbcType=BIGINT},
+        #{refUserId,jdbcType=BIGINT},
+        #{refDepartmentId,jdbcType=BIGINT},
+        #{status,jdbcType=VARCHAR},
+        #{updateTime,jdbcType=TIMESTAMP},
+    </sql>
+    <sql id="Selective_Value_List">
+        #{id},
+        <if test="refUserId != null">
+            #{refUserId,jdbcType=BIGINT},
+        </if>
+        <if test="refDepartmentId != null">
+            #{refDepartmentId,jdbcType=BIGINT},
+        </if>
+        <if test="status != null">
+            #{status,jdbcType=VARCHAR},
+        </if>
+    </sql>
 
-	<select id="selectByExample" parameterType="SysUserDepartmentRefQuery" resultMap="BaseResultMap">
-		select
-		<trim suffixOverrides=",">
-			<include refid="Base_Column_List" />
-		</trim>
-		from sys_user_department_ref
-		<include refid="Example_Where_Clause" />
-		<!-- order by CREATE_DATE -->
-	</select>
-	<select id="selectByPrimaryKey" parameterType="Long" resultMap="BaseResultMap">
-		select
-		<trim suffixOverrides=",">
-			<include refid="Base_Column_List" />
-		</trim>
-		from sys_user_department_ref
-		where ID = #{id,jdbcType=SMALLINT}
-	</select>
-	<delete id="deleteByPrimaryKey" parameterType="Long">
-		delete from sys_user_department_ref
-		where ID = #{id,jdbcType=SMALLINT}
-	</delete>
-	<delete id="deleteByExample" parameterType="SysUserDepartmentRefQuery">
-		delete from sys_user_department_ref
-		<include refid="Example_Where_Clause" />
-	</delete>
-	<insert id="insert" parameterType="SysUserDepartmentRef">
-		insert into sys_user_department_ref
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<include refid="Base_Column_List" />
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<include refid="Base_Value_List" />
-		</trim>
-	</insert>
-	<insert id="insertSelective" parameterType="SysUserDepartmentRef" useGeneratedKeys="true" keyProperty="id">
-		insert into sys_user_department_ref
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<include refid="Selective_Column_List" />
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<include refid="Selective_Value_List" />
-		</trim>
-	</insert>
-	<select id="countByExample" parameterType="SysUserDepartmentRefQuery" resultType="java.lang.Integer">
-		select count(*) from sys_user_department_ref
-		<include refid="Example_Where_Clause" />
-	</select>
-	<update id="updateByPrimaryKeySelective" parameterType="SysUserDepartmentRef">
-		update sys_user_department_ref
-		<include refid="Example_Set_Clause" />
-		where ID = #{id,jdbcType=SMALLINT}
-	</update>
-	<update id="updateByPrimaryKey" parameterType="SysUserDepartmentRef">
-		update sys_user_department_ref
-		<include refid="Base_Set_Clause" />
-		where ID = #{id,jdbcType=SMALLINT}
-	</update>
+    <select id="selectByExample" parameterType="SysUserDepartmentRefQuery" resultMap="BaseResultMap">
+        select
+        <trim suffixOverrides=",">
+            <include refid="Base_Column_List"/>
+        </trim>
+        from sys_user_department_ref
+        <include refid="Example_Where_Clause"/>
+        <!-- order by CREATE_DATE -->
+    </select>
+    <select id="selectByPrimaryKey" parameterType="Long" resultMap="BaseResultMap">
+        select
+        <trim suffixOverrides=",">
+            <include refid="Base_Column_List"/>
+        </trim>
+        from sys_user_department_ref
+        where ID = #{id,jdbcType=SMALLINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="Long">
+        delete from sys_user_department_ref
+        where ID = #{id,jdbcType=SMALLINT}
+    </delete>
+    <delete id="deleteByExample" parameterType="SysUserDepartmentRefQuery">
+        delete from sys_user_department_ref
+        <include refid="Example_Where_Clause"/>
+    </delete>
+    <insert id="insert" parameterType="SysUserDepartmentRef">
+        insert into sys_user_department_ref
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="Base_Column_List"/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="Base_Value_List"/>
+        </trim>
+    </insert>
+    <insert id="insertSelective" parameterType="SysUserDepartmentRef" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_user_department_ref
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="Selective_Column_List"/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="Selective_Value_List"/>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="SysUserDepartmentRefQuery" resultType="java.lang.Integer">
+        select count(*) from sys_user_department_ref
+        <include refid="Example_Where_Clause"/>
+    </select>
+    <update id="updateByPrimaryKeySelective" parameterType="SysUserDepartmentRef">
+        update sys_user_department_ref
+        <include refid="Example_Set_Clause"/>
+        where ID = #{id,jdbcType=SMALLINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="SysUserDepartmentRef">
+        update sys_user_department_ref
+        <include refid="Base_Set_Clause"/>
+        where ID = #{id,jdbcType=SMALLINT}
+    </update>
 
-	<select id="selectPageByExample" parameterType="SysUserDepartmentRefQuery" resultMap="BaseResultMap">
-		select
-		<trim suffixOverrides=",">
-			<include refid="Base_Column_List" />
-		</trim>
-		from sys_user_department_ref
-		<include refid="Example_Where_Clause" />
+    <select id="selectPageByExample" parameterType="SysUserDepartmentRefQuery" resultMap="BaseResultMap">
+        select
+        <trim suffixOverrides=",">
+            <include refid="Base_Column_List"/>
+        </trim>
+        from sys_user_department_ref
+        <include refid="Example_Where_Clause"/>
         <![CDATA[ limit #{startRow},#{endRow} ]]>
-  		<!-- order by CREATE_DATE -->
-	</select>
+        <!-- order by CREATE_DATE -->
+    </select>
 
 
+    <resultMap id="sysDepartmentMap" type="SysDepartment">
+        <id column="ID" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="pid" jdbcType="BIGINT" property="pid"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="create_user" jdbcType="BIGINT" property="createUser"/>
+        <result column="create_name" jdbcType="VARCHAR" property="createName"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="BIGINT" property="updateUser"/>
+        <result column="update_name" jdbcType="VARCHAR" property="updateName"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
 
-
-
-
-	<resultMap id="sysDepartmentMap" type="SysDepartment">
-		<id column="ID" jdbcType="BIGINT" property="id" />
-		<result column="name" jdbcType="VARCHAR" property="name" />
-		<result column="description" jdbcType="VARCHAR" property="description" />
-		<result column="pid" jdbcType="BIGINT" property="pid" />
-		<result column="status" jdbcType="VARCHAR" property="status" />
-		<result column="create_user" jdbcType="BIGINT" property="createUser" />
-		<result column="create_name" jdbcType="VARCHAR" property="createName" />
-		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-		<result column="update_user" jdbcType="BIGINT" property="updateUser" />
-		<result column="update_name" jdbcType="VARCHAR" property="updateName" />
-		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-	</resultMap>
-
-	<select id="selectByExampleToUser" parameterType="SysUserDepartmentRefQuery" resultMap="sysDepartmentMap">
-		select
-		de.id,
-		de.name,
-		de.description,
-		de.pid,
-		de.status,
-		de.create_user,
-		de.create_name,
-		de.create_time,
-		de.update_user,
-		de.update_name,
-		de.update_time
-		from sys_user_department_ref rde, sys_department de
-		<where>
-			<trim prefix="(" prefixOverrides="and" suffix=")">
-				and rde.ref_department_id = de.id
-				<if test="refUserId != null and refUserId != ''">
-					and rde.ref_user_id = #{refUserId,jdbcType=BIGINT}
-				</if>
-				<if test="refDepartmentId != null and refDepartmentId != ''">
-					and rde.ref_department_id = #{refDepartmentId,jdbcType=BIGINT}
-				</if>
-				<if test="status != null">
-					and rde.status = #{status,jdbcType=VARCHAR}
-				</if>
-			</trim>
-		</where>
-	</select>
+    <select id="selectByExampleToUser" parameterType="SysUserDepartmentRefQuery" resultMap="sysDepartmentMap">
+        select
+        de.id,
+        de.name,
+        de.description,
+        de.pid,
+        de.status,
+        de.create_user,
+        de.create_name,
+        de.create_time,
+        de.update_user,
+        de.update_name,
+        de.update_time
+        from sys_user_department_ref rde, sys_department de
+        <where>
+            <trim prefix="(" prefixOverrides="and" suffix=")">
+                and rde.ref_department_id = de.id
+                <if test="refUserId != null and refUserId != ''">
+                    and rde.ref_user_id = #{refUserId,jdbcType=BIGINT}
+                </if>
+                <if test="refDepartmentId != null and refDepartmentId != ''">
+                    and rde.ref_department_id = #{refDepartmentId,jdbcType=BIGINT}
+                </if>
+                <if test="status != null">
+                    and rde.status = #{status,jdbcType=VARCHAR}
+                </if>
+            </trim>
+        </where>
+    </select>
 
 </mapper>

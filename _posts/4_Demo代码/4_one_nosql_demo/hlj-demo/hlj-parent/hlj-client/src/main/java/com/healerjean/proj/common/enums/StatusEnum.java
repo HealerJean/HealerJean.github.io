@@ -5,7 +5,7 @@ package com.healerjean.proj.common.enums;
  * @Author HealerJean
  * @Date 2019-06-16  01:58.
  */
-public enum  StatusEnum {
+public enum StatusEnum {
 
     生效("10", "生效"),
     废弃("99", "废弃");

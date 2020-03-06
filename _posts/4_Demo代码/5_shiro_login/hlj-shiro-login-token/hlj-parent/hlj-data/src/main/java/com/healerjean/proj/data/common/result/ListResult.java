@@ -11,25 +11,26 @@ import java.util.List;
  */
 public class ListResult<T> {
 
-	private static final long serialVersionUID = 1641284062873197036L;
+    private static final long serialVersionUID = 1641284062873197036L;
 
-	public ListResult() {}
+    public ListResult() {
+    }
 
-	public static <E> ListResult<E> newListResult() {
-		return new ListResult<E>();
-	}
+    public static <E> ListResult<E> newListResult() {
+        return new ListResult<E>();
+    }
 
-	/**
-	 * 集合值结果
-	 */
-	private List<T> values;
+    /**
+     * 集合值结果
+     */
+    private List<T> values;
 
-	public List<T> getValues() {
-		return values;
-	}
+    public List<T> getValues() {
+        return values;
+    }
 
-	public ListResult<T> setValues(List<T> values) {
-		this.values = values;
-		return this;
-	}
+    public ListResult<T> setValues(List<T> values) {
+        this.values = values;
+        return this;
+    }
 }

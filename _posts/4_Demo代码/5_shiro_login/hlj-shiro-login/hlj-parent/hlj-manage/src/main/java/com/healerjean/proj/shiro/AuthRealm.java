@@ -1,4 +1,5 @@
 package com.healerjean.proj.shiro;
+
 import com.healerjean.proj.dto.system.MenuDTO;
 import com.healerjean.proj.dto.user.LoginUserDTO;
 import com.healerjean.proj.service.identity.IdentityService;
@@ -65,8 +66,8 @@ public class AuthRealm extends AuthorizingRealm {
      * 1、获取登录后需要的的基本信息（将来无需查询数据库直接获取）
      * 2、shiro中放入用户Url权限
      * 3、用户信息存储到session中  （不存储菜单和权限，因为session中的用户是提供给我们后台自己使用的对象）
-     *     菜单放到了 session的另一个 name中，如下
-     *     权限交给了 shiro ，shiro控制是否有权限操作
+     * 菜单放到了 session的另一个 name中，如下
+     * 权限交给了 shiro ，shiro控制是否有权限操作
      * 4、前台展示的路由菜单menus，用户提供前台显示的菜单放到了session中
      */
     @Override

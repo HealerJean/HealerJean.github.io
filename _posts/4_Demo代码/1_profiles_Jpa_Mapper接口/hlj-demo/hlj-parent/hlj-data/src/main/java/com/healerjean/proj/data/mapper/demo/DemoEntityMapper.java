@@ -13,11 +13,11 @@ import java.util.List;
 public interface DemoEntityMapper {
 
 
-    Long countQueryContion(DemoEntityQuery query) ;
+    Long countQueryContion(DemoEntityQuery query);
 
     DemoEntity findByQueryContion(DemoEntityQuery query);
 
-    List<DemoEntity> queryList(DemoEntityQuery query) ;
+    List<DemoEntity> queryList(DemoEntityQuery query);
 
 
 }

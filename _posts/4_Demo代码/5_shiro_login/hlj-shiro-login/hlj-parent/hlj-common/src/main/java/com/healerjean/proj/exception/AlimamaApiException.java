@@ -11,7 +11,6 @@ import com.healerjean.proj.enums.ResponseEnum;
 public class AlimamaApiException extends BusinessException {
 
 
-
     public AlimamaApiException(String msg) {
         super(ResponseEnum.淘宝接口数据异常, msg);
     }

@@ -64,8 +64,6 @@ public class SysMenuDao extends BaseDao {
     }
 
 
-
-
     public List<SysMenu> selectPageByExampleLike(SysMenuQuery example) {
         return super.getSqlSession().selectList("SysMenuMapper.selectPageByExampleLike", example);
     }
@@ -84,7 +82,6 @@ public class SysMenuDao extends BaseDao {
     }
 
 
-
     public List<SysMenu> selectByPrimaryKeys(List<Long> ids) {
         return super.getSqlSession().selectList("SysMenuMapper.selectByPrimaryKeys", ids);
     }
@@ -92,7 +89,6 @@ public class SysMenuDao extends BaseDao {
     public int batchUpdate(List<SysMenu> list) {
         return super.batchUpdate("SysMenuMapper.updateByPrimaryKeySelective", list);
     }
-
 
 
 }

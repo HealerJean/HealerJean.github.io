@@ -51,7 +51,6 @@
         </dependency>
 
 
-
         <!--logback-->
         <dependency>
             <groupId>com.github.pukkaone</groupId>
@@ -76,8 +75,6 @@
             <artifactId>logback-access</artifactId>
             <version>1.1.6</version>
         </dependency>
-
-
 
 
         <!--不一样的arrylist 和 stringUtils-->
