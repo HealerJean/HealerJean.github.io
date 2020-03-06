@@ -37,6 +37,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     /**
      * 获取部门树形结构
+     *
      * @return
      */
     @Override
@@ -49,6 +50,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     /**
      * 添加部门
+     *
      * @param departmentDTO
      * @return
      */
@@ -77,6 +79,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     /**
      * 修改部门（不能修改部门父级）
+     *
      * @param departmentDTO
      * @return
      */
@@ -102,6 +105,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     /**
      * 删除部门（有子部门不可删除）
+     *
      * @param departmentDTO
      */
     @Override

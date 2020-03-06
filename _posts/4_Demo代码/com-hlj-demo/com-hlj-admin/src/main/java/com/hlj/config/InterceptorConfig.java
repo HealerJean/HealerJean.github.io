@@ -12,7 +12,7 @@ import javax.annotation.Resource;
  * 拦截器
  * 作者：  HealerJean
  * 日期:  2018/11/8 下午3:57.
- * 类描述: 
+ * 类描述:
  */
 
 @Configuration
@@ -23,7 +23,8 @@ public class InterceptorConfig extends WebMvcConfigurerAdapter {
 
 
     /**
-     *  swagger增加url映射
+     * swagger增加url映射
+     *
      * @param registry
      */
     @Override

@@ -3,6 +3,7 @@ package com.healerjean.proj.utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
 /**
  * @author HealerJean
  * @version 1.0v
@@ -24,8 +25,8 @@ public class PropertiesUtil {
         String profile = System.getProperty("profiles.active");
         System.out.println(profile);
 
-        String[]  props = new String[] {"db.properties", "resource.properties" };
-        for(String prop:props){
+        String[] props = new String[]{"db.properties", "resource.properties"};
+        for (String prop : props) {
             InputStream inputStream = PropertiesUtil.class.getClassLoader().getResourceAsStream(prop);
             if (inputStream != null) {
                 Properties propertiest = new Properties();

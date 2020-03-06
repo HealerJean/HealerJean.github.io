@@ -95,6 +95,7 @@ public class SensitiveInfoUtils {
 
     /**
      * 提供给外部进行直接脱敏处理
+     *
      * @param type
      * @param value
      * @return

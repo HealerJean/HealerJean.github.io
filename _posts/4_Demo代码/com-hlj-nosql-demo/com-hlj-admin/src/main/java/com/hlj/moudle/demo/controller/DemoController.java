@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class DemoController {
 
 
-
     @ApiOperation(value = "Post接口",
             notes = "Post接口",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
@@ -41,16 +40,16 @@ public class DemoController {
             response = ResponseBean.class
     )
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "params", value = "参数", required =false,paramType = "query", dataType = "string")
+            @ApiImplicitParam(name = "params", value = "参数", required = false, paramType = "query", dataType = "string")
     })
-    @PostMapping( value = "post",produces="application/json;charset=utf-8")
+    @PostMapping(value = "post", produces = "application/json;charset=utf-8")
     @ResponseBody
-    public ResponseBean post(String params){
+    public ResponseBean post(String params) {
         try {
-            return  ResponseBean.buildSuccess("Post_Ok");
+            return ResponseBean.buildSuccess("Post_Ok");
         } catch (AppException e) {
             ExceptionLogUtils.log(e, this.getClass());
-            return ResponseBean.buildFailure(e.getCode(),e.getMessage());
+            return ResponseBean.buildFailure(e.getCode(), e.getMessage());
         } catch (Exception e) {
             ExceptionLogUtils.log(e, this.getClass());
             return ResponseBean.buildFailure(e.getMessage());
@@ -58,29 +57,26 @@ public class DemoController {
     }
 
 
-
-    @ApiOperation(value = "Get接口",notes = "Get接口",
+    @ApiOperation(value = "Get接口", notes = "Get接口",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             response = ResponseBean.class)
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "params", value = "参数", required =false,paramType = "query", dataType = "string")
+            @ApiImplicitParam(name = "params", value = "参数", required = false, paramType = "query", dataType = "string")
     })
     @GetMapping("get")
     @ResponseBody
-    public ResponseBean get(String params){
+    public ResponseBean get(String params) {
         try {
             return ResponseBean.buildSuccess(params);
         } catch (AppException e) {
-            log.error(e.getMessage(),e);
-            return ResponseBean.buildFailure(e.getCode(),e.getMessage());
+            log.error(e.getMessage(), e);
+            return ResponseBean.buildFailure(e.getCode(), e.getMessage());
         } catch (Exception e) {
-            log.error(e.getMessage(),e);
+            log.error(e.getMessage(), e);
             return ResponseBean.buildFailure(e.getMessage());
         }
     }
-
-
 
 
 }

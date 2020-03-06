@@ -1,7 +1,6 @@
 package com.healerjean.proj.api.system;
 
 
-
 import com.healerjean.proj.dto.system.DepartmentDTO;
 import com.healerjean.proj.dto.user.LoginUserDTO;
 
@@ -18,12 +17,14 @@ public interface DepartmentService {
 
     /**
      * 获取部门树结构
+     *
      * @return
      */
     List<DepartmentDTO> getDepartmentTree();
 
     /**
      * 增加部门
+     *
      * @param departmentDTO
      * @return
      */
@@ -31,6 +32,7 @@ public interface DepartmentService {
 
     /**
      * 修改部门
+     *
      * @param departmentDTO
      * @return
      */
@@ -38,6 +40,7 @@ public interface DepartmentService {
 
     /**
      * 删除部门
+     *
      * @param departmentDTO
      */
     void deleteDepartment(DepartmentDTO departmentDTO);

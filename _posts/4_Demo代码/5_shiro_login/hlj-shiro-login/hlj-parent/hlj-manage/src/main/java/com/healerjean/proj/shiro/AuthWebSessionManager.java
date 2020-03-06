@@ -34,11 +34,12 @@ public class AuthWebSessionManager extends DefaultWebSessionManager {
      * 初始化session管理器
      * 1、初始化session的与系统关联
      * 2、设置sessionIdCookie，将sessionId存储到cookie中
+     *
      * @param authConfiguration
      */
     public AuthWebSessionManager(AuthConfiguration authConfiguration) {
         super();
-        Cookie cookie = new SimpleCookie(authConfiguration.getClientName()+ "_SID");
+        Cookie cookie = new SimpleCookie(authConfiguration.getClientName() + "_SID");
         cookie.setHttpOnly(true);
 
         //设置sessionIdCookie
@@ -54,9 +55,9 @@ public class AuthWebSessionManager extends DefaultWebSessionManager {
 
     /**
      * 1、取出Session：当浏览器最开始访问的时候进入获取当前会话session(这个方法会被多次执行，反复执行)
-     *  1.1、从浏览器/请求中中获取sessionId，如果浏览器中token为空的话session工厂中创建
-     *  1.2、调用RedisSessionDao进行获取session   -》readSession
-     *  1.3、如果获取不到session，抛出下面的异常
+     * 1.1、从浏览器/请求中中获取sessionId，如果浏览器中token为空的话session工厂中创建
+     * 1.2、调用RedisSessionDao进行获取session   -》readSession
+     * 1.3、如果获取不到session，抛出下面的异常
      */
     @Override
     protected Session retrieveSession(SessionKey sessionKey) throws UnknownSessionException {
@@ -75,7 +76,6 @@ public class AuthWebSessionManager extends DefaultWebSessionManager {
         }
         return session;
     }
-
 
 
     @Override
@@ -116,14 +116,6 @@ public class AuthWebSessionManager extends DefaultWebSessionManager {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         return getSessionIdCookie().readValue(httpRequest, WebUtils.toHttp(response));
     }
-
-
-
-
-
-
-
-
 
 
     @Override

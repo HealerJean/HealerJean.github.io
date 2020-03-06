@@ -8,7 +8,7 @@ import com.healerjean.proj.enums.ResponseEnum;
  * @date 2019/10/17  16:19.
  * @Description 参数错误
  */
-public class ParameterErrorException extends com.healerjean.proj.exception.BusinessException {
+public class ParameterErrorException extends BusinessException {
 
     public ParameterErrorException() {
         super(ResponseEnum.参数错误);

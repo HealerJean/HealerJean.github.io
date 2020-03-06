@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2019 xiaomi.com, Inc. All Rights Reserved.
- */package com.healerjean.proj.data.dao.deme;
+ */
+package com.healerjean.proj.data.dao.deme;
 
 import com.healerjean.proj.data.dao.BaseDao;
 import com.healerjean.proj.data.pojo.demo.DemoEntity;
@@ -8,6 +9,7 @@ import com.healerjean.proj.data.pojo.demo.DemoEntityQuery;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 /**
  * @author zhangyujin
  * @ClassName: DemoEntityDao
@@ -17,48 +19,48 @@ import java.util.List;
 @Repository("demoEntityDao")
 public class DemoEntityDao extends BaseDao {
 
-	public int countByExample(DemoEntityQuery example) {
-		return super.getSqlSession().selectOne("DemoEntityMapper.countByExample", example);
-	}
+    public int countByExample(DemoEntityQuery example) {
+        return super.getSqlSession().selectOne("DemoEntityMapper.countByExample", example);
+    }
 
-	public int deleteByExample(DemoEntityQuery example) {
-		return super.getSqlSession().delete("DemoEntityMapper.deleteByExample", example);
-	}
+    public int deleteByExample(DemoEntityQuery example) {
+        return super.getSqlSession().delete("DemoEntityMapper.deleteByExample", example);
+    }
 
-	public int deleteByPrimaryKey(long id) {
-		return super.getSqlSession().delete("DemoEntityMapper.deleteByPrimaryKey", id);
-	}
+    public int deleteByPrimaryKey(long id) {
+        return super.getSqlSession().delete("DemoEntityMapper.deleteByPrimaryKey", id);
+    }
 
-	public int insert(DemoEntity record) {
-		return super.getSqlSession().insert("DemoEntityMapper.insert", record);
-	}
+    public int insert(DemoEntity record) {
+        return super.getSqlSession().insert("DemoEntityMapper.insert", record);
+    }
 
-	public int insertSelective(DemoEntity record) {
-		return super.getSqlSession().insert("DemoEntityMapper.insertSelective", record);
-	}
+    public int insertSelective(DemoEntity record) {
+        return super.getSqlSession().insert("DemoEntityMapper.insertSelective", record);
+    }
 
-	public int batchInsert(List<DemoEntity> list) {
-		return super.batchInsert("DemoEntityMapper.insertSelective", list);
-	}
+    public int batchInsert(List<DemoEntity> list) {
+        return super.batchInsert("DemoEntityMapper.insertSelective", list);
+    }
 
-	public List<DemoEntity> selectByExample(DemoEntityQuery example) {
-		return super.getSqlSession().selectList("DemoEntityMapper.selectByExample", example);
-	}
+    public List<DemoEntity> selectByExample(DemoEntityQuery example) {
+        return super.getSqlSession().selectList("DemoEntityMapper.selectByExample", example);
+    }
 
-	public List<DemoEntity> selectPageByExample(DemoEntityQuery example) {
-		return super.getSqlSession().selectList("DemoEntityMapper.selectPageByExample", example);
-	}
+    public List<DemoEntity> selectPageByExample(DemoEntityQuery example) {
+        return super.getSqlSession().selectList("DemoEntityMapper.selectPageByExample", example);
+    }
 
-	public DemoEntity selectByPrimaryKey(long id) {
-		return super.getSqlSession().selectOne("DemoEntityMapper.selectByPrimaryKey", id);
-	}
+    public DemoEntity selectByPrimaryKey(long id) {
+        return super.getSqlSession().selectOne("DemoEntityMapper.selectByPrimaryKey", id);
+    }
 
-	public int updateByPrimaryKeySelective(DemoEntity record) {
-		return super.getSqlSession().update("DemoEntityMapper.updateByPrimaryKeySelective", record);
-	}
+    public int updateByPrimaryKeySelective(DemoEntity record) {
+        return super.getSqlSession().update("DemoEntityMapper.updateByPrimaryKeySelective", record);
+    }
 
-	public int updateByPrimaryKey(DemoEntity record) {
-		return super.getSqlSession().update("DemoEntityMapper.updateByPrimaryKey", record);
-	}
+    public int updateByPrimaryKey(DemoEntity record) {
+        return super.getSqlSession().update("DemoEntityMapper.updateByPrimaryKey", record);
+    }
 
 }

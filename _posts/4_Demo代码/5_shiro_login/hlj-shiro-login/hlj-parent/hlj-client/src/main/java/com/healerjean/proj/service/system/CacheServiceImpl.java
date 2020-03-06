@@ -5,6 +5,7 @@ import com.healerjean.proj.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +35,7 @@ public class CacheServiceImpl implements CacheService {
 
     @Override
     public void set(String key, Object value) {
-         redisTemplate.opsForValue().set(key, value);
+        redisTemplate.opsForValue().set(key, value);
     }
 
     @Override
@@ -103,6 +104,6 @@ public class CacheServiceImpl implements CacheService {
 
     @Override
     public void unlock(String key) {
-        delete(REDIS_HLJ + ":" + REDIS_LOCK + ":"  + key);
+        delete(REDIS_HLJ + ":" + REDIS_LOCK + ":" + key);
     }
 }

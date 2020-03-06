@@ -10,8 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class HttpEntity {
 
-    /** Http返回码 */
+    /**
+     * Http返回码
+     */
     private int code;
-    /** Http返回正文 */
+    /**
+     * Http返回正文
+     */
     private String content;
 }

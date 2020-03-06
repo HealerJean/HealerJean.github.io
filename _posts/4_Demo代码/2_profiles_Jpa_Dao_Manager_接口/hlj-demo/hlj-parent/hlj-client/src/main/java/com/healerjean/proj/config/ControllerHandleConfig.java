@@ -69,7 +69,6 @@ public class ControllerHandleConfig {
     }
 
 
-
     /**
      * 参数错误
      */
@@ -89,11 +88,9 @@ public class ControllerHandleConfig {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ResponseBean businessExceptionHandler(BusinessException e) {
-        log.error("业务异常------------异常信息：code:{},message{}" ,e.getCode(), e.getMessage());
-        return ResponseBean.buildFailure(e.getCode(),e.getMessage());
+        log.error("业务异常------------异常信息：code:{},message{}", e.getCode(), e.getMessage());
+        return ResponseBean.buildFailure(e.getCode(), e.getMessage());
     }
-
-
 
 
     /**
@@ -113,7 +110,6 @@ public class ControllerHandleConfig {
         header.add("Charset", "UTF-8");
         return new HttpEntity<>(responseBean, header);
     }
-
 
 
     /**

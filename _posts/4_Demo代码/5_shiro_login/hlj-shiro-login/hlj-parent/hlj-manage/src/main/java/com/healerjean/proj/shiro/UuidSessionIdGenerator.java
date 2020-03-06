@@ -15,6 +15,6 @@ import java.util.UUID;
 public class UuidSessionIdGenerator implements SessionIdGenerator {
     @Override
     public Serializable generateId(Session session) {
-            return UUID.randomUUID().toString().replaceAll("-","");
+        return UUID.randomUUID().toString().replaceAll("-", "");
     }
 }

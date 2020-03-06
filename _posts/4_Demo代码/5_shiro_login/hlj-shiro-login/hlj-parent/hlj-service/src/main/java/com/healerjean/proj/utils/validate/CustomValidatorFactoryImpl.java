@@ -36,7 +36,6 @@ public class CustomValidatorFactoryImpl implements HibernateValidatorFactory {
     private final boolean failFast;
 
 
-
     public CustomValidatorFactoryImpl(ConfigurationState configurationState) {
         this.messageInterpolator = configurationState.getMessageInterpolator();
         this.constraintValidatorFactory = configurationState.getConstraintValidatorFactory();
@@ -57,13 +56,13 @@ public class CustomValidatorFactoryImpl implements HibernateValidatorFactory {
         constraintList.add(PojoIdExistVialidator.class);
         constraintHelper.addConstraintValidatorDefinition(PojoIdExist.class, constraintList);
         constraintList = new ArrayList<>(1);
-        constraintList.add( DictionaryProvinceValidator.class );
+        constraintList.add(DictionaryProvinceValidator.class);
         constraintHelper.addConstraintValidatorDefinition(DictionaryProvince.class, constraintList);
         constraintList = new ArrayList<>(1);
-        constraintList.add( DictionaryCityValidator.class );
+        constraintList.add(DictionaryCityValidator.class);
         constraintHelper.addConstraintValidatorDefinition(DictionaryCity.class, constraintList);
         constraintList = new ArrayList<>(1);
-        constraintList.add( DictionaryDistrictValidator.class );
+        constraintList.add(DictionaryDistrictValidator.class);
         constraintHelper.addConstraintValidatorDefinition(DictionaryDistrict.class, constraintList);
         // HV-302; don't load XmlMappingParser if not necessary
         if (!configurationState.getMappingStreams().isEmpty()) {
@@ -102,14 +101,17 @@ public class CustomValidatorFactoryImpl implements HibernateValidatorFactory {
     public Validator getValidator() {
         return usingContext().getValidator();
     }
+
     @Override
     public MessageInterpolator getMessageInterpolator() {
         return messageInterpolator;
     }
+
     @Override
     public TraversableResolver getTraversableResolver() {
         return traversableResolver;
     }
+
     @Override
     public ConstraintValidatorFactory getConstraintValidatorFactory() {
         return constraintValidatorFactory;

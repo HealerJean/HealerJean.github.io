@@ -51,12 +51,11 @@ public class DemoController {
     public ResponseBean get(DemoDTO demoDTO) {
         log.info("样例--------GET请求------数据信息{}", demoDTO);
         String validate = ValidateUtils.validate(demoDTO, ValidateGroup.HealerJean.class);
-        if (!validate.equals(CommonConstants.COMMON_SUCCESS)){
-            throw new BusinessException(ResponseEnum.参数错误,validate);
+        if (!validate.equals(CommonConstants.COMMON_SUCCESS)) {
+            throw new BusinessException(ResponseEnum.参数错误, validate);
         }
         return ResponseBean.buildSuccess(demoEntityService.getMmethod(demoDTO));
     }
-
 
 
     @ApiOperation(value = "demo实体",
@@ -64,31 +63,31 @@ public class DemoController {
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = DemoDTO.class)
-    @PostMapping(value = "demo/post",consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "demo/post", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public DemoDTO post(@RequestBody String message) {
         log.info("样例--------post------数据信息{}", message);
         DemoDTO demoDTO = JsonUtils.toObject(message, DemoDTO.class);
         String validate = ValidateUtils.validate(demoDTO, ValidateGroup.HealerJean.class);
-        if (!validate.equals(CommonConstants.COMMON_SUCCESS)){
-            throw new BusinessException(ResponseEnum.参数错误,validate);
+        if (!validate.equals(CommonConstants.COMMON_SUCCESS)) {
+            throw new BusinessException(ResponseEnum.参数错误, validate);
         }
-        return  demoEntityService.getMmethod(demoDTO);
+        return demoEntityService.getMmethod(demoDTO);
     }
 
 
     public static void main(String[] args) {
-        try{
+        try {
             // 模拟空指针异常
             //Integer nullInt = Integer.valueOf(null);
-            int[] array = {1,2,3,4,5};
+            int[] array = {1, 2, 3, 4, 5};
             int outBoundInt = array[5];
-        }catch (Exception e){
+        } catch (Exception e) {
             // 使用逗号分隔，调用两个参数的error方法
             log.error("使用 , 号 使第二个参数作为Throwable : ", e);
             // 尝试使用分隔符,第二个参数为Throwable,会发现分隔符没有起作用，第二个参数的不同据，调用不同的重载方法
             log.error("第二个参数为Throwable，使用分隔符打印 {} : ", e);
-            log.error("第二个参数为Object，使用分隔符打印 {} ",123, e);
+            log.error("第二个参数为Object，使用分隔符打印 {} ", 123, e);
 
         }
     }

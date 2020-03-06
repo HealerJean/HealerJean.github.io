@@ -36,20 +36,20 @@ public class UserDTO {
     private String userType;
 
     @ApiModelProperty(value = "用户真实姓名")
-    @NotBlank(message = "用户真实姓名不能为空", groups = { ValidateGroup.RegisterUser.class, ValidateGroup.ManageAddUser.class})
+    @NotBlank(message = "用户真实姓名不能为空", groups = {ValidateGroup.RegisterUser.class, ValidateGroup.ManageAddUser.class})
     private String realName;
 
     @ApiModelProperty(value = "手机号")
-    @NotBlank(message = "手机号不能为空", groups = { ValidateGroup.RegisterUser.class, ValidateGroup.ManageAddUser.class})
+    @NotBlank(message = "手机号不能为空", groups = {ValidateGroup.RegisterUser.class, ValidateGroup.ManageAddUser.class})
     private String telephone;
 
     @ApiModelProperty(value = "有效")
-    @NotBlank(message = "有效不能为空", groups = { ValidateGroup.RegisterUser.class, ValidateGroup.ManageAddUser.class})
+    @NotBlank(message = "有效不能为空", groups = {ValidateGroup.RegisterUser.class, ValidateGroup.ManageAddUser.class})
     @Pattern(regexp = RegularExpressionConstants.EMAIL, message = "请输入正确的邮箱")
     private String email;
 
     @ApiModelProperty(value = "密码")
-    @NotBlank(message = "密码不能为空", groups = { ValidateGroup.RegisterUser.class, ValidateGroup.Login.class, ValidateGroup.ManageAddUser.class})
+    @NotBlank(message = "密码不能为空", groups = {ValidateGroup.RegisterUser.class, ValidateGroup.Login.class, ValidateGroup.ManageAddUser.class})
     @Pattern(regexp = RegularExpressionConstants.PASSWORD, message = "密码强度过低(长度至少 6 位，由大小写字母和数字共同组成)")
     private String password;
 

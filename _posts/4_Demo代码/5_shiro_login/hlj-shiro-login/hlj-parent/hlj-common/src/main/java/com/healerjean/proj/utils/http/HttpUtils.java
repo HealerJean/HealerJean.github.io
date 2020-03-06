@@ -83,7 +83,7 @@ public class HttpUtils {
      * @param params 发送内容
      * @return string
      */
-    public static HttpEntity doGet(String url, Map<String, String> params, Map<String, String> headersParams)  {
+    public static HttpEntity doGet(String url, Map<String, String> params, Map<String, String> headersParams) {
         //  url中添加参数
         HttpUrl httpUrl = HttpUrl.parse(url);
         HttpUrl.Builder builder = httpUrl.newBuilder();
@@ -178,7 +178,7 @@ public class HttpUtils {
      * @param params 发送参数
      * @return string
      */
-    public static HttpEntity doPostFromFile(String url, Map<String, Object> params, Map<String, File> fileMap, Map<String, String> fileMediaTypeMap, Map<String, String> headersParams)  {
+    public static HttpEntity doPostFromFile(String url, Map<String, Object> params, Map<String, File> fileMap, Map<String, String> fileMediaTypeMap, Map<String, String> headersParams) {
         MultipartBody.Builder multiBuilder = new MultipartBody.Builder();
         multiBuilder.setType(MultipartBody.FORM);
         for (Map.Entry<String, Object> entry : params.entrySet()) {
@@ -238,7 +238,7 @@ public class HttpUtils {
      * @param params 发送参数
      * @return string
      */
-    public static HttpEntity doPutForm(String url, Map<String, String> params, Map<String, String> headersParams)  {
+    public static HttpEntity doPutForm(String url, Map<String, String> params, Map<String, String> headersParams) {
         FormBody.Builder builder = new FormBody.Builder();
         if (params != null && !params.isEmpty()) {
             for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -291,7 +291,7 @@ public class HttpUtils {
      * @param params 发送参数
      * @return string
      */
-    public static HttpEntity doDeleteForm(String url, Map<String, String> params, Map<String, String> headersParams)  {
+    public static HttpEntity doDeleteForm(String url, Map<String, String> params, Map<String, String> headersParams) {
         FormBody.Builder builder = new FormBody.Builder();
         if (params != null && !params.isEmpty()) {
             for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -321,7 +321,7 @@ public class HttpUtils {
      * @param content 发送内容
      * @return string
      */
-    public static HttpEntity doDelete(MediaType type, String url, String content, Map<String, String> headersParams)  {
+    public static HttpEntity doDelete(MediaType type, String url, String content, Map<String, String> headersParams) {
         RequestBody body = RequestBody.create(type, content);
         Request request = new Request.Builder()
                 .url(url)

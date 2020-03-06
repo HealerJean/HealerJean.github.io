@@ -53,12 +53,12 @@ public class SendMailServiceImpl implements SendMailService {
             sendMailDTO.setStatus(StatusEnum.生效.code);
             sendMailDTO.setMsg(StatusEnum.生效.desc);
         } catch (Exception e) {
-            log.error("=========邮件发送异常=========",e);
+            log.error("=========邮件发送异常=========", e);
             sendMailDTO.setStatus(StatusEnum.废弃.code);
             sendMailDTO.setMsg(e.getMessage());
             // throw new ScfException(SystemEnum.ResponseEnum.MAIL_ERROR);
-        }finally {
-           sendMsgLogService.saveSendMailLog(sendMailDTO);
+        } finally {
+            sendMsgLogService.saveSendMailLog(sendMailDTO);
         }
     }
 
@@ -100,11 +100,11 @@ public class SendMailServiceImpl implements SendMailService {
             query.setName(sendMailTemplateDTO.getTemplateName());
             query.setType(BusinessEnum.TemplateTypeEnum.邮件.code);
             SysTemplate template = sysTemplateManager.findByQueryContion(query);
-            if(template==null){
+            if (template == null) {
                 log.error("=========邮件模板不存在=========");
                 throw new ParameterErrorException("邮件模板不存在！");
             }
-            String content = FreeMarkerUtil.stringTemplate(template.getContent(),sendMailTemplateDTO.getMap());
+            String content = FreeMarkerUtil.stringTemplate(template.getContent(), sendMailTemplateDTO.getMap());
             sendMailTemplateDTO.setContent(content);
             sendMailTemplateDTO.setType(template.getName());
 

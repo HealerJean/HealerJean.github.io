@@ -105,15 +105,15 @@ public interface BusinessEnum {
     }
 
 
-
     /**
      * 模板名字
      */
-    enum TempleNameEnum  {
+    enum TempleNameEnum {
         邮箱验证("VerifyEmail", "邮箱验证"),
         找回密码邮箱验证("PasswordVerifyEmail", "找回密码邮箱验证"),
         手机号验证("VerifyPhone", "手机号验证"),
         ;
+
         TempleNameEnum(String code, String desc) {
             this.code = code;
             this.desc = desc;
@@ -153,14 +153,13 @@ public interface BusinessEnum {
 
         public static MenuTypeEnum toEnum(String code) {
             for (MenuTypeEnum value : MenuTypeEnum.values()) {
-                if (value.code .equals( code)) {
+                if (value.code.equals(code)) {
                     return value;
                 }
             }
             return null;
         }
     }
-
 
 
     /**
@@ -208,12 +207,6 @@ public interface BusinessEnum {
         public String desc;
 
     }
-
-
-
-
-
-
 
 
 }

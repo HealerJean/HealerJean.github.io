@@ -9,8 +9,9 @@ public class ImageUtils {
 
     /**
      * 解决：只要经过ImageIO.read()方法读取后再保存，该图片变成红图
-     Image src=Toolkit.getDefaultToolkit().getImage(file.getPath());
-     BufferedImage image=BufferedImageBuilder.toBufferedImage(src);
+     * Image src=Toolkit.getDefaultToolkit().getImage(file.getPath());
+     * BufferedImage image=BufferedImageBuilder.toBufferedImage(src);
+     *
      * @param image
      * @return
      */

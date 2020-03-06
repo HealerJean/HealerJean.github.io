@@ -8,7 +8,7 @@ package com.healerjean.proj.enums;
  */
 public interface BusinessEnum {
 
-    enum WechatTypeEnum {
+    enum WechatTypeEnum implements BusinessEnum{
 
         订阅号("Subscribe", "订阅号"),
         服务号("Service", "服务号");
@@ -26,7 +26,7 @@ public interface BusinessEnum {
     /**
      * 操作系统枚举
      */
-    enum EPlatformEnum {
+    enum EPlatformEnum implements BusinessEnum{
 
         Any("any"),
         Linux("Linux"),
@@ -61,7 +61,7 @@ public interface BusinessEnum {
     /**
      * 验证码枚举
      */
-    enum VerifyCodeTypeEnum {
+    enum VerifyCodeTypeEnum implements BusinessEnum{
 
         图片验证码("captcha", "图片验证码"),
         注册邮箱验证码("RegistEmail", "注册邮箱验证码"),
@@ -90,7 +90,7 @@ public interface BusinessEnum {
     /**
      * 模板类型
      */
-    enum TemplateTypeEnum {
+    enum TemplateTypeEnum implements BusinessEnum{
 
         邮件("Email", "邮件"),
         ;
@@ -105,15 +105,15 @@ public interface BusinessEnum {
     }
 
 
-
     /**
      * 模板名字
      */
-    enum TempleNameEnum  {
+    enum TempleNameEnum implements BusinessEnum{
         邮箱验证("VerifyEmail", "邮箱验证"),
         找回密码邮箱验证("PasswordVerifyEmail", "找回密码邮箱验证"),
         手机号验证("VerifyPhone", "手机号验证"),
         ;
+
         TempleNameEnum(String code, String desc) {
             this.code = code;
             this.desc = desc;
@@ -137,7 +137,7 @@ public interface BusinessEnum {
     /**
      * 菜单类型
      */
-    enum MenuTypeEnum {
+    enum MenuTypeEnum implements BusinessEnum{
 
         后端菜单("0", "后端菜单"),
         前端菜单("1", "前端菜单");
@@ -153,7 +153,7 @@ public interface BusinessEnum {
 
         public static MenuTypeEnum toEnum(String code) {
             for (MenuTypeEnum value : MenuTypeEnum.values()) {
-                if (value.code .equals( code)) {
+                if (value.code.equals(code)) {
                     return value;
                 }
             }
@@ -162,11 +162,10 @@ public interface BusinessEnum {
     }
 
 
-
     /**
      * 用户类型
      */
-    enum UserTypeEnum {
+    enum UserTypeEnum implements BusinessEnum{
 
         管理人员("manager", "管理人员"),
         网站用户("webuser", "网站用户");
@@ -193,7 +192,7 @@ public interface BusinessEnum {
     /**
      * 用户类型
      */
-    enum DomainTypeEnum {
+    enum DomainTypeEnum implements BusinessEnum{
 
         网站("web", "网站"),
 
@@ -208,12 +207,6 @@ public interface BusinessEnum {
         public String desc;
 
     }
-
-
-
-
-
-
 
 
 }

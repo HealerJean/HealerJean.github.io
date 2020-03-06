@@ -20,6 +20,7 @@ public class ControllerExceptionConfig {
 
     /**
      * 用来给ftl模板提供项目路径访问，这种方式不可以使用EnableWebMvc
+     *
      * @return
      */
     @ModelAttribute("urls")
@@ -30,11 +31,10 @@ public class ControllerExceptionConfig {
     //配合application中的配置使用哦
     @ExceptionHandler(value = Throwable.class) //处理抛出的异常。一般都是抛出的哦
     @ResponseBody
-    public String handler(Throwable t){
-        ExceptionLogUtils.log(t,this.getClass());
-        return  "SYSTEM ERROR/404/403/等）";
+    public String handler(Throwable t) {
+        ExceptionLogUtils.log(t, this.getClass());
+        return "SYSTEM ERROR/404/403/等）";
     }
-
 
 
 }

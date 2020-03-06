@@ -113,21 +113,21 @@ public class MenuServiceImpl implements MenuService {
      * @return
      */
     @Override
-    public Map<String, MenuDTO> getMenusNoPageToTree (MenuDTO menuDTO) {
+    public Map<String, MenuDTO> getMenusNoPageToTree(MenuDTO menuDTO) {
         SysMenuQuery query = new SysMenuQuery();
         query.setRefSystemCode(menuDTO.getSystemCode());
         query.setStatus(StatusEnum.生效.code);
         List<SysMenu> menus = sysMenuManager.queryList(query);
-        if(menus == null){
+        if (menus == null) {
             return new HashMap<>(0);
         }
         Map<String, List<SysMenu>> mapSystem = menus.stream().collect(Collectors.groupingBy(SysMenu::getRefSystemCode));
         Map<String, MenuDTO> result = new HashMap<>(mapSystem.size());
         //前后分端菜单按菜单类型做分组
-        for(Map.Entry<String, List<SysMenu>> systemEntry : mapSystem.entrySet()) {
-            MenuDTO resultMenuDTO =  new MenuDTO();
+        for (Map.Entry<String, List<SysMenu>> systemEntry : mapSystem.entrySet()) {
+            MenuDTO resultMenuDTO = new MenuDTO();
             List<SysMenu> systemValue = systemEntry.getValue();
-            if(systemValue == null){
+            if (systemValue == null) {
                 continue;
             }
             Map<String, List<SysMenu>> mapMenu = systemValue.stream().collect(Collectors.groupingBy(item -> item.getMenuType()));
@@ -142,13 +142,13 @@ public class MenuServiceImpl implements MenuService {
             }
             //后端菜单树状
             List<SysMenu> serviceMenus = mapMenu.get(BusinessEnum.MenuTypeEnum.后端菜单.code);
-            if(serviceMenus != null) {
+            if (serviceMenus != null) {
                 List<MenuDTO> serviceData = serviceMenus.stream().map(item -> BeanUtils.menuToDTO(item)).collect(Collectors.toList());
                 List<MenuDTO> systemData = systemValue.stream().map(item -> BeanUtils.menuToDTO(item)).collect(Collectors.toList());
                 serviceData = BeanUtils.backMenusToTree(serviceData, systemData);
                 resultMenuDTO.setBackMenus(serviceData);
             }
-            result.put(systemEntry.getKey(),resultMenuDTO);
+            result.put(systemEntry.getKey(), resultMenuDTO);
         }
         return result;
     }

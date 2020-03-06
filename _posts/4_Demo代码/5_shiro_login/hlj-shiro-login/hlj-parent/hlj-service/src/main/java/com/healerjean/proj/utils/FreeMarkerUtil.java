@@ -72,7 +72,7 @@ public class FreeMarkerUtil {
             }
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, params);
         } catch (Exception e) {
-            throw new BusinessException("模板匹配数据异常：" , e);
+            throw new BusinessException("模板匹配数据异常：", e);
         }
     }
 

@@ -1,7 +1,6 @@
 package com.healerjean.proj.util.sensitivity;
 
 
-
 /**
  * @author HealerJean
  * @version 1.0v
@@ -36,7 +35,6 @@ public enum SensitiveTypeEnum {
      * 账户信息
      */
     ACCOUNT_NO;
-
 
 
 }

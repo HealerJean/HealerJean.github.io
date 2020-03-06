@@ -21,11 +21,10 @@ import java.util.List;
 public class DemoEntityServiceImpl implements DemoEntityService {
 
     @Resource
-    private DemoEntityMapper demoEntityMapper ;
+    private DemoEntityMapper demoEntityMapper;
 
     @Resource
-    private DemoEntityRepository demoEntityRepository ;
-
+    private DemoEntityRepository demoEntityRepository;
 
 
     @Override

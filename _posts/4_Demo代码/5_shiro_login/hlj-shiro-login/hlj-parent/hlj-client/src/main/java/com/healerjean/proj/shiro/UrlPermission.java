@@ -26,16 +26,16 @@ public class UrlPermission implements Permission {
 
     @Override
     public boolean implies(Permission permission) {
-        if(!(permission instanceof UrlPermission)){
+        if (!(permission instanceof UrlPermission)) {
             return false;
         }
-        UrlPermission urlPermission = (UrlPermission)permission;
+        UrlPermission urlPermission = (UrlPermission) permission;
         PatternMatcher patternMatcher = new AntPathMatcher();
 
-        boolean matches = patternMatcher.matches(this.uri,urlPermission.getUri());
+        boolean matches = patternMatcher.matches(this.uri, urlPermission.getUri());
         matches = matches &
                 (StringUtils.isNotBlank(this.method) && StringUtils.isNotBlank(urlPermission.getMethod())
-                && this.method.toUpperCase().equals(urlPermission.getMethod().toUpperCase()));
+                        && this.method.toUpperCase().equals(urlPermission.getMethod().toUpperCase()));
         return matches;
     }
 }

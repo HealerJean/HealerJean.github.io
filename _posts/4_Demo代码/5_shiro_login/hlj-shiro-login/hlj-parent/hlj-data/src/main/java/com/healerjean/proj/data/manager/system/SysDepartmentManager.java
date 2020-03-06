@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2019 xiaomi.com, Inc. All Rights Reserved.
- */package com.healerjean.proj.data.manager.system;
+ */
+package com.healerjean.proj.data.manager.system;
 
 import java.util.List;
 
@@ -22,85 +23,82 @@ import org.springframework.stereotype.Component;
 @Component("sysDepartmentManager")
 public class SysDepartmentManager {
 
-	@Autowired
-	@Qualifier("sysDepartmentDao")
-	private SysDepartmentDao sysDepartmentDao;
+    @Autowired
+    @Qualifier("sysDepartmentDao")
+    private SysDepartmentDao sysDepartmentDao;
 
-	public SysDepartmentDao getDao() {
-		return this.sysDepartmentDao;
-	}
+    public SysDepartmentDao getDao() {
+        return this.sysDepartmentDao;
+    }
 
-	public int save(SysDepartment sysDepartment) {
-		int cnt = 0;
-		if (sysDepartment.getId() == null) {
-			cnt = sysDepartmentDao.insertSelective(sysDepartment);
-		} else {
-			cnt = sysDepartmentDao.updateByPrimaryKeySelective(sysDepartment);
-		}
-		return cnt;
-	}
+    public int save(SysDepartment sysDepartment) {
+        int cnt = 0;
+        if (sysDepartment.getId() == null) {
+            cnt = sysDepartmentDao.insertSelective(sysDepartment);
+        } else {
+            cnt = sysDepartmentDao.updateByPrimaryKeySelective(sysDepartment);
+        }
+        return cnt;
+    }
 
-	public int update(SysDepartment sysDepartment) {
-		return sysDepartmentDao.updateByPrimaryKey(sysDepartment);
-	}
+    public int update(SysDepartment sysDepartment) {
+        return sysDepartmentDao.updateByPrimaryKey(sysDepartment);
+    }
 
-	public int updateSelective(SysDepartment sysDepartment) {
-		return sysDepartmentDao.updateByPrimaryKeySelective(sysDepartment);
-	}
+    public int updateSelective(SysDepartment sysDepartment) {
+        return sysDepartmentDao.updateByPrimaryKeySelective(sysDepartment);
+    }
 
-	public int insert(SysDepartment sysDepartment) {
-		return sysDepartmentDao.insert(sysDepartment);
-	}
+    public int insert(SysDepartment sysDepartment) {
+        return sysDepartmentDao.insert(sysDepartment);
+    }
 
-	public int insertSelective(SysDepartment sysDepartment) {
-		return sysDepartmentDao.insertSelective(sysDepartment);
-	}
+    public int insertSelective(SysDepartment sysDepartment) {
+        return sysDepartmentDao.insertSelective(sysDepartment);
+    }
 
-	public int batchInsert(List<SysDepartment> list){
-		return sysDepartmentDao.batchInsert(list);
-	}
+    public int batchInsert(List<SysDepartment> list) {
+        return sysDepartmentDao.batchInsert(list);
+    }
 
-	public SysDepartment findById(long id) {
-		return sysDepartmentDao.selectByPrimaryKey(id);
-	}
+    public SysDepartment findById(long id) {
+        return sysDepartmentDao.selectByPrimaryKey(id);
+    }
 
-	public SysDepartment findByQueryContion(SysDepartmentQuery query) {
-		List<SysDepartment> list = sysDepartmentDao.selectByExample(query);
-		if(null!=list && !list.isEmpty()){
-			return list.get(0);
-		}
-		return null;
-	}
+    public SysDepartment findByQueryContion(SysDepartmentQuery query) {
+        List<SysDepartment> list = sysDepartmentDao.selectByExample(query);
+        if (null != list && !list.isEmpty()) {
+            return list.get(0);
+        }
+        return null;
+    }
 
-	public List<SysDepartment> queryList(SysDepartmentQuery query) {
-		return sysDepartmentDao.selectByExample(query);
-	}
+    public List<SysDepartment> queryList(SysDepartmentQuery query) {
+        return sysDepartmentDao.selectByExample(query);
+    }
 
-	public int deleteById(long id) {
-		return sysDepartmentDao.deleteByPrimaryKey(id);
-	}
+    public int deleteById(long id) {
+        return sysDepartmentDao.deleteByPrimaryKey(id);
+    }
 
-	public int delete(SysDepartmentQuery query) {
-		return sysDepartmentDao.deleteByExample(query);
-	}
+    public int delete(SysDepartmentQuery query) {
+        return sysDepartmentDao.deleteByExample(query);
+    }
 
-	public SysDepartmentPage queryPageList(SysDepartmentQuery query) {
-		SysDepartmentPage sysDepartmentPage = new SysDepartmentPage();
-		Integer itemCount = sysDepartmentDao.countByExample(query);
-		query.setItemCount(itemCount);
+    public SysDepartmentPage queryPageList(SysDepartmentQuery query) {
+        SysDepartmentPage sysDepartmentPage = new SysDepartmentPage();
+        Integer itemCount = sysDepartmentDao.countByExample(query);
+        query.setItemCount(itemCount);
 
-		if (itemCount == 0) {
-			sysDepartmentPage.setValues(null);
-		} else {
-			sysDepartmentPage.setValues(sysDepartmentDao.selectPageByExample(query));
-		}
+        if (itemCount == 0) {
+            sysDepartmentPage.setValues(null);
+        } else {
+            sysDepartmentPage.setValues(sysDepartmentDao.selectPageByExample(query));
+        }
 
-		sysDepartmentPage.setPagenation(new Pagenation(query.getPageNo(), query.getPageSize(), query.getItemCount()));
-		return sysDepartmentPage;
-	}
-
-
-
+        sysDepartmentPage.setPagenation(new Pagenation(query.getPageNo(), query.getPageSize(), query.getItemCount()));
+        return sysDepartmentPage;
+    }
 
 
 }
