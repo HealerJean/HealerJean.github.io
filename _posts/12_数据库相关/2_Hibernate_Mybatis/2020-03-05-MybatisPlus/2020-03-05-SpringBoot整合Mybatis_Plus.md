@@ -945,6 +945,7 @@ apply(boolean condition, String applySql, Object... params)
 例: apply("id = 1")--->id = 1
 例: apply("date_format(dateColumn,'%Y-%m-%d') = '2008-08-08'")
     --->date_format(dateColumn,'%Y-%m-%d') = '2008-08-08'")
+    
 例: apply("date_format(dateColumn,'%Y-%m-%d') = {0}", "2008-08-08")
     --->date_format(dateColumn,'%Y-%m-%d') = '2008-08-08'")
     
