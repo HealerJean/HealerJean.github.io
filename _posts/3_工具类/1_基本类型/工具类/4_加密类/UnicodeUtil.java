@@ -65,7 +65,6 @@ public class UnicodeUtil {
 
 
     /**
-     * 中文，必须是中文
      * unicode 转 中文，只能转化全部都是unicode编码的
      * @param unicode
      * @return
