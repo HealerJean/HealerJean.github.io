@@ -83,37 +83,7 @@ public class RSAUtils {
         return null;
     }
 
-    /**
-     * 还原公钥，X509EncodedKeySpec 用于构建公钥的规范
-     *
-     * @param publicKeyStr 公钥
-     * @return
-     * @throws InvalidKeySpecException
-     * @throws NoSuchAlgorithmException
-     */
-    private PublicKey restorePublicKey(String publicKeyStr) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        byte[] publicKeyByte = Base64.decodeBase64(publicKeyStr);
-        X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKeyByte);
-        KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec);
-        return publicKey;
-    }
 
-    /**
-     * 还原私钥 PKCS8EncodedKeySpec
-     *
-     * @param privateKeyStr 私钥
-     * @return
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeySpecException
-     */
-    private PrivateKey restorePrivateKey(String privateKeyStr) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        byte[] privateKeyByte = Base64.decodeBase64(privateKeyStr);
-        PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKeyByte);
-        KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        PrivateKey privateKey = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
-        return privateKey;
-    }
 
     /**
      * 通过公钥获取秘钥属性
@@ -140,30 +110,6 @@ public class RSAUtils {
         return keyPair;
     }
 
-    /**
-     * 通过私钥获取秘钥属性
-     *
-     * @param privateKey
-     * @return
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeySpecException
-     */
-    private KeyPair getKeySizeByPriKey(PrivateKey privateKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        KeyPair keyPair = new KeyPair();
-        KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        RSAPrivateKeySpec keySpec = keyFactory.getKeySpec(privateKey, RSAPrivateKeySpec.class);
-        BigInteger modulus = keySpec.getModulus();
-        //RSA秘钥大小
-        int keySize = modulus.toString(2).length();
-        //RSA最大加密明文大小
-        int maxEncryptSize = keySize / 8 - 11;
-        //RSA最大解密密文大小
-        int maxDecryptSize = keySize / 8;
-        keyPair.setKeySize(keySize);
-        keyPair.setMaxEncryptSize(maxEncryptSize);
-        keyPair.setMaxDecryptSize(maxDecryptSize);
-        return keyPair;
-    }
 
     /**
      * 公钥加密
@@ -223,6 +169,28 @@ public class RSAUtils {
         }
         return null;
     }
+
+
+
+
+    /**
+     * 还原公钥，X509EncodedKeySpec 用于构建公钥的规范
+     *
+     * @param publicKeyStr 公钥
+     * @return
+     * @throws InvalidKeySpecException
+     * @throws NoSuchAlgorithmException
+     */
+    private PublicKey restorePublicKey(String publicKeyStr) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        byte[] publicKeyByte = Base64.decodeBase64(publicKeyStr);
+        X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKeyByte);
+        KeyFactory keyFactory = KeyFactory.getInstance(RSA);
+        PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec);
+        return publicKey;
+    }
+
+
+
     /**
      * 私钥解密
      *
@@ -282,6 +250,50 @@ public class RSAUtils {
     }
 
 
+    /**
+     * 通过私钥获取秘钥属性
+     *
+     * @param privateKey
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
+    private KeyPair getKeySizeByPriKey(PrivateKey privateKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        KeyPair keyPair = new KeyPair();
+        KeyFactory keyFactory = KeyFactory.getInstance(RSA);
+        RSAPrivateKeySpec keySpec = keyFactory.getKeySpec(privateKey, RSAPrivateKeySpec.class);
+        BigInteger modulus = keySpec.getModulus();
+        //RSA秘钥大小
+        int keySize = modulus.toString(2).length();
+        //RSA最大加密明文大小
+        int maxEncryptSize = keySize / 8 - 11;
+        //RSA最大解密密文大小
+        int maxDecryptSize = keySize / 8;
+        keyPair.setKeySize(keySize);
+        keyPair.setMaxEncryptSize(maxEncryptSize);
+        keyPair.setMaxDecryptSize(maxDecryptSize);
+        return keyPair;
+    }
+
+
+
+    /**
+     * 还原私钥 PKCS8EncodedKeySpec
+     *
+     * @param privateKeyStr 私钥
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
+    private PrivateKey restorePrivateKey(String privateKeyStr) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        byte[] privateKeyByte = Base64.decodeBase64(privateKeyStr);
+        PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKeyByte);
+        KeyFactory keyFactory = KeyFactory.getInstance(RSA);
+        PrivateKey privateKey = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
+        return privateKey;
+    }
+
+
 
     /**
      * 私钥数字签名
@@ -320,6 +332,7 @@ public class RSAUtils {
         }
         return null;
     }
+
 
     /**
      * 公钥数字签名进行验证
