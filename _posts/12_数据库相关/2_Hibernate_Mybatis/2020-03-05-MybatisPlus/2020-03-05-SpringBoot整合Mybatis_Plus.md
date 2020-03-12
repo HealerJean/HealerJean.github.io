@@ -1129,13 +1129,46 @@ List<MysqlData> getAll(@Param(Constants.WRAPPER) Wrapper wrapper);
 
 
 
+## 6、复杂SQL 
+
+## 6.1、返回自定义对象 
+
+### 6.1.1、mapper
+
+```java
+ public interface UserMapper  extends BaseMapper<User> {
+
+
+    @Select("select * from user where name = #{name}")
+    //写不写下面的都行
+    // @ResultType(UserDTO.class)
+    @Results(
+            @Result(property = "userId", column = "id")
+    )
+    List<UserDTO> selectUserDtoList(UserDTO userDTO);
+}
+
+```
 
 
 
+### 6.1.2、测试类 
 
 
 
+```java
+@Test
+public void userDTO(){
+    UserDTO userDTO = new UserDTO();
+    userDTO.setName("healer");
+    List<UserDTO> userDTOS = userMapper.selectUserDtoList(userDTO);
+    System.out.println(JsonUtils.toJsonString(userDTOS));
+}
 
+
+
+[{"userId":1235553744515612673,"name":"healer","age":22,"email":"22"}]
+```
 
 
 
