@@ -141,13 +141,13 @@ public void text() throws Exception {
 
 
 
-![1575546523204](D:\study\HealerJean.github.io\blogImages\1575546523204.png)
+![1575546523204](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1575546523204.png)
 
 
 
 
 
-![1575546511692](D:\study\HealerJean.github.io\blogImages\1575546511692.png)
+![1575546511692](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1575546511692.png)
 
 
 
@@ -270,11 +270,11 @@ public void image() throws Exception {
 
 
 
-![1575546340272](D:\study\HealerJean.github.io\blogImages\1575546340272.png)
+![1575546340272](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1575546340272.png)
 
 
 
-![1575546365325](D:\study\HealerJean.github.io\blogImages\1575546365325.png)
+![1575546365325](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1575546365325.png)
 
 
 
@@ -330,11 +330,11 @@ public void table() throws Exception{
 
 
 
-![1575546781755](D:\study\HealerJean.github.io\blogImages\1575546781755.png)
+![1575546781755](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1575546781755.png)
 
 
 
-![1575546861665](D:\study\HealerJean.github.io\blogImages\1575546861665.png)
+![1575546861665](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1575546861665.png)
 
 
 
@@ -390,11 +390,11 @@ FMT_UPPER_LETTER //A. B. C.
 
 
 
-![1575547702474](D:\study\HealerJean.github.io\blogImages\1575547702474.png)
+![1575547702474](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1575547702474.png)
 
 
 
-![1575547695686](D:\study\HealerJean.github.io\blogImages\1575547695686.png)
+![1575547695686](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1575547695686.png)
 
 
 
@@ -402,7 +402,7 @@ FMT_UPPER_LETTER //A. B. C.
 
 ## 3、配置 
 
-```
+```java
 ConfigureBuilder builder = Configure.newBuilder();
 XWPFTemplate.compile("~/template.docx", builder.buid());
 ```
@@ -411,7 +411,7 @@ XWPFTemplate.compile("~/template.docx", builder.buid());
 
 ### 3.1、图片语法 `{{@var}}`修改为 `{{%var}} `
 
-```
+```java
 builder.addPlugin('%', new PictureRenderPolicy());
 ```
 
@@ -419,7 +419,7 @@ builder.addPlugin('%', new PictureRenderPolicy());
 
 ### 3.2、语法加前缀 为${var}
 
-```
+```java
 builder.buildGramer("${", "}");
 ```
 
@@ -433,7 +433,7 @@ builder.buildGramer("${", "}");
 
 
 
-```
+```java
 builder.buildGrammerRegex("[\\w]+(\\.[\\w]+)*");
 ```
 
@@ -550,7 +550,7 @@ public void rule() throws Exception {
 }
 ```
 
-![1575548964655](D:\study\HealerJean.github.io\blogImages\1575548964655.png)
+![1575548964655](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1575548964655.png)
 
 
 
@@ -558,7 +558,7 @@ public void rule() throws Exception {
 
 
 
-![1575548971417](D:\study\HealerJean.github.io\blogImages\1575548971417.png)
+![1575548971417](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1575548971417.png)
 
 
 
@@ -600,11 +600,11 @@ public void rule() throws Exception {
 
 
 
-![1575548964655](D:\study\HealerJean.github.io\blogImages\1575548964655.png)
+![1575548964655](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1575548964655.png)
 
 
 
-![1575549055019](D:\study\HealerJean.github.io\blogImages\1575549055019.png)
+![1575549055019](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1575549055019.png)
 
 
 
@@ -644,7 +644,7 @@ public void rule() throws Exception {
 
 
 
-![1575549088526](D:\study\HealerJean.github.io\blogImages\1575549088526.png)
+![1575549088526](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1575549088526.png)
 
 
 
