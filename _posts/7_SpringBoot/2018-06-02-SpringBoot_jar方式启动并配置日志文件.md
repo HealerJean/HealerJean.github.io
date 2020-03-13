@@ -17,7 +17,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 正常启动 ,下面会选择`application.properties` 中配置默认的启动文件进行启动，下面这种情况不能根据实际情况进行启动项目
 
-```
+```shell
 java jar admin-1.0-SNAPSHOT.jar 
 
 ```
@@ -26,7 +26,7 @@ java jar admin-1.0-SNAPSHOT.jar
 ## 1、测试环境和生产环境启动
 
 
-```
+```shell
 主要观察priperties中配置文件的名字
 
 测试环境：java -jar my-spring-boot.jar --spring.profiles.active=test  
@@ -40,7 +40,7 @@ java jar admin-1.0-SNAPSHOT.jar
 
 #### 2.1、测试库启动
 
-```
+```shell
 #!/bin/bash
    echo starting
    java -jar admin-1.0-SNAPSHOT.jar --spring.profiles.active=test  > log.file 2>log.error &
@@ -50,7 +50,7 @@ java jar admin-1.0-SNAPSHOT.jar
 #### 2.2、正式库启动
 
 
-```
+```shell
 #!/bin/bash
    echo starting
    java -jar admin-1.0-SNAPSHOT.jar --spring.profiles.active=prod > log.file 2>&1 &
@@ -62,20 +62,22 @@ java jar admin-1.0-SNAPSHOT.jar
 #### 2.3、停止正在运行的项目
 
 
-```
+```shell
 #!/bin/bash
-   PID=$(ps -ef | grep admin-1.0-SNAPSHOT.jar | grep -v grep | awk '{ print $2 }')
-if [ -z "$PID" ]
-then
 
-    echo Application is already stopped
+check_results=`ps -aux | grep "admin-1.0-SNAPSHOT.jar" | grep "spring"   |awk '{print $2}'`
+
+
+if [ ! -n "$check_results"   ]; then
+
+  echo "the web never find"
 else
 
-    echo kill $PID
+  echo "command(ps -aux) results are: $check_results"
+  kill -9  $check_results  
+  echo "the web have been stop : $check_results"
 
-    kill $PID
 fi
-
 
 ```
 
@@ -83,7 +85,7 @@ fi
 #### 2.4、重启项目
 
 
-```
+```shell
 #!/bin/bash
 
 echo stop application
@@ -100,7 +102,11 @@ source start.sh
 ## 3、很简答吧
 
 
-<br/><br/><br/>
+
+
+
+
+
 如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，添加博主微信哦， 请下方留言吧。可与博主自由讨论哦
 
 |支付包 | 微信|微信公众号|
