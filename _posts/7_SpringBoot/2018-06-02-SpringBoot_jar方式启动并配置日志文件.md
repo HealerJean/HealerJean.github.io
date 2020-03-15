@@ -22,6 +22,14 @@ java jar admin-1.0-SNAPSHOT.jar
 
 ```
 
+解压
+
+
+```java
+java -xvf admin-1.1-SNAPSHOT.jar
+
+```
+
 
 ## 1、测试环境和生产环境启动
 
