@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysEmailLogMapper">
+    <resultMap id="BaseResultMap" type="SysEmailLog">
+        <id column="ID" jdbcType="BIGINT" property="id"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="subject" jdbcType="VARCHAR" property="subject"/>
+        <result column="content" jdbcType="LONGVARCHAR" property="content"/>
+        <result column="send_email" jdbcType="VARCHAR" property="sendEmail"/>
+        <result column="receive_mails" jdbcType="VARCHAR" property="receiveMails"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="msg" jdbcType="VARCHAR" property="msg"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <trim prefix="(" prefixOverrides="and" suffix=")">
+                <if test="type != null">
+                    and type = #{type,jdbcType=VARCHAR}
+                </if>
+                <if test="subject != null">
+                    and subject = #{subject,jdbcType=VARCHAR}
+                </if>
+                <if test="content != null and content != ''">
+                    and content = #{content,jdbcType=LONGVARCHAR}
+                </if>
+                <if test="sendEmail != null">
+                    and send_email = #{sendEmail,jdbcType=VARCHAR}
+                </if>
+                <if test="receiveMails != null">
+                    and receive_mails = #{receiveMails,jdbcType=VARCHAR}
+                </if>
+                <if test="status != null">
+                    and status = #{status,jdbcType=VARCHAR}
+                </if>
+                <if test="msg != null">
+                    and msg = #{msg,jdbcType=VARCHAR}
+                </if>
+            </trim>
+        </where>
+    </sql>
+    <sql id="Example_Set_Clause">
+        <set>
+            <trim suffixOverrides=",">
+                <if test="type != null">
+                    type = #{type,jdbcType=VARCHAR},
+                </if>
+                <if test="subject != null">
+                    subject = #{subject,jdbcType=VARCHAR},
+                </if>
+                <if test="content != null">
+                    content = #{content,jdbcType=LONGVARCHAR},
+                </if>
+                <if test="sendEmail != null">
+                    send_email = #{sendEmail,jdbcType=VARCHAR},
+                </if>
+                <if test="receiveMails != null">
+                    receive_mails = #{receiveMails,jdbcType=VARCHAR},
+                </if>
+                <if test="status != null">
+                    status = #{status,jdbcType=VARCHAR},
+                </if>
+                <if test="msg != null">
+                    msg = #{msg,jdbcType=VARCHAR},
+                </if>
+                UPDATE_TIME = NOW(),
+            </trim>
+        </set>
+    </sql>
+    <sql id="Base_Column_List">
+        id,
+        type,
+        subject,
+        content,
+        send_email,
+        receive_mails,
+        status,
+        msg,
+        create_time,
+        update_time
+    </sql>
+    <sql id="Base_Set_Clause">
+        <set>
+            <trim suffixOverrides=",">
+                type = #{type,jdbcType=VARCHAR},
+                subject = #{subject,jdbcType=VARCHAR},
+                content = #{content,jdbcType=LONGVARCHAR},
+                send_email = #{sendEmail,jdbcType=VARCHAR},
+                receive_mails = #{receiveMails,jdbcType=VARCHAR},
+                status = #{status,jdbcType=VARCHAR},
+                msg = #{msg,jdbcType=VARCHAR},
+            </trim>
+        </set>
+    </sql>
+    <sql id="Selective_Column_List">
+        ID,
+        <if test="type != null">
+            type,
+        </if>
+        <if test="subject != null">
+            subject,
+        </if>
+        <if test="content != null">
+            content,
+        </if>
+        <if test="sendEmail != null">
+            send_email,
+        </if>
+        <if test="receiveMails != null">
+            receive_mails,
+        </if>
+        <if test="status != null">
+            status,
+        </if>
+        <if test="msg != null">
+            msg,
+        </if>
+        CREATE_TIME,
+    </sql>
+    <sql id="Base_Value_List">
+        #{id,jdbcType=BIGINT},
+        #{type,jdbcType=VARCHAR},
+        #{subject,jdbcType=VARCHAR},
+        #{content,jdbcType=LONGVARCHAR},
+        #{sendEmail,jdbcType=VARCHAR},
+        #{receiveMails,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{msg,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP},
+    </sql>
+    <sql id="Selective_Value_List">
+        #{id},
+        <if test="type != null">
+            #{type,jdbcType=VARCHAR},
+        </if>
+        <if test="subject != null">
+            #{subject,jdbcType=VARCHAR},
+        </if>
+        <if test="content != null">
+            #{content,jdbcType=LONGVARCHAR},
+        </if>
+        <if test="sendEmail != null">
+            #{sendEmail,jdbcType=VARCHAR},
+        </if>
+        <if test="receiveMails != null">
+            #{receiveMails,jdbcType=VARCHAR},
+        </if>
+        <if test="status != null">
+            #{status,jdbcType=VARCHAR},
+        </if>
+        <if test="msg != null">
+            #{msg,jdbcType=VARCHAR},
+        </if>
+        NOW(),
+    </sql>
+
+    <select id="selectByExample" parameterType="SysEmailLogQuery" resultMap="BaseResultMap">
+        select
+        <trim suffixOverrides=",">
+            <include refid="Base_Column_List"/>
+        </trim>
+        from sys_email_log
+        <include refid="Example_Where_Clause"/>
+        <!-- order by CREATE_DATE -->
+    </select>
+    <select id="selectByPrimaryKey" parameterType="Long" resultMap="BaseResultMap">
+        select
+        <trim suffixOverrides=",">
+            <include refid="Base_Column_List"/>
+        </trim>
+        from sys_email_log
+        where ID = #{id,jdbcType=SMALLINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="Long">
+        delete from sys_email_log
+        where ID = #{id,jdbcType=SMALLINT}
+    </delete>
+    <delete id="deleteByExample" parameterType="SysEmailLogQuery">
+        delete from sys_email_log
+        <include refid="Example_Where_Clause"/>
+    </delete>
+    <insert id="insert" parameterType="SysEmailLog">
+        insert into sys_email_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="Base_Column_List"/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="Base_Value_List"/>
+        </trim>
+    </insert>
+    <insert id="insertSelective" parameterType="SysEmailLog" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_email_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="Selective_Column_List"/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="Selective_Value_List"/>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="SysEmailLogQuery" resultType="java.lang.Integer">
+        select count(*) from sys_email_log
+        <include refid="Example_Where_Clause"/>
+    </select>
+    <update id="updateByPrimaryKeySelective" parameterType="SysEmailLog">
+        update sys_email_log
+        <include refid="Example_Set_Clause"/>
+        where ID = #{id,jdbcType=SMALLINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="SysEmailLog">
+        update sys_email_log
+        <include refid="Base_Set_Clause"/>
+        where ID = #{id,jdbcType=SMALLINT}
+    </update>
+
+    <select id="selectPageByExample" parameterType="SysEmailLogQuery" resultMap="BaseResultMap">
+        select
+        <trim suffixOverrides=",">
+            <include refid="Base_Column_List"/>
+        </trim>
+        from sys_email_log
+        <include refid="Example_Where_Clause"/>
+        <![CDATA[ limit #{startRow},#{endRow} ]]>
+        <!-- order by CREATE_DATE -->
+    </select>
+</mapper>

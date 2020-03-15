@@ -21,6 +21,6 @@ import java.lang.annotation.RetentionPolicy;
 @JsonSerialize(using = SensitiveInfoSerialize.class)
 public @interface SensitiveInfo {
 
-    SensitiveTypeEnum value() ;
+    SensitiveTypeEnum value();
 
 }

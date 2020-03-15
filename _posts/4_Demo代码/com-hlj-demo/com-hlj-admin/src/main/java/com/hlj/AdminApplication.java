@@ -13,7 +13,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAsync
 @ImportResource(value = "classpath:applicationContext.xml")
 @EnableJpaRepositories(basePackages = {"com.hlj.dao.db"})
-@EntityScan(basePackages = "com.hlj.entity.db")public class AdminApplication {
+@EntityScan(basePackages = "com.hlj.entity.db")
+public class AdminApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AdminApplication.class, args);

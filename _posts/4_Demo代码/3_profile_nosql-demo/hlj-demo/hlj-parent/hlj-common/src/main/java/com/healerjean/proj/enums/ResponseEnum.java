@@ -36,11 +36,11 @@ public enum ResponseEnum {
     用户已经存在(1000, "用户已经存在"),
     用户不存在(1001, "用户不存在"),
 
-    微信接口请求异常(2001,"微信接口请求异常"),
-    淘宝接口请求异常(2002,"淘宝接口请求异常"),
-    淘宝接口数据异常(2003,"淘宝接口数据异常"),
-    好单库口请求异常(2004,"好单库口请求异常"),
-    好单库接口数据异常(2005,"好单库接口数据异常"),
+    微信接口请求异常(2001, "微信接口请求异常"),
+    淘宝接口请求异常(2002, "淘宝接口请求异常"),
+    淘宝接口数据异常(2003, "淘宝接口数据异常"),
+    好单库口请求异常(2004, "好单库口请求异常"),
+    好单库接口数据异常(2005, "好单库接口数据异常"),
 
     ;
 
@@ -55,9 +55,9 @@ public enum ResponseEnum {
     }
 
 
-    public static boolean checkExist( Integer code){
-        for (ResponseEnum value : ResponseEnum.values()){
-            if (value.code == code){
+    public static boolean checkExist(Integer code) {
+        for (ResponseEnum value : ResponseEnum.values()) {
+            if (value.code == code) {
                 return true;
             }
         }
@@ -65,18 +65,18 @@ public enum ResponseEnum {
     }
 
 
-    public static ResponseEnum toEnum(int code){
-        for (ResponseEnum value : ResponseEnum.values()){
-            if (value.code == code){
+    public static ResponseEnum toEnum(int code) {
+        for (ResponseEnum value : ResponseEnum.values()) {
+            if (value.code == code) {
                 return value;
             }
         }
         return ResponseEnum.未知错误;
     }
 
-    public static String getMsg(int code){
-        for (ResponseEnum value : ResponseEnum.values()){
-            if (value.code == code){
+    public static String getMsg(int code) {
+        for (ResponseEnum value : ResponseEnum.values()) {
+            if (value.code == code) {
                 return value.msg;
             }
         }
@@ -84,11 +84,11 @@ public enum ResponseEnum {
     }
 
 
-    public ResponseEnum value(String enumName){
-        return valueOf( enumName ) ;
+    public ResponseEnum value(String enumName) {
+        return valueOf(enumName);
     }
 
-    public static List<ResponseEnum> getList(){
+    public static List<ResponseEnum> getList() {
         return Arrays.asList(values());
     }
 

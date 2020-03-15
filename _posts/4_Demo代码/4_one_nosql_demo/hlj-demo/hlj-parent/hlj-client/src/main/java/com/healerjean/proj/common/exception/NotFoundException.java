@@ -6,7 +6,7 @@ import com.healerjean.proj.common.enums.ResponseEnum;
 
 public class NotFoundException extends BusinessException {
 
-    public NotFoundException(ResponseEnum  responseEnum) {
+    public NotFoundException(ResponseEnum responseEnum) {
         super(responseEnum);
     }
 

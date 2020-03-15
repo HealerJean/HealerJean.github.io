@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 public class HljClientApplication implements CommandLineRunner {
 
     @Resource
-    private PlatformTransactionManager platformTransactionManager ;
+    private PlatformTransactionManager platformTransactionManager;
 
     public static void main(String[] args) {
         SpringApplication.run(HljClientApplication.class, args);

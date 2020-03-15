@@ -21,7 +21,7 @@ import java.io.IOException;
 public class MybatisConfig {
 
     @Bean
-    public MapperScannerConfigurer mapperScannerConfigurer(){
+    public MapperScannerConfigurer mapperScannerConfigurer() {
         MapperScannerConfigurer configurer = new MapperScannerConfigurer();
         configurer.setBasePackage("com.hlj.dao.mybatis.*");
         return configurer;

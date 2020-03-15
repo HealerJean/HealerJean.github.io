@@ -9,6 +9,9 @@ package com.healerjean.proj.common;
  */
 public class ValidateGroup {
 
-    public interface HealerJean { };
+    public interface HealerJean {
+    }
+
+    ;
 
 }

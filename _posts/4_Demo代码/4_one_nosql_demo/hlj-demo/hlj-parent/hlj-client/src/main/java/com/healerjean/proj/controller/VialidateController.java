@@ -45,7 +45,7 @@ public class VialidateController {
     public ResponseBean post(@RequestBody JavaBean javaBean) {
         String validate = ValidateUtils.validate(javaBean, ValidateGroup.HealerJean.class);
         if (!"success".equals(validate)) {
-            throw new BusinessException(ResponseEnum.参数错误,validate);
+            throw new BusinessException(ResponseEnum.参数错误, validate);
         }
         return ResponseBean.buildSuccess(javaBean);
     }

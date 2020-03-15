@@ -3,7 +3,6 @@
 <mapper namespace="com.healerjean.proj.data.mapper.demo.DemoEntityMapper">
 
 
-
     <sql id="Example_Where_Clause">
         <where>
             <trim prefix="(" prefixOverrides="and" suffix=")">
@@ -38,52 +37,47 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-		id,
-		name,
-		phone,
-		email,
-		age,
-		del_flag,
-		create_user as createUser,
-		create_name as createName,
-		create_time as createTime,
-		update_user as updateUser,
-		update_name as updateName,
-		update_time as updateTime
-	</sql>
-
-
-
+        id,
+        name,
+        phone,
+        email,
+        age,
+        del_flag,
+        create_user as createUser,
+        create_name as createName,
+        create_time as createTime,
+        update_user as updateUser,
+        update_name as updateName,
+        update_time as updateTime
+    </sql>
 
 
     <select id="countQueryContion" resultType="java.lang.Long">
         select count(*) from demo_entity
-        <include refid="Example_Where_Clause" />
+        <include refid="Example_Where_Clause"/>
     </select>
 
     <select id="findByQueryContion" resultType="com.healerjean.proj.data.pojo.demo.DemoEntity">
         select
         <trim suffixOverrides=",">
-            <include refid="Base_Column_List" />
+            <include refid="Base_Column_List"/>
         </trim>
         from demo_entity
-        <include refid="Example_Where_Clause" />
+        <include refid="Example_Where_Clause"/>
     </select>
 
 
     <select id="queryList" resultType="com.healerjean.proj.data.pojo.demo.DemoEntity">
         select
         <trim suffixOverrides=",">
-            <include refid="Base_Column_List" />
+            <include refid="Base_Column_List"/>
         </trim>
         from demo_entity
-        <include refid="Example_Where_Clause" />
+        <include refid="Example_Where_Clause"/>
         <if test="startRow != null and endRow != ''">
             limit #{startRow}, #{endRow}
         </if>        <!-- order by CREATE_DATE -->
     </select>
-
-
 
 
 </mapper>

@@ -73,6 +73,6 @@ public class JavaBean extends BaseBean {
     // /**测试非Null下,其他注解属性无需 加 group*/
     @NotBlank(message = "testGroup不能为空", groups = {ValidateGroup.HealerJean.class})
     @Length(max = 5, message = "testGroup长度不能超过5")
-    private String testGroup ;
+    private String testGroup;
 
 }

@@ -158,7 +158,7 @@ public class SensitiveParameterFormatter {
     /**
      * Replace placeholders in the given messagePattern with arguments.
      *
-     * @param buffer the buffer to write the formatted message into
+     * @param buffer         the buffer to write the formatted message into
      * @param messagePattern the message pattern containing placeholders.
      * @param arguments      the arguments to be used to replace placeholders.
      */
@@ -180,7 +180,7 @@ public class SensitiveParameterFormatter {
     /**
      * Replace placeholders in the given messagePattern with arguments.
      *
-     * @param buffer the buffer to write the formatted message into
+     * @param buffer         the buffer to write the formatted message into
      * @param messagePattern the message pattern containing placeholders.
      * @param arguments      the arguments to be used to replace placeholders.
      */
@@ -205,7 +205,7 @@ public class SensitiveParameterFormatter {
     /**
      * Replace placeholders in the given messagePattern with arguments.
      *
-     * @param buffer the buffer to write the formatted message into
+     * @param buffer         the buffer to write the formatted message into
      * @param messagePattern the message pattern containing placeholders.
      * @param arguments      the arguments to be used to replace placeholders.
      */
@@ -370,6 +370,7 @@ public class SensitiveParameterFormatter {
      * This means, in effect, that logging would produce a usable output even if an ordinary System.out.println(o)
      * would produce a relatively hard-to-debug StackOverflowError.
      * </p>
+     *
      * @param o The object.
      * @return The String representation.
      */
@@ -598,8 +599,6 @@ public class SensitiveParameterFormatter {
 
         }
     }
-
-
 
 
     private static void handleErrorInObjectToString(final Object o, final StringBuilder str, final Throwable t) {

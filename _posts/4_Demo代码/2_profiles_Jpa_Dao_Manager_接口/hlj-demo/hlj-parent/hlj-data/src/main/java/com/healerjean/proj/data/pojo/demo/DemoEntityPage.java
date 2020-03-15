@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2019 xiaomi.com, Inc. All Rights Reserved.
- */package com.healerjean.proj.data.pojo.demo;
+ */
+package com.healerjean.proj.data.pojo.demo;
 
 import com.healerjean.proj.data.common.result.PageListResult;
 
@@ -10,8 +11,8 @@ import com.healerjean.proj.data.common.result.PageListResult;
  * @date 2099/1/1
  * @Description: DemoEntityPage
  */
-public class DemoEntityPage  extends PageListResult<DemoEntity> {
+public class DemoEntityPage extends PageListResult<DemoEntity> {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
 }

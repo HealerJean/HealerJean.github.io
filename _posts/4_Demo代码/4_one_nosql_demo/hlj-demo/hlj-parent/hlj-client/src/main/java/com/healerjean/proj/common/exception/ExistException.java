@@ -6,7 +6,7 @@ import com.healerjean.proj.common.enums.ResponseEnum;
 
 public class ExistException extends BusinessException {
 
-    public ExistException(ResponseEnum  responseEnum) {
+    public ExistException(ResponseEnum responseEnum) {
         super(responseEnum);
     }
 

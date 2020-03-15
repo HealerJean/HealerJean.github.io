@@ -18,10 +18,10 @@ import lombok.experimental.Accessors;
 @ApiModel(value = "demo实体类")
 public class DemoEntity {
 
-	private String name;       //lombok   setName
+    private String name;       //lombok   setName
 
-	private boolean isTmail;   // lombok  setTmail
+    private boolean isTmail;   // lombok  setTmail
 
-	private Long tVolumn ;     // lombok  setTVolumn
+    private Long tVolumn;     // lombok  setTVolumn
 
 }

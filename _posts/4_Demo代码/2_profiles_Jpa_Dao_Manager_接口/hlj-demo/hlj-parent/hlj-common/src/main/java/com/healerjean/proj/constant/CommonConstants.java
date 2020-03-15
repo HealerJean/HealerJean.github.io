@@ -8,6 +8,8 @@ package com.healerjean.proj.constant;
  */
 public class CommonConstants {
 
-    /** 成功标识常量（系统内部使用） */
+    /**
+     * 成功标识常量（系统内部使用）
+     */
     public static final String COMMON_SUCCESS = "success";
 }
