@@ -374,15 +374,15 @@ class KeyPair {
     /**
      * 私钥
      */
-     String privateKeyStr;
+    String privateKeyStr;
     /**
      * 秘钥keySize
      */
-     int keySize;
+    int keySize;
     /**
      * 最大加密明文大小
      */
-     int maxEncryptSize;
+    int maxEncryptSize;
     /**
      * 最大解密密文大小
      */

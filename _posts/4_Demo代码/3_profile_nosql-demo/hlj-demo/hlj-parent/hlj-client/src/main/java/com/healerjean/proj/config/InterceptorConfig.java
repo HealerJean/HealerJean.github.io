@@ -27,7 +27,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
     private UrlInterceptor urlInterceptor;
 
     /**
-     *  swagger增加url映射
+     * swagger增加url映射
+     *
      * @param registry
      */
     @Override
@@ -44,7 +45,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
     }
 
 
-    /**过滤器配置 ，配置了过滤器会让swagger失效，所以我后来讲swagger的路径修改为了/develop/swagge  */
+    /**
+     * 过滤器配置 ，配置了过滤器会让swagger失效，所以我后来讲swagger的路径修改为了/develop/swagge
+     */
     @Bean
     public FilterRegistrationBean spaceFilter() {
         FilterRegistrationBean fitler = new FilterRegistrationBean();

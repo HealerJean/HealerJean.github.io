@@ -25,14 +25,24 @@ public class PageDTO<T> {
         this.datas = datas;
     }
 
-    /** 页码，默认是第一页 */
+    /**
+     * 页码，默认是第一页
+     */
     private Integer pageNo = 1;
-    /** 每页显示的记录数，默认是10  */
+    /**
+     * 每页显示的记录数，默认是10
+     */
     private Integer pageSize = 10;
-    /** 总记录数  */
+    /**
+     * 总记录数
+     */
     private Integer total;
-    /** 总页数  */
+    /**
+     * 总页数
+     */
     private Integer totalPage;
-    /** 对应的当前页记录  */
+    /**
+     * 对应的当前页记录
+     */
     private List<T> datas;
 }

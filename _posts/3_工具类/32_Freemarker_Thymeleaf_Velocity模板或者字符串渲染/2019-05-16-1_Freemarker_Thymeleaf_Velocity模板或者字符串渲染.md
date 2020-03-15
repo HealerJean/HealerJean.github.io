@@ -315,7 +315,7 @@ public class ThymeLeafUtil {
 
 #### 3.1.1、关于字符串解析可能会根据不同的springboot版本有一些问题
 
-我的springboot版本是1.5.默认提供的thymeleaf版本是1.5
+**我的springboot版本是1.5.默认提供的thymeleaf版本是1.5**
 
 ```xml
 <!--thymeleaf 模板-->

@@ -3,7 +3,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 
-
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -12,12 +11,12 @@
     </parent>
 
 
- <!---->
-   <!--<parent>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-starter-parent</artifactId>-->
-        <!--<version>1.5.4.RELEASE</version>-->
-        <!--<relativePath/>-->
+    <!---->
+    <!--<parent>-->
+    <!--<groupId>org.springframework.boot</groupId>-->
+    <!--<artifactId>spring-boot-starter-parent</artifactId>-->
+    <!--<version>1.5.4.RELEASE</version>-->
+    <!--<relativePath/>-->
     <!--</parent>-->
 
     <modelVersion>4.0.0</modelVersion>
@@ -38,11 +37,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>8</java.version>
         <!--swagger 版本-->
-        <swagger.version>2.7.0</swagger.version> </properties>
+        <swagger.version>2.7.0</swagger.version>
+    </properties>
 
     <dependencies>
-
-
 
 
         <!--lombok版本太低了，不支持java10  升级版本：>= 1.18.0-->

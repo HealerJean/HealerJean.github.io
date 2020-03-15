@@ -26,12 +26,12 @@ public class BusinessException extends RuntimeException {
 
     public BusinessException(ResponseEnum responseEnum) {
         super(responseEnum.msg);
-        this.code = responseEnum.code ;
+        this.code = responseEnum.code;
     }
 
-    public BusinessException(ResponseEnum responseEnum,String message) {
+    public BusinessException(ResponseEnum responseEnum, String message) {
         super(message);
-        this.code = responseEnum.code ;
+        this.code = responseEnum.code;
     }
 
     public BusinessException(String message, Throwable cause) {
@@ -39,7 +39,7 @@ public class BusinessException extends RuntimeException {
         this.code = ResponseEnum.逻辑错误.code;
     }
 
-    public BusinessException(int code ,Throwable e) {
+    public BusinessException(int code, Throwable e) {
         super(e);
         this.code = code;
     }

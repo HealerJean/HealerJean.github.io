@@ -35,9 +35,7 @@ public class BeanUtils {
     }
 
 
-
-
-    public static DemoEntity dtoToDemo(DemoDTO demoDTO){
+    public static DemoEntity dtoToDemo(DemoDTO demoDTO) {
         DemoEntity result = new DemoEntity();
         result.setId(demoDTO.getId());
         result.setName(demoDTO.getName());
@@ -51,12 +49,12 @@ public class BeanUtils {
         result.setUpdateUser(demoDTO.getUpdateUser());
         result.setUpdateName(demoDTO.getUpdateName());
         result.setUpdateTime(demoDTO.getUpdateTime());
-        return result ;
+        return result;
     }
 
-    public static DemoDTO demoToDTO(DemoEntity demoEntity){
-        DemoDTO dto = new DemoDTO() ;
-        if(demoEntity !=null){
+    public static DemoDTO demoToDTO(DemoEntity demoEntity) {
+        DemoDTO dto = new DemoDTO();
+        if (demoEntity != null) {
             dto.setId(demoEntity.getId());
             dto.setName(demoEntity.getName());
             dto.setAge(demoEntity.getAge());
@@ -73,10 +71,10 @@ public class BeanUtils {
             dto.setPageSize(null);
             dto.setPageNo(null);
         }
-        return dto ;
+        return dto;
     }
 
-    public static DemoEntityQuery dtoToDemoQuery(DemoDTO demoDTO){
+    public static DemoEntityQuery dtoToDemoQuery(DemoDTO demoDTO) {
         DemoEntityQuery query = new DemoEntityQuery();
         query.setName(demoDTO.getName());
         query.setAge(demoDTO.getAge());
@@ -89,6 +87,6 @@ public class BeanUtils {
         query.setUpdateName(demoDTO.getUpdateName());
         query.setPageNo(demoDTO.getPageNo());
         query.setPageSize(demoDTO.getPageSize());
-        return query ;
+        return query;
     }
 }
