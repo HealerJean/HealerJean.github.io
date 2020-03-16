@@ -38,7 +38,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 
 
-![1584330302911]https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584330302911.png)
+![1584330302911](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584330302911.png)
 
 
 
@@ -49,7 +49,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 安装完CRT和FX软件后，我们就需要激活，我们可以直接通过文件夹中的软件直接进行替换破解，找到应用程序中的软件，在图标上点击右键选择“显示包内容”，然后把文件复制到Contents/MacOS中。
 如下图：
 
-![1584330345837]https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584330345837.png)
+![1584330345837](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584330345837.png)
 
 
 
@@ -68,7 +68,7 @@ chmod u+x SecureFX
 
 ## 1.3、打开软件，激活软件
 
-![1584330412685]https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584330412685.png)
+![1584330412685](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584330412685.png)
 
 
 
@@ -76,11 +76,11 @@ chmod u+x SecureFX
 
 
 
-![1584330420695]https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584330420695.png)
+![1584330420695](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584330420695.png)
 
 
 
-![1584330427737]https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584330427737.png)
+![1584330427737](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584330427737.png)
 
 
 
@@ -124,13 +124,13 @@ Issue Date:11-12-2018
 
 
 
-![1584329665749]https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584329665749.png)
+![1584329665749](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584329665749.png)
 
 
 
 ## 2.2、调整颜色 
 
-![1584329707148]https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584329707148.png)
+![1584329707148](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584329707148.png)
 
 
 
