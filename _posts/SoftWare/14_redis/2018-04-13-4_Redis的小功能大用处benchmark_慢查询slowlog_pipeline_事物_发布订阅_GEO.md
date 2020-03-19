@@ -2,9 +2,9 @@
 title: 4、Redis的小功能大用处
 date: 2018-04-13 17:33:00
 tags: 
-- Redis
+- Cache
 category: 
-- Redis
+- Cache
 description: Redis的小功能大用处
 ---
 <!-- image url 

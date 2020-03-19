@@ -2,9 +2,9 @@
 title: SpringBoot中Redis配置
 date: 2020-03-19 03:33:00
 tags: 
-- Redis
+- Cache
 category: 
-- Redis
+- Cache
 description: SpringBoot中Redis配置
 ---
 
