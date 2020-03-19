@@ -2,9 +2,9 @@
 title: Kolin入门HelloWord
 date: 2019-02-28 03:33:00
 tags: 
-- Kotlin
+- Other
 category: 
-- Kotlin
+- Other
 description: Kolin入门HelloWord
 ---
 <!-- image url 
@@ -24,7 +24,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 #### [博主github](https://github.com/HealerJean)
 #### [博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)    
-     
+
 ## 前言
 
 之前一直听过Kotlin，现在自己也想简单看看它的语法，这里讲我的学习第一篇发布下HelloWord
@@ -33,15 +33,15 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
    
 
-    
-     
-     
-     
-     
-     
-     
-     
-     
+
+​     
+​     
+​     
+​     
+​     
+​     
+​     
+​     
 <br><br>    
 <font  color="red" size="5" >     
 感兴趣的，欢迎添加博主微信
