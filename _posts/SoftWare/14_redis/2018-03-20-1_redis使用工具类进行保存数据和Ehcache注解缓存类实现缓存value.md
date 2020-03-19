@@ -1,13 +1,11 @@
 ---
-title: redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value
+title: Redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value
 date: 2018-03-20 03:33:00
 tags: 
-- Redis
-- Ehcache
+- Cache
 category: 
-- Redis
-- Ehcache
-description: redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value
+- Cache
+description: Redis使用工具类进行保存数据和Ehcache注解缓存类实现缓存value
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
@@ -18,7 +16,8 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 ## 前言
  本文主要是key value的形式。
-这里我先说下序列化吧
+这里我先说下序列化吧   
+
  <font color="red">
 GenericToStringSerializer：使用Spring转换服务进行序列化（可以用来专门转化存放Double等类型，我下面的工具类有介绍）；
 
@@ -35,9 +34,9 @@ StringRedisSerializer：序列化String类型的key和value。实际上是String
 StringSerializer就是通过String.getBytes()来实现的，而且在Redis中，所有存储的值都是字符串类型的。所以这种方法保存后，通过Redis-cli控制台，是可以清楚的查看到我们保存了什么key,value是什么。它只能对String类型进行序列化
 
 JdkSerializationRedisSerializer，这个序列化方法是Idk提供的，要求要被序列化的类继承自Serializeable接口，然后通过Jdk对象序列化的方法保存，这个序列化保存的对象，即使是个String类型的，在redis控制台，也是看不出来的，还是类似于 乱码的东西。因为它保存了一些对象的类型什么的额外信息。除非中间再加上一些objectmappr就可以看到内容了，如下
- 
 
-```
+
+```JAVA
 @Bean
 public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory factory) {
 	RedisTemplate<String, String> redisTemplate = new RedisTemplate<String, String>();
@@ -83,10 +82,10 @@ redis是通过socket访问到缓存服务，效率比ecache低，比数据库要
 
 
 
-## 1、springBoot引入spring配置文件，进行redis的搭建<br/>
+## 1、springBoot引入spring配置文件，进行redis的搭建
 
 
-```
+```java
 @ImportResource(value = "classpath:applicationContext.xml")
 @SpringBootApplication
 public class SinoredisSpringbootApplication {
@@ -98,10 +97,10 @@ public class SinoredisSpringbootApplication {
 
 ```
 
-### 1.1、spring配置文件如下<br/>
+### 1.1、spring配置文件如下
 
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -116,10 +115,10 @@ public class SinoredisSpringbootApplication {
 
 ```
 
-### 1.2、redis配置信息在properties中如下<br/>
+### 1.2、redis配置信息在properties中如下
 
 
-```
+```properties
 ########################################################
 ###REDIS (RedisProperties) redis
 ########################################################
@@ -135,7 +134,7 @@ hlj.redis.pool.max-wait=-1
 
 这里可以看到我使用了自定义的key 和value的序列化方式
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -171,7 +170,7 @@ hlj.redis.pool.max-wait=-1
 ### 1.3.1 自定义key的序列化方式
 
 
-```
+```java
 package com.hlj.config.serializer;
 
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -246,7 +245,7 @@ public class CustomStringRedisSerializer implements RedisSerializer<Object> {
 #### 1.3.2、自定义value的序列化方式
 
 
-```
+```java
 package com.hlj.config.serializer;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -386,7 +385,7 @@ public class CustomJSONStringRedisSerializer implements RedisSerializer<Object> 
 2、本类中可以看到有两个服务类`ValueOperations`和`RedisOperations`，但是其实是同一个类只不过名字不同。只是其作用的范围表面上意思不一样，**第一个是用来存取数据，第二个用来操作参数数据的**
 
 
-```
+```java
 package com.hlj.redis.redisTool;
 
 import org.springframework.data.redis.core.RedisOperations;
@@ -446,7 +445,7 @@ public class RedisObjectData {
 
 #### 2.2.1、添加缓存对象和读取缓存对象
 
-```
+```java
 package com.hlj.controller;
 
 import com.hlj.Format.ResponseBean;
@@ -1091,7 +1090,7 @@ public class CacheConstants {
 
 #### 1、controller
 
-```
+```java
 package com.hlj.Ehcache.controller;
 
 
@@ -1374,7 +1373,7 @@ public UrlRequestInterceptor() {
 ```
 Long count = redisUrlRequestData.increase(userId + uri,urlFilter.get(uri));
 ```
- 
+
  
 
 
@@ -1499,7 +1498,7 @@ public class RedisUrlRequestData {
         });
     }
 }
-``` 
+```
 
 网上不错的方法
 
