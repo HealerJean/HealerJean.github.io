@@ -7,7 +7,10 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.type.JdbcType;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -16,11 +19,11 @@ import java.util.List;
  * @date 2020/3/5  20:08.
  * @Description
  */
-public interface UserMapper  extends BaseMapper<User> {
+public interface UserMapper extends BaseMapper<User> {
 
 
     @Select("select * from user where name = #{name}")
-    //写不写下面的都行
+    //写不写下面的这行都行
     // @ResultType(UserDTO.class)
     @Results(
             @Result(property = "userId", column = "id")
@@ -28,15 +31,20 @@ public interface UserMapper  extends BaseMapper<User> {
     List<UserDTO> selectUserDtoList(UserDTO userDTO);
 
 
-
     @Select({
             "<script>",
             "select * from user where",
-            "id in",
-            "<foreach collection='ids' item='id' open='(' separator=',' close=')'>",
-            "#{id}",
+            "<if test='ids != null and ids.size > 0'> ",
+            " id in",
+            "<foreach collection='ids' index='index' item='item' open='(' separator=',' close=')'>",
+            " #{item} ",
             "</foreach>",
+            "</if>",
             "</script>"
     })
     List<UserDTO> selectListByScript(UserDTO userDTO);
+
+
+    List<UserDTO> selectByMappeXml(UserDTO userDTO);
+
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-<!--学习 https://blog.csdn.net/ZYC88888/article/details/85060315-->
+    <!--学习 https://blog.csdn.net/ZYC88888/article/details/85060315-->
 
     <!--
      格式化输出：%d表示日期，
@@ -18,7 +18,7 @@
 
     <!--控制台-->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
+        <encoder charset="UTF-8"  >
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
