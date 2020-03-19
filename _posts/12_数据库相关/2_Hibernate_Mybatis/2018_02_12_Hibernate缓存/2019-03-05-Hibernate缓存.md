@@ -2,9 +2,9 @@
 title: Hibernate缓存
 date: 2019-03-05 03:33:00
 tags: 
-- database
+- Database
 category: 
-- database
+- Database
 description: Hibernate缓存
 ---
 <!-- image url 
