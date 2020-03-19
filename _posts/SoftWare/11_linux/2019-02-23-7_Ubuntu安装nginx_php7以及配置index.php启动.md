@@ -2,9 +2,9 @@
 title: Ubuntu安装nginx_php7以及配置index.php启动
 date: 2018-02-23 03:33:00
 tags: 
-- server
+- Linux
 category: 
-- server
+- Linux
 description: Ubuntu安装nginx_php7以及配置index.php启动
 ---
 <!-- image url 
