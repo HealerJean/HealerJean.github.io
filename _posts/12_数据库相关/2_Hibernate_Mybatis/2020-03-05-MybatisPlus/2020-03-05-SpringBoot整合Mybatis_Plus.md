@@ -314,7 +314,10 @@ spring.datasource.druid.testWhileIdle=true
 spring.datasource.druid.testOnBorrow=false
 spring.datasource.druid.testOnReturn=false
 
-#mybatis-plus.config-location=classpath:mapper/*.xml
+# 配置 mybatis的一些配置，也可以在 application.properties 中配置，如果配置了就不需要了mybatis.xml
+#mybatis-plus.config-location=classpath:mybatis.xml
+#Maven 多模块项目的扫描路径需以 classpath*: 开头 （即加载多个 jar 包下的 XML 文件）
+#mybatis-plus.mapper-locations=classpath*:mapper/*.xml
 mybatis-plus.type-aliases-package=com.healerjean.proj.data.entity
 ##主键类型  0:"数据库ID自增，非常大", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
 mybatis-plus.id-type: 0
@@ -459,9 +462,119 @@ http://127.0.0.1:8888/hlj/user/selectById?id=1235553744515612673
 
 
 
-# 2、Wrapper方法的的使用 
+# 2、 Wrapper 对象
 
-## 2.1、`eq`：等于 =
+
+
+## 2.1、`QueryWrapper`  
+
+> 继承自 ·`AbstractWrapper` ,自身的内部属性 `entity` 也用于生成` where` 条件 及` LambdaQueryWrapper`,
+
+
+
+### 2.1.1、获取`QueryWrapper`对象  
+
+#### 2.1.1.1、`Wrappers.<User>lambdaQuery()`
+
+```java
+Wrapper<User> userWrapper = Wrappers.<User>lambdaQuery()
+    .eq(User::getName, "healer");
+
+List<User> users = userMapper.selectList(userWrapper);
+System.out.println(JsonUtils.toJsonString(users));
+```
+
+
+
+#### 2.1.1.2、`Wrappers.lambdaQuery(User.class)`  
+
+```java
+Wrapper<User> userWrapper = Wrappers.lambdaQuery(User.class)
+    .eq(User::getName, "healer");
+
+List<User> users = userMapper.selectList(userWrapper);
+System.out.println(JsonUtils.toJsonString(users));
+```
+
+
+
+#### 2.1.1.3、`new QueryWrapper<User>().lambda()`
+
+```java
+Wrapper<User> userWrapper = new QueryWrapper<User>().lambda()
+    .eq(User::getName, "healer");
+
+List<User> users = userMapper.selectList(userWrapper);
+System.out.println(JsonUtils.toJsonString(users));
+```
+
+
+
+
+
+### 2.1.2、`select`：设置查询字段 
+
+> 分法为两类.第二类方法为:过滤查询字段(主键除外),入参不包含 class 的调用前需要`wrapper`内的`entity`属性有值!      
+>
+> 这两类方法重复调用以最后一次为准
+
+```java
+select(String... sqlSelect)
+select(Predicate<TableFieldInfo> predicate)
+select(Class<T> entityClass, Predicate<TableFieldInfo> predicate)
+    
+    
+select("id", "name", "age")
+select(i -> i.getProperty().startsWith("test"))
+```
+
+
+
+## 2.2、`UpdateWrapper`
+
+
+
+> 继承自 `AbstractWrapper` ,自身的内部属性 `entity` 也用于生成 `where` 条件
+> 及 `LambdaUpdateWrapper`, 可以通过 `new UpdateWrapper().lambda()` 方法获取!
+
+
+
+### 2.2.1、`set`：SET 字段
+
+
+
+```java
+set(String column, Object val)
+set(boolean condition, String column, Object val)
+    
+
+
+例: set("name", "老李头")
+例: set("name", "")--->数据库字段值变为空字符串
+例: set("name", null)--->数据库字段值变为null
+```
+
+
+
+### 2.2.2、`setSql`：设置 SET 部分 SQL
+
+```java
+setSql(String sql)
+
+例: setSql("name = '老李头'")
+```
+
+
+
+
+
+
+
+
+
+# 3、Wrapper方法的的使用 
+
+## 3.1、`eq`：等于 =
 
 ```java
 eq(R column, Object val)
@@ -484,7 +597,7 @@ List<User>  users = userMapper.selectList(userWrapper);
 
 
 
-## 2.2、`ne`：不等于 <>
+## 3.2、`ne`：不等于 <>
 
 ```java
 ne(R column, Object val)
@@ -495,7 +608,7 @@ ne(boolean condition, R column, Object val)
 
 
 
-## 2.3、`gt`：大于 >
+## 3.3、`gt`：大于 >
 
 ```java
 gt(R column, Object val)
@@ -508,7 +621,7 @@ gt(boolean condition, R column, Object val)
 
 
 
-## 2.4、`ge`：大于等于 >=
+## 3.4、`ge`：大于等于 >=
 
 ```java
 lt(R column, Object val)
@@ -523,7 +636,7 @@ ge("age", 18)--->age >= 18
 ```
 
 
-## 2.5、`lt`：小于 <
+## 3.5、`lt`：小于 <
 
 ```java
 lt(R column, Object val)
@@ -535,7 +648,7 @@ lt(boolean condition, R column, Object val)
 
 
 
-## 2.6、`le`：小于等于 <=
+## 3.6、`le`：小于等于 <=
 
 ```java
 le(R column, Object val)
@@ -546,7 +659,7 @@ le(boolean condition, R column, Object val)
 
 
 
-## 2.7、`between`：ETWEEN 值1 AND 值2
+## 3.7、`between`：ETWEEN 值1 AND 值2
 
 ```java
 between(R column, Object val1, Object val2)
@@ -557,7 +670,7 @@ between(boolean condition, R column, Object val1, Object val2)
 
 
 
-## 2.8、`notBetween`：NOT BETWEEN 值1 AND 值2
+## 3.8、`notBetween`：NOT BETWEEN 值1 AND 值2
 
 ```java
 notBetween(R column, Object val1, Object val2)
@@ -568,7 +681,7 @@ notBetween(boolean condition, R column, Object val1, Object val2)
 
 
 
-## 2.9、`like`：LIKE '%值%'
+## 3.9、`like`：LIKE '%值%'
 
 ```java
 like(R column, Object val)
@@ -578,7 +691,7 @@ like(boolean condition, R column, Object val)
 ```
 
 
-## 2.10、`notLike`：NOT LIKE '%值%'
+## 3.10、`notLike`：NOT LIKE '%值%'
 
 ```java
 notLike(R column, Object val)
@@ -589,7 +702,7 @@ notLike(boolean condition, R column, Object val)
 
 
 
-## 2.11、`likeLeft`：LIKE '%值'
+## 3.11、`likeLeft`：LIKE '%值'
 
 ```java
 likeLeft(R column, Object val)
@@ -600,7 +713,7 @@ likeLeft(boolean condition, R column, Object val)
 
 
 
-## 2.12、`likeRight`：LIKE '值%'
+## 3.12、`likeRight`：LIKE '值%'
 
 ```java
 likeRight(R column, Object val)
@@ -611,7 +724,7 @@ likeRight(boolean condition, R column, Object val)
 
 
 
-## 2.13、`isNull`：字段 IS NULL
+## 3.13、`isNull`：字段 IS NULL
 
 ```java
 isNull(R column)
@@ -621,7 +734,7 @@ isNull(boolean condition, R column)
 ```
 
 
-## 2.14、`isNotNull`：字段 IS NOT NULL
+## 3.14、`isNotNull`：字段 IS NOT NULL
 
 ```java
 isNotNull(R column)
@@ -632,7 +745,7 @@ isNotNull(boolean condition, R column)
 
 
 
-## 2.15、`in`：字段 IN
+## 3.15、`in`：字段 IN
 
 ```java
 in(R column, Collection<?> value)
@@ -672,7 +785,7 @@ public void in() {
 
 
 
-## 2.16、`notIn`：字段 IN (value.get(0), value.get(1), ...)
+## 3.16、`notIn`：字段 IN (value.get(0), value.get(1), ...)
 
 ```java
 notIn(R column, Collection<?> value)
@@ -694,7 +807,7 @@ notIn(boolean condition, R column, Object... values)
 
 
 
-## 2.17、`inSql`：字段 IN ( sql语句 )
+## 3.17、`inSql`：字段 IN ( sql语句 )
 
 ```java
 inSql(R column, String inValue)
@@ -723,7 +836,7 @@ public void inSql() {
 
 
 
-## 2.18、`notInSql`：字段 NOT IN ( sql语句 )
+## 3.18、`notInSql`：字段 NOT IN ( sql语句 )
 
 ```java
 notInSql(R column, String inValue)
@@ -739,7 +852,7 @@ notInSql(boolean condition, R column, String inValue)
 
 
 
-## 2.19、`groupBy`：分组：GROUP BY 字段, .
+## 3.19、`groupBy`：分组：GROUP BY 字段, .
 
 ```java
 groupBy(R... columns)
@@ -769,7 +882,7 @@ public void groupBy() {
 
 
 
-## 2.20、`orderBy/orderByAsc`：ORDER BY 字段, ... ASC
+## 3.20、`orderBy/orderByAsc`：ORDER BY 字段, ... ASC
 
 
 ```java
@@ -788,7 +901,7 @@ orderByAsc(boolean condition, R... columns)
 
 
 
-## 2.21、`orderByDesc`：排序：ORDER BY 字段, ... DESC
+## 3.21、`orderByDesc`：排序：ORDER BY 字段, ... DESC
 
 ```java
 orderByDesc(R... columns)
@@ -801,7 +914,7 @@ orderByDesc(boolean condition, R... columns)
 
 
 
-## 2.22、`having`：HAVING ( sql语句 )
+## 3.22、`having`：HAVING ( sql语句 )
 
 ```java
 having(String sqlHaving, Object... params)
@@ -828,7 +941,7 @@ public void groupBy() {
 
 
 
-## 2.23、`or`：拼接 OR 
+## 3.23、`or`：拼接 OR 
 
 > 注意事项：主动调用`or`表示紧接着下一个**方法**不是用`and`连接!(不调用`or`则默认为使用`and`连接)
 
@@ -841,7 +954,7 @@ or(boolean condition)
 
 
 
-### 2.23.1、OR嵌套 
+### 3.23.1、OR嵌套 
 
 ```java
 例: or(i -> i.eq("name", "李白")
@@ -872,7 +985,7 @@ SELECT id,name,age,email FROM user WHERE ((age = ? AND age = ?) OR name = ?)
 
 
 
-## 2.24、`and`：默认为and
+## 3.24、`and`：默认为and
 
 ```java
 and(Consumer<Param> consumer)
@@ -880,7 +993,7 @@ and(boolean condition, Consumer<Param> consumer)
 
 ```
 
-### 2.24.1、AND 嵌套
+### 3.24.1、AND 嵌套
 
 ```java
 例:  and(i -> i.eq("name", "李白")
@@ -893,7 +1006,7 @@ and(boolean condition, Consumer<Param> consumer)
 
 
 
-## 2.25、`nested`：正常嵌套 不带 AND 或者 OR
+## 3.25、`nested`：正常嵌套 不带 AND 或者 OR
 
 > 默认都是自动加and
 
@@ -932,7 +1045,7 @@ SELECT id,name,age,email FROM user WHERE
 
 
 
-## 2.26、`apply`：拼接 sql 
+## 3.26、`apply`：拼接 sql 
 
 > 该方法可用于数据库**函数** 动态入参的`params`对应前面`applySql`内部的`{index}`部分.这样是不会有sql注入风险的,反之会有!
 
@@ -974,7 +1087,7 @@ SELECT id,name,age,email FROM user WHERE (age = ? AND name = 'healer')
 
 
 
-## 2.27、`last`：无视优化规则直接拼接到 sql 的最后
+## 3.27、`last`：无视优化规则直接拼接到 sql 的最后
 
 > 只能调用一次,多次调用以最后一次为准 有sql注入的风险,请谨慎使用
 >
@@ -992,7 +1105,7 @@ last(boolean condition, String lastSql)
 
 
 
-## 2.28、`exists`：拼接 EXISTS ( sql语句 )
+## 3.28、`exists`：拼接 EXISTS ( sql语句 )
 
 ```java
 exists(String existsSql)
@@ -1005,7 +1118,7 @@ exists(boolean condition, String existsSql)
 
 
 
-## 2.29、`notExists`：拼接 NOT EXISTS ( sql语句 )
+## 3.29、`notExists`：拼接 NOT EXISTS ( sql语句 )
 
 ```java
 notExists(String notExistsSql)
@@ -1018,129 +1131,20 @@ notExists(boolean condition, String notExistsSql)
 
 
 
-# 3、`QueryWrapper`
-
-> 继承自 AbstractWrapper ,自身的内部属性 entity 也用于生成 where 条件
-> 及` LambdaQueryWrapper`, 可以通过 `new QueryWrapper().lambda()` 方法获取 
-
-```
-mysqlMapper.getAll(Wrappers.<MysqlData>lambdaQuery().eq(MysqlData::getGroup, 1));
-```
 
 
+# 4、复杂`SQL `
 
-## 3.1、`select`：设置查询字段 
+## 4.1、返回自定义对象 
 
-> 分法为两类.第二类方法为:过滤查询字段(主键除外),入参不包含 class 的调用前需要`wrapper`内的`entity`属性有值! 这两类方法重复调用以最后一次为准
-
-```java
-select(String... sqlSelect)
-select(Predicate<TableFieldInfo> predicate)
-select(Class<T> entityClass, Predicate<TableFieldInfo> predicate)
-    
-    
-select("id", "name", "age")
-select(i -> i.getProperty().startsWith("test"))
-```
-
-
-
-
-
-# 4、`UpdateWrapper`
-
-> 继承自 `AbstractWrapper` ,自身的内部属性 `entity` 也用于生成 where 条件
-> 及 `LambdaUpdateWrapper`, 可以通过 `new UpdateWrapper().lambda()` 方法获取!
-
-
-
-## 4.1、`set`：SQL SET 字段
-
-
-
-```java
-set(String column, Object val)
-set(boolean condition, String column, Object val)
-    
-
-
-例: set("name", "老李头")
-例: set("name", "")--->数据库字段值变为空字符串
-例: set("name", null)--->数据库字段值变为null
-```
-
-
-
-## 4.2、`setSql`：设置 SET 部分 SQL
-
-```java
-setSql(String sql)
-
-例: setSql("name = '老李头'")
-```
-
-
-
-# 5、使用 Wrapper 自定义SQL
-
-
-
-```java
-/**
-* 1、构造LambdaQueryWrapper 的方式
-*/
-@Test
-public void lambdaQuery() {
-    Wrapper<User> userWrapper = null;
-    List<User> users = null;
-    String name = "healer";
-    userWrapper = Wrappers.<User>lambdaQuery().eq(User::getName, name);
-    users = userMapper.selectList(userWrapper);
-    System.out.println(JsonUtils.toJsonString(users));
-
-    userWrapper = Wrappers.lambdaQuery(User.class).eq(User::getName, name);
-    users = userMapper.selectList(userWrapper);
-    System.out.println(JsonUtils.toJsonString(users));
-
-    userWrapper = new QueryWrapper<User>().lambda().eq(User::getName, name);
-    users = userMapper.selectList(userWrapper);
-    System.out.println(JsonUtils.toJsonString(users));
-}
-```
-
-
-
-##  方案一： 注解方式 `Mapper.java`
-
-```java
-@Select("select * from mysql_data ${ew.customSqlSegment}")
-List<MysqlData> getAll(@Param(Constants.WRAPPER) Wrapper wrapper);
-```
-
-
-
-## 方案二 ：XML形式 `Mapper.xml`
-
-```xml
-<select id="getAll" resultType="MysqlData">
-	SELECT * FROM mysql_data ${ew.customSqlSegment}
-</select>
-```
-
-
-
-## 6、复杂SQL 
-
-## 6.1、返回自定义对象 
-
-### 6.1.1、mapper
+### 4.1.1、Mapper
 
 ```java
  public interface UserMapper  extends BaseMapper<User> {
 
 
     @Select("select * from user where name = #{name}")
-    //写不写下面的都行
+    //写不写下面这行都行
     // @ResultType(UserDTO.class)
     @Results(
             @Result(property = "userId", column = "id")
@@ -1150,11 +1154,7 @@ List<MysqlData> getAll(@Param(Constants.WRAPPER) Wrapper wrapper);
 
 ```
 
-
-
-### 6.1.2、测试类 
-
-
+### 4.1.2、测试类 
 
 ```java
 @Test
@@ -1166,8 +1166,133 @@ public void userDTO(){
 }
 
 
-
 [{"userId":1235553744515612673,"name":"healer","age":22,"email":"22"}]
+```
+
+
+
+## 4.2、原生SQL使用Script语句 
+
+### 4.2.1、Mapper
+
+```java
+@Select({
+    "<script>",
+    "select * from user where",
+    "<if test='ids != null and ids.size > 0'> ",
+    " id in",
+    "<foreach collection='ids' index='index' item='item' open='(' separator=',' close=')'>",
+    " #{item} ",
+    "</foreach>",
+    "</if>",
+    "</script>"
+})
+List<UserDTO> selectListByScript(UserDTO userDTO);
+```
+
+
+
+### 4.2.2、测试类 
+
+```java
+@Test
+public void selectListByScript() {
+    UserDTO userDTO = new UserDTO();
+    userDTO.setIds(Arrays.asList(1L, 2L));
+    List<UserDTO> userDTOS = userMapper.selectListByScript(userDTO);
+    System.out.println(JsonUtils.toJsonString(userDTOS));
+}
+
+
+[{"id":1,"name":"healer","age":22,"email":"healerjean@gmial.com"}]
+```
+
+
+
+## 4.3、配置`mapper.xml` 
+
+### 4.3.1、`application.properties`配置
+
+```properties
+# 配置 mybatis的一些配置，也可以在 application.properties 中配置，如果配置了就不需要了mybatis.xml
+#mybatis-plus.config-location=classpath:mybatis.xml
+#Maven 多模块项目的扫描路径需以 classpath*: 开头 （即加载多个 jar 包下的 XML 文件）
+mybatis-plus.mapper-locations=classpath*:mapper/*.xml
+mybatis-plus.type-aliases-package=com.healerjean.proj.data.entity
+##主键类型  0:"数据库ID自增，非常大", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+mybatis-plus.id-type: 0
+ #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+mybatis-plus.field-strategy: 2
+ #数据库大写下划线转换
+mybatis-plus.capital-mode: true
+mybatis-plus.refresh-mapper: true
+
+```
+
+
+
+### 4.3.2、`mybatis.xml`
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="cacheEnabled" value="false"/>
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <setting name="defaultStatementTimeout" value="25000"/>
+    </settings>
+
+</configuration>
+
+```
+
+
+
+### 4.3.3、`mapper.xml`  
+
+![1584524650597](D:\study\HealerJean.github.io\blogImages\1584524650597.png)
+
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.healerjean.proj.data.mapper.UserMapper">
+
+
+    <select id = "selectByMappeXml" resultType="com.healerjean.proj.dto.UserDTO">
+              select * from user where name = #{name}
+    </select>
+
+</mapper>
+
+```
+
+
+
+### 4.3.4、`Mapepr.java`
+
+```java
+List<UserDTO> selectByMappeXml(UserDTO userDTO);
+```
+
+
+
+### 4.3.5、测试
+
+```java
+
+@Test
+public void test(){
+    UserDTO userDTO = new UserDTO();
+    userDTO.setName("healer");
+    List<UserDTO> userDTOS = userMapper.selectByMappeXml(userDTO);
+    System.out.println(JsonUtils.toJsonString(userDTOS));
+}
+
+
+[{"id":1,"name":"healer","age":22,"email":"healerjean@gmial.com"}]
 ```
 
 
