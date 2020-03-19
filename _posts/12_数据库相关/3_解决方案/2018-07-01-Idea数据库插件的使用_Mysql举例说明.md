@@ -2,10 +2,10 @@
 title: Idea_数据库插件的使用_Mysql举例说明
 date: 2018-03-06 03:33:00
 tags: 
-- Mysql
+- SoftWare
 - Database
 category: 
-- Mysql
+- SoftWare
 - Database
 description: Idea_数据库插件的使用_Mysql举例说明
 ---
