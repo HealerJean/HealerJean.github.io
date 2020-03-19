@@ -2,11 +2,9 @@
 title: hibernate编辑实体日期的更新问题
 date: 2018-03-14 16:33:00
 tags: 
-- Hibernate
-- Date
+- Database
 category: 
-- Hibernate
-- Date
+- Database
 description: hibernate编辑实体日期的修改问题
 ---
 <!-- image url 
@@ -14,7 +12,8 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 <font color="red"></font>
 -->
-##前言
+
+**前言**
 
 对于刚刚接触hibernate的开发者来说，它确实是一个伟大的东西，但如果针对修改不太明白的话，那确实挺伤的。首先修改是根据id查找到实体。然后和保存一样，也是用save进行存储。
 
