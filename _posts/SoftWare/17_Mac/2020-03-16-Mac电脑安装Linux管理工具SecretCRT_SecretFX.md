@@ -3,8 +3,12 @@ title: Mac电脑安装Linux管理工具SecretCRT_SecretFX
 date: 2020-03-16 03:33:00
 tags: 
 - Mac
+- Linux
+- SoftWare
 category: 
 - Mac
+- Linux
+- SoftWare
 description: Mac电脑安装Linux管理工具SecretCRT_SecretFX
 ---
 
@@ -111,47 +115,6 @@ Serial Number: 06-64-250319
 License Key: ABW86K JKJZ1X CF34MM TB77KW ADNBSY FNGPR3 SA6QAZ ZJM6SH
 Issue Date:11-12-2018
 ```
-
-
-
-
-
-
-
-# 2、经验
-
-## 2.1、如果出现不显示二维码的情况
-
-
-
-![1584329665749](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584329665749.png)
-
-
-
-## 2.2、调整颜色 
-
-![1584329707148](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584329707148.png)
-
-
-
-## 2.3、不保存用户密码
-
-> 虽然在第一次通过SSH连接时，输入密码后，已经选择Accept&Save去保存了密码： 
-
-
-
-**“options-global options-general-mac options”去掉“use keychain”的勾选项**
-
-
-
-## 2.4、设置secureCRT不掉线的方法
-
-Options—>Global Options—>General—>Default Session—>Edit Default Settings—>Terminal—>Anti-idle
-
-
-选中Send protocol NO-OP every 120 seconds
-
-
 
 
 
