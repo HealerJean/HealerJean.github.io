@@ -3,12 +3,12 @@ title: 2、netty_websocket_redisTemplate_thread
 date: 2018-03-30 16:33:00
 tags: 
 - Netty
-- Redis
+- Cache
 - Thread
 category: 
 - Netty
 - Thread
-- Redis
+- Cache
 description: netty_websocket_redisTemplate_thread
 ---
 <!-- image url 

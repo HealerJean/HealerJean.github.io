@@ -2,12 +2,6 @@ package com.healerjean.proj.service.system.cache;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * @ClassName CacheService
- * @Author TD
- * @Date 2019/6/3 17:56
- * @Description 缓存业务
- */
 public interface CacheService {
 
     /**

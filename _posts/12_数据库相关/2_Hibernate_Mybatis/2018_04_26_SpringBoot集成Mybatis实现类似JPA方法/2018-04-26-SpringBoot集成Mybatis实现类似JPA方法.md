@@ -1,13 +1,11 @@
 ---
-title: 1、SpringBoot继承mybatis实现类似JPA方法
+title: 1、SpringBoot集成mybatis实现类似JPA方法
 date: 2018-04-26 11:29:00
 tags: 
-- SpringBoot
-- Mybatis
+- Database
 category: 
-- SpringBoot
-- Mybatis
-description: SpringBoot继承mybatis实现类似JPA方法
+- Database
+description: SpringBoot集成mybatis实现类似JPA方法
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages

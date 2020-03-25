@@ -2,9 +2,11 @@
 title: spirngboot关于Maven项目代码jar上传到linux服务
 date: 2018-07-19 03:33:00
 tags: 
-- SpirngBoot
+- SpringBoot
+- Linux
 category: 
-- SpirngBoot
+- SpringBoot
+- Linux
 description: spirngboot关于Maven项目代码jar上传到linux服务
 ---
 <!-- image url 

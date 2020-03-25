@@ -3,11 +3,9 @@ title: Docker安装graylog和详解
 date: 2018-03-16 14:33:00
 tags: 
 - Docker
-- GrayLog
 - Log
 category: 
 - Docker
-- GrayLog
 - Log
 description: Docker安装graylog和详解
 ---
@@ -139,7 +137,7 @@ curl -XPOST http://localhost:12201/gelf -p0 -d '{"message":"hello这是一条消
 
 ### 1、使用logback进行日志的封装
 
-```
+```xml
 <!--logback-->
 	<dependency>
 		<groupId>com.github.pukkaone</groupId>
@@ -171,7 +169,7 @@ curl -XPOST http://localhost:12201/gelf -p0 -d '{"message":"hello这是一条消
 
 1、application.properties
 
-```
+```properties
 spring.application.name=tools
 server.port=8085
 spring.profiles.active=prod
@@ -185,7 +183,7 @@ logging.level.org.mybatis=error
 ```
 2、application-prod.properties
 
-```
+```properties
 server.port=8080
 
 #logging properties
@@ -194,7 +192,7 @@ logging.config=classpath:logback-prod.xml
 ```
 ### 3、logback-prod.xml 配置如下
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
@@ -233,7 +231,7 @@ logging.config=classpath:logback-prod.xml
 ### 4、测试controller，下面有个异常哦
 
 
-```
+```java
 @Slf4j
 @RestController
 public class TestController {
@@ -251,7 +249,7 @@ public class TestController {
 }
 ```
 
-### 5、开始启动springBoot的朋友们。观察浏览器graylog<br/>
+### 5、开始启动springBoot的朋友们。观察浏览器graylog 
 
 可以看到日志和控制台是一样的
 
@@ -302,7 +300,7 @@ source:tools AND warn
 
 ## 总结下
 
-至此，如果公司要用的话，我觉得大家应该也能够用的非常顺利，祝大家工作顺利。如果那里不懂的可以即使留言哦
+至此，如果公司要用的话，我觉得大家应该也能够用的非常顺利，祝大家工作顺利。如果那里不懂的可以即使留言哦    
 
 
 
@@ -315,7 +313,6 @@ source:tools AND warn
 
 
 
-<br/><br/><br/>
 如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
 
 |支付包 | 微信|微信公众号|

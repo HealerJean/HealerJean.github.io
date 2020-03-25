@@ -1,5 +1,5 @@
 ---
-title: docker搭建Nexus私服
+title: Docker搭建Nexus私服
 date: 2019-01-17 03:33:00
 tags: 
 - Docker
@@ -7,7 +7,7 @@ tags:
 category: 
 - Docker
 - Maven
-- description: docker搭建Nexus私服
+- description: Docker搭建Nexus私服
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages

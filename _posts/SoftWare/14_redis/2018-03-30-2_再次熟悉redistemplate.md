@@ -1,11 +1,11 @@
 ---
-title: 2、再次熟悉redisTemplate
+title: 再次熟悉RedisTemplate
 date: 2018-03-30 23:33:00
 tags: 
-- Redis
+- Cache
 category: 
-- Redis
-description: 再次熟悉redisTemplate
+- Cache
+description: 再次熟悉RedisTemplate
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
@@ -40,7 +40,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 |boundHashOps(K)	|BoundHashOperations|以绑定指定key的方式，操作具有hash值的条目|
 
 
-		
+​		
 
 
 
@@ -60,7 +60,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 <br/>
 2、ValueOperations RedisOperations
 就像他们的名字一样 ，一个是操作数据的值的，一个是操作key的其他（过期，删除等）
- 
+
  </font>
 
 ```java
@@ -376,8 +376,8 @@ ZbtGameRoom room = mapper.convertValue(redisWithTemplate.opsForValue().get(Cache
 
 Encache是后台我们自己用的
 
+​    
 
-<br/><br/><br/>
 如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
 
 |支付包 | 微信|微信公众号|
