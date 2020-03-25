@@ -1,5 +1,7 @@
 package com.hlj.proj.controller;
 
+import com.hlj.proj.controller.dto.UserDTO;
+import com.hlj.proj.controller.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,4 +30,14 @@ public class LogbackController {
         System.out.println(i);
         return "日志处理成功";
     }
+
+    @GetMapping("logJson")
+    public UserDTO logJson() {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(0L);
+        userDTO.setName("HealerJean");
+        log.info("userDTO：{}, name：{}", userDTO, userDTO.getName());
+        return userDTO;
+    }
+
 }

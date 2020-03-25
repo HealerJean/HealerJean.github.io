@@ -1,11 +1,11 @@
 ---
-title: 2、swagger请求的更改请求的url地址
+title: Swagger请求的更改请求的url地址
 date: 2018-07-10 03:33:00
 tags: 
 - Swagger
 category: 
 - Swagger
-description: swagger请求的更改请求的url地址
+description: Swagger请求的更改请求的url地址
 ---
 <!-- image url 
 https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages

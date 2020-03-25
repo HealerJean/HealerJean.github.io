@@ -4,7 +4,7 @@ date: 2019-02-20 03:33:00
 tags: 
 - SpringBoot
 category: 
-- Spring
+- SpringBoot
 description: SpringBoot添加Profile文件夹同时作为Resource目录
 ---
 
