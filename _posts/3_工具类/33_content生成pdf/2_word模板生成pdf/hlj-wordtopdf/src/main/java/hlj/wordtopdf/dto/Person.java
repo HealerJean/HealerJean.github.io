@@ -1,4 +1,4 @@
-package hlj.wordtopdf;
+package hlj.wordtopdf.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
