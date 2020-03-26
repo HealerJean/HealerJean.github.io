@@ -1,17 +1,15 @@
 package com.healerjean.proj.data.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.healerjean.proj.config.CustomLocalDateTimeTypeHandler;
-import com.healerjean.proj.config.CustomLocalDateTypeHandler;
 import com.healerjean.proj.data.entity.User;
 import com.healerjean.proj.dto.UserDTO;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.type.JdbcType;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
+import org.mapstruct.factory.Mappers;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -55,4 +53,10 @@ public interface UserMapper extends BaseMapper<User> {
 
 
     List<UserDTO> selectLocalDateByMappeXml(UserDTO userDTO);
+
+
+
+
+
+
 }

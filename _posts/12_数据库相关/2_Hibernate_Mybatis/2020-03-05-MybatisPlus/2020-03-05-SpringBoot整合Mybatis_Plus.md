@@ -1295,7 +1295,7 @@ public void test(){
 
 
 
-# 5、版本问题
+# 5、问题
 
 
 
@@ -1606,6 +1606,85 @@ public void testDateList(){
 
 [{"id":1,"name":"healer","age":22,"email":"healerjean@gmial.com","createDate":"2020-03-18","createTime":"2020-03-18 16:28:20"}]
 ```
+
+
+
+
+
+## 5.2、日期问题 
+
+
+
+> 可能会遇到日期格式的时间段问题，当数据库的时间为DATE类型时，MyBatis的`jdbcType`应该使用DATE
+> `jdbcType=DATE`，而不是使用`jdbcType=TIMESTAMP`
+
+
+
+### 5.2.1、 Date类型` JsonFormat`失效  
+
+解决方案：如果直接从数据库中取出来，再放到前台，序列化为`yyyy-MM-dd HH:mm:ss`，会失败，最后解决方案为添加一个中间对象（Model），然后再转化为`LocalDateTime`
+
+(具体原理不知)
+
+
+
+### 5.2.2、 数据库日期类型为`datetime`， 序列化为 ` yyyy-MM-dd`，会少一天（不管是LocalDate还是Date序列化）
+
+
+
+```java
+@Data
+public class LoanOrderModel {
+
+    /** 申请时间 */
+    private Date applyDate;
+    /** 下次还款时间 */
+    private Date nextRepayDate;
+    
+}
+
+
+
+@Data
+public class LoanOrderDTO {
+
+    /** 申请时间 */
+    private LocalDateTime applyDate;
+    /** 下次还款时间 */
+    private LocalDate nextRepayDate;
+
+}
+
+```
+
+
+
+**数据库存储的时间是 2020-04-25 00:00:00：如果直接使用如下，则到了前台日期会少一天 2020-04-24**
+
+```java
+loanOrderDTO.setNextRepayDate( DateUtils.toLocalDate(loanOrderModel.getNextRepayDate()));
+
+```
+
+
+
+#### 5.2.2.1、解决方案
+
+> **先变成`LocalDateTime`，再变成`LocalDate`**   
+
+(具体原理不知)
+
+```java
+loanOrderDTO.setNextRepayDate( DateUtils.toLocalDateTime(
+					loanOrderModel.getNextRepayDate()).toLocalDate());
+
+```
+
+
+
+
+
+
 
 
 
