@@ -1,4 +1,4 @@
-package hlj.wordtopdf.xdocreport;
+package hlj.wordtopdf.proj.wordToPdf.xdocreport;
 
 import fr.opensagres.xdocreport.converter.ConverterTypeTo;
 import fr.opensagres.xdocreport.converter.ConverterTypeVia;
@@ -11,8 +11,8 @@ import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
-import hlj.wordtopdf.Person;
-import hlj.wordtopdf.TableData;
+import hlj.wordtopdf.dto.Person;
+import hlj.wordtopdf.dto.TableData;
 import lombok.Data;
 import org.apache.poi.xwpf.converter.pdf.PdfConverter;
 import org.apache.poi.xwpf.usermodel.*;
@@ -25,18 +25,18 @@ import java.util.Map;
 
 /**
  * @author HealerJean
- * @ClassName WordToPdfUtils
+ * @ClassName XdocreportfWordPdfUtils
  * @date 2019/10/12  14:00.
  * @Description
  */
 @Data
-public class WordToPdfUtils {
+public class XdocreportfWordPdfUtils {
 
     private FieldsMetadata fieldsMetadata;
     private IXDocReport ixDocReport;
     private IContext iContext;
 
-    public WordToPdfUtils(InputStream inputStream) {
+    public XdocreportfWordPdfUtils(InputStream inputStream) {
         try {
             this.ixDocReport = XDocReportRegistry.getRegistry().loadReport(inputStream, TemplateEngineKind.Freemarker);
             this.iContext = ixDocReport.createContext();
@@ -153,7 +153,7 @@ public class WordToPdfUtils {
     public static void main(String[] args) {
         try {
             File template = new File("D:/pdf/template.docx");
-            WordToPdfUtils wordToPdfUtils = new WordToPdfUtils(new FileInputStream(template));
+            XdocreportfWordPdfUtils xdocreportfWordPdfUtils = new XdocreportfWordPdfUtils(new FileInputStream(template));
             Map<String, Object> map = new HashMap<>();
             // 1、普通字符
             map.put("word", "helloWord");
@@ -175,17 +175,17 @@ public class WordToPdfUtils {
             map.put("img", new File("D:/pdf/img.png"));
 
             //组装数据
-            wordToPdfUtils.assembleMap(map);
+            xdocreportfWordPdfUtils.assembleMap(map);
 
             //生成pdf
             File outputFile = new File("D:/pdf/ok_template.pdf");
             OutputStream outputStream = new FileOutputStream(outputFile);
-            wordToPdfUtils.createPdf(outputStream);
+            xdocreportfWordPdfUtils.createPdf(outputStream);
 
             // 生成word
             // File wordOutputFile = new File("D:/pdf/ok_template.docx");
             // OutputStream outputStream = new FileOutputStream(wordOutputFile);
-            // wordToPdfUtils.createWord(outputStream);
+            // xdocreportfWordPdfUtils.createWord(outputStream);
 
 
 
