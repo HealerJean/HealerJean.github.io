@@ -17,7 +17,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>hlj-client</module>
+        <module>hlj-01-read-write</module>
+        <module>hlj-02-vertical_shard</module>
     </modules>
 
     <properties>
