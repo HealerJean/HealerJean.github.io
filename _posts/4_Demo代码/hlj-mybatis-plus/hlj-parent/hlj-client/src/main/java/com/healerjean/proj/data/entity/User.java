@@ -2,6 +2,8 @@ package com.healerjean.proj.data.entity;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author HealerJean
  * @ClassName User
@@ -14,4 +16,8 @@ public class User {
     private String name;
     private Integer age;
     private String email;
+
+    /** 添加日期进行测试 */
+    private Date createDate;
+    private Date createTime;
 }

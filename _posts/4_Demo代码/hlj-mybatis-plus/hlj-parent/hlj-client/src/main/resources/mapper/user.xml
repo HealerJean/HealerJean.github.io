@@ -3,8 +3,13 @@
 <mapper namespace="com.healerjean.proj.data.mapper.UserMapper">
 
 
-    <select id = "selectByMappeXml" resultType="com.healerjean.proj.dto.UserDTO">
+    <select id="selectByMappeXml" resultType="com.healerjean.proj.dto.UserDTO">
               select * from user where name = #{name}
+    </select>
+
+
+    <select id="selectLocalDateByMappeXml" resultType="com.healerjean.proj.dto.UserDTO">
+               select * from user where name = #{name}
     </select>
 
 </mapper>
