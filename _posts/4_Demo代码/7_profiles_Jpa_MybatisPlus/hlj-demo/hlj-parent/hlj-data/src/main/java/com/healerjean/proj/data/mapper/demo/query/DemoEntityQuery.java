@@ -43,7 +43,7 @@ public class DemoEntityQuery extends PagingQuery {
     /**
      * 10可用，99删除
      */
-    private String delFlag;
+    private String status;
     /**
      * 创建人
      */

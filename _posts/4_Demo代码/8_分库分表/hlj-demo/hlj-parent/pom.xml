@@ -17,13 +17,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>hlj-common</module>
-        <module>hlj-api</module>
-        <module>hlj-service</module>
-        <module>hlj-data</module>
         <module>hlj-client</module>
     </modules>
-
 
     <properties>
         <project.scf.version>1.0.0-SNAPSHOT</project.scf.version>

@@ -39,7 +39,7 @@ public class DemoDTO extends PageQuery {
     private String email;
 
     @ApiModelProperty(value = "是否删除，10可用，99删除 ", hidden = true)
-    private String delFlag;
+    private String status;
 
     @ApiModelProperty(value = "创建人", hidden = true)
     private Long createUser;
