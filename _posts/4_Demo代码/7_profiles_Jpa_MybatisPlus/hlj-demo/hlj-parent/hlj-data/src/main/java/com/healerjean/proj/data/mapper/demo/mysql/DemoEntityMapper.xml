@@ -18,8 +18,8 @@
                 <if test="age != null and age != ''">
                     and age = #{age,jdbcType=INTEGER}
                 </if>
-                <if test="delFlag != null">
-                    and del_flag = #{delFlag,jdbcType=VARCHAR}
+                <if test="status != null">
+                    and status = #{status,jdbcType=VARCHAR}
                 </if>
                 <if test="createUser != null and createUser != ''">
                     and create_user = #{createUser,jdbcType=BIGINT}
@@ -42,7 +42,7 @@
         phone,
         email,
         age,
-        del_flag,
+        status,
         create_user as createUser,
         create_name as createName,
         create_time as createTime,

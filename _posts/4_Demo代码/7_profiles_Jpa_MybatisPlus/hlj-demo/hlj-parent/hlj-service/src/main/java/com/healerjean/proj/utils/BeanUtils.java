@@ -32,7 +32,7 @@ public class BeanUtils {
         result.setPhone(demoDTO.getPhone());
         result.setEmail(demoDTO.getEmail());
         result.setAge(demoDTO.getAge());
-        result.setStatus(demoDTO.getDelFlag());
+        result.setStatus(demoDTO.getStatus());
         result.setCreateUser(demoDTO.getCreateUser());
         result.setCreateName(demoDTO.getCreateName());
         result.setCreateTime(demoDTO.getCreateTime());
@@ -51,7 +51,7 @@ public class BeanUtils {
             dto.setAge(demoEntity.getAge());
             dto.setPhone(demoEntity.getPhone());
             dto.setEmail(demoEntity.getEmail());
-            dto.setDelFlag(demoEntity.getStatus());
+            dto.setStatus(demoEntity.getStatus());
             dto.setCreateUser(demoEntity.getCreateUser());
             dto.setCreateName(demoEntity.getCreateName());
             dto.setCreateTime(demoEntity.getCreateTime());
@@ -71,7 +71,7 @@ public class BeanUtils {
         query.setAge(demoDTO.getAge());
         query.setPhone(demoDTO.getPhone());
         query.setEmail(demoDTO.getEmail());
-        query.setDelFlag(demoDTO.getDelFlag());
+        query.setDelFlag(demoDTO.getStatus());
         query.setCreateUser(demoDTO.getCreateUser());
         query.setCreateName(demoDTO.getCreateName());
         query.setUpdateUser(demoDTO.getUpdateUser());
