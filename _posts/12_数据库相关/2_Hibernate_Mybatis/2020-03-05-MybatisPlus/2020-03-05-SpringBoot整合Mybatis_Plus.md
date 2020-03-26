@@ -76,7 +76,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
         <lombok.version>1.18.4</lombok.version>
         <!--swagger 版本-->
         <swagger.version>2.7.0</swagger.version>
-        <!--数据源-->
+        <!--数据源 注意提高下面的版本，否则不支持LocalDate-->
         <com-alibaba-druid.version>1.1.9</com-alibaba-druid.version>
         <!--mybatis plus-->
         <mybatis-plus-boot-starter.version>3.3.1.tmp</mybatis-plus-boot-starter.version>
@@ -112,9 +112,10 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
             <!--数据源-->
             <dependency>
                 <groupId>com.alibaba</groupId>
-                <artifactId>druid</artifactId>
+                <artifactId>druid-spring-boot-starter</artifactId>
                 <version>${com-alibaba-druid.version}</version>
             </dependency>
+
             <!--mybatis-plus-->
             <dependency>
                 <groupId>com.baomidou</groupId>
@@ -242,20 +243,15 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
         </dependency>
 
         <!-- 数据源 -->
-
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.1.10</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+
 
         <!--mybatis-plus-->
         <dependency>
@@ -1251,7 +1247,7 @@ mybatis-plus.refresh-mapper: true
 
 ### 4.3.3、`mapper.xml`  
 
-![1584524650597](D:\study\HealerJean.github.io\blogImages\1584524650597.png)
+![1584524650597](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584524650597.png)
 
 
 
@@ -1299,7 +1295,317 @@ public void test(){
 
 
 
+# 5、版本问题
 
+
+
+## 5.1、返回类型为`LocalDate`和`LocalDateTime` 的报错问题  
+
+
+
+### 5.1.1、 准备 
+
+#### 5.1.1.1、sql表 
+
+```java
+CREATE TABLE `user`
+(
+  `id`          bigint(20) NOT NULL COMMENT '主键ID',
+  `name`        varchar(30) DEFAULT NULL COMMENT '姓名',
+  `age`         int(11)     DEFAULT NULL COMMENT '年龄',
+  `email`       varchar(50) DEFAULT NULL COMMENT '邮箱',
+  `create_date` date        DEFAULT NULL COMMENT '日期',
+  `create_time` datetime    DEFAULT NULL COMMENT '日期时间',
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+
+INSERT INTO hlj_mybatis_plus.user (id, name, age, email, create_date, create_time) VALUES (1, 'healer', 22, 'healerjean@gmial.com', '2020-03-18', '2020-03-18 16:28:20');
+```
+
+
+
+#### 5.1.1.2、`UserDTO`
+
+```java
+@Data
+public class UserDTO {
+
+    private Long id;
+    private Long userId;
+    private List<Long> ids ;
+    private String name;
+    private Integer age;
+    private String email;
+
+
+    /** 添加日期进行测试 */
+    private LocalDate createDate;
+    private LocalDateTime createTime;
+
+}
+```
+
+
+
+
+
+### 5.1.2、第一种方案（List查询不支持，单个对象查询支持）
+
+#### 5.1.2.1、查询对象 
+
+
+
+##### 5.1.2.1.1、Mapper.java
+
+```java
+@Results({
+    @Result(column = "create_time", property = "createTime", 
+            javaType = LocalDateTime.class,
+            jdbcType = JdbcType.TIMESTAMP, 
+            typeHandler = CustomLocalDateTimeTypeHandler.class),
+    @Result(column = "create_date", property = "createDate", 
+            javaType = LocalDate.class,
+            jdbcType = JdbcType.DATE, 
+            typeHandler = CustomLocalDateTypeHandler.class)
+})
+@Select("select * from user where id = 1")
+UserDTO queryLocalDate();
+```
+
+
+##### 5.1.2.1.2、`CustomLocalDateTypeHandler`、`CustomLocalDateTimeTypeHandler`
+
+
+
+```java
+package com.healerjean.proj.config;
+
+import org.apache.ibatis.type.LocalDateTimeTypeHandler;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+
+/**
+ * @author HealerJean
+ * @ClassName CustomLocalDateTimeTypeHandler
+ * @date 2020/3/26  11:16.
+ * @Description
+ */
+public class CustomLocalDateTimeTypeHandler extends LocalDateTimeTypeHandler {
+
+    @Override
+    public LocalDateTime getResult(ResultSet rs, String columnName) throws SQLException {
+        Object object = rs.getObject(columnName);
+        System.out.println(object);
+        //在这里强行转换，将sql的时间转换为LocalDateTime
+        if (object instanceof java.sql.Timestamp) {
+            LocalDateTime localDateTime = ((java.sql.Timestamp) object).toLocalDateTime();
+            return localDateTime;
+        }
+        return super.getResult(rs, columnName);
+    }
+}
+
+```
+
+
+
+
+
+```java
+package com.healerjean.proj.config;
+
+import org.apache.ibatis.type.LocalDateTypeHandler;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+
+/**
+ * @author HealerJean
+ * @ClassName CustomLocalDateTypeHandler
+ * @date 2020/3/26  11:20.
+ * @Description
+ */
+public class CustomLocalDateTypeHandler extends LocalDateTypeHandler {
+
+    @Override
+    public LocalDate getResult(ResultSet rs, String columnName) throws SQLException {
+        Object object = rs.getObject(columnName);
+        System.out.println(object);
+        //在这里强行转换，将sql的时间转换为LocalDateTime
+        if (object instanceof java.sql.Date) {
+            LocalDate localDate = ((java.sql.Date) object).toLocalDate();
+            return localDate;
+        }
+        return super.getResult(rs, columnName);
+    }
+}
+
+```
+
+
+
+##### 5.1.2.1.3、测试 
+
+```java
+
+@Test
+public void testDate(){
+    UserDTO userDTO= userMapper.queryLocalDate();
+    System.out.println(JsonUtils.toJsonString(userDTO));
+}
+
+
+
+
+{"id":1,"name":"healer","age":22,"email":"healerjean@gmial.com","createDate":"2020-03-18","createTime":"2020-03-18 16:28:20"}
+```
+
+
+
+
+
+#### 5.1.2.2、查询集合List
+
+
+
+##### 5.1.2.2.1、`Maper.java`
+
+```java
+   @Results({
+            @Result(column = "create_time", property = "createTime", 
+                    javaType = LocalDateTime.class,
+                    jdbcType = JdbcType.TIMESTAMP, 
+                    typeHandler = CustomLocalDateTimeTypeHandler.class),
+            @Result(column = "create_date", property = "createDate", 
+                    javaType = LocalDate.class,
+                    jdbcType = JdbcType.DATE, 
+                    typeHandler = CustomLocalDateTypeHandler.class)
+    })
+    List<UserDTO> selectLocalDateByMappeXml(UserDTO userDTO);
+```
+
+
+
+##### 5.1.2.2.2、`Mapper.xml`
+
+```xml
+<select id="selectLocalDateByMappeXml" resultType="com.healerjean.proj.dto.UserDTO">
+    select * from user where name = #{name}
+</select>
+```
+
+
+
+
+
+##### 5.1.2.2.3、测试 
+
+```java
+@Test
+public void testDateList(){
+    UserDTO userDTO = new UserDTO();
+    userDTO.setName("healer");
+    List<UserDTO> userDTOS = userMapper.selectLocalDateByMappeXml(userDTO);
+    System.out.println(JsonUtils.toJsonString(userDTOS));
+}
+```
+
+
+
+##### 5.1.2.2.4、报错如下
+
+
+
+```java
+
+org.springframework.dao.InvalidDataAccessApiUsageException: Error attempting to get column 'create_date' from result set.  Cause: java.sql.SQLFeatureNotSupportedException
+; null; nested exception is java.sql.SQLFeatureNotSupportedException
+```
+
+
+
+
+
+### 5.1.3、第二种：完美的解决方案
+
+#### 5.1.3.1、提高`druid`版本,我提高到了1.1.21
+
+```xml
+<!--数据源-->
+<com-alibaba-druid.version>1.1.20</com-alibaba-druid.version>
+
+
+
+<!--数据源-->
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>druid-spring-boot-starter</artifactId>
+    <version>${com-alibaba-druid.version}</version>
+</dependency>
+```
+
+
+
+#### 5.1.3.2、`Mapper.java`
+
+```java
+
+    UserDTO queryLocalDate();
+
+
+
+    List<UserDTO> selectLocalDateByMappeXml(UserDTO userDTO);
+```
+
+
+
+
+
+#### 5.1.3.3、`Mapper.xml`
+
+
+
+```xml
+
+<select id="selectLocalDateByMappeXml" resultType="com.healerjean.proj.dto.UserDTO">
+    select * from user where name = #{name}
+</select>
+
+```
+
+
+
+#### 5.1.3.4、测试
+
+
+
+```java
+@Test
+public void testDate(){
+    UserDTO userDTO= userMapper.queryLocalDate();
+    System.out.println(JsonUtils.toJsonString(userDTO));
+}
+
+
+{"id":1,"name":"healer","age":22,"email":"healerjean@gmial.com","createDate":"2020-03-18","createTime":"2020-03-18 16:28:20"}
+
+
+
+@Test
+public void testDateList(){
+    UserDTO userDTO = new UserDTO();
+    userDTO.setName("healer");
+    List<UserDTO> userDTOS = userMapper.selectLocalDateByMappeXml(userDTO);
+    System.out.println(JsonUtils.toJsonString(userDTOS));
+}
+
+[{"id":1,"name":"healer","age":22,"email":"healerjean@gmial.com","createDate":"2020-03-18","createTime":"2020-03-18 16:28:20"}]
+```
 
 
 
