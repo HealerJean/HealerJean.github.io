@@ -3,12 +3,11 @@
  */
 package com.healerjean.proj.pojo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 测试实体类;
@@ -16,14 +15,16 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class User implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     /** 主键  */
-    /** mybatis-plus如果希望使用数据库自增 */
-    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     private String name;
     private String city;
+    private String status;
+    private Date createTime;
+    private Date updateTime;
 }
 
 

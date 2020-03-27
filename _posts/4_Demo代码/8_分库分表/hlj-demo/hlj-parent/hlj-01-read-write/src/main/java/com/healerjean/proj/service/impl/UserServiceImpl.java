@@ -1,5 +1,6 @@
 package com.healerjean.proj.service.impl;
 
+import com.healerjean.proj.common.enums.StatusEnum;
 import com.healerjean.proj.dao.mapper.UserMapper;
 import com.healerjean.proj.dto.UserDTO;
 import com.healerjean.proj.pojo.User;
@@ -25,18 +26,14 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public UserDTO insert(UserDTO userDTO) {
-        User user = new User();
-        user.setId(userDTO.getId());
-        user.setName(userDTO.getName());
-        user.setCity(userDTO.getCity());
+        User user = BeanUtils.dtoToUserDTO(userDTO);
+        user.setStatus(StatusEnum.生效.code);
         userMapper.insert(user);
         userDTO.setId(user.getId());
         return userDTO;
     }
-
 
     @Override
     public UserDTO findById(Long id) {

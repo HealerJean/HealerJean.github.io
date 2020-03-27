@@ -30,9 +30,9 @@ import org.springframework.web.bind.annotation.*;
         @ApiResponse(code = 403, message = "禁止访问"),
         @ApiResponse(code = 404, message = "url错误")
 })
-@Api(description = "demo控制器")
+@Api(description = "user控制器")
 @Controller
-@RequestMapping("hlj/demo")
+@RequestMapping("hlj/user")
 @Slf4j
 public class UserController {
 
@@ -69,7 +69,7 @@ public class UserController {
     @GetMapping("findById/{id}")
     @ResponseBody
     public ResponseBean findById(@PathVariable Long id) {
-        log.info("样例--------findById------数据Id{}", id);
+        log.info("样例--------findById------数据：id：{}", id);
         return ResponseBean.buildSuccess(userService.findById(id));
     }
 

@@ -9,15 +9,6 @@ CREATE TABLE `user`(
 
 
 
-
-
-
-
-
-
-
-
-
 CREATE DATABASE `ds_1` CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';
 
 CREATE TABLE `loudong` (

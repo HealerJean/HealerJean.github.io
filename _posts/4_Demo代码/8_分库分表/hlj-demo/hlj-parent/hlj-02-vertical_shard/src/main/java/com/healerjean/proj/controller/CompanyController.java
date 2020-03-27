@@ -1,11 +1,13 @@
 package com.healerjean.proj.controller;
 
 import com.healerjean.proj.common.constant.CommonConstants;
-import com.healerjean.proj.common.dto.ValidateGroup;
 import com.healerjean.proj.common.dto.ResponseBean;
+import com.healerjean.proj.common.dto.ValidateGroup;
 import com.healerjean.proj.common.enums.ResponseEnum;
 import com.healerjean.proj.common.exception.BusinessException;
+import com.healerjean.proj.dto.CompanyDTO;
 import com.healerjean.proj.dto.UserDTO;
+import com.healerjean.proj.service.CompanyService;
 import com.healerjean.proj.service.UserService;
 import com.healerjean.proj.utils.validate.ValidateUtils;
 import io.swagger.annotations.*;
@@ -32,14 +34,13 @@ import org.springframework.web.bind.annotation.*;
 })
 @Api(description = "demo控制器")
 @Controller
-@RequestMapping("hlj/demo")
+@RequestMapping("hlj/company")
 @Slf4j
-public class UserController {
-
+public class CompanyController {
 
 
     @Autowired
-    private UserService userService;
+    private CompanyService companyService;
 
     @ApiOperation(value = "insert",
             notes = "insert",
@@ -48,13 +49,9 @@ public class UserController {
             response = UserDTO.class)
     @PostMapping(value = "insert", produces = "application/json; charset=utf-8")
     @ResponseBody
-    public ResponseBean insert(UserDTO userDTO) {
-        log.info("样例--------mybaits-plus添加demo实体------数据信息{}", userDTO);
-        String validate = ValidateUtils.validate(userDTO, ValidateGroup.HealerJean.class);
-        if (!validate.equals(CommonConstants.COMMON_SUCCESS)) {
-            throw new BusinessException(ResponseEnum.参数错误, validate);
-        }
-        return ResponseBean.buildSuccess(userService.insert(userDTO));
+    public ResponseBean insert(CompanyDTO companyDTO) {
+        log.info("样例--------insert------数据信息{}", companyDTO);
+        return ResponseBean.buildSuccess(companyService.insert(companyDTO));
     }
 
 
@@ -70,7 +67,7 @@ public class UserController {
     @ResponseBody
     public ResponseBean findById(@PathVariable Long id) {
         log.info("样例--------findById------数据：id：{}", id);
-        return ResponseBean.buildSuccess(userService.findById(id));
+        return ResponseBean.buildSuccess(companyService.findById(id));
     }
 
 }
