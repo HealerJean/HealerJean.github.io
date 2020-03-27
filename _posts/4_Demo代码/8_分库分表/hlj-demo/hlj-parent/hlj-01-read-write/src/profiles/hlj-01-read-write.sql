@@ -5,7 +5,7 @@ use ds_0;
 drop table if exists user;
 create table `user`
 (
-  `id`        bigint(16) unsigned not null,
+  `id`        bigint(20) unsigned not null,
   city        varchar(20)         not null default '',
   name        varchar(20)         not null default '',
   status      int(10)             not null default '0' comment '状态',
@@ -24,7 +24,7 @@ use ds_1;
 drop table if exists user;
 create table `user`
 (
-  `id`        bigint(16) unsigned not null,
+  `id`        bigint(20) unsigned not null,
   city        varchar(20)         not null default '',
   name        varchar(20)         not null default '',
   status      int(10)             not null default '0' comment '状态',

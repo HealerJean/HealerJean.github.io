@@ -42,10 +42,10 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public List<CompanyDTO> list() {
-        List<Company> users = companyMapper.selectList(null);
+        List<Company> companys = companyMapper.selectList(null);
         List<CompanyDTO> list = null;
-        if (!EmptyUtil.isEmpty(users)) {
-            list = users.stream().map(BeanUtils::companyToDTO).collect(Collectors.toList());
+        if (!EmptyUtil.isEmpty(companys)) {
+            list = companys.stream().map(BeanUtils::companyToDTO).collect(Collectors.toList());
         }
         return list;
     }

@@ -48,6 +48,10 @@ public class ResponseBean {
         return responseBean;
     }
 
+    public static String buildCustomJsonSuccess(Object result) {
+        return JsonUtils.toJsonString(buildSuccess(result));
+    }
+
     public static String buildSensitivitySuccess(String msg, Object result) {
         return JsonUtils.toJsonStringWithSensitivity(buildSuccess(msg, result));
     }
