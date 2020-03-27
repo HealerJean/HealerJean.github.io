@@ -17,8 +17,15 @@
     <packaging>pom</packaging>
 
     <modules>
+        <!--读写分离(库不一样) -->
         <module>hlj-01-read-write</module>
+        <!-- 垂直拆分（不同的表在不同的库中） -->
         <module>hlj-02-vertical_shard</module>
+        <!--  垂直拆分（不同的表在不同的库中）+ 读写分离 -->
+        <module>hlj-03-read_write-vertical_shard</module>
+        <!--不分库，只分表-->
+        <module>hlj-04-sharding-table</module>
+
     </modules>
 
     <properties>
