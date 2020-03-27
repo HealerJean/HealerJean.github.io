@@ -1,4 +1,4 @@
-package com.healerjean.proj.utils;
+package com.healerjean.proj.utils.json;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;

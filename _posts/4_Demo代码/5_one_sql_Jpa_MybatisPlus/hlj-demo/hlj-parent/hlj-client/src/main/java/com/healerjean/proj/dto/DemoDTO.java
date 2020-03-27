@@ -2,8 +2,10 @@ package com.healerjean.proj.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.healerjean.proj.common.dto.ValidateGroup;
 import com.healerjean.proj.common.dto.page.query.PageQuery;
+import com.healerjean.proj.utils.json.JsonLongSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -23,6 +25,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DemoDTO extends PageQuery {
 
+    @JsonSerialize(using = JsonLongSerializer.class )
     private Long id;
 
     @ApiModelProperty(value = "姓名")
