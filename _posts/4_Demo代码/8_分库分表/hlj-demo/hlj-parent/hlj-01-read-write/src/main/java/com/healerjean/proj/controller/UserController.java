@@ -69,7 +69,7 @@ public class UserController {
     @GetMapping("findById/{id}")
     @ResponseBody
     public ResponseBean findById(@PathVariable Long id) {
-        log.info("样例--------findById------数据Id{}", id);
+        log.info("样例--------findById------数据：id：{}", id);
         return ResponseBean.buildSuccess(userService.findById(id));
     }
 

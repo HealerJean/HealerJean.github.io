@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.util.Date;
+
 /**
  * @author HealerJean
  * @version 1.0v
@@ -22,6 +24,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
 
+
     @ApiModelProperty(value = "主键", hidden = true)
     private Long id;
 
@@ -31,5 +34,14 @@ public class UserDTO {
 
     @ApiModelProperty(value = "城市")
     private String city;
+
+    @ApiModelProperty(value = "状态", hidden = true)
+    private String status;
+
+    @ApiModelProperty(value = "创建时间", hidden = true)
+    private Date createTime;
+
+    @ApiModelProperty(value = "修改时间", hidden = true)
+    private Date updateTime;
 
 }

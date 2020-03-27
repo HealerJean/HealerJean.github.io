@@ -1,5 +1,6 @@
 package com.healerjean.proj.utils;
 
+import com.healerjean.proj.common.enums.StatusEnum;
 import com.healerjean.proj.dto.UserDTO;
 import com.healerjean.proj.pojo.User;
 
@@ -18,7 +19,23 @@ public class BeanUtils {
         if (user != null) {
             dto.setId(user.getId());
             dto.setName(user.getName());
+            dto.setId(user.getId());
+            dto.setName(user.getName());
+            dto.setCity(user.getCity());
+            dto.setStatus(user.getStatus());
+            dto.setCreateTime(user.getCreateTime());
+            dto.setUpdateTime(user.getUpdateTime());
         }
         return dto;
+    }
+
+    public static User dtoToUserDTO(UserDTO userDTO) {
+        User user = new User();
+        user.setId(userDTO.getId());
+        user.setName(userDTO.getName());
+        user.setCity(userDTO.getCity());
+        user.setCreateTime(userDTO.getCreateTime());
+        user.setUpdateTime(userDTO.getUpdateTime());
+        return user;
     }
 }
