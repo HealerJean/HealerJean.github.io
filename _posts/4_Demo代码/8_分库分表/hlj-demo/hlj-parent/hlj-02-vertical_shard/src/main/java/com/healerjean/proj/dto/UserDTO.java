@@ -3,8 +3,10 @@ package com.healerjean.proj.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.healerjean.proj.common.dto.ValidateGroup;
 import com.healerjean.proj.utils.DateUtils;
+import com.healerjean.proj.utils.json.JsonLongSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -28,6 +30,7 @@ public class UserDTO {
 
 
     @ApiModelProperty(value = "主键", hidden = true)
+    @JsonSerialize(using = JsonLongSerializer.class )
     private Long id;
 
     @ApiModelProperty(value = "姓名")

@@ -2,7 +2,7 @@ package com.healerjean.proj.common.dto;
 
 
 import com.healerjean.proj.common.enums.ResponseEnum;
-import com.healerjean.proj.utils.JsonUtils;
+import com.healerjean.proj.utils.json.JsonUtils;
 
 /**
  * 返回对象
