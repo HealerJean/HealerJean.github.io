@@ -20,10 +20,10 @@ public class CompanyDTO {
 
 
 	@ApiModelProperty(value = "创建时间", hidden = true)
-	@JsonFormat(pattern =  DateUtils.YYYY_MM_dd_HH_mm_ss)
+	@JsonFormat(pattern = DateUtils.YYYY_MM_dd_HH_mm_ss, timezone = "GMT+8")
 	private Date createTime;
 
 	@ApiModelProperty(value = "修改时间", hidden = true)
-	@JsonFormat(pattern =  DateUtils.YYYY_MM_dd_HH_mm_ss)
+	@JsonFormat(pattern = DateUtils.YYYY_MM_dd_HH_mm_ss, timezone = "GMT+8")
 	private Date updateTime;
 }

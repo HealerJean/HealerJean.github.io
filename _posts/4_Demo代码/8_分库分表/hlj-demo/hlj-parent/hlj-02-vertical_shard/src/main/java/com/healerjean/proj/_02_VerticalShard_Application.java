@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class _02_VerticalShard_Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(_02_VerticalShard_Application.class, args);
+        SpringApplication.run(_02_ReadWrite_VerticalShard_Application.class, args);
     }
 
 }
