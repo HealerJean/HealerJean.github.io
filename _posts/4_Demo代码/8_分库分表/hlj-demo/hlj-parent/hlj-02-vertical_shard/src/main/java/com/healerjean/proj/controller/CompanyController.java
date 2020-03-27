@@ -50,7 +50,7 @@ public class CompanyController {
     @PostMapping(value = "insert", produces = "application/json; charset=utf-8")
     @ResponseBody
     public ResponseBean insert(CompanyDTO companyDTO) {
-        log.info("样例--------insert------数据信息{}", companyDTO);
+        log.info("user--------insert------请求参数：{}", companyDTO);
         return ResponseBean.buildSuccess(companyService.insert(companyDTO));
     }
 
@@ -66,8 +66,22 @@ public class CompanyController {
     @GetMapping("findById/{id}")
     @ResponseBody
     public ResponseBean findById(@PathVariable Long id) {
-        log.info("样例--------findById------数据：id：{}", id);
+        log.info("company--------findById------id：{}", id);
         return ResponseBean.buildSuccess(companyService.findById(id));
+    }
+
+
+
+    @ApiOperation(notes = "list",
+            value = "list",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            response = UserDTO.class)
+    @GetMapping("list")
+    @ResponseBody
+    public ResponseBean list() {
+        log.info("company--------list------");
+        return ResponseBean.buildSuccess(companyService.list());
     }
 
 }

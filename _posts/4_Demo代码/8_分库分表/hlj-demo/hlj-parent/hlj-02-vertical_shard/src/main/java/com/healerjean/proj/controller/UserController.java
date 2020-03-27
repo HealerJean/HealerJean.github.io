@@ -49,7 +49,7 @@ public class UserController {
     @PostMapping(value = "insert", produces = "application/json; charset=utf-8")
     @ResponseBody
     public ResponseBean insert(UserDTO userDTO) {
-        log.info("样例--------mybaits-plus添加demo实体------数据信息{}", userDTO);
+        log.info("user--------insert------请求参数：{}", userDTO);
         String validate = ValidateUtils.validate(userDTO, ValidateGroup.HealerJean.class);
         if (!validate.equals(CommonConstants.COMMON_SUCCESS)) {
             throw new BusinessException(ResponseEnum.参数错误, validate);
@@ -69,8 +69,21 @@ public class UserController {
     @GetMapping("findById/{id}")
     @ResponseBody
     public ResponseBean findById(@PathVariable Long id) {
-        log.info("样例--------findById------数据：id：{}", id);
+        log.info("user--------findById------id：{}", id);
         return ResponseBean.buildSuccess(userService.findById(id));
+    }
+
+
+    @ApiOperation(notes = "list",
+            value = "list",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            response = UserDTO.class)
+    @GetMapping("list")
+    @ResponseBody
+    public ResponseBean list() {
+        log.info("user--------list------");
+        return ResponseBean.buildSuccess(userService.list());
     }
 
 }

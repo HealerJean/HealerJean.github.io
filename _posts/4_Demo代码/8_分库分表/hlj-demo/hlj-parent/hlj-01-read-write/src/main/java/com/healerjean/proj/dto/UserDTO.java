@@ -1,8 +1,10 @@
 package com.healerjean.proj.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.healerjean.proj.common.dto.ValidateGroup;
+import com.healerjean.proj.utils.DateUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -38,8 +40,10 @@ public class UserDTO {
     private String status;
 
     @ApiModelProperty(value = "创建时间", hidden = true)
+    @JsonFormat(pattern =  DateUtils.YYYY_MM_dd_HH_mm_ss)
     private Date createTime;
 
     @ApiModelProperty(value = "修改时间", hidden = true)
+    @JsonFormat(pattern =  DateUtils.YYYY_MM_dd_HH_mm_ss)
     private Date updateTime;
 }

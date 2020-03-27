@@ -73,4 +73,17 @@ public class UserController {
         return ResponseBean.buildSuccess(userService.findById(id));
     }
 
+    @ApiOperation(notes = "list",
+            value = "list",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            response = UserDTO.class)
+    @GetMapping("list")
+    @ResponseBody
+    public ResponseBean list() {
+        log.info("样例--------list------");
+        return ResponseBean.buildSuccess(userService.list());
+    }
+
+
 }

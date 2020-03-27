@@ -315,7 +315,7 @@ spring.datasource.druid.testOnReturn=false
 #Maven 多模块项目的扫描路径需以 classpath*: 开头 （即加载多个 jar 包下的 XML 文件）
 #mybatis-plus.mapper-locations=classpath*:mapper/*.xml
 mybatis-plus.type-aliases-package=com.healerjean.proj.data.entity
-##主键类型  0:"数据库ID自增，非常大", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+##主键类型  0:"数据库ID自增，非常大", 1:"用户输入ID（如果用户不输入，则默认是0）",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
 mybatis-plus.id-type: 0
  #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
 mybatis-plus.field-strategy: 2
@@ -1215,7 +1215,7 @@ public void selectListByScript() {
 #Maven 多模块项目的扫描路径需以 classpath*: 开头 （即加载多个 jar 包下的 XML 文件）
 mybatis-plus.mapper-locations=classpath*:mapper/*.xml
 mybatis-plus.type-aliases-package=com.healerjean.proj.data.entity
-##主键类型  0:"数据库ID自增，非常大", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+##主键类型  0:"数据库ID自增，非常大", 1:"用户输入ID（如果用户不输入，则默认是0）",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
 mybatis-plus.id-type: 0
  #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
 mybatis-plus.field-strategy: 2

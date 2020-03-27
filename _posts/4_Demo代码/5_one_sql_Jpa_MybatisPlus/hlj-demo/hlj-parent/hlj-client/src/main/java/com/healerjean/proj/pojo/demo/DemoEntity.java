@@ -27,9 +27,9 @@ public class DemoEntity implements Serializable {
      * 主键
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     /** mybatis-plus如果希望使用数据库自增 */
-    @TableId(value = "id", type = IdType.AUTO)
+    // @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     /** 姓名 */
     private String name;
