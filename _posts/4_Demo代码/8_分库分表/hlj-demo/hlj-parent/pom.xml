@@ -25,7 +25,8 @@
         <module>hlj-03-read_write-vertical_shard</module>
         <!--不分库，只分表-->
         <module>hlj-04-sharding-table</module>
-
+        <!--不分库，只分表+读写分离案例-->
+        <module>hlj-05-sharding_table-read_write</module>
     </modules>
 
     <properties>
