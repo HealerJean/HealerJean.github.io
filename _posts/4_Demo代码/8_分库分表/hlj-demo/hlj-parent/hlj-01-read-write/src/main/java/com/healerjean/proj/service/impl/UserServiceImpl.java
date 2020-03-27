@@ -6,11 +6,13 @@ import com.healerjean.proj.dto.UserDTO;
 import com.healerjean.proj.pojo.User;
 import com.healerjean.proj.service.UserService;
 import com.healerjean.proj.utils.BeanUtils;
+import com.healerjean.proj.utils.EmptyUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -38,7 +40,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO findById(Long id) {
         User user = userMapper.selectById(id);
-        return user == null ? null : BeanUtils.demoToDTO(user);
+        return user == null ? null : BeanUtils.userToDTO(user);
     }
+
+    @Override
+    public List<UserDTO> list() {
+        List<User> users = userMapper.selectList(null);
+        List<UserDTO> list = null;
+        if (!EmptyUtil.isEmpty(users)) {
+            list = users.stream().map(BeanUtils::userToDTO).collect(Collectors.toList());
+        }
+        return list;
+    }
+
 
 }

@@ -14,7 +14,7 @@ import com.healerjean.proj.pojo.User;
 public class BeanUtils {
 
 
-    public static UserDTO demoToDTO(User user) {
+    public static UserDTO userToDTO(User user) {
         UserDTO dto = new UserDTO();
         if (user != null) {
             dto.setId(user.getId());
