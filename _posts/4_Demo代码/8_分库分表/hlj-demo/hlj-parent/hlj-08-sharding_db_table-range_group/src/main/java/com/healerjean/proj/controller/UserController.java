@@ -86,4 +86,46 @@ public class UserController {
         return ResponseBean.buildSuccess(userService.list());
     }
 
+
+
+    @ApiOperation(notes = "limit",
+            value = "limit",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            response = UserDTO.class)
+    @GetMapping("limit")
+    @ResponseBody
+    public ResponseBean limit() {
+        log.info("demo--------limit------");
+        return ResponseBean.buildSuccess(userService.limit());
+    }
+
+
+    @ApiOperation(notes = "leftJoin",
+            value = "leftJoin",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            response = UserDTO.class)
+    @GetMapping("leftJoin")
+    @ResponseBody
+    public ResponseBean leftJoin() {
+        log.info("demo--------leftJoin------");
+        return ResponseBean.buildSuccess( userService.leftJoin());
+    }
+
+
+
+    @ApiOperation(notes = "group",
+            value = "group",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            response = UserDTO.class)
+    @GetMapping("group")
+    @ResponseBody
+    public ResponseBean group() {
+        log.info("demo--------group------");
+        userService.group();
+        return ResponseBean.buildSuccess();
+    }
+
 }
