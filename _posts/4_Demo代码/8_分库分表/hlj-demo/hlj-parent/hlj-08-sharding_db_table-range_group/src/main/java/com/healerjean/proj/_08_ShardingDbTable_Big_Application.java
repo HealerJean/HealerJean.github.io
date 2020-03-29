@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableTransactionManagement
 @SpringBootApplication
-public class _07_ShardingDbTable_ReadWrite_Application {
+public class _08_ShardingDbTable_Big_Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(_07_ShardingDbTable_ReadWrite_Application.class, args);
+        SpringApplication.run(_08_ShardingDbTable_Big_Application.class, args);
     }
 
 }

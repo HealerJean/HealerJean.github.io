@@ -2,6 +2,7 @@ package com.healerjean.proj.service;
 
 
 import com.healerjean.proj.dto.UserDTO;
+import com.healerjean.proj.pojo.UserRefCompany;
 
 import java.util.List;
 
@@ -18,4 +19,12 @@ public interface UserService {
     UserDTO findById(Long id);
 
     List<UserDTO> list();
+
+
+    List<UserDTO> limit();
+
+
+    List<UserRefCompany>  leftJoin();
+
+    void group();
 }

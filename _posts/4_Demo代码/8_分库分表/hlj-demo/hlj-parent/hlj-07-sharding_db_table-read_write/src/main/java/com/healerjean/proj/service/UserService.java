@@ -18,4 +18,5 @@ public interface UserService {
     UserDTO findById(Long id);
 
     List<UserDTO> list();
+
 }

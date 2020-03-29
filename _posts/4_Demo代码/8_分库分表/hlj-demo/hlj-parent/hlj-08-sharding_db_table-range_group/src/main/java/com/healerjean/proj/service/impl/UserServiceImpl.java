@@ -1,9 +1,12 @@
 package com.healerjean.proj.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.healerjean.proj.common.enums.StatusEnum;
 import com.healerjean.proj.dao.mapper.UserMapper;
 import com.healerjean.proj.dto.UserDTO;
 import com.healerjean.proj.pojo.User;
+import com.healerjean.proj.pojo.UserRefCompany;
 import com.healerjean.proj.service.UserService;
 import com.healerjean.proj.utils.BeanUtils;
 import com.healerjean.proj.utils.EmptyUtil;
@@ -51,4 +54,41 @@ public class UserServiceImpl implements UserService {
         }
         return list;
     }
+
+
+    @Override
+    public List<UserDTO> limit() {
+        Wrapper<User> userWrapper = new QueryWrapper<User>().lambda()
+                .orderByAsc(User::getId)
+                .last("limit 1, 5");
+        List<User> users = userMapper.selectList(userWrapper);
+        List<UserDTO> list = null;
+        if (!EmptyUtil.isEmpty(users)) {
+            list = users.stream().map(BeanUtils::userToDTO).collect(Collectors.toList());
+        }
+        return list;    }
+
+    @Override
+    public List<UserRefCompany>  leftJoin() {
+        List<UserRefCompany>  userRefCompanies = userMapper.leftJoin();
+        return userRefCompanies;
+    }
+
+
+    /**
+     * 成功
+     */
+    @Override
+    public void group() {
+        Wrapper<User> userWrapper = new QueryWrapper<User>().lambda()
+                .select(User::getCity )
+                .groupBy(User::getCity);
+        List<Object> citys = userMapper.selectObjs(userWrapper);
+
+        log.info("citys：{}", citys);
+    }
+
+
+
+
 }
