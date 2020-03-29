@@ -27,6 +27,8 @@
         <module>hlj-04-sharding-table</module>
         <!--不分库，只分表+读写分离案例-->
         <module>hlj-05-sharding_table-read_write</module>
+        <!--  分库分表-->
+        <module>hlj-05-sharding_db_table</module>
     </modules>
 
     <properties>

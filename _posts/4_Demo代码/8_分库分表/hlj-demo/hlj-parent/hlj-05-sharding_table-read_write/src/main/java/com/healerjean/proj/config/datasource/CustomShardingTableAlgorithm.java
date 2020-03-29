@@ -20,4 +20,8 @@ public class CustomShardingTableAlgorithm implements PreciseShardingAlgorithm<Lo
         throw new IllegalArgumentException();
     }
 
+    public static void main(String[] args) {
+        System.out.println(4L%4);
+    }
+
 }

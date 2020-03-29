@@ -1,15 +1,9 @@
 package com.healerjean.proj.controller;
 
-import com.healerjean.proj.common.constant.CommonConstants;
 import com.healerjean.proj.common.dto.ResponseBean;
-import com.healerjean.proj.common.dto.ValidateGroup;
-import com.healerjean.proj.common.enums.ResponseEnum;
-import com.healerjean.proj.common.exception.BusinessException;
 import com.healerjean.proj.dto.CompanyDTO;
 import com.healerjean.proj.dto.UserDTO;
 import com.healerjean.proj.service.CompanyService;
-import com.healerjean.proj.service.UserService;
-import com.healerjean.proj.utils.validate.ValidateUtils;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,5 +77,6 @@ public class CompanyController {
         log.info("company--------list------");
         return ResponseBean.buildSuccess(companyService.list());
     }
+
 
 }
