@@ -1,9 +1,15 @@
 package com.healerjean.proj.controller;
 
+import com.healerjean.proj.common.constant.CommonConstants;
 import com.healerjean.proj.common.dto.ResponseBean;
+import com.healerjean.proj.common.dto.ValidateGroup;
+import com.healerjean.proj.common.enums.ResponseEnum;
+import com.healerjean.proj.common.exception.BusinessException;
 import com.healerjean.proj.dto.CompanyDTO;
+import com.healerjean.proj.dto.DemoDTO;
 import com.healerjean.proj.dto.UserDTO;
-import com.healerjean.proj.service.CompanyService;
+import com.healerjean.proj.service.DemoEntityService;
+import com.healerjean.proj.utils.validate.ValidateUtils;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +34,13 @@ import org.springframework.web.bind.annotation.*;
 })
 @Api(description = "demo控制器")
 @Controller
-@RequestMapping("hlj/company")
+@RequestMapping("hlj/demo")
 @Slf4j
-public class CompanyController {
-
+public class DemoController {
 
     @Autowired
-    private CompanyService companyService;
+    private DemoEntityService demoEntityService;
+
 
     @ApiOperation(value = "insert",
             notes = "insert",
@@ -43,9 +49,9 @@ public class CompanyController {
             response = UserDTO.class)
     @PostMapping(value = "insert", produces = "application/json; charset=utf-8")
     @ResponseBody
-    public ResponseBean insert(CompanyDTO companyDTO) {
-        log.info("user--------insert------请求参数：{}", companyDTO);
-        return ResponseBean.buildSuccess(companyService.insert(companyDTO));
+    public ResponseBean insert(DemoDTO demoDTO) {
+        log.info("demo--------insert------请求参数：{}", demoDTO);
+        return ResponseBean.buildSuccess(demoEntityService.insert(demoDTO));
     }
 
 
@@ -60,8 +66,8 @@ public class CompanyController {
     @GetMapping("findById/{id}")
     @ResponseBody
     public ResponseBean findById(@PathVariable Long id) {
-        log.info("company--------findById------id：{}", id);
-        return ResponseBean.buildSuccess(companyService.findById(id));
+        log.info("demo--------findById------id：{}", id);
+        return ResponseBean.buildSuccess(demoEntityService.findById(id));
     }
 
 
@@ -74,9 +80,10 @@ public class CompanyController {
     @GetMapping("list")
     @ResponseBody
     public ResponseBean list() {
-        log.info("company--------list------");
-        return ResponseBean.buildSuccess(companyService.list());
+        log.info("demo--------list------");
+        return ResponseBean.buildSuccess(demoEntityService.list());
     }
+
 
 
 }

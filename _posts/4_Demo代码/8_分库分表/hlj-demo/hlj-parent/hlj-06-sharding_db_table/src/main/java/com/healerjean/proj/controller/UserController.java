@@ -1,9 +1,13 @@
 package com.healerjean.proj.controller;
 
+import com.healerjean.proj.common.constant.CommonConstants;
+import com.healerjean.proj.common.dto.ValidateGroup;
 import com.healerjean.proj.common.dto.ResponseBean;
-import com.healerjean.proj.dto.CompanyDTO;
+import com.healerjean.proj.common.enums.ResponseEnum;
+import com.healerjean.proj.common.exception.BusinessException;
 import com.healerjean.proj.dto.UserDTO;
-import com.healerjean.proj.service.CompanyService;
+import com.healerjean.proj.service.UserService;
+import com.healerjean.proj.utils.validate.ValidateUtils;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +30,16 @@ import org.springframework.web.bind.annotation.*;
         @ApiResponse(code = 403, message = "禁止访问"),
         @ApiResponse(code = 404, message = "url错误")
 })
-@Api(description = "demo控制器")
+@Api(description = "user控制器")
 @Controller
-@RequestMapping("hlj/company")
+@RequestMapping("hlj/user")
 @Slf4j
-public class CompanyController {
+public class UserController {
+
 
 
     @Autowired
-    private CompanyService companyService;
+    private UserService userService;
 
     @ApiOperation(value = "insert",
             notes = "insert",
@@ -43,9 +48,13 @@ public class CompanyController {
             response = UserDTO.class)
     @PostMapping(value = "insert", produces = "application/json; charset=utf-8")
     @ResponseBody
-    public ResponseBean insert(CompanyDTO companyDTO) {
-        log.info("user--------insert------请求参数：{}", companyDTO);
-        return ResponseBean.buildSuccess(companyService.insert(companyDTO));
+    public ResponseBean insert(UserDTO userDTO) {
+        log.info("user--------insert------请求参数：{}", userDTO);
+        String validate = ValidateUtils.validate(userDTO, ValidateGroup.HealerJean.class);
+        if (!validate.equals(CommonConstants.COMMON_SUCCESS)) {
+            throw new BusinessException(ResponseEnum.参数错误, validate);
+        }
+        return ResponseBean.buildSuccess(userService.insert(userDTO));
     }
 
 
@@ -60,10 +69,9 @@ public class CompanyController {
     @GetMapping("findById/{id}")
     @ResponseBody
     public ResponseBean findById(@PathVariable Long id) {
-        log.info("company--------findById------id：{}", id);
-        return ResponseBean.buildSuccess(companyService.findById(id));
+        log.info("user--------findById------id：{}", id);
+        return ResponseBean.buildSuccess(userService.findById(id));
     }
-
 
 
     @ApiOperation(notes = "list",
@@ -74,9 +82,8 @@ public class CompanyController {
     @GetMapping("list")
     @ResponseBody
     public ResponseBean list() {
-        log.info("company--------list------");
-        return ResponseBean.buildSuccess(companyService.list());
+        log.info("user--------list------");
+        return ResponseBean.buildSuccess(userService.list());
     }
-
 
 }
