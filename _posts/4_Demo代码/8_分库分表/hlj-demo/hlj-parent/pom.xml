@@ -24,11 +24,17 @@
         <!--  垂直拆分（不同的表在不同的库中）+ 读写分离 -->
         <module>hlj-03-read_write-vertical_shard</module>
         <!--不分库，只分表-->
-        <module>hlj-04-sharding-table</module>
+        <module>hlj-04-sharding_table</module>
         <!--不分库，只分表+读写分离案例-->
         <module>hlj-05-sharding_table-read_write</module>
         <!--  分库分表-->
-        <module>hlj-05-sharding_db_table</module>
+        <module>hlj-06-sharding_db_table</module>
+        <!--  分库分表 + 读写分离案例-->
+        <module>hlj-07-sharding_db_table-read_write</module>
+
+        <!--  分库分表 => 范围分表、取模 = 无线扩容  -->
+        <module>hlj-08-sharding_db_table-range_group</module>
+
     </modules>
 
     <properties>
