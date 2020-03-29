@@ -2,13 +2,18 @@ package com.healerjean.proj.service.impl;
 
 import com.healerjean.proj.common.enums.StatusEnum;
 import com.healerjean.proj.dao.mapper.DemoEntityMapper;
+import com.healerjean.proj.dto.CompanyDTO;
 import com.healerjean.proj.dto.DemoDTO;
+import com.healerjean.proj.dto.UserDTO;
 import com.healerjean.proj.pojo.DemoEntity;
+import com.healerjean.proj.service.CompanyService;
 import com.healerjean.proj.service.DemoEntityService;
+import com.healerjean.proj.service.UserService;
 import com.healerjean.proj.utils.BeanUtils;
 import com.healerjean.proj.utils.EmptyUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -28,7 +33,10 @@ public class DemoEntityServiceImpl implements DemoEntityService {
     @Resource
     private DemoEntityMapper demoEntityMapper;
 
-
+    @Resource
+    private CompanyService companyService;
+    @Resource
+    private UserService userService;
 
     @Override
     public DemoDTO insert(DemoDTO demoDTO) {
@@ -54,6 +62,18 @@ public class DemoEntityServiceImpl implements DemoEntityService {
             collect = list.stream().map(BeanUtils::demoToDTO).collect(Collectors.toList());
         }
         return collect;
+    }
+
+
+    /**
+     * 分库分表也是有事务的，如果跑出了异常，则都不能成功
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void dbTransactional(UserDTO userDTO, CompanyDTO companyDTO) {
+        userService.insert(userDTO);
+        companyService.insert(companyDTO);
+        int i = 1/0;
     }
 
 }

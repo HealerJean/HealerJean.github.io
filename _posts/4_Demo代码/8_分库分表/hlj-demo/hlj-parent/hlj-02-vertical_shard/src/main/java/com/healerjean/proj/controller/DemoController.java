@@ -1,15 +1,10 @@
 package com.healerjean.proj.controller;
 
-import com.healerjean.proj.common.constant.CommonConstants;
 import com.healerjean.proj.common.dto.ResponseBean;
-import com.healerjean.proj.common.dto.ValidateGroup;
-import com.healerjean.proj.common.enums.ResponseEnum;
-import com.healerjean.proj.common.exception.BusinessException;
 import com.healerjean.proj.dto.CompanyDTO;
 import com.healerjean.proj.dto.DemoDTO;
 import com.healerjean.proj.dto.UserDTO;
 import com.healerjean.proj.service.DemoEntityService;
-import com.healerjean.proj.utils.validate.ValidateUtils;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +78,22 @@ public class DemoController {
         log.info("demo--------list------");
         return ResponseBean.buildSuccess(demoEntityService.list());
     }
+
+    @ApiOperation(notes = "dbTransactional",
+            value = "dbTransactional",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            response = UserDTO.class)
+    @PostMapping("dbTransactional")
+    @ResponseBody
+    public ResponseBean dbTransactional(UserDTO userDTO, CompanyDTO companyDTO) {
+        log.info("demo--------dbTransactional------");
+        demoEntityService.dbTransactional(userDTO, companyDTO);
+        return ResponseBean.buildSuccess("执行成功");
+    }
+
+
+
 
 
 
