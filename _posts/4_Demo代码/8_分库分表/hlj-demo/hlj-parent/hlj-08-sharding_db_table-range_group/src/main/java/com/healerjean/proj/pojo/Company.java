@@ -8,6 +8,7 @@ import java.util.Date;
 public class Company {
 
 	private Long id;
+	private Long refUserId;
 	private String name;
 	private String companyNameEnglish;
 	private String status;

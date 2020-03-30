@@ -142,18 +142,6 @@ create table `user_2`
 ) engine = innodb
   default charset = utf8;
 
-drop table if exists user_3;
-create table `user_3`
-(
-    `id`        bigint(20) unsigned not null,
-    city        varchar(20)         not null default '',
-    name        varchar(20)         not null default '',
-    status      int(10)             not null default '0' comment '状态',
-    create_time datetime            not null default current_timestamp comment '创建时间',
-    update_time datetime            not null default current_timestamp on update current_timestamp comment '修改时间',
-    primary key (`id`)
-) engine = innodb
-  default charset = utf8;
 
 
 

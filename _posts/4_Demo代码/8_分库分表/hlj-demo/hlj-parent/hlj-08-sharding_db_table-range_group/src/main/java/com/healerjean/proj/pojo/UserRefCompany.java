@@ -23,4 +23,8 @@ public class UserRefCompany {
     private String companyNameEnglish;
 
 
+    private Integer avgAge;
+    private Integer sumAge;
+
+
 }

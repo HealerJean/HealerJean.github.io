@@ -26,6 +26,7 @@ public class BeanUtils {
             dto.setId(user.getId());
             dto.setName(user.getName());
             dto.setCity(user.getCity());
+            dto.setAge(user.getAge());
             dto.setStatus(user.getStatus());
             dto.setCreateTime(user.getCreateTime());
             dto.setUpdateTime(user.getUpdateTime());
@@ -38,6 +39,7 @@ public class BeanUtils {
         user.setId(userDTO.getId());
         user.setName(userDTO.getName());
         user.setCity(userDTO.getCity());
+        user.setAge(userDTO.getAge());
         user.setCreateTime(userDTO.getCreateTime());
         user.setUpdateTime(userDTO.getUpdateTime());
         return user;
@@ -51,6 +53,7 @@ public class BeanUtils {
         company.setStatus(dto.getStatus());
         company.setCompanyNameEnglish(dto.getCompanyNameEnglish());
         company.setName(dto.getName());
+        company.setRefUserId(dto.getRefUserId());
         company.setUpdateTime(dto.getUpdateTime());
         return company;
     }
@@ -63,6 +66,7 @@ public class BeanUtils {
         dto.setStatus(company.getStatus());
         dto.setCompanyNameEnglish(company.getCompanyNameEnglish());
         dto.setName(company.getName());
+        dto.setRefUserId(company.getRefUserId());
         dto.setUpdateTime(company.getUpdateTime());
         return dto;
     }

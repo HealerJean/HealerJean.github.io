@@ -40,6 +40,10 @@ public class UserDTO {
     @ApiModelProperty(value = "城市")
     private String city;
 
+    @ApiModelProperty(value = "年龄")
+    private Integer age;
+
+
     @ApiModelProperty(value = "状态", hidden = true)
     private String status;
 
@@ -51,5 +55,8 @@ public class UserDTO {
     @ApiModelProperty(value = "修改时间", hidden = true)
     @JsonFormat(pattern = DateUtils.YYYY_MM_dd_HH_mm_ss, timezone = "GMT+8")
     private Date updateTime;
+
+    private Integer pageNow ;
+    private Integer pageSize ;
 
 }
