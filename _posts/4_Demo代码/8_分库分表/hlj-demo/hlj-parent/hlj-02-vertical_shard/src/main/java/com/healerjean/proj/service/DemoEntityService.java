@@ -24,8 +24,6 @@ public interface DemoEntityService {
 
     /**
      * 测试多个数据库事务
-     * @param userDTO
-     * @param companyDTO
      */
     void dbTransactional(UserDTO userDTO, CompanyDTO companyDTO);
 

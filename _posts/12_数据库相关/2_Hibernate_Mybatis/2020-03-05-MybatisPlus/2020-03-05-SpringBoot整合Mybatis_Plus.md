@@ -317,6 +317,10 @@ spring.datasource.druid.testOnReturn=false
 mybatis-plus.type-aliases-package=com.healerjean.proj.data.entity
 ##主键类型  0:"数据库ID自增，非常大", 1:"用户输入ID（如果用户不输入，则默认是0）",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
 mybatis-plus.id-type: 0
+/** mybatis-plus如果希望使用数据库自增 */
+// @TableId(value = "id", type = IdType.AUTO)
+//private Long id;
+    
  #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
 mybatis-plus.field-strategy: 2
  #数据库大写下划线转换
@@ -1217,6 +1221,9 @@ mybatis-plus.mapper-locations=classpath*:mapper/*.xml
 mybatis-plus.type-aliases-package=com.healerjean.proj.data.entity
 ##主键类型  0:"数据库ID自增，非常大", 1:"用户输入ID（如果用户不输入，则默认是0）",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
 mybatis-plus.id-type: 0
+/** mybatis-plus如果希望使用数据库自增 */
+// @TableId(value = "id", type = IdType.AUTO)
+//private Long id;
  #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
 mybatis-plus.field-strategy: 2
  #数据库大写下划线转换
