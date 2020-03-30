@@ -45,6 +45,9 @@ public class UserServiceImpl implements UserService {
         return user == null ? null : BeanUtils.userToDTO(user);
     }
 
+    /**
+     * 成功
+     */
     @Override
     public List<UserDTO> list() {
         List<User> users = userMapper.selectList(null);
@@ -72,6 +75,9 @@ public class UserServiceImpl implements UserService {
         return list;
     }
 
+    /**
+     * 设置了绑定关系后成功
+     */
     @Override
     public List<UserRefCompany> leftJoin() {
         List<UserRefCompany> userRefCompanies = userMapper.leftJoin();
@@ -89,4 +95,19 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    /**
+     * between 成功
+     */
+    @Override
+    public List<UserDTO> between() {
+        Wrapper<User> userWrapper = new QueryWrapper<User>().lambda()
+                .between(User::getAge, 1, 3)
+                .orderByDesc(User::getCreateTime);
+        List<User> users = userMapper.selectList(userWrapper);
+        List<UserDTO> list = null;
+        if (!EmptyUtil.isEmpty(users)) {
+            list = users.stream().map(BeanUtils::userToDTO).collect(Collectors.toList());
+        }
+        return list;
+    }
 }

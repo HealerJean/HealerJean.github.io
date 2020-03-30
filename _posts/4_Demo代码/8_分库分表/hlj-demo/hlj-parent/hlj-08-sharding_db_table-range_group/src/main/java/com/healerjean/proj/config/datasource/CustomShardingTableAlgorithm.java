@@ -15,7 +15,7 @@ public class CustomShardingTableAlgorithm implements PreciseShardingAlgorithm<Lo
     @Override
     public String doSharding(Collection<String> availableTargetNames, PreciseShardingValue<Long> shardingValue) {
         for (String tableName : availableTargetNames) {
-            if (tableName.endsWith(shardingValue.getValue() % 3 + "")) {
+            if (tableName.endsWith(shardingValue.getValue() % 2 + "")) {
                 log.info("表为：{}, 主键为：{}, 最终被分到的表为：【{}】", availableTargetNames, shardingValue, tableName);
                 return tableName;
             }

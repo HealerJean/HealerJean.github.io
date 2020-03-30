@@ -203,20 +203,6 @@ create table `user_1`
   default charset = utf8;
 
 
-drop table if exists user_2;
-create table `user_2`
-(
-  id          bigint(20) unsigned not null,
-  city        varchar(20)         not null default '',
-  name        varchar(20)         not null default '',
-  age         int(11)             not null default 0,
-  status      int(10)             not null default '0' comment '状态',
-  create_time datetime            not null default current_timestamp comment '创建时间',
-  update_time datetime            not null default current_timestamp on update current_timestamp comment '修改时间',
-  primary key (id)
-) engine = innodb
-  default charset = utf8;
-
 
 
 drop table if exists company_0;
@@ -303,20 +289,6 @@ create table `user_1`
 ) engine = innodb
   default charset = utf8;
 
-drop table if exists user_2;
-create table `user_2`
-(
-  id          bigint(20) unsigned not null,
-  city        varchar(20)         not null default '',
-  name        varchar(20)         not null default '',
-  age         int(11)             not null default 0,
-  status      int(10)             not null default '0' comment '状态',
-  create_time datetime            not null default current_timestamp comment '创建时间',
-  update_time datetime            not null default current_timestamp on update current_timestamp comment '修改时间',
-  primary key (id)
-) engine = innodb
-  default charset = utf8;
-
 
 
 drop table if exists company_0;
@@ -348,4 +320,25 @@ create table `company_1`
   primary key (id)
 ) engine = innodb
   default charset = utf8;
-ƒ
+
+
+
+
+CREATE TABLE `demo_entity`
+(
+  id            bigint(20) unsigned NOT NULL COMMENT '主键',
+  `name`        varchar(64)         NOT NULL,
+  `phone`       varchar(20)                  DEFAULT '' COMMENT '手机号',
+  `email`       varchar(64)                  DEFAULT '' COMMENT '邮箱',
+  `age`         int(10)                      DEFAULT NULL,
+  `status`      varchar(8)          NOT NULL COMMENT '状态',
+  `create_user` bigint(16) unsigned          DEFAULT NULL COMMENT '创建人',
+  `create_name` varchar(64)                  DEFAULT '' COMMENT '创建人名称',
+  `create_time` datetime            NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_user` bigint(16) unsigned          DEFAULT NULL COMMENT '更新人',
+  `update_name` varchar(64)                  DEFAULT '' COMMENT '更新人名称',
+  `update_time` datetime            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+

@@ -127,4 +127,17 @@ public class UserController {
         return ResponseBean.buildSuccess(userService.group());
     }
 
+
+    @ApiOperation(notes = "between",
+            value = "group",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            response = UserDTO.class)
+    @GetMapping("between")
+    @ResponseBody
+    public ResponseBean between() {
+        log.info("demo--------between------");
+        return ResponseBean.buildSuccess(userService.between());
+    }
+
 }
