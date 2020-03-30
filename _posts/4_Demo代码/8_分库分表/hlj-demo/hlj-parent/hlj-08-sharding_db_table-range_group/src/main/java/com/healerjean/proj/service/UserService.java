@@ -27,4 +27,6 @@ public interface UserService {
     List<UserRefCompany>  leftJoin();
 
     List<UserRefCompany>  group();
+
+    List<UserDTO> between();
 }
