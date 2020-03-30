@@ -23,10 +23,11 @@ public interface UserService {
 
     List<UserDTO> limit(UserDTO userDTO);
 
-
-    List<UserRefCompany>  leftJoin();
-
     List<UserRefCompany>  group();
 
     List<UserDTO> between();
+
+    List<UserRefCompany>  leftJoin();
+
+
 }

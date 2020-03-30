@@ -11,7 +11,7 @@
                    c.ref_user_id as refUserId,
                    c.company_name_english as companyNameEnglish
                from user u
-            left join  company c  on u.id = c .ref_user_id
+            left join  company c  on u.id = c .ref_user_id order by  u.create_time
     </select>
 
 

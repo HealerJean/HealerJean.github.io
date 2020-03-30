@@ -76,16 +76,6 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 设置了绑定关系后成功
-     */
-    @Override
-    public List<UserRefCompany> leftJoin() {
-        List<UserRefCompany> userRefCompanies = userMapper.leftJoin();
-        return userRefCompanies;
-    }
-
-
-    /**
      * groupBy 成功
      */
     @Override
@@ -110,4 +100,18 @@ public class UserServiceImpl implements UserService {
         }
         return list;
     }
+
+
+    /**
+     * left join 设置了绑定关系后成功
+     */
+    @Override
+    public List<UserRefCompany> leftJoin() {
+        List<UserRefCompany> userRefCompanies = userMapper.leftJoin();
+        return userRefCompanies;
+    }
+
+
+
+
 }
