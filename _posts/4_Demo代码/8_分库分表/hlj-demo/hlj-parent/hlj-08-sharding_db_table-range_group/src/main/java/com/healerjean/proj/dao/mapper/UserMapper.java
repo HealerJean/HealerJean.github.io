@@ -16,12 +16,8 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
 
 
-    @Select("select u.id," +
-            "       u.name ," +
-            "       c.id as companyId," +
-            "       c.name as companyName," +
-            "       c.company_name_english as companyNameEnglish" +
-            "       from user u" +
-            "    left join  company c  on u.name = c .name")
     List<UserRefCompany> leftJoin();
+
+
+    List<UserRefCompany> groupByCity();
 }

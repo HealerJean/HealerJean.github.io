@@ -22,5 +22,4 @@ public class CustomShardingTableAlgorithm implements PreciseShardingAlgorithm<Lo
         }
         throw new IllegalArgumentException();
     }
-
 }

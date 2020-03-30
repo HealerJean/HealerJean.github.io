@@ -21,6 +21,7 @@ public class User implements Serializable {
     private Long id;
     private String name;
     private String city;
+    private Integer age;
     private String status;
     private Date createTime;
     private Date updateTime;

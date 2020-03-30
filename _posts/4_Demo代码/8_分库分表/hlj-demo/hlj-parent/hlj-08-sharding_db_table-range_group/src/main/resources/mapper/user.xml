@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.healerjean.proj.dao.mapper.UserMapper">
+
+
+    <select id="leftJoin" resultType="com.healerjean.proj.pojo.UserRefCompany">
+            select u.id,
+                   u.name ,
+                   c.id as companyId,
+                   c.name as companyName,
+                   c.ref_user_id as refUserId,
+                   c.company_name_english as companyNameEnglish
+               from user u
+            left join  company c  on u.id = c .ref_user_id
+    </select>
+
+
+    <select id="groupByCity" resultType="com.healerjean.proj.pojo.UserRefCompany">
+            select city , sum(age) as sumAge, avg(age) as avgAge  from user  group by city
+    </select>
+
+
+</mapper>

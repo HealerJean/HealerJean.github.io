@@ -95,9 +95,9 @@ public class UserController {
             response = UserDTO.class)
     @GetMapping("limit")
     @ResponseBody
-    public ResponseBean limit() {
+    public ResponseBean limit(UserDTO userDTO) {
         log.info("demo--------limit------");
-        return ResponseBean.buildSuccess(userService.limit());
+        return ResponseBean.buildSuccess(userService.limit(userDTO));
     }
 
 
@@ -124,8 +124,7 @@ public class UserController {
     @ResponseBody
     public ResponseBean group() {
         log.info("demo--------group------");
-        userService.group();
-        return ResponseBean.buildSuccess();
+        return ResponseBean.buildSuccess(userService.group());
     }
 
 }

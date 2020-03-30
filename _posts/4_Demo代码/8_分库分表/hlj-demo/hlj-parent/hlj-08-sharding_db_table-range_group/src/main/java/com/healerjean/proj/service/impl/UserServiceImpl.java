@@ -56,39 +56,37 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    /**
+     * limit 成功
+     */
     @Override
-    public List<UserDTO> limit() {
+    public List<UserDTO> limit(UserDTO userDTO) {
         Wrapper<User> userWrapper = new QueryWrapper<User>().lambda()
-                .orderByAsc(User::getId)
-                .last("limit 1, 5");
+                .orderByDesc(User::getCreateTime)
+                .last("limit " + userDTO.getPageNow() + ", " + userDTO.getPageSize());
         List<User> users = userMapper.selectList(userWrapper);
         List<UserDTO> list = null;
         if (!EmptyUtil.isEmpty(users)) {
             list = users.stream().map(BeanUtils::userToDTO).collect(Collectors.toList());
         }
-        return list;    }
+        return list;
+    }
 
     @Override
-    public List<UserRefCompany>  leftJoin() {
-        List<UserRefCompany>  userRefCompanies = userMapper.leftJoin();
+    public List<UserRefCompany> leftJoin() {
+        List<UserRefCompany> userRefCompanies = userMapper.leftJoin();
         return userRefCompanies;
     }
 
 
     /**
-     * 成功
+     * groupBy 成功
      */
     @Override
-    public void group() {
-        Wrapper<User> userWrapper = new QueryWrapper<User>().lambda()
-                .select(User::getCity )
-                .groupBy(User::getCity);
-        List<Object> citys = userMapper.selectObjs(userWrapper);
-
-        log.info("citys：{}", citys);
+    public List<UserRefCompany>  group() {
+        List<UserRefCompany> list = userMapper.groupByCity();
+        return list;
     }
-
-
 
 
 }
