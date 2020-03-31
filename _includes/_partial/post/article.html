@@ -6,12 +6,12 @@
 	{% include _partial/post/header.html %}
 	<div class="article-content">
 		{% if table and site.toc.article %}
-		<div id="toc" class="toc-article toc-content" style="display: none;">
-		{% if item.list_number == false %}
+		<!-- <div id="toc" class="toc-article toc-content" style="display: none;"> -->
+		<!-- {% if item.list_number == false %} -->
 		<!--<%- toc(item.content,{list_number:false}) %>-->
-		{% else %}
+		<!-- {% else %} -->
 			<!--<%- toc(item.content) %>-->
-		{% endif %}
+		<!-- {% endif %} -->
 		</div>
 		{% endif %}
 		{{ content }}  
