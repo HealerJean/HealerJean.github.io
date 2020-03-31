@@ -5,15 +5,15 @@
 	<article itemprop="articleBody"> 
 	{% include _partial/post/header.html %}
 	<div class="article-content">
-		{% if table and site.toc.article %}
+		<!-- {% if table and site.toc.article %} -->
 		<!-- <div id="toc" class="toc-article toc-content" style="display: none;"> -->
 		<!-- {% if item.list_number == false %} -->
 		<!--<%- toc(item.content,{list_number:false}) %>-->
 		<!-- {% else %} -->
 			<!--<%- toc(item.content) %>-->
 		<!-- {% endif %} -->
-		</div>
-		{% endif %}
+		<!-- </div> -->
+		<!-- {% endif %} -->
 		{{ content }}  
 	</div>
 	{% include _partial/post/footer.html %}   
