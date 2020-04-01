@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.healerjean.proj.dao.mapper.demo.DemoEntityMapper">
+<mapper namespace="com.healerjean.proj.dao.mapper.DemoEntityMapper">
 
 
     <sql id="Example_Where_Clause">
@@ -57,7 +57,7 @@
         <include refid="Example_Where_Clause"/>
     </select>
 
-    <select id="findByQueryContion" resultType="com.healerjean.proj.pojo.demo.DemoEntity">
+    <select id="findByQueryContion" resultType="com.healerjean.proj.pojo.DemoEntity">
         select
         <trim suffixOverrides=",">
             <include refid="Base_Column_List"/>
@@ -67,7 +67,7 @@
     </select>
 
 
-    <select id="queryList" resultType="com.healerjean.proj.pojo.demo.DemoEntity">
+    <select id="queryList" resultType="com.healerjean.proj.pojo.DemoEntity">
         select
         <trim suffixOverrides=",">
             <include refid="Base_Column_List"/>

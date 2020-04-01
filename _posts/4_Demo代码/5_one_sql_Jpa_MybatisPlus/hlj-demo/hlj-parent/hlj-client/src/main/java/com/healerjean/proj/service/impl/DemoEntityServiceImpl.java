@@ -2,11 +2,11 @@ package com.healerjean.proj.service.impl;
 
 import com.healerjean.proj.common.dto.page.PageDTO;
 import com.healerjean.proj.common.enums.StatusEnum;
-import com.healerjean.proj.dao.mapper.demo.DemoEntityMapper;
-import com.healerjean.proj.dao.repository.demo.DemoEntityRepository;
+import com.healerjean.proj.dao.mapper.DemoEntityMapper;
+import com.healerjean.proj.dao.repository.DemoEntityRepository;
 import com.healerjean.proj.dto.DemoDTO;
-import com.healerjean.proj.pojo.demo.DemoEntity;
-import com.healerjean.proj.pojo.demo.DemoEntityQuery;
+import com.healerjean.proj.pojo.DemoEntity;
+import com.healerjean.proj.pojo.DemoEntityQuery;
 import com.healerjean.proj.service.DemoEntityService;
 import com.healerjean.proj.utils.BeanUtils;
 import com.healerjean.proj.utils.EmptyUtil;
