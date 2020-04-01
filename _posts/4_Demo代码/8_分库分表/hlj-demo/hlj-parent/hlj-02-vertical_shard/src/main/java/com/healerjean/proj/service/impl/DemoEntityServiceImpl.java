@@ -12,8 +12,6 @@ import com.healerjean.proj.service.UserService;
 import com.healerjean.proj.utils.BeanUtils;
 import com.healerjean.proj.utils.EmptyUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shardingsphere.transaction.annotation.ShardingTransactionType;
-import org.apache.shardingsphere.transaction.core.TransactionType;
 import org.apache.shardingsphere.transaction.core.TransactionTypeHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,7 +70,6 @@ public class DemoEntityServiceImpl implements DemoEntityService {
      * 分库分表也是有事务的，如果跑出了异常，则都不能成功
      */
 
-    @ShardingTransactionType(TransactionType.XA)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void dbTransactional(UserDTO userDTO, CompanyDTO companyDTO) {
