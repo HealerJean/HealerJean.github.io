@@ -69,7 +69,6 @@ public class DemoEntityServiceImpl implements DemoEntityService {
     /**
      * 分库分表也是有事务的，如果跑出了异常，则都不能成功
      */
-
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void dbTransactional(UserDTO userDTO, CompanyDTO companyDTO) {

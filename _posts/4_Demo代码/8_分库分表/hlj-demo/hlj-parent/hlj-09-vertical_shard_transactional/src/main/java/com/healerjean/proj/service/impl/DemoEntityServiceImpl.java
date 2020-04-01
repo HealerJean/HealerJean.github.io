@@ -72,15 +72,14 @@ public class DemoEntityServiceImpl implements DemoEntityService {
      * 分库分表也是有事务的，如果跑出了异常，则都不能成功
      */
 
-    @ShardingTransactionType(TransactionType.XA)
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void dbTransactional(UserDTO userDTO, CompanyDTO companyDTO) {
         System.out.println("----------------开始进入事务");
         userService.insert(userDTO);
         companyService.insert(companyDTO);
-        System.out.println("---------------TransactionTypeHolder" +  TransactionTypeHolder.get());
-        // int i = 1 / 0;
+        System.out.println("---------------TransactionTypeHolder" + TransactionTypeHolder.get());
+        int i = 1 / 0;
     }
 
 }
