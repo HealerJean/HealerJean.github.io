@@ -154,12 +154,12 @@
         </dependency>
 
 
-        <!--&lt;!&ndash;shardingsphere&ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.apache.shardingsphere</groupId>-->
-            <!--<artifactId>sharding-jdbc-spring-boot-starter</artifactId>-->
-            <!--<version>4.0.0-RC1</version>-->
-        <!--</dependency>-->
+        <!--文件相关-->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
 
     </dependencies>
 

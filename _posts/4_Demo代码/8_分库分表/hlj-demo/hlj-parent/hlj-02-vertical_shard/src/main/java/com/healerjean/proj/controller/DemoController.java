@@ -7,6 +7,8 @@ import com.healerjean.proj.dto.UserDTO;
 import com.healerjean.proj.service.DemoEntityService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shardingsphere.transaction.core.TransactionType;
+import org.apache.shardingsphere.transaction.core.TransactionTypeHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -88,6 +90,7 @@ public class DemoController {
     @ResponseBody
     public ResponseBean dbTransactional(UserDTO userDTO, CompanyDTO companyDTO) {
         log.info("demo--------dbTransactional------");
+        TransactionTypeHolder.set(TransactionType.XA);
         demoEntityService.dbTransactional(userDTO, companyDTO);
         return ResponseBean.buildSuccess("执行成功");
     }

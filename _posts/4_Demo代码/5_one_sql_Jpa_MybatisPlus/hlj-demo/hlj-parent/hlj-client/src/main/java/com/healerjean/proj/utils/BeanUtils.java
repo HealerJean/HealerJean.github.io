@@ -2,8 +2,8 @@ package com.healerjean.proj.utils;
 
 import com.healerjean.proj.common.dto.page.PageDTO;
 import com.healerjean.proj.dto.DemoDTO;
-import com.healerjean.proj.pojo.demo.DemoEntity;
-import com.healerjean.proj.pojo.demo.DemoEntityQuery;
+import com.healerjean.proj.pojo.DemoEntity;
+import com.healerjean.proj.pojo.DemoEntityQuery;
 import org.springframework.data.domain.Page;
 
 /**
