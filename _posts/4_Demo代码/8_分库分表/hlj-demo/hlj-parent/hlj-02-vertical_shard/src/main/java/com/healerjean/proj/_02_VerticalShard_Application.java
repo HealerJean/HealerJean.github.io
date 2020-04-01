@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.transaction.jta.JtaAutoConfigurati
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableTransactionManagement
-@SpringBootApplication(exclude = JtaAutoConfiguration.class)
+@SpringBootApplication
 public class _02_VerticalShard_Application {
 
     public static void main(String[] args) {

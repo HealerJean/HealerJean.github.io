@@ -41,6 +41,8 @@
         <!--  分库分表 => 范围分表、取模 = 无线扩容  -->
         <module>hlj-08-sharding_db_table-range_group</module>
 
+        <!--垂直拆分 事务测试-->
+        <module>hlj-09-vertical_shard_transactional</module>
     </modules>
 
     <properties>
