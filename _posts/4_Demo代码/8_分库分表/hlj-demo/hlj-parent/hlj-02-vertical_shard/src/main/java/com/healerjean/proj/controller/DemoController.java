@@ -90,7 +90,6 @@ public class DemoController {
     @ResponseBody
     public ResponseBean dbTransactional(UserDTO userDTO, CompanyDTO companyDTO) {
         log.info("demo--------dbTransactional------");
-        TransactionTypeHolder.set(TransactionType.XA);
         demoEntityService.dbTransactional(userDTO, companyDTO);
         return ResponseBean.buildSuccess("执行成功");
     }
