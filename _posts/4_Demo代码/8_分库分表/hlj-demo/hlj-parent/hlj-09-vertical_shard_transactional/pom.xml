@@ -155,7 +155,7 @@
             <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
             <version>4.0.0-RC2</version>
         </dependency>
-
+n
         <!--XA事务必须配置如下，否则如下报错-->
         <!--Caused by: java.lang.NullPointerException: Cannot find transaction manager of [XA]-->
         <dependency>
