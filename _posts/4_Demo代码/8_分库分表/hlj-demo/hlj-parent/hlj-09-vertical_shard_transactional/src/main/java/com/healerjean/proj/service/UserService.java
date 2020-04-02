@@ -18,4 +18,8 @@ public interface UserService {
     UserDTO findById(Long id);
 
     List<UserDTO> list();
+
+     void updateSQL(Long id, String name);
+
+    void updateSQLRequiresNewTransactional(Long id, String name);
 }
