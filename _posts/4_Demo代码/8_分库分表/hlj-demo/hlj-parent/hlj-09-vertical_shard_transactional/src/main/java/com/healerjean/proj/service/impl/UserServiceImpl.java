@@ -9,6 +9,8 @@ import com.healerjean.proj.utils.BeanUtils;
 import com.healerjean.proj.utils.EmptyUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -41,6 +43,19 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectById(id);
         return user == null ? null : BeanUtils.userToDTO(user);
     }
+
+
+    @Override
+    public void updateSQL(Long id, String name) {
+        userMapper.updateSQL(id, name);
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    @Override
+    public void updateSQLRequiresNewTransactional(Long id, String name) {
+        userMapper.updateSQL(id, name);
+    }
+
 
     @Override
     public List<UserDTO> list() {

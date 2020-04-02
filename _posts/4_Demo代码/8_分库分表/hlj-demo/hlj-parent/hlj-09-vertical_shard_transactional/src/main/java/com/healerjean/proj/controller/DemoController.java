@@ -81,18 +81,5 @@ public class DemoController {
         return ResponseBean.buildSuccess(demoEntityService.list());
     }
 
-    @ApiOperation(notes = "dbTransactional",
-            value = "dbTransactional",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            response = UserDTO.class)
-    @PostMapping("dbTransactional")
-    @ResponseBody
-    public ResponseBean dbTransactional(UserDTO userDTO, CompanyDTO companyDTO) {
-        log.info("demo--------dbTransactional------");
-        TransactionTypeHolder.set(TransactionType.XA);
-        demoEntityService.dbTransactional(userDTO, companyDTO);
-        return ResponseBean.buildSuccess("执行成功");
-    }
 
 }

@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -35,11 +37,6 @@ public class DemoEntityServiceImpl implements DemoEntityService {
 
     @Resource
     private DemoEntityMapper demoEntityMapper;
-
-    @Resource
-    private CompanyService companyService;
-    @Resource
-    private UserService userService;
 
     @Override
     public DemoDTO insert(DemoDTO demoDTO) {
@@ -67,19 +64,5 @@ public class DemoEntityServiceImpl implements DemoEntityService {
         return collect;
     }
 
-
-    /**
-     * 分库分表也是有事务的，如果跑出了异常，则都不能成功
-     */
-
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public void dbTransactional(UserDTO userDTO, CompanyDTO companyDTO) {
-        System.out.println("----------------开始进入事务");
-        userService.insert(userDTO);
-        companyService.insert(companyDTO);
-        System.out.println("---------------TransactionTypeHolder" + TransactionTypeHolder.get());
-        int i = 1 / 0;
-    }
 
 }
