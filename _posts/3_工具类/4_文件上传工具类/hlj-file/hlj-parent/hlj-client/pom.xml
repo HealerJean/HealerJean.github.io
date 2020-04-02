@@ -17,7 +17,8 @@
         <snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
         <asciidoctor.input.directory>${project.basedir}/src/docs/asciidoc</asciidoctor.input.directory>
         <generated.asciidoc.directory>${project.build.directory}/asciidoc</generated.asciidoc.directory>
-        <asciidoctor.html.output.ResponseBeandirectory>${project.build.directory}/asciidoc/html</asciidoctor.html.output.ResponseBeandirectory>
+        <asciidoctor.html.output.ResponseBeandirectory>${project.build.directory}/asciidoc/html
+        </asciidoctor.html.output.ResponseBeandirectory>
         <asciidoctor.pdf.output.directory>${project.build.directory}/asciidoc/pdf</asciidoctor.pdf.output.directory>
     </properties>
 
@@ -95,7 +96,6 @@
             <artifactId>validation-api</artifactId>
             <groupId>javax.validation</groupId>
         </dependency>
-
 
 
         <!-- Jackson jsonUtils-->
@@ -186,6 +186,12 @@
             <version>3.1</version>
         </dependency>
 
+        <!--zip压缩-->
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-apache-xalan2</artifactId>
+            <version>1.10.1</version>
+        </dependency>
     </dependencies>
 
     <build>
