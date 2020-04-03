@@ -20,5 +20,4 @@ public interface DemoEntityMapper extends BaseMapper<DemoEntity> {
 
     List<DemoEntity> queryList(DemoEntityQuery query);
 
-
 }

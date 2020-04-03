@@ -4,7 +4,7 @@
  `phone` varchar(20) default '' comment '手机号',
  `email` varchar(64) default '' comment '邮箱',
  `age` int(100) default null,
- `del_flag` varchar(8) not null comment '10可用，99删除',
+ `status` varchar(8) not null comment '10可用，99删除',
  `create_user` bigint(16) unsigned default null comment '创建人',
  `create_name` varchar(64) default '' comment '创建人名称',
  `create_time` timestamp not null default current_timestamp comment '创建时间',

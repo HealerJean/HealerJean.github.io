@@ -71,7 +71,7 @@ public class BeanUtils {
         query.setAge(demoDTO.getAge());
         query.setPhone(demoDTO.getPhone());
         query.setEmail(demoDTO.getEmail());
-        query.setDelFlag(demoDTO.getStatus());
+        query.setStatus(demoDTO.getStatus());
         query.setCreateUser(demoDTO.getCreateUser());
         query.setCreateName(demoDTO.getCreateName());
         query.setUpdateUser(demoDTO.getUpdateUser());
