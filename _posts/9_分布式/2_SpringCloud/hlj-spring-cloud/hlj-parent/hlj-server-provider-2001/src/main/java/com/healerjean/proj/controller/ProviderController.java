@@ -1,5 +1,6 @@
 package com.healerjean.proj.controller;
 
+import com.healerjean.proj.dto.UserDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -7,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author HealerJean
@@ -40,6 +39,33 @@ public class ProviderController extends BaseController {
         log.info("host：【{}】,serviceId：【{}】", serviceInstance.getHost(), serviceInstance.getServiceId());
         return serviceInstance;
     }
+
+
+    @ApiOperation(value = "urlGet",
+            notes = "urlGet",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = UserDTO.class)
+    @GetMapping(value = "urlGet")
+    @ResponseBody
+    public UserDTO urlGet(UserDTO user) {
+        user.setId("18");
+        return user;
+    }
+
+    @ApiOperation(value = "urlPost",
+            notes = "urlPost",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = UserDTO.class)
+    @PostMapping(value = "urlPost")
+    @ResponseBody
+    public UserDTO urlPost(UserDTO user) {
+        user.setId("1");
+        return user;
+    }
+
+
 }
 
 
