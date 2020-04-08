@@ -1,5 +1,6 @@
 package com.healerjean.proj.controller;
 
+import com.healerjean.proj.dto.UserDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -8,12 +9,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author HealerJean
@@ -42,6 +44,68 @@ public class ConsumerController extends BaseController {
     public String connectProvider() {
         log.info("服务消费者控制器--------connect--------");
         return restTemplate.getForEntity("http://" + serverProviderName + "/api/provider/connect/", String.class).getBody();
+    }
+
+    /**
+     * 占位符{1}
+     */
+    @GetMapping(value = "/c_get_url")
+    public UserDTO userUrl() {
+        ResponseEntity<UserDTO> responseEntity = restTemplate.getForEntity("http://" + serverProviderName + "/api/provider/urlGet?name={1}", UserDTO.class, "HealerJean");
+        UserDTO body = responseEntity.getBody();
+        return body;
+    }
+
+    /**
+     * map传参占位符{name}
+     */
+    @RequestMapping(value = "c_get_map", method = RequestMethod.GET)
+    public UserDTO userUrlMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "HealerJean");
+        ResponseEntity<UserDTO> responseEntity = restTemplate.getForEntity("http://" + serverProviderName + "/api/provider/urlGet?name={name}", UserDTO.class, map);
+        UserDTO body = responseEntity.getBody();
+        return body;
+    }
+
+
+
+    @GetMapping(value = "/c_post")
+    public UserDTO postFirst() {
+        UserDTO user = new UserDTO();
+        user.setName("HealerJean");
+        ResponseEntity<UserDTO> responseEntity =
+                restTemplate.postForEntity("http://" + serverProviderName + "/api/provider/urlPost", user, UserDTO.class);
+        UserDTO body = responseEntity.getBody();
+        return body;
+    }
+
+
+    @GetMapping(value = "/c_put")
+    public UserDTO put() {
+        UserDTO user = new UserDTO();
+        user.setName("HealerJean");
+        String id = "2";
+        restTemplate.put("http://" + serverProviderName + "/api/provider/put/{1}", user, id);
+        return user;
+    }
+
+    @GetMapping(value = "c_delete")
+    public UserDTO delete() {
+        String id = "2";
+        restTemplate.delete("http://" + serverProviderName + "/api/provider/delete/{1}", id);
+        return null;
+    }
+
+
+
+    /**
+     * restTemplate.getForObject 传参形式和getForEntity是一样的,只不过不到需要.getBody了
+     */
+    @GetMapping(value = "/c_getForObjectTest")
+    public UserDTO getForObject() {
+        UserDTO userDTO = restTemplate.getForObject("http://" + serverProviderName + "/api/provider/urlGet?name={1}", UserDTO.class, "HealerJean");
+        return userDTO;
     }
 
 }
