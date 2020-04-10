@@ -58,17 +58,12 @@ public class DatasourceConfig {
         druidDataSource.setMaxWait(3000);
         druidDataSource.setTimeBetweenEvictionRunsMillis(60000);
         druidDataSource.setMinEvictableIdleTimeMillis(300000);
-
         return druidDataSource;
     }
 
 
     /**
      * 整合myBatis
-     *
-     * @param dataSource
-     * @return
-     * @throws Exception
      */
     @Bean(name = "sqlSessionFactory")
     public SqlSessionFactory clusterSqlSessionFactory(@Qualifier("dataSource") DataSource dataSource)
@@ -83,9 +78,6 @@ public class DatasourceConfig {
 
     /**
      * 初始化BaseDao
-     *
-     * @param sqlSessionFactory
-     * @return
      */
     @Bean
     public BaseDao initBaseDao(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {

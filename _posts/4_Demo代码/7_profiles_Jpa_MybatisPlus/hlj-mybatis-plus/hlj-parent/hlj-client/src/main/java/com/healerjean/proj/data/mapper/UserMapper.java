@@ -1,14 +1,12 @@
 package com.healerjean.proj.data.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.healerjean.proj.config.keycenter.one.CustomTypeHandler;
 import com.healerjean.proj.data.entity.User;
 import com.healerjean.proj.dto.UserDTO;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
@@ -57,6 +55,16 @@ public interface UserMapper extends BaseMapper<User> {
 
 
 
+    @Select("select * from user where id = #{id}")
+    @Results(
+            @Result(column = "email", property = "email", typeHandler = CustomTypeHandler.class)
+    )
+    User selectDncryptById(Long id);
 
 
+    @Results({
+            @Result(column = "email", property = "email", typeHandler = CustomTypeHandler.class),
+            @Result(column = "tel_phone", property = "telPhone", typeHandler = CustomTypeHandler.class)})
+    @Select("select * from user where id = #{id}")
+    List<User> selectDncryptList(Long id);
 }

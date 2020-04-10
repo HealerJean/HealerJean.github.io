@@ -29,6 +29,19 @@
             <artifactId>spring-cloud-starter-ribbon</artifactId>
         </dependency>
 
+        <!--hystrix 容错保护-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-hystrix</artifactId>
+        </dependency>
+
+        <!--feign 声明式服务调用-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-feign</artifactId>
+        </dependency>
+
+
         <!--swagger-->
         <dependency>
             <groupId>io.springfox</groupId>
