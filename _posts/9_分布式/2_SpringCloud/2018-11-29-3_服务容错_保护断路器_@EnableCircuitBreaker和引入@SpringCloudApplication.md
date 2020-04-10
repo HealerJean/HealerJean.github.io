@@ -7,289 +7,321 @@ category:
 - SpringCloud
 description: 服务容错_保护断路器_@EnableCircuitBreaker和引入@SpringCloudApplication
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
-
-<font  color="red" size="4">   </font>
 
 
-<font size="4">   </font>
--->
-**
-## 前言
+
+
+
+**前言**    
 
 前面做了一个简单的服务 注册。服务发现，服务提供者和消费者的项目，现在我们还是准备之前的项目代码
 
-## 1、 服务容错保护，准备的项目工程
-
-
->1、服务注册中心 ，端口为1111
->2、服务提供者，端口为8080，8081
->3、服务消费者 端口为9000
-
-## 2、在服务消费者中引入依赖包
-
->hystrix 对应的中文名字是“豪猪”，豪猪周身长满了刺，能保护自己不受天敌的伤害，代表了一种防御机制，这与hystrix本身的功能不谋而合，因此Netflix团队将该框架命名为Hystrix，并使用了对应的卡通形象做作为logo。<br/>
 
 
 
----- 
 
->在一个分布式系统里，许多依赖不可避免的会调用失败，比如超时、异常等，如何能够保证在一个依赖出问题的情况下，不会导致整体服务失败，这个就是Hystrix需要做的事情。Hystrix提供了熔断、隔离、Fallback、cache、监控等功能，能够在一个、或多个依赖同时出现问题时保证系统依然可用。
+# 1、`Hystrix`：容错保护  （消费者：3001）
+
+> > `hystrix` 对应的中文名字是“豪猪”，豪猪周身长满了刺，能保护自己不受天敌的伤害，代表了一种防御机制，这与`hystrix`本身的功能不谋而合，因此`Netflix`团队将该框架命名为`Hystrix`，并使用了对应的卡通形象做作为logo。
+>
+> ​     
+>
+> 在一个分布式系统里，许多依赖不可避免的会调用失败，比如超时、异常等，如何能够保证在一个依赖出问题的情况下，不会导致整体服务失败，这个就是`Hystrix`需要做的事情。      
+>
+> **`Hystrix`提供了熔断、隔离、`Fallback`、`cache`、监控等功能，能够在一个、或多个依赖同时出现问题时保证系统依然可用。** 
 
 
 
-```java
-   <dependency>
-         <groupId>org.springframework.cloud</groupId>
-         <artifactId>spring-cloud-starter-hystrix</artifactId>
-   </dependency> 
+## 1.1、`pom.xml`添加依赖  
 
+
+
+```xml
+<!--hystrix 容错保护-->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-hystrix</artifactId>
+</dependency>
 ```
 
 
-```java
-
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-   <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.healerjean.proj</groupId>
+        <artifactId>hlj-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
 
-   <groupId>com.didispace</groupId>
-   <artifactId>ribbon-consumer</artifactId>
-   <version>0.0.1-SNAPSHOT</version>
-   <packaging>jar</packaging>
+    <artifactId>hlj-server-consumer-3001</artifactId>
+    <version>${project.healerjean.version}</version>
 
-   <name>ribbon-consumer</name>
-   <description>Demo project for Spring Boot</description>
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
 
-   <parent>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-parent</artifactId>
-      <version>1.3.7.RELEASE</version>
-      <relativePath/> <!-- lookup parent from repository -->
-   </parent>
+    <dependencies>
 
-   <properties>
-      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-      <java.version>1.8</java.version>
-   </properties>
-
-   <dependencies>
-      <dependency>
-         <groupId>org.springframework.boot</groupId>
-         <artifactId>spring-boot-starter-web</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.springframework.boot</groupId>
-         <artifactId>spring-boot-starter-test</artifactId>
-         <scope>test</scope>
-      </dependency>
-
-      <dependency>
-         <groupId>org.springframework.cloud</groupId>
-         <artifactId>spring-cloud-starter-eureka</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.springframework.cloud</groupId>
-         <artifactId>spring-cloud-starter-ribbon</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.springframework.boot</groupId>
-         <artifactId>spring-boot-starter-actuator</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.springframework.cloud</groupId>
-         <artifactId>spring-cloud-starter-hystrix</artifactId>
-      </dependency>
-
-   </dependencies>
-
-   <dependencyManagement>
-      <dependencies>
-         <dependency>
+        <!--eureka 客户端，处理服务的注册和发现-->
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-dependencies</artifactId>
-            <version>Brixton.SR5</version>
-            <type>pom</type>
-            <scope>import</scope>
-         </dependency>
-      </dependencies>
-   </dependencyManagement>
+            <artifactId>spring-cloud-starter-eureka</artifactId>
+        </dependency>
 
-   <build>
-      <plugins>
-         <plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-         </plugin>
-      </plugins>
-   </build>
+        <!--ribbon 消费服务，它同时也作为辅助均衡器-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-ribbon</artifactId>
+        </dependency>
+
+
+        <!--hystrix 容错保护-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-hystrix</artifactId>
+        </dependency>
+
+        <!--swagger-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+        </dependency>
+
+        <!--lombok-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!--StringUtils-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
 
 ```
 
 
-## 3、注解开启断路器功能@EnableCircuitBreaker
 
-#### 解释:这里还可以使用 @ SpringCloudApplication 注解代替上面三个注解，由此也可以得到spring Cloud标准应用包含服务发下和断路器
+## 1.2、启动类：
+
+> `@EnableCircuitBreaker`：**开启断路器功能**    
+>
+> `@ SpringCloudApplication`：可以代替如下三个 
+>
+> > `@EnableCircuitBreaker`  //开启断路器功能
+> > `@EnableDiscoveryClient  `//开启服务发现客户端，
+> > `@SpringBootApplication`
 
 
 
 ```java
+package com.healerjean.proj;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 @EnableCircuitBreaker //开启断路器功能
-@EnableDiscoveryClient //开启服务发现客户端，
+@EnableDiscoveryClient //支持服务发现
 @SpringBootApplication
 ////@SpringCloudApplication //可以取代上面三个
-public class ConsumerApplication {
+public class ServerConsumer_3001_Application {
 
-   @Bean
-   @LoadBalanced
-   RestTemplate restTemplate() {
-      return new RestTemplate();
-   }
-   public static void main(String[] args) {
-      SpringApplication.run(ConsumerApplication.class, args);
-   }
+    //开启客户端负载均衡
+    @Bean
+    @LoadBalanced
+    RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
-}
-
-//或者下面这个
-@ SpringCloudApplication 
-public class ConsumerApplication {
-
-   @Bean
-   @LoadBalanced
-   RestTemplate restTemplate() {
-      return new RestTemplate();
-   }
-   public static void main(String[] args) {
-      SpringApplication.run(ConsumerApplication.class, args);
-   }
+    public static void main(String[] args) {
+        SpringApplication.run(ServerConsumer_3001_Application.class, args);
+    }
 
 }
 
 ```
 
-## 4、@HystrixCommand(方法内部报错之后，自动去找回滚的方法)
 
-### 4.1、新建service类，用来添加指定回调方法
 
+## 1.3、`@HystrixCommand`：服务降级
+
+> `@HystrixCommand`：**方法内部报错之后，不会抛出异常，自动去找回滚的方法**
+
+
+
+### 1.3.1、`ConsumeService`  
 
 ```java
+public interface ConsumeService {
 
+    String testFallBack();
+}
+
+```
+
+
+
+### 1.3.2、`ConsumeServiceImpl`
+
+```java
 @Service
-public class HelloService {
+public class ConsumeServiceImpl implements ConsumeService {
 
     @Autowired
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
+    @Value("${hlj.server.providerName}")
+    private String serverProviderName;
 
-    @HystrixCommand(fallbackMethod = "helloFallBack")
-    public String hello(){
-        return restTemplate.getForEntity("http://HELLO-SERVICE/hello",String.class).getBody();
+    @Override
+    @HystrixCommand(fallbackMethod = "fallBack")
+    public String testFallBack() {
+        return restTemplate.getForEntity(
+            "http://" + serverProviderName + "/api/provider/connect/", 
+            String.class).getBody();
+        
+        // int i = 1/0;
+        // return "success";
     }
 
-
-    public String helloFallBack(){
-        return "error";
+    public String fallBack() {
+        return "testFallBack 方法不可用，服务降级";
     }
+
 }
 ```
 
-## 5、修改之前服务消费者的Controller方法
 
+
+
+
+## 1.4、访问接口 ：启动所有的服务测试  
+
+> 服务注册中心：` hlj-eureka-server-1111`
+> 服务注册中心：` hlj-eureka-server-1112`   
+>
+> 服务提供者：`hlj-server-provider-2001`
+> 服务提供者：`hlj-server-provider-2002`
+>
+> 服务消费者：`hlj-server-consumer-3001`
+
+
+
+### 1.4.1、访问接口 
 
 ```java
-@RestController
-public class ConsumerController {
-
-
-    @Autowired
-    HelloService helloService;
-
-    @ResponseBody
-    @RequestMapping(value = "/ribbon-consumer", method = RequestMethod.GET)
-    public String helloConsumer() {
-        return helloService.hello();
-    }
-
-}
-
-
+http://127.0.0.1:3001/api/consumer/hystrix/fallBack
 ```
 
-## 6、开始验证断路器的实现的回调逻辑，
+**接口返回**   
 
-### 6.1、启动所有的服务
+> 服务提供者：2002
 
-#### 访问[http://localhost:9000/ribbon-consumer ](http://localhost:9000/ribbon-consumer )
- 
-
-### 6.2、在8080 8081 这两个服务提供者工作的时候，返回的结果都是一样的
-
-![WX20181129-164811@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20181129-164811@2x.png)
-
-### 6.3、直接断开8081服务提供者
-
-<font  color="red" size="4">  
-
-这个时候我们将8081的服务提供者挂掉，继续访问，发现一会正常，一会显示error，但是时间长了，就还是只会显示hello ，出现这种情况，应该是注册中心没有及时检测到挂掉了8081，还继续提供给消费者服务。但是时间长了，就肯定原型毕露
-
-
-
- </font>
-
-![WX20181129-164940@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20181129-164940@2x.png)
-
-## 7、模拟服务阻塞，添加延迟
-
-#### 解释：(hystrix默认超时2000毫秒) （启动所有的服务）
-
-### 7.1、服务提供者中添加延迟时间设置为3000毫秒
-
-```java
-
-/**
- * 2、断路器，模拟服务阻塞
- */
-@RequestMapping(value = "/hello", method = RequestMethod.GET)
-public String hello() throws InterruptedException {
-
-   ServiceInstance instance = client.getLocalServiceInstance();
-
-
-   int sleepTime = new Random().nextInt(3000);
-   logger.info("处理线程等待 "+sleepTime+" 秒");
-   Thread.sleep(sleepTime);
-
-   logger.info("/hello, host:" + instance.getHost() + ", service_id:" + instance.getServiceId());
-   return "Hello World";
+```json
+{
+    "host": "localhost",
+    "port": 2002,
+    "metadata": {},
+    "serviceId": "hlj-server-provider",
+    "secure": false,
+    "uri": "http://localhost:2002"
 }
+```
 
+> 服务提供者：2001  
+
+```json
+{
+    "host": "localhost",
+    "port": 2001,
+    "metadata": {},
+    "secure": false,
+    "serviceId": "hlj-server-provider",
+    "uri": "http://localhost:2001"
+}
 ```
 
 
-### 7.2、结果 ：和上面的测试是一样的，也是有错误，有正常
+
+## 1.5、断路器测试    
+
+### 1.5.1、这个时候断开服务提供者：2002  
+
+> 这个时候我们将2002 的服务提供者挂掉，继续访问，发现一会正常，一会显示错误信息。     
+>
+> 但是时间长了，就还是只会显示正常 ，出现这种情况，应该是注册中心没有及时检测到挂掉了2002，还继续提供给消费者服务。但是时间长了，就肯定原型毕露   
 
 
 
-[HealerJean-代码下载](https://github.com/HealerJean/com-hlj-springcloud/tree/master/3)
+**接口返回**   
+
+> 服务提供者：2002
+
+```json
+testFallBack 方法不可用，服务降级
+```
+
+> 服务提供者：2001  
+
+```json
+{
+    "host": "localhost",
+    "port": 2001,
+    "metadata": {},
+    "secure": false,
+    "serviceId": "hlj-server-provider",
+    "uri": "http://localhost:2001"
+}
+```
 
 
 
-<br/><br/><br/>
-<font color="red"> 感兴趣的，欢迎添加博主微信， </font><br/>
-哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。
-<br/>
+### 15.2、`Hystrix`默认超时2000毫秒   
+
+> 如果某个服务提供者超时了，就会进行容错保护，按照上面的测试
+
+
+
+
+
+
+
+
+
+
+
+
+
+<font color="red"> 感兴趣的，欢迎添加博主微信， </font>     
+
+哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。    
+
+
 请下方留言吧。可与博主自由讨论哦
 
 |微信 | 微信公众号|支付宝|

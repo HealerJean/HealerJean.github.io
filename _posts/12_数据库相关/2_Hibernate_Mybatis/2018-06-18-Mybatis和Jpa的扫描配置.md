@@ -222,24 +222,50 @@ mybatis.type-aliases-package=com.fintech.scf.data.pojo
 
 
 ```java
-@Value("${mybatis.mapper-locations}")
-private String mapperLocation;
+    @Value("${hlj.datasource.url}")
+    private String admoreUrl;
+    @Value("${hlj.datasource.username}")
+    private String admoreUsername;
+    @Value("${hlj.datasource.password}")
+    private String admorePassword;
 
-@Value("${mybatis.type-aliases-package}")
-private String typeAliasesPackage;
-    
-    
 
-@Bean(name = "sqlSessionFactory")
-public SqlSessionFactory clusterSqlSessionFactory(@Qualifier("masterDataSource") DataSource dataSource)
-    throws Exception {
-    final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
-    sessionFactory.setDataSource(dataSource);
-    sessionFactory.setMapperLocations(
-        new PathMatchingResourcePatternResolver().getResources(mapperLocation));
-    sessionFactory.setTypeAliasesPackage(typeAliasesPackage);
-    return sessionFactory.getObject();
-}
+    @Value("${mybatis.mapper-locations}")
+    private String mapperLocation;
+
+    @Value("${mybatis.type-aliases-package}")
+    private String typeAliasesPackage;
+
+    @Bean(name = "dataSource")
+    public DataSource dataSource() {
+        DruidDataSource druidDataSource = new DruidDataSource();
+        druidDataSource.setUrl(admoreUrl);
+        druidDataSource.setUsername(admoreUsername);
+        druidDataSource.setPassword(admorePassword);
+        druidDataSource.setMaxActive(150);
+        druidDataSource.setInitialSize(10);
+        druidDataSource.setTestWhileIdle(true);
+        druidDataSource.setMaxWait(3000);
+        druidDataSource.setTimeBetweenEvictionRunsMillis(60000);
+        druidDataSource.setMinEvictableIdleTimeMillis(300000);
+
+        return druidDataSource;
+    }
+
+
+    /**
+     * 整合myBatis
+     */
+    @Bean(name = "sqlSessionFactory")
+    public SqlSessionFactory clusterSqlSessionFactory(@Qualifier("dataSource") DataSource dataSource)
+            throws Exception {
+        final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+        sessionFactory.setDataSource(dataSource);
+        sessionFactory.setMapperLocations(
+                new PathMatchingResourcePatternResolver().getResources(mapperLocation));
+        sessionFactory.setTypeAliasesPackage(typeAliasesPackage);
+        return sessionFactory.getObject();
+    }
 
 ```
 

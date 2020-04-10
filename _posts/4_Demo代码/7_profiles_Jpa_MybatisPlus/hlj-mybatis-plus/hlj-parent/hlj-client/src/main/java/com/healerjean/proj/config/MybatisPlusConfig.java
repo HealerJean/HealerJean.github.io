@@ -13,4 +13,6 @@ import org.springframework.context.annotation.Configuration;
 @MapperScan("com.healerjean.proj.data.mapper")
 public class MybatisPlusConfig {
 
+
+
 }

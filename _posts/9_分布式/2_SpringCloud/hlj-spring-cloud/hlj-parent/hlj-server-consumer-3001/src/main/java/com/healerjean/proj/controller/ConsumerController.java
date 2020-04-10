@@ -1,16 +1,16 @@
 package com.healerjean.proj.controller;
 
 import com.healerjean.proj.dto.UserDTO;
+import com.healerjean.proj.service.ConsumeService;
+import com.healerjean.proj.service.FeignProviderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,11 +29,14 @@ import java.util.Map;
 @Slf4j
 public class ConsumerController extends BaseController {
 
-
-    @Autowired
-    private RestTemplate restTemplate;
     @Value("${hlj.server.providerName}")
     private String serverProviderName;
+    @Autowired
+    private RestTemplate restTemplate;
+    @Autowired
+    private FeignProviderService feignProviderService;
+    @Autowired
+    private ConsumeService consumeService;
 
     @ApiOperation(value = "connect",
             notes = "connect",
@@ -68,8 +71,6 @@ public class ConsumerController extends BaseController {
         return body;
     }
 
-
-
     @GetMapping(value = "/c_post")
     public UserDTO postFirst() {
         UserDTO user = new UserDTO();
@@ -79,7 +80,6 @@ public class ConsumerController extends BaseController {
         UserDTO body = responseEntity.getBody();
         return body;
     }
-
 
     @GetMapping(value = "/c_put")
     public UserDTO put() {
@@ -97,16 +97,35 @@ public class ConsumerController extends BaseController {
         return null;
     }
 
-
-
     /**
      * restTemplate.getForObject 传参形式和getForEntity是一样的,只不过不到需要.getBody了
      */
-    @GetMapping(value = "/c_getForObjectTest")
+    @GetMapping(value = "c_getForObjectTest")
     public UserDTO getForObject() {
         UserDTO userDTO = restTemplate.getForObject("http://" + serverProviderName + "/api/provider/urlGet?name={1}", UserDTO.class, "HealerJean");
         return userDTO;
     }
+
+
+
+    /**
+     * 测试服务降级
+     */
+    @GetMapping(value = "hystrix/fallBack")
+    public String hystrixFallBack() {
+        return consumeService.hystrixFallBack();
+    }
+
+
+
+    /**
+     * 测试申明式服务调用
+     */
+    @GetMapping(value = "feign/connectProvider")
+    public String feignConnectProvider() {
+        return feignProviderService.connectProvider();
+    }
+
 
 }
 
