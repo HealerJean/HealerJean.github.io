@@ -1,23 +1,30 @@
-package com.duodian.youhui.admin.utils;
+package com.fintech.confin.web.utils.rsa;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.security.MessageDigest;
 
 public class MD5Util {
 
 
+    public static String encode(String origin) {
+        return encode(origin, null);
+    }
 
-    public static String MD5Encode(String origin, String charsetname) {
+    public static String encode(String origin, String charsetname) {
+        if (StringUtils.isBlank(origin)) {
+            return null;
+        }
         String resultString = null;
         try {
-            resultString = new String(origin);
             MessageDigest md = MessageDigest.getInstance("MD5");
-            if (charsetname == null || "".equals(charsetname))
-                resultString = byteArrayToHexString(md.digest(resultString
-                        .getBytes()));
-            else
-                resultString = byteArrayToHexString(md.digest(resultString
-                        .getBytes(charsetname)));
-        } catch (Exception exception) {
+            if (charsetname == null) {
+                resultString = byteArrayToHexString(md.digest(origin.getBytes()));
+            } else {
+                resultString = byteArrayToHexString(md.digest(origin.getBytes(charsetname)));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
         }
         return resultString;
     }
@@ -31,7 +38,6 @@ public class MD5Util {
 
         return resultSb.toString();
     }
-
 
 
 

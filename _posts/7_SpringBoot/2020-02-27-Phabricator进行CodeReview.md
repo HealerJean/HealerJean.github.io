@@ -176,7 +176,7 @@ git clone ssh://git@phabricator.youdomain.com/diffusion/P/youproject.git
 
 ## 3.2、详细使用命令    
 
-### 3.3.1、`arc diff develop`   
+### 3.3.1、`arc diff origin/healerjean`
 
 >   **review前开发一定要使用自己的分支，比如healerjean，因为最后合并到主分支后会删除当前分支(如果不创建会怎么办)**   
 
@@ -222,16 +222,20 @@ arc diff –preview
 
 ### 3.3.3、 如果审核未通过，或者自己想继续追加提交       
 
-```java
-1、arc diff #继续执行这个命令，arc会自动知道是更新操作
-2、arc diff　develop(预期分支名称)  –update D66666
+```shell
+arc diff origin/healerhean   
+arc diff #继续执行这个命令，arc会自动知道是更新操作
+
+arc diff　origin/healerjean –update D66666  更新操作（如果被通过了，还可以用哦）
+
+arc diff origin/healerjean  --create  创建一个新的review
 ```
 
 
 
 ### 3.3.4、`arc list：`查看review的状态 
 
-```powershell
+```shell
 arc list
 * Needs Review D202484: 用户登录
 ```
@@ -242,8 +246,8 @@ arc list
 
 > 如果审核通过，在本地执行arc land即可将代码push到中央仓库，并删除当前分支。自动回到push的分支 。
 
-```
-arc land --onto release/uat0.1 --revision D202484
+```shell
+arc land --onto healerjean --revision D202484
 ```
 
 

@@ -534,8 +534,21 @@ select(i -> i.getProperty().startsWith("test"))
 
 
 
-> 继承自 `AbstractWrapper` ,自身的内部属性 `entity` 也用于生成 `where` 条件
+> 继承自 `AbstractWrapper` ,自身的内部属性 `entity` 、也用于生成 `where` 条件（主要是这个功能）
 > 及 `LambdaUpdateWrapper`, 可以通过 `new UpdateWrapper().lambda()` 方法获取!
+
+
+
+
+
+```java
+ userWrapper =new UpdateWrapper<User>().lambda()
+        .set(User::getEmail, "h@gmail.com") 
+         .setSql("age = 24").eq(User::getId, user.getId());
+ user.setName("jjjjjk");
+ user.setEmail("66666"); //以它为主，所以导致上面的不会生效。
+ userMapper.update(user, userWrapper);
+```
 
 
 

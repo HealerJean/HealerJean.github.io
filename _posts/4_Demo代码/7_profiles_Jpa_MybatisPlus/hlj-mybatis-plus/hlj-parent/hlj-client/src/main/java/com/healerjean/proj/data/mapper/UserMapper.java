@@ -55,12 +55,6 @@ public interface UserMapper extends BaseMapper<User> {
 
 
 
-    @Select("select * from user where id = #{id}")
-    @Results(
-            @Result(column = "email", property = "email", typeHandler = CustomTypeHandler.class)
-    )
-    User selectDncryptById(Long id);
-
 
     @Results({
             @Result(column = "email", property = "email", typeHandler = CustomTypeHandler.class),
