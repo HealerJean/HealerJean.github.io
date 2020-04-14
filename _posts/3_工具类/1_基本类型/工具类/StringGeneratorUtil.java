@@ -61,23 +61,10 @@ public class StringGeneratorUtil {
      * @return 随机字符串
      */
     public static String generateDigitString(int length){
-        StringBuilder sb = new StringBuilder();
-        Random random = new Random();
-        for(int i=0;i<length;i++){
-            sb.append(digitChar.charAt(random.nextInt(digitChar.length())));
-        }
-        return sb.toString();
+        return RandomStringUtils.randomNumeric(length);
     }
 
 
-    /**
-     * 返回一个6位数字验证码
-     */
-    public static String genrateVerifyCode6() {
-        Random random = new Random();
-        int x = random.nextInt(899999);
-        return String.valueOf(x + 100000);
-    }
     /**
      * 返回一个4位数字验证码
      */
