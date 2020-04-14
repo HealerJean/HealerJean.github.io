@@ -3,7 +3,13 @@ package com.hlj.proj.utils.validate;
 import com.hlj.proj.constant.CommonConstants;
 import com.hlj.proj.enums.ResponseEnum;
 import com.hlj.proj.exception.BusinessException;
+import com.hlj.proj.utils.validate.validator.GreaterLessValidator;
+import com.hlj.proj.utils.validate.validator.NameIncludeValidator;
+import com.hlj.proj.validate.anno.GreaterLess;
+import com.hlj.proj.validate.anno.NameInclude;
 import org.hibernate.validator.HibernateValidator;
+import org.hibernate.validator.HibernateValidatorConfiguration;
+import org.hibernate.validator.cfg.ConstraintMapping;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -21,20 +27,35 @@ public class ValidateUtils {
 
     public static Validator validator;
 
+    //快速返回模式，有一个验证失败立即返回错误信息
     static {
 
-        validator = Validation
-                //一般情况下使用这里就可以了
-                // .byProvider(HibernateValidator.class)
+        //一般情况下使用这里就可以了
+        // validator = Validation
+        //         .byProvider(HibernateValidator.class)
+        //         .configure()
+        //         .failFast(true)
+        //         .buildValidatorFactory()
+        //         .getValidator();
 
-                //当 一个字段 配置非空group ，其他无需加组
-                .byProvider(CustomValidationProvider.class)
-                .configure()
+        //因为我的项目是接口与实现分离（api无法导入service包），所以这里写上了自定义校验注解的实现，而不是在自定义注解中使用Constraint进行引入，如果不是接口与实现分离，建议使用Constraint
+        HibernateValidatorConfiguration configure = Validation
+                .byProvider(HibernateValidator.class)
+                .configure();
+        ConstraintMapping greaterLessConstraintMapping = configure.createConstraintMapping();
+        ConstraintMapping nameIncludeConstraintMapping = configure.createConstraintMapping();
+        nameIncludeConstraintMapping.constraintDefinition(NameInclude.class)
+                .validatedBy(NameIncludeValidator.class);
+        //  如果同一个注解有多个实现过程
+        // .validatedBy(DigitsIncloudZeroValidatorForCharSequence.class);
+        greaterLessConstraintMapping.constraintDefinition(GreaterLess.class)
+                .validatedBy(GreaterLessValidator.class);
+        validator = configure
+                .addMapping(nameIncludeConstraintMapping)
+                .addMapping(greaterLessConstraintMapping)
                 .failFast(true)
                 .buildValidatorFactory()
                 .getValidator();
-        //快速返回模式，有一个验证失败立即返回错误信息
-
     }
 
 

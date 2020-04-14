@@ -42,7 +42,8 @@ public class VialidateController {
     )
     @PostMapping(value = "validate", produces = "application/json;charset=utf-8")
     public ResponseBean post(@RequestBody JavaBean javaBean) {
-        String validate = ValidateUtils.validate(javaBean, ValidateGroup.HealerJean.class);
+        // String validate = ValidateUtils.validate(javaBean, ValidateGroup.HealerJean.class);
+        String validate = ValidateUtils.validate(javaBean);
         if (!"success".equals(validate)) {
             log.info("错误信息：{}", validate);
         }
