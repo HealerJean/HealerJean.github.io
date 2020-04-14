@@ -2,7 +2,6 @@ package com.healerjean.proj.controller;
 
 import com.healerjean.proj.dto.UserDTO;
 import com.healerjean.proj.service.ConsumeService;
-import com.healerjean.proj.service.FeignProviderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,7 @@ import java.util.Map;
  * @date 2020/4/8  17:03.
  * @Description
  */
-@Api(description = "服务消费者控制器")
+@Api(description = "服务消费者_3001_控制器")
 @RestController
 @RequestMapping("api/consumer")
 @Slf4j
@@ -33,8 +32,6 @@ public class ConsumerController extends BaseController {
     private String serverProviderName;
     @Autowired
     private RestTemplate restTemplate;
-    @Autowired
-    private FeignProviderService feignProviderService;
     @Autowired
     private ConsumeService consumeService;
 
@@ -116,15 +113,6 @@ public class ConsumerController extends BaseController {
         return consumeService.hystrixFallBack();
     }
 
-
-
-    /**
-     * 测试申明式服务调用
-     */
-    @GetMapping(value = "feign/connectProvider")
-    public String feignConnectProvider() {
-        return feignProviderService.connectProvider();
-    }
 
 
 }

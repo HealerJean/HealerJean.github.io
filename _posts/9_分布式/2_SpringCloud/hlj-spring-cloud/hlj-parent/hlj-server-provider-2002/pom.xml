@@ -23,6 +23,13 @@
             <artifactId>spring-cloud-starter-eureka</artifactId>
         </dependency>
 
+        <!--hlj-service-api-->
+        <dependency>
+            <groupId>com.healerjean.proj</groupId>
+            <artifactId>hlj-service-api</artifactId>
+            <version>${project.healerjean.version}</version>
+        </dependency>
+
         <!--swagger-->
         <dependency>
             <groupId>io.springfox</groupId>
