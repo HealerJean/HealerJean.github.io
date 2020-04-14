@@ -1,0 +1,26 @@
+package com.fintech.confin.web.utils.validate.anno;
+
+
+import javax.validation.Constraint;
+import javax.validation.Payload;
+import java.lang.annotation.*;
+
+/**
+ * @ClassName CheckFgwMoney
+ * @Author DYB
+ * @Date 2018/12/3 12:00
+ * @Description 校验城市
+ * @Version V1.0
+ */
+@Constraint(validatedBy = {})
+@Documented
+@Target( {  ElementType.FIELD })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface DictionaryCity {
+
+    String message() ;
+
+    Class<?>[] groups() default { };
+
+    Class<? extends Payload>[] payload() default { };
+}
