@@ -21,12 +21,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!--zuul网关 -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-zuul</artifactId>
-        </dependency>
-
         <!--eureka-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
