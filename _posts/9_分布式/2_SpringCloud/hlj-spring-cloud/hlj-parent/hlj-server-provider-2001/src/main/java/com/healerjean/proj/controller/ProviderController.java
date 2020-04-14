@@ -49,7 +49,7 @@ public class ProviderController extends BaseController {
     @GetMapping(value = "urlGet")
     @ResponseBody
     public UserDTO urlGet(UserDTO user) {
-        user.setId("18");
+        user.setId(1L);
         return user;
     }
 
@@ -61,7 +61,7 @@ public class ProviderController extends BaseController {
     @PostMapping(value = "urlPost")
     @ResponseBody
     public UserDTO urlPost(UserDTO user) {
-        user.setId("1");
+        user.setId(1L);
         return user;
     }
 

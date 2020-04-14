@@ -4,8 +4,15 @@ import lombok.Data;
 
 @Data
 public class UserDTO {
-    private String id;
+    private Long id;
     private String name;
 
+    public UserDTO() {
+    }
+
+    public UserDTO(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }
 
