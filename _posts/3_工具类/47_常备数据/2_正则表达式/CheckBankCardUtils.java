@@ -1,4 +1,4 @@
-package com.duodian.admore.core.helper;
+package com.hlj.util.Z025_utils;
 
 
 import org.apache.commons.lang.StringUtils;
@@ -6,22 +6,19 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Created by shiwei.li on 2018/4/26.
  */
-public class CheckBankCardHelper {
+public class CheckBankCardUtils {
 
-    /*
+    /**
     校验过程：
     1、从卡号最后一位数字开始，逆向将奇数位(1、3、5等等)相加。
     2、从卡号最后一位数字开始，逆向将偶数位数字，先乘以2（如果乘积为两位数，将个位十位数字相加，即将其减去9），再求和。
     3、将奇数位总和加上偶数位总和，结果应该可以被10整除。
     */
-
     /**
      * 校验银行卡卡号
      */
     public static boolean checkBankCard(String bankCard) {
-
         bankCard = StringUtils.deleteWhitespace(bankCard);
-
         if (StringUtils.isBlank(bankCard)){
             return false;
         }

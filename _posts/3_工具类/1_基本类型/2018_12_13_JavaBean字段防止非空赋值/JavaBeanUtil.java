@@ -45,7 +45,7 @@ public class JavaBeanUtil {
                         newfield.set(newObject, Long.valueOf(value));
                         break;
                     case "class java.math.BigDecimal":
-                        newfield.set(newObject, new BigDecimal(Double.valueOf(value)) );
+                        newfield.set(newObject, new BigDecimal(String.valueOf(value)) );
                         break;
                     case "class java.util.Date":
                         Date  date = null;
