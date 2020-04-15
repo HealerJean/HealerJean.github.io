@@ -8,7 +8,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>hlj-api-gateway-4001</artifactId>
+    <artifactId>hlj-config-server-5001</artifactId>
     <version>${project.healerjean.version}</version>
 
     <properties>
@@ -16,21 +16,23 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
 
-        <!--zuul网关 -->
+        <!--config-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-zuul</artifactId>
+            <artifactId>spring-cloud-config-server</artifactId>
         </dependency>
 
-        <!--eureka-->
+        <!--starter-eureka-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-eureka</artifactId>
+        </dependency>
+
+        <!--starter-web-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <!--lombok-->
@@ -41,8 +43,6 @@
     </dependencies>
 
     <build>
-        <finalName>hlj-api-gateway-4001</finalName>
-
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

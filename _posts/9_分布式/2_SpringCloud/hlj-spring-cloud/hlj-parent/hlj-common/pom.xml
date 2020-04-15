@@ -17,6 +17,11 @@
 
     <dependencies>
 
+        <!-- starter-web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
         <!-- Jackson jsonUtils-->
         <dependency>
@@ -66,17 +71,6 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
-
-
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

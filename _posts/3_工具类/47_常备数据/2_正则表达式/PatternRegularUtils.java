@@ -1,4 +1,4 @@
-package com.hlj.util.Z025_utils;
+package com.healerjean.proj.controller;
 
 
 import org.apache.commons.lang3.StringUtils;
@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class PatternRegularUtils {
 
-
+    /** 用户相关 */
     /** 用户名-正则表达式：英文字母开头，包含英文字母或数字或特殊字符(. _ -)，长度4-32位*/
     public static final String UserName = "^[a-zA-Z]{1}([a-zA-Z0-9]|[._-]){3,31}$";
     /** 邮箱-正则表达式 */
@@ -23,18 +23,32 @@ public class PatternRegularUtils {
     /** 统一社会信用代码-正则表达式 */
     public static final String SocialCreditCode = "^([159Y]{1})([1239]{1})([0-9ABCDEFGHJKLMNPQRTUWXY]{6})([0-9ABCDEFGHJKLMNPQRTUWXY]{9})([0-90-9ABCDEFGHJKLMNPQRTUWXY])$";
 
+
+    /** 字符相关 */
     /** 全为英文 */
-    public static final String ALL_ENGLISH_ALL = "[a-zA-Z]+";
-    /** 全为中文  */
-    public static final String ALL_CHINESE = "[\\u4e00-\\u9fa5]+";
-    /** 全为数字 */
-    public static final String ALL_NUMBER = "[0-9]+";
+    public static final String ENGLISH = "[a-zA-Z]+";
+    /** 全为英文 大写*/
+    public static final String ENGLISH_UPPER = "^[A-Z]+$";
+    /** 全为英文 小写*/
+    public static final String ENGLISH_lLOW = "^[a-z]+$";
     /** 含有英文 */
     public static final String CONTAIN_ENGLISH = ".*[a-zA-z].*";
+    /** 全为数字 */
+    public static final String NUMBER = "[0-9]+";
     /** 含有数字 */
     public static final String CONTAIN_NUMBER  = ".*[0-9].*";
-    /** 只有英文和数字的字符串 */
-    public static final String ENGLISH_AND_NUMBER = "[a-zA-Z0-9]+";
+    /** 英文、数字 */
+    public static final String ENGLISH_NUMBER = "[a-zA-Z0-9]+";
+    /** 英文、数字、下划线 */
+    public static final String ENGLISH_NUMBER_ = "^\\w+$";
+    /** 全为中文  */
+    public static final String CHINESE = "[\\u4e00-\\u9fa5]+";
+    /** 中文、英文、数字 */
+    public static final String CHINESE_ENGLISH_NUMBER = "^[\\u4E00-\\u9FA5A-Za-z0-9]+$";
+    /** 中文、英文、数字、下划线*/
+    public static final String CHINESE_ENGLISH_NUMBER_ = "^[\\u4E00-\\u9FA5A-Za-z0-9_]+$";
+
+
 
 
 

@@ -8,7 +8,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>hlj-api-gateway-4001</artifactId>
+    <artifactId>hlj-config-client-6001</artifactId>
     <version>${project.healerjean.version}</version>
 
     <properties>
@@ -16,18 +16,21 @@
     </properties>
 
     <dependencies>
+
+        <!--hlj-common-->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>com.healerjean.proj</groupId>
+            <artifactId>hlj-common</artifactId>
+            <version>${project.healerjean.version}</version>
         </dependency>
 
-        <!--zuul网关 -->
+        <!--config 客户端-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-zuul</artifactId>
+            <artifactId>spring-cloud-starter-config</artifactId>
         </dependency>
 
-        <!--eureka-->
+        <!--eureka 客户端，处理服务的注册和发现-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-eureka</artifactId>
@@ -38,10 +41,22 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+
+
+        <!--swagger-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
-        <finalName>hlj-api-gateway-4001</finalName>
+        <finalName>hlj-config-client-6001</finalName>
 
         <plugins>
             <plugin>

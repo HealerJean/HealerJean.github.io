@@ -24,7 +24,8 @@
         <module>hlj-server-provider-2002</module>
         <module>hlj-server-consumer-3001</module>
         <module>hlj-api-gateway-4001</module>
-        <module>hlj-config-5001</module>
+        <module>hlj-config-server-5001</module>
+        <module>hlj-config-client-6001</module>
 
         <module>hlj-service-api</module>
         <module>hlj-common</module>
