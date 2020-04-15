@@ -41,6 +41,8 @@
     </dependencies>
 
     <build>
+        <finalName>hlj-api-gateway-4001</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
