@@ -1,4 +1,4 @@
-package com.fintech.credit.web.utils.sequence;
+package com.hlj.util.Z025_utils;
 
 import com.fintech.credit.basic.date.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +7,11 @@ import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class SequenceUtils {
+public class RedisSequenceUtils {
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -23,7 +24,8 @@ public class SequenceUtils {
      * @Date  2019/10/29
      */
     public String generateSeqNo(String prefixKey) {
-        String minuteStr = DateUtils.toString(LocalDateTime.now(), DateUtils.YYYYMMddHHmmss);
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String minuteStr = df.format(LocalDateTime.now());
         StringBuffer sb = new StringBuffer();
         sb.append(prefixKey).append(minuteStr);
         String temp = sb.toString();
