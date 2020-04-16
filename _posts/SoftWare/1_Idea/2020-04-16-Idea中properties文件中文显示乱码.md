@@ -1,23 +1,12 @@
 ---
-title: Long类型值过长导致丢失精度变00
-date: 2020-03-30 03:33:00
+title: Idea中properties文件中文显示乱码
+date: 2020-04-16 03:33:00
 tags: 
-- SpringBoot
-- Json
+- SoftWare
 category: 
-- SpringBoot
-- Json
-description: Long类型值过长导致丢失精度变00
+- SoftWare
+description: Idea中properties文件中文显示乱码
 ---
-
-
-
-<!--
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/ 
-　　首行缩进
--->
-
-
 
 
 
@@ -30,48 +19,19 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 
 
-**类似于LocalDateTime的序列化和反序列化方式**
+Java文件的话，可以直接点右下角的那个编码格式，选择自己想要的，一般都是utf-8，但是不排除你下载个老的代码，他是gbk编码的格式。      
+
+但是在properties文件里面，这个却是不能直接点击修改的。只能如上图那样修改，而且是**一休改之后，整个项目的properties文件都变成了utf-8的编码格式啦**。所以，注意，你修改过之后，原来写的注释，估计又变成乱码了。     
 
 
 
-# 1、修改序列化的方式  
+**解决方案：无解**  
 
-## 1.1、JsonLongSerializer
-
-```java
-public class JsonLongSerializer extends JsonSerializer<Long> {
-    @Override
-    public void serialize(Long aLong, 
-                          JsonGenerator jsonGenerator, 
-                          SerializerProvider serializerProvider) throws IOException {
-        jsonGenerator.writeString(Long.toString(aLong));
-    }
-}
-
-```
+**如果遇到`properties`因为`gbk`或者`utf-8`导致的乱码情况，就改成对应的呗，也没事啊，下次再改回来呗，能花几秒钟呢**   
 
 
 
-## 1.2、使用注解
-
-```java
-@JsonSerialize(using = JsonLongSerializer.class )
-private Long voucherId = null;
-```
-
-
-
-# 2、配置参数   
-
-> 该方式会强制将所有数字全部转成字符串输出，这种方式的优点是使用方便，不需要调整代码；缺点是颗粒度太大，所有的数字都被转成字符串输出了，包括按照timestamp格式输出的时间也是如此。   
-
-
-
-```properties
-spring.jackson.generator.write_numbers_as_strings=true
-```
-
-
+![1587033986376](D:\study\HealerJean.github.io\blogImages\1587033986376.png)
 
 
 
@@ -109,7 +69,7 @@ spring.jackson.generator.write_numbers_as_strings=true
 		repo: `HealerJean.github.io`,
 		owner: 'HealerJean',
 		admin: ['HealerJean'],
-		id: 'N4jn0CBmA7wFRaKO',
+		id: '3fQyjaGqgNY5u8Fs',
     });
     gitalk.render('gitalk-container');
 </script> 
