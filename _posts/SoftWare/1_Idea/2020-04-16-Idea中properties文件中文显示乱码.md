@@ -31,7 +31,7 @@ Java文件的话，可以直接点右下角的那个编码格式，选择自己�
 
 
 
-![1587033986376](D:\study\HealerJean.github.io\blogImages\1587033986376.png)
+![1587033986376](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1587033986376.png)
 
 
 
