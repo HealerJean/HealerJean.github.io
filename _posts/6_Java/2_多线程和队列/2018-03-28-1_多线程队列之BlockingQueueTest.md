@@ -7,33 +7,35 @@ category:
 - Thread
 description: 多线程队列之BlockingQueueTest
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
--->
+**前言**     
 
-## 前言
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
-BlockingQueueTest
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)             
+
+
+
+BlockingQueueTest    
+
 <font color="red"> 
-　　LinkedBlockingQueue是一个线程安全的阻塞队列(`使用了lock锁机制`)，实现了先进先出等特性，是作为生产者消费者的首选，可以指定容量，也可以不指定，不指定的话默认最大是Integer.MAX_VALUE </font>
-，<br/>
-　　其中主要用到put和take方法，put方法将一个对象放到队列尾部，在队列满的时候会阻塞直到有队列成员被消费，take方法从head取一个对象，在队列为空的时候会阻塞，直到有队列成员被放进来。<br/>
-　　
-常用方法如下：<br/>
-    
+　　LinkedBlockingQueue是一个线程安全的阻塞队列(`使用了lock锁机制`)，实现了先进先出等特性，是作为生产者消费者的首选，可以指定容量，也可以不指定，不指定的话默认最大是Integer.MAX_VALUE </font>     
 
-#### 1、add(anObject)： 能放就放不能放就生气了
+　　其中主要用到put和take方法，put方法将一个对象放到队列尾部，在队列满的时候会阻塞直到有队列成员被消费，take方法从head取一个对象，在队列为空的时候会阻塞，直到有队列成员被放进来。    
 
-　　把anObject添加到BlockingQueue里，添加成功返回true，如果BlockingQueue空间已满则抛出异常。<br/>
+1、add(anObject)： 能放就放不能放就生气了     
+
+　　把anObject添加到BlockingQueue里，添加成功返回true，如果BlockingQueue空间已满则抛出异常。
 
 #### 2、offer(anObject)： 能放就放，不能放拉倒，返回false
- 　　表示如果可能的话，将anObject加到BlockingQueue里，即如果BlockingQueue可以容纳，则返回true，否则返回false。<br/>
+ 　　表示如果可能的话，将anObject加到BlockingQueue里，即如果BlockingQueue可以容纳，则返回true，否则返回false。     
+
 　　
+
 #### <font color="red"> 3、put(anObject) </font>： 我脾气好，我等还不行
- 　　把anObject加到BlockingQueue里，如果BlockingQueue没有空间，则调用此方法的线程被阻断直到BlockingQueue里有空间再继续。<br/>
+ 　　把anObject加到BlockingQueue里，如果BlockingQueue没有空间，则调用此方法的线程被阻断直到BlockingQueue里有空间再继续。     
+
 　
+
 #### 4、poll(time)： 按照一段时间取出队头
  　　获取并移除此队列的头，若不能立即取出，则可以等time参数规定的时间，取不到时返回null。
 
@@ -57,7 +59,7 @@ BlockingQueueTest
 
 ```
 
-```
+```java
 package com.hlj.thread.comhljthread.start;
 
 import java.util.concurrent.BlockingQueue;
@@ -130,12 +132,9 @@ public class BlockingQueueTest extends Thread {
 
 ## [代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_28_1_%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%98%9F%E5%88%97%E4%B9%8BBlockingQueueTest/com-hlj-thread.zip)
 
-<br/><br/><br/>
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
 
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

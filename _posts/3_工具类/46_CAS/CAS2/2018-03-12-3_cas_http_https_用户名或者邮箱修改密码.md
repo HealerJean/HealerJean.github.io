@@ -7,12 +7,13 @@ category:
 - CAS
 description: cas_http_https_用户名或者邮箱修改密码
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
--->
+**前言**     
+
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)             
 
 
-## 前言，准备
 
 cas自定义通过邮箱修改密码，这里的验证，点击邮箱链接之后还会输入密保问题。本文章有http和https两种验证邮箱。不必着急往后看。证书无非是SSL设置为true或者false；
 
@@ -177,7 +178,7 @@ cas.authn.pm.jdbc.passwordEncoder.encodingAlgorithm=${cas.authn.jdbc.query[0].pa
 
 
 1、输入用户名：HealerJean
- 
+
 
 ![WX20180312-133304@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180312-133304@2x.png)
 
@@ -383,16 +384,11 @@ server.ssl.enabled=false
 ```
 ### 8.3、启动即可，成功。
 ---
-## [9、代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_12_3_cas%E9%82%AE%E7%AE%B1%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81/com-hlj-cas.zip)
+## [9、代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_12_3_cas%E9%82%AE%E7%AE%B1%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81/com-hlj-cas.zip)    
 
----
----
----
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
 
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

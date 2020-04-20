@@ -9,21 +9,21 @@ category:
 - SpringBoot
 description: springBoot集成Durid进行SQL监控
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
--->
+**前言**     
 
-## 前言
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
-Druid是阿里巴巴开发的号称为监控而生的数据库连接池！<br/>
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)          
+
+Druid是阿里巴巴开发的号称为监控而生的数据库连接池！    
 
 1、充当数据库连接池    
 2、可以监控数据库访问性能    
-3、获得SQL执行日志<br/>
+3、获得SQL执行日志    
 
-### 1、pom依赖包<br/>
+
+
+### 1、pom依赖包 
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -402,15 +402,7 @@ public DataSource dataSource(){
 
 ## [代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_21_1_springBoot%E9%9B%86%E6%88%90Durid%E8%BF%9B%E8%A1%8C%E7%9B%91%E6%8E%A7/com-hlj-druid.zip)
 
-
-<br/><br/><br/>
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
-
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
-
-
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 <!-- Gitalk 评论 start  -->

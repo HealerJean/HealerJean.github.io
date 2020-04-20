@@ -7,25 +7,20 @@ category:
 - Annotation
 description: get_set驼峰原装_lombok注解引发的字段问题
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
+**前言**     
 
-<font  color="red" size="4">   </font>
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
-
-<font size="4">   </font>
--->
-
-## 前言
-
-使用lombok固然能加快开发，但是使用的不恰当，可能会给我们造成一些意外的伤害，这里我将之前遇到的字段伤害做个简单的总结。
-
-<font  color="red" size="4">数据库设计的时候，一定要考虑好字段的名称，让它和json一致 ，比如我的数据库中设计的为 IsTmail ，那么我使用的lombok字段名 为 IsTmail（因为数据库映射是完全根据字段对应的，与json没有关系，但是我们以后设计尽量和json一致） </font><br/>
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)        
 
 
-lombok 首字母映射出来一定是大写的（映射出来json也是如此）
+
+使用lombok固然能加快开发，但是使用的不恰当，可能会给我们造成一些意外的伤害，这里我将之前遇到的字段伤害做个简单的总结。     
+
+<font  color="red" size="4">数据库设计的时候，一定要考虑好字段的名称，让它和json一致 ，比如我的数据库中设计的为 IsTmail ，那么我使用的lombok字段名 为 IsTmail（因为数据库映射是完全根据字段对应的，与json没有关系，但是我们以后设计尽量和json一致） </font>     
+
+lombok 首字母映射出来一定是大写的（映射出来json也是如此）     
+
 javabean 首字母小写，第二个大写，则set的下个字母按照原来的首字母确定（映射出来的json和自己本身的字段名相同）
 
 
@@ -421,20 +416,7 @@ public class DemoEntity04 {
     }
 
 ```
-### 
-
-
-## [HealerJean-代码下载](https://github.com/HealerJean/com-hlj-nosql-lombok-javabean)
-
-<br/><br/><br/>
-<font color="red"> 感兴趣的，欢迎添加博主微信， </font><br/>
-哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。
-<br/>
-请下方留言吧。可与博主自由讨论哦
-
-|微信 | 微信公众号|支付宝|
-|:-------:|:-------:|:------:|
-| ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) |
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

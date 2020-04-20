@@ -7,18 +7,13 @@ category:
 - SpringBoot
 description: Listenter用法
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
+**前言**     
 
-<font  color="red" size="4">   </font>
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)            
 
 
-<font size="4">   </font>
--->
-
-## 前言
 
 ## 1、listener监听
 
@@ -61,8 +56,8 @@ ServletContextAttributeListener可以监听到ServletContext中属性的新增�
 
 
 使用 @ServletComponentScan注解后，Servlet、Filter、Listener 可以直接通过 @WebServlet、@WebFilter、@WebListener 注解自动注册，无需其他代码。
- 
- 
+
+
 ```java
 /**
  * 使用 @ServletComponentScan注解后，Servlet、Filter、Listener
@@ -87,7 +82,7 @@ public class AdminApplication {
 
 当Servlet 容器启动Web 应用时调用该方法。在调用完该方法之后，容器再对Filter 初始化，<br/>
 
-     
+
 #### 作用：做一些初始化的内容添加工作、设置一些基本的内容、比如一些参数或者是一些固定的对象等等。
 
 1、ServletContext 对象是一个为整个 web 应用提供共享的内存，任何请求都可以访问里面的内容
@@ -252,19 +247,11 @@ ServletContext destroyed
 
 
 
-<br/><br/><br/>
-<font color="red"> 感兴趣的，欢迎添加博主微信， </font><br/>
-哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。
-<br/>
-请下方留言吧。可与博主自由讨论哦
-
-|微信 | 微信公众号|支付宝|
-|:-------:|:-------:|:------:|
-| ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) |
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 
-    
+
 <!-- Gitalk 评论 start  -->
 
 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">

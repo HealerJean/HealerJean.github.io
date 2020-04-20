@@ -9,21 +9,19 @@ category:
 - SpringBoot
 description: springBoot集成Quartz数据库持久化
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
--->
+**前言**     
 
-## 前言
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)          
 
 
-  有时候，我们会将任务放到数据库中，等我们需要的是，自动从前台进行点击，然后开始执行任务。那么这个时候，就用到quartz。可以从数据库中直接读取，然后执行。非常的方便，可以说nice。
-  
-  比如多点科技的试客任务，用户可以确定从几点到几点开始投放app，那么这里也可以用到，从几点开始到几点执行，无非就是加两条任务。一条是开始执行，一条是终止任务。
-  
-  
-springBoot集成Quartz数据库持久化
+
+  有时候，我们会将任务放到数据库中，等我们需要的是，自动从前台进行点击，然后开始执行任务。那么这个时候，就用到quartz。可以从数据库中直接读取，然后执行。非常的方便，可以说nice。    
+
+  比如多点科技的试客任务，用户可以确定从几点到几点开始投放app，那么这里也可以用到，从几点开始到几点执行，无非就是加两条任务。一条是开始执行，一条是终止任务。   
+
+springBoot集成Quartz数据库持久化   
 
 那么首先，持久化，不是说我们将任务放到表里取出，就算持久化了，持久化，其实可以这样任务，我们上面说的只是方法的书写，也就是逻辑，真正持久化，应该是如果我们中间断掉服务器。任务还在为我们保存。并且在启动服务器之后可以自动执行
 
@@ -782,12 +780,8 @@ public class QuartzController {
 
 
 
-<br/><br/><br/>
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
 
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

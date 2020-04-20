@@ -7,13 +7,13 @@ category:
 - Mac
 description: mac上如何安装多个版本的jdk以及卸载jdk
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
--->
+**前言**     
 
-## 前言
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)           
+
+
 
 ### 1、直接安装
 ####  dmp包直接安装两个版本的jdk，比如我这里安装的`1.8.0_181` 、`10.0.2`。
@@ -84,13 +84,8 @@ sudo rm -rf /Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk
 ```
 
 
-<font color="red"> 感兴趣的，欢迎添加博主微信， </font>哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备备注您的微信或者其他联系方式。添加博主微信哦。
-<br/>
-请下方留言吧。可与博主自由讨论哦
 
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

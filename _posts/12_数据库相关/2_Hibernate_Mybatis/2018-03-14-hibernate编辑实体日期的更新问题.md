@@ -7,22 +7,26 @@ category:
 - Database
 description: hibernate编辑实体日期的修改问题
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
+**前言**     
 
-<font color="red"></font>
--->
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
-**前言**
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)            
+
+
 
 对于刚刚接触hibernate的开发者来说，它确实是一个伟大的东西，但如果针对修改不太明白的话，那确实挺伤的。首先修改是根据id查找到实体。然后和保存一样，也是用save进行存储。
 
-针对一些cdate创建日期，udate更新日期。我们希望创建日期只在添加是实体的时候创建，但是修改实体的时候cdate不发生改变，但是udate是在每次更新实体的时候改变，包括添加实体的时候。
+针对一些cdate创建日期，udate更新日期。我们希望创建日期只在添加是实体的时候创建，但是修改实体的时候cdate不发生改变，但是udate是在每次更新实体的时候改变，包括添加实体的时候。  
 
-好了废话，不多说。开始吧！！！
 
-再多说一句，下文分析两种开发情况展开的，一种是维护，一种是从头开发。
-从头开始我这里的意思是根据hibernate实体类进行映射到数据库，然后自动生成表。
+
+好了废话，不多说。开始吧！！！   
+
+再多说一句，下文分析两种开发情况展开的，一种是维护，一种是从头开发。   
+
+从头开始我这里的意思是根据hibernate实体类进行映射到数据库，然后自动生成表。   
+
 而我这里的维护是指，不能通过hibernate实体对象来创建表，只能通过sql填写。这两种所用到的注解可能稍微有点不一样的哦
 
 ## 1、从头开始开发，hibernate映射数据表
@@ -52,8 +56,9 @@ private Date cdate;
 
 <font color="red" >正常情况下的更新，其实都是将id查找出来</font>，然后通过前台传来的值赋值给它，然后才能更新。这种情况用上面的注解完全没有任何问题。
 
+但是还有一种情况就是更新和添加用到同一个方法，而且传到后台的参数也是一样的（<font color="red" > **除了udae更新和cdate创建日期，我这里因为前段变成了时间戳，没有必要传到后台**</font>）。而且更新的时候将id也传了过来。我们这个时候不通过id查询实体(因为查找数据库浪费时间)，而是直接将这些参数组装成一个实体。然后save。这个时候，问题来了。udate很正常，没有问题。但是cdate这个时候就会变成空，    
 
-但是还有一种情况就是更新和添加用到同一个方法，而且传到后台的参数也是一样的（<font color="red" > **除了udae更新和cdate创建日期，我这里因为前段变成了时间戳，没有必要传到后台**</font>）。而且更新的时候将id也传了过来。我们这个时候不通过id查询实体(因为查找数据库浪费时间)，而是直接将这些参数组装成一个实体。然后save。这个时候，问题来了。udate很正常，没有问题。但是cdate这个时候就会变成空，
+
 
 关于cdate，如下图。可以这样理解，这个注解只是观察是否是第一次创建，在插入数据的的时候数据中该字段是否有值，如果是第一次创建，那么好了，我给你插入当前的时间，如果不是第一次创建，并且传来的值是空的，那么好了，我他妈生气了，给你个空吧，所以这种情况下@CreationTimestamp的就不可以使用了。如果不是第一次创建，也就是更新操作，那么传来如果cdate字段有值，可以理解为不发生变化。就和替换了一样
 
@@ -117,12 +122,8 @@ private Date cdate;
 ```
 
 
-<br/><br/><br/>
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
 
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

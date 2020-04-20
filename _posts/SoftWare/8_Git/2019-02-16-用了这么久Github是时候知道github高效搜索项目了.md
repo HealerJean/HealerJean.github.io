@@ -7,28 +7,21 @@ category:
 - Git
 description: 用了这么久Github是时候知道github高效搜索项目了
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
+**前言**     
 
-<font  color="red" size="4">   </font>
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
-
-<font size="4">   </font>
--->
-
-## 前言
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)           
 
 
-2019年的github的一声巨雷，<font  color="red" size="4">  个人可以免费创建私有仓库了 </font>，哎，为了省点银子，博主还专门去码云上建立私有仓库来放自己的每天的日记。两边操作，现在终于可以都放到github上来的。<br/>
 
-但是，这种权限是有限制的哦<br/>
-<font color="red"> 
-GitHub Free now includes unlimited private repositories. For the first time, developers can use GitHub for their private projects with up to three collaborators per repository for free. Many developers want to use private repos to apply for a job, work on a side project, or try something out in private before releasing it publicly. Starting today, those scenarios, and many more, are possible on GitHub at no cost. Public repositories are still free (of course—no changes there) and include unlimited collaborators.<br/>
+2019年的github的一声巨雷，<font  color="red" size="4">  个人可以免费创建私有仓库了 </font>，哎，为了省点银子，博主还专门去码云上建立私有仓库来放自己的每天的日记。两边操作，现在终于可以都放到github上来的。   
 
-个人可以免费创建私有仓库，数量无限制，不过有一个限制就是，免费的私有仓库同时最多只能有三个协作者<br/>
-</font>
+但是，这种权限是有限制的哦      
+
+GitHub Free now includes unlimited private repositories. For the first time, developers can use GitHub for their private projects with up to three collaborators per repository for free. Many developers want to use private repos to apply for a job, work on a side project, or try something out in private before releasing it publicly. Starting today, those scenarios, and many more, are possible on GitHub at no cost. Public repositories are still free (of course—no changes there) and include unlimited collaborators.   
+
+个人可以免费创建私有仓库，数量无限制，不过有一个限制就是，免费的私有仓库同时最多只能有三个协作者
 
 ## 回归正题
 
@@ -112,17 +105,7 @@ GitHub Free now includes unlimited private repositories. For the first time, dev
 
 ![WX20190216-133953@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20190216-133953@2x.png)
 
-
-
-<br/><br/><br/>
-<font color="red"> 感兴趣的，欢迎添加博主微信， </font><br/>
-哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。
-<br/>
-请下方留言吧。可与博主自由讨论哦
-
-|微信 | 微信公众号|支付宝|
-|:-------:|:-------:|:------:|
-| ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) |
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

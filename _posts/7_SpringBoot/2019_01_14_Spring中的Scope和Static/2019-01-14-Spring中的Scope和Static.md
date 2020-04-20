@@ -7,25 +7,19 @@ category:
 - SpringBoot
 description: spring中的scope和static
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
+**前言**     
 
-<font  color="red" size="4">   </font>
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
-
-<font size="4">   </font>
--->
-
-## 前言
-
-scope的作用域。默认是单例模式，即scope="singleton"。另外scope还有prototype、request、session、global session作用域。scope="prototype"多例。再配置bean的作用域时，它的头文件形式如下：
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)             
 
 
-#### 1、 在spring2.0之前bean只有2种作用域即：singleton(单例)、non-singleton（也称 prototype）
 
-#### 2、Spring2.0以后，增加了session、request、global session三种专用于Web应用程序上下文的Bean。因此，默认情况下Spring2.0现在有五种类型的Bean。当然，Spring2.0对 Bean的类型的设计进行了重构，并设计出灵活的Bean类型支持，理论上可以有无数多种类型的Bean，用户可以根据自己的需要，增加新的Bean类 型，满足实际应用需求。
+scope的作用域。默认是单例模式，即scope="singleton"。另外scope还有prototype、request、session、global session作用域。scope="prototype"多例。再配置bean的作用域时，它的头文件形式如下：    
+
+1、 在spring2.0之前bean只有2种作用域即：singleton(单例)、non-singleton（也称 prototype）   
+
+2、Spring2.0以后，增加了session、request、global session三种专用于Web应用程序上下文的Bean。因此，默认情况下Spring2.0现在有五种类型的Bean。当然，Spring2.0对 Bean的类型的设计进行了重构，并设计出灵活的Bean类型支持，理论上可以有无数多种类型的Bean，用户可以根据自己的需要，增加新的Bean类 型，满足实际应用需求。
 
 
 
@@ -48,16 +42,16 @@ scope的作用域。默认是单例模式，即scope="singleton"。另外scope�
 
 
  </font>
- 
+
  默认情况下，从bean工厂所取得的实例为Singleton（bean的singleton属性） Singleton: spring容器只存在一个共享的bean实例，
  Prototype: 每次对bean的请求都会创建一个新的bean实例。二者选择的原则：有状态的bean都使用Prototype作用域 ，而对无状态的bean则应该使用singleton作用域。
 
- 
+
 ## 1、测试
 
  最佳实践：定义一个非静态成员变量时候，则通过注解@Scope("prototype")，将其设置为多例模式(每次都会重新new一个)。
 
- 
+
 ```java
 
 @RestController
@@ -267,14 +261,10 @@ public class StaticController {
 
 ```
 
-<font color="red"> 感兴趣的，欢迎添加博主微信， </font><br/>
-哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。
-<br/>
-请下方留言吧。可与博主自由讨论哦
 
-|微信 | 微信公众号|支付宝|
-|:-------:|:-------:|:------:|
-| ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) |
+
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
+
 
 
 

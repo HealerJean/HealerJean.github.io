@@ -7,13 +7,13 @@ category:
 - Java
 description: Java8之Stream
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
+**前言**     
 
--->
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
-## 前言
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)             
+
+
 
 对我而言，为什么要引入stream，傻子都知道，不好用，还引入干什么for 循环遍历不太好，for循环是形式,\for循环不是进行过滤的必要手段，这里使用stream进行过滤更高效  
 
@@ -1133,11 +1133,7 @@ List<Person> unique = persons.stream().collect(
 
 ​    
 
-如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，添加博主微信哦， 请下方留言吧。可与博主自由讨论哦
-
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)  
 
 
 
