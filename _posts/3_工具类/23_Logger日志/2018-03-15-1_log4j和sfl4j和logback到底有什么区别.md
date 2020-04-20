@@ -7,13 +7,11 @@ category:
 - Log
 description: log4j和sfl4j和lobback到底有什么区别
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
+**前言**     
 
-<font color="red"></font>
--->
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
-## 前言
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)       
 
 首先我要说的是，我公司用的是logback，并且将日志输出到额graylog中
 
@@ -162,12 +160,11 @@ logback-dev.xml
 
 
 
-<br/><br/><br/>
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
 
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+
+   
+
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

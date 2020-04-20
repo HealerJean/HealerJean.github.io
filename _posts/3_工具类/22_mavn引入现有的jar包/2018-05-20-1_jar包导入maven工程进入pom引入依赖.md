@@ -7,13 +7,11 @@ category:
 - Maven
 description: jar包导入maven工程进入pom引入依赖
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
--->
+**前言**     
 
-## 前言
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)      
 
 这篇其实在我最开始接触maven的时候，就该写了，后来一直没怎么用到，所以就没写，现在好了，正好项目中使用到了这个功能，好吧，我就将它写到了这里。<br/>
 
@@ -27,7 +25,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 ![WX20180606-175209@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180606-175209@2x.png)
 
- 
+
 ### 1.1、第一步修改名字，
 
 >主要是为了方便我们区分，其实名字可以随意指定的，但是最好加个版本号，也不要像下面这样版本号太大
@@ -74,13 +72,7 @@ mvn install:install-file -Dfile=taobao-sdk-java-5.2.1.jar -DgroupId=taobao-sdk-j
 
 
 
-
-<br/><br/><br/>
-如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，添加博主微信哦， 请下方留言吧。可与博主自由讨论哦
-
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 
