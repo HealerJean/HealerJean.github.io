@@ -7,13 +7,13 @@ category:
 - Quartz
 description: SpringBoot集成Quartz
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
--->
+**前言**     
 
-## 前言
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)          
+
+
 
 
 有时候需要实现动态定时任务，即工程启动后，可以实现启动和关闭任务，同时也可以设置定时计划。这就需要利用到quartz
@@ -27,7 +27,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 
 
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -94,7 +94,7 @@ https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/b
 ### 1.2、resource下创建配置文件quartz.properties
 
 
-```
+```properties
 #配置线程池的容量，即表示同时最多可运行的线程数量
 org.quartz.threadPool.threadCount = 20
 org.quartz.scheduler.skipUpdateCheck = true
@@ -118,7 +118,7 @@ org.quartz.jobStore.class = org.quartz.simpl.RAMJobStore
 
 
 
-```
+```java
 package com.hlj.quartz.quartz.Job;
 import java.util.Date;
 import org.quartz.Job;
@@ -143,13 +143,13 @@ public class HelloJobOne implements Job{
 ```
 
 
-### 1.4、service中开始调用执行这个job
+### 1.4、Service中开始调用执行这个job
 
 
 #### 解释:  
 #### 1、其实配置文件中配置的，也就是我们可以在下面使用的定时器了，也就是获取实例
 
-```
+```java
 Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
 ```
 #### 2、定时器有了，下一步就是获取上面的任务，也就是获取工作详情
@@ -233,7 +233,7 @@ public String haveProperties() throws InterruptedException, SchedulerException {
 
 
 
-```
+```java
 /**
  * @Description
  * @Author HealerJean
@@ -432,7 +432,7 @@ public class QuartzService {
 ### 2.4、controller控制执行，注意观察控制台
 
 
-```
+```java
 package com.hlj.quartz.controller;
 
 import com.hlj.quartz.quartz.Job.HelloJoTwo;
@@ -499,9 +499,9 @@ public class QuartzController {
         return "关闭定时器，则所有任务不能执行和创建";
     }
 
-
-
 ```
+
+
 
 ### 2.5、日期的匹配规则
 
@@ -603,15 +603,7 @@ public class QuartzController {
 
 ## [代码下载](https://gitee.com/HealerJean/CodeDownLoad/tree/master/2017_03_22_2_springBoot%E9%9B%86%E6%88%90Quartz)
 
-
-
-
-<br/><br/><br/>
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
-
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

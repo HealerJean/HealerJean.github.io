@@ -7,23 +7,13 @@ category:
 - Database
 description: Hibernate缓存
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
+**前言**     
+
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)            
 
 
-<font  clalss="healerColor" color="red" size="5" >     
-
-</font>
-
-<font  clalss="healerSize"  size="5" >     </font>
-
--->
-
-## 前言
-
-#### [博主github](https://github.com/HealerJean)
-#### [博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)    
 
 
 ## 1、hibernate get/load
@@ -40,8 +30,10 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 #### 1.2.1、若为true
 
-1、先在Session缓存中查找，看看该id对应的对象是否存在    
-2、不存在则使用延迟加载，返回实体的代理类对象(该代理类为实体类的子类，由CGLIB动态生成)。    
+1、先在Session缓存中查找，看看该id对应的对象是否存在       
+
+2、不存在则使用延迟加载，返回实体的代理类对象(该代理类为实体类的子类，由CGLIB动态生成)。      
+
 3、等到具体使用该对象(除获取OID以外)的时候，再查询二级缓存和数据库，若仍没发现符合条件的记录，则会抛出一个ObjectNotFoundException。
 
 #### 1.2.2、若为false
@@ -1306,18 +1298,8 @@ Hibernate: update demo_entity set age=?, name=?, udate=? where id=?
 ```
 
 
-<br><br>    
-<font  color="red" size="5" >     
-感兴趣的，欢迎添加博主微信
- </font>
-<br>
-哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。    
 
-请下方留言吧。可与博主自由讨论哦
-
-|微信 | 微信公众号|支付宝|
-|:-------:|:-------:|:------:|
-| ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) |
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

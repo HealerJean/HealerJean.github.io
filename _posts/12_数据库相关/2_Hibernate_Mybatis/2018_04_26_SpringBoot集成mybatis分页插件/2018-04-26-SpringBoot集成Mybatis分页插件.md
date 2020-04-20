@@ -1,4 +1,4 @@
-###### ---
+---
 title: 2、springBoot集成mybatis分页插件PageHelper
 date: 2018-04-26 12:33:00
 tags: 
@@ -9,13 +9,13 @@ category:
 - Mybatis
 description: springBoot集成mybatis分页插件PageHelper
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
--->
+**前言**     
 
-## 前言
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)           
+
+
 
 <font color="red"> PageHelper是一款非常好用的分页插件，它和Mybatis工作在一起，可以大幅提升开发效率。PageHelper是通过Mybatis的拦截器插件原理实现的。 </font>
 
@@ -208,12 +208,7 @@ public PageInfo<TVideoCategoryTagVO> getCategoryTagList(Map<String,Object> query
 
 
 
-<br/><br/><br/>
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
-
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg) 
 
 
 

@@ -7,9 +7,14 @@ category:
 - CAS
 description: 重新开始认识Cas-通过maven和骨架来搭建cas服务器
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
--->
+**前言**     
+
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)             
+
+
+
 ## 1、新建一个maven总司令，注意修改成pom的，因为默认是jar的。总司令一定是pom
 
 ![QQ20180310-221810@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/QQ20180310-221810@2x.png)
@@ -364,11 +369,8 @@ cas.authn.accept.users=casuser::Mellon
 ## 3、[源码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018-03-10-%E9%87%8D%E6%96%B0%E5%BC%80%E5%A7%8B%E8%AE%A4%E8%AF%86Cas-%E9%80%9A%E8%BF%87maven%E5%92%8C%E9%AA%A8%E6%9E%B6%E6%9D%A5%E6%90%AD%E5%BB%BAcas%E6%9C%8D%E5%8A%A1%E5%99%A8/com-hlj-cas.zip)
 
 
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
 
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

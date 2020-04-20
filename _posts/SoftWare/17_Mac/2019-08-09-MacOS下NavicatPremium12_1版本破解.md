@@ -8,6 +8,12 @@ category:
 description: MacOS 下 Navicat Premium 12.1 版本破解
 ---
 
+**前言**     
+
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)          
+
 
 
 

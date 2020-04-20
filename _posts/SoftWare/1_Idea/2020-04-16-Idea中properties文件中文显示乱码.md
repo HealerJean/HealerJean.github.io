@@ -10,12 +10,11 @@ description: Idea中properties文件中文显示乱码
 
 
 
-
 **前言**     
 
  Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
- 博客：[http://blog.healerjean.com](http://HealerJean.github.io)    
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)           
 
 
 
@@ -39,22 +38,7 @@ Java文件的话，可以直接点右下角的那个编码格式，选择自己�
 
 
 
-
-
-
-  **<font  color="red">感兴趣的，欢迎添加博主微信 </font>**       
-
-​    
-
-哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。    
-
-请下方留言吧。可与博主自由讨论哦   
-
-
-
-|微信 | 微信公众号|支付宝|
-|:-------:|:-------:|:------:|
-| ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) |
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

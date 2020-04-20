@@ -7,23 +7,19 @@ category:
 - CAS
 description: session问题和cas单点登录ticket
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
--->
+**前言**     
 
-## 前言
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
-1、博主这个礼拜很难受，公司没什么活干，礼拜三说要做一个微信小程序，所以马上看了下微信小程序怎么做。学了点皮毛，但是够用了。
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)               
 
----
 
----
 
-2、之前做过一个Nginx，Tomcat，session共享，当时用了的是一个域名，也就是常见的localhost，当时没有考虑过一个域名下的session是不是同一个，但是按照教程做完了。通过配置tomcat和项目，最后得到是一个sessionId。其实现在我才知道，如果没有配置共享session，本来一个localhost，不同端口，如果开启项目的话，每次刷新不同的端口项目，session变了。那是因为当前的端口将之前的端口的sessionId被替换掉了。但是之前的端口的sessionId再刷新的话，就又会变了。
+1、博主这个礼拜很难受，公司没什么活干，礼拜三说要做一个微信小程序，所以马上看了下微信小程序怎么做。学了点皮毛，但是够用了。     
 
----
+2、之前做过一个Nginx，Tomcat，session共享，当时用了的是一个域名，也就是常见的localhost，当时没有考虑过一个域名下的session是不是同一个，但是按照教程做完了。通过配置tomcat和项目，最后得到是一个sessionId。其实现在我才知道，如果没有配置共享session，本来一个localhost，不同端口，如果开启项目的话，每次刷新不同的端口项目，session变了。那是因为当前的端口将之前的端口的sessionId被替换掉了。但是之前的端口的sessionId再刷新的话，就又会变了。   
 
-4、接着说sso，我还是用了同一个localhost，发现，单点是可以登录，但是只能登录一个客户端。这就偶是3中强调的一个域名session是同一个，如果登录另外一个。通过sso就会将之前的session给干掉。只留下当前登录的那个客户端。我这里用的是sso使用的是ticket验证，不可以共用一个sessionId的。所以请看下面的第一个
+3、接着说sso，我还是用了同一个localhost，发现，单点是可以登录，但是只能登录一个客户端。这就偶是3中强调的一个域名session是同一个，如果登录另外一个。通过sso就会将之前的session给干掉。只留下当前登录的那个客户端。我这里用的是sso使用的是ticket验证，不可以共用一个sessionId的。所以请看下面的第一个
 
 
 ## 1、一个域名下两个不同端口的项目，session不能同时存在
@@ -32,13 +28,17 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 ## 2、得到不同的sesion
 
-基于cookie区分路径、域名、名称，有三个解决方案。
-1、设置域名不同，比如 
-http://projectA.com:7777/ 
-http://projectB.com:8080/
+基于cookie区分路径、域名、名称，有三个解决方案。    
 
-2、设置路径不同，设置工程名字，不再映射根路径，比如 
- http://ip1:7777/projectA  http://ip1:8080/projectB
+1、设置域名不同，比如     
+
+http://projectA.com:7777/     
+
+http://projectB.com:8080/    
+
+2、设置路径不同，设置工程名字，不再映射根路径，比如     
+
+ http://ip1:7777/projectA  http://ip1:8080/projectB     
 
 3、设置key不同  在Tomcat的server.xml中配置sessionCookieName，只要两个不相同就可以  Tomcat server.xml context配置
 
@@ -61,14 +61,14 @@ http://projectB.com:8080/
   </Service>
 ```
 
----
----
 
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
 
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+
+
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
+
+
+
 <!-- Gitalk 评论 start  -->
 
 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">

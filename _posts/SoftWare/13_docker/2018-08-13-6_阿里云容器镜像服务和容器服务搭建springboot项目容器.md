@@ -7,13 +7,13 @@ category:
 - Docker
 description: 阿里云容器镜像服务和容器服务搭建springboot项目容器
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
--->
+**前言**     
 
-## 前言
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)           
+
+
 
 
 ### 1、开通阿里云容器镜像服务
@@ -425,7 +425,7 @@ server-dev:
   kernel_memory: 0
   mem_limit: 0
 ```
- 
+
 #### 2.1、复制-可以直接 创建编排（未删减版）
 
 ![WX20180824-190622@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180824-190622@2x.png)
@@ -496,12 +496,8 @@ duodian-node2-8082:
 ```
 
 
-<br/><br/><br/>
-如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，添加博主微信哦， 请下方留言吧。可与博主自由讨论哦
 
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

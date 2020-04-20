@@ -7,9 +7,13 @@ category:
 - Mac
 description: Mac_Windos互传文件
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
--->
+**前言**     
+
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)           
+
+
 
 ## 各自下载软件 `Dukto`
 #### 1、ma下载地址[（点击直接下载）](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/software/Dukto/mac/Dukto.zip)
@@ -19,11 +23,10 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 ![WX20180306-211612@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180306-211612@2x.png)
 
 
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
 
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+
+
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

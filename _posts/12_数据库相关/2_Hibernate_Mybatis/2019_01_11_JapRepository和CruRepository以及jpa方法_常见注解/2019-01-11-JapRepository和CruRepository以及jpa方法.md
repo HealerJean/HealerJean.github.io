@@ -7,18 +7,13 @@ category:
 - Database
 description: JapRepository和CruRepository以及jpa方法
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
+**前言**     
 
-<font  color="red" size="4">   </font>
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)            
 
 
-<font size="4">   </font>
--->
-
-## 前言
 
 用了这么久springboot springdata jpa了，是时候简单总结一下下了
 
@@ -198,12 +193,11 @@ RspDemoModel findDtoModel(@Param("id") Long id) ;
 
 ## 3、getOne和上面的findOne区别
 
-使用中get和上面的find在Jpa方法中没什么区别的，比如：getByNameContaining也就是说可以用下吗的get去替代上面的find<br/>
+使用中get和上面的find在Jpa方法中没什么区别的，比如：getByNameContaining也就是说可以用下吗的get去替代上面的find     
 
 但是如果是getOne和findOne就会有一些问题
 
-<font  color="red" size="4">  
-findOne()是返回的是一个实体对象，查不到的时候会返回null。
+<font  color="red" size="4">  findOne()是返回的是一个实体对象，查不到的时候会返回null。
 getOne()是返回的一个对象的引用，也是是代理对象，查不到会抛异常。
  </font>
 
@@ -352,7 +346,7 @@ type分别为jpa和cur
 
 
 
-``` 
+```
 
 原因：
 Jason转换失败（直接返回前端会造成）,不是没有 implements Serializable 的原因
@@ -378,21 +372,7 @@ Jason转换失败（直接返回前端会造成）,不是没有 implements Seria
 
 
 
-
-
-
-
-
-<br/><br/><br/>
-<font color="red"> 感兴趣的，欢迎添加博主微信， </font><br/>
-哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。
-<br/>
-请下方留言吧。可与博主自由讨论哦
-
-|微信 | 微信公众号|支付宝|
-|:-------:|:-------:|:------:|
-| ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) |
-
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

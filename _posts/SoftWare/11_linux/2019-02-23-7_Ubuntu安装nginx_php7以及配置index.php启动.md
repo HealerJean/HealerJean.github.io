@@ -7,18 +7,13 @@ category:
 - Linux
 description: Ubuntu安装nginx_php7以及配置index.php启动
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
+**前言**     
 
-<font  color="red" size="4">   </font>
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)           
 
 
-<font size="4">   </font>
--->
-
-## 前言
 
 上午接到一个活，要安装一个index.php，关于php，基本语法在大学的时候学习了2个礼拜。觉得php很简单的，当时本地环境用的额是apache，所以本来也想在公司的服务器上安装apache来配置启动，后来想想还是算了，已经有了nginx就用nginx吧。那么下面就是Ubuntu安装的过程了，很简答的哦
 
@@ -129,13 +124,21 @@ tcp        0      0 127.0.0.1:9000          0.0.0.0:*               LISTEN      
 
 关于出现下面问题的解决方法
 
-![https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages20190328165623.png](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages20190328165623.png)
+![https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages20190328165623.png](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/20190328165623.png)
 
-cms 版本：11
-php 版本：7.0.33-0ubuntu0.16.04.2
-curl 未开启,请先开启curl扩展，否则无法运行,请联系您的空间或者服务器提供商
-mbstring 未开启,请先开启mbstring扩展，否则无法运行
-cache 无效,请先设置目录读写权限,请联系您的空间或者服务器提供商
+cms 版本：11  
+
+php 版本：7.0.33-0ubuntu0.16.04.2  
+
+curl 未开启,请先开启curl扩展，否则无法运行,请联系您的空间或者服务器提供商  
+
+mbstring 未开启,请先开启mbstring扩展，否则无法运行  
+
+cache 无效,请先设置目录读写权限,请联系您的空间或者服务器提供商  
+
+
+
+
 
 
 apt-cache search curl，等具体看版本
@@ -147,15 +150,8 @@ apt-get install php7.0-cache
 
 
 
-<br/><br/><br/>
-<font color="red" size="5"> 感兴趣的，欢迎添加博主微信， </font><br/>
-哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。
-<br/>
-请下方留言吧。可与博主自由讨论哦
 
-|微信 | 微信公众号|支付宝|
-|:-------:|:-------:|:------:|
-| ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) |
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

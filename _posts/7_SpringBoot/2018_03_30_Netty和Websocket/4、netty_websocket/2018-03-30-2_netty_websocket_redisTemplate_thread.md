@@ -11,13 +11,13 @@ category:
 - Cache
 description: netty_websocket_redisTemplate_thread
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
--->
+**前言**     
 
-## 前言
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)             
+
+
 
 
 兄弟们，只想说，这一篇很重要，博主一开始也不是特别理解。如果说回了这个，我觉得你已经可以成为一个真正的程序员了
@@ -400,12 +400,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 ## [代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_30_2_netty_websocket_redisTemplate_thread/com-hlj-netty-websocket-thread-redis.zip)
 
 
-<br/><br/><br/>
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
 
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

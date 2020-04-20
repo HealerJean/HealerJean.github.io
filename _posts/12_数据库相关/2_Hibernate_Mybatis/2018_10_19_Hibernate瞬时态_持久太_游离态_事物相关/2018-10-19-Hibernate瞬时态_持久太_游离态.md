@@ -8,18 +8,13 @@ category:
 - Database
 description: Hibernate瞬时态_持久太_游离态
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
+**前言**     
 
-<font  color="red" size="4">   </font>
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)           
 
 
-<font size="4">   </font>
--->
-
-## 前言
 
 总结一个多年以前自己犯的错误，就是Hibernate持久化状态下，查出来的数据，只要set过修改过数据之后， 不用save也会自动更新.
 
@@ -64,7 +59,7 @@ demoEntityT.setBalance(12L); //会对上面的进行更新
   一个实体通过new操作符创建后，没有和Hibernate的Session建立关系，也没有手动赋值过该实体的持久化 标识(持久化标识可以认为是映射表的主键)。  此时该实体中任何属性的更新都不会反映到数据库表中。
 ### 2.持久化：
   当一个实体和Hibernate的Session创建了关系，并获取了持久化标识，而且在Hibernate的Session生命周期内 存在。  此时针对该实体任何属性的更改都会直接影响到数据库表中一条记录对应字段的更新，即与数据库表同步。
- 
+
 ### 3.脱管：
   当一个实体和Hibernate的Session创建了关系，并获取了持久化标识，而此时Hibernate的Session生命周期结 束，实体的持久化标识没有被改动过。  针对该实体任何属性的修改都不会及时反映到数据库表中。
 
@@ -307,15 +302,7 @@ public class DemoEntityServiceImpl implements DemoEntityService {
 
 
 
-<br/><br/><br/><br/>
-<font color="red"> 感兴趣的，欢迎添加博主微信， </font><br/>
-哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。
-<br/>
-请下方留言吧。可与博主自由讨论哦
-
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

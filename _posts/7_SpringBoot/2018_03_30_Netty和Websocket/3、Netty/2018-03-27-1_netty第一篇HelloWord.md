@@ -7,21 +7,18 @@ category:
 - Netty
 description: netty第一篇HelloWord之与服务器聊天
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
--->
+**前言**     
 
-## 前言
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
-#### [博主github](https://github.com/HealerJean)
-#### [博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)    
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)             
+
+
 
 
 　　Netty是一个异步通信、事件驱动基于NIO编写的高性能高并发的java网络编程框架。下面通过一个简单的服务器应答程序来完成Netty的初步学习。
 
-## 1、netty服务端 <br/>
+## 1、netty服务端
 
 ### 1.1、netty服务端启动类
 
@@ -304,7 +301,7 @@ public class HelloClientHandler extends SimpleChannelInboundHandler<String> {
 #### 3.2.2 、观察服务端
 
 1、服务端激活channelActive
- 
+
 
 ![WX20180327-164024](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180327-164024.png)
 
@@ -329,21 +326,9 @@ public class HelloClientHandler extends SimpleChannelInboundHandler<String> {
 
 ## [代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_30_1_netty%E5%92%8Cwebsock%E6%95%B4%E5%90%88/com-hlj-netty-websocket.zip)
 
-    
-     
-     
-<br><br>    
-<font  color="red" size="5" >     
-感兴趣的，欢迎添加博主微信
- </font>
-<br>
-哈，博主很乐意和各路好友交流，如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，备注您的微信或者其他联系方式。添加博主微信哦。    
+ 
 
-请下方留言吧。可与博主自由讨论哦
-
-|微信 | 微信公众号|支付宝|
-|:-------:|:-------:|:------:|
-| ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) |
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

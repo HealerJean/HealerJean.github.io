@@ -7,13 +7,13 @@ category:
 - Database
 description: Jave一次性读取Mysql几十万条大数据的处理
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
--->
+**前言**     
 
-## 前言
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)           
+
+
 
 不用说也知道，一次性读取出那么大的数据是疯了吗，虚拟机能承受的聊那么大的对象吗？，所以我们需要分批进行读取。
 
@@ -22,7 +22,7 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
               
 
 ## 1、传入总数和每多少进行分段 制作为map
- 
+
 ```java
 package com.duodian.youhui.admin.utils;
 
@@ -60,11 +60,11 @@ public class JavaHeapSpaceUtilsForCouponGood {
 
 
 ```
-     
- 
+
+
 ## 2、开始执行
- 
- 
+
+
 ```java
 package com.duodian.youhui.admin.moudle.xiaodang.impl;
 
@@ -132,14 +132,8 @@ public void keyTransferToXiaoDang(Long taobaoUserInfoId) {
 
 
 ```
-              
 
-<br/><br/><br/>
-如果满意，请打赏博主任意金额，感兴趣的在微信转账的时候，添加博主微信哦， 请下方留言吧。可与博主自由讨论哦
-
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 

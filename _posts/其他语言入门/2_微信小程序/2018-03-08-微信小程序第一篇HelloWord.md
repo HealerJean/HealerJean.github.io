@@ -7,11 +7,13 @@ category:
 - WeChat
 description: 微信小程序第一篇HelloWord
 ---
-<!-- 
-1、替换图片image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-2、替换下面的gittalk id 随机数
--->
+**前言**     
+
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)           
+
+
 
 ## **准备工作**
 ### 1、注册微信公众号（小程序）
@@ -60,13 +62,9 @@ Page({
 <br/>
 ![WX20180308-133929@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180308-133929@2x.png)
 
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
-
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
 
 <!-- Gitalk 评论 start  -->
 
