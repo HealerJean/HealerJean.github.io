@@ -7,13 +7,12 @@ category:
 - Database
 description: 多数据源配置之Transactional注解不同的事务管理器控制
 ---
-<!-- image url 
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages
-　　首行缩进
-<font color="red">  </font>
--->
+**前言**     
 
-## 前言
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)      
+
 1、一定注意是maven项目，在添加mybatis的Resource中扫描classpath的过程中可能会报错，所以需要加入
 
 2、这里和我后面一章介绍的差不多，但是需要在使用中注意的是，我们的实体类，尽量不要放到一起，尽管可以使用。
@@ -468,14 +467,9 @@ public class TwoService {
 
 ## 7、[代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2019-04-19-20_1_%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E9%85%8D%E7%BD%AE%E4%B9%8BTransactional%E6%B3%A8%E8%A7%A3/com-hlj-many-datasource.zip)
 
+​    
 
-
-<br/><br/><br/>
-如果满意，请打赏博主任意金额，感兴趣的请下方留言吧。可与博主自由讨论哦
-
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
 
