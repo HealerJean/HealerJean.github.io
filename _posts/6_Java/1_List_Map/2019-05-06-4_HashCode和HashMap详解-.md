@@ -259,17 +259,30 @@ public static void calculateConflictRate(Integer multiplier, List<Integer> hashs
 
 （2）如果这个位置上已经有元素了，就调用它的equals方法与新元素进行比较，相同的话就不存了；     
 
-（3）不相同的话，也就是发生了Hash key相同导致冲突的情况，那么就在这个Hash key的地方产生一个链表，将所有产生相同HashCode的对象放到这个单链表上去，串在一起（很少出现）。这样一来实际调用equals方法的次数就大大降低了，几乎只需要一两次。 （下面1、的实例就为这里的测试实例）
+（3）不相同的话，也就是发生了Hash key相同导致冲突的情况，那么就在这个Hash key的地方产生一个链表，将所有产生相同HashCode的对象放到这个单链表上去，串在一起（很少出现）。这样一来实际调用**equals**方法的次数就大大降低了，几乎只需要一两次。 （下面1、的实例就为这里的测试实例）
 
  
 
+```java
+  @Test
+    public void test(){
+        Set<String> set = new HashSet<String>();
+        set.add("abc");
+        set.add(new String("abc"));
+        System.out.println(set.size()); //1
+
+
+        Map map = new HashMap();
+        map.put("abc", "ab");
+        map.put(new String("abc"), "ab");
+        System.out.println(map.size()); //1
+
+    }
+```
 
 
 
-
-
-
-### 1.3.4、Set测试
+### 1.3.4、Set测试(equals比较是否相等)
 
 #### 1.3.4.1、实例重写HashCode方法
 
@@ -651,7 +664,7 @@ public HashMap(Map<? extends K, ? extends V> m) {
 
 2、通过1中计算的hash值，和table的大小n-1进行与运算获得table数组的下标位置，如果这个位置为null的话，直接放进去，否则执行3  
 
-3、  数组当前位置有值了，判断当前数组节点的的hash值和传入的hash值是否相等，以及key和p的key是否完全一致（包括==和equals），如果完全一致，则返回旧的数据，放入新的数据，否则执行4/5，要形成链表或者红黑树了，  
+3、  数组当前位置有值了，**判断当前数组节点的的hash值和传入的hash值是否相等**，以及key和p的key是否完全一致（包括==和equals），如果完全一致，则返回旧的数据，放入新的数据，否则执行4/5，要形成链表或者红黑树了，  
 
 4、如果是红黑树节点，则调用红黑树的方法`putTreeVal`查找替换或者放入      
 
@@ -690,6 +703,7 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
         // table表该索引位置不为空，则进行查找
         Node<K,V> e; K k;
         // 3.判断p节点的key和hash值是否跟传入的相等，如果相等, 则p节点即为要查找的目标节点，将p节点赋值给e节点
+        // k = p.key) == key  一般情况是用来比较 key为 null的情况
         if (p.hash == hash && ((k = p.key) == key || (key != null && key.equals(k))))
             e = p;
         // 4.判断p节点是否为TreeNode, 如果是则调用红黑树的putTreeVal方法查找目标节点
