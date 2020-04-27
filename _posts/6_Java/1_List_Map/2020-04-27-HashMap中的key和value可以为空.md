@@ -36,7 +36,7 @@ description: HashMap中的key和value可以为空
 
 
 
-**value可以为空；   **
+**value可以为空；**
 
 > key都可以为空了，还在乎value吗，即使存在key，value为空怎么了。
 
