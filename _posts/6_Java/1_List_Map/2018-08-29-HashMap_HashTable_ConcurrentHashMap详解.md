@@ -520,6 +520,7 @@ public V put(K key, V value) {
 
 
 ```java
+
 /** Implementation for put and putIfAbsent */
 final V putVal(K key, V value, boolean onlyIfAbsent) {
     if (key == null || value == null) throw new NullPointerException();
@@ -531,7 +532,7 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
             tab = initTable();
         
   	
-         //如果table[i]==null说明当前位置没有值，则利用CAS操作直接存储在该位置，如果CAS操作成功则退出死循环。否则一直死循环执行
+         //如果table[i]==null说明当前位置没有值，则利用CAS操作直接存储在该位置，如果CAS操作成功则退出死循环。否则一直继续for死循环执行
         else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
             if (casTabAt(tab, i, null,
                          new Node<K,V>(hash, key, value, null)))
@@ -547,8 +548,8 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
                 if (tabAt(tab, i) == f) { ///避免多线程，重新检查一下
                     if (fh >= 0) {{ //当前数组位置节点的hash值 >= 0 表示 链表节点
                         binCount = 1;
-                        //面的代码就是先查找链表中是否出现了此key，如果出现，则更新value，并跳出循环，
-                            否则将节点加入到里阿尼报末尾并跳出循环
+                        //下面的代码就是先查找链表中是否出现了此key，如果出现，则更新value，并跳出循环，否则将节点加入到链表末尾并跳出循环
+                            
                         for (Node<K,V> e = f;; ++binCount) {
                             K ek;
                             if (e.hash == hash &&
