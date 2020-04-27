@@ -1,6 +1,6 @@
 ---
 title: 4、线程安全的AtomicLong不需要synchronize
-date: 2018-03-06 03:33:00
+date: 2019-04-27 03:33:00
 tags: 
 - Thread
 category: 
@@ -54,8 +54,10 @@ package com.hlj.thread.AtomicLong;
 ```
 
 ### 解释：
-1、控制台上不一定每次都能出现 counter = 1000
-2、在static上添加synchronize，则可以每次都能出现。
+1、控制台上不一定每次都能出现 counter = 1000    
+
+2、在static上添加synchronize，则可以每次都能出现。   
+
 3、但是我们不想用synchronize，所以就出现了下面的内容
 
 ## 2、线程安全的AtomicLong
