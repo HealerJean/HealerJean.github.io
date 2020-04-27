@@ -546,7 +546,7 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
             //hash值相同的链表的头节点上锁，（前面有执行过 f = tabAt(tab, i = (n - 1) & hash) ）  
             synchronized (f) {
                 if (tabAt(tab, i) == f) { ///避免多线程，重新检查一下
-                    if (fh >= 0) {{ //当前数组位置节点的hash值 >= 0 表示 链表节点
+                    if (fh >= 0) { //当前数组位置节点的hash值 >= 0 表示 链表节点
                         binCount = 1;
                         //下面的代码就是先查找链表中是否出现了此key，如果出现，则更新value，并跳出循环，否则将节点加入到链表末尾并跳出循环
                             
@@ -604,7 +604,9 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
 
 #### 2.5.1.2、`tabAt` ：获取索引位置的node节点   
 
-> 该方法用来获取 table 数组中索引为 i 的 Node 元素
+> 该方法用来获取 table 数组中索引为 i 的 Node 元素   
+> `tabAt`方法原子读取`table[i]`；调用Unsafe对象的`getObjectVolatile方`法获取`tab[i]`，由于对volatile写操作happen-before于volatile读操作，因此其他线程对table的修改均对get读取可见；
+((long)i << ASHIFT) + ABASE)计算i元素的地址
 
 ```java
   else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
@@ -617,8 +619,18 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
 
 
 
-
 ```java
+
+// 数组对象的起始 offset
+long ABASE = unsafe.arrayBaseOffset(Class)
+// 对象的每个元素的长度，（boolean 1, char 2, short 2, int 4, reference 4, float 4, double 8, long 8）
+int scale = unsafe.arrayIndexScale(Class)
+// 需要移动的位数,如果数组元素是 int类型，则ASHIFT 为 2，即元素的偏移量为 ABASE + (1 << ASHIFT) * i. 第一个元素为 ABASE + 4； 第二个元素的偏移量为 ABASE + 8
+int ASHIFT = 31 - Integer.numberOfLeadingZeros() 
+
+// 使用 unsafe 以原子化的形式读取数组的第 i 个元素
+
+
  static final <K,V> Node<K,V> tabAt(Node<K,V>[] tab, int i) {
         return (Node<K,V>)U.getObjectVolatile(tab, ((long)i << ASHIFT) + ABASE);
     }
@@ -626,9 +638,9 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
 
 
 
-#### 2.5.1.1、`casTabAt` ：当前数组位置放入节点         
+#### 2.5.1.1、`casTabAt` ：节点插入         
 
-> 利用 CAS 操作设置 table 数组中索引为 i 的元素，不论多个线程执行，我都会在当前节点放入数据，如果是替换的话，后面有会`synchronize`锁    
+> 利用 CAS 操作设置 table 数组中索引为 i 的元素，不论多个线程执行，我都会在当前节点放入数据，如果是更新的话，后面有会`synchronize`锁    
 
 
 
@@ -651,9 +663,11 @@ else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
 
 
 
-#### 2.5.1.3、`setTabAt`：替换节点，这一步操作之前已经上了`synchronize`锁了
+#### 2.5.1.3、`setTabAt`：节点更新
 
-> 这个是用来替换节点的值，表示之前位置上已经有值了，这个
+
+
+> 替换节点，这一步操作之前已经上了`synchronize`锁了,仅在synchronized同步块中被调用，更新键值对；
 
 ```java
     static final <K,V> void setTabAt(Node<K,V>[] tab, int i, Node<K,V> v) {
