@@ -1,11 +1,11 @@
 ---
-title: Synchronized
+title: synchronized
 date: 2020-04-24 03:33:00
 tags: 
 - Java
 category: 
 - Java
-description: Synchronized
+description: synchronized
 ---
 
 **前言**     
