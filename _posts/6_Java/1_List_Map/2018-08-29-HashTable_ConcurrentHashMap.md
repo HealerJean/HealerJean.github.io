@@ -1,11 +1,11 @@
 ---
-title: HashMap_HashTable_ConcurrentHashMap
+title: HashTable_ConcurrentHashMap
 date: 2018-11-27 03:33:00
 tags: 
 - Java
 category: 
 - Java
-description: Map详解
+description: HashTable_ConcurrentHashMap
 ---
 
 
@@ -642,8 +642,6 @@ int ASHIFT = 31 - Integer.numberOfLeadingZeros()
 
 > 利用 CAS 操作设置 table 数组中索引为 i 的元素，不论多个线程执行，我都会在当前节点放入数据，如果是更新的话，后面有会`synchronize`锁    
 
-
-
 ```java
 else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
     if (casTabAt(tab, i, null,
@@ -749,7 +747,11 @@ private final Node<K,V>[] initTable() {
 
 
 
-## 2.8、get()方法 
+## 2.8、get()方法  
+
+> 不上锁，所以ConcurrentHashMap不是强一致性的，因为val被volitale修饰，保证了可见性， 
+
+
 
 ```java
 //会发现源码中没有一处加了锁
