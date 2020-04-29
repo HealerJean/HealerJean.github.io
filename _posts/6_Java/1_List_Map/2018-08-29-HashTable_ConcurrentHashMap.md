@@ -663,8 +663,6 @@ else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
 
 #### 2.5.1.3、`setTabAt`：节点更新
 
-
-
 > 替换节点，这一步操作之前已经上了`synchronize`锁了,仅在synchronized同步块中被调用，更新键值对；
 
 ```java
