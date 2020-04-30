@@ -519,7 +519,9 @@ public V put(K key, V value) {
 
 2.2）说明table[i]的节点的hash值不等于MOVED，如果table[i]为链表节点，则将此节点插入链表中即可，如果table[i]为树节点，则将此节点插入树中即可 。插入成功后进行5    
 
-5、如果table[i]的节点是链表节点，则检查table的第i个位置的链表是否需要转化为数（满足2个条件，同hashmap），如果需要则调用`treeifyBin`函数进行转化
+5、如果table[i]的节点是链表节点，则检查table的第`i`个位置的链表是否需要转化为数（满足2个条件，同hashmap），如果需要则调用`treeifyBin`函数进行转化   
+
+6、看看是否需要扩容，如果需要则扩容
 
 
 
