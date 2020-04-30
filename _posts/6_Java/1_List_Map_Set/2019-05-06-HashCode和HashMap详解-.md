@@ -516,7 +516,7 @@ LinkedHashMap.Entry 在LinkedHashMap 类中
 
 
 
-### 2.1.3、类常亮以及解释  
+### 2.1.3、静态常亮
 
 
 
@@ -533,7 +533,7 @@ static final int MAXIMUM_CAPACITY = 1 << 30;
 //只有hash桶桶的数量  大于 64 才会发生链表树化。64在承受范围之内，不需要转化，因为转化是会消耗时间的
 static final int MIN_TREEIFY_CAPACITY = 64;
 
-//链表长度大于 8 时，并且桶的数量大于等于 MIN_TREEIFY_CAPACITY 64时，链表树化 
+//链表长度大于 8 时，并且桶的数量大于等于 MIN_TREEIFY_CAPACITY 64时，链表树化（否则如果只是 长度大于8，但是桶的长度小于的时候，则扩容） 
 static final int TREEIFY_THRESHOLD = 8;
 
 //在哈希表扩容时,如果发现链表长度小于6,则会由树重新退化为链表，不是上面的8了，给了一个缓冲的余地
@@ -671,6 +671,10 @@ public HashMap(Map<? extends K, ? extends V> m) {
 5、 如果是链表节点， 则调用方法`newNode`遍历链表，如果key相同则替换，当找不到目标节点的时候，则插入链表尾部，**然后，当链表的节点大于8 并且hash桶的长度大于64的时候会进行链表树化。变成红黑树**。
 
 6、最后，以上操作如果触发了扩容机制，则会扩容   
+
+
+
+![1588223117169](D:\study\HealerJean.github.io\blogImages\1588223117169.png)
 
 
 
@@ -1299,31 +1303,39 @@ final Node<K,V>[] resize() {
     Node<K,V>[] oldTab = table;
     int oldCap = (oldTab == null) ? 0 : oldTab.length;
     int oldThr = threshold;
+   //新的容量值，新的扩容阀界值
     int newCap, newThr = 0;
-    // 1.如果旧hash桶不为空
+    // 如果旧hash桶不为空，说明是扩容
     if (oldCap > 0) {
         
-// 1.1 判断hash桶是否超过最大容量值：如果超过则将阈值设置为Integer.MAX_VALUE(2的30次幂)，并直接返回老表,
+		//如果此时oldCap>=MAXIMUM_CAPACITY(1 << 30)，表示已经到了最大容量，这时还要往map中放数据，则阈值设置为整数的最大值 Integer.MAX_VALUE，直接返回这个oldTab的内存地址。 
         if (oldCap >= MAXIMUM_CAPACITY) {
             threshold = Integer.MAX_VALUE;
             return oldTab;
         }
-        // 1.2 将新的桶长度赋值为旧桶长度的2倍，
-         //这时新的桶长度<最大容量Integer.MAX_VALUE(2的30次幂) ，并且旧桶长度>=初始的桶长度DEFAULT_INITIAL_CAPACITY（16）, 则将新阈值设置为原来的两倍
+        // 将旧容量值<<1(相当于*2)赋值给 newCap
+         //这时新的桶长度 newCap <最大容量Integer.MAX_VALUE(2的30次幂) 如果等于或者大于的话，下面有一个代码会执行 ，并且旧桶长度>=初始的桶长度DEFAULT_INITIAL_CAPACITY（16），如果能进来证明此map是扩容而不是初始化
+          //操作：将原扩容阀界值<<1(相当于*2)赋值给 newThr，
         else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
                  oldCap >= DEFAULT_INITIAL_CAPACITY)
-            newThr = oldThr << 1; // double threshold
+                newThr = oldThr << 1; // double threshold
     }
-    // 2.如果旧桶为空, 旧桶的阈值大于0, 是因为HashMap初始构造器的时候放入了阈值，则将新表的容量设置为老表的阈值
+    
+           //进入此if证明创建map时用的带参构造：public HashMap(int initialCapacity)或 public HashMap(int initialCapacity, float loadFactor)
     else if (oldThr > 0)
         newCap = oldThr;
+   
+    // 进入此if证明创建map时用的无参构造： public HashMap( )
     else {
         //3.老表的容量为0, 老表的阈值为0，这种情况是HashMap初始构造器没有传初始容量的new方法创建的空表，将阈值和容量设置为默认值 ，新的阀值  = 容量*负载因子
         newCap = DEFAULT_INITIAL_CAPACITY;
         newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
     }
     
-    // 4.如果新表的阈值为0, 则通过新的容量*负载因子获得阈值
+    
+     //进入此if有两种可能
+    // 第一种：初始化，第一次put，说明是进入的有参数的,上面 “if (oldCap > 0) 初始化了newCap新桶容量，就等newThr新的阀值了
+    // 第二种：就是put元素的时候，要扩容，且旧容量小于oldCap 16 
     if (newThr == 0) {
         float ft = (float)newCap * loadFactor;
         newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
