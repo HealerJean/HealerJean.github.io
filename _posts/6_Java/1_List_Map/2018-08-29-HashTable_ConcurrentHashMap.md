@@ -34,8 +34,13 @@ description: HashTable_ConcurrentHashMap
 
 ![WX20181126-175036@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20181126-175036@2x.png)
 
-
 　
+
+## 1.2、Get取值
+
+> synchronize上锁，强一致性
+
+
 
 # 2、ConcurrentHashMap   
 
