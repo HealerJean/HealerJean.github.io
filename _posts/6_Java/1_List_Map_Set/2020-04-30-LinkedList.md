@@ -1,6 +1,6 @@
 ---
 title: LinkedList
-date: 2020-05-06 03:33:00
+date: 2020-04-30 03:33:00
 tags: 
 - Java
 category: 
@@ -50,6 +50,8 @@ public class LinkedList<E>
 
 
 
+
+
 ### 1.1.1、`Node<E>`
 
 ```java
@@ -72,7 +74,20 @@ private static class Node<E> {
 
 
 
-## 1.1、实例变量 
+## 1.2、构造器
+
+### 1.2.1、无参构造器 
+
+```java
+public LinkedList() {
+}
+```
+
+
+
+
+
+## 1.3、实例变量 
 
 ```java
 // 标识这个链表的长度，也就是元素的个数
@@ -89,7 +104,7 @@ transient Node<E> last;
 
 
 
-## 1.3、`add(E e) `
+## 1.4、`add(E e) `
 
 > 默认从链表的末尾添加数据      
 >
@@ -124,7 +139,7 @@ void linkLast(E e) {
 
 
 
-## 1.4、get 
+## 1.5、get 
 
 1、检查元素索引是否越界        
 
@@ -141,7 +156,7 @@ public E get(int index) {
 
 
 
-### 1.4.1、检查元素索引是否越界
+### 1.5.1、检查元素索引是否越界
 
 ```java
 
@@ -155,7 +170,7 @@ private boolean isElementIndex(int index) {
 }
 ```
 
-### 1.4.2、遍历链表，定位元素
+### 1.5.2、遍历链表，定位元素
 
 > 类似于2分法，距离链表头近，则从链表头`first节点`开始找，如果距离链表尾部近，则从链表尾部`last节点`开始找   
 
@@ -179,7 +194,7 @@ Node<E> node(int index) {
 
 
 
-## 1.5、`remove(int index)`
+## 1.6、`remove(int index)`
 
 1、`checkElementIndex(index)`检查元素索引是否越界    
 
@@ -231,7 +246,7 @@ E unlink(Node<E> x) {
 
 
 
-## 1.6、`set(int index, E element)`
+## 1.7、`set(int index, E element)`
 
 1、检查元素索引是否越界   
 
