@@ -101,7 +101,7 @@ public ArrayList(int initialCapacity) {
 
 
 
-## 1.4、add 、grow初始化和扩容  
+## 1.4、`add(E e)`、grow初始化和扩容  
 
 1、一进来就首先确保elementData数组有合适的大小，调用`ensureCapacityInternal(int minCapacity)`，`minCapacity`为数组最少需要的容量，也可以作为扩容阀值。执行2
 
@@ -214,7 +214,7 @@ private static int hugeCapacity(int minCapacity) {
 
 
 
-## 1.5、remove
+## 1.5、`remove(int index)`
 
 **1、判断是否索引位是否越界，数组移动元素**  
 
@@ -247,7 +247,7 @@ private void rangeCheck(int index) {
 }
 ```
 
-## 1.6、get 
+## 1.6、`get(int index)`
 
 > 检查是否越界，直接返回数组下标 
 
@@ -262,7 +262,7 @@ private void rangeCheck(int index) {
 
 
 
-## 1.7、set
+## 1.7、`set(int index, E e)`
 
 > 检查是否越界，替换然后返回替换的元素即可
 
