@@ -76,6 +76,8 @@ private int size;
 
 ### 1.3.1、无参构造器
 
+> 初始化一个空的数组
+
 ```java
 public ArrayList() {
 	this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
@@ -85,6 +87,8 @@ public ArrayList() {
 
 
 ### 1.3.2、指定大小的构造器
+
+> 如果指定了大小，则直接初始化
 
 ```java
 public ArrayList(int initialCapacity) {
@@ -180,9 +184,12 @@ private void grow(int minCapacity) {
     //如 10 + 5 = 15
     int newCapacity = oldCapacity + (oldCapacity >> 1);
 
-    //最少需要的容量比 新计算出来的容量还要打。我们这个时候要使用期望的最小容量作为新的容量
+    //最少需要的容量比 新计算出来的容量还要打。）我们这个时候要使用期望的最小容量作为新的容量
+    //情况1：无参构造器，数组初始化，
+    //情况2：指定容量为1
     if (newCapacity - minCapacity < 0)
         newCapacity = minCapacity;
+    
     //如果通过上面计算出来的容量，比数组允许的最大容量还要大，那肯定不行的。所以要根据实际需要的最小容量来减少，调用hugeCapacity重新获取新的容量
     if (newCapacity - MAX_ARRAY_SIZE > 0)
         newCapacity = hugeCapacity(minCapacity);
@@ -207,7 +214,7 @@ private static int hugeCapacity(int minCapacity) {
     //取最大容量 加入最少需要的容量比数组的最大容量还要大，Integer的最大值作为新的数组容量，否则就返回，数组最大容量
     return (minCapacity > MAX_ARRAY_SIZE) ?
         Integer.MAX_VALUE :
-        MAX_ARRAY_SIZE;
+    MAX_ARRAY_SIZE;
 }
 
 ```
