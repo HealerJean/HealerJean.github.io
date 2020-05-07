@@ -67,7 +67,7 @@ class MyThread extends Thread {
 
 ### 1.1.2、控制台测试结果
 
-![1587721413477](D:\study\HealerJean.github.io\blogImages\1587721413477.png)
+![1587721413477](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1587721413477.png)
 
 
 
@@ -174,7 +174,7 @@ class TwoMyThread extends Thread {
 
 ### 1.2.2、控制台测试结果
 
-![1587721575773](D:\study\HealerJean.github.io\blogImages\1587721575773.png)
+![1587721575773](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1587721575773.png)
 
 
 
@@ -372,7 +372,7 @@ public class Test {
 
 
 
-![1587884358158](D:\study\HealerJean.github.io\blogImages\1587884358158.png)
+![1587884358158](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1587884358158.png)
 
 
 
