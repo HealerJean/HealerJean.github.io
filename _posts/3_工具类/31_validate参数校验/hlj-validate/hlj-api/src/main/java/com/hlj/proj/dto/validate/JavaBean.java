@@ -1,16 +1,10 @@
 package com.hlj.proj.dto.validate;
 
 import com.hlj.proj.common.group.ValidateGroup;
-import com.hlj.proj.validate.anno.GreaterLess;
-import com.hlj.proj.validate.anno.NameInclude;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
-import java.math.BigDecimal;
-import java.util.List;
+import javax.validation.constraints.NotBlank;
 
 /**
  * @author HealerJean
