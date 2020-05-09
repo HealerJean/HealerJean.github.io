@@ -8,51 +8,53 @@ category:
 description: 设计模式之交给子类_TemplateMethod模模式_讲具体处理交给子类.
 ---
 
-<!-- 
-
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/
-　　首行缩进
-
-<font  clalss="healerColor" color="red" size="5" >     </font>
-
-<font  clalss="healerSize"  size="5" >     </font>
--->
 
 
 
 
-## 前言
+**前言**     
 
-#### [博主github](https://github.com/HealerJean)
-#### [博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)    
+[博主github](https://github.com/HealerJean)     
 
-
-
-### 1、解释
-
-父类中定义处理流程的框架，在子类中实现具体处理的模式 ，这种模式我们经常会遇到，项目中太多了    
-
-**就是说一个父类中有一些方法有不同的实现，需要多个子类来处理。**
+[博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)        
 
 
 
-### 2、业务场景
+# 1、模板方法
 
-看下面2中的内容 ，也就是说多个业务有重合的地方，重合的地方交给父类，子类继承，也可重写
-
-
-
-### 1、示例程序
-
-#### 1.1、UML图
-
-![1558691657273](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1558691657273.png)
+> 父类中定义处理流程的框架，在子类中实现具体处理的模式 ，这种模式我们经常会遇到，项目中太多了   ,**就是说一个父类中有一些方法有不同的实现，需要多个子类来处理。** 
 
 
 
-#### 1.2、示例代码
+## 1.1、使用场景  
 
-##### 1.2.1、抽象父类 `AbstractDisplay`
+
+
+> 也就是说多个业务有重合的地方，重合的地方交给父类，子类继承，也可重写
+
+
+
+## 1.2、角色
+
+### 1.2.1、AbstractClass（抽象类 父类） 
+
+> **期待，并且要求子类去实现抽象方法**     
+
+### 1.2.2、ConcreteClass（具体类 ，子类）
+
+> **1、在子类中可以使用父类中定义的方法 **   
+>
+> **2、在子类中重新父类的方法可以改变程序的行为**   
+>
+> **3、在子类中添加方法来实现新的功能**    
+
+
+
+
+
+## 1.3、示例程序
+
+### 1.2.1、抽象父类 `AbstractDisplay`
 
 ```java
 public abstract class AbstractDisplay { // 抽象类AbstractDisplay
@@ -69,7 +71,9 @@ public abstract class AbstractDisplay { // 抽象类AbstractDisplay
 }
 ```
 
-##### 1.2.2、子类 `CharDisplay`
+
+
+### 1.2.2、子类 `CharDisplay`
 
 ```java
 package com.hlj.moudle.design.D03_交给子类.D03_TeampleMethod模式.TemplateMethod.Sample;
@@ -96,35 +100,42 @@ public class CharDisplay extends AbstractDisplay {  // CharDisplay是AbstractDis
 
 ```
 
-##### 1.2.3、子类 `StringDisplay`
 
 
+### 1.2.3、子类 `StringDisplay`
 
 ```java
 package com.hlj.moudle.design.D03_交给子类.D03_TeampleMethod模式.TemplateMethod.Sample;
+// StringDisplay也是AbstractDisplay的子类
+public class StringDisplay extends AbstractDisplay {    
+    // 需要显示的字符串
+    private String string;                             
+     // 以字节为单位计算出的字符串长度
+    private int width;                                 
 
-public class StringDisplay extends AbstractDisplay {    // StringDisplay也是AbstractDisplay的子类
-    private String string;                              // 需要显示的字符串
-    private int width;                                  // 以字节为单位计算出的字符串长度
-
-    public StringDisplay(String string) {               // 构造函数中接收的字符串被
-        this.string = string;                           // 保存在字段中
-        this.width = string.getBytes().length;          // 同时将字符串的字节长度也保存在字段中，以供后面使用 
+     // 构造函数中接收的字符串被
+    public StringDisplay(String string) {              
+        this.string = string;                          
+        this.width = string.getBytes().length;          
     }
 
-    public void open() {                                // 重写的open方法
-        printLine();                                    // 调用该类的printLine方法画线
+    // 重写的open方法
+    public void open() {                                
+        printLine();                                   
     }
 
-    public void print() {                               // print方法
-        System.out.println("|" + string + "|");         // 给保存在字段中的字符串前后分别加上"|"并显示出来 
+    // print方法
+    public void print() {                               
+        System.out.println("|" + string + "|");         
     }
 
-    public void close() {                               // close方法
-        printLine();                                    // 与open方法一样，调用printLine方法画线
+    // close方法
+    public void close() {                               
+        printLine();                                    
     }
 
-    private void printLine() {                          // 被open和close方法调用。由于可见性是private，因此只能在本类中被调用
+    // 被open和close方法调用。由于可见性是private，因此只能在本类中被调用
+    private void printLine() {                          
         System.out.print("+");                          // 显示表示方框的角的"+"
         for (int i = 0; i < width; i++) {               // 显示width个"-"
             System.out.print("-");                      // 组成方框的边框
@@ -139,15 +150,24 @@ public class StringDisplay extends AbstractDisplay {    // StringDisplay也是Ab
 
 #####  1.2.4、测试Main
 
-```
+```java
 public class Main {
     public static void main(String[] args) {
-        AbstractDisplay d1 = new CharDisplay('H');                  // 生成一个持有'H'的CharDisplay类的实例 
-        AbstractDisplay d2 = new StringDisplay("Hello, world.");    // 生成一个持有"Hello, world."的StringDisplay类的实例 
-        AbstractDisplay d3 = new StringDisplay("你好，世界。");     // 生成一个持有"你好，世界。"的StringDisplay类的实例 
-        d1.display();                                               // 由于d1、d2和d3都是AbstractDisplay类的子类
-        d2.display();                                               // 可以调用继承的display方法
-        d3.display();                                               // 实际的程序行为取决于CharDisplay类和StringDisplay类的具体实现
+        // 生成一个持有'H'的CharDisplay类的实例 
+        AbstractDisplay d1 = new CharDisplay('H');        
+        
+        // 生成一个持有"Hello, world."的StringDisplay类的实例 
+        AbstractDisplay d2 = new StringDisplay("Hello, world.");  
+        
+        // 生成一个持有"你好，世界。"的StringDisplay类的实例 
+        AbstractDisplay d3 = new StringDisplay("你好，世界。");     
+        
+        // 由于d1、d2和d3都是AbstractDisplay类的子类
+        d1.display();                                     
+        // 可以调用继承的display方法
+        d2.display();            
+        // 实际的程序行为取决于CharDisplay类和StringDisplay类的具体实现
+        d3.display();                                               
 
     }
 }
@@ -156,27 +176,9 @@ public class Main {
 
 
 
-### 2、TemplateMethod 模式中登场角色
 
 
-
-#### 2.1、AbstractClass（抽象类 父类）
-<font   color="red"  >    
-
-**1、期待，并且要求子类去实现抽象方法**
- </font>
-
-#### 2.2、ConcreteClass（具体类 ，子类）
-
-<font  color="red"  >    
-
-
-**1、在子类中可以使用父类中定义的方法**
-**2、在子类中添加方法来实现新的功能**
-**3、在子类中重新父类的方法可以改变程序的行为**
-
- </font>
-### 3、UML图
+## 1.4、UML图
 
 ![1558693456672](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1558693456672.png)
 
@@ -184,9 +186,11 @@ public class Main {
 
 
 
-    
-       
-          
+
+
+​       
+
+
 ![](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
@@ -194,6 +198,7 @@ public class Main {
 <!-- Gitalk 评论 start  -->
 
 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
 <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script> 
 <div id="gitalk-container"></div>    
  <script type="text/javascript">

@@ -8,16 +8,6 @@ category:
 description: 设计模式之访问数据结构_ChainOfReponsibility责任链模式_推卸责任
 ---
 
-<!-- 
-
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/
-　　首行缩进
-
-<font  clalss="healerColor" color="red" size="5" >     </font>
-
-<font  clalss="healerSize"  size="5" >     </font>
--->
-
 
 
 
@@ -29,10 +19,12 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 
 
+# 1、`ChainOfReponsibility`责任链模式
 
 
 
-## 1、解释
+
+## 1.1、解释
 
 场景：假设现在我们去公司领取资料。    
 
@@ -54,15 +46,11 @@ https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogIma
 
 
 
-## 2、实例代码
+## 1.2、示例代码
 
 
 
-本案例已打印日志说明
-
-
-
-### 2.1、抽象父类节点`AbstractLogger`
+### 1.2.1、抽象父类节点`AbstractLogger`
 
 ```java
 package com.hlj.moudle.design.D06访问数据结构.D14ChanOfResponsibility责任链模式;
@@ -115,9 +103,7 @@ public abstract  class AbstractLogger {
 
 
 
-### 2.2、Error级别
-
-
+#### 1.2.1.1、Error级别
 
 ```java
 
@@ -137,7 +123,7 @@ public class ErrorLogger extends AbstractLogger {
 
 
 
-### 2.3、Info级别
+#### 1.2.1.2、Info级别
 
 ```java
 public class InfoLogger extends AbstractLogger {
@@ -155,7 +141,7 @@ public class InfoLogger extends AbstractLogger {
 
 
 
-### 2.4、Debug级别
+#### 1.2.1.3、Debug级别
 
 ```java
 public class DebugLogger extends AbstractLogger {
@@ -174,17 +160,12 @@ public class DebugLogger extends AbstractLogger {
 
 
 
-### 2.5、测试
+### 1.2.2、测试
 
 ```java
 package com.hlj.moudle.design.D06访问数据结构.D14ChanOfResponsibility责任链模式;
 
-/**
- * @author HealerJean
- * @ClassName Main
- * @date 2019/8/16  15:57.
- * @Description
- */
+
 public class Main {
 
     private static AbstractLogger getChainOfLoggers(){
@@ -222,25 +203,11 @@ public class Main {
 
 
 
-### 3、总结
-
-上面就是讲message消息挨个到各自的节点去处理，一直到处理完成，这既是责任链模式
-
-
-
-### 3.1、优化地方
-
-#### 3.1.1、可以讲上面抽象类的level 放到各自的子类中
-
-#### 3.1.2、nextLogger 时，在初始化时就指定。
 
 
 
 
 
-        
-        
-        
 ![](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
