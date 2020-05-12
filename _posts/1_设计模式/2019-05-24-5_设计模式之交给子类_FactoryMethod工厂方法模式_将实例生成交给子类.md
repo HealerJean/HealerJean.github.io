@@ -8,7 +8,11 @@ category:
 description: 设计模式之交给子类_FactoryMethod模式_将实例生成交给子类
 ---
 
+**前言**     
 
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)       
 
 # 1、FactoryMethod模式
 

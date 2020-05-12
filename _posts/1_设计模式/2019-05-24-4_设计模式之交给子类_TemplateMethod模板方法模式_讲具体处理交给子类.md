@@ -14,11 +14,9 @@ description: 设计模式之交给子类_TemplateMethod模模式_讲具体处理
 
 **前言**     
 
-[博主github](https://github.com/HealerJean)     
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
-[博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)        
-
-
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)       
 
 # 1、模板方法
 
