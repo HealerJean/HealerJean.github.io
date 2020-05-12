@@ -10,12 +10,11 @@ description: 设计模式之访问数据结构_ChainOfReponsibility责任链模�
 
 
 
-
 **前言**     
 
-[博主github](https://github.com/HealerJean)      
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
-[博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)        
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)        
 
 
 
