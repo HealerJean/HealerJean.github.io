@@ -100,6 +100,16 @@ Options—>Global Options—>General—>Default Session—>Edit Default Settings
 
 
 
+# 6、备份
+
+
+
+![image-20200512163146407](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200512163146407.png)
+
+
+
+
+
 
 
 
