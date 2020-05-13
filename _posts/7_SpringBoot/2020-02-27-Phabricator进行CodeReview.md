@@ -207,7 +207,7 @@ git checkout -b healerjean
 
 
 ```shell
-arc diff –preview
+arc diff --preview
 ```
 
 
