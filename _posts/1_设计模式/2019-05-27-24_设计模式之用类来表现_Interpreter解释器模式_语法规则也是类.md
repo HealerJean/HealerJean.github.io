@@ -8,44 +8,31 @@ category:
 description: 设计模式之用类来表现_Interpreter解释器模式_语法规则也是类
 ---
 
-<!-- 
-
-https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/
-　　首行缩进
-
-<font  clalss="healerColor" color="red" size="5" >     </font>
-
-<font  clalss="healerSize"  size="5" >     </font>
--->
-
-
-
-
 **前言**     
 
-[博主github](https://github.com/HealerJean)      
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
-[博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)    
-
-
-
-## 1、解释
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)           
 
 
 
-**解释器模式：给定一个语言，定义它的文法表示，并定义一个解释器，这个解释器使用该标识来解释语言中的句子。**    
+## 1、Interpreter解释器模式
+
+## 1.1、解释
+
+> **解释器模式：给定一个语言，定义它的文法表示，并定义一个解释器，这个解释器使用该标识来解释语言中的句子。**    
 
 
 
-博主说实话，这个模式有点可爱，没有实战过，怎么说，个人理解吧，    别的不想多聊，先看看这个模式的结构，如果看不懂结构，建议先看代码，再回来看结构     
+说实话，这个模式有点可爱，没有实战过，怎么说，先看看这个模式的结构，如果看不懂结构，建议先看代码，再回来看结构     
 
-先说明，本篇文档来源于大神，个人知识加入了自己的理解  ，进行本篇解释器前先看看，文法和终结符以及非终结符吧
-
-### 1.1、文法，终结符、非终结符
+先说明，本篇文档来源于大神，加入了自己的理解  ，进行本篇解释器前先看看，文法和终结符以及非终结符吧     
 
 
 
-####  1.1.1、文法 = 规则
+### 1.1.1、文法，终结符、非终结符
+
+#### 1.1.1.1、文法 = 规则
 
 文法是用于描述语言的语法结构的形式规则。没有规矩不成方圆，任何事情都要有规则，语言也一样，不管它是机器语言还是自然语言，都有它自己的文法规则。例如，  
 
@@ -64,7 +51,7 @@ B->dB
 
 
 
-##### 1.1.1.1、终结符 和 非终结符   
+#### 1.1.1.2、终结符 和 非终结符   
 
 **终结符：** 通俗的说就是不能单独出现在推导式左边的符号，也就是说终结符不能再进行   
 
@@ -73,17 +60,17 @@ B->dB
 
 
 
-### 1.2、模式的结构
+## 1.2、解释器模式的结构
 
 
 
-#### 1.2.1、抽象表达式解释器：  
+### 1.2.1、抽象表达式解释器：  
 
-声明一个所有具体表达式都要实现的抽象接口（或者抽象类），接口中主要是一个interpret()方法，称为解释操作。具体解释任务由它的各个实现类来完成，具体的解释器分别由终结符解释器和非终结符解释器完成。    
+声明一个所有具体表达式都要实现的抽象接口（或者抽象类），接口中主要是一个`interpret()`方法，称为解释操作。具体解释任务由它的各个实现类来完成，具体的解释器分别由终结符解释器和非终结符解释器完成。    
 
 
 
-#### 1.2.2、终结符表达式：     
+### 1.2.2、终结符表达式：     
 
 实现与文法中的元素相关联的解释操作，每个终结符表达式对应一种实例。。**终结符一般是文法中的运算单元**，   
 
@@ -93,7 +80,7 @@ B->dB
 
 
 
-#### 1.2.3、非终结符表达式：    
+### 1.2.3、非终结符表达式：    
 
 文法中的每条规则对应于一个非终结符表达式，**非终结符表达式一般是文法中的运算符或者其他关键字**，
 
@@ -103,7 +90,7 @@ B->dB
 
 
 
-#### 1.2.4、环境角色：    
+### 1.2.4、环境角色：    
 
 通常包含各个解释器需要的数据
 
@@ -111,11 +98,11 @@ B->dB
 
 
 
-## 2、实例代码
+## 1.2、示例代码1
 
 
 
-### 2.1、 抽象表达式`AbstractExpression`
+### 1.2.1、 抽象解释器：`AbstractExpression`
 
 ```java
 /**
@@ -131,9 +118,7 @@ public interface AbstractExpression {
 
 
 
-### 2.2、终结符表达式
-
-
+#### 1.2.1.1、终结符表达式：`TerminalExpression`
 
 ```java
 /**
@@ -149,7 +134,7 @@ class TerminalExpression implements AbstractExpression {
     private Set<String> set = new HashSet<>();
 
     public TerminalExpression(String[] data) {
-        set.addAll(  Arrays.stream(data).collect(Collectors.toSet()));
+        set.addAll(Arrays.stream(data).collect(Collectors.toSet()));
     }
 
     @Override
@@ -165,9 +150,7 @@ class TerminalExpression implements AbstractExpression {
 
 
 
-
-
-### 2.3、非终结符表达式
+#### 1.2.1.2、非终结符表达式：`AndExpression`
 
 ```java
 /**
@@ -203,9 +186,9 @@ public class AndExpression implements AbstractExpression {
 
 
 
-### 2.4、环境角色 （其实也可以放到客户端调用中去）
+### 1.2.2、环境角色：
 
-
+>  其实也可以放到客户端调用中去
 
 ```java
 
@@ -245,7 +228,7 @@ public class Context {
 
 
 
-### 2.5、测试
+### 1.2.3、测试
 
 ```java
 public class D23Main {
@@ -277,11 +260,9 @@ public class D23Main {
 
 
 
-### 2.3、实例代码二、
+## 1.3、实例代码2
 
-
-
-### 2.3.1、 抽象解释器
+### 1.3.1、 抽象解释器
 
 ```java
 public abstract class ArithmeticExpression {
@@ -292,10 +273,7 @@ public abstract class ArithmeticExpression {
 
 
 /**
- * @author HealerJean
- * @ClassName CommonAbstractExpression
- * @date 2019/8/23  16:27.
- * @Description 非中介表达式公共抽象部分
+ * 非终结表达式公共抽象部分
  */
 public abstract class CommonAbstractExpression  extends ArithmeticExpression{
 
@@ -312,13 +290,11 @@ public abstract class CommonAbstractExpression  extends ArithmeticExpression{
 
 
 
-
-
 ```
 
 
 
-### 1.2、终结表达式解释器
+#### 1.3.1.1、终结表达式解释器：数字
 
 ```java
 
@@ -342,7 +318,7 @@ public class NumExpression extends ArithmeticExpression {
 
 
 
-### 1.3、非终结表达式加法解释器
+#### 1.3.1.2、非终结表达式：加法解释器
 
 ```java
 /**
@@ -366,15 +342,10 @@ public class AdditionExpression extends CommonAbstractExpression {
 
 
 
-### 1.4、非终结表达式减法解释器
+#### 1.3.1.3、非终结表达式：减法解释器
 
 ```java
-/**
- * @author HealerJean
- * @ClassName SubtractionExpression
- * @date 2019/8/23  16:23.
- * @Description
- */
+
 public class SubtractionExpression extends CommonAbstractExpression {
 
 
@@ -392,19 +363,14 @@ public class SubtractionExpression extends CommonAbstractExpression {
 
 
 
-### 1.5、环境角色（计算）
+### 1.3.2、环境角色（计算）
 
 ```java
-
-/**
- * @author HealerJean
- * @ClassName Calculator
- * @date 2019/8/23  16:19.
- * @Description
+ription
  */
 public class Calculator {
 
-   private   ArithmeticExpression exp1 ;
+    private  ArithmeticExpression exp1 ;
     private  ArithmeticExpression exp2 ;
 
     public Calculator(String expression,String rule){
@@ -430,7 +396,7 @@ public class Calculator {
 
 
 
-### 1.6、测试吧
+### 1.3.3、测试吧
 
 ```java
 public class D02Main {
@@ -450,9 +416,7 @@ public class D02Main {
 
 
 
-        
-        
-        
+
 ![](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 

@@ -1,9 +1,7 @@
 package com.hlj.moudle.design.D03_生成实例.D06_Prototype模式;
 
-import javafx.scene.shape.Circle;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 /**
