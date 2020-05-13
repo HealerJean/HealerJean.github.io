@@ -8,6 +8,6 @@ package com.hlj.moudle.design.D09避免浪费.D20Flyweight享元模式;
  */
 public abstract class AbstractWebSite {
 
-    public abstract void create(User user);
+    public abstract void operate(String message);
 
 }

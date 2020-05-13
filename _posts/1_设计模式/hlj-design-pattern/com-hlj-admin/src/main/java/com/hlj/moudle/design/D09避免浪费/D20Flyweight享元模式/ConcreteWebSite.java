@@ -8,15 +8,14 @@ package com.hlj.moudle.design.D09避免浪费.D20Flyweight享元模式;
  */
 public class ConcreteWebSite extends AbstractWebSite {
 
-    private String name = "";
+    private String name ;
 
     public ConcreteWebSite(String name) {
         this.name = name;
     }
 
     @Override
-    public void create(User user) {
-        System.out.println("网站分类：" + name+" user:"+user.getName());
+    public void operate(String message) {
+        System.out.println("网站信息：" + message);
     }
-
 }

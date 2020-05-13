@@ -14,7 +14,7 @@ public class Calculator {
 
     public Calculator(String expression,String rule){
         String[] elements = expression.split(rule);
-        exp1 = new NumExpression(Integer.valueOf(elements[0]));s
+        exp1 = new NumExpression(Integer.valueOf(elements[0]));
         exp2 = new NumExpression(Integer.valueOf(elements[1]));
     }
 
