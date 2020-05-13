@@ -27,6 +27,9 @@
         <module>hlj-config-server-8888</module>
         <module>hlj-config-client-6001</module>
 
+        <module>hlj-zookeeper-server-provider-7011</module>
+        <module>hlj-zookeeper-server-consumer-7021</module>
+
         <module>hlj-service-api</module>
         <module>hlj-common</module>
     </modules>
