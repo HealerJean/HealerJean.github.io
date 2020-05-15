@@ -21,77 +21,29 @@ description: SpringBoot集成Quartz
 
 别的先不多说，先利用配置文件制作一个简单的定时器器吧
 
-## 1、利用配置文件配置定时器（很少，以后还会详解）
-
-### 1.1 、导入pom依赖
 
 
+# 1、SpringBoot集成Quartz
+
+## 1.1、第一个简单的任务
+
+### 1.1.1 、导入pom依赖
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>com.hlj.quartz</groupId>
-	<artifactId>com-hlj-quartz</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
-
-	<name>com-hlj-quartz</name>
-	<description>Demo project for Spring Boot</description>
-
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.0.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-	</properties>
-
-	<dependencies>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz-jobs</artifactId>
-			<version>2.2.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-quartz</artifactId>
-		</dependency>
-
-    </dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-</project>
-
+<!--quartz-->
+<dependency>
+    <groupId>org.quartz-scheduler</groupId>
+    <artifactId>quartz-jobs</artifactId>
+    <version>2.2.1</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-quartz</artifactId>
+</dependency>
 ```
-### 1.2、resource下创建配置文件quartz.properties
+
+
+### 1.1.2、quartz.properties
 
 
 ```properties
@@ -106,341 +58,587 @@ org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool
 # 这也是它的快速和简单配置的原因；JDBCJobStore也是一种相当有名的JobStore，它通过JDBC把数据都保存到数据库中，
 # 所以在配置上会比RAMJobStore复杂一些，而且不像RAMJobStore那么快，但是当我们对数据库中的表的主键创建索引时，性能上的缺点就不是很关键的了。
 org.quartz.jobStore.class = org.quartz.simpl.RAMJobStore
-
-
-
 ```
 
-### 1.3、新建一个定时器任务
-
-继承Job类，也就是工作任务类，然后重写里面的方法 `execute`
 
 
+### 1.1.3、`OneJob`：任务类
+
+> 继承Job类，也就是工作任务类，然后重写里面的方法 `execute`
 
 
 ```java
-package com.hlj.quartz.quartz.Job;
-import java.util.Date;
+
+import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+
+import java.util.Date;
+
+@Slf4j
+public class OneJob implements Job {
+
+    @Override
+    public void execute(JobExecutionContext context) {
+        log.info("quartz任务--------OneJob--------开始执行：执行事件：{}", new Date());
+    }
+
+}
+```
 
 
-/**
- * @Description 任务类.
- * @Author HealerJean
- * @Date 2018/3/22  下午4:17.
- */
 
-public class HelloJobOne implements Job{
+### 1.1.4、启动定时器任务：`DemoService`
 
-        public void execute(JobExecutionContext context) throws JobExecutionException {
-            System.out.println("一号任务"+new Date());
+#### 1.1.1.4、`DemoService`
 
-        }
+```java
+public interface DemoService {
+
+    void oneJob();
 }
 
 ```
 
 
-### 1.4、Service中开始调用执行这个job
 
-
-#### 解释:  
-#### 1、其实配置文件中配置的，也就是我们可以在下面使用的定时器了，也就是获取实例
+#### 1.1.1.5、`DemoServiceImpl`
 
 ```java
-Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
-```
-#### 2、定时器有了，下一步就是获取上面的任务，也就是获取工作详情
 
-```
-JobDetail jobDetail = JobBuilder.newJob(HelloJobOne.class).withIdentity("job1","group1").build();
-```
+@Service
+@Slf4j
+public class DemoServiceImpl implements DemoService {
 
-#### 3、工作任务有了，那么下一布，就是工作的执行时间和触发规则，交给定时器
-
-```
-SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(5).repeatForever();
-Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger1","group1").startNow().withSchedule(simpleScheduleBuilder).build();
-// 交由Scheduler安排触发
-scheduler.scheduleJob(jobDetail,trigger);
-
-```
-
-#### 下面是service全部代码
-
-```
-
-public void haveProperties() throws SchedulerException, InterruptedException{
-    /*
-     *在 Quartz 中， scheduler 由 scheduler 工厂创建：
-     * DirectSchedulerFactory 或者 StdSchedulerFactory。
-     *第二种工厂 StdSchedulerFactory 使用较多，
-     *因为 DirectSchedulerFactory 使用起来不够方便，需要作许多详细的手工编码设置。
+    /**
+     * 第一个quartz Job任务
      */
-    // 获取Scheduler实例
-    Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
-    System.out.println("scheduler.start");
-    //具体任务.
-    JobDetail jobDetail = JobBuilder.newJob(HelloJobOne.class).withIdentity("job1","group1").build();
-    //触发时间点. (每5秒执行1次.)
-    SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(5).repeatForever();
-    Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger1","group1").startNow().withSchedule(simpleScheduleBuilder).build();
-    // 交由Scheduler安排触发
-    scheduler.scheduleJob(jobDetail,trigger);
-    //睡眠20秒.
-    TimeUnit.SECONDS.sleep(20);
-    scheduler.shutdown();//关闭定时任务调度器.
-    System.out.println("scheduler.shutdown");
+    @Override
+    public void oneJob() {
+        try {
+            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+            scheduler.start();
+            log.info("调度器启动：scheduler.start");
 
+            //具体任务.
+            String jobDetailName = "oneJobName";
+            String jobDetailGroup = "oneJobGroup";
+            JobDetail jobDetail = JobBuilder.newJob(OneJob.class)
+                .withIdentity(jobDetailName, jobDetailGroup)
+                .build();
+            log.info("任务详情：jobDetail：任务类：OneJob.class，任务名：{}，任务分组：{}", 
+                     jobDetailName, jobDetailGroup);
+
+            //触发时间点. (每5秒执行1次.)
+            SimpleScheduleBuilder simpleScheduleBuilder = 
+                SimpleScheduleBuilder.simpleSchedule()
+                .withIntervalInSeconds(5).repeatForever();
+            log.info("任务触发时间点：每5秒执行1次");
+
+            String triggerName = "triggerName";
+            String triggerGroup = "triggerGroup";
+            Trigger trigger = TriggerBuilder.newTrigger()
+                .withIdentity(triggerName, triggerGroup)
+                .startNow()
+                .withSchedule(simpleScheduleBuilder)
+                .build();
+            log.info("任务触发器：触发器名称：{}，触发器分组：{}", triggerName, triggerName);
+
+            // 交由Scheduler安排触发
+            scheduler.scheduleJob(jobDetail, trigger);
+            log.info("任务详情 和 触发器 交由Scheduler安排触发");
+
+            //睡眠20秒.等待任务完成
+            TimeUnit.SECONDS.sleep(20);
+
+            //关闭定时任务调度器.
+            log.info("关闭定时器调度器");
+            scheduler.shutdown();
+            System.out.println("scheduler.shutdown");
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 ```
 
 
-### 1.5、controler中开始调用
 
 
-```
 
-/**
- * @Desc   有配置文件quartz.properties
- * @Date   2018/3/22 下午5:40.
- */
-
-@GetMapping("haveProperties")
-public String haveProperties() throws InterruptedException, SchedulerException {
-    quartzService.haveProperties();
-    return "使用配置文件-定时器开始执行，请观察控制台";
-}
-
-```
-
-
-### 1.6、浏览器中访问吧，朋友
-
-[http://localhost:8080/haveProperties](http://localhost:8080/haveProperties)
-
-#### 调用的时候可以看到控制台关于，配置文件 quartz.properties 中的一些信息。 而且人物执行成功
-
-![WX20180322-191414](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/blogImages/WX20180322-191414.png)
-
-
-## 2、开始更多的方法
-
-### 2.1、开始从定时器工厂中，找到定时器Bean
-
-
+### 1.1.5、`Controller`
 
 ```java
-/**
- * @Description
- * @Author HealerJean
- * @Date 2018/3/22  下午3:45.
- */
+@ApiResponses(value = {
+        @ApiResponse(code = 200, message = "访问正常"),
+        @ApiResponse(code = 301, message = "逻辑错误"),
+        @ApiResponse(code = 500, message = "系统错误"),
+        @ApiResponse(code = 401, message = "未认证"),
+        @ApiResponse(code = 403, message = "禁止访问"),
+        @ApiResponse(code = 404, message = "url错误")
+})
+@Api(description = "quartz定时器")
+@RequestMapping("hlj/quartz")
+@Slf4j
+@RestController
+public class QuartzController {
+
+
+    @Autowired
+    private DemoService demoService;
+
+    @GetMapping("oneJob")
+    public ResponseBean oneJob() {
+        demoService.oneJob();
+        return ResponseBean.buildSuccess();
+    }
+}
+
+```
+
+
+
+### 1.1.6、启动测试 
+
+```http
+http://127.0.0.1:8888/hlj/quartz/oneJob
+```
+
+**浏览器：**
+
+```json
+{
+  "success": true,
+  "result": "{}",
+  "msg": "",
+  "code": 200,
+  "date": "1589515699682"
+}
+```
+
+**服务器控制台：**
+
+```
+调度器启动：scheduler.start 
+任务详情：jobDetail：任务类：OneJob.class，任务名：oneJobName，任务分组：oneJobGroup 
+任务触发时间点：每5秒执行1次 
+任务触发器：触发器名称：triggerName，触发器分组：triggerName 
+任务详情 和 触发器 交由Scheduler安排触发
+quartz任务--------OneJob--------开始执行：执行事件：2020-05-15T12:07:59.683+0800 
+quartz任务--------OneJob--------开始执行：执行事件：2020-05-15 12:08:09.677+0800 
+quartz任务--------OneJob--------开始执行：执行事件：2020-05-15T12:08:09.677+0800 
+quartz任务--------OneJob--------开始执行：执行事件：2020-05-15T12:08:14.676+0800 
+quartz任务--------OneJob--------开始执行：执行事件：2020-05-15T12:08:19.676+0800 
+关闭定时器调度器 
+```
+
+
+
+# 2、集成方法
+
+## 2.1、`QuartzConfig`
+
+```java
 @Configuration
 public class QuartzConfig {
 
+
     @Bean
-    public SpringBeanJobFactory jobFactory (){
+    public SpringBeanJobFactory jobFactory() {
         return new SpringBeanJobFactory();
     }
 
     @Bean
-    public SchedulerFactoryBean schedulerFactoryBean(SpringBeanJobFactory jobFactory) {
+    public SchedulerFactoryBean schedulerFactoryBean(SpringBeanJobFactory simpleJobFactory) {
         SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
-
         schedulerFactoryBean.setOverwriteExistingJobs(true);
         schedulerFactoryBean.setConfigLocation(new ClassPathResource("quartz.properties"));
-        schedulerFactoryBean.setJobFactory(jobFactory);
+        schedulerFactoryBean.setJobFactory(simpleJobFactory);
         schedulerFactoryBean.setWaitForJobsToCompleteOnShutdown(true);
-
         return schedulerFactoryBean;
     }
-}
 
+}
 ```
 
 
 
-
-### 2.3、这个时候，我们开始一系列的方法，对定时器进行了解
-
-#### 实话实说，我看的比较着急，还没有对定时器自己的一些方法进行仔细深入的了解
-
-1、这时，我们可以看到这里用到的其实就是固定时间的定时器（可以设置为某一天的几点开始执行） ，上面的定时器是没几秒开始执行。所以二者是有区别的，具体如下
-
-SimpleScheduleBuilder是简单调用触发器，它只能**指定触发的间隔时间和执行次数**；
-
-CronScheduleBuilder是类似于Linux Cron的触发器，它通过一个称为CronExpression的规则来指定触发规则，通常是每次触发的具体时间；
-
-CalendarIntervalScheduleBuilder是对CronScheduleBuilder的补充，它能指定每隔一段时间触发一次。
-
-
-2、针对暂停，和关闭任务，也是是利用触发规则的name和group，然后判断这个规则是否存在工作，如果存在则执行定时器
-
-3、下面我设置了两个任务。controller中对这两个任务进行观察
-
-
+## 2.2、定时器服务层：`QuartzService`
 
 ```java
-package com.hlj.quartz.quartz.service;
+package com.healerjean.proj.service;
 
-import com.hlj.quartz.quartz.Job.HelloJobOne;
-import org.quartz.*;
-import org.quartz.impl.StdSchedulerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.concurrent.TimeUnit;
 
 /**
+ * @author HealerJean
+ * @ClassName QuartzService
+ * @date 2020/5/15  12:27.
  * @Description
- * @Author HealerJean
- * @Date 2018/3/22  下午4:38.
  */
-/**
- SimpleScheduleBuilder是简单调用触发器，它只能指定触发的间隔时间和执行次数；
- CronScheduleBuilder是类似于Linux Cron的触发器，它通过一个称为CronExpression的规则来指定触发规则，通常是每次触发的具体时间；（关于CronExpression，详见：官方，中文网文）
- CalendarIntervalScheduleBuilder是对CronScheduleBuilder的补充，它能指定每隔一段时间触发一次。
- */
+public interface QuartzService {
 
-@Service
-public class QuartzService {
-
-    @Rewsource
-    private Scheduler scheduler;
-
-    public void startJob(String time,String jobName,String group,Class job){
-        try {
-            // 创建jobDetail实例，绑定Job实现类
-            // 指明job的名称，所在组的名称，以及绑定job类
-            JobDetail jobDetail = JobBuilder.newJob(job).withIdentity(jobName, group).build();//设置Job的名字和组
-            //corn表达式  每2秒执行一次
-            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(time/*"0/2 * * * * ?"*/);
-            //设置定时任务的时间触发规则
-            CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(jobName,group) .withSchedule(scheduleBuilder).build();
-            System.out.println(scheduler.getSchedulerName());
-            // 把作业和触发器注册到任务调度中, 启动调度
-            scheduler.scheduleJob(jobDetail,cronTrigger);
-        /*
-         Thread.sleep(30000);
-        // 停止调度
-        scheduler.shutdown();*/
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void startJob2(String time,String jobName,String group,Class job){
-        try {
-            JobDetail jobDetail = JobBuilder.newJob(job).withIdentity(jobName, group).build();//设置Job的名字和组
-            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(time/*"0/2 * * * * ?"*/);
-            CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(jobName,group) .withSchedule(scheduleBuilder).build();
-            System.out.println(scheduler.getSchedulerName());
-            scheduler.scheduleJob(jobDetail,cronTrigger);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /****
-     * 暂停一个任务
-     * @param triggerName
-     * @param triggerGroupName
+    /**
+     * 开启定时器
+     *
+     * @param time         Cron 表达式
+     * @param jobName      任务名称，
+     * @param group        任务分组
+     * @param jobClassName 任务类
      */
-    public void pauseJob(String triggerName,String triggerGroupName){
-        try {
-            JobKey jobKey = new JobKey(triggerName, triggerGroupName);
-            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-            if (jobDetail==null){
-                return;
-            }
-            System.out.println("开始暂停一个定时器");
-            scheduler.pauseJob(jobKey);
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
-    }
+    void startJob(String time, String jobName, String group, String jobClassName);
 
-    /****
-     * 暂停重启一个定时器任务，shutdown关闭了，或者删除了就不能重启了
-     * @param triggerName
-     * @param triggerGroupName
+
+    /**
+     * 暂停任务
+     *
+     * @param name  任务名称
+     * @param group 任务分组
      */
-    public void resumeJob(String triggerName,String triggerGroupName){
-        try {
-            JobKey jobKey = new JobKey(triggerName, triggerGroupName);
-            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-            if (jobDetail==null){
-                return;
-            }
-            scheduler.resumeJob(jobKey);
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
-    }
+    void pauseJob(String name, String group);
 
-
-
-    /****
-     * 删除一个定时器任务，删除了，重启就没什么用了
-     * @param triggerName
-     * @param triggerGroupName
+    /**
+     * 继续定时器任务：暂停中的任务
+     * 注意：shutdown关闭了，或者删除了就不能重启了
      */
-    public void deleteJob(String triggerName,String triggerGroupName){
-        try {
-            JobKey jobKey = new JobKey(triggerName, triggerGroupName);
-            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-            if (jobDetail==null){
-                return;
-            }
-            scheduler.deleteJob(jobKey);
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
-    }
+    void resumeJob(String name, String group);
 
+
+    /**
+     * 删除定时器任务
+     */
+    void deleteJob(String name, String group);
 
 
     /***
      * 开启定时器，这时才可以开始所有的任务，默认是开启的
      */
-    public void startAllJob(){
+    void startAllJob();
+
+    /**
+     * 关闭定时器，则所有任务不能执行和创建
+     */
+    void shutdown();
+}
+
+```
+
+
+
+### 2.2.1、实现类：`QuartzServiceImpl`
+
+```java
+package com.healerjean.proj.service.impl;
+
+import com.healerjean.proj.service.QuartzService;
+import lombok.extern.slf4j.Slf4j;
+import org.quartz.*;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+
+/**
+ * @author HealerJean
+ * @ClassName QuartzServiceImpl
+ * @date 2020/5/15  12:27.
+ * @Description
+ */
+@Slf4j
+@Service
+public class QuartzServiceImpl implements QuartzService {
+
+    @Resource
+    private Scheduler scheduler;
+
+    /**
+     * 开启定时器
+     *
+     * @param time         Cron 表达式
+     * @param name         任务名称，
+     * @param group        任务分组
+     * @param jobClassName 任务类
+     */
+    @Override
+    public void startJob(String time, String name, String group, String jobClassName) {
+        try {
+            Class jobClass = Class.forName(jobClassName);
+            JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(name, group).build();
+            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(time);
+            CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(name, group).withSchedule(scheduleBuilder).build();
+            scheduler.scheduleJob(jobDetail, cronTrigger);
+            log.info("quartz定时器--------启动任务--------任务名称：{}, 任务分组：{}", name, group);
+        } catch (SchedulerException e) {
+            log.error("quartz定时器--------启动任务失败", e);
+            throw new RuntimeException(e.getMessage(), e);
+        } catch (ClassNotFoundException e) {
+            log.error("quartz定时器--------启动任务失败", e);
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+
+    /**
+     * 暂停任务
+     *
+     * @param name  任务名称
+     * @param group 任务分组
+     */
+    @Override
+    public void pauseJob(String name, String group) {
+        try {
+            JobKey jobKey = new JobKey(name, group);
+            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+            if (jobDetail == null) {
+                return;
+            }
+            scheduler.pauseJob(jobKey);
+            log.info("quartz定时器--------暂停任务--------任务名称：{}, 任务分组：{}", name, group);
+        } catch (SchedulerException e) {
+            log.error("quartz定时器--------暂停任务失败--------任务名称：" + name + ", 任务分组：" + group, e);
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 继续任务：暂停中的任务
+     * 注意：shutdown关闭了，或者删除了就不能重启了
+     */
+    @Override
+    public void resumeJob(String name, String group) {
+        try {
+            JobKey jobKey = new JobKey(name, group);
+            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+            if (jobDetail == null) {
+                return;
+            }
+            scheduler.resumeJob(jobKey);
+            log.info("quartz定时器--------继续任务--------任务名称：{}, 任务分组：{}", name, group);
+        } catch (SchedulerException e) {
+            log.error("quartz定时器--------继续任务失败--------任务名称：" + name + ", 任务分组：" + group, e);
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+
+    /**
+     * 删除任务
+     */
+    @Override
+    public void deleteJob(String name, String group) {
+        try {
+            JobKey jobKey = new JobKey(name, group);
+            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+            if (jobDetail == null) {
+                return;
+            }
+            scheduler.deleteJob(jobKey);
+            log.info("quartz定时器--------删除任务--------任务名称：{}, 任务分组：{}", name, group);
+        } catch (SchedulerException e) {
+            log.error("quartz定时器--------删除任务失败--------任务名称：" + name + ", 任务分组：" + group, e);
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+
+    /***
+     * 开启定时器，这时才可以开始所有的任务，默认是开启的
+     */
+    @Override
+    public void startAllJob() {
         try {
             scheduler.start();
+            log.info("quartz定时器--------开启定时器}");
         } catch (SchedulerException e) {
-            e.printStackTrace();
+            log.error("quartz定时器--------开启定时器失败", e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
     /**
      * 关闭定时器，则所有任务不能执行和创建
      */
-    public void shutdown(){
+    @Override
+    public void shutdown() {
         try {
             scheduler.shutdown();
+            log.info("quartz定时器--------关闭定时器}");
         } catch (SchedulerException e) {
-            e.printStackTrace();
+            log.error("quartz定时器--------关闭定时器失败", e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
-
+}
 
 ```
 
-### 2.4、controller控制执行，注意观察控制台
+
+
+#### 2.2.2.1、`startJob`：开启任务
+
+```java
+@Override
+public void startJob(String time, String name, String group, String jobClassName) {
+    try {
+        Class jobClass = Class.forName(jobClassName);
+        JobDetail jobDetail = JobBuilder.newJob(jobClass)
+            .withIdentity(name, group).build();
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(time);
+        CronTrigger cronTrigger = TriggerBuilder.newTrigger()
+            .withIdentity(name, group)
+            .withSchedule(scheduleBuilder)
+            .build();
+        scheduler.scheduleJob(jobDetail, cronTrigger);
+        log.info("quartz定时器--------启动任务--------任务名称：{}, 任务分组：{}", name, group);
+    } catch (SchedulerException e) {
+        log.error("quartz定时器--------启动任务失败", e);
+        throw new RuntimeException(e.getMessage(), e);
+    } catch (ClassNotFoundException e) {
+        log.error("quartz定时器--------启动任务失败", e);
+        throw new RuntimeException(e.getMessage(), e);
+    }
+}
+
+```
+
+
+
+#### 2.2.2.2、`pauseJob`：暂停任务
+
+> **正在执行中的任务不受任何影响**
+
+```java
+
+@Override
+public void pauseJob(String name, String group) {
+    try {
+        JobKey jobKey = new JobKey(name, group);
+        JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+        if (jobDetail == null) {
+            return;
+        }
+        scheduler.pauseJob(jobKey);
+        log.info("quartz定时器--------暂停任务--------任务名称：{}, 任务分组：{}", name, group);
+    } catch (SchedulerException e) {
+        log.error("quartz定时器--------暂停任务失败--------任务名称："
+                  + name + ", 任务分组：" + group, e);
+        throw new RuntimeException(e.getMessage(), e);
+    }
+}
+```
+
+
+
+#### 2.2.2.3、`resumeJob`：继续任务：暂停中的任务
+
+```java
+
+@Override
+public void resumeJob(String name, String group) {
+    try {
+        JobKey jobKey = new JobKey(name, group);
+        JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+        if (jobDetail == null) {
+            return;
+        }
+        scheduler.resumeJob(jobKey);
+        log.info("quartz定时器--------继续任务--------任务名称：{}, 任务分组：{}", name, group);
+    } catch (SchedulerException e) {
+        log.error("quartz定时器--------继续任务失败--------任务名称：" + name + ", 任务分组：" + group, e);
+        throw new RuntimeException(e.getMessage(), e);
+    }
+}
+```
+
+
+
+#### 2.2.2.4、`deleteJob`：删除任务
+
+> 正在执行的不受任何影响  
+
 
 
 ```java
-package com.hlj.quartz.controller;
+/**
+     * 删除任务
+     */
+@Override
+public void deleteJob(String name, String group) {
+    try {
+        JobKey jobKey = new JobKey(name, group);
+        JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+        if (jobDetail == null) {
+            return;
+        }
+        scheduler.deleteJob(jobKey);
+        log.info("quartz定时器--------删除任务--------任务名称：{}, 任务分组：{}", name, group);
+    } catch (SchedulerException e) {
+        log.error("quartz定时器--------删除任务失败--------任务名称：" + name + ", 任务分组：" + group, e);
+        throw new RuntimeException(e.getMessage(), e);
+    }
+}
 
-import com.hlj.quartz.quartz.Job.HelloJoTwo;
-import com.hlj.quartz.quartz.service.QuartzService;
-import com.hlj.quartz.quartz.Job.HelloJobOne;
-import org.quartz.SchedulerException;
+```
+
+
+
+#### 2.2.2.5、开启定时器：`scheduler.start()`
+
+> 开启定时器，这时才可以开始所有的任务，默认是开启的;
+
+```java
+
+@Override
+public void startAllJob() {
+    try {
+        scheduler.start();
+        log.info("quartz定时器--------开启定时器}");
+    } catch (SchedulerException e) {
+        log.error("quartz定时器--------开启定时器失败", e);
+        throw new RuntimeException(e.getMessage(), e);
+    }
+}
+```
+
+
+
+#### 2.2.2.5、关闭定时器 ：`scheduler.shutdown()`
+
+>  关闭定时器，则所有任务不能执行和创建，从此也再不能开启定时器
+
+```java
+
+@Override
+public void shutdown() {
+    try {
+        scheduler.shutdown();
+        log.info("quartz定时器--------关闭定时器}");
+    } catch (SchedulerException e) {
+        log.error("quartz定时器--------关闭定时器失败", e);
+        throw new RuntimeException(e.getMessage(), e);
+    }
+}
+```
+
+
+
+## 2.3、`QuartzController`
+
+```java
+package com.healerjean.proj.controller;
+
+import com.healerjean.proj.common.ResponseBean;
+import com.healerjean.proj.scheduler.OneJob;
+import com.healerjean.proj.service.DemoService;
+import com.healerjean.proj.service.QuartzService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -449,159 +647,205 @@ import org.springframework.web.bind.annotation.RestController;
  * @Author HealerJean
  * @Date 2018/3/22  下午4:47.
  */
+@ApiResponses(value = {
+        @ApiResponse(code = 200, message = "访问正常"),
+        @ApiResponse(code = 301, message = "逻辑错误"),
+        @ApiResponse(code = 500, message = "系统错误"),
+        @ApiResponse(code = 401, message = "未认证"),
+        @ApiResponse(code = 403, message = "禁止访问"),
+        @ApiResponse(code = 404, message = "url错误")
+})
+@Api(description = "quartz控制器")
+@RequestMapping("hlj/quartz")
+@Slf4j
 @RestController
 public class QuartzController {
 
 
     @Autowired
+    private DemoService demoService;
+    @Autowired
     private QuartzService quartzService;
 
+    @GetMapping("oneJob")
+    public ResponseBean oneJob() {
+        demoService.oneJob();
+        return ResponseBean.buildSuccess();
+    }
 
-    @GetMapping("quartzStart")
-    public String startNNoQuartz(){
-        quartzService.startJob("0/1 * * * * ? ","job1","gropu1", HelloJobOne.class);
-        quartzService.startJob("0/2 * * * * ? ","job2","gropu2", HelloJoTwo.class);
 
-        return "定时器任务开始执行，请注意观察控制台";
+
+    @GetMapping("startJob")
+    public ResponseBean startJob(String time, String name, String group, String className) {
+        log.info("quartz控制器--------开启任务--------任务名称：{}, 任务分组：{}", name, group);
+        quartzService.startJob(time, name, group, className);
+        return ResponseBean.buildSuccess("已经开启任务");
     }
 
     @GetMapping("pauseJob")
-    public String pauseJob(){
-        quartzService.pauseJob("job1","gropu1");
-        return "暂停一个定时器任务，请注意观察控制台";
+    public ResponseBean pauseJob(String name, String group) {
+        log.info("quartz控制器--------暂停任务--------任务名称：{}, 任务分组：{}", name, group);
+        quartzService.pauseJob(name, group);
+        return ResponseBean.buildSuccess("暂停任务");
     }
 
 
-    @GetMapping("resumeJob") //shutdown关闭了，或者删除了就不能重启了
-    public String resumeJob(){
-        quartzService.resumeJob("job1","gropu1");
-        return "暂停重启一个定时器任务，请注意观察控制台，shutdown关闭了，或者删除了就不能重启了";
+    @GetMapping("resumeJob")
+    public ResponseBean resumeJob(String name, String group) {
+        log.info("quartz控制器--------暂停任务");
+        quartzService.resumeJob(name, group);
+        return ResponseBean.buildSuccess("暂停后继续任务");
     }
 
     @GetMapping("deleteJob")
-    public String deleteJob(){
-        quartzService.deleteJob("job1","gropu1");
-        return "删除一个定时器任务，请注意观察控制台，删除了，重启就没什么用了";
+    public ResponseBean deleteJob(String name, String group) {
+        log.info("quartz控制器--------删除任务--------任务名称：{}, 任务分组：{}", name, group);
+        quartzService.deleteJob(name, group);
+        return ResponseBean.buildSuccess("删除任务");
     }
-
-
 
 
     @GetMapping("startAllJob")
-    public String startAllJob(){
+    public ResponseBean startAllJob() {
+        log.info("quartz控制器--------启动定时器");
         quartzService.startAllJob();
-        return "开启定时器，这时才可以开始所有的任务，默认是开启的";
+        return ResponseBean.buildSuccess("启动定时器");
     }
 
     @GetMapping("shutdown")
-    public String shutdown(){
+    public ResponseBean shutdown() {
+        log.info("quartz控制器--------关闭定时器");
         quartzService.shutdown();
-        return "关闭定时器，则所有任务不能执行和创建";
+        return ResponseBean.buildSuccess("关闭定时器");
     }
+
+}
 
 ```
 
 
 
-### 2.5、日期的匹配规则
+## 2.4、启动测试
 
-<table>
-<thead>
-<tr>
-  <th>表达式</th>
-  <th align="left">允许值</th>
-</tr>
-</thead>
-<tbody><tr>
-  <td>“0 0 12 * * ?”</td>
-  <td align="left">每天中午12点触发</td>
-</tr>
-<tr>
-  <td>“0 15 10 ? * *”</td>
-  <td align="left">每天上午10:15触发</td>
-</tr>
-<tr>
-  <td>“0 15 10 * * ?”</td>
-  <td align="left">每天上午10:15触发</td>
-</tr>
-<tr>
-  <td>“0 15 10 * * ? *”</td>
-  <td align="left">每天上午10:15触发</td>
-</tr>
-<tr>
-  <td>“0 15 10 * * ? 2005”</td>
-  <td align="left">2005年的每天上午10:15触发</td>
-</tr>
-<tr>
-  <td>“0 * 14 * * ?”</td>
-  <td align="left">在每天下午2点到下午2:59期间的每1分钟触发</td>
-</tr>
-<tr>
-  <td>“0 0/5 14 * * ?”</td>
-  <td align="left">在每天下午2点到下午2:55期间的每5分钟触发</td>
-</tr>
-<tr>
-  <td>“0 0/5 14,18 * * ?”</td>
-  <td align="left">在每天下午2点到2:55期间和下午6点到6:55期间的每5分钟触发</td>
-</tr>
-<tr>
-  <td>“0 0-5 14 * * ?”</td>
-  <td align="left">在每天下午2点到下午2:05期间的每1分钟触发</td>
-</tr>
-<tr>
-  <td>“0 10,44 14 ? 3 WED”</td>
-  <td align="left">每年三月的星期三的下午2:10和2:44触发</td>
-</tr>
-<tr>
-  <td>“0 15 10 ? * MON-FRI”</td>
-  <td align="left">周一至周五的上午10:15触发</td>
-</tr>
-<tr>
-  <td>“0 15 10 15 * ?”</td>
-  <td align="left">每月15日上午10:15触发</td>
-</tr>
-<tr>
-  <td>“0 15 10 L * ?”</td>
-  <td align="left">每月最后一日的上午10:15触发</td>
-</tr>
-<tr>
-  <td>“0 15 10 ? * 6L”</td>
-  <td align="left">每月的最后一个星期五上午10:15触发</td>
-</tr>
-<tr>
-  <td>“0 15 10 ? * 6L 2002-2005”</td>
-  <td align="left">2002年至2005年的每月的最后一个星期五上午10:15触发</td>
-</tr>
-<tr>
-  <td>“0 15 10 ? * 6#3”</td>
-  <td align="left">每月的第三个星期五上午10:15触发</td>
-</tr>
-<tr>
-  <td>0 6 * * *</td>
-  <td align="left">每天早上6点</td>
-</tr>
-<tr>
-  <td>0 <em>/2 </em> * *</td>
-  <td align="left">每两个小时</td>
-</tr>
-<tr>
-  <td>0 23-7/2，8 * * *</td>
-  <td align="left">晚上11点到早上8点之间每两个小时，早上八点</td>
-</tr>
-<tr>
-  <td>0 11 4 * 1-3</td>
-  <td align="left">每个月的4号和每个礼拜的礼拜一到礼拜三的早上11点</td>
-</tr>
-<tr>
-  <td>0 4 1 1 *</td>
-  <td align="left">1月1日早上4点</td>
-</tr>
-</tbody></table>
+### 2.4.1、开启任务
+
+```http
+http://127.0.0.1:8888/hlj/quartz/startJob?className=com.healerjean.proj.scheduler.OneJob&group=group&name=name&time=0%2F1%20*%20*%20*%20*%20%3F
+```
+
+**接口返回：**
+
+```json
+{
+  "success": true,
+  "result": "已经开启任务",
+  "msg": "",
+  "code": 200,
+  "date": "1589524122848"
+}
+```
+
+**控制台：**
+
+![image-20200515144852649](D:\study\HealerJean.github.io\blogImages\image-20200515144852649.png)
 
 
 
+# 4、概念解析
 
-## [代码下载](https://gitee.com/HealerJean/CodeDownLoad/tree/master/2017_03_22_2_springBoot%E9%9B%86%E6%88%90Quartz)
+## 4.1、`ScheduleBuilde`
+
+### 4.1.1、`SimpleScheduleBuilder` 
+
+> **只能指定触发的间隔时间和执行次数，需要触发器指定开始时间**；
+
+
+
+```java
+@Override
+public void oneJob() {
+    try {
+        Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+        scheduler.start();
+
+        //具体任务.
+        String jobDetailName = "oneJobName";
+        String jobDetailGroup = "oneJobGroup";
+        JobDetail jobDetail = JobBuilder.newJob(OneJob.class)
+            .withIdentity(jobDetailName, jobDetailGroup).build();
+
+        //触发时间点. (每5秒执行1次.)
+        SimpleScheduleBuilder simpleScheduleBuilder = 
+            SimpleScheduleBuilder.simpleSchedule()
+            .withIntervalInSeconds(5)
+            .repeatForever();
+
+        String triggerName = "triggerName";
+        String triggerGroup = "triggerGroup";
+        Trigger trigger = TriggerBuilder.newTrigger()
+            .withIdentity(triggerName, triggerGroup)
+            .startNow()
+            .withSchedule(simpleScheduleBuilder)
+            .build();
+
+        scheduler.scheduleJob(jobDetail, trigger);
+
+        //睡眠20秒.等待任务完成
+        TimeUnit.SECONDS.sleep(20);
+
+        //关闭定时任务调度器.
+        log.info("关闭定时器调度器");
+        scheduler.shutdown();
+        System.out.println("scheduler.shutdown");
+    } catch (SchedulerException e) {
+        e.printStackTrace();
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+
+}
+```
+
+
+
+### 4.1.2、`CronScheduleBuilder`
+
+> CronScheduleBuilder是类似于Linux Cron的触发器，它通过一个称为CronExpression的规则来指定触发规则，通常是每次触发的具体时间；
+
+
+
+```java
+public void startJob(String time, String name, String group, String jobClassName) {
+    try {
+        Class jobClass = Class.forName(jobClassName);
+        JobDetail jobDetail = JobBuilder.newJob(jobClass)
+            .withIdentity(name, group).build();
+        
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(time);
+        CronTrigger cronTrigger = TriggerBuilder.newTrigger()
+            .withIdentity(name, group)
+            .withSchedule(scheduleBuilder)
+            .build();
+        
+        scheduler.scheduleJob(jobDetail, cronTrigger);
+        log.info("quartz定时器--------启动任务--------任务名称：{}, 任务分组：{}", name, group);
+    } catch (SchedulerException e) {
+        log.error("quartz定时器--------启动任务失败", e);
+        throw new RuntimeException(e.getMessage(), e);
+    } catch (ClassNotFoundException e) {
+        log.error("quartz定时器--------启动任务失败", e);
+        throw new RuntimeException(e.getMessage(), e);
+    }
+}
+```
+
+
+
+
+
+## 
+
+
 
 ![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
