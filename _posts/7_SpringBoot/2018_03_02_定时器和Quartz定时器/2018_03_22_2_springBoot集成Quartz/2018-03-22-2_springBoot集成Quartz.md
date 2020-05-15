@@ -1,5 +1,5 @@
 ---
-title: 2、SpringBoot集成Quartz
+title: SpringBoot集成Quartz
 date: 2018-03-22 21:33:00
 tags: 
 - Quartz

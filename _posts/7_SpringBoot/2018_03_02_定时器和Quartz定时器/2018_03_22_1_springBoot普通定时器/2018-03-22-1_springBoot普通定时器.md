@@ -1,5 +1,5 @@
 ---
-title: 1、SpringBoot普通定时器
+title: SpringBoot普通定时器
 date: 2018-03-22 18:33:00
 tags: 
 - Quartz
@@ -15,20 +15,27 @@ description: SpringBoot普通定时器
 
 
 
-SpringBoot自带的Scheduled，
+# 1、SpringBoot普通定时器  
 
-有两种定时任务执行方式：
-	•	单线程（串行）
-	•	多线程（并行）
+> SpringBoot自带的Scheduled，  有两种定时任务执行方式：    
+>
+> 1、单线程（串行） 默认    
+>
+> 2、多线程（并行）      
+>
+> 
+>
+> 有时候需要实现动态定时任务，即工程启动后，可以实现启动和关闭任务，同时也可以设置定时计划。这就需要利用到quartz，那么下一篇我将会开始介绍quartz
+>
 
-有时候需要实现动态定时任务，即工程启动后，可以实现启动和关闭任务，同时也可以设置定时计划。这就需要利用到quartz，那么下一篇我将会开始介绍quartz
-
-## 1、串行任务
-
-### 1.1、sprinBoot启动开启定时器支持
 
 
-```
+## 1.1、串行任务
+
+### 1.1.1、启动定时器支持
+
+
+```java
 @SpringBootApplication
 @EnableScheduling
 public class ComHljQuartzApplication {
@@ -40,7 +47,9 @@ public class ComHljQuartzApplication {
 
 ```
 
-### 1.2、准备好定时器开始，执行吧
+
+
+### 1.1.2、定时器任务
 
 
 ```java
@@ -96,11 +105,12 @@ public class MyTaskAnnotation {
 ```
 
 
-### 1.3、项目启动，开始执行观察控制台
+
+### 1.1.3、启动测试  
+
+
 
 > 两个任务共同时候用的同一个线程，也就是这里的定时器任务是串行的，也就是说spirngBoot定时器任务默认是串行的
-
-   
 
 
 
@@ -108,12 +118,15 @@ public class MyTaskAnnotation {
 
 
 
-## 2、并行任务，（将上面的串行变成并行）
-> 1、其实做这个定时器的时候，想起给sinosoft的定时器任务了，代码虽然垃圾，但也算是实现了定时器的基本需求，
-> 2、那里的spinng文件中配置的其实也可以用在这里，也是并行运行的。只不过这里sprignBoot就是为了省略配置文件。所以我下面用注解的方式实现
 
 
-### 2.1、开启并行任务支持，进行任务执行器的配置
+## 1.2、并行任务  
+
+
+
+### 1.2.1、并行任务支持 
+
+
 
 ```java
 package com.hlj.quartz.normalschedule.config;
@@ -189,38 +202,49 @@ public class ScheduleConfig implements SchedulingConfigurer, AsyncConfigurer
 
 
 
-### 2.2、项目启动，开始观察控制台  
+### 1.2.2、启动测试  
 
 
 
-**发现了吧，定时器的线程改变了，变成多线程的样式，那么这里就代码是多线程喽。也就是实现并行了**  
+>  **发现了吧，定时器的线程改变了，变成多线程的样式，那么这里就代码是多线程喽。也就是实现并行了**  
 
 
 
 ![WX20180322-185336](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20180322-185336.png)
 
 
-## [代码下载](https://gitee.com/HealerJean/CodeDownLoad/raw/master/2018_03_22_1_springBoot%E6%99%AE%E9%80%9A%E5%AE%9A%E6%97%B6%E5%99%A8/com-hlj-schedule.zip)
-
-​     
 
 
 
-## 3、注解解释 
+
+
+# 2、解释
+
+## 2.1、名词解释 
+
+### 2.1.1、`fixedDelay`
+
+> `fixedDelay`控制方法执行的间隔时间，是以上一次方法执行完开始算起，如上一次方法执行阻塞住了，那么直到上一次执行完，并间隔给定的时间后，执行下一次。
 
 
 
-### 3.1、fixedDelay
+### 2.1.2、`fixedRate`
 
-fixedDelay控制方法执行的间隔时间，是以上一次方法执行完开始算起，如上一次方法执行阻塞住了，那么直到上一次执行完，并间隔给定的时间后，执行下一次。
+> `fixedRate`是按照一定的速率执行，是从上一次方法执行开始的时间算起.。      
+>
+> 如果上一次方法阻塞住了，下一次也是不会执行，但是在阻塞这段时间内累计应该执行的次数，当不再阻塞时，一下子把这些全部执行掉，而后再按照固定速率继续执行。    
 
-### 3.2、fixedRate
 
-fixedRate是按照一定的速率执行，是从上一次方法执行开始的时间算起，如果上一次方法阻塞住了，下一次也是不会执行，但是在阻塞这段时间内累计应该执行的次数，当不再阻塞时，一下子把这些全部执行掉，而后再按照固定速率继续执行。  
 
-### 3.3、cron
+### 2.1.3、cron
 
-cron表达式可以定制化执行任务，但是执行的方式是与fixedDelay相近的，也是会按照上一次方法结束时间开始算起。
+> cron表达式可以定制化执行任务
+
+
+
+
+
+
 
 
 
