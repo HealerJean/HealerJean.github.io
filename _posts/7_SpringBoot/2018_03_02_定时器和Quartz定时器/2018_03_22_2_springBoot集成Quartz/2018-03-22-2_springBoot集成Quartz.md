@@ -284,7 +284,7 @@ CalendarIntervalScheduleBuilder是对CronScheduleBuilder的补充，它能指定
 
 
 
-```
+```java
 package com.hlj.quartz.quartz.service;
 
 import com.hlj.quartz.quartz.Job.HelloJobOne;
