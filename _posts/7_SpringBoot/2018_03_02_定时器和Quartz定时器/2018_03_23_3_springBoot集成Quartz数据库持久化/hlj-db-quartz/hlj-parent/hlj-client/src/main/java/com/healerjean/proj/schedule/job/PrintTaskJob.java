@@ -2,9 +2,9 @@ package com.healerjean.proj.schedule.job;
 
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronTrigger;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
+@DisallowConcurrentExecution //禁止并发执行多个相同定义的JobDetail
 public class PrintTaskJob implements Job {
 
     @Override

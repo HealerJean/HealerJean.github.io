@@ -1,6 +1,6 @@
-package com.healerjean.proj.schedule.service.impl;
+package com.healerjean.proj.scheduler.service.impl;
 
-import com.healerjean.proj.schedule.service.SchedulerService;
+import com.healerjean.proj.scheduler.service.SchedulerService;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
@@ -11,36 +11,34 @@ import java.util.Set;
 
 /**
  * @author HealerJean
- * @ClassName SchedulerServiceImpl
- * @date 2020/5/15  17:41.
+ * @ClassName QuartzServiceImpl
+ * @date 2020/5/15  12:27.
  * @Description
  */
 @Slf4j
 @Service
 public class SchedulerServiceImpl implements SchedulerService {
 
-
     @Resource
     private Scheduler scheduler;
-
 
     /**
      * 启动任务
      *
-     * @param cron      Cron 表达式
-     * @param name      任务名称
+     * @param name      任务名称，
+     * @param group     任务分组
      * @param className 任务类
-     * @param jobDesc   任务描述
+     * @param cron      Cron 表达式
      */
     @Override
-    public void startJob( String name, String className, String cron,String jobDesc) {
+    public void startJob(String name, String group, String className, String cron,  String jobDesc) {
         try {
             Class jobClass = Class.forName(className);
-            JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(name).withDescription(jobDesc).build();
+            JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(name, group).withDescription(jobDesc).build();
             CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cron);
-            CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(name).withSchedule(scheduleBuilder).build();
+            CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity(name, group).withSchedule(scheduleBuilder).build();
             scheduler.scheduleJob(jobDetail, cronTrigger);
-            log.info("quartz定时器--------启动任务--------任务名称：{}, 任务类：{}，corn表达式", name, className, cron);
+            log.info("quartz定时器--------启动任务--------任务名称：{}, 任务分组：{}, 任务类：{}，corn表达式", name, group, className, cron);
         } catch (SchedulerException e) {
             log.error("quartz定时器--------启动任务失败", e);
             throw new RuntimeException(e.getMessage(), e);
@@ -50,25 +48,21 @@ public class SchedulerServiceImpl implements SchedulerService {
         }
     }
 
-
     /**
      * 重置任务
-     *
-     * @param name 任务名称
-     * @param cron Cron 表达式
      */
     @Override
-    public void resetJob(String name, String cron) {
+    public void resetJob(String name, String group, String cron) {
         try {
-            JobKey jobKey = new JobKey(name);
+            JobKey jobKey = new JobKey(name, group);
             if (scheduler.checkExists(jobKey)) {
-                TriggerKey triggerKey = TriggerKey.triggerKey(name);
+                TriggerKey triggerKey = TriggerKey.triggerKey(name, group);
                 CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cron);
                 CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
                 trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
                 //按新的trigger重新设置job执行
                 scheduler.rescheduleJob(triggerKey, trigger);
-                log.info("quartz定时器--------重置任务--------任务名称：{}", name);
+                log.info("quartz定时器--------重置任务--------任务名称：{},任务分组：{}", name, group);
             }
             throw new RuntimeException("quartz定时器--------重置任务--------任务" + name + "不存在");
         } catch (SchedulerException e) {
@@ -80,18 +74,38 @@ public class SchedulerServiceImpl implements SchedulerService {
     /**
      * 暂停任务
      *
-     * @param name 任务名称
+     * @param name  任务名称
+     * @param group 任务分组
      */
     @Override
-    public void pauseJob(String name) {
+    public void pauseJob(String name, String group) {
         try {
-            JobKey jobKey = new JobKey(name);
+            JobKey jobKey = new JobKey(name, group);
             if (scheduler.checkExists(jobKey)) {
                 scheduler.pauseJob(jobKey);
-                log.info("quartz定时器--------暂停任务--------任务名称：{}", name);
+                log.info("quartz定时器--------暂停任务--------任务名称：{}, 任务分组：{}", name, group);
             }
         } catch (SchedulerException e) {
-            log.error("quartz定时器--------暂停任务失败--------任务名称：" + name + "", e);
+            log.error("quartz定时器--------暂停任务失败--------任务名称：" + name + ", 任务分组：" + group, e);
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+
+    /**
+     * 暂停重启任务：暂停中的任务
+     * 注意：shutdown关闭了，或者删除了就不能重启了
+     */
+    @Override
+    public void resumeJob(String name, String group) {
+        try {
+            JobKey jobKey = new JobKey(name, group);
+            if (scheduler.checkExists(jobKey)) {
+                scheduler.resumeJob(jobKey);
+                log.info("quartz定时器--------暂停重启任务--------任务名称：{}, 任务分组：{}", name, group);
+            }
+        } catch (SchedulerException e) {
+            log.error("quartz定时器--------暂停重启任务失败--------任务名称：" + name + ", 任务分组：" + group, e);
             throw new RuntimeException(e.getMessage(), e);
         }
     }
@@ -101,31 +115,15 @@ public class SchedulerServiceImpl implements SchedulerService {
      * 删除任务
      */
     @Override
-    public void deleteJob(String name) {
+    public void deleteJob(String name, String group) {
         try {
-            if (scheduler.checkExists(new JobKey(name))) {
-                scheduler.deleteJob(new JobKey(name));
-                log.info("quartz定时器--------删除任务--------任务名称：{}", name);
+            JobKey jobKey = new JobKey(name, group);
+            if (scheduler.checkExists(jobKey)) {
+                scheduler.deleteJob(jobKey);
+                log.info("quartz定时器--------删除任务--------任务名称：{}, 任务分组：{}", name, group);
             }
         } catch (SchedulerException e) {
-            log.error("quartz定时器--------删除任务失败--------任务名称：" + name + "", e);
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
-
-    /**
-     * 暂停重启
-     */
-    @Override
-    public void resumeJob(String name) {
-        try {
-            if (scheduler.checkExists(new JobKey(name))) {
-                scheduler.resumeJob(new JobKey(name));
-                log.info("quartz定时器--------暂停重启任务--------任务名称：{}", name);
-            }
-        } catch (SchedulerException e) {
-            log.error("quartz定时器--------暂停重启任务失败--------任务名称：" + name + "", e);
+            log.error("quartz定时器--------删除任务失败--------任务名称：" + name + ", 任务分组：" + group, e);
             throw new RuntimeException(e.getMessage(), e);
         }
     }
@@ -144,14 +142,13 @@ public class SchedulerServiceImpl implements SchedulerService {
         }
     }
 
-
     /**
      * 获取任务详情 JobDetail
      */
     @Override
-    public JobDetail getJobDetail(String name) {
+    public JobDetail getJobDetail(String name, String group) {
         try {
-            JobKey jobKey = new JobKey(name);
+            JobKey jobKey = new JobKey(name, group);
             return scheduler.getJobDetail(jobKey);
         } catch (SchedulerException e) {
             throw new RuntimeException();
@@ -164,22 +161,23 @@ public class SchedulerServiceImpl implements SchedulerService {
      * @return
      */
     @Override
-    public Trigger getJobTrigger(String name) {
+    public Trigger getJobTrigger(String name, String group) {
         try {
-            TriggerKey triggerKey = new TriggerKey(name);
+            TriggerKey triggerKey = new TriggerKey(name, group);
             return scheduler.getTrigger(triggerKey);
         } catch (SchedulerException e) {
             throw new RuntimeException();
         }
     }
 
+
     /**
      * 获取触发器 任务的执行状态
      */
     @Override
-    public Trigger.TriggerState getTriggerState(String name ) {
+    public Trigger.TriggerState getTriggerState(String name, String group) {
         try {
-            TriggerKey triggerKey = new TriggerKey(name);
+            TriggerKey triggerKey = new TriggerKey(name, group);
             return scheduler.getTriggerState(triggerKey);
         } catch (SchedulerException e) {
             throw new RuntimeException();
@@ -214,6 +212,4 @@ public class SchedulerServiceImpl implements SchedulerService {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
-
-
 }
