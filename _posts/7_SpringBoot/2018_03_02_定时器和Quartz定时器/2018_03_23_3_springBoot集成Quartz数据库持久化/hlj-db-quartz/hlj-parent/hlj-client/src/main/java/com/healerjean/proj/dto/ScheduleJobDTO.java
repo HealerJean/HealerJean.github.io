@@ -2,6 +2,8 @@ package com.healerjean.proj.dto;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author HealerJean
  * @ClassName ScheduleJobDTO
@@ -11,7 +13,6 @@ import lombok.Data;
 @Data
 public class ScheduleJobDTO {
 
-    private Long scheduleJobid;
     /**  时间表达式 */
     private String cron;
     /**  任务名称 */
@@ -20,6 +21,8 @@ public class ScheduleJobDTO {
     private String jobDesc;
     /**  任务类全名，包含包 */
     private String jobClass;
-    /**  99 废弃 10 有效 */
-    private String status;
+
+    private Date previousFireTime;
+    private Date nextFireTime;
+    private String jobStatus;
 }

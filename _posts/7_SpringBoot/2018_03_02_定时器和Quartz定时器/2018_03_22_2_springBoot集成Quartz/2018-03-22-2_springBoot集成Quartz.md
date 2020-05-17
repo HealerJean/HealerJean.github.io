@@ -43,7 +43,7 @@ description: SpringBoot集成Quartz
 ```
 
 
-### 1.1.2、quartz.properties
+### 1.1.2、`quartz.properties`
 
 
 ```properties
@@ -747,7 +747,7 @@ http://127.0.0.1:8888/hlj/quartz/startJob?className=com.healerjean.proj.schedule
 
 **控制台：**
 
-![image-20200515144852649](D:\study\HealerJean.github.io\blogImages\image-20200515144852649.png)
+![image-20200515144852649](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200515144852649.png)
 
 
 

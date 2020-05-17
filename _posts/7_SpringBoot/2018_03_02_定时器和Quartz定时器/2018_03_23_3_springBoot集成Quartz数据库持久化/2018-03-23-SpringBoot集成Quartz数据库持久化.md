@@ -229,16 +229,21 @@ commit;
 
 <!--quartz-->
 <dependency>
-	<groupId>org.quartz-scheduler</groupId>
-	<artifactId>quartz-jobs</artifactId>
-	<version>2.2.1</version>
+    <groupId>org.quartz-scheduler</groupId>
+    <artifactId>quartz-jobs</artifactId>
+    <version>2.2.1</version>
 </dependency>
 
 <dependency>
-	<groupId>org.springframework.boot</groupId>
-	<artifactId>spring-boot-starter-quartz</artifactId>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-quartz</artifactId>
 </dependency>
 
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>druid</artifactId>
+    <version>1.1.5</version>
+</dependency>
 ```
 
 
@@ -270,15 +275,16 @@ org.quartz.jobStore.class = org.quartz.simpl.RAMJobStore
 
 ```properties
 
+
 #默认或是自己改名字都行
-org.quartz.scheduler.instanceName=HeaelrJeanQuartzScheduler
+org.quartz.scheduler.instanceName=CustomQuartzScheduler
 #如果使用集群，instanceId必须唯一，设置成AUTO
 org.quartz.scheduler.instanceId=AUTO
 org.quartz.scheduler.jobFactory.class=org.quartz.simpl.SimpleJobFactory
 org.quartz.scheduler.autoStartup=true
 org.quartz.scheduler.skipUpdateCheck=true
 
-
+# 配置现场池
 org.quartz.threadPool.class=org.quartz.simpl.SimpleThreadPool
 org.quartz.threadPool.threadCount=30
 org.quartz.threadPool.threadPriority=5
@@ -296,16 +302,17 @@ org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.StdJDBCDele
 #misfireThreshold是用来设置调度引擎对触发器超时的忍耐时间，简单来说 假设misfireThreshold=6000(单位毫秒)。
 #那么它的意思说当一个触发器超时时间如果大于misfireThreshold的值 就认为这个触发器真正的超时(也叫Misfires)。
 org.quartz.jobStore.misfireThreshold=60000
+#数据库中quartz表的表名前缀
 org.quartz.jobStore.tablePrefix = QRTZ_
 org.quartz.jobStore.dataSource = myDS
-
 #配置数据源
-#数据库中quartz表的表名前缀
 org.quartz.dataSource.myDS.driver = com.mysql.jdbc.Driver
 org.quartz.dataSource.myDS.URL = jdbc:mysql://localhost:3306/hlj_quartz?characterEncoding=utf-8
 org.quartz.dataSource.myDS.user = root
 org.quartz.dataSource.myDS.password = 123456
 org.quartz.dataSource.myDS.maxConnections = 5
+
+
 ```
 
 
