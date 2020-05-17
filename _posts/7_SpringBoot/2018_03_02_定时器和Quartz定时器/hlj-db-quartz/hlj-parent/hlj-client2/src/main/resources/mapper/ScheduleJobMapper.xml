@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.healerjean.proj.dao.mapper.ScheduleJobMapper">
+
+    <resultMap type="com.healerjean.proj.pojo.ScheduleJob" id="ScheduleJobMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="cron" column="cron" jdbcType="VARCHAR"/>
+        <result property="jobName" column="job_name" jdbcType="VARCHAR"/>
+        <result property="jobDesc" column="job_desc" jdbcType="VARCHAR"/>
+        <result property="jobClass" column="job_class" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+    </resultMap>
+
+</mapper>
