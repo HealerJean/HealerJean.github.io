@@ -2066,19 +2066,28 @@ CronTrigger trigger = TriggerBuilder.newTrigger()
 
 ## 4.2、`@DisallowConcurrentExecution`
 
-> 禁止并发执行多个相同定义的JobDetail    
+> 禁止并发执行多个相同定义的JobDetail       
+>
+> 这个注解是加在`Job`类上的, 但意思并不是不能同时执行多个Job, 而是不能并发执行同一个Job Definition(由`JobDetail`定义)    
 
-这个注解是加在Job类上的, 但意思并不是不能同时执行多个Job, 而是不能并发执行同一个Job Definition(由JobDetail定义)    
+举例说明,我们有一个`Job`类,叫做`SayHelloJob`, 并在这个`Job`上加了这个注解, 然后在这个Job上定义了很多个`JobDetail`，如`sayHelloToJoeJobDetail`, `sayHelloToMikeJobDetail`,      
 
-举例说明,我们有一个Job类,叫做SayHelloJob, 并在这个Job上加了这个注解, 然后在这个Job上定义了很多个JobDetail，如sayHelloToJoeJobDetail, sayHelloToMikeJobDetail,      
-
-那么当scheduler启动时, 不会并发执行多个sayHelloToJoeJobDetail或者sayHelloToMikeJobDetail。而是会按照顺序同步执行。     
+那么当`scheduler`启动时, 不会并发执行多个`sayHelloToJoeJobDetail`或者`sayHelloToMikeJobDetail`。而是会按照顺序同步执行。       
 
 
-![](markdownImage/15897150880051.jpg)
+
+
+![](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/15897150880051.jpg)
+
+
+
 
 
 ![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
+
+
+
+
 
 
 
