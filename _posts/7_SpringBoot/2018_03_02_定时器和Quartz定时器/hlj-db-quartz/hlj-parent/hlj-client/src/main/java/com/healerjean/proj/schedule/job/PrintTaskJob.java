@@ -25,9 +25,9 @@ public class PrintTaskJob implements Job {
             String corn = trigger.getCronExpression();
             String jobName = trigger.getKey().getName();
             String jobGroup = trigger.getKey().getGroup();
-            log.info("定时器任务开始执行--------【PrintTaskJob】 ,任务corn：{}, 任务名称：{}， 任务组：{}", corn, jobName, jobGroup);
+            log.info("定时器任务开始执行--------任务corn：{}, 任务名称：{}， 任务组：{}", corn, jobName, jobGroup);
         } catch (Exception e) {
-            log.error("定时器任务--------【PrintTaskJob】 任务执行失败");
+            log.error("定时器任务--------任务执行失败", e);
         }
     }
 }

@@ -3,15 +3,14 @@ package com.healerjean.proj.controller;
 import com.healerjean.proj.common.dto.ResponseBean;
 import com.healerjean.proj.dto.ScheduleJobDTO;
 import com.healerjean.proj.schedule.service.SchedulerService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,16 +44,27 @@ public class QuartzController {
     private SchedulerService schedulerService;
 
 
-
+    @ApiOperation(notes = "启动任务",
+            value = "启动任务",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = ResponseBean.class
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "任务名，英文", required = true, dataTypeClass = String.class, defaultValue = "PrintTaskJob", paramType = "query"),
+            @ApiImplicitParam(name = "className", value = "任务类", required = true, dataTypeClass = String.class, defaultValue = "com.healerjean.proj.schedule.job.PrintTaskJob", paramType = "query"),
+            @ApiImplicitParam(name = "cron", value = "cron表达式", required = true, dataTypeClass = String.class, defaultValue = "*/20 * * * * ?", paramType = "query"),
+            @ApiImplicitParam(name = "jobDesc", value = "任务描述", required = true, dataTypeClass = String.class, defaultValue = "打印任务", paramType = "query"),
+    })
     @GetMapping("startJob")
-    public ResponseBean startJob( String name, String className, String cron, String jobDesc) {
+    public ResponseBean startJob(String name, String className, String cron, String jobDesc) {
         log.info("quartz控制器--------启动任务--------任务名称：{}, 任务类：{}，corn表达式", name, className, cron);
-        schedulerService.startJob(name, className,cron, jobDesc);
+        schedulerService.startJob(name, className, cron, jobDesc);
         return ResponseBean.buildSuccess("已经开启任务");
     }
 
     @GetMapping("pauseJob")
-    public ResponseBean pauseJob(String name ) {
+    public ResponseBean pauseJob(String name) {
         log.info("quartz控制器--------暂停任务--------任务名称：{}", name);
         schedulerService.pauseJob(name);
         return ResponseBean.buildSuccess("暂停任务");
@@ -62,7 +72,7 @@ public class QuartzController {
 
 
     @GetMapping("resumeJob")
-    public ResponseBean resumeJob(String name ) {
+    public ResponseBean resumeJob(String name) {
         log.info("quartz控制器--------暂停任务");
         schedulerService.resumeJob(name);
         return ResponseBean.buildSuccess("暂停后继续任务");
@@ -81,14 +91,14 @@ public class QuartzController {
         Set<JobKey> jobKeys = schedulerService.currentJobs();
         List<ScheduleJobDTO> jobList = new ArrayList<>();
 
-        for (JobKey jobKey : jobKeys){
+        for (JobKey jobKey : jobKeys) {
             JobDetail jobDetail = schedulerService.getJobDetail(jobKey.getName());
             Trigger trigger = schedulerService.getJobTrigger(jobKey.getName());
             Trigger.TriggerState triggerState = schedulerService.getTriggerState(jobKey.getName());
             ScheduleJobDTO jobDTO = new ScheduleJobDTO();
             jobDTO.setJobName(jobKey.getName());
             jobDTO.setJobDesc(jobDetail.getDescription());
-            jobDTO.setCron(((CronTrigger)trigger).getCronExpression());
+            jobDTO.setCron(((CronTrigger) trigger).getCronExpression());
             jobDTO.setJobClass(jobDetail.getJobClass().toString());
             jobDTO.setPreviousFireTime(trigger.getPreviousFireTime());
             jobDTO.setNextFireTime(trigger.getNextFireTime());
@@ -102,7 +112,7 @@ public class QuartzController {
     @GetMapping("getTriggerState")
     public ResponseBean getTriggerState(String name) {
         log.info("quartz控制器--------任务的执行状态--------任务名称：{}", name);
-        return ResponseBean.buildSuccess("任务的执行状态",schedulerService.getTriggerState(name));
+        return ResponseBean.buildSuccess("任务的执行状态", schedulerService.getTriggerState(name));
     }
 
 

@@ -1,10 +1,12 @@
 package com.healerjean.proj.schedule.listener;
 
+import com.healerjean.proj.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobListener;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -28,7 +30,7 @@ public class CustomSchedulerJobListener implements JobListener {
     @Override
     public void jobToBeExecuted(JobExecutionContext jobExecutionContext) {
         String name = jobExecutionContext.getJobDetail().getKey().getName();
-        log.info("定时器监听，任务：【{} 准备开始执行，执行时间：{}", name, new Date());
+        log.info("定时器监听，任务：【{} 准备开始执行，执行时间：{}", name, DateUtils.toDateTimeString(LocalDateTime.now(), DateUtils.YYYY_MM_dd_HH_mm_ss));
     }
 
     /**
@@ -50,10 +52,9 @@ public class CustomSchedulerJobListener implements JobListener {
     public void jobWasExecuted(JobExecutionContext jobExecutionContext, JobExecutionException e) {
         String name = jobExecutionContext.getJobDetail().getKey().getName();
         if (e != null) {
-            log.error("定时器监听，任务：【{"+name+"}】 执行失败", e);
+            log.error("定时器监听，任务：【{" + name + "}】 执行失败", e);
         } else {
-            log.info("定时器监听，任务：【{}】执行成功，执行时间：{}", name, new Date());
-
+            log.info("定时器监听，任务：【{} 执行成功，执行时间：{}", name, DateUtils.toDateTimeString(LocalDateTime.now(), DateUtils.YYYY_MM_dd_HH_mm_ss));
         }
     }
 }

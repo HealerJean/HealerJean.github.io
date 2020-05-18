@@ -10,7 +10,7 @@
 
     <artifactId>hlj-client2</artifactId>
     <version>${project.scf.version}</version>
-    <name>hlj-client</name>
+    <name>hlj-client2</name>
     <description>客户端</description>
 
 
