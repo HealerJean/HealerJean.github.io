@@ -3,15 +3,14 @@ package com.healerjean.proj.controller;
 import com.healerjean.proj.common.dto.ResponseBean;
 import com.healerjean.proj.dto.ScheduleJobDTO;
 import com.healerjean.proj.schedule.service.SchedulerService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,10 +45,22 @@ public class QuartzController {
 
 
 
+    @ApiOperation(notes = "启动任务",
+            value = "启动任务",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = ResponseBean.class
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "任务名，英文", required = true, dataTypeClass = String.class, defaultValue = "PrintTaskJob", paramType = "query"),
+            @ApiImplicitParam(name = "className", value = "任务类", required = true, dataTypeClass = String.class, defaultValue = "com.healerjean.proj.schedule.job.PrintTaskJob", paramType = "query"),
+            @ApiImplicitParam(name = "cron", value = "cron表达式", required = true, dataTypeClass = String.class, defaultValue = "*/20 * * * * ?", paramType = "query"),
+            @ApiImplicitParam(name = "jobDesc", value = "任务描述", required = true, dataTypeClass = String.class, defaultValue = "打印任务", paramType = "query"),
+    })
     @GetMapping("startJob")
-    public ResponseBean startJob( String name, String className, String cron, String jobDesc) {
+    public ResponseBean startJob(String name, String className, String cron, String jobDesc) {
         log.info("quartz控制器--------启动任务--------任务名称：{}, 任务类：{}，corn表达式", name, className, cron);
-        schedulerService.startJob(name, className,cron, jobDesc);
+        schedulerService.startJob(name, className, cron, jobDesc);
         return ResponseBean.buildSuccess("已经开启任务");
     }
 

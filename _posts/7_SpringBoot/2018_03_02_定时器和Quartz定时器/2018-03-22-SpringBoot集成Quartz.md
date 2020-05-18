@@ -1242,39 +1242,35 @@ commit;
 
 ```properties
 
-#============================================================================
-# 配置定时器属性
-#============================================================================
 #默认或是自己改名字都行
 org.quartz.scheduler.instanceName=CustomQuartzScheduler
 #如果使用集群，instanceId必须唯一，设置成AUTO
 org.quartz.scheduler.instanceId=AUTO
+org.quartz.scheduler.jobFactory.class=org.quartz.simpl.SimpleJobFactory
+org.quartz.scheduler.autoStartup=true
+org.quartz.scheduler.skipUpdateCheck=true
 
-# 配置线程池
+# 配置现场池
 org.quartz.threadPool.class=org.quartz.simpl.SimpleThreadPool
 org.quartz.threadPool.threadCount=30
 org.quartz.threadPool.threadPriority=5
 
 
 #存储方式使用JobStoreTX，也就是数据库
-#misfireThreshold是用来设置调度引擎对触发器超时的忍耐时间，简单来说 假设misfireThreshold=6000(单位毫秒)。
-#那么它的意思说当一个触发器超时时间如果大于misfireThreshold的值 就认为这个触发器真正的超时(也叫Misfires)。
-org.quartz.jobStore.misfireThreshold=60000
+#存储的JobDataMaps是否都为String类型
+org.quartz.jobStore.useProperties=true
+#是否使用集群（如果项目只部署到 一台服务器，就不用了）
+org.quartz.jobStore.isClustered=true
+org.quartz.jobStore.clusterCheckinInterval=20000
 #存储方式使用JobStoreTX，也就是数据库
 org.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTX
 org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.StdJDBCDelegate
-org.quartz.jobStore.useProperties=false
-
-
-#是否使用集群
-org.quartz.jobStore.isClustered=true
-org.quartz.jobStore.clusterCheckinInterval=20000
-
-
+#misfireThreshold是用来设置调度引擎对触发器超时的忍耐时间，简单来说 假设misfireThreshold=6000(单位毫秒)。
+#那么它的意思说当一个触发器超时时间如果大于misfireThreshold的值 就认为这个触发器真正的超时(也叫Misfires)。
+org.quartz.jobStore.misfireThreshold=60000
 #数据库中quartz表的表名前缀
 org.quartz.jobStore.tablePrefix = QRTZ_
 org.quartz.jobStore.dataSource = customQuartz
-
 
 ```
 
@@ -1399,10 +1395,9 @@ public class PrintTaskJob implements Job {
             String corn = trigger.getCronExpression();
             String jobName = trigger.getKey().getName();
             String jobGroup = trigger.getKey().getGroup();
-            log.info("定时器任务开始执行--------任务corn：{}, 任务名称：{}， 任务组：{}", 
-                     corn, jobName, jobGroup);
+            log.info("定时器任务开始执行--------【PrintTaskJob】 ,任务corn：{}, 任务名称：{}， 任务组：{}", corn, jobName, jobGroup);
         } catch (Exception e) {
-            log.error("定时器任务--------任务执行失败", e);
+            log.error("定时器任务--------【PrintTaskJob】 任务执行失败");
         }
     }
 }
@@ -1740,14 +1735,10 @@ public class SchedulerServiceImpl implements SchedulerService {
 ```java
 package com.healerjean.proj.schedule.listener;
 
-import com.healerjean.proj.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobListener;
-
-import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * 类描述：
@@ -1770,7 +1761,7 @@ public class CustomSchedulerJobListener implements JobListener {
     @Override
     public void jobToBeExecuted(JobExecutionContext jobExecutionContext) {
         String name = jobExecutionContext.getJobDetail().getKey().getName();
-        log.info("定时器监听，任务：【{} 准备开始执行，执行时间：{}", name, DateUtils.toDateTimeString(LocalDateTime.now(), DateUtils.YYYY_MM_dd_HH_mm_ss));
+        log.info("定时器监听，任务：【{} 准备开始执行", name);
     }
 
     /**
@@ -1792,17 +1783,15 @@ public class CustomSchedulerJobListener implements JobListener {
     public void jobWasExecuted(JobExecutionContext jobExecutionContext, JobExecutionException e) {
         String name = jobExecutionContext.getJobDetail().getKey().getName();
         if (e != null) {
-            log.error("定时器监听，任务：【{" + name + "}】 执行失败", e);
+            log.error("定时器监听，任务：【{"+name+"}】 执行失败", e);
         } else {
-            log.info("定时器监听，任务：【{} 执行成功，执行时间：{}", name, DateUtils.toDateTimeString(LocalDateTime.now(), DateUtils.YYYY_MM_dd_HH_mm_ss));
+            log.info("定时器监听，任务：【{}】执行成功", name);
+
         }
     }
 }
 
-
 ```
-
-
 
 ## 3.7、`QuartzController`
 
@@ -1813,14 +1802,15 @@ package com.healerjean.proj.controller;
 import com.healerjean.proj.common.dto.ResponseBean;
 import com.healerjean.proj.dto.ScheduleJobDTO;
 import com.healerjean.proj.schedule.service.SchedulerService;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -1854,27 +1844,16 @@ public class QuartzController {
     private SchedulerService schedulerService;
 
 
-    @ApiOperation(notes = "启动任务",
-            value = "启动任务",
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            response = ResponseBean.class
-    )
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "name", value = "任务名，英文", required = true, dataTypeClass = String.class, defaultValue = "PrintTaskJob", paramType = "query"),
-            @ApiImplicitParam(name = "className", value = "任务类", required = true, dataTypeClass = String.class, defaultValue = "com.healerjean.proj.schedule.job.PrintTaskJob", paramType = "query"),
-            @ApiImplicitParam(name = "cron", value = "cron表达式", required = true, dataTypeClass = String.class, defaultValue = "*/20 * * * * ?", paramType = "query"),
-            @ApiImplicitParam(name = "jobDesc", value = "任务描述", required = true, dataTypeClass = String.class, defaultValue = "打印任务", paramType = "query"),
-    })
+
     @GetMapping("startJob")
-    public ResponseBean startJob(String name, String className, String cron, String jobDesc) {
+    public ResponseBean startJob( String name, String className, String cron, String jobDesc) {
         log.info("quartz控制器--------启动任务--------任务名称：{}, 任务类：{}，corn表达式", name, className, cron);
-        schedulerService.startJob(name, className, cron, jobDesc);
+        schedulerService.startJob(name, className,cron, jobDesc);
         return ResponseBean.buildSuccess("已经开启任务");
     }
 
     @GetMapping("pauseJob")
-    public ResponseBean pauseJob(String name) {
+    public ResponseBean pauseJob(String name ) {
         log.info("quartz控制器--------暂停任务--------任务名称：{}", name);
         schedulerService.pauseJob(name);
         return ResponseBean.buildSuccess("暂停任务");
@@ -1882,7 +1861,7 @@ public class QuartzController {
 
 
     @GetMapping("resumeJob")
-    public ResponseBean resumeJob(String name) {
+    public ResponseBean resumeJob(String name ) {
         log.info("quartz控制器--------暂停任务");
         schedulerService.resumeJob(name);
         return ResponseBean.buildSuccess("暂停后继续任务");
@@ -1901,14 +1880,14 @@ public class QuartzController {
         Set<JobKey> jobKeys = schedulerService.currentJobs();
         List<ScheduleJobDTO> jobList = new ArrayList<>();
 
-        for (JobKey jobKey : jobKeys) {
+        for (JobKey jobKey : jobKeys){
             JobDetail jobDetail = schedulerService.getJobDetail(jobKey.getName());
             Trigger trigger = schedulerService.getJobTrigger(jobKey.getName());
             Trigger.TriggerState triggerState = schedulerService.getTriggerState(jobKey.getName());
             ScheduleJobDTO jobDTO = new ScheduleJobDTO();
             jobDTO.setJobName(jobKey.getName());
             jobDTO.setJobDesc(jobDetail.getDescription());
-            jobDTO.setCron(((CronTrigger) trigger).getCronExpression());
+            jobDTO.setCron(((CronTrigger)trigger).getCronExpression());
             jobDTO.setJobClass(jobDetail.getJobClass().toString());
             jobDTO.setPreviousFireTime(trigger.getPreviousFireTime());
             jobDTO.setNextFireTime(trigger.getNextFireTime());
@@ -1922,7 +1901,7 @@ public class QuartzController {
     @GetMapping("getTriggerState")
     public ResponseBean getTriggerState(String name) {
         log.info("quartz控制器--------任务的执行状态--------任务名称：{}", name);
-        return ResponseBean.buildSuccess("任务的执行状态", schedulerService.getTriggerState(name));
+        return ResponseBean.buildSuccess("任务的执行状态",schedulerService.getTriggerState(name));
     }
 
 
