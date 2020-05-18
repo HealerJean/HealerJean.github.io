@@ -1242,35 +1242,39 @@ commit;
 
 ```properties
 
+#============================================================================
+# 配置定时器属性
+#============================================================================
 #默认或是自己改名字都行
 org.quartz.scheduler.instanceName=CustomQuartzScheduler
 #如果使用集群，instanceId必须唯一，设置成AUTO
 org.quartz.scheduler.instanceId=AUTO
-org.quartz.scheduler.jobFactory.class=org.quartz.simpl.SimpleJobFactory
-org.quartz.scheduler.autoStartup=true
-org.quartz.scheduler.skipUpdateCheck=true
 
-# 配置现场池
+# 配置线程池
 org.quartz.threadPool.class=org.quartz.simpl.SimpleThreadPool
 org.quartz.threadPool.threadCount=30
 org.quartz.threadPool.threadPriority=5
 
 
 #存储方式使用JobStoreTX，也就是数据库
-#存储的JobDataMaps是否都为String类型
-org.quartz.jobStore.useProperties=true
-#是否使用集群（如果项目只部署到 一台服务器，就不用了）
-org.quartz.jobStore.isClustered=true
-org.quartz.jobStore.clusterCheckinInterval=20000
-#存储方式使用JobStoreTX，也就是数据库
-org.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTX
-org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.StdJDBCDelegate
 #misfireThreshold是用来设置调度引擎对触发器超时的忍耐时间，简单来说 假设misfireThreshold=6000(单位毫秒)。
 #那么它的意思说当一个触发器超时时间如果大于misfireThreshold的值 就认为这个触发器真正的超时(也叫Misfires)。
 org.quartz.jobStore.misfireThreshold=60000
+#存储方式使用JobStoreTX，也就是数据库
+org.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTX
+org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+org.quartz.jobStore.useProperties=false
+
+
+#是否使用集群
+org.quartz.jobStore.isClustered=true
+org.quartz.jobStore.clusterCheckinInterval=20000
+
+
 #数据库中quartz表的表名前缀
 org.quartz.jobStore.tablePrefix = QRTZ_
 org.quartz.jobStore.dataSource = customQuartz
+
 
 ```
 
@@ -1395,9 +1399,10 @@ public class PrintTaskJob implements Job {
             String corn = trigger.getCronExpression();
             String jobName = trigger.getKey().getName();
             String jobGroup = trigger.getKey().getGroup();
-            log.info("定时器任务开始执行--------【PrintTaskJob】 ,任务corn：{}, 任务名称：{}， 任务组：{}", corn, jobName, jobGroup);
+            log.info("定时器任务开始执行--------任务corn：{}, 任务名称：{}， 任务组：{}", 
+                     corn, jobName, jobGroup);
         } catch (Exception e) {
-            log.error("定时器任务--------【PrintTaskJob】 任务执行失败");
+            log.error("定时器任务--------任务执行失败", e);
         }
     }
 }
@@ -1735,10 +1740,14 @@ public class SchedulerServiceImpl implements SchedulerService {
 ```java
 package com.healerjean.proj.schedule.listener;
 
+import com.healerjean.proj.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobListener;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * 类描述：
@@ -1761,7 +1770,7 @@ public class CustomSchedulerJobListener implements JobListener {
     @Override
     public void jobToBeExecuted(JobExecutionContext jobExecutionContext) {
         String name = jobExecutionContext.getJobDetail().getKey().getName();
-        log.info("定时器监听，任务：【{} 准备开始执行", name);
+        log.info("定时器监听，任务：【{} 准备开始执行，执行时间：{}", name, DateUtils.toDateTimeString(LocalDateTime.now(), DateUtils.YYYY_MM_dd_HH_mm_ss));
     }
 
     /**
@@ -1783,15 +1792,17 @@ public class CustomSchedulerJobListener implements JobListener {
     public void jobWasExecuted(JobExecutionContext jobExecutionContext, JobExecutionException e) {
         String name = jobExecutionContext.getJobDetail().getKey().getName();
         if (e != null) {
-            log.error("定时器监听，任务：【{"+name+"}】 执行失败", e);
+            log.error("定时器监听，任务：【{" + name + "}】 执行失败", e);
         } else {
-            log.info("定时器监听，任务：【{}】执行成功", name);
-
+            log.info("定时器监听，任务：【{} 执行成功，执行时间：{}", name, DateUtils.toDateTimeString(LocalDateTime.now(), DateUtils.YYYY_MM_dd_HH_mm_ss));
         }
     }
 }
 
+
 ```
+
+
 
 ## 3.7、`QuartzController`
 
@@ -1802,15 +1813,14 @@ package com.healerjean.proj.controller;
 import com.healerjean.proj.common.dto.ResponseBean;
 import com.healerjean.proj.dto.ScheduleJobDTO;
 import com.healerjean.proj.schedule.service.SchedulerService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -1844,16 +1854,27 @@ public class QuartzController {
     private SchedulerService schedulerService;
 
 
-
+    @ApiOperation(notes = "启动任务",
+            value = "启动任务",
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            response = ResponseBean.class
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "任务名，英文", required = true, dataTypeClass = String.class, defaultValue = "PrintTaskJob", paramType = "query"),
+            @ApiImplicitParam(name = "className", value = "任务类", required = true, dataTypeClass = String.class, defaultValue = "com.healerjean.proj.schedule.job.PrintTaskJob", paramType = "query"),
+            @ApiImplicitParam(name = "cron", value = "cron表达式", required = true, dataTypeClass = String.class, defaultValue = "*/20 * * * * ?", paramType = "query"),
+            @ApiImplicitParam(name = "jobDesc", value = "任务描述", required = true, dataTypeClass = String.class, defaultValue = "打印任务", paramType = "query"),
+    })
     @GetMapping("startJob")
-    public ResponseBean startJob( String name, String className, String cron, String jobDesc) {
+    public ResponseBean startJob(String name, String className, String cron, String jobDesc) {
         log.info("quartz控制器--------启动任务--------任务名称：{}, 任务类：{}，corn表达式", name, className, cron);
-        schedulerService.startJob(name, className,cron, jobDesc);
+        schedulerService.startJob(name, className, cron, jobDesc);
         return ResponseBean.buildSuccess("已经开启任务");
     }
 
     @GetMapping("pauseJob")
-    public ResponseBean pauseJob(String name ) {
+    public ResponseBean pauseJob(String name) {
         log.info("quartz控制器--------暂停任务--------任务名称：{}", name);
         schedulerService.pauseJob(name);
         return ResponseBean.buildSuccess("暂停任务");
@@ -1861,7 +1882,7 @@ public class QuartzController {
 
 
     @GetMapping("resumeJob")
-    public ResponseBean resumeJob(String name ) {
+    public ResponseBean resumeJob(String name) {
         log.info("quartz控制器--------暂停任务");
         schedulerService.resumeJob(name);
         return ResponseBean.buildSuccess("暂停后继续任务");
@@ -1880,14 +1901,14 @@ public class QuartzController {
         Set<JobKey> jobKeys = schedulerService.currentJobs();
         List<ScheduleJobDTO> jobList = new ArrayList<>();
 
-        for (JobKey jobKey : jobKeys){
+        for (JobKey jobKey : jobKeys) {
             JobDetail jobDetail = schedulerService.getJobDetail(jobKey.getName());
             Trigger trigger = schedulerService.getJobTrigger(jobKey.getName());
             Trigger.TriggerState triggerState = schedulerService.getTriggerState(jobKey.getName());
             ScheduleJobDTO jobDTO = new ScheduleJobDTO();
             jobDTO.setJobName(jobKey.getName());
             jobDTO.setJobDesc(jobDetail.getDescription());
-            jobDTO.setCron(((CronTrigger)trigger).getCronExpression());
+            jobDTO.setCron(((CronTrigger) trigger).getCronExpression());
             jobDTO.setJobClass(jobDetail.getJobClass().toString());
             jobDTO.setPreviousFireTime(trigger.getPreviousFireTime());
             jobDTO.setNextFireTime(trigger.getNextFireTime());
@@ -1901,7 +1922,7 @@ public class QuartzController {
     @GetMapping("getTriggerState")
     public ResponseBean getTriggerState(String name) {
         log.info("quartz控制器--------任务的执行状态--------任务名称：{}", name);
-        return ResponseBean.buildSuccess("任务的执行状态",schedulerService.getTriggerState(name));
+        return ResponseBean.buildSuccess("任务的执行状态", schedulerService.getTriggerState(name));
     }
 
 
@@ -2076,6 +2097,858 @@ CronTrigger trigger = TriggerBuilder.newTrigger()
 
 
 ![](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/15897150880051.jpg)
+
+
+
+## 4.3、数据库表结构
+
+
+
+
+
+| Table Name               | **Description**                                              |
+| ------------------------ | ------------------------------------------------------------ |
+| qrtz_blob_triggers       | Trigger作为Blob类型存储                                      |
+| qrtz_calendars           | 存储Quartz的Calendar信息                                     |
+| qrtz_cron_triggers       | 存储CronTrigger，包括Cron表达式和时区信息                    |
+| **qrtz_fired_triggers**  | **存储与与触发的Trigger相关的状态信息，以及相联Job的执行信息** |
+| qrtz_job_details         | 存储每一个已配置的Job的详细信息                              |
+| **qrtz_locks**           | **存储程序的悲观锁的信息**                                   |
+| qrtz_paused_trigger_grps | 存储已暂停的Trigger组的信息                                  |
+| qrtz_scheduler_state     | 存储少量的有关Scheduler的状态信息，和别的Scheduler实例       |
+| qrtz_simple_triggers     | 存储简单的Trigger，包括重复次数、间隔、以及已触的次数        |
+| qrtz_simprop_triggers    | 存储CalendarIntervalTrigger和DailyTimeIntervalTrigger两种类型的触发器，使用CalendarIntervalTrigger做如下配置： |
+| qrtz_triggers            | 存储已配置的Trigger的信息                                    |
+
+
+
+# 5、分布式单节点执行原理 
+
+## 5.1、组件间的通讯图  
+
+![image-20200518175715901](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200518175715901.png)
+
+
+
+## 5.2、quartz对任务调度的时序图
+
+
+
+![image-20200518180204471](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200518180204471.png)
+
+
+
+## 5.3、文字解释调度流程
+
+### 5.3.1、获取待触发trigger     
+
+​	1.1、数据库`LOCKS`表`TRIGGER_ACCESS`行加锁
+
+​	1.2、读取`JobDetail`信息     
+
+​	1.3、读取`trigger`表中触发器信息并标记为"已获取"       
+
+​	1.4、commit事务,释放锁     
+
+### 5.3.2、触发trigger   
+
+ 	2.1、数据库`LOCKS`表`TRIGGER_ACCESS`行加锁    
+
+ 	2.2、确认`trigger`的状态    
+
+​	 2.3、读取`trigger`的`JobDetail`信息    
+
+​	 2.4、读取`trigger`的`Calendar`信息    
+
+​	 2.5、更新`trigger`信息    
+
+ 	2.6、commit事务,释放锁      
+
+### 5.3.3、实例化并执行Job
+
+​	3.1、从线程池获取线程执行JobRunShell的run方法
+
+
+
+可以看到,这个过程中有两个相似的过程，同样是对数据表的更新操作,同样是在执行操作前获取锁 操作完成后释放锁.这一规则可以看做是quartz解决集群问题的核心思想.
+
+![image-20200518184830501](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200518184830501.png)
+
+
+
+# 6、源码分析过程
+
+
+## 6.1、调度器实例化 
+
+```java
+////取得Schedule对象
+Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+//启动调度器
+scheduler.start();
+
+//具体任务.
+JobDetail jobDetail = JobBuilder.newJob(OneJob.class).withIdentity(name, group).build();
+
+//触发时间点. (每5秒执行1次.)
+SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder
+    .simpleSchedule()
+    .withIntervalInSeconds(5)
+    .repeatForever();
+
+Trigger trigger = TriggerBuilder.newTrigger()
+    .withIdentity(name, group)
+    .startNow()
+    .withSchedule(simpleScheduleBuilder)
+    .build();
+
+// 交由Scheduler安排触发
+scheduler.scheduleJob(jobDetail, trigger);
+```
+
+
+
+### 6.1.1、从工厂中获取调度器
+
+```java
+public static Scheduler getDefaultScheduler() throws SchedulerException {
+    StdSchedulerFactory fact = new StdSchedulerFactory();
+    return fact.getScheduler();
+}
+```
+
+
+
+```java
+ public Scheduler getScheduler() throws SchedulerException {
+        if (this.cfg == null) {
+            this.initialize();
+        }
+
+        SchedulerRepository schedRep = SchedulerRepository.getInstance();
+       //从"调度器仓库"中根据properties的SchedulerName配置获取一个调度器实例
+        Scheduler sched = schedRep.lookup(this.getSchedulerName());
+        if (sched != null) {
+            if (!sched.isShutdown()) {
+                return sched;
+            }
+
+            schedRep.remove(this.getSchedulerName());
+        }
+
+        sched = this.instantiate();
+        return sched;
+    }
+```
+
+`this.initialize()`：   读取配置资源,   生成`QuartzScheduler`对象,   初始化工作已完成,
+
+
+
+### 6.1.2、启动调度器
+
+
+
+```java
+public void start() throws SchedulerException {
+    if (!this.shuttingDown && !this.closed) {
+        //通知该调度器的listener启动开始
+        this.notifySchedulerListenersStarting();
+        if (this.initialStart == null) {
+            this.initialStart = new Date();
+              //启动调度器的线程
+            this.resources.getJobStore().schedulerStarted();
+             //启动plugins
+            this.startPlugins();
+        } else {
+            this.resources.getJobStore().schedulerResumed();
+        }
+
+        this.schedThread.togglePause(false);
+        this.getLog().info("Scheduler " + this.resources.getUniqueIdentifier() + " started.");
+         //通知该调度器的listener启动完成
+        this.notifySchedulerListenersStarted();
+    } else {
+        throw new SchedulerException("The Scheduler cannot be restarted after shutdown() has been called.");
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+## 6.2、调度过程
+
+> 1、获取待触发trigger     
+>
+> 2、触发trigger     
+>
+> 3、实例化并执行Job    
+>
+> 
+
+
+
+### 6.2.1、调度器线程类入口：调度入口，是个死循环
+
+> `QuartzSchedulerThread`是调度器线程类，调度过程的三个步骤就承载在run()方法中,分析见代码注释:  
+
+
+
+```java
+public void run() {
+   boolean lastAcquireFailed = false;
+   while (!halted.get()) {
+     ......
+
+     int availThreadCount = qsRsrcs.getThreadPool().blockForAvailableThreads();
+     if(availThreadCount > 0) { 
+
+     ......
+
+     //调度器在trigger队列中寻找30秒内一定数目的trigger(需要保证集群节点的系统时间一致)
+        //参数1：`nolaterthan` = `now`+3000ms，即未来30s内将会被触发（idleWaitTime 30s）.      
+		//参数2：最大获取数量，大小取线程池线程剩余量与定义值得较小者.      
+     triggers = qsRsrcs.getJobStore().acquireNextTriggers(
+                            now + idleWaitTime, 
+         Math.min(availThreadCount, qsRsrcs.getMaxBatchSize()), 
+         qsRsrcs.getBatchTimeWindow());
+
+     ......
+
+     //触发trigger，
+     List<TriggerFiredResult> res = qsRsrcs.getJobStore().triggersFired(triggers);
+
+     ......
+
+     //释放trigger，任务开始执行
+     for (int i = 0; i < triggers.size(); i++) {
+         qsRsrcs.getJobStore().releaseAcquiredTrigger(triggers.get(i));
+     }
+
+   }                
+}
+```
+
+
+
+由此可知，`QuartzScheduler`调度线程不断获取`trigger`，触发`trigger`，释放`trigger`。下面分析trigger的获取过程，`qsRsrcs.getJobStore()返`回对象是`JobStore`，配置如下：
+
+```properties
+org.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTX
+```
+
+
+
+`JobStoreTX`继承自`JobStoreSupport`，而`JobStoreSupport`的`acquireNextTriggers`、`triggersFired`、`releaseAcquiredTrigger`方法负责具体`trigger`相关操作，**都必须获得`TRIGGER_ACCESS`锁。核心逻辑d都在`executeInNonManagedTXLock`方法中**       
+
+
+
+### 6.2.2、触发器的获取   
+
+> 调度器在trigger队列中寻找30秒内一定数目的`trigger`(需要保证集群节点的系统时间一致)
+
+```java
+ //调度器在trigger队列中寻找30秒内一定数目的trigger(需要保证集群节点的系统时间一致)
+//参数1：`nolaterthan` = `now`+3000ms，即未来30s内将会被触发（idleWaitTime 30s）.      
+//参数2：最大获取数量，大小取线程池线程剩余量与定义值得较小者.  
+triggers = qsRsrcs.getJobStore().acquireNextTriggers(
+								now + idleWaitTime, Math.min(availThreadCount, 
+                                qsRsrcs.getMaxBatchSize()), 
+   							    qsRsrcs.getBatchTimeWindow());
+```
+
+
+
+```java
+public List<OperableTrigger> acquireNextTriggers(final long noLaterThan, final int maxCount, final long timeWindow) throws JobPersistenceException {
+    String lockName;
+    if (!this.isAcquireTriggersWithinLock() && maxCount <= 1) {
+        lockName = null;
+    } else {
+        lockName = "TRIGGER_ACCESS";
+    }
+
+    return (List)this.executeInNonManagedTXLock(lockName, 
+                                                
+        public List<OperableTrigger> execute(Connection conn) 
+                                                throws JobPersistenceException {
+            return JobStoreSupport.this.acquireNextTrigger(conn, 
+                                                           noLaterThan, 
+                                                           maxCount, 
+                                                           timeWindow);
+        }
+    }, 
+                                                
+        new JobStoreSupport.TransactionValidator<List<OperableTrigger>>() {
+            
+        	public Boolean validate(Connection conn, List<OperableTrigger> result) 
+                throws JobPersistenceException {
+            try {
+                List<FiredTriggerRecord> acquired = JobStoreSupport.this.getDelegate()
+                    .selectInstancesFiredTriggerRecords(conn, 
+                                                   JobStoreSupport.this.getInstanceId());
+                Set<String> fireInstanceIds = new HashSet();
+                Iterator i$ = acquired.iterator();
+
+                while(i$.hasNext()) {
+                    FiredTriggerRecord ft = (FiredTriggerRecord)i$.next();
+                    fireInstanceIds.add(ft.getFireInstanceId());
+                }
+
+                i$ = result.iterator();
+
+                OperableTrigger tr;
+                do {
+                    if (!i$.hasNext()) {
+                        return false;
+                    }
+
+                    tr = (OperableTrigger)i$.next();
+                } while(!fireInstanceIds.contains(tr.getFireInstanceId()));
+
+                return true;
+            } catch (SQLException var7) {
+                throw new JobPersistenceException("error validating trigger acquisition", var7);
+            }
+        }
+    });
+}
+```
+
+
+
+```java
+protected List<OperableTrigger> acquireNextTrigger(Connection conn, long noLaterThan, int maxCount, long timeWindow) throws JobPersistenceException {
+    if (timeWindow < 0L) {
+        throw new IllegalArgumentException();
+    } else {
+        List<OperableTrigger> acquiredTriggers = new ArrayList();
+        Set<JobKey> acquiredJobKeysForNoConcurrentExec = new HashSet();
+        int MAX_DO_LOOP_RETRY = true;
+        int currentLoopCount = 0;
+
+        while(true) {
+            ++currentLoopCount;
+
+            try {
+                List<TriggerKey> keys = this.getDelegate().selectTriggerToAcquire(conn, noLaterThan + timeWindow, this.getMisfireTime(), maxCount);
+                if (keys != null && keys.size() != 0) {
+                    long batchEnd = noLaterThan;
+                    Iterator i$ = keys.iterator();
+
+                    while(i$.hasNext()) {
+                        TriggerKey triggerKey = (TriggerKey)i$.next();
+                        OperableTrigger nextTrigger = this.retrieveTrigger(conn, triggerKey);
+                        if (nextTrigger != null) {
+                            JobKey jobKey = nextTrigger.getJobKey();
+
+                            JobDetail job;
+                            try {
+                                job = this.retrieveJob(conn, jobKey);
+                            } catch (JobPersistenceException var22) {
+                                JobPersistenceException jpe = var22;
+
+                                try {
+                                    this.getLog().error("Error retrieving job, setting trigger state to ERROR.", jpe);
+                                    this.getDelegate().updateTriggerState(conn, triggerKey, "ERROR");
+                                } catch (SQLException var21) {
+                                    this.getLog().error("Unable to set trigger state to ERROR.", var21);
+                                }
+                                continue;
+                            }
+
+                            if (job.isConcurrentExectionDisallowed()) {
+                                if (acquiredJobKeysForNoConcurrentExec.contains(jobKey)) {
+                                    continue;
+                                }
+
+                                acquiredJobKeysForNoConcurrentExec.add(jobKey);
+                            }
+
+                            if (nextTrigger.getNextFireTime().getTime() > batchEnd) {
+                                break;
+                            }
+
+                            int rowsUpdated = this.getDelegate().updateTriggerStateFromOtherState(conn, triggerKey, "ACQUIRED", "WAITING");
+                            if (rowsUpdated > 0) {
+                                nextTrigger.setFireInstanceId(this.getFiredTriggerRecordId());
+                                this.getDelegate().insertFiredTrigger(conn, nextTrigger, "ACQUIRED", (JobDetail)null);
+                                if (acquiredTriggers.isEmpty()) {
+                                    batchEnd = Math.max(nextTrigger.getNextFireTime().getTime(), System.currentTimeMillis()) + timeWindow;
+                                }
+
+                                acquiredTriggers.add(nextTrigger);
+                            }
+                        }
+                    }
+
+                    if (acquiredTriggers.size() == 0 && currentLoopCount < 3) {
+                        continue;
+                    }
+
+                    return acquiredTriggers;
+                }
+
+                return acquiredTriggers;
+            } catch (Exception var23) {
+                throw new JobPersistenceException("Couldn't acquire next trigger: " + var23.getMessage(), var23);
+            }
+        }
+    }
+}
+```
+
+
+
+`executeInNonManagedTXLock`方法指定了一个锁名`TRIGGER_ACCESS`，两个回调函数（接口）     
+
+**在开始执行时获得锁，在方法执行完毕后随着事务的提交锁被释放，在该方法的底层使用 for update语句，在数据库中加入行级锁，保证了在该方法执行过程中，其他的调度器对trigger进行获取时将会等待该调度器释放该锁**       
+
+
+
+```java
+protected <T> T executeInNonManagedTXLock(
+    String lockName, 
+    TransactionCallback<T> txCallback, final TransactionValidator<T> txValidator) throws JobPersistenceException {
+    boolean transOwner = false;
+    Connection conn = null;
+    try {
+        if (lockName != null) {
+            if (getLockHandler().requiresConnection()) {
+                conn = getNonManagedTXConnection();
+            }
+
+            //获取锁
+            transOwner = getLockHandler().obtainLock(conn, lockName);
+        }
+
+        if (conn == null) {
+            conn = getNonManagedTXConnection();
+        }
+
+        final T result = txCallback.execute(conn);
+        try {
+            commitConnection(conn);
+        } catch (JobPersistenceException e) {
+            rollbackConnection(conn);
+            if (txValidator == null || !retryExecuteInNonManagedTXLock(lockName, new TransactionCallback<Boolean>() {
+                @Override
+                public Boolean execute(Connection conn) throws JobPersistenceException {
+                    return txValidator.validate(conn, result);
+                }
+            })) {
+                throw e;
+            }
+        }
+
+        Long sigTime = clearAndGetSignalSchedulingChangeOnTxCompletion();
+        if(sigTime != null && sigTime >= 0) {
+            signalSchedulingChangeImmediately(sigTime);
+        }
+
+        return result;
+    } catch (JobPersistenceException e) {
+        rollbackConnection(conn);
+        throw e;
+    } catch (RuntimeException e) {
+        rollbackConnection(conn);
+        throw new JobPersistenceException("Unexpected runtime exception: "
+                                          + e.getMessage(), e);
+    } finally {
+        try {
+            releaseLock(lockName, transOwner);      //释放锁
+        } finally {
+            cleanupConnection(conn);
+        }
+    }
+}
+```
+
+
+
+**`getLockHandler()`方法返回的对象类型是`Semaphore`，取锁和释放锁的具体逻辑由该对象维护**      
+
+```java
+public interface Semaphore {
+
+     boolean obtainLock(Connection conn, String lockName) throws LockException;
+
+     void releaseLock(String lockName) throws LockException;
+
+     boolean requiresConnection();
+}
+```
+
+
+
+该接口的实现类完成具体操作锁的逻辑，在`JobStoreSupport`的初始化方法中注入的`Semaphore`具体类型是`StdRowLockSemaphore`
+
+```java
+setLockHandler(new StdRowLockSemaphore(getTablePrefix(), 
+                                       getInstanceName(), 
+                                       getSelectWithLockSQL()));
+
+```
+
+
+
+`StdRowLockSemaphore`源码如下    
+
+```java
+public class StdRowLockSemaphore extends DBSemaphore {
+//锁定SQL语句
+public static final String SELECT_FOR_LOCK = "SELECT * FROM "
+        + TABLE_PREFIX_SUBST + TABLE_LOCKS + " WHERE " + COL_LOCK_NAME
+        + " = ? FOR UPDATE";
+
+public static final String INSERT_LOCK = "INSERT INTO " + TABLE_PREFIX_SUBST 
+        + TABLE_LOCKS + "(" + COL_SCHEDULER_NAME + ", " 
+        + COL_LOCK_NAME + ") VALUES (" + SCHED_NAME_SUBST + ", ?)"; 
+
+//指定锁定SQL
+protected void executeSQL(Connection conn, String lockName, String expandedSQL) throws LockException {
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    try {
+        ps = conn.prepareStatement(expandedSQL);
+        ps.setString(1, lockName);
+        ......
+        rs = ps.executeQuery();
+        if (!rs.next()) {
+            throw new SQLException(Util.rtp(
+                "No row exists in table " + TABLE_PREFIX_SUBST +
+                TABLE_LOCKS + " for lock named: " + lockName, getTablePrefix()));
+        }
+    } catch (SQLException sqle) {
+
+    } finally {
+      ...... //release resources
+    }
+  }
+}
+
+//获取QRTZ_LOCKS行级锁
+public boolean obtainLock(Connection conn, String lockName) throws LockException {
+    lockName = lockName.intern();
+
+    if (!isLockOwner(conn, lockName)) {
+        executeSQL(conn, lockName, expandedSQL);
+
+        getThreadLocks().add(lockName);
+    }
+    return true;
+}
+
+//释放QRTZ_LOCKS行级锁
+public void releaseLock(Connection conn, String lockName) {
+    lockName = lockName.intern();
+
+    if (isLockOwner(conn, lockName)) {
+        getThreadLocks().remove(lockName);
+    }
+    ......
+}
+```
+
+
+
+**quratz在获取数据库资源之前，先要以`for update`方式访问`LOCKS`表中相应`LOCK_NAM`E数据将改行锁定，如果在此前该行已经被锁定,那么等待释放锁，如果没有被锁定，那么读取满足要求的`trigger`。 **       
+
+
+
+```java
+public List<TriggerKey> selectTriggerToAcquire(Connection conn, long noLaterThan, long noEarlierThan, int maxCount) throws SQLException {
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    LinkedList nextTriggers = new LinkedList();
+
+    try {
+        ps = conn.prepareStatement(this.rtp("SELECT TRIGGER_NAME, TRIGGER_GROUP, NEXT_FIRE_TIME, PRIORITY FROM {0}TRIGGERS WHERE SCHED_NAME = {1} AND TRIGGER_STATE = ? AND NEXT_FIRE_TIME <= ? AND (MISFIRE_INSTR = -1 OR (MISFIRE_INSTR != -1 AND NEXT_FIRE_TIME >= ?)) ORDER BY NEXT_FIRE_TIME ASC, PRIORITY DESC"));
+        if (maxCount < 1) {
+            maxCount = 1;
+        }
+
+        ps.setMaxRows(maxCount);
+        ps.setFetchSize(maxCount);
+        ps.setString(1, "WAITING");
+        ps.setBigDecimal(2, new BigDecimal(String.valueOf(noLaterThan)));
+        ps.setBigDecimal(3, new BigDecimal(String.valueOf(noEarlierThan)));
+        rs = ps.executeQuery();
+
+        while(rs.next() && nextTriggers.size() <= maxCount) {
+            nextTriggers.add(TriggerKey.triggerKey(rs.getString("TRIGGER_NAME"), rs.getString("TRIGGER_GROUP")));
+        }
+
+        LinkedList var10 = nextTriggers;
+        return var10;
+    } finally {
+        closeResultSet(rs);
+        closeStatement(ps);
+    }
+}
+```
+
+
+
+**然后把它们的status置为`STATE_ACQUIRED`，如果有tirgger已被置为`STATE_ACQUIRED`，那么说明该`trigger`已被别的调度器实例认领,无需再次认领，调度器查询的时候会忽略此trigger，调度器实例之间的间接通信就体现在这里.**     
+
+
+
+`JobStoreSupport.acquireNextTrigger()`方法中
+
+```java
+// 讲WAITING状态的设置为ACQUIRED
+int rowsUpdated = getDelegate().updateTriggerStateFromOtherState(conn, 
+                                                                 triggerKey, 
+                                                                 STATE_ACQUIRED,
+                                                                 STATE_WAITING);
+```
+
+```java
+public int updateTriggerStateFromOtherState(Connection conn, TriggerKey triggerKey, String newState, String oldState) throws SQLException {
+    PreparedStatement ps = null;
+
+    int var6;
+    try {
+        ps = conn.prepareStatement(this.rtp("UPDATE {0}TRIGGERS SET TRIGGER_STATE = ? WHERE SCHED_NAME = {1} AND TRIGGER_NAME = ? AND TRIGGER_GROUP = ? AND TRIGGER_STATE = ?"));
+        ps.setString(1, newState);
+        ps.setString(2, triggerKey.getName());
+        ps.setString(3, triggerKey.getGroup());
+        ps.setString(4, oldState);
+        var6 = ps.executeUpdate();
+    } finally {
+        closeStatement(ps);
+    }
+
+    return var6;
+}
+```
+
+
+
+**最后释放锁,这时如果下一个调度器在排队获取`trigger`的话,则仍会执行相同的步骤.这种机制保证了`trigger`不会被重复获取.按照这种算法正常运行状态下调度器每次读取的`trigger`中会有相当一部分已被标记为被获取.**
+
+
+
+### 6.2.3、触发trigger
+
+```java
+List<TriggerFiredResult> res = qsRsrcs.getJobStore().triggersFired(triggers)
+```
+
+
+
+```java
+    public List<TriggerFiredResult> triggersFired(final List<OperableTrigger> triggers) throws JobPersistenceException {
+        return (List)this.executeInNonManagedTXLock("TRIGGER_ACCESS", new JobStoreSupport.TransactionCallback<List<TriggerFiredResult>>() {
+            public List<TriggerFiredResult> execute(Connection conn) throws JobPersistenceException {
+                List<TriggerFiredResult> results = new ArrayList();
+
+                TriggerFiredResult result;
+                for(Iterator i$ = triggers.iterator(); i$.hasNext(); results.add(result)) {
+                    OperableTrigger trigger = (OperableTrigger)i$.next();
+
+                    try {
+                        TriggerFiredBundle bundle = JobStoreSupport.this.triggerFired(conn, trigger);
+                        result = new TriggerFiredResult(bundle);
+                    } catch (JobPersistenceException var7) {
+                        result = new TriggerFiredResult(var7);
+                    } catch (RuntimeException var8) {
+                        result = new TriggerFiredResult(var8);
+                    }
+                }
+
+                return results;
+            }
+        }, new JobStoreSupport.TransactionValidator<List<TriggerFiredResult>>() {
+            public Boolean validate(Connection conn, List<TriggerFiredResult> result) throws JobPersistenceException {
+                try {
+                    List<FiredTriggerRecord> acquired = JobStoreSupport.this.getDelegate().selectInstancesFiredTriggerRecords(conn, JobStoreSupport.this.getInstanceId());
+                    Set<String> executingTriggers = new HashSet();
+                    Iterator i$ = acquired.iterator();
+
+                    while(i$.hasNext()) {
+                        FiredTriggerRecord ft = (FiredTriggerRecord)i$.next();
+                        if ("EXECUTING".equals(ft.getFireInstanceState())) {
+                            executingTriggers.add(ft.getFireInstanceId());
+                        }
+                    }
+
+                    i$ = result.iterator();
+
+                    TriggerFiredResult tr;
+                    do {
+                        if (!i$.hasNext()) {
+                            return false;
+                        }
+
+                        tr = (TriggerFiredResult)i$.next();
+                    } while(tr.getTriggerFiredBundle() == null || !executingTriggers.contains(tr.getTriggerFiredBundle().getTrigger().getFireInstanceId()));
+
+                    return true;
+                } catch (SQLException var7) {
+                    throw new JobPersistenceException("error validating trigger acquisition", var7);
+                }
+            }
+        });
+    }
+```
+
+
+
+此处再次用到了`executeInNonManagedTXLock()`方法，在获取锁的情况下对`trigger`进行触发操作.其中的触发细节如下:       
+
+
+
+1、获取trigger当前状态
+
+2、通过trigger中的JobKey读取trigger包含的Job信息       
+
+3、将trigger更新至触发状态，等待释放（表`qrtz_fired_triggers`）   ，,及计算下一次触发时间，添加下一次的触发器 `qrtz_fired_triggers`
+
+4、结合calendar的信息触发trigger,涉及多次状态更新    
+
+5、返回trigger触发结果的数据传输类TriggerFiredBundle
+
+
+
+```java
+protected TriggerFiredBundle triggerFired(Connection conn,
+            OperableTrigger trigger)
+        throws JobPersistenceException {
+        JobDetail job;
+        Calendar cal = null;
+        // Make sure trigger wasn't deleted, paused, or completed...
+        try { // if trigger was deleted, state will be STATE_DELETED
+            String state = getDelegate().selectTriggerState(conn,
+                    trigger.getKey());
+            //如果任务已经被其他节点拥有了，则返回
+            if (!state.equals(STATE_ACQUIRED)) {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new JobPersistenceException("Couldn't select trigger state: "
+                    + e.getMessage(), e);
+        }
+        try {
+            //获取任务
+            job = retrieveJob(conn, trigger.getJobKey());
+            if (job == null) { return null; }
+        } catch (JobPersistenceException jpe) {
+            try {
+                getLog().error("Error retrieving job, setting trigger state to ERROR.", jpe);
+                getDelegate().updateTriggerState(conn, trigger.getKey(),
+                        STATE_ERROR);
+            } catch (SQLException sqle) {
+                getLog().error("Unable to set trigger state to ERROR.", sqle);
+            }
+            throw jpe;
+        }
+        if (trigger.getCalendarName() != null) {
+            cal = retrieveCalendar(conn, trigger.getCalendarName());
+            if (cal == null) { return null; }
+        }
+        try {
+            //任务开始执行，设置当前触发器状态为执行状态
+            getDelegate().updateFiredTrigger(conn, trigger, STATE_EXECUTING, job);
+        } catch (SQLException e) {
+            throw new JobPersistenceException("Couldn't insert fired trigger: "
+                    + e.getMessage(), e);
+        }
+        Date prevFireTime = trigger.getPreviousFireTime();
+        // call triggered - to update the trigger's next-fire-time state...
+        trigger.triggered(cal);
+        String state = STATE_WAITING;
+        boolean force = true;
+         
+        if (job.isConcurrentExectionDisallowed()) {
+            state = STATE_BLOCKED;
+            force = false;
+            try {
+                getDelegate().updateTriggerStatesForJobFromOtherState(conn, job.getKey(),
+                        STATE_BLOCKED, STATE_WAITING);
+                getDelegate().updateTriggerStatesForJobFromOtherState(conn, job.getKey(),
+                        STATE_BLOCKED, STATE_ACQUIRED);
+                getDelegate().updateTriggerStatesForJobFromOtherState(conn, job.getKey(),
+                        STATE_PAUSED_BLOCKED, STATE_PAUSED);
+            } catch (SQLException e) {
+                throw new JobPersistenceException(
+                        "Couldn't update states of blocked triggers: "
+                                + e.getMessage(), e);
+            }
+        }
+             
+        if (trigger.getNextFireTime() == null) {
+            state = STATE_COMPLETE;
+            force = true;
+        }
+        storeTrigger(conn, trigger, job, true, state, force, false);
+        job.getJobDataMap().clearDirtyFlag();
+        return new TriggerFiredBundle(job, trigger, cal, trigger.getKey().getGroup()
+                .equals(Scheduler.DEFAULT_RECOVERY_GROUP), new Date(), trigger
+                .getPreviousFireTime(), prevFireTime, trigger.getNextFireTime());
+    }
+```
+
+
+
+
+
+### 6.2.4、触发器释放，Job执行过程
+
+```java
+
+qsRsrcs.getJobStore().releaseAcquiredTrigger(triggers.get(i));
+shell.initialize(qs);
+```
+
+> 为每个Job生成一个可运行的RunShell,并放入线程池运行.
+>
+> 在最后调度线程生成了一个随机的等待时间,进入短暂的等待,这使得其他节点的调度器都有机会获取数据库资源.如此就实现了quratz的负载平衡.
+>
+> 这样一次完整的调度过程就结束了.调度器线程进入下一次循环.
+
+
+
+**触发器执行完成，要讲状态设置WAITING状态，并删除当前正在执行的触发器信息**
+
+```java
+public void releaseAcquiredTrigger(final OperableTrigger trigger) {
+    this.retryExecuteInNonManagedTXLock
+        ("TRIGGER_ACCESS",                               
+        new JobStoreSupport.VoidTransactionCallback() {
+            public void executeVoid(Connection conn) throws JobPersistenceException {
+                JobStoreSupport.this.releaseAcquiredTrigger(conn, trigger);
+            }
+        });
+}
+
+protected void releaseAcquiredTrigger(Connection conn, OperableTrigger trigger) throws JobPersistenceException {
+    try {
+        this.getDelegate().updateTriggerStateFromOtherState(conn,
+                                                            trigger.getKey(), 
+                                                            "WAITING", 
+                                                            "ACQUIRED");
+        this.getDelegate().deleteFiredTrigger(conn, trigger.getFireInstanceId());
+    } catch (SQLException var4) {
+        throw new JobPersistenceException("Couldn't release acquired trigger: " + 
+                                          var4.getMessage(), 
+                                          var4);
+    }
+}
+```
+
+
+
+
+
+
 
 
 
