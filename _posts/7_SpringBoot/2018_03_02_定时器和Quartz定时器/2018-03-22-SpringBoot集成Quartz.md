@@ -2087,7 +2087,9 @@ CronTrigger trigger = TriggerBuilder.newTrigger()
 
 > 禁止并发执行多个相同定义的JobDetail       
 >
-> 这个注解是加在`Job`类上的, 但意思并不是不能同时执行多个Job, 而是不能并发执行同一个Job Definition(由`JobDetail`定义)    
+> 这个注解是加在`Job`类上的, 但意思并不是不能同时执行多个Job, 而是不能并发执行同一个Job Definition(由`JobDetail`定义)        
+>
+> 会将该Trriger设置为BLOCK状态，以后不会执行，你都并发了还怎么执行
 
 举例说明,我们有一个`Job`类,叫做`SayHelloJob`, 并在这个`Job`上加了这个注解, 然后在这个Job上定义了很多个`JobDetail`，如`sayHelloToJoeJobDetail`, `sayHelloToMikeJobDetail`,      
 
@@ -2138,7 +2140,28 @@ CronTrigger trigger = TriggerBuilder.newTrigger()
 
 
 
-## 5.3、文字解释调度流程
+## 5.3、文字解释调度流程 
+
+```
+1. 先获取线程池中的可用线程数量（若没有可用的会阻塞，直到有可用的）；
+2. 获取30m内要执行的trigger(即acquireNextTriggers)：
+   获取trigger的锁，经过select …for update方式实现；获取30m内（可配置）要执行的triggers（须要保证集群节点的时间一致），若@ConcurrentExectionDisallowed且列表存在该条trigger则跳过，不然更新trigger状态为ACQUIRED(刚开始为WAITING)；插入firedTrigger表，状态为ACQUIRED;（注意：在RAMJobStore中，有个timeTriggers，排序方式是按触发时间nextFireTime排的；JobStoreSupport从数据库取出triggers时是按照nextFireTime排序）;
+3. 等待直到获取的trigger中最早执行的trigger在2ms内；
+4. triggersFired：
+   1. 更新firedTrigger的status=EXECUTING;
+   2. 更新trigger下一次触发的时间；
+   3. 更新trigger的状态：无状态的trigger->WAITING，有状态的trigger->BLOCKED，若nextFireTime==null ->COMPLETE；
+   4. commit connection,释放锁；
+5. 针对每一个要执行的trigger，建立JobRunShell，并放入线程池执行：
+   1. execute:执行job
+   2. 获取TRIGGER_ACCESS锁
+   3. 如果有状态的job：更新trigger状态：BLOCKED->WAITING,PAUSED_BLOCKED->BLOCKED
+   4. 若@PersistJobDataAfterExecution，则updateJobData
+   5. 删除firedTrigger
+   6. commit connection，释放锁
+```
+
+
 
 ### 5.3.1、获取待触发trigger     
 
@@ -2146,7 +2169,7 @@ CronTrigger trigger = TriggerBuilder.newTrigger()
 
 ​	1.2、读取`JobDetail`信息     
 
-​	1.3、读取`trigger`表中触发器信息并标记为"已获取"       
+​	1.3、读取`trigger`表中触发器信息并标记为"已获取`ACQUIRED`"       
 
 ​	1.4、commit事务,释放锁     
 
@@ -2173,6 +2196,12 @@ CronTrigger trigger = TriggerBuilder.newTrigger()
 可以看到,这个过程中有两个相似的过程，同样是对数据表的更新操作,同样是在执行操作前获取锁 操作完成后释放锁.这一规则可以看做是quartz解决集群问题的核心思想.
 
 ![image-20200518184830501](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200518184830501.png)
+
+
+
+
+
+
 
 
 
@@ -2420,6 +2449,10 @@ public List<OperableTrigger> acquireNextTriggers(final long noLaterThan, final i
     });
 }
 ```
+
+
+
+
 
 
 
@@ -2808,13 +2841,11 @@ List<TriggerFiredResult> res = qsRsrcs.getJobStore().triggersFired(triggers)
 
 1、获取trigger当前状态
 
-2、通过trigger中的JobKey读取trigger包含的Job信息       
+2、通过trigger中的JobKey读取trigger包含的Job信息   ，更新或者导入    `fired_trigger`表
 
-3、将trigger更新至触发状态，等待释放（表`qrtz_fired_triggers`）   ，,及计算下一次触发时间，添加下一次的触发器 `qrtz_fired_triggers`
+3、将`fired_trigger`更新至触发状态,（表`qrtz_fired_triggers`），,及计算下一次触发时间，添加下一次的触发器 `qrtz_fired_triggers`
 
-4、结合calendar的信息触发trigger,涉及多次状态更新    
-
-5、返回trigger触发结果的数据传输类TriggerFiredBundle
+4、返回trigger触发结果的数据传输类TriggerFiredBundle
 
 
 
@@ -2916,7 +2947,9 @@ shell.initialize(qs);
 
 
 
-**触发器执行完成，要讲状态设置WAITING状态，并删除当前正在执行的触发器信息**
+**触发器执行完成，要讲状态设置WAITING状态，并删除当前正在执行的触发器`Fired_Trugger`信息**  
+
+
 
 ```java
 public void releaseAcquiredTrigger(final OperableTrigger trigger) {
@@ -2943,6 +2976,385 @@ protected void releaseAcquiredTrigger(Connection conn, OperableTrigger trigger) 
     }
 }
 ```
+
+
+
+## 6.3、宕机处理未完成的任务 
+
+
+
+
+
+```sql
+CREATE TABLE `qrtz_scheduler_state` (
+  `SCHED_NAME` varchar(120) COLLATE utf8_unicode_ci NOT NULL,
+  `INSTANCE_NAME` varchar(200) COLLATE utf8_unicode_ci NOT NULL, #服务器实例
+  `LAST_CHECKIN_TIME` bigint(13) NOT NULL,
+  `CHECKIN_INTERVAL` bigint(13) NOT NULL,
+  PRIMARY KEY (`SCHED_NAME`,`INSTANCE_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+
+
+CREATE TABLE `qrtz_fired_triggers` (
+  `SCHED_NAME` varchar(120) COLLATE utf8_unicode_ci NOT NULL,
+  `ENTRY_ID` varchar(95) COLLATE utf8_unicode_ci NOT NULL,
+  `TRIGGER_NAME` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `TRIGGER_GROUP` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `INSTANCE_NAME` varchar(200) COLLATE utf8_unicode_ci NOT NULL,#服务器实例
+  `FIRED_TIME` bigint(13) NOT NULL,
+  `SCHED_TIME` bigint(13) NOT NULL,
+  `PRIORITY` int(11) NOT NULL,
+  `STATE` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
+  `JOB_NAME` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `JOB_GROUP` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `IS_NONCONCURRENT` varchar(1) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `REQUESTS_RECOVERY` varchar(1) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`SCHED_NAME`,`ENTRY_ID`),
+  KEY `IDX_QRTZ_FT_TRIG_INST_NAME` (`SCHED_NAME`,`INSTANCE_NAME`),
+  KEY `IDX_QRTZ_FT_INST_JOB_REQ_RCVRY` (`SCHED_NAME`,`INSTANCE_NAME`,`REQUESTS_RECOVERY`),
+  KEY `IDX_QRTZ_FT_J_G` (`SCHED_NAME`,`JOB_NAME`,`JOB_GROUP`),
+  KEY `IDX_QRTZ_FT_JG` (`SCHED_NAME`,`JOB_GROUP`),
+  KEY `IDX_QRTZ_FT_T_G` (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
+  KEY `IDX_QRTZ_FT_TG` (`SCHED_NAME`,`TRIGGER_GROUP`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+```
+
+
+
+
+
+
+
+```java
+class ClusterManager extends Thread {
+
+    private volatile boolean shutdown = false;
+
+    private int numFails = 0;
+
+    ClusterManager() {
+        this.setPriority(Thread.NORM_PRIORITY + 2);
+        this.setName("QuartzScheduler_" + instanceName + "-" 
+                     + instanceId + "_ClusterManager");
+        this.setDaemon(getMakeThreadsDaemons());
+    }
+
+    public void initialize() {
+        this.manage();
+
+        ThreadExecutor executor = getThreadExecutor();
+        executor.execute(ClusterManager.this);
+    }
+
+    public void shutdown() {
+        shutdown = true;
+        this.interrupt();
+    }
+
+    private boolean manage() {
+        boolean res = false;
+        try {
+
+            res = doCheckin();
+
+            numFails = 0;
+            getLog().debug("ClusterManager: Check-in complete.");
+        } catch (Exception e) {
+            if(numFails % 4 == 0) {
+                getLog().error(
+                    "ClusterManager: Error managing cluster: "
+                    + e.getMessage(), e);
+            }
+            numFails++;
+        }
+        return res;
+    }
+
+    @Override
+    public void run() {
+        //死循环，一直检查
+        while (!shutdown) {
+
+            if (!shutdown) {
+                long timeToSleep = getClusterCheckinInterval();
+                long transpiredTime = (System.currentTimeMillis() - lastCheckin);
+                timeToSleep = timeToSleep - transpiredTime;
+                if (timeToSleep <= 0) {
+                    timeToSleep = 100L;
+                }
+
+                if(numFails > 0) {
+                    timeToSleep = Math.max(getDbRetryInterval(), timeToSleep);
+                }
+
+                try {
+                    Thread.sleep(timeToSleep);
+                } catch (Exception ignore) {
+                }
+            }
+			
+            //调用放方法 this.manage() 管理检查
+            if (!shutdown && this.manage()) {
+                //处理完成发动定时器通知
+                signalSchedulingChangeImmediately(0L);
+            }
+
+        }//while !shutdown
+    }
+}
+```
+
+
+
+`ClusterManager`：机器管理器是继承Thread的的一个线程类，同时是在`JobStoreSupport`的内部类  ，一直会运行一个  `while (!shutdown)` ，死循环监听其他节点是否宕机，以及宕机后未完成的任务。       
+
+`this.manage()`：调用方法进行检查`doCheckin()`
+
+
+
+```java
+protected boolean doCheckin() throws JobPersistenceException {
+    boolean transOwner = false;
+    boolean transStateOwner = false;
+    boolean recovered = false;
+
+    Connection conn = getNonManagedTXConnection();
+    try {
+        //除了第一次以外，总是先签入以确保
+        //在获得锁之前有工作要做（因为这很昂贵，
+        //而且几乎没有必要）。必须在单独的
+        //事务中完成此操作，以防止在恢复条件下出现死锁
+        List<SchedulerStateRecord> failedRecords = null;
+        //如果不是第一次检查的检查，也要进行检查，获取失败的节点记录 （schedulerInstanceId）
+        if (!firstCheckIn) {
+            failedRecords = clusterCheckIn(conn);
+            commitConnection(conn);
+        }
+
+        //如果是第一次执行，并且 有失败的节点记录，则进入
+        if (firstCheckIn || (failedRecords.size() > 0)) {
+            //获取状态锁
+            getLockHandler().obtainLock(conn, LOCK_STATE_ACCESS);
+            transStateOwner = true;
+
+            // 如果是第一次进入获取失败的节点，如果不是第一次则再再次获取
+            failedRecords = (firstCheckIn) ? clusterCheckIn(conn) : findFailedInstances(conn);
+			
+            //在状态锁下，依旧获取了失败的节点
+            if (failedRecords.size() > 0) {
+                //获取LOCK_TRIGGER_ACCESS 锁，开始准备执行任务
+                getLockHandler().obtainLock(conn, LOCK_TRIGGER_ACCESS);
+                //getLockHandler().obtainLock(conn, LOCK_JOB_ACCESS);
+                transOwner = true;
+
+                clusterRecover(conn, failedRecords);
+                recovered = true;
+            }
+        }
+
+        commitConnection(conn);
+    } catch (JobPersistenceException e) {
+        rollbackConnection(conn);
+        throw e;
+    } finally {
+        try {
+            releaseLock(LOCK_TRIGGER_ACCESS, transOwner);
+        } finally {
+            try {
+                releaseLock(LOCK_STATE_ACCESS, transStateOwner);
+            } finally {
+                cleanupConnection(conn);
+            }
+        }
+    }
+
+    firstCheckIn = false;
+
+    return recovered;
+}
+```
+
+
+
+`clusterRecover`：节点恢复，找到未执行的任务改变`qrtz_triggers`表的状态，    
+
+如果是阻塞状态变成等待状态，    
+
+如果是暂停阻塞状态则变成暂停状态，   
+
+如果是`STATE_ACQUIRED`，撞他变成`STATE_WAITING`等待状态   
+
+接着删除失败的实例和，删除``FiredTriggers`，`deleteFiredTriggers`    
+
+
+
+
+
+```java
+@SuppressWarnings("ConstantConditions")
+protected void clusterRecover(Connection conn, List<SchedulerStateRecord> failedInstances)
+    throws JobPersistenceException {
+
+    if (failedInstances.size() > 0) {
+
+        long recoverIds = System.currentTimeMillis();
+
+        logWarnIfNonZero(failedInstances.size(),
+                         "ClusterManager: detected " + failedInstances.size()
+                         + " failed or restarted instances.");
+        try {
+            for (SchedulerStateRecord rec : failedInstances) {
+                getLog().info(
+                    "ClusterManager: Scanning for instance \""
+                    + rec.getSchedulerInstanceId()
+                    + "\"'s failed in-progress jobs.");
+
+                List<FiredTriggerRecord> firedTriggerRecs = getDelegate()
+                    .selectInstancesFiredTriggerRecords(conn,
+                                                        rec.getSchedulerInstanceId());
+
+                int acquiredCount = 0;
+                int recoveredCount = 0;
+                int otherCount = 0;
+
+                Set<TriggerKey> triggerKeys = new HashSet<TriggerKey>();
+
+                for (FiredTriggerRecord ftRec : firedTriggerRecs) {
+
+                    TriggerKey tKey = ftRec.getTriggerKey();
+                    JobKey jKey = ftRec.getJobKey();
+
+                    triggerKeys.add(tKey);
+
+                    // release blocked triggers..
+                    if (ftRec.getFireInstanceState().equals(STATE_BLOCKED)) {
+                        getDelegate()
+                            .updateTriggerStatesForJobFromOtherState(
+                            conn, jKey,
+                            STATE_WAITING, STATE_BLOCKED);
+                    } else if (ftRec.getFireInstanceState().equals(STATE_PAUSED_BLOCKED)) {
+                        getDelegate()
+                            .updateTriggerStatesForJobFromOtherState(
+                            conn, jKey,
+                            STATE_PAUSED, STATE_PAUSED_BLOCKED);
+                    }
+
+                    // release acquired triggers..
+                    if (ftRec.getFireInstanceState().equals(STATE_ACQUIRED)) {
+                        getDelegate().updateTriggerStateFromOtherState(
+                            conn, tKey, STATE_WAITING,
+                            STATE_ACQUIRED);
+                        acquiredCount++;
+                    } else if (ftRec.isJobRequestsRecovery()) {
+                        // handle jobs marked for recovery that were not fully
+                        // executed..
+                        if (jobExists(conn, jKey)) {
+                            @SuppressWarnings("deprecation")
+                            SimpleTriggerImpl rcvryTrig = new SimpleTriggerImpl(
+                                "recover_"
+                                + rec.getSchedulerInstanceId()
+                                + "_"
+                                + String.valueOf(recoverIds++),
+                                Scheduler.DEFAULT_RECOVERY_GROUP,
+                                new Date(ftRec.getScheduleTimestamp()));
+                            rcvryTrig.setJobName(jKey.getName());
+                            rcvryTrig.setJobGroup(jKey.getGroup());
+                            rcvryTrig.setMisfireInstruction(SimpleTrigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY);
+                            rcvryTrig.setPriority(ftRec.getPriority());
+                            JobDataMap jd = getDelegate().selectTriggerJobDataMap(conn, tKey.getName(), tKey.getGroup());
+                            jd.put(Scheduler.FAILED_JOB_ORIGINAL_TRIGGER_NAME, tKey.getName());
+                            jd.put(Scheduler.FAILED_JOB_ORIGINAL_TRIGGER_GROUP, tKey.getGroup());
+                            jd.put(Scheduler.FAILED_JOB_ORIGINAL_TRIGGER_FIRETIME_IN_MILLISECONDS, String.valueOf(ftRec.getFireTimestamp()));
+                            jd.put(Scheduler.FAILED_JOB_ORIGINAL_TRIGGER_SCHEDULED_FIRETIME_IN_MILLISECONDS, String.valueOf(ftRec.getScheduleTimestamp()));
+                            rcvryTrig.setJobDataMap(jd);
+
+                            rcvryTrig.computeFirstFireTime(null);
+                            storeTrigger(conn, rcvryTrig, null, false,
+                                         STATE_WAITING, false, true);
+                            recoveredCount++;
+                        } else {
+                            getLog()
+                                .warn(
+                                "ClusterManager: failed job '"
+                                + jKey
+                                + "' no longer exists, cannot schedule recovery.");
+                            otherCount++;
+                        }
+                    } else {
+                        otherCount++;
+                    }
+
+                    // free up stateful job's triggers
+                    if (ftRec.isJobDisallowsConcurrentExecution()) {
+                        getDelegate()
+                            .updateTriggerStatesForJobFromOtherState(
+                            conn, jKey,
+                            STATE_WAITING, STATE_BLOCKED);
+                        getDelegate()
+                            .updateTriggerStatesForJobFromOtherState(
+                            conn, jKey,
+                            STATE_PAUSED, STATE_PAUSED_BLOCKED);
+                    }
+                }
+
+                getDelegate().deleteFiredTriggers(conn,
+                                                  rec.getSchedulerInstanceId());
+
+                // Check if any of the fired triggers we just deleted were the last fired trigger
+                // records of a COMPLETE trigger.
+                int completeCount = 0;
+                for (TriggerKey triggerKey : triggerKeys) {
+
+                    if (getDelegate().selectTriggerState(conn, triggerKey).
+                        equals(STATE_COMPLETE)) {
+                        List<FiredTriggerRecord> firedTriggers =
+                            getDelegate().selectFiredTriggerRecords(conn, triggerKey.getName(), triggerKey.getGroup());
+                        if (firedTriggers.isEmpty()) {
+
+                            if (removeTrigger(conn, triggerKey)) {
+                                completeCount++;
+                            }
+                        }
+                    }
+                }
+
+                logWarnIfNonZero(acquiredCount,
+                                 "ClusterManager: ......Freed " + acquiredCount
+                                 + " acquired trigger(s).");
+                logWarnIfNonZero(completeCount,
+                                 "ClusterManager: ......Deleted " + completeCount
+                                 + " complete triggers(s).");
+                logWarnIfNonZero(recoveredCount,
+                                 "ClusterManager: ......Scheduled " + recoveredCount
+                                 + " recoverable job(s) for recovery.");
+                logWarnIfNonZero(otherCount,
+                                 "ClusterManager: ......Cleaned-up " + otherCount
+                                 + " other failed job(s).");
+
+                if (!rec.getSchedulerInstanceId().equals(getInstanceId())) {
+                    getDelegate().deleteSchedulerState(conn,
+                                                       rec.getSchedulerInstanceId());
+                }
+            }
+        } catch (Throwable e) {
+            throw new JobPersistenceException("Failure recovering jobs: "
+                                              + e.getMessage(), e);
+        }
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
 
 
 
