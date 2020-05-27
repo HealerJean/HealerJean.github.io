@@ -19,9 +19,10 @@ public class SpirngAopApplication {
         // 从 context 中取出我们的 Bean，而不是用 new UserService() 这种方式
         UserService userService = annotationConfigApplicationContext.getBean(UserService.class);
 
-
         userService.login(1L);
 
     }
+
+
 
 }
