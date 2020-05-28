@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(description = "服务提供者_2001_声明式服务调用Controller")
 @RestController
 @Slf4j
+@RequestMapping("api/provider/feign")
 public class ProviderFeignController extends BaseController implements FeignServerService {
 
     /**
