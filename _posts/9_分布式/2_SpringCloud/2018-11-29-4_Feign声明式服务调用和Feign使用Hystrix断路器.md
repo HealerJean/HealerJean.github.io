@@ -837,13 +837,84 @@ public class ConsumerFeignServerServiceFallBack implements ConsumerFeignServerSe
 
 
 
-**方案二、如果觉得上面麻烦，`@Requestmappering`不要加在类上也是可以的 ，这种情况在1的用例中是可以的，但是2重构之后因为接口类会被服务提供者和服务消费者共同使用。服务提供者要求接口上必须有`@Requestmappering`，所以这种方案要视情况选用**
+**方案二、如果觉得上面麻烦，`@Requestmappering`不要加在声明式类上也是可以的 ，这种情况在1的用例中是可以的。在2重构之后的情况，将它放到方法层面，服务提供者Controller自己写`@Requestmappering`，所以这种方案要视情况选用。**
 
 
 
+```java
+public interface FeignServerService {
+
+    @GetMapping("api/provider/feign/reequestParam")
+    String reequestParam(@RequestParam("name") String name);
+
+    @GetMapping("api/provider/feign/requestHeader")
+    UserDTO requestHeader(@RequestHeader("id") Long id, @RequestHeader("name") String name);
+
+    @PostMapping("api/provider/feign/requestBody")
+    UserDTO requestBody(@RequestBody UserDTO userDTO);
+
+    /**
+     * (接收会使空，这种方式我目前开发基本不会用到了，今后用到再说)
+     */
+    @PostMapping("api/provider/feign/post")
+    UserDTO post(UserDTO userDTO);
+
+}
+```
 
 
 
+```java
+@Api(description = "服务提供者_2001_声明式服务调用Controller")
+@RestController
+@Slf4j
+@RequestMapping("api/provider/feign")
+public class ProviderFeignController extends BaseController implements FeignServerService {
+
+    /**
+     * reequestParam 参数接收
+     */
+    @GetMapping("reequestParam")
+    @Override
+    public String reequestParam(@RequestParam("name") String name) {
+        log.info("声明式服务调用Controller--------reequestParam 参数接收--------请求参数：{}", name);
+        return "声明式服务调用Controller--------reequestParam 参数接收--------成功 ：" + name;
+    }
+
+    /**
+     * requestHeader 参数接收
+     */
+    @GetMapping("requestHeader")
+    @Override
+    public UserDTO requestHeader(@RequestHeader("id") Long id, @RequestHeader("name") String name) {
+        log.info("声明式服务调用Controller--------requestHeader 参数接收--------请求参数：{}", name);
+        return new UserDTO(id, name);
+    }
+
+
+    /**
+     *  requestBody 参数接收
+     */
+    @PostMapping("requestBody")
+    @Override
+    public UserDTO requestBody(@RequestBody UserDTO userDTO) {
+        log.info("声明式服务调用Controller--------requestBody 参数接收--------请求参数：{}", userDTO);
+        return userDTO;
+    }
+
+    /**
+     *  post 参数接收(接收会使空，这种方式我目前开发基本不会用到了，今后用到再说)
+     */
+    @PostMapping("post")
+    @Override
+    public UserDTO post(UserDTO userDTO) {
+        log.info("声明式服务调用Controller--------post 参数接收--------请求参数：{}", userDTO);
+        return userDTO;
+    }
+
+}
+
+```
 
 
 

@@ -10,23 +10,21 @@ import org.springframework.web.bind.annotation.*;
  * @date 2020/4/9  12:40.
  * @Description
  */
-
-@RequestMapping("api/provider/feign")
 public interface FeignServerService {
 
-    @GetMapping("reequestParam")
+    @GetMapping("api/provider/feign/reequestParam")
     String reequestParam(@RequestParam("name") String name);
 
-    @GetMapping("requestHeader")
+    @GetMapping("api/provider/feign/requestHeader")
     UserDTO requestHeader(@RequestHeader("id") Long id, @RequestHeader("name") String name);
 
-    @PostMapping("requestBody")
+    @PostMapping("api/provider/feign/requestBody")
     UserDTO requestBody(@RequestBody UserDTO userDTO);
 
     /**
      * (接收会使空，这种方式我目前开发基本不会用到了，今后用到再说)
      */
-    @PostMapping("post")
+    @PostMapping("api/provider/feign/post")
     UserDTO post(UserDTO userDTO);
 
 }

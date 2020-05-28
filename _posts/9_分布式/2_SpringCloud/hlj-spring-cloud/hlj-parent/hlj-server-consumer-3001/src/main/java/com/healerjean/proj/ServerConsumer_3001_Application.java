@@ -22,7 +22,7 @@ public class ServerConsumer_3001_Application {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(ZookeeperServerConsumer_7021_Application.class, args);
+        SpringApplication.run(ServerConsumer_3001_Application.class, args);
     }
 
 }

@@ -15,18 +15,15 @@ import org.springframework.web.bind.annotation.*;
 public class ConsumerFeignServerServiceFallBack implements ConsumerFeignServerService {
 
 
-    @GetMapping("fallBackReequestParam")
     @Override
     public String reequestParam(String name) {
         return "error";
     }
-    @GetMapping("fallBackRequestHeader")
     @Override
     public UserDTO requestHeader(Long id, String name) {
         return new UserDTO();
     }
 
-    @PostMapping("fallBackRequestBody")
     @Override
     public UserDTO requestBody(UserDTO userDTO) {
         return new UserDTO();
@@ -35,7 +32,6 @@ public class ConsumerFeignServerServiceFallBack implements ConsumerFeignServerSe
     /**
      * (接收会使空，这种方式我目前开发基本不会用到了，今后用到再说)
      */
-    @PostMapping("fallBackPost")
     @Override
     public UserDTO post(UserDTO userDTO) {
         return  new UserDTO();
