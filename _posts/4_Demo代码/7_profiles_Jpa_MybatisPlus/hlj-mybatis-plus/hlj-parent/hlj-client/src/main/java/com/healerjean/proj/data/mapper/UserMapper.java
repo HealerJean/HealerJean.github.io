@@ -50,7 +50,7 @@ public interface UserMapper extends BaseMapper<User> {
     UserDTO queryLocalDate();
 
 
-    List<UserDTO> selectLocalDateByMappeXml(UserDTO userDTO);
+    List<UserDTO> selectLocalDateTimeByMappeXml(UserDTO userDTO);
 
 
 

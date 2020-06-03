@@ -8,7 +8,7 @@
     </select>
 
 
-    <select id="selectLocalDateByMappeXml" resultType="com.healerjean.proj.dto.UserDTO">
+    <select id="selectLocalDateTimeByMappeXml" resultType="com.healerjean.proj.dto.UserDTO">
                select * from user where name = #{name}
     </select>
 
