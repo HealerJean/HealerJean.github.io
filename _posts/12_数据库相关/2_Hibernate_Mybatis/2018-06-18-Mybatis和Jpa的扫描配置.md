@@ -108,7 +108,7 @@ public class MybatisConfig {
         sessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:mybatis.xml"));
 
         Resource[] resources = ArrayUtils.addAll(
-                applicationContext.getResources("classpath*:com/hlj/dao/mybatis/**/mysql/*.xml")
+            applicationContext.getResources("classpath*:com/hlj/dao/mybatis/**/mysql/*.xml")
         );
         sessionFactoryBean.setMapperLocations(resources);
         return sessionFactoryBean;
@@ -350,8 +350,11 @@ public class DatasourceConfig {
 
 
 
-<br/>
-<br/>
+
+
+
+
+
 
 ![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
