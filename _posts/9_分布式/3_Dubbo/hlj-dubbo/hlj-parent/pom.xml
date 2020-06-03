@@ -20,7 +20,7 @@
     <modules>
         <module>hlj-server-provider-2001</module>
         <module>hlj-server-consumer-3001</module>
-        <module>hlj-service-api</module>
+        <module>hlj-api</module>
         <module>hlj-common</module>
     </modules>
 

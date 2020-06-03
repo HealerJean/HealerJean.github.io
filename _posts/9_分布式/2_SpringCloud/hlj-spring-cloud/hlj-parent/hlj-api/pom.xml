@@ -8,7 +8,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>hlj-service-api</artifactId>
+    <artifactId>hlj-api</artifactId>
     <version>${project.healerjean.version}</version>
 
     <properties>
@@ -16,11 +16,13 @@
     </properties>
 
     <dependencies>
-        <!-- dubbo-->
+
+        <!--feign 声明式服务调用-->
         <dependency>
-            <groupId>com.alibaba.boot</groupId>
-            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-feign</artifactId>
         </dependency>
+
 
         <!--swagger-->
         <dependency>
