@@ -5,7 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 
-//支持服务发现
 @EnableDubbo(scanBasePackages = "com.healerjean.proj.service")
 @PropertySource("classpath:dubbo.properties")
 @SpringBootApplication
