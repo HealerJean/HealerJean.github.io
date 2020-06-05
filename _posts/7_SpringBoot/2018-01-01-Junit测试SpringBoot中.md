@@ -27,13 +27,13 @@ description: Junit测试SpringBoot中
 
 
 ```xml
-         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
-        </dependency>
-        
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-api</artifactId>
+    <version>RELEASE</version>
+    <scope>compile</scope>
+</dependency>
+
 ```
 
 #### 1.1.2、如果运行报下面错误
@@ -57,11 +57,11 @@ Exception in thread "main" java.lang.NoSuchMethodError: org.junit.platform.commo
 
 ```xml
 
-             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.12</version>
-            </dependency>
+<dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <version>4.12</version>
+</dependency>
 
 ```
 
@@ -72,22 +72,17 @@ Exception in thread "main" java.lang.NoSuchMethodError: org.junit.platform.commo
 ### 2.1、maven
 
 ```xml
-    <!--springBoot测试-->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>5.1.9.RELEASE</version>
-            <scope>text</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <version>1.5.1.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+    <exclusions>
+        <exclusion>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
 ```
 
 
@@ -95,23 +90,18 @@ Exception in thread "main" java.lang.NoSuchMethodError: org.junit.platform.commo
 ### 2.2、开始测试
 
 ```java
+@SpringBootTest
+class SpirngAopApplicationTests {
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = HljActivemqApplication.class)
-public class MainText {
-
+   @Autowired
+    private AppBean appBean;
     @Autowired
-    private JMSProducer jmsProducer;
+    private DataBean dataBean;
 
     @Test
-    public void testJms() {
-        Destination destination = new ActiveMQQueue("springboot.queue.test");
-
-        for (int i = 0; i < 10; i++) {
-            jmsProducer.sendMessage(destination, "hello,world!" + i);
-        }
+    public void test(){
+        System.out.println(dataBean == appBean.getDataBean());
     }
-
 }
 
 ```
