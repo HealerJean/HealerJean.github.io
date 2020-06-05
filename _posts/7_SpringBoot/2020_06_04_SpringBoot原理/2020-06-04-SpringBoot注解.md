@@ -1,11 +1,11 @@
 ---
-title: @Configuration和@Bean原理
+title: SpringBoot注解
 date: 2020-06-04 03:33:00
 tags: 
 - SpringBoot
 category: 
 - SpringBoot
-description: @Configuration和@Bean原理
+description: SpringBoot注解
 ---
 
 **前言**     
@@ -451,6 +451,52 @@ public class AppConfig {
 
 
 
+## 1.5、@EnableAutoConfiguration
+
+> 开启自动配置功能   **@EnableAutoConfiguration**通知SpringBoot开启自动配置功能，这样自动配置才能生效。   
+>
+> `@AutoConfigurationPackage`  ：自动配置包注解
+
+
+
+```java
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+@AutoConfigurationPackage
+@Import(AutoConfigurationImportSelector.class)
+public @interface EnableAutoConfiguration {
+```
+
+
+
+> `@Import(AutoConfigurationPackages.Registrar.class)`：      
+>
+> 默认将主配置类(**@SpringBootApplication**)所在的包及其子包里面的所有组件扫描到Spring容器中。如下   
+
+
+
+```java
+@Import(AutoConfigurationPackages.Registrar.class)
+public @interface AutoConfigurationPackage {
+
+
+}
+```
+
+
+
+ 
+
+
+
+
+
+
+
+
+
 
 
 # 2、源码解析 
@@ -459,7 +505,9 @@ public class AppConfig {
 
 ## 2.1、@Configuration和@Component区别源码解析
 
-
+> 为什么这么搞呢@Configuration它本身就是基于配置的，内部肯定会有一些相互调用，为了保证是单例的，所以这样实现了。    
+>
+> 而@Component是基于类而已，大概意思就是只要使用它注释了，大概率上是希望被扫描到。至于是不是单例，不关心。  
 
 ### 2.1.1、找出带有@Configuration的的类，使它变成增强类  
 
