@@ -17,6 +17,9 @@
     <modules>
         <module>spring-aop</module>
         <module>spring-boot</module>
+        <module>spring-annotation</module>
+
+
     </modules>
 
     <properties>
