@@ -542,13 +542,13 @@ condition.var.encrypt=true
 ```
 
 ```java
-//不可以使用 @PropertySource，@Value
+//不可以使用 @PropertySource，@Value（可以采用spring.profiles.active=db 进行模块导入）
 public class EncryptCondition implements Condition {
 
     @Override
     public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata metadata) {
         Environment environment = conditionContext.getEnvironment();
-        String encrypt = environment.getProperty("condition.var.encrypt");
+        String encrypt = environment.getProperty("condition.var.encrypt"); 
         if (Boolean.valueOf(encrypt)) {
             return true;
         }
