@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.healerjean.proj.configuration.DemoConfiguration,\
+com.healerjean.proj.configuration.NextConfiguration

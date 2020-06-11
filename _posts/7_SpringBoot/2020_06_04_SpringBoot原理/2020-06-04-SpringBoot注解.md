@@ -667,8 +667,6 @@ public class DataConfig {
 
 
 
-
-
 ## 6.1、实例使用
 
 ### 6.1.1、`application.properties`
@@ -1352,6 +1350,75 @@ public class TestMa3Controller {
 
 ![image-20200609200022464](D:\study\HealerJean.github.io\blogImages\image-20200609200022464.png)
 
+# 23、`@ConfigurationProperties`、`@EnableConfigurationProperties`
+
+> 如果一个配置类只配置`@ConfigurationProperties`注解，而没有使用`@Component`，那么在IOC容器中是获取不到properties 配置文件转化的bean。说白了 `@EnableConfigurationProperties` 相当于把使用  `@ConfigurationProperties `的类进行了一次注入。
+
+
+
+## 23.1、使用
+
+### 23.1.1、`application.properties`
+
+```properties
+demo.name=healerjean
+```
+
+### 23.1.2、`DemoProperties`
+
+```java
+//一个配置类只配置@ConfigurationProperties注解，
+// 而没有使用@Component，那么在IOC容器中是获取不到properties 配置文件转化的bean
+@ConfigurationProperties("demo")
+@Data
+public class DemoProperties {
+
+    private String name ;
+}
+
+```
+
+
+
+### 23.1.3、`DemoPropertiesAutoConfiguration`
+
+```java
+@Configuration
+@EnableConfigurationProperties(DemoProperties.class)
+@Slf4j
+public class DemoPropertiesAutoConfiguration {
+
+    @Autowired
+    private DemoProperties demoProperties;
+
+    @PostConstruct
+    public void init() {
+        log.info("配置文件属性--------{}", demoProperties);
+    }
+
+}
+
+```
+
+
+
+## 23.2、替代方案  
+
+第一种：
+
+```java
+@ComponentScan
+@ConfigurationProperties("demo")
+@Data
+public class DemoProperties {
+
+    private String name ;
+}
+
+```
+
+
+
 
 
 
@@ -1380,19 +1447,11 @@ public @interface EnableAutoConfiguration {
 
 
 
-> `@Import(AutoConfigurationPackages.Registrar.class)`：      
->
-> 默认将主配置类(**@SpringBootApplication**)所在的包及其子包里面的所有组件扫描到Spring容器中。如下   
 
 
 
-```java
-@Import(AutoConfigurationPackages.Registrar.class)
-public @interface AutoConfigurationPackage {
 
 
-}
-```
 
 
 

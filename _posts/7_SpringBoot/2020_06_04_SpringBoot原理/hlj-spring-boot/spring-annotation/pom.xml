@@ -44,10 +44,11 @@
         </dependency>
 
 
-        <!-- aop 切面 -->
+
+        <!--StringUtils-->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
 
     </dependencies>

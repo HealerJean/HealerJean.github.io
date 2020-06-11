@@ -1,9 +1,10 @@
-package com.healerjean.proj.annotation.condition;
+package com.healerjean.proj.config.condition;
 
-import com.healerjean.proj.utils.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
+import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
 /**
@@ -16,12 +17,10 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 public class EncryptCondition implements Condition {
     @Override
     public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata metadata) {
-        String property = conditionContext.getEnvironment().getProperty("var.encrypt");
-        String de = conditionContext.getEnvironment().getProperty("var.demo");
-
-        String encrypt = PropertiesUtil.getProperty("var.encrypt");
-        log.debug("服务启动--------数据加解密：{}", encrypt);
-        if (Boolean.valueOf(encrypt)) {
+        Environment environment = conditionContext.getEnvironment();
+        String encryptStr = environment.getProperty("database.encrypt");
+        log.debug("服务启动--------数据加解密：{}", encryptStr);
+        if (StringUtils.isNotBlank(encryptStr) && encryptStr.equals("true")) {
             return true;
         }
         return false;

@@ -1,4 +1,4 @@
-package com.healerjean.proj.bean;
+package com.healerjean.proj.config.bean;
 
 import org.springframework.context.annotation.Configuration;
 

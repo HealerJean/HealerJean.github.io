@@ -1,16 +1,15 @@
 package com.healerjean.proj;
 
-import com.healerjean.proj.bean.AppBean;
-import com.healerjean.proj.bean.DataBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-public class SpringBoot_Test_Application {
+public class SpringBoot_Demo_Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringBoot_Test_Application.class, args);
+        // System.out.println(SpringBoot_Demo_Application.class.getName());
+        SpringApplication.run(SpringBoot_Demo_Application.class, args);
 
 
         // AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(SpringBoot_Test_Application.class);
