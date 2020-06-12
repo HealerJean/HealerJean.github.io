@@ -42,6 +42,12 @@
             </exclusions>
         </dependency>
 
+        <!-- aop 切面 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
         <!--jpa-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

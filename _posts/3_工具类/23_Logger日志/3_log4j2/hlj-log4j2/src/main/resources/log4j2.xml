@@ -7,6 +7,7 @@
 <configuration status="error" monitorInterval="30">
     <!--    %d{yyyy-MM-dd HH:mm:ss, SSS} : 日志生产时间-->
     <!--    %p : 日志输出格式-->
+    <!--    %thread表示线程名，-->
     <!--    %c : logger的名称-->
     <!--    %m : 日志内容，即 logger.info("message")-->
     <!--    %n : 换行符-->
@@ -20,7 +21,7 @@
     <Properties>
         <Property name="level">info</Property>
         <Property name="LOG_PATTERN">
-            %d{yyyy-MM-dd HH:mm:ss} %-5level -[%-32X{REQ_UID}]- %msg%xEx %logger{36}.%M[%L]%n
+            %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level -[%-32X{REQ_UID}]- %msg%xEx %logger{36}.%M[%L]%n
         </Property>
 
         <Property name="logDri">/Users/healerjean/Desktop/logs</Property>
