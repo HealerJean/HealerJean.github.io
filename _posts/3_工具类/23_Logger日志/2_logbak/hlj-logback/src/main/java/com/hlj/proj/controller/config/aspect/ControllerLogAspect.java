@@ -1,23 +1,44 @@
-package com.healerjean.proj.config.aspect;
+package com.hlj.proj.controller.config.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.*;
+import org.slf4j.MDC;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 @Aspect
 @Component
 @Slf4j
+@Order(1)
 public class ControllerLogAspect {
 
-    @Around("execution(* com.healerjean.proj.controller.*Controller.*(..))")
+    private static final String REQ_UID = "REQ_UID";
+
+
+    @Pointcut("execution(* com.hlj.proj.controller.*Controller.*(..))")
+    private void controllerMethod() {
+    }
+
+    @Before("controllerMethod()")
+    private void before() {
+        MDC.put(REQ_UID, UUID.randomUUID().toString().replace("-",""));
+    }
+
+    @After("controllerMethod()")
+    public void after() {
+        MDC.remove(REQ_UID);
+    }
+
+
+    @Around("controllerMethod()")
     public Object handleControllerLog(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         RequestAttributes ra = RequestContextHolder.getRequestAttributes();
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) ra;

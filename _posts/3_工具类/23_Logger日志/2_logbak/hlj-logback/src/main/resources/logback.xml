@@ -8,9 +8,13 @@
      %-5level：级别从左显示5个字符宽度,
      %logger{50} 表示 Logger 名字最长36个字符,
      %msg：日志消息，
+     %M : 日志输出所在方法名
+     %L : 日志输出所在行数
      %n是换行符 -->
     -->
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg %n "/>
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level -[%-32X{REQ_UID}] - %msg  -%logger{50}.%M[%L]%n "/>
+
+
 
     <property name="LOG_PATH" value="/Users/healerjean/Desktop/logs"/>
     <property name="FILE_PATH_INFO"  value="${LOG_PATH}/hlj-logback.log"/>
