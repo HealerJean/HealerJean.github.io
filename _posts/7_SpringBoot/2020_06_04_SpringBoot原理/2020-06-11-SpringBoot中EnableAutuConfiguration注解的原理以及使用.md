@@ -296,54 +296,65 @@ protected List<String> getCandidateConfigurations(AnnotationMetadata metadata, A
 
 **SpringFactoriesLoader.loadFactoryNames(getSpringFactoriesLoaderFactoryClass(), getBeanClassLoader());**    
 
-> 择在spring.factories文件中 org.springframework.boot.autoconfigure.EnableAutoConfiguration的相关配置类的名字，然后返回为List集合
+> 择在spring.factories文件中 org.springframework.boot.autoconfigure.EnableAutoConfiguration的相关配置类的名字，然后返回为List集合。会进行过滤  
+
+
+
+> 此方法很多地方都会用到，所以要根据我们传入的进行筛选
 
 ```java
 public static List<String> loadFactoryNames(Class<?> factoryType, @Nullable ClassLoader classLoader) {
-    //选择在spring.factories文件中 org.springframework.boot.autoconfigure.EnableAutoConfiguration的相关配置类的名字
+    //选择在spring.factories文件中factoryTypeName = org.springframework.boot.autoconfigure.EnableAutoConfiguration的相关配置类的名字
     String factoryTypeName = factoryType.getName();
     return (List)loadSpringFactories(classLoader).getOrDefault(factoryTypeName, Collections.emptyList());
 }
 
+```
+
+
+
+```java
+
+public static final String FACTORIES_RESOURCE_LOCATION = "META-INF/spring.factories";
+
+
 
 private static Map<String, List<String>> loadSpringFactories(@Nullable ClassLoader classLoader) {
-    MultiValueMap<String, String> result = (MultiValueMap)cache.get(classLoader);
+    MultiValueMap<String, String> result = cache.get(classLoader);
     if (result != null) {
         return result;
-    } else {
-        try {
-            //找到所有jar包中在文件 META-INF/spring.factories 的配置类
-            Enumeration<URL> urls = classLoader != null ? classLoader.getResources("META-INF/spring.factories") : ClassLoader.getSystemResources("META-INF/spring.factories");
-            LinkedMultiValueMap result = new LinkedMultiValueMap();
+    }
 
-            while(urls.hasMoreElements()) {
-                URL url = (URL)urls.nextElement();
-                UrlResource resource = new UrlResource(url);
-                Properties properties = PropertiesLoaderUtils.loadProperties(resource);
-                Iterator var6 = properties.entrySet().iterator();
-
-                while(var6.hasNext()) {
-                    Entry<?, ?> entry = (Entry)var6.next();
-                    String factoryTypeName = ((String)entry.getKey()).trim();
-                    String[] var9 = StringUtils.commaDelimitedListToStringArray((String)entry.getValue());
-                    int var10 = var9.length;
-
-                    for(int var11 = 0; var11 < var10; ++var11) {
-                        String factoryImplementationName = var9[var11];
-                        result.add(factoryTypeName, factoryImplementationName.trim());
-                    }
+    try {
+        //找到所有jar包中在文件 META-INF/spring.factories 
+        Enumeration<URL> urls = (classLoader != null ?
+                                 classLoader.getResources(FACTORIES_RESOURCE_LOCATION) :
+                                 ClassLoader.getSystemResources(FACTORIES_RESOURCE_LOCATION));
+        result = new LinkedMultiValueMap<>();
+        while (urls.hasMoreElements()) {
+            URL url = urls.nextElement();
+            UrlResource resource = new UrlResource(url);
+            Properties properties = PropertiesLoaderUtils.loadProperties(resource);
+            for (Map.Entry<?, ?> entry : properties.entrySet()) {
+                String factoryTypeName = ((String) entry.getKey()).trim();
+                for (String factoryImplementationName : StringUtils.commaDelimitedListToStringArray((String) entry.getValue())) {
+                    result.add(factoryTypeName, factoryImplementationName.trim());
                 }
             }
-
-            cache.put(classLoader, result);
-            return result;
-        } catch (IOException var13) {
-            throw new IllegalArgumentException("Unable to load factories from location [META-INF/spring.factories]", var13);
         }
+        cache.put(classLoader, result);
+        return result;
+    }
+    catch (IOException ex) {
+        throw new IllegalArgumentException("Unable to load factories from location [" +
+                                           FACTORIES_RESOURCE_LOCATION + "]", ex);
     }
 }
 
+
 ```
+
+![image-20200611162525077](D:\study\HealerJean.github.io\blogImages\image-20200611162525077.png)
 
 
 

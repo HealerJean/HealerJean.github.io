@@ -25,12 +25,11 @@ public class Log4j2Controller {
         log.warn("warn日志=================={}", logBean);
         log.error("error日志================{}", logBean);
         int i = 1 / 0;
-        System.out.println(i);
         return "日志处理成功";
     }
 
     public static void main(String[] args) {
-        for (int i = 0; i < 500000; i++) {
+        for (int i = 0; i < 50000; i++) {
             log.info("===================================" + i);
         }
     }

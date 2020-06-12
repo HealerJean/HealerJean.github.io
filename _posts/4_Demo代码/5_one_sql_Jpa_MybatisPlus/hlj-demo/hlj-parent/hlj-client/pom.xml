@@ -36,6 +36,12 @@
         </dependency>
 
 
+        <!-- aop 切面 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
         <!--lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -137,11 +143,6 @@
             <artifactId>okhttp</artifactId>
         </dependency>
 
-        <!--log4j脱敏的时候创建的-->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-        </dependency>
 
         <!--swagger-->
         <dependency>

@@ -33,11 +33,9 @@
         <okhttp3.version>3.11.0</okhttp3.version>
         <!--要激活的resoure目录-->
         <profiles.active>src/profiles/local</profiles.active>
-        <!--fastjson-->
-        <com-alibaba-fastjson.version>1.2.58</com-alibaba-fastjson.version>
-        <javax-validation.version>1.0.0.GA</javax-validation.version>
-        <!--默认的版本是6.0.9.Final 使用过程中NotBlank会显示红色，所以这里讲版本降低，这样就不会显示红色了-->
-        <hibernate-validator.version>4.3.2.Final</hibernate-validator.version>
+        <!--校验-->
+        <javax-validation.version>2.0.1.Final</javax-validation.version>
+        <hibernate-validator.version>6.0.9.Final</hibernate-validator.version>
     </properties>
 
 
@@ -70,13 +68,6 @@
                 <version>${swagger.version}</version>
             </dependency>
 
-
-            <!--  fastjson  -->
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${com-alibaba-fastjson.version}</version>
-            </dependency>
 
 
             <dependency>

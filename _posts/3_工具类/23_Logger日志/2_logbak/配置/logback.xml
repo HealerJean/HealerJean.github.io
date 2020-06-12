@@ -65,6 +65,10 @@
 
 
 
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.springframework.aop.framework" level="OFF"/>
+
+
     <!--以配置文件application.properties 中为主，如果配置文件中不存在以它为主-->
     <root level="info">
         <appender-ref ref="STDOUT" />
