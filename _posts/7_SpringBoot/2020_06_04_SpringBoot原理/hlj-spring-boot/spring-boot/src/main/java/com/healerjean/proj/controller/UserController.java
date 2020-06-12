@@ -19,6 +19,7 @@ public class UserController {
 
     @GetMapping("user/{id}")
     public UserDTO login(@PathVariable Long id) {
+        int i = 1/0;
         return userService.login(id);
     }
 }

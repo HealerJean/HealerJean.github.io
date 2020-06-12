@@ -5,10 +5,7 @@ import com.healerjean.proj.config.interceptor.UrlInterceptor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.DispatcherType;
@@ -42,6 +39,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(urlInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/develop/swagger/**");
+
+        registry.addInterceptor(new Log42jInterceptor())
+                .addPathPatterns("/**");
     }
 
 

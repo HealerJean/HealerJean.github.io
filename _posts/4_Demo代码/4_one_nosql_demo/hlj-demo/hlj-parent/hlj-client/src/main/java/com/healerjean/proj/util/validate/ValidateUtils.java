@@ -1,9 +1,9 @@
 package com.healerjean.proj.util.validate;
 
-
 import com.healerjean.proj.common.constant.CommonConstants;
 import com.healerjean.proj.common.enums.ResponseEnum;
 import com.healerjean.proj.common.exception.BusinessException;
+import org.hibernate.validator.HibernateValidator;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -21,20 +21,16 @@ public class ValidateUtils {
 
     public static Validator validator;
 
+    //快速返回模式，有一个验证失败立即返回错误信息
     static {
 
+        //一般情况下使用这里就可以了
         validator = Validation
-                //一般情况下使用这里就可以了
-                // .byProvider(HibernateValidator.class)
-
-                //当 一个字段 配置非空group ，其他无需加组
-                .byProvider(CustomValidationProvider.class)
+                .byProvider(HibernateValidator.class)
                 .configure()
                 .failFast(true)
                 .buildValidatorFactory()
                 .getValidator();
-        //快速返回模式，有一个验证失败立即返回错误信息
-
     }
 
 

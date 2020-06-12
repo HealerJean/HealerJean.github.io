@@ -46,8 +46,6 @@ public class ValidateUtils {
         ConstraintMapping nameIncludeConstraintMapping = configure.createConstraintMapping();
         nameIncludeConstraintMapping.constraintDefinition(NameInclude.class)
                 .validatedBy(NameIncludeValidator.class);
-        //  如果同一个注解有多个实现过程
-        // .validatedBy(DigitsIncloudZeroValidatorForCharSequence.class);
         greaterLessConstraintMapping.constraintDefinition(GreaterLess.class)
                 .validatedBy(GreaterLessValidator.class);
         validator = configure

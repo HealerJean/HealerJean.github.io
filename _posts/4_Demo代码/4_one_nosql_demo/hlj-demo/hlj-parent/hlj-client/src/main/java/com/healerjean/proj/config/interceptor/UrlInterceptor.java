@@ -24,7 +24,7 @@ public class UrlInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-        log.info("请求method：{}；请求地址：[{}]；访问ip：[{}]", httpServletRequest.getMethod(), httpServletRequest.getRequestURL(), IpUtils.getIp(httpServletRequest));
+        // log.info("请求method：{}；请求地址：[{}]；访问ip：[{}]", httpServletRequest.getMethod(), httpServletRequest.getRequestURL(), IpUtils.getIp(httpServletRequest));
         return true;
     }
 

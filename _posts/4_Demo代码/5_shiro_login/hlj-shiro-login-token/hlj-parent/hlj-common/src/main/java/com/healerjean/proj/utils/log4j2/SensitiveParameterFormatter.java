@@ -2,6 +2,7 @@ package com.healerjean.proj.utils.log4j2;
 
 
 import com.alibaba.fastjson.JSON;
+import com.healerjean.proj.utils.JsonUtils;
 import org.apache.logging.log4j.util.StringBuilders;
 
 import java.text.SimpleDateFormat;
@@ -584,12 +585,11 @@ public class SensitiveParameterFormatter {
         }
     }
 
-    private static LogValueFilter logValueFilter = new LogValueFilter();
 
     private static void tryObjectToString(final Object o, final StringBuilder str) {
         // it's just some other Object, we can only use toString().
         try {
-            str.append(JSON.toJSONString(o, logValueFilter));
+            str.append(JsonUtils.toJsonStringWithSensitivity(o));
         } catch (final Throwable t) {
             try {
                 str.append(String.valueOf(o));

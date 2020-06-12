@@ -85,11 +85,6 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
-        <!--log4j脱敏的时候创建的-->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-        </dependency>
 
         <!--微信开发jar-->
         <dependency>

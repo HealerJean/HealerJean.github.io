@@ -3,6 +3,7 @@ package com.healerjean.proj.controller;
 
 import com.healerjean.proj.common.ResponseBean;
 import com.healerjean.proj.common.ValidateGroup;
+import com.healerjean.proj.common.constant.CommonConstants;
 import com.healerjean.proj.dto.validate.JavaBean;
 import com.healerjean.proj.common.enums.ResponseEnum;
 import com.healerjean.proj.common.exception.BusinessException;
@@ -44,7 +45,7 @@ public class VialidateController {
     @PostMapping(value = "validate", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseBean post(@RequestBody JavaBean javaBean) {
         String validate = ValidateUtils.validate(javaBean, ValidateGroup.HealerJean.class);
-        if (!"success".equals(validate)) {
+        if (CommonConstants.COMMON_SUCCESS.equals(validate)) {
             throw new BusinessException(ResponseEnum.参数错误, validate);
         }
         return ResponseBean.buildSuccess(javaBean);
