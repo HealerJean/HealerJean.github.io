@@ -1,6 +1,7 @@
 package com.healerjean.proj.controller;
 
 import com.healerjean.proj.common.ValidateGroup;
+import com.healerjean.proj.annotation.InterfaceName;
 import com.healerjean.proj.service.DemoEntityService;
 import com.healerjean.proj.common.constant.CommonConstants;
 import com.healerjean.proj.dto.Demo.DemoDTO;
@@ -41,6 +42,7 @@ public class DemoController {
     private DemoEntityService demoEntityService;
 
 
+    @InterfaceName("demo控制器--------demo实体")
     @ApiOperation(value = "demo实体",
             notes = "demo实体",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,

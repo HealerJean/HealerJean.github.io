@@ -1,5 +1,7 @@
 package com.healerjean.proj.config.filter;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -11,6 +13,7 @@ import java.io.IOException;
  * @Date 2019/9/29  14:33.
  * @Description
  */
+@Slf4j
 public class SpaceFilter implements Filter {
 
     private FilterConfig filterConfig;
