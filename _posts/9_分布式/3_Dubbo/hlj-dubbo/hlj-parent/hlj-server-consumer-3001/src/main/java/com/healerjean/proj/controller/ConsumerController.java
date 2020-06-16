@@ -33,7 +33,9 @@ public class ConsumerController extends BaseController {
     @GetMapping(value = "connect")
     public String connectProvider(String name) {
         log.info("服务消费者控制器--------connect--------");
-        return providerDubboService.connect(name);
+        String connect = providerDubboService.connect(name);
+        log.info("服务消费者控制器--------返回信息--------{}", connect);
+        return connect;
     }
 
 }
