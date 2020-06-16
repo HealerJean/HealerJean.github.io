@@ -1,13 +1,16 @@
 package com.healerjean.proj.config;
 
+import com.healerjean.proj.config.filter.Log4j2ReqUidFilter;
 import com.healerjean.proj.config.interceptor.UrlInterceptor;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.annotation.Resource;
+import javax.servlet.DispatcherType;
 
 /**
  * 拦截器
@@ -41,6 +44,17 @@ public class InterceptorConfig extends WebMvcConfigurerAdapter {
                 .excludePathPatterns("/develop/swagger/**");
     }
 
+
+
+    @Bean
+    public FilterRegistrationBean log4j2ReqUidFilter() {
+        FilterRegistrationBean fitler = new FilterRegistrationBean();
+        fitler.setFilter(new Log4j2ReqUidFilter());
+        fitler.addUrlPatterns("/*");
+        fitler.setName("Log4j2ReqUidFilter");
+        fitler.setDispatcherTypes(DispatcherType.REQUEST);
+        return fitler;
+    }
 
 
 }
