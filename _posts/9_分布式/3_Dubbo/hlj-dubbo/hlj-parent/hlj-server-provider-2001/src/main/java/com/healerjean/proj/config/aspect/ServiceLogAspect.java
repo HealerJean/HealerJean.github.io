@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @Order(1)
-public class ControllerLogAspect {
+public class ServiceLogAspect {
 
     @Around("execution(* com.healerjean.proj.service.*Service.*(..))")
     public Object handleControllerLog(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {

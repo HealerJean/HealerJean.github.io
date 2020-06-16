@@ -13,7 +13,7 @@ import java.util.UUID;
  * @date 2020/6/15  20:12.
  * @Description
  */
-public class Log4j2Filter implements Filter {
+public class Log4j2ReqUidFilter implements Filter {
 
     private static final String REQ_UID = "REQ_UID";
     private FilterConfig filterConfig;
@@ -35,7 +35,6 @@ public class Log4j2Filter implements Filter {
     public void destroy() {
         this.filterConfig = null;
     }
-
 
 
 }

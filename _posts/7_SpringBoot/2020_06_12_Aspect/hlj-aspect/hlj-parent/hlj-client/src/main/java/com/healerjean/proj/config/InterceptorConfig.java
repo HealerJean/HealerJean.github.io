@@ -1,6 +1,6 @@
 package com.healerjean.proj.config;
 
-import com.healerjean.proj.config.filter.Log4j2Filter;
+import com.healerjean.proj.config.filter.Log4j2ReqUidFilter;
 import com.healerjean.proj.config.filter.SpaceFilter;
 import com.healerjean.proj.config.interceptor.UrlInterceptor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -59,11 +59,11 @@ public class InterceptorConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public FilterRegistrationBean log4j2Fiter() {
+    public FilterRegistrationBean log4j2ReqUidFilter() {
         FilterRegistrationBean fitler = new FilterRegistrationBean();
-        fitler.setFilter(new Log4j2Filter());
+        fitler.setFilter(new Log4j2ReqUidFilter());
         fitler.addUrlPatterns("/*");
-        fitler.setName("log4j2Fiter");
+        fitler.setName("Log4j2ReqUidFilter");
         fitler.setDispatcherTypes(DispatcherType.REQUEST);
         return fitler;
     }
