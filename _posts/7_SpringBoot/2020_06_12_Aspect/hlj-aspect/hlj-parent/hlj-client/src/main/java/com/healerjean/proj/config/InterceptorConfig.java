@@ -1,5 +1,6 @@
 package com.healerjean.proj.config;
 
+import com.healerjean.proj.config.filter.Log4j2Filter;
 import com.healerjean.proj.config.filter.SpaceFilter;
 import com.healerjean.proj.config.interceptor.UrlInterceptor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -8,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.annotation.Resource;
 import javax.servlet.DispatcherType;
@@ -54,6 +54,16 @@ public class InterceptorConfig implements WebMvcConfigurer {
         fitler.setFilter(new SpaceFilter());
         fitler.addUrlPatterns("/hlj/*");
         fitler.setName("SpaceFilter");
+        fitler.setDispatcherTypes(DispatcherType.REQUEST);
+        return fitler;
+    }
+
+    @Bean
+    public FilterRegistrationBean log4j2Fiter() {
+        FilterRegistrationBean fitler = new FilterRegistrationBean();
+        fitler.setFilter(new Log4j2Filter());
+        fitler.addUrlPatterns("/*");
+        fitler.setName("log4j2Fiter");
         fitler.setDispatcherTypes(DispatcherType.REQUEST);
         return fitler;
     }
