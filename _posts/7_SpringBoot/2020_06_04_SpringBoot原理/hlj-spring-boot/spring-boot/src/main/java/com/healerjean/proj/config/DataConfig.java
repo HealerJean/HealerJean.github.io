@@ -25,7 +25,7 @@ public class DataConfig {
     public AppBean appBean() {
         AppBean appBean = new AppBean();
         appBean.setDataBean(dataBean());
-        log.info("{}", demoPeroperties);
+        // log.info("{}", demoPeroperties);
         return appBean;
     }
 

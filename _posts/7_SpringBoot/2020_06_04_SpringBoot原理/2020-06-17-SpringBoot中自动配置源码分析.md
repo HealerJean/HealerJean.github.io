@@ -1,11 +1,11 @@
 ---
-title: SpringBoot中EnableAutuConfiguration注解的原理以及使用
+title: SpringBoot中自动配置源码分析
 date: 2020-02-20 03:33:00
 tags: 
 - SpringBoot
 category: 
 - SpringBoot
-description: SpringBoot中EnableAutuConfiguration注解的原理以及使用
+description: SpringBoot中自动配置源码分析
 ---
 
 **前言**     
@@ -16,11 +16,332 @@ description: SpringBoot中EnableAutuConfiguration注解的原理以及使用
 
 
 
+# 1、SpringBoot启动类加载
+
+> 首先加载springBoot启动类注入到`spring`容器中`beanDefinitionMap`中，看下prepareContext方法中的load方法：load(context, sources.toArray(new Object[0]));
+> 跟进该方法最终会执行BeanDefinitionLoader的load方法：   
 
 
-# 1、原理 
 
-## 1.1、观察启动类
+`SpringBoot`中`run`方法，`Spring`容器前置处理会对启动类进行加载
+
+```java
+public static ConfigurableApplicationContext run(Class<?> primarySource, String... args) {
+    return run(new Class<?>[] { primarySource }, args);
+}
+
+
+
+public ConfigurableApplicationContext run(String... args) {
+    // 计时工具
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
+    ConfigurableApplicationContext context = null;
+    Collection<SpringBootExceptionReporter> exceptionReporters = new ArrayList<>();
+    configureHeadlessProperty();
+
+
+    // 第一步：获取并启动监听器
+    SpringApplicationRunListeners listeners = getRunListeners(args);
+    listeners.starting();
+    try {
+        ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
+
+        // 第二步：根据SpringApplicationRunListeners以及参数来准备环境
+        ConfigurableEnvironment environment = prepareEnvironment(listeners, applicationArguments);
+        configureIgnoreBeanInfo(environment);
+
+
+        // 准备Banner打印器 - 就是启动Spring Boot的时候打印在console上的ASCII艺术字体
+        Banner printedBanner = printBanner(environment);
+
+
+        // 第三步：创建Spring容器
+        context = createApplicationContext();
+
+
+        exceptionReporters = getSpringFactoriesInstances(SpringBootExceptionReporter.class,
+                                                         new Class[] { ConfigurableApplicationContext.class }, context);
+
+
+        // 第四步：Spring容器前置处理
+        prepareContext(context, environment, listeners, applicationArguments, printedBanner);
+
+        // 第五步：刷新容器
+        refreshContext(context);
+
+
+        // 第六步：Spring容器后置处理
+        afterRefresh(context, applicationArguments);
+        stopWatch.stop();
+        if (this.logStartupInfo) {
+            new StartupInfoLogger(this.mainApplicationClass).logStarted(getApplicationLog(), stopWatch);
+        }
+
+
+
+        // 第七步：发出结束执行的事件
+        listeners.started(context);
+
+
+        // 第八步：执行Runners
+        callRunners(context, applicationArguments);
+    }
+    catch (Throwable ex) {
+        handleRunFailure(context, ex, exceptionReporters, listeners);
+        throw new IllegalStateException(ex);
+    }
+
+    try {
+        listeners.running(context);
+    }
+    catch (Throwable ex) {
+        handleRunFailure(context, ex, exceptionReporters, null);
+        throw new IllegalStateException(ex);
+    }
+
+    // 返回容器
+    return context;
+}
+```
+
+
+
+> `prepareContext`中`load(context, sources.toArray(new Object[0]));`会对启动类进行加载
+
+```java
+private void prepareContext(ConfigurableApplicationContext context,
+        ConfigurableEnvironment environment, SpringApplicationRunListeners listeners,
+        ApplicationArguments applicationArguments, Banner printedBanner) {
+    
+    //设置容器环境，包括各种变量
+    context.setEnvironment(environment);
+    
+    //执行容器后置处理
+    postProcessApplicationContext(context);
+    
+    //执行容器中的ApplicationContextInitializer（包括 spring.factories和自定义的实例）
+    applyInitializers(context);
+    
+　　//发送容器已经准备好的事件，通知各监听器
+    listeners.contextPrepared(context);
+
+    //注册启动参数bean，这里将容器指定的参数封装成bean，注入容器
+    context.getBeanFactory().registerSingleton("springApplicationArguments",
+            applicationArguments);
+    
+    //设置banner
+    if (printedBanner != null) {
+        context.getBeanFactory().registerSingleton("springBootBanner", printedBanner);
+    }
+    
+    //获取我们的启动类指定的参数，可以是多个
+    Set<Object> sources = getAllSources();
+    
+    Assert.notEmpty(sources, "Sources must not be empty");
+    
+    
+    //加载我们的启动类，将启动类注入容器
+    load(context, sources.toArray(new Object[0]));
+    
+    //发布容器已加载事件。
+    listeners.contextLoaded(context);
+}
+```
+
+
+
+### 
+
+> 启动类`SpringBoot_Application.class`被加载到 bean工厂的  `beanDefinitionMap`中，后续该启动类将作为开启自动化配置的入口，    
+
+```java
+Set<Object> sources = getAllSources();
+Assert.notEmpty(sources, "Sources must not be empty");
+load(context, sources.toArray(new Object[0]));
+```
+
+
+
+> 在创建**SpringApplication**实例时，先将**SpringBoot_Application.class**存储在`this.primarySources`属性中，现在就是用到这个属性的时候了，我们来看看`getAllSources（）`
+
+```java
+//获取启动类
+public Set<Object> getAllSources() {
+    Set<Object> allSources = new LinkedHashSet<>();
+    if (!CollectionUtils.isEmpty(this.primarySources)) {
+        allSources.addAll(this.primarySources);
+    }
+    if (!CollectionUtils.isEmpty(this.sources)) {
+        allSources.addAll(this.sources);
+    }
+    return Collections.unmodifiableSet(allSources);
+}
+```
+
+
+
+> 加载启动类
+
+```java
+protected void load(ApplicationContext context, Object[] sources) {
+    BeanDefinitionLoader loader = createBeanDefinitionLoader(getBeanDefinitionRegistry(context), sources);
+    if (this.beanNameGenerator != null) {
+        loader.setBeanNameGenerator(this.beanNameGenerator);
+    }
+    if (this.resourceLoader != null) {
+        loader.setResourceLoader(this.resourceLoader);
+    }
+    if (this.environment != null) {
+        loader.setEnvironment(this.environment);
+    }
+    loader.load();
+}
+
+
+```
+
+
+
+```java
+int load() {
+    int count = 0;
+    for (Object source : this.sources) {
+        count += load(source);
+    }
+    return count;
+}
+
+```
+
+```java
+private int load(Object source) {
+    Assert.notNull(source, "Source must not be null");
+    //如果是class类型，启用注解类型（就是它）
+    if (source instanceof Class<?>) {
+        return load((Class<?>) source);
+    }
+    //如果是resource类型，启用xml解析
+    if (source instanceof Resource) {
+        return load((Resource) source);
+    }
+    //如果是package类型，启用扫描包，例如：@ComponentScan
+    if (source instanceof Package) {
+        return load((Package) source);
+    }
+    //如果是字符串类型，直接加载
+    if (source instanceof CharSequence) {
+        return load((CharSequence) source);
+    }
+    throw new IllegalArgumentException("Invalid source type " + source.getClass());
+}
+```
+
+
+
+> 断启动类中是否包含`@component`注解，可我们的启动类并没有该注解。继续跟进会发现，AnnotationUtils判断是否包含该注解是通过递归实现，注解上的注解若包含指定类型也是可以的。    
+>
+> 启动类中包含`@SpringBootApplication`注解，进一步查找到`@SpringBootConfiguration`注解，然后查找到`@Component`注解
+
+```java
+private int load(Class<?> source) {
+    if (isGroovyPresent() && GroovyBeanDefinitionSource.class.isAssignableFrom(source)) {
+        // Any GroovyLoaders added in beans{} DSL can contribute beans here
+        GroovyBeanDefinitionSource loader = BeanUtils.instantiateClass(source, GroovyBeanDefinitionSource.class);
+        load(loader);
+    }
+    
+    //判断是否被注解@Component注释
+    if (isComponent(source)) {
+        
+        //将启动类bean信息存入beanDefinitionMap(DefaultListableBeanFactory 类)，
+        //也就是将SpringBoot_Application.class存入了beanDefinitionMap
+        this.annotatedReader.register(source);
+        return 1;
+    }
+    return 0;
+}
+```
+
+
+
+> 在查找到`@Component`注解后，表面该对象为`spring bean`，然后会将其信息包装成 `beanDefinitaion(AnnotatedGenericBeanDefinition)` ，添加到容器的` beanDefinitionMap`中。如下：     
+>
+> 将启动类bean信息存入`beanDefinitionMap`(`DefaultListableBeanFactory` 类)，也就是将`SpringBoot_Application.class`存入了`beanDefinitionMap`   
+
+
+
+
+
+```java
+private <T> void doRegisterBean(Class<T> beanClass, @Nullable String name,
+                                @Nullable Class<? extends Annotation>[] qualifiers, @Nullable Supplier<T> supplier,
+                                @Nullable BeanDefinitionCustomizer[] customizers) {
+
+    //new  BeanDefinition()
+    AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(beanClass);
+    if (this.conditionEvaluator.shouldSkip(abd.getMetadata())) {
+        return;
+    }
+
+    abd.setInstanceSupplier(supplier);
+    ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
+    abd.setScope(scopeMetadata.getScopeName());
+    String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
+
+    AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
+    if (qualifiers != null) {
+        for (Class<? extends Annotation> qualifier : qualifiers) {
+            if (Primary.class == qualifier) {
+                abd.setPrimary(true);
+            }
+            else if (Lazy.class == qualifier) {
+                abd.setLazyInit(true);
+            }
+            else {
+                abd.addQualifier(new AutowireCandidateQualifier(qualifier));
+            }
+        }
+    }
+    if (customizers != null) {
+        for (BeanDefinitionCustomizer customizer : customizers) {
+            customizer.customize(abd);
+        }
+    }
+
+    BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
+    definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
+    
+    //将 AnnotatedGenericBeanDefinition 
+    BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
+}
+```
+
+
+
+![image-20200617192512795](D:\study\HealerJean.github.io\blogImages\image-20200617192512795.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 2、SpringBoot中EnableAutuConfiguration注解的原理以及使用
+
+## 2.1、原理 
+
+### 2.1.1、观察启动类
 
 ```java
 @SpringBootApplication
@@ -58,7 +379,7 @@ public @interface SpringBootApplication {
 
 
 
-## 1.2、观察注解组成  
+### 2.1.2、观察注解组成  
 
 > **`@EnableAutoConfiguration`：顾名思义，开启Spring Boot的自动配置功能 ，什么是自动配置功能呢？简单点说就是通知SpringBoot根据依赖中的jar包，自动选择实例化某些配置。**
 
@@ -85,7 +406,7 @@ public @interface EnableAutoConfiguration {
 
 
 
-### 1.2.1、@AutoConfigurationPackage    
+#### 2.1.2.1、@AutoConfigurationPackage    
 
 >  自动配置包，将`SpringBootApplication`主配置类所在包以及子包的所有子类扫描到`spring`容器
 
@@ -99,7 +420,7 @@ public @interface AutoConfigurationPackage {
 
 
 
-### 1.2.2、@Import(AutoConfigurationImportSelector.class)
+#### 2.1.2.2、@Import(AutoConfigurationImportSelector.class)
 
 > 借助`AutoConfigurationImportSelector`，`@EnableAutoConfiguration`可以帮助SpringBoot应用将所有符合条件的`@Configuration`配置都加载到当前SpringBoot创建并使用的IoC容器。   
 >
@@ -140,15 +461,15 @@ public @interface AutoConfigurationPackage {
 
 
 
-## 1.3、分析：   
+### 1.1.3、分析：   
 
-### 1.3.1、`@AutoConfigurationPackage `
+#### 1.1.3.1、`@AutoConfigurationPackage `
 
 > **将spring boot主配置类所在的包及其子包下的所有的组件扫描到spring容器中去，可以理解为所有的类**
 
 
 
-#### 1.3.1.1、注册时机 
+##### 1.1.3.1.1、注册时机 
 
 > 这个以后慢慢分析，SpringBoot启动过程回过头来看
 
@@ -167,7 +488,7 @@ SpringApplication.run()
 
 
 
-#### 1.3.1.2、注册逻辑  
+##### 1.1.3.1.2、注册逻辑  
 
 ```java
 static class Registrar implements ImportBeanDefinitionRegistrar, DeterminableImports {
@@ -225,7 +546,7 @@ static class Registrar implements ImportBeanDefinitionRegistrar, DeterminableImp
 
 
 
-### 1.3.2、`@Import(AutoConfigurationImportSelector.class)`
+#### 1.1.3.2、`@Import(AutoConfigurationImportSelector.class)`
 
 
 
@@ -502,6 +823,7 @@ public class DemoPeroperties {
 @ConditionalOnClass(DemoBean.class)
 //使 DemoPeroperties 被ioc容器注入
 @EnableConfigurationProperties(DemoPeroperties.class)
+@Configuration
 public class DemoConfiguration {
 
     @Autowired

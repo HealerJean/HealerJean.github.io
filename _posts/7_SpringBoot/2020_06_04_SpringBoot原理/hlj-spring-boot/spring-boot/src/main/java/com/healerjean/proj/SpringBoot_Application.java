@@ -1,15 +1,17 @@
 package com.healerjean.proj;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+@Slf4j
 @SpringBootApplication
 public class SpringBoot_Application {
 
     public static void main(String[] args) {
-        // System.out.println(SpringBoot_Demo_Application.class.getName());
+        log.info("SpringBoot_Application--------run");
         SpringApplication.run(SpringBoot_Application.class, args);
-
 
         // AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(SpringBoot_Test_Application.class);
         // AppBean appBean = annotationConfigApplicationContext.getBean(AppBean.class);

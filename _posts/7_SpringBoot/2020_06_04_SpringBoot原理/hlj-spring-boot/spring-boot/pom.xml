@@ -50,13 +50,6 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-        <!--  测试 @autoEnableConfiguration -->
-        <dependency>
-            <groupId>com.healerjean.proj</groupId>
-            <artifactId>spring-stater-custom</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-
     </dependencies>
 
     <build>
