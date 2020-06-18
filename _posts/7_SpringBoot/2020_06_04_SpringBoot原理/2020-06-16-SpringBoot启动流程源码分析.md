@@ -1158,8 +1158,9 @@ private void prepareContext(ConfigurableApplicationContext context,
     Set<Object> sources = getAllSources();
     
     Assert.notEmpty(sources, "Sources must not be empty");
-    //加载我们的启动类，将启动类注入容器
     
+    
+    //加载我们的启动类，将启动类注入容器
     load(context, sources.toArray(new Object[0]));
     
     //发布容器已加载事件。
@@ -1244,33 +1245,37 @@ protected void load(ApplicationContext context, Object[] sources) {
 
 
 ```java
-	int load() {
-		int count = 0;
-		for (Object source : this.sources) {
-			count += load(source);
-		}
-		return count;
-	}
+int load() {
+    int count = 0;
+    for (Object source : this.sources) {
+        count += load(source);
+    }
+    return count;
+}
 
 ```
 
 ```java
 private int load(Object source) {
-		Assert.notNull(source, "Source must not be null");
-		if (source instanceof Class<?>) {
-			return load((Class<?>) source);
-		}
-		if (source instanceof Resource) {
-			return load((Resource) source);
-		}
-		if (source instanceof Package) {
-			return load((Package) source);
-		}
-		if (source instanceof CharSequence) {
-			return load((CharSequence) source);
-		}
-		throw new IllegalArgumentException("Invalid source type " + source.getClass());
-	}
+    Assert.notNull(source, "Source must not be null");
+    //如果是class类型，启用注解类型
+    if (source instanceof Class<?>) {
+        return load((Class<?>) source);
+    }
+    //如果是resource类型，启用xml解析
+    if (source instanceof Resource) {
+        return load((Resource) source);
+    }
+    //如果是package类型，启用扫描包，例如：@ComponentScan
+    if (source instanceof Package) {
+        return load((Package) source);
+    }
+    //如果是字符串类型，直接加载
+    if (source instanceof CharSequence) {
+        return load((CharSequence) source);
+    }
+    throw new IllegalArgumentException("Invalid source type " + source.getClass());
+}
 ```
 
 
@@ -1286,7 +1291,8 @@ private int load(Class<?> source) {
     //判断是否被注解@Component注释
     if (isComponent(source)) {
         
-        //将启动类bean信息存入beanDefinitionMap(DefaultListableBeanFactory 类)，也就是将SpringBoot_Application.class存入了beanDefinitionMap
+        //将启动类bean信息存入beanDefinitionMap(DefaultListableBeanFactory 类)，
+        //也就是将SpringBoot_Application.class存入了beanDefinitionMap
         this.annotatedReader.register(source);
         return 1;
     }

@@ -1382,8 +1382,9 @@ public class DemoProperties {
 
 ### 23.1.3、`DemoPropertiesAutoConfiguration`
 
+> 写了 @EnableConfigurationProperties(DemoProperties.class)  可以不写`@Configuration`，都是自动装配的意思
+
 ```java
-@Configuration
 @EnableConfigurationProperties(DemoProperties.class)
 @Slf4j
 public class DemoPropertiesAutoConfiguration {
@@ -1407,7 +1408,7 @@ public class DemoPropertiesAutoConfiguration {
 第一种：
 
 ```java
-@ComponentScan
+@Component
 @ConfigurationProperties("demo")
 @Data
 public class DemoProperties {
