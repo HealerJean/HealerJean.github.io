@@ -219,4 +219,21 @@ public class d01_FileDemoMain {
     }
 
 
+    /**
+     * 9、File.createTempFile
+     * 前缀不得少于3个字符
+     * C:\Users\HealerJean\AppData\Local\Temp
+     */
+    @Test
+    public void test() {
+        try {
+            File tempFile = File.createTempFile("a_name", ".jpg");
+            System.out.println(tempFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 }

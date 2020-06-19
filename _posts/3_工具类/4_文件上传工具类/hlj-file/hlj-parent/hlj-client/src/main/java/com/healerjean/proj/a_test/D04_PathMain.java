@@ -12,8 +12,8 @@ public class D04_PathMain {
 
     @Test
     public void testClassPath() {
-        System.out.println(this.getClass().getResource(""));
-        System.out.println(this.getClass().getResource("/"));
+        // System.out.println(this.getClass().getResource(""));
+        System.out.println(this.getClass().getClassLoader().getResource("/1"));
     }
 
 }

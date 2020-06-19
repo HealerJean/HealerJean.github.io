@@ -3,6 +3,7 @@ package com.healerjean.proj.config;
 import com.healerjean.proj.bean.AppBean;
 import com.healerjean.proj.bean.DataBean;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,16 +17,12 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 public class DataConfig {
 
-
-    @Bean
-    public AppBean appBean() {
-        AppBean appBean = new AppBean();
-        appBean.setDataBean(dataBean());
-        return appBean;
-    }
+    @Autowired
+    private AppConfig appConfig;
 
     @Bean
     public DataBean dataBean() {
+        log.info("{}", appConfig);
         return new DataBean();
     }
 
