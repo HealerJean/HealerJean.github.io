@@ -327,16 +327,6 @@ private <T> void doRegisterBean(Class<T> beanClass, @Nullable String name,
 
 
 
-
-
-
-
-
-
-
-
-
-
 # 2、SpringBoot中EnableAutuConfiguration注解的原理以及使用
 
 ## 2.1、原理 
@@ -461,15 +451,27 @@ public @interface AutoConfigurationPackage {
 
 
 
-### 1.1.3、分析：   
+### 2.1.3、分析：   
 
-#### 1.1.3.1、`@AutoConfigurationPackage `
+#### 2.1.3.1、`@AutoConfigurationPackage `
 
 > **将spring boot主配置类所在的包及其子包下的所有的组件扫描到spring容器中去，可以理解为所有的类**
 
 
 
-##### 1.1.3.1.1、注册时机 
+```java
+@Import(AutoConfigurationPackages.Registrar.class)
+public @interface AutoConfigurationPackage {
+
+
+}
+```
+
+
+
+
+
+##### 2.1.3.1.1、注册时机 
 
 > 这个以后慢慢分析，SpringBoot启动过程回过头来看
 
@@ -488,7 +490,7 @@ SpringApplication.run()
 
 
 
-##### 1.1.3.1.2、注册逻辑  
+##### 2.1.3.1.2、注册逻辑  
 
 ```java
 static class Registrar implements ImportBeanDefinitionRegistrar, DeterminableImports {
@@ -546,7 +548,7 @@ static class Registrar implements ImportBeanDefinitionRegistrar, DeterminableImp
 
 
 
-#### 1.1.3.2、`@Import(AutoConfigurationImportSelector.class)`
+#### 2.1.3.2、`@Import(AutoConfigurationImportSelector.class)`
 
 
 
@@ -713,11 +715,11 @@ org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration,\
 
 
 
-# 2、实战1 
+## 2.2、实战1 
 
-## 2.1、项目`spring-stater-custom`
+### 2.2.1、项目`spring-stater-custom`
 
-### 2.1.1、`pom`依赖
+#### 2.2.1.1、`pom`依赖
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -766,9 +768,9 @@ org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration,\
 
 
 
-### 2.1.2、`Bean`
+#### 2.2.1.2、`Bean`
 
-#### 2.1.2.1、`DemoBean`
+##### 2.2.1.2.1、`DemoBean`
 
 ```java
 @Data
@@ -781,7 +783,7 @@ public class DemoBean {
 
 
 
-#### 2.1.2.2、`NextBean``
+##### 2.2.1.2.2、`NextBean`
 
 ```java
 @Data
@@ -793,7 +795,7 @@ public class NextBean {
 
 
 
-### 2.1.3、`DemoPeroperties`
+#### 2.2.1.3、`DemoPeroperties`
 
 > 这个就很重要了，很多SpringBoot导入的jar包，需要我们在`application.properties`写一些配置属性，比如数据源，redis之类的配置信息。就是通过类似于这样的完成的。   
 
@@ -814,9 +816,9 @@ public class DemoPeroperties {
 
 
 
-### 2.1.4、`configuration`
+#### 2.2.1.4、`configuration`
 
-#### 2.1.4.1、`DemoConfiguration`
+##### 2.2.2.1.1、`DemoConfiguration`
 
 ```java
 //要求这个类是否在classpath中存在，如果存在，才会实例化一个Bean
@@ -842,7 +844,7 @@ public class DemoConfiguration {
 
 ```
 
-#### 2.1.5.2、NextConfiguration
+##### 2.2.2.1.2、NextConfiguration
 
 ```java
 //要求这个类是否在classpath中存在，如果存在，才会实例化一个Bean
@@ -862,7 +864,7 @@ public class NextConfiguration {
 
 
 
-### 2.1.5、`spring.factories`
+#### 2.2.1.5、`spring.factories`
 
 ```
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
@@ -875,7 +877,7 @@ com.healerjean.proj.configuration.NextConfiguration
 
 
 
-### 2.1.6、打包，发布到我们的maven仓库中
+#### 2.2.1.6、打包，发布到我们的maven仓库中
 
 ```shell
 mvn install
@@ -883,9 +885,9 @@ mvn install
 
 
 
-## 2.2、示例项目
+### 2.2.2、示例项目
 
-### 2.2.1、pom导入上面的依赖
+#### 2.2.2.1、pom导入上面的依赖
 
 ```xml
 <!--  测试 @autoEnableConfiguration -->
@@ -898,7 +900,7 @@ mvn install
 
 
 
-### 2.2.2、`application.properties`
+#### 2.2.2.2、`application.properties`
 
 ```java
 spring.application.name=springboot-test
@@ -912,7 +914,7 @@ demo.age=12
 
 
 
-### 2.2.3、`DataConfig`
+#### 2.2.3、`DataConfig`
 
 ```java
 @Configuration
