@@ -1,4 +1,4 @@
-package com.healerjean.proj.initdata;
+package com.healerjean.proj._1_初始化数据源码分析;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

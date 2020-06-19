@@ -24,25 +24,46 @@
     <properties>
         <java.version>1.8</java.version>
         <lombok.version>1.18.4</lombok.version>
+        <javax-validation.version>2.0.1.Final</javax-validation.version>
+        <hibernate-validator.version>6.0.9.Final</hibernate-validator.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-        <!--lombok版本太低了，不支持java10  升级版本：>= 1.18.0-->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-        </dependency>
+            <!--lombok版本太低了，不支持java10  升级版本：>= 1.18.0-->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
 
-        <!--StringUtils-->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
+            <!--StringUtils-->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>validation-api</artifactId>
+                        <groupId>javax.validation</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <artifactId>validation-api</artifactId>
+                <groupId>javax.validation</groupId>
+                <version>${javax-validation.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
