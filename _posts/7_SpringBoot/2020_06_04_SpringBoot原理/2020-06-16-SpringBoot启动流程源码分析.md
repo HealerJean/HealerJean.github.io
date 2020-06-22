@@ -1424,7 +1424,7 @@ protected void afterRefresh(ConfigurableApplicationContext context,
 
 ## 2.6、发出结束执行的事件  
 
-> 获取EventPublishingRunListener监听器，并执行其started方法，并且将创建的Spring容器传进去了，创建一个ApplicationStartedEvent事件，并执行ConfigurableApplicationContext 的publishEvent方法，也就是说这里是在Spring容器中发布事件，并不是在SpringApplication中发布事件，      
+> 获取`EventPublishingRunListener`监听器，并执行其started方法，并且将创建的Spring容器传进去了，创建一个ApplicationStartedEvent事件，并执行ConfigurableApplicationContext 的publishEvent方法，也就是说这里是在Spring容器中发布事件，并不是在SpringApplication中发布事件，      
 >
 > 和前面的starting是不同的，前面的starting是直接向SpringApplication中的11个监听器发布启动事件。   
 
