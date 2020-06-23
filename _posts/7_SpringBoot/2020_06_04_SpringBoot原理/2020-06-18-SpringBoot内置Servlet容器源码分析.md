@@ -717,7 +717,7 @@ private void createWebServer() {
         //获取ServletWebServerFactory 
         ServletWebServerFactory  factory = getWebServerFactory();
         
-        //从工厂中获取Web服务
+        //从工厂中获取Web服务，包装tomcat对象，返回一个Tomcat容器，内部会启动该tomcat容器
         this.webServer = factory.getWebServer(getSelfInitializer());
         getBeanFactory().registerSingleton("webServerGracefulShutdown",
                                            new WebServerGracefulShutdownLifecycle(this.webServer));
@@ -762,6 +762,407 @@ protected ServletWebServerFactory getWebServerFactory() {
 
 
 
+# 4、SpringBoot实现MVC
+
+## 4.1、`ServletRegistrationBean`、`FilterRegistrationBean`、`ServletListenerRegistrationBean`
+
+> 我们发现`RegistrationBean` 实现了`ServletContextInitializer`这个接口，并且有一个`onStartup`方法，`ServletRegistrationBean`、`FilterRegistrationBean`、S`ervletListenerRegistrationBean`都实现了**onStartup方法。 **     
+>
+> `ServletContextInitializer`是 Servlet 容器初始化的时候，提供的初始化接口。所以，Servlet 容器初始化会获取并触发所有的`FilterRegistrationBean`、`FilterRegistrationBean`、`ServletListenerRegistrationBean`实例中`onStartup方法`
+
+
+
+### 4.1.1、ServletRegistrationBean 
+
+```java
+public class ServletRegistrationBean<T extends Servlet> extends DynamicRegistrationBean<ServletRegistration.Dynamic> {
+
+	private static final String[] DEFAULT_MAPPINGS = { "/*" };
+    //存放目标Servlet实例
+	private T servlet;
+    
+    //存放Servlet的urlMapping
+	private Set<String> urlMappings = new LinkedHashSet
+        
+	private boolean alwaysMapUrl = true;
+	private int loadOnStartup = -1;
+	private MultipartConfigElement multipartConfig;
+
+
+	//other code
+
+}
+```
+
+
+
+```java
+public abstract class DynamicRegistrationBean<D extends Registration.Dynamic> extends RegistrationBean {
+
+    
+}
+
+public abstract class RegistrationBean implements ServletContextInitializer, Ordered {
+
+    
+}
+```
+
+
+
+```java
+public interface ServletContextInitializer {
+
+	void onStartup(ServletContext servletContext) throws ServletException;
+
+}
+
+```
+
+
+
+### 4.1.2、`FilterRegistrationBean`
+
+
+
+```java
+public class FilterRegistrationBean<T extends Filter> extends AbstractFilterRegistrationBean<T> {
+
+	private T filter;
+
+	public FilterRegistrationBean() {
+	}
+
+
+	public FilterRegistrationBean(T filter, ServletRegistrationBean<?>... servletRegistrationBeans) {
+		super(servletRegistrationBeans);
+		Assert.notNull(filter, "Filter must not be null");
+		this.filter = filter;
+	}
+
+	@Override
+	public T getFilter() {
+		return this.filter;
+	}
+
+	public void setFilter(T filter) {
+		Assert.notNull(filter, "Filter must not be null");
+		this.filter = filter;
+	}
+
+}
+
+```
+
+
+
+```java
+public abstract class AbstractFilterRegistrationBean<T extends Filter> extends DynamicRegistrationBean<Dynamic> {
+
+
+}
+public abstract class DynamicRegistrationBean<D extends Registration.Dynamic> extends RegistrationBean {
+
+    
+}
+public abstract class RegistrationBean implements ServletContextInitializer, Ordered {
+
+    
+}
+
+
+```
+
+
+
+```java
+public interface ServletContextInitializer {
+
+	void onStartup(ServletContext servletContext) throws ServletException;
+
+}
+
+```
+
+
+
+### 4.1.3、`ServletListenerRegistrationBean`
+
+```java
+public class ServletListenerRegistrationBean<T extends EventListener> extends RegistrationBean {
+
+	private static final Set<Class<?>> SUPPORTED_TYPES;
+
+	static {
+		Set<Class<?>> types = new HashSet<>();
+		types.add(ServletContextAttributeListener.class);
+		types.add(ServletRequestListener.class);
+		types.add(ServletRequestAttributeListener.class);
+		types.add(HttpSessionAttributeListener.class);
+		types.add(HttpSessionListener.class);
+		types.add(ServletContextListener.class);
+		SUPPORTED_TYPES = Collections.unmodifiableSet(types);
+	}
+
+    //存放了目标listener
+	private T listener;
+
+	
+    
+	public ServletListenerRegistrationBean() {
+	}
+
+    
+	public ServletListenerRegistrationBean(T listener) {
+		Assert.notNull(listener, "Listener must not be null");
+		Assert.isTrue(isSupportedType(listener), "Listener is not of a supported type");
+		this.listener = listener;
+	}
+
+    
+	public void setListener(T listener) {
+		Assert.notNull(listener, "Listener must not be null");
+		Assert.isTrue(isSupportedType(listener), "Listener is not of a supported type");
+		this.listener = listener;
+	}
+
+	
+    
+	public T getListener() {
+		return this.listener;
+	}
+
+	@Override
+	protected String getDescription() {
+		Assert.notNull(this.listener, "Listener must not be null");
+		return "listener " + this.listener;
+	}
+
+	@Override
+	protected void register(String description, ServletContext servletContext) {
+		try {
+			servletContext.addListener(this.listener);
+		}
+		catch (RuntimeException ex) {
+			throw new IllegalStateException("Failed to add listener '" + this.listener + "' to servlet context", ex);
+		}
+	}
+
+
+    
+	public static boolean isSupportedType(EventListener listener) {
+		for (Class<?> type : SUPPORTED_TYPES) {
+			if (ClassUtils.isAssignableValue(type, listener)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	
+    
+	public static Set<Class<?>> getSupportedTypes() {
+		return SUPPORTED_TYPES;
+	}
+
+}
+
+```
+
+
+
+## 4.2、Servlet容器启动观察  
+
+> `createWebServer() `创建tomcat并启动tomcat，并返回`WebServer` （`TomcatWebServer`）
+
+```java
+private void createWebServer() {
+    WebServer webServer = this.webServer;
+    ServletContext servletContext = getServletContext();
+    if (webServer == null && servletContext == null) {
+
+        //获取ServletWebServerFactory 
+        ServletWebServerFactory  factory = getWebServerFactory();
+
+        //从工厂中获取Web服务，包装tomcat对象，返回一个Tomcat容器，内部会启动该tomcat容器
+        this.webServer = factory.getWebServer(getSelfInitializer());
+        getBeanFactory().registerSingleton("webServerGracefulShutdown",
+                                           new WebServerGracefulShutdownLifecycle(this.webServer));
+        getBeanFactory().registerSingleton("webServerStartStop",
+                                           new WebServerStartStopLifecycle(this, this.webServer));
+    }
+    else if (servletContext != null) {
+        try {
+            getSelfInitializer().onStartup(servletContext);
+        }
+        catch (ServletException ex) {
+            throw new ApplicationContextException("Cannot initialize servlet context", ex);
+        }
+    }
+    initPropertySources();
+}
+```
+
+
+
+
+
+> 关键代码在`getSelfInitializer()`获取到所有的`Initializer`，传入Servlet容器中，那核心就在`getSelfInitializer()`方法，获取Servilet初始化器
+
+
+
+```java
+	private org.springframework.boot.web.servlet.ServletContextInitializer getSelfInitializer() {
+		return this::selfInitialize;
+	}
+
+	private void selfInitialize(ServletContext servletContext) throws ServletException {
+		prepareWebApplicationContext(servletContext);
+		registerApplicationScope(servletContext);
+		WebApplicationContextUtils.registerEnvironmentBeans(getBeanFactory(), servletContext);
+        
+         //这里便是获取所有的 ServletContextInitializer 实现类，会获取所有的注册组件
+		for (ServletContextInitializer beans : getServletContextInitializerBeans()) {
+            
+             //执行所有ServletContextInitializer的onStartup方法
+			beans.onStartup(servletContext);
+		}
+	}
+```
+
+
+
+### 4.2.1、获取所有的`ServletContextInitializer`
+
+```java
+protected Collection<ServletContextInitializer> getServletContextInitializerBeans() {
+    return new ServletContextInitializerBeans(getBeanFactory());
+}
+```
+
+
+
+> 我们看到`ServletContextInitializerBeans` 中有一个存放所有`ServletContextInitializer`的集合`sortedList`，就是在其构造方法中获取所有的`ServletContextInitializer`，并放入`sortedList`集合中，那我们来看看其构造方法的逻辑，
+
+
+
+```java
+public class ServletContextInitializerBeans extends AbstractCollection<ServletContextInitializer> {
+
+	private static final String DISPATCHER_SERVLET_NAME = "dispatcherServlet";
+
+	private static final Log logger = LogFactory.getLog(ServletContextInitializerBeans.class);
+
+	/**
+	 * Seen bean instances or bean names.
+	 */
+	private final Set<Object> seen = new HashSet<>();
+
+	private final MultiValueMap<Class<?>, ServletContextInitializer> initializers;
+
+	private final List<Class<? extends ServletContextInitializer>> initializerTypes;
+
+    // 可以看到继承了AbstractCollection<ServletContextInitializer>  
+    // 下面这个就是具体的东西，存放所有的ServletContextInitializer
+	private List<ServletContextInitializer> sortedList;
+
+	@SafeVarargs
+	public ServletContextInitializerBeans(ListableBeanFactory beanFactory,
+			Class<? extends ServletContextInitializer>... initializerTypes) {
+		this.initializers = new LinkedMultiValueMap<>();
+		this.initializerTypes = (initializerTypes.length != 0) ? Arrays.asList(initializerTypes)
+				: Collections.singletonList(ServletContextInitializer.class);
+        
+         //执行addServletContextInitializerBeans
+		addServletContextInitializerBeans(beanFactory);
+        
+       //执行addAdaptableBeans
+		addAdaptableBeans(beanFactory);
+        
+		List<ServletContextInitializer> sortedInitializers = this.initializers.values().stream()
+				.flatMap((value) -> value.stream().sorted(AnnotationAwareOrderComparator.INSTANCE))
+				.collect(Collectors.toList());
+		this.sortedList = Collections.unmodifiableList(sortedInitializers);
+		logMappings(this.initializers);
+	}
+    
+    
+    
+}
+```
+
+
+
+
+
+> 判断从`Spring`容器中获取的`ServletContextInitializer`类型，如ServletRegistrationBean、FilterRegistrationBean、ServletListenerRegistrationBean，并加入到initializers集合中去，我们再来看构造器中的另外一个方法   
+
+
+
+```java
+private void addServletContextInitializerBeans(ListableBeanFactory beanFactory) {
+    for (Class<? extends ServletContextInitializer> initializerType : this.initializerTypes) {
+
+        ////从Spring容器中获取所有ServletContextInitializer.class 类型的Bean
+        for (Entry<String, ? extends ServletContextInitializer> initializerBean : getOrderedBeansOfType(beanFactory,
+                                                                                                        initializerType)) {
+
+            //添加到具体的集合中
+            addServletContextInitializerBean(initializerBean.getKey(), initializerBean.getValue(), beanFactory);
+        }
+    }
+}
+
+private void addServletContextInitializerBean(String beanName, ServletContextInitializer initializer,
+                                              ListableBeanFactory beanFactory) {
+    //判断ServletRegistrationBean类型
+    if (initializer instanceof ServletRegistrationBean) {
+        Servlet source = ((ServletRegistrationBean<?>) initializer).getServlet();
+        
+        //将ServletRegistrationBean加入到集合中
+        addServletContextInitializerBean(Servlet.class, beanName, initializer, beanFactory, source);
+    }
+    
+     //判断FilterRegistrationBean类型
+    else if (initializer instanceof FilterRegistrationBean) {
+        Filter source = ((FilterRegistrationBean<?>) initializer).getFilter();
+        
+        //将ServletRegistrationBean加入到集合中
+        addServletContextInitializerBean(Filter.class, beanName, initializer, beanFactory, source);
+    }
+    else if (initializer instanceof DelegatingFilterProxyRegistrationBean) {
+        String source = ((DelegatingFilterProxyRegistrationBean) initializer).getTargetBeanName();
+        addServletContextInitializerBean(Filter.class, beanName, initializer, beanFactory, source);
+    }
+    else if (initializer instanceof ServletListenerRegistrationBean) {
+        EventListener source = ((ServletListenerRegistrationBean<?>) initializer).getListener();
+        addServletContextInitializerBean(EventListener.class, beanName, initializer, beanFactory, source);
+    }
+    else {
+        addServletContextInitializerBean(ServletContextInitializer.class, beanName, initializer, beanFactory,
+                                         initializer);
+    }
+}
+
+
+
+private void addServletContextInitializerBean(Class<?> type, String beanName, ServletContextInitializer initializer,
+                                              ListableBeanFactory beanFactory, Object source) {
+    
+     //加入到initializers中
+    this.initializers.add(type, initializer);
+    if (source != null) {
+        // Mark the underlying source as seen in case it wraps an existing bean
+        this.seen.add(source);
+    }
+    if (logger.isTraceEnabled()) {
+        String resourceDescription = getResourceDescription(beanName, beanFactory);
+        int order = getOrder(initializer);
+        logger.trace("Added existing " + type.getSimpleName() + " initializer bean '" + beanName + "'; order="
+                     + order + ", resource=" + resourceDescription);
+    }
+}
+```
 
 
 
@@ -769,6 +1170,117 @@ protected ServletWebServerFactory getWebServerFactory() {
 
 
 
+
+
+> 我们看到先从`beanFactory`获取所有`Servlet.class`和`Filter.class`类型的Bean，然后通过`ServletRegistrationBeanAdapter`和`FilterRegistrationBeanAdapter`两个适配器将`Servlet.class`和`Filter.class`封装成RegistrationBean
+
+
+
+```java
+protected void addAdaptableBeans(ListableBeanFactory beanFactory) {
+    MultipartConfigElement multipartConfig = getMultipartConfig(beanFactory);
+    //从beanFactory获取所有Servlet.class和Filter.class类型的Bean，并封装成RegistrationBean对象，加入到集合中
+    addAsRegistrationBean(beanFactory, Servlet.class, new ServletRegistrationBeanAdapter(multipartConfig));
+    addAsRegistrationBean(beanFactory, Filter.class, new FilterRegistrationBeanAdapter());
+
+    for (Class<?> listenerType : ServletListenerRegistrationBean.getSupportedTypes()) {
+        addAsRegistrationBean(beanFactory, EventListener.class, (Class<EventListener>) listenerType,
+                              new ServletListenerRegistrationBeanAdapter());
+    }
+}
+
+protected <T> void addAsRegistrationBean(ListableBeanFactory beanFactory, Class<T> type,
+                                         RegistrationBeanAdapter<T> adapter) {
+    addAsRegistrationBean(beanFactory, type, type, adapter);
+}
+
+private <T, B extends T> void addAsRegistrationBean(ListableBeanFactory beanFactory, Class<T> type,
+                                                    Class<B> beanType, RegistrationBeanAdapter<T> adapter) {
+    
+      //从Spring容器中获取所有的Servlet.class和Filter.class类型的Bean
+    List<Map.Entry<String, B>> entries = getOrderedBeansOfType(beanFactory, beanType, this.seen);
+    for (Entry<String, B> entry : entries) {
+        String beanName = entry.getKey();
+        B bean = entry.getValue();
+        if (this.seen.add(bean)) {            
+             //创建Servlet.class和Filter.class包装成RegistrationBean对象
+             // > 通过`ServletRegistrationBeanAdapter`和`FilterRegistrationBeanAdapter`两个适配器将`Servlet.class`和`Filter.class`封装成RegistrationBean
+            RegistrationBean registration = adapter.createRegistrationBean(beanName, bean, entries.size());
+            int order = getOrder(bean);
+            registration.setOrder(order);
+            this.initializers.add(type, registration);
+            if (logger.isTraceEnabled()) {
+                logger.trace("Created " + type.getSimpleName() + " initializer for bean '" + beanName + "'; order="
+                             + order + ", resource=" + getResourceDescription(beanName, beanFactory));
+            }
+        }
+    }
+}
+
+```
+
+
+
+
+
+```java
+protected interface RegistrationBeanAdapter<T> {
+    
+    RegistrationBean createRegistrationBean(String name, T source, int totalNumberOfSourceBeans);
+
+}
+```
+
+
+
+```java
+private static class FilterRegistrationBeanAdapter implements RegistrationBeanAdapter<Filter> {
+
+    @Override
+    public RegistrationBean createRegistrationBean(String name, Filter source, int totalNumberOfSourceBeans) {
+        FilterRegistrationBean<Filter> bean = new FilterRegistrationBean<>(source);
+        bean.setName(name);
+        return bean;
+    }
+
+}
+```
+
+
+
+```java
+private static class ServletRegistrationBeanAdapter implements RegistrationBeanAdapter<Servlet> {
+
+    private final MultipartConfigElement multipartConfig;
+
+    ServletRegistrationBeanAdapter(MultipartConfigElement multipartConfig) {
+        this.multipartConfig = multipartConfig;
+    }
+
+    @Override
+    public RegistrationBean createRegistrationBean(String name, Servlet source, int totalNumberOfSourceBeans) {
+        String url = (totalNumberOfSourceBeans != 1) ? "/" + name + "/" : "/";
+        if (name.equals(DISPATCHER_SERVLET_NAME)) {
+            url = "/"; // always map the main dispatcherServlet to "/"
+        }
+        ServletRegistrationBean<Servlet> bean = new ServletRegistrationBean<>(source, url);
+        bean.setName(name);
+        bean.setMultipartConfig(this.multipartConfig);
+        return bean;
+    }
+
+}
+```
+
+
+
+
+
+
+
+> /代码中注释很清楚了还是将Servlet.class实例封装成ServletRegistrationBean对象，将Filter.class实例封装成FilterRegistrationBean对象，这和我们自己定义ServletRegistrationBean对象是一模一样的，现在所有的ServletRegistrationBean、FilterRegistrationBean      
+>
+> Servlet.class、Filter.class都添加到List<ServletContextInitializer> sortedList这个集合中去了，接着就是遍历这个集合，执行其onStartup方法了
 
 
 
