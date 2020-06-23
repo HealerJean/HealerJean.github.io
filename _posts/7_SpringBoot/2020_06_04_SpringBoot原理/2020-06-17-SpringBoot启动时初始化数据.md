@@ -178,17 +178,9 @@ callRunners(context, applicationArguments);
 
 > 在spring初始化bean的时候，如果bean实现了 `InitializingBean `接口，在对象的所有属性被初始化后之后才会调用`afterPropertiesSet()`方法。所以这个在上面的Runner之前进行调用   
 
-```
+```java
 public interface InitializingBean {
 
-	/**
-	 * Invoked by the containing {@code BeanFactory} after it has set all bean properties
-	 * and satisfied {@link BeanFactoryAware}, {@code ApplicationContextAware} etc.
-	 * <p>This method allows the bean instance to perform validation of its overall
-	 * configuration and final initialization when all bean properties have been set.
-	 * @throws Exception in the event of misconfiguration (such as failure to set an
-	 * essential property) or if initialization fails for any other reason
-	 */
 	void afterPropertiesSet() throws Exception;
 
 }
