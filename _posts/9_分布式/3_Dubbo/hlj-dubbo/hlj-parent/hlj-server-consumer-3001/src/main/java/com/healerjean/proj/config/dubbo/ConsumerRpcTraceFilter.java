@@ -4,10 +4,8 @@ import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.extension.Activate;
 import com.alibaba.dubbo.rpc.*;
 import com.alibaba.dubbo.rpc.protocol.dubbo.filter.FutureFilter;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 
-import java.util.UUID;
 
 @Activate(group = Constants.CONSUMER, order = 1)
 public class ConsumerRpcTraceFilter extends FutureFilter {
