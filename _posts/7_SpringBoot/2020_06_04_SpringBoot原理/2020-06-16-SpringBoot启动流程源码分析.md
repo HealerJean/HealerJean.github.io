@@ -101,47 +101,6 @@ this.webApplicationType = WebApplicationType.deduceFromClasspath();
 > 如果是使用外部tomcat启动，则是`REACTIVE`，如果适应内置tomcat则是`SERVLET`
 
 ```java
-public enum WebApplicationType {
-
-    NONE,
-    SERVLET,
-    REACTIVE;
-
-    private WebApplicationType() {
-    }
-
-
-    private static final String WEBMVC_INDICATOR_CLASS = "org.springframework.web.servlet.DispatcherServlet";
-
-    private static final String WEBFLUX_INDICATOR_CLASS = "org.springframework.web.reactive.DispatcherHandler";
-
-    private static final String JERSEY_INDICATOR_CLASS = "org.glassfish.jersey.servlet.ServletContainer";
-
-    private static final String SERVLET_APPLICATION_CONTEXT_CLASS = "org.springframework.web.context.WebApplicationContext";
-
-    private static final String REACTIVE_APPLICATION_CONTEXT_CLASS = "org.springframework.boot.web.reactive.context.ReactiveWebApplicationContext";
-
-    static WebApplicationType deduceFromClasspath() {
-
-        if (ClassUtils.isPresent(WEBFLUX_INDICATOR_CLASS, null) && 
-            !ClassUtils.isPresent(WEBMVC_INDICATOR_CLASS, null) && 
-            !ClassUtils.isPresent(JERSEY_INDICATOR_CLASS, null)) {
-            return WebApplicationType.REACTIVE;
-        }
-        for (String className : SERVLET_INDICATOR_CLASSES) {
-            if (!ClassUtils.isPresent(className, null)) {
-                return WebApplicationType.NONE;
-            }
-        }
-        return WebApplicationType.SERVLET;
-    }
-
-}
-
-
-
-
-
 package org.springframework.boot;
 
 import org.springframework.util.ClassUtils;
@@ -162,6 +121,7 @@ public enum WebApplicationType {
 	private static final String[] SERVLET_INDICATOR_CLASSES = { "javax.servlet.Servlet",
 			"org.springframework.web.context.ConfigurableWebApplicationContext" };
 
+    //我们引入了spring-boot-starter-web，同时引入了tomcat和SpringMvc,肯定会存在DispatcherServlet.class字节码
 	private static final String WEBMVC_INDICATOR_CLASS = "org.springframework.web.servlet.DispatcherServlet";
 
 	private static final String WEBFLUX_INDICATOR_CLASS = "org.springframework.web.reactive.DispatcherHandler";

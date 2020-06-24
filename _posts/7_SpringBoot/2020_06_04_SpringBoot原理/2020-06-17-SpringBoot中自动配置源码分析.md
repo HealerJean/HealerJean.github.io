@@ -151,8 +151,6 @@ private void prepareContext(ConfigurableApplicationContext context,
 
 
 
-### 
-
 > 启动类`SpringBoot_Application.class`被加载到 bean工厂的  `beanDefinitionMap`中，后续该启动类将作为开启自动化配置的入口，    
 
 ```java
