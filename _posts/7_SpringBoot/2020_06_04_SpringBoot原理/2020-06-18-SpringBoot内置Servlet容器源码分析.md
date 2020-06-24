@@ -971,6 +971,17 @@ public class ServletListenerRegistrationBean<T extends EventListener> extends Re
 
 
 
+```java
+public interface ServletContextInitializer {
+
+	void onStartup(ServletContext servletContext) throws ServletException;
+
+}
+
+```
+
+
+
 ## 4.2、Servlet容器启动观察  
 
 > `createWebServer() `创建tomcat并启动tomcat，并返回`WebServer` （`TomcatWebServer`）
@@ -1009,8 +1020,6 @@ private void createWebServer() {
 
 > 关键代码在`getSelfInitializer()`获取到所有的`Initializer`，传入Servlet容器中，那核心就在`getSelfInitializer()`方法，获取Servilet初始化器
 
-
-
 ```java
 	private org.springframework.boot.web.servlet.ServletContextInitializer getSelfInitializer() {
 		return this::selfInitialize;
@@ -1024,11 +1033,15 @@ private void createWebServer() {
          //这里便是获取所有的 ServletContextInitializer 实现类，会获取所有的注册组件
 		for (ServletContextInitializer beans : getServletContextInitializerBeans()) {
             
-             //执行所有ServletContextInitializer的onStartup方法
+             //执行所有ServletContextInitializer的onStartup方法，将以上bean注册的
 			beans.onStartup(servletContext);
 		}
 	}
 ```
+
+
+
+![image-20200623145102076](D:\study\HealerJean.github.io\blogImages\image-20200623145102076.png)
 
 
 
@@ -1043,8 +1056,6 @@ protected Collection<ServletContextInitializer> getServletContextInitializerBean
 
 
 > 我们看到`ServletContextInitializerBeans` 中有一个存放所有`ServletContextInitializer`的集合`sortedList`，就是在其构造方法中获取所有的`ServletContextInitializer`，并放入`sortedList`集合中，那我们来看看其构造方法的逻辑，
-
-
 
 ```java
 public class ServletContextInitializerBeans extends AbstractCollection<ServletContextInitializer> {
@@ -1079,10 +1090,12 @@ public class ServletContextInitializerBeans extends AbstractCollection<ServletCo
        //执行addAdaptableBeans
 		addAdaptableBeans(beanFactory);
         
+        //将上面2个执行的结果，放到sortedList 中去
 		List<ServletContextInitializer> sortedInitializers = this.initializers.values().stream()
 				.flatMap((value) -> value.stream().sorted(AnnotationAwareOrderComparator.INSTANCE))
 				.collect(Collectors.toList());
 		this.sortedList = Collections.unmodifiableList(sortedInitializers);
+        
 		logMappings(this.initializers);
 	}
     
@@ -1093,11 +1106,21 @@ public class ServletContextInitializerBeans extends AbstractCollection<ServletCo
 
 
 
+![image-20200623144849444](D:\study\HealerJean.github.io\blogImages\image-20200623144849444.png)
+
+
+
+
+
+![image-20200623145003700](D:\study\HealerJean.github.io\blogImages\image-20200623145003700.png)
+
+
+
+#### 4.2.1.1、执行`addServletContextInitializerBeans`
+
 
 
 > 判断从`Spring`容器中获取的`ServletContextInitializer`类型，如ServletRegistrationBean、FilterRegistrationBean、ServletListenerRegistrationBean，并加入到initializers集合中去，我们再来看构造器中的另外一个方法   
-
-
 
 ```java
 private void addServletContextInitializerBeans(ListableBeanFactory beanFactory) {
@@ -1166,15 +1189,17 @@ private void addServletContextInitializerBean(Class<?> type, String beanName, Se
 
 
 
+![image-20200623144309405](D:\study\HealerJean.github.io\blogImages\image-20200623144309405.png)
 
 
 
+
+
+#### 4.2.1.2、执行 `addAdaptableBeans`
 
 
 
 > 我们看到先从`beanFactory`获取所有`Servlet.class`和`Filter.class`类型的Bean，然后通过`ServletRegistrationBeanAdapter`和`FilterRegistrationBeanAdapter`两个适配器将`Servlet.class`和`Filter.class`封装成RegistrationBean
-
-
 
 ```java
 protected void addAdaptableBeans(ListableBeanFactory beanFactory) {
@@ -1221,7 +1246,7 @@ private <T, B extends T> void addAsRegistrationBean(ListableBeanFactory beanFact
 
 
 
-
+接口`RegistrationBeanAdapter`
 
 ```java
 protected interface RegistrationBeanAdapter<T> {
@@ -1232,6 +1257,8 @@ protected interface RegistrationBeanAdapter<T> {
 ```
 
 
+
+`FilterRegistrationBeanAdapter`
 
 ```java
 private static class FilterRegistrationBeanAdapter implements RegistrationBeanAdapter<Filter> {
@@ -1247,6 +1274,8 @@ private static class FilterRegistrationBeanAdapter implements RegistrationBeanAd
 ```
 
 
+
+`ServletRegistrationBeanAdapter`
 
 ```java
 private static class ServletRegistrationBeanAdapter implements RegistrationBeanAdapter<Servlet> {
@@ -1274,13 +1303,296 @@ private static class ServletRegistrationBeanAdapter implements RegistrationBeanA
 
 
 
+`ServletListenerRegistrationBeanAdapter`
+
+```java
+private static class ServletListenerRegistrationBeanAdapter implements RegistrationBeanAdapter<EventListener> {
+
+    @Override
+    public RegistrationBean createRegistrationBean(String name, EventListener source,
+                                                   int totalNumberOfSourceBeans) {
+        return new ServletListenerRegistrationBean<>(source);
+    }
+
+}
+
+```
 
 
 
 
-> /代码中注释很清楚了还是将Servlet.class实例封装成ServletRegistrationBean对象，将Filter.class实例封装成FilterRegistrationBean对象，这和我们自己定义ServletRegistrationBean对象是一模一样的，现在所有的ServletRegistrationBean、FilterRegistrationBean      
+
+> 代码中注释很清楚了还是    
 >
-> Servlet.class、Filter.class都添加到List<ServletContextInitializer> sortedList这个集合中去了，接着就是遍历这个集合，执行其onStartup方法了
+> 将`Servlet.class`实例封装成`ServletRegistrationBean`对象，       
+>
+> 将`Filter.class`实例封装成`FilterRegistrationBean`对象，     
+>
+> 这和我们自己定义`ServletRegistrationBean`对象是一模一样的，现在所有的`ServletRegistrationBean`、`FilterRegistrationBean`
+>
+> `Servlet.class`、`Filter.class`都添加到`List<ServletContextInitializer>` sortedList这个集合中去了，接着就是遍历这个集合，执行其onStartup方法了   
+
+
+
+### 4.2.2、ServletContextInitializer的**onStartup**方法
+
+```java
+private org.springframework.boot.web.servlet.ServletContextInitializer getSelfInitializer() {
+    return this::selfInitialize;
+}
+
+private void selfInitialize(ServletContext servletContext) throws ServletException {
+    prepareWebApplicationContext(servletContext);
+    registerApplicationScope(servletContext);
+    WebApplicationContextUtils.registerEnvironmentBeans(getBeanFactory(), servletContext);
+    for (ServletContextInitializer beans : getServletContextInitializerBeans()) {
+        beans.onStartup(servletContext);
+    }
+}
+```
+
+
+
+> `beans.onStartup(servletContext);`这方法在抽象类`RegistrationBean`
+
+```java
+public abstract class RegistrationBean implements ServletContextInitializer, Ordered {
+
+
+	@Override
+	public final void onStartup(ServletContext servletContext) throws ServletException {
+		String description = getDescription();
+		if (!isEnabled()) {
+			logger.info(StringUtils.capitalize(description) + " was not registered (disabled)");
+			return;
+		}
+		register(description, servletContext);
+	}
+```
+
+
+
+![image-20200623160656369](D:\study\HealerJean.github.io\blogImages\image-20200623160656369.png)
+
+
+
+#### 4.2.2.1、`servletContext`容器中添加Servlet
+
+![image-20200623161024674](D:\study\HealerJean.github.io\blogImages\image-20200623161024674.png)
+
+```java
+@Override
+protected final void register(String description, ServletContext servletContext) {
+    D registration = addRegistration(description, servletContext);
+    if (registration == null) {
+        logger.info(StringUtils.capitalize(description) + " was not registered (possibly already registered?)");
+        return;
+    }
+    configure(registration);
+}
+```
+
+
+
+![image-20200623161059002](D:\study\HealerJean.github.io\blogImages\image-20200623161059002.png)
+
+
+
+
+
+> `ServletRegistrationBean` 中的` onStartup`获取Servlet的name，然后调用ServletContext的addServlet将Servlet加入到Tomcat中，这样我们就能发请求给这个Servlet了。   
+
+```java
+@Override
+protected ServletRegistration.Dynamic addRegistration(String description, ServletContext servletContext) {
+   String name = getServletName();
+   return servletContext.addServlet(name, this.servlet);
+}
+```
+
+
+
+#### 4.2.2.2、`servletContext`中添加`Filter`
+
+
+
+![image-20200623161207609](D:\study\HealerJean.github.io\blogImages\image-20200623161207609.png)
+
+
+
+```java
+@Override
+protected final void register(String description, ServletContext servletContext) {
+   D registration = addRegistration(description, servletContext);
+   if (registration == null) {
+      logger.info(StringUtils.capitalize(description) + " was not registered (possibly already registered?)");
+      return;
+   }
+   configure(registration);
+}
+```
+
+![image-20200623161309361](D:\study\HealerJean.github.io\blogImages\image-20200623161309361.png)
+
+
+
+
+
+> `AbstractFilterRegistrationBean`也是同样的原理，先获取目标`Filter`，然后调用ServletContext的**addFilter**将Filter加入到Tomcat中，这样Filter就能拦截我们请求了。
+
+
+```java
+@Override
+protected Dynamic addRegistration(String description, ServletContext servletContext) {
+	Filter filter = getFilter();
+	return servletContext.addFilter(getOrDeduceName(filter), filter);
+}
+```
+
+
+
+
+#### 4.2.2.3、Servlet容器中添加`addListener`
+
+![image-20200623161355168](D:\study\HealerJean.github.io\blogImages\image-20200623161355168.png)
+
+
+
+
+
+```java
+@Override
+protected void register(String description, ServletContext servletContext) {
+    try {
+        servletContext.addListener(this.listener);
+    }
+    catch (RuntimeException ex) {
+        throw new IllegalStateException("Failed to add listener '" + this.listener + "' to servlet context", ex);
+    }
+}
+```
+
+
+
+### 4.2.3、DispatcherServletAutoConfiguration
+
+> Spring Boot在自动配置SpringMVC的时候，会自动注册SpringMVC前端控制器：**DispatcherServlet**，该控制器主要在**DispatcherServletAutoConfiguration**自动配置类中进行注册的。DispatcherServlet是SpringMVC中的核心分发器。DispatcherServletAutoConfiguration也在spring.factories中配置了    
+
+
+
+> 1、先看下ClassPath下是否有DispatcherServlet.class字节码， 我们引入了spring-boot-starter-web，同时引入了tomcat和SpringMvc,肯定会存在DispatcherServlet.class字节码，如果没有导入spring-boot-starter-web，则这个配置类将不会生效
+
+> 2、然后往Spring容器中注册DispatcherServlet实例，接着又加入ServletRegistrationBean实例，并把DispatcherServlet实例作为参数，上面我们已经学过了ServletRegistrationBean的逻辑，在Tomcat启动的时候，会获取所有的ServletRegistrationBean，并执行其中的onstartup方法，将DispatcherServlet注册到Servlet容器中，这样就类似原来的web.xml中配置的dispatcherServlet。
+
+
+
+![image-20200623162302716](D:\study\HealerJean.github.io\blogImages\image-20200623162302716.png)
+
+
+
+
+
+```java
+@AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
+@Configuration(proxyBeanMethods = false)
+@ConditionalOnWebApplication(type = Type.SERVLET)
+// 先看下ClassPath下是否有DispatcherServlet.class字节码
+// 我们引入了spring-boot-starter-web，同时引入了tomcat和SpringMvc,肯定会存在DispatcherServlet.class字节码
+@ConditionalOnClass(DispatcherServlet.class)
+
+//这个配置类的执行要在ServletWebServerFactoryAutoConfiguration配置类生效之后执行, 要等Tomcat启动后才能往其中注入DispatcherServlet
+@AutoConfigureAfter(ServletWebServerFactoryAutoConfiguration.class)
+public class DispatcherServletAutoConfiguration {
+
+	/*
+	 * The bean name for a DispatcherServlet that will be mapped to the root URL "/"
+	 */
+	public static final String DEFAULT_DISPATCHER_SERVLET_BEAN_NAME = "dispatcherServlet";
+
+	/*
+	 * The bean name for a ServletRegistrationBean for the DispatcherServlet "/"
+	 */
+	public static final String DEFAULT_DISPATCHER_SERVLET_REGISTRATION_BEAN_NAME = "dispatcherServletRegistration";
+
+    
+    //Spring容器注册DispatcherServlet
+	@Configuration(proxyBeanMethods = false)
+	@Conditional(DefaultDispatcherServletCondition.class)
+	@ConditionalOnClass(ServletRegistration.class)
+	@EnableConfigurationProperties(WebMvcProperties.class)
+	protected static class DispatcherServletConfiguration {
+
+        // 直接构造DispatcherServlet，并设置WebMvcProperties中的一些配置
+		@Bean(name = DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
+		public DispatcherServlet dispatcherServlet(WebMvcProperties webMvcProperties) {
+			DispatcherServlet dispatcherServlet = new DispatcherServlet();
+			dispatcherServlet.setDispatchOptionsRequest(webMvcProperties.isDispatchOptionsRequest());
+			dispatcherServlet.setDispatchTraceRequest(webMvcProperties.isDispatchTraceRequest());
+			dispatcherServlet.setThrowExceptionIfNoHandlerFound(webMvcProperties.isThrowExceptionIfNoHandlerFound());
+			dispatcherServlet.setPublishEvents(webMvcProperties.isPublishRequestHandledEvents());
+			dispatcherServlet.setEnableLoggingRequestDetails(webMvcProperties.isLogRequestDetails());
+			return dispatcherServlet;
+		}
+
+        
+        // 构造文件上传相关的bean
+		@Bean
+		@ConditionalOnBean(MultipartResolver.class)
+		@ConditionalOnMissingBean(name = DispatcherServlet.MULTIPART_RESOLVER_BEAN_NAME)
+		public MultipartResolver multipartResolver(MultipartResolver resolver) {
+			// Detect if the user has created a MultipartResolver but named it incorrectly
+			return resolver;
+		}
+
+	}
+    
+    
+    @Configuration(proxyBeanMethods = false)
+	@Conditional(DispatcherServletRegistrationCondition.class)
+	@ConditionalOnClass(ServletRegistration.class)
+	@EnableConfigurationProperties(WebMvcProperties.class)
+	@Import(DispatcherServletConfiguration.class)
+	protected static class DispatcherServletRegistrationConfiguration {
+
+        // ServletRegistrationBean实现了ServletContextInitializer接口，在onStartup方法中对应的Servlet注册到Servlet容器中,对应的urlMapping为server.servletPath配置
+		@Bean(name = DEFAULT_DISPATCHER_SERVLET_REGISTRATION_BEAN_NAME)
+		@ConditionalOnBean(value = DispatcherServlet.class, name = DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
+		public DispatcherServletRegistrationBean dispatcherServletRegistration(DispatcherServlet dispatcherServlet,
+				WebMvcProperties webMvcProperties, ObjectProvider<MultipartConfigElement> multipartConfig) {
+			DispatcherServletRegistrationBean registration = new DispatcherServletRegistrationBean(dispatcherServlet,
+					webMvcProperties.getServlet().getPath());
+			registration.setName(DEFAULT_DISPATCHER_SERVLET_BEAN_NAME);
+			registration.setLoadOnStartup(webMvcProperties.getServlet().getLoadOnStartup());
+			multipartConfig.ifAvailable(registration::setMultipartConfig);
+			return registration;
+		}
+
+	}
+    
+    
+    
+    
+    
+    
+```
+
+
+
+```xml
+<servlet>
+    <servlet-name>dispatcherServlet</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+</servlet>
+<servlet-mapping>
+    <servlet-name>dispatcherServlet</servlet-name>
+    <url-pattern>/</url-pattern>
+</servlet-mapping>
+```
+
+
+
+
 
 
 
