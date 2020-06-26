@@ -26,6 +26,9 @@ public class ProviderExceptionFilter implements Filter {
             Class returnType = method.getReturnType();
             if (result.hasException()) {
                 Throwable throwable = result.getException();
+                if (throwable instanceof  ArithmeticException){
+                    log.error("系统错误--------", throwable);
+                }
                 if (returnType.equals(String.class)) {
                     return new RpcResult("系统错误");
                 }
