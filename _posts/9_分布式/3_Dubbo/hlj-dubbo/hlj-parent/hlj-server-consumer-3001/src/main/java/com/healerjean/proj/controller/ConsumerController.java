@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ConsumerController extends BaseController {
 
     // moke （非业务异常） 服务接口调用失败Mock实现类名，该Mock类必须有一个无参构造函数，与Local的区别在于，Local总是被执行，而Mock只在出现非业务异常(比如超时，网络异常等)时执行，Local在远程调用之前执行，Mock在远程调用后执行。
-    @Reference(version = "0.1", group = "inter_one", mock = "com.healerjean.proj.service.MockDubboService")
+    @Reference(version = "0.1", group = "inter_one", mock = "com.healerjean.proj.service.impl.Apple")
     private ProviderDubboService providerDubboService;
 
     @ApiOperation(value = "connect",
