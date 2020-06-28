@@ -1,6 +1,5 @@
 package com.healerjean.proj.study.spi;
 
-import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.common.extension.Activate;
 import lombok.extern.slf4j.Slf4j;
@@ -15,16 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Dog implements Animal {
 
-
-    @Override
-    public void eat(String msg) {
-
-    }
-
     @Override
     public void call(String msg, URL url) {
-        log.info("{},狗 call 旺旺", msg);
+        log.info("我是狗，发出叫声： {},", msg);
     }
-
 
 }

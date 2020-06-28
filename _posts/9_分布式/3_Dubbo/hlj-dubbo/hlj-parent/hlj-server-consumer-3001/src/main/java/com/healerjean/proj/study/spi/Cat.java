@@ -17,12 +17,7 @@ public class Cat implements Animal {
 
     @Override
     public void call(String msg, URL url) {
-        log.info("{},猫 call 喵喵", msg);
+        log.info("我是猫，发出叫声： {},", msg);
     }
 
-
-    @Override
-    public void eat(String msg) {
-
-    }
 }
