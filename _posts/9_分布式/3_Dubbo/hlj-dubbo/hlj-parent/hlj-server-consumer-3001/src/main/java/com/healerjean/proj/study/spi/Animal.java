@@ -10,7 +10,7 @@ import com.alibaba.dubbo.common.extension.SPI;
  * @date 2020/6/24  18:41.
  * @Description
  */
-@SPI(value = "adaptiveAnimal")
+@SPI
 public interface Animal {
 
     @Adaptive(value = "name")

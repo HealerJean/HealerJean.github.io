@@ -22,7 +22,7 @@ public class DubboSPITest {
         ExtensionLoader<Animal> annoimalExtensionLoader =  ExtensionLoader.getExtensionLoader(Animal.class);
         log.info("#######################################");
         Animal dog = annoimalExtensionLoader.getExtension("dog");
-        dog.call("我是一只狗", null);
+        dog.call("旺旺旺", null);
         Animal cat = annoimalExtensionLoader.getExtension("cat");
         cat.call("我是一只猫", null);
         log.info("#######################################");
