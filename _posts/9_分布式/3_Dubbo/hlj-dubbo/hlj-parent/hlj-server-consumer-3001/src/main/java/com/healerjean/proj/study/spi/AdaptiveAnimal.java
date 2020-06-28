@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2020/6/28  10:10.
  * @Description
  */
-@Adaptive
 @Slf4j
 public class AdaptiveAnimal implements Animal {
 
