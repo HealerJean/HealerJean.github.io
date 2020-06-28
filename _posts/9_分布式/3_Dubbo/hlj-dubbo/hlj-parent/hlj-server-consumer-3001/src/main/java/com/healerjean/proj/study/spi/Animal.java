@@ -13,9 +13,7 @@ import com.alibaba.dubbo.common.extension.SPI;
 @SPI(value = "adaptiveAnimal")
 public interface Animal {
 
-    @Adaptive("name")
+    @Adaptive(value = "name")
     void call(String msg, URL url);
-
-    void eat(String msg);
 
 }

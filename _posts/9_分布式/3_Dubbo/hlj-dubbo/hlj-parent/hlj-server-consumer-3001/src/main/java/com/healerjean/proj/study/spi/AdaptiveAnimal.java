@@ -10,19 +10,13 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2020/6/28  10:10.
  * @Description
  */
-// @Adaptive
+@Adaptive
 @Slf4j
 public class AdaptiveAnimal implements Animal {
 
-
     @Override
     public void call(String msg, URL url) {
-      log.info("{}，我可以发出任何叫声", msg);
-    }
-
-    @Override
-    public void eat(String msg) {
-
+      log.info("我是适配动物，发出叫声：{}", msg);
     }
 
 }
