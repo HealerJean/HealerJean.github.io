@@ -10,10 +10,12 @@ import com.alibaba.dubbo.common.extension.SPI;
  * @date 2020/6/24  18:41.
  * @Description
  */
-@SPI
-public interface Annoimal {
+@SPI(value = "adaptiveAnimal")
+public interface Animal {
 
-    @Adaptive
-    void call(URL url);
+    @Adaptive("name")
+    void call(String msg, URL url);
+
+    void eat(String msg);
 
 }

@@ -1,6 +1,6 @@
 package com.healerjean.proj.study.spi.java;
 
-import com.healerjean.proj.study.spi.Annoimal;
+import com.healerjean.proj.study.spi.Animal;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ public class JavaSPITest {
 
     @Test
     public void sayHello() {
-        ServiceLoader<Annoimal> serviceLoader = ServiceLoader.load(Annoimal.class);
+        ServiceLoader<Animal> serviceLoader = ServiceLoader.load(Animal.class);
         log.info("Java SPI--------");
         // serviceLoader.forEach(annoimal -> annoimal.call());
     }
