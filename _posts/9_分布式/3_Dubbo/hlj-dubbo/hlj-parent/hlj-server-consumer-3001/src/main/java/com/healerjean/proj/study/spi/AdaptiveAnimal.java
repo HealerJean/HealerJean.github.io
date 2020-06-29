@@ -1,7 +1,6 @@
 package com.healerjean.proj.study.spi;
 
 import com.alibaba.dubbo.common.URL;
-import com.alibaba.dubbo.common.extension.Adaptive;
 import lombok.extern.slf4j.Slf4j;
 
 /**
