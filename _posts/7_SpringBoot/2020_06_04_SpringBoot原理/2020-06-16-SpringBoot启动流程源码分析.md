@@ -18,6 +18,40 @@ description: SpringBoot启动流程源码分析
 
 
 
+看完之后回过头来看，就明白了
+
+**1，BeanFactory**     
+
+> `Bean工厂BeanFactory`是`Spring`框架最核心的接口，它提供了`IoC`的配置机制。它的一个实现`DefaultListableBeanFactory`在上下文中持有，也就是我们常说的IOC容器，
+
+**2，ApplicationContext**    
+
+> 应用上下文`ApplicationContext`建立在`BeanFactory`基础之上，提供了更多面向应用的功能。`SpringBoot`使用的是`ApplicationContext`的子类`AnnotationConfigServletWebServerApplicationContext`。
+
+对于`BeanFactory`和`ApplicationContext`的比较，`BeanFactory`是`Spring`框架的基础设施，面向`Spring`本身，`ApplicationContext`面向使用`Spring`框架的开发者，如果将`Spring`容器比作一辆汽车，那么`BeanFactory`就是汽车的发动机，而`ApplicationContext`则是一辆完整的汽车（**后面有的地方，我把它看做Spring容器**），它不但包括发动机，还包括离合器、变速器及底盘等其他组件。     
+
+**应用上下文可以理解成IoC容器的高级表现形式，应用上下文确实是在IoC容器的基础上丰富了一些高级功能**。     
+
+**应用上下文对IoC容器是持有的关系。他的一个属性beanFactory就是IoC容器（DefaultListableBeanFactory）。所以他们之间是持有，和扩展的关系**。
+
+
+
+> `context`就是我们熟悉的上下文（也有人称之为容器，我的理解也是容器，都可以，看个人爱好和理解，但是建议还是将上下文和容器分开）     
+>
+> `beanFactory`就是我们所说的IoC容器的真实面孔了。**细细感受下上下文和容器的联系和区别**，对于我们理解源码有很大的帮助。，**最好将上下文和容器严格区分开来的。**   
+
+
+
+
+
+![image-20200629181002029](D:\study\HealerJean.github.io\blogImages\image-20200629181002029.png)
+
+
+
+
+
+
+
 # 1、入口列
 
 ```java
@@ -215,7 +249,7 @@ private <T> Collection<T> getSpringFactoriesInstances(Class<T> type, Class<?>[] 
     //根据names来进行实例化
     List<T> instances = createSpringFactoriesInstances(type, parameterTypes, classLoader, args, names);
     
-    //对实例进行排序
+    //对实例进行排序 （org.springframework.core.annotation.Order注解指定的顺序）
     AnnotationAwareOrderComparator.sort(instances);
     return instances;
 }
@@ -415,7 +449,7 @@ public ConfigurableApplicationContext run(String... args) {
     configureHeadlessProperty();
 
 
-    // 第一步：获取并启动监听器
+    // 第一步：获取并启动监听器 (从META-INF/spring.factories中获取监听器)
     SpringApplicationRunListeners listeners = getRunListeners(args);
     listeners.starting();
     try {
@@ -430,7 +464,7 @@ public ConfigurableApplicationContext run(String... args) {
         Banner printedBanner = printBanner(environment);
 
 
-        // 第三步：创建Spring容器
+        // 第三步：创建初始化应用上下文ApplicationContext和IOC容器BeanFactory
         context = createApplicationContext();
 
 
@@ -438,15 +472,19 @@ public ConfigurableApplicationContext run(String... args) {
                                                          new Class[] { ConfigurableApplicationContext.class }, context);
 
 
-        // 第四步：Spring容器前置处理
+        // 第四步：刷新应用上下文前的准备阶段/前置处理
         prepareContext(context, environment, listeners, applicationArguments, printedBanner);
 
-        // 第五步：刷新容器
+        
+        
+        // 第五步：刷新应用上下
         refreshContext(context);
 
 
-        // 第六步：Spring容器后置处理
+        // 第六步：刷新应用上下文后的扩展接口
         afterRefresh(context, applicationArguments);
+        
+        //时间记录停止
         stopWatch.stop();
         if (this.logStartupInfo) {
             new StartupInfoLogger(this.mainApplicationClass).logStarted(getApplicationLog(), stopWatch);
@@ -483,6 +521,12 @@ public ConfigurableApplicationContext run(String... args) {
 
 ## 2.1、获取并启动监听器`SpringApplicationRunListeners`
 
+> 获取并启动监听器 (从META-INF/spring.factories中获取监听器)       
+>
+> **事件机制在Spring是很重要的一部分内容，通过事件机制我们可以监听Spring容器中正在发生的一些事件，同样也可以自定义监听事件**。     
+>
+> Spring的事件为Bean和Bean之间的消息传递提供支持。当一个被监听对象执行某种任务后，监听器进行某些处理，常用的场景有进行某些操作后发送通知，消息、邮件等情况。
+
 ```java
 SpringApplicationRunListeners listeners = getRunListeners(args);
 listeners.starting();
@@ -497,8 +541,6 @@ class SpringApplicationRunListeners {
 
 	private final List<SpringApplicationRunListener> listeners;
 ```
-
-
 
 
 
@@ -1022,7 +1064,9 @@ private static final String DEFAULT_SEARCH_LOCATIONS = "classpath:/,classpath:/c
 
 
 
-## 2.3、创建容器 
+## 2.3、创建初始化应用上下文`ApplicationContext`和IOC容器`BeanFactory `
+
+> 创建初始化应用上下文`ApplicationContex`t和IOC容器`BeanFactory`
 
 ```java
 context = createApplicationContext();
@@ -1051,6 +1095,7 @@ protected ConfigurableApplicationContext createApplicationContext() {
         try {
             switch (this.webApplicationType) {
                 case SERVLET:
+                    //内置容器 AnnotationConfigServletWebServerApplicationContext
                     contextClass = Class.forName(DEFAULT_SERVLET_WEB_CONTEXT_CLASS);
                     break;
                 case REACTIVE:
@@ -1076,7 +1121,158 @@ protected ConfigurableApplicationContext createApplicationContext() {
 
 
 
-## 2.4、Spring容器前置处理 （非常关键） 
+### 2.3.1、初始化上下文
+
+> `AnnotationConfigServletWebServerApplicationContext`
+
+```java
+public static <T> T instantiateClass(Class<T> clazz) throws BeanInstantiationException {
+    Assert.notNull(clazz, "Class must not be null");
+    if (clazz.isInterface()) {
+        throw new BeanInstantiationException(clazz, "Specified class is an interface");
+    }
+    try {
+        //实例化的是空构造器  
+        return instantiateClass(clazz.getDeclaredConstructor());
+    }
+    catch (NoSuchMethodException ex) {
+        Constructor<T> ctor = findPrimaryConstructor(clazz);
+        if (ctor != null) {
+            return instantiateClass(ctor);
+        }
+        throw new BeanInstantiationException(clazz, "No default constructor found", ex);
+    }
+    catch (LinkageError err) {
+        throw new BeanInstantiationException(clazz, "Unresolvable class definition", err);
+    }
+}
+
+
+public static <T> T instantiateClass(Constructor<T> ctor, Object... args) throws BeanInstantiationException {
+    Assert.notNull(ctor, "Constructor must not be null");
+    try {
+        ReflectionUtils.makeAccessible(ctor);
+        if (KotlinDetector.isKotlinReflectPresent() && KotlinDetector.isKotlinType(ctor.getDeclaringClass())) {
+            return KotlinDelegate.instantiateClass(ctor, args);
+        }
+        else {
+            Class<?>[] parameterTypes = ctor.getParameterTypes();
+            Assert.isTrue(args.length <= parameterTypes.length, "Can't specify more arguments than constructor parameters");
+            Object[] argsWithDefaultValues = new Object[args.length];
+            for (int i = 0 ; i < args.length; i++) {
+                if (args[i] == null) {
+                    Class<?> parameterType = parameterTypes[i];
+                    argsWithDefaultValues[i] = (parameterType.isPrimitive() ? DEFAULT_TYPE_VALUES.get(parameterType) : null);
+                }
+                else {
+                    argsWithDefaultValues[i] = args[i];
+                }
+            }
+            return ctor.newInstance(argsWithDefaultValues);
+        }
+    }
+    catch (InstantiationException ex) {
+        throw new BeanInstantiationException(ctor, "Is it an abstract class?", ex);
+    }
+    catch (IllegalAccessException ex) {
+        throw new BeanInstantiationException(ctor, "Is the constructor accessible?", ex);
+    }
+    catch (IllegalArgumentException ex) {
+        throw new BeanInstantiationException(ctor, "Illegal arguments for constructor", ex);
+    }
+    catch (InvocationTargetException ex) {
+        throw new BeanInstantiationException(ctor, "Constructor threw exception", ex.getTargetException());
+    }
+}
+```
+
+
+
+
+
+```java
+
+public class ServletWebServerApplicationContext extends GenericWebApplicationContext
+    implements ConfigurableWebServerApplicationContext {
+	
+	//会率先调用父类中的构造器哦，也就是会创建IOC容器，往下看一点
+    public ServletWebServerApplicationContext() {
+    }
+
+
+
+}
+```
+
+
+
+### 2.3.2、创建IOC容器`BeanFactory`  
+
+> `beanFactory`正是在`AnnotationConfigServletWebServerApplicationContext`实现的接口`GenericApplicationContext`中定义的。在上面`createApplicationContext()`方法中的，     
+>
+> 
+>
+>  `BeanUtils.instantiateClass(contextClass) `这个方法中，不但初始化了`AnnotationConfigServletWebServerApplicationContext`类，也就是我们的上下文`context`，同样也触发了`GenericApplicationContext`类的构造函数，从而IoC容器也创建了。仔细看他的构造函数，有没有发现一个很熟悉的类`DefaultListableBeanFactory`，没错，`DefaultListableBeanFactory`就是IoC容器真实面目了。在后面的refresh()方法分析中，`DefaultListableBeanFactory`是无处不在的存在感。   
+
+
+
+```java
+public class GenericWebApplicationContext extends GenericApplicationContext
+		implements ConfigurableWebApplicationContext, ThemeSource {
+
+
+	public GenericWebApplicationContext() {
+		super();
+	}
+
+    
+ //other code
+    
+}
+    
+
+```
+
+
+
+```java
+public class GenericApplicationContext extends AbstractApplicationContext implements BeanDefinitionRegistry {
+
+	private final DefaultListableBeanFactory beanFactory;
+
+	@Nullable
+	private ResourceLoader resourceLoader;
+
+	private boolean customClassLoader = false;
+
+	private final AtomicBoolean refreshed = new AtomicBoolean();
+
+
+
+	public GenericApplicationContext() {
+        //长长江口
+		this.beanFactory = new DefaultListableBeanFactory();
+	}
+    
+    
+    
+    
+        
+ //other code
+    
+    
+}
+```
+
+
+
+
+
+
+
+
+
+## 2.4、刷新应用上下文前的准备阶段
 
 > 这一步主要是在容器刷新之前的准备动作。包含一个非常关键的操作：**将启动类注入容器，为后续开启自动化配置奠定基础。**    
 
@@ -1093,19 +1289,19 @@ private void prepareContext(ConfigurableApplicationContext context,
         ConfigurableEnvironment environment, SpringApplicationRunListeners listeners,
         ApplicationArguments applicationArguments, Banner printedBanner) {
     
-    //设置容器环境，包括各种变量
+   //设置容器环境
     context.setEnvironment(environment);
     
-    //执行容器后置处理
+   //执行容器后置处理
     postProcessApplicationContext(context);
     
-    //执行容器中的ApplicationContextInitializer（包括 spring.factories和自定义的实例）
+   //执行容器中的 ApplicationContextInitializer 包括spring.factories和通过三种方式自定义的
     applyInitializers(context);
     
-　　//发送容器已经准备好的事件，通知各监听器
+　  //向各个监听器发送容器已经准备好的事件
     listeners.contextPrepared(context);
 
-    //注册启动参数bean，这里将容器指定的参数封装成bean，注入容器
+    //将main函数中的args参数封装成单例Bean，注册进容器
     context.getBeanFactory().registerSingleton("springApplicationArguments",
             applicationArguments);
     
@@ -1130,7 +1326,16 @@ private void prepareContext(ConfigurableApplicationContext context,
 
 
 
-### 2.4.1、调用初始化器
+### 2.4.1、设置容器环境
+
+```java
+//设置容器环境
+context.setEnvironment(environment);
+```
+
+
+
+### 2.4.2、调用初始化器
 
 > 这里终于用到了在创建SpringApplication实例时设置的初始化器了，依次对它们进行遍历，并调用`initialize`方法。       
 >
@@ -1155,7 +1360,18 @@ protected void applyInitializers(ConfigurableApplicationContext context) {
 
 
 
-### 2.4.2、加载启动指定类（重点）    
+
+
+### 2.4.3、监听器：发送容器已经准备好的事件
+
+```java
+//向各个监听器发送容器已经准备好的事件
+listeners.contextPrepared(context
+```
+
+
+
+### 2.4.3、加载启动指定类（重点）    
 
 > 启动类`SpringBoot_Application.class`被加载到 bean工厂的  `beanDefinitionMap`中，后续该启动类将作为开启自动化配置的入口，    
 
@@ -1262,7 +1478,7 @@ private int load(Class<?> source) {
 
 
 
-### 2.4.3、**通知监听器，容器已准备就绪**
+### 2.4.4、**通知监听器，容器已加载/准备就绪**
 
 ```java
 //发布容器已加载事件。
@@ -1271,7 +1487,9 @@ listeners.contextLoaded(context);
 
 
 
-## 2.5、刷新容器
+## 2.5、刷新应用上下文
+
+> **最后跟踪到`AbstractApplicationContext`这个抽象类的`refresh`方法，这个类直接继承自`ConfigurableApplicationContext`接口，该类属于`spring framework`**
 
 
 
@@ -1281,6 +1499,9 @@ protected void refresh(ApplicationContext applicationContext) {
     //调用创建的容器applicationContext中的refresh()方法
     ((AbstractApplicationContext)applicationContext).refresh();
 }
+
+
+
 public void refresh() throws BeansException, IllegalStateException {
     synchronized (this.startupShutdownMonitor) {
         /**
@@ -1289,7 +1510,7 @@ public void refresh() throws BeansException, IllegalStateException {
         prepareRefresh();
 
         /**
-         * 初始化BeanFactory，解析XML，相当于之前的XmlBeanFactory的操作，
+         * 旧版本的Spring在这里初始化BeanFactory，读取xml配置，并解析成一个个Bean，事实上我在之前已经创建好了
          */
         ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
@@ -1368,13 +1589,13 @@ public void refresh() throws BeansException, IllegalStateException {
 
 
 
-## 2.5、Spring容器后置处理
+## 2.5、刷新应用上下文后的扩展接口
 
 > 扩展接口，设计模式中的模板方法，默认为空实现。如果有自定义需求，可以重写该方法。比如打印一些启动结束log，或者一些其它后置处理。   
 
 
 
-```
+```java
 protected void afterRefresh(ConfigurableApplicationContext context,
         ApplicationArguments args) {
 }
@@ -1382,7 +1603,7 @@ protected void afterRefresh(ConfigurableApplicationContext context,
 
 
 
-## 2.6、发出结束执行的事件  
+## 2.6、监听器：发布容器启动完成事件  
 
 > 获取`EventPublishingRunListener`监听器，并执行其started方法，并且将创建的Spring容器传进去了，创建一个ApplicationStartedEvent事件，并执行ConfigurableApplicationContext 的publishEvent方法，也就是说这里是在Spring容器中发布事件，并不是在SpringApplication中发布事件，      
 >
