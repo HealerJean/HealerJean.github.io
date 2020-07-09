@@ -5,7 +5,7 @@ import com.alibaba.dubbo.config.annotation.Service;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service(version = "0.1", group = "inter_other")
+@Service(version = "0.1")
 public class ProviderDubboOtherServiceImpl implements ProviderDubboService {
 
     @Override

@@ -1382,7 +1382,7 @@ public class DemoProperties {
 
 ### 23.1.3、`DemoPropertiesAutoConfiguration`
 
-> 写了 @EnableConfigurationProperties(DemoProperties.class)  可以不写`@Configuration`，都是自动装配的意思
+> 写了 `@EnableConfigurationProperties(DemoProperties.class)`  可以不写`@Configuration`，都是自动装配的意思
 
 ```java
 @EnableConfigurationProperties(DemoProperties.class)
@@ -1454,7 +1454,7 @@ public @interface EnableAutoConfiguration {
 >
 > 使用下面这个三个的注解和它是一样的     
 >
-> @Configuration    
+> `@Configuration `   
 >
 > `@EnableAutoConfiguration` ：让springboot 根据类的路径中的jar包依赖为当前项目进行自动配置，比如，添加了spring-boot-start-web，会自动添加Tomact和spring MVC 的依赖。这样就会对二者进行自动配置）  
 >
