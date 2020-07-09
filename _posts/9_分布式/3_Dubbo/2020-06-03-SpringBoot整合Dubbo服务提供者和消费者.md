@@ -638,6 +638,115 @@ public class ConsumerController extends BaseController {
 
 
 
+# 2、dubbo注解的使用
+
+## 2.1、`@Service`
+
+> 服务提供者，接口实现需要配置该注解
+
+```java
+@Service(version = "0.1", group = "inter_one")
+```
+
+| 属性    | 值     | 说明                                                         |
+| ------- | ------ | ------------------------------------------------------------ |
+| version | String | 服务版本(默认 0.0.0)，建议使用两位数字版本，如：1.0，通常在接口不兼容时版本号才需要升级，**也可以当做group使用，但是不建议** |
+| group   | String | **服务分组，当一个接口有多个实现，可以用分组区分**           |
+
+
+
+```java
+public interface ProviderDubboService {
+
+    String connect(String name);
+
+}
+
+```
+
+
+
+```java
+@Slf4j
+@Service(version = "0.1", group = "inter_one")
+public class ProviderDubboServiceImpl implements ProviderDubboService {
+
+    @Override
+    public String connect(String name) {
+        log.info("消费者：ProviderDubboServiceImpl 【{} 】连接成功", name);
+        int i = 1 / 0;
+        return name + "：连接成功";
+    }
+
+}
+
+```
+
+
+
+```java
+@Slf4j
+@Service(version = "0.1", group = "inter_other")
+public class ProviderDubboOtherServiceImpl implements ProviderDubboService {
+
+    @Override
+    public String connect(String name) {
+        log.info("消费者 ProviderDubboOtherServiceImpl：【{} 】连接成功", name);
+        return name + "：连接成功";
+    }
+
+}
+
+```
+
+
+
+
+
+
+
+## 2.2、`@Reference`
+
+
+
+| 属性    | 值     | 说明                                                         |
+| ------- | ------ | ------------------------------------------------------------ |
+| version | String | 提供者接口的版本                                             |
+| group   | String | 提供者的分组。当一个接口有多个实现的时候，可以用分组区别     |
+| mock    | String | （非业务异常） 服务接口调用失败Mock实现类名，该Mock类必须有一个无参构造函数，与Local的区别在于，Local总是被执行，而Mock只在出现非业务异常(比如超时，网络异常等)时执行，Local在远程调用之前执行，Mock在远程调用后执行。 |
+
+```java
+@RestController
+@RequestMapping("api/consumer")
+@Slf4j
+public class ConsumerController extends BaseController {
+
+    // moke （非业务异常） 服务接口调用失败Mock实现类名，该Mock类必须有一个无参构造函数，与Local的区别在于，Local总是被执行，而Mock只在出现非业务异常(比如超时，网络异常等)时执行，Local在远程调用之前执行，Mock在远程调用后执行。
+    @Reference(version = "0.1", group = "inter_one", mock = "com.healerjean.proj.service.impl.Apple")
+    private ProviderDubboService providerDubboService;
+
+    
+    @GetMapping(value = "connect")
+    public String connectProvider(String name) {
+        String connect = providerDubboService.connect(name);
+        return connect;
+    }
+
+}
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 
