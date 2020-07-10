@@ -1,11 +1,9 @@
 package com.hlj.moudle.design.D09避免浪费.D21Proxy代理模式;
 
-import com.hlj.moudle.design.D09避免浪费.D21Proxy代理模式.D01静态代理.BuyHouseProxy;
 import com.hlj.moudle.design.D09避免浪费.D21Proxy代理模式.D02Jdk动态代理.DynamicProxyHandler;
-import com.hlj.moudle.design.D09避免浪费.D21Proxy代理模式.D03CGLIB代理.CglibProxy;
+import com.hlj.moudle.design.D09避免浪费.D21Proxy代理模式.D03CGLIB代理.BuyHouseMethodInterceptor;
 
 import java.lang.reflect.Proxy;
-import java.time.LocalDate;
 
 /**
  * @author HealerJean
@@ -35,14 +33,14 @@ public class FastMain {
         System.out.println("JDK："+(System.currentTimeMillis()-norStart));
 
 
-        norStart = System.currentTimeMillis() ;
-        CglibProxy cglibProxy = new CglibProxy();
-        BuyHouseImpl buyHouseCglibProxy = cglibProxy.getInstance(buyHouse,BuyHouseImpl.class);
-        for(int i = 1 ; i < 10000000 ; i++ ){
-            buyHouseCglibProxy.countAdd(i);
-        }
-        System.out.println("CGLIB："+(System.currentTimeMillis()-norStart));
-
+        // norStart = System.currentTimeMillis() ;
+        // BuyHouseMethodInterceptor cglibProxy = new BuyHouseMethodInterceptor();
+        // BuyHouseImpl buyHouseCglibProxy = cglibProxy.getInstance(buyHouse,BuyHouseImpl.class);
+        // for(int i = 1 ; i < 10000000 ; i++ ){
+        //     buyHouseCglibProxy.countAdd(i);
+        // }
+        // System.out.println("CGLIB："+(System.currentTimeMillis()-norStart));
+        //
 
     }
 
