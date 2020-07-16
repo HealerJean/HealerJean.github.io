@@ -1087,7 +1087,9 @@ article .article-content h6{
 
 
 article .article-content h1 > code, article .article-content h2 > code, article .article-content h3 > code, article .article-content h4 > code, article .article-content h5 > code, article .article-content h6 > code {
-    color: #a3a3a3
+    color: #1c5fce;
+    background: #e1e8d2;
+    border: 1px solid #d6d6d6;
 }
 
 article .article-content hr {
@@ -2694,6 +2696,11 @@ article .article-content img.emoji {
     padding: 0px;
     margin: 0em 0.2em 0.25em 0.2em;
 }
+
+
+
+
+
 
 @media only screen and (min-width: 1024px)
     .github-card {
