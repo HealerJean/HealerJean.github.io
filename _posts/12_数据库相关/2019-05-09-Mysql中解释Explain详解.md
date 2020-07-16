@@ -236,7 +236,7 @@ explain  select * from user  where  id > 2;
 
 
 
-## 2.4、`INDEX_MERGE`
+## 2.4、`index_merge`
 
 > **解释：合并索引，使用多个单列索引搜索**
 
@@ -252,7 +252,7 @@ explain   select id from user  where  id = 2 or  name = 'xiaoming';
 
 
 
-## 2.5、`REF`
+## 2.5、`ref`
 
 >  **解释：根据索引查找一个或多个值**
 
@@ -379,7 +379,7 @@ explain   select id from order_info  where  id = 1 and ref_user_id = 1;
 
 
 
-# 7、Extra 
+# 7、`Extra` 
 
 > 解释 ： 额外信息，优化器会在索引存在的情况下，通过符合 RANGE 范围的条数和总数的比例来选择是使用索引还是进行全表遍历    
 >
