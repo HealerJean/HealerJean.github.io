@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
-<html {% if site.language %}lang="{{ site.language }}"{% endif %}>
+<html {% if site.language %}lang="{{ site.language }}" {% endif %}>
 <head>
-  <meta name="baidu-site-verification" content="0r55fUD7QR" />
-  <meta charset="UTF-8">
+    <meta name="baidu-site-verification" content="0r55fUD7QR"/>
+    <meta charset="UTF-8">
     {% assign title = page.title %}
     {% if page.layout == 'archives' %}
     {% assign title = lang.archive_a %}
@@ -21,7 +21,9 @@
     <meta name="author" content="{{ site.author.name }}">
     {% endif %}
 
-    {% if page.keywords %}<meta name="keywords" content="{{ page.keywords }}">{% endif %}
+    {% if page.keywords %}
+    <meta name="keywords" content="{{ page.keywords }}">
+    {% endif %}
     <!--<%- open_graph({twitter_id: theme.author.twitter, google_plus: theme.author.google_plus}) %>-->
 
     <meta name="description" content="page.description">
@@ -55,56 +57,68 @@
     <link rel="stylesheet" href="{{ site.baseurl }}{{ site.assets }}/css/highlight.css" type="text/css">
     {% if site.banner_img %}
     <style>
-        body >header {
+        body > header {
             background: url("{{ site.baseurl }}{{ site.assets }}/{{ site.banner_img }}") center #2ca6cb;
         }
     </style>
     {% endif %}
     {% if site.yungentie_productkey and page.layout == 'default' %}
     <style>
-      .join-count::before {
-        content: none !important;
-      }
-      .join-count {
-        margin-right: .5em;
-      }
-      .comments-count-link {
-        padding-right: 0em !important;
-      }
+        .join-count::before {
+            content: none !important;
+        }
+
+        .join-count {
+            margin-right: .5em;
+        }
+
+        .comments-count-link {
+            padding-right: 0em !important;
+        }
     </style>
     {% endif %}
 
 
-  <style>
-    table{
-      border-left:1px solid #000000;border-top:1px solid #000000;
-      width: 100%;
-      word-wrap:break-word; word-break:break-all;
-    }
-    table th{
-      text-align:center;
-    }
-    table th,td{
-      border-right:1px solid #000000;border-bottom:1px solid #000000;
-    }
-  </style>
+    <!--  表格样式修改-->
+    <style>
+        table {
+            width: 100%;
+            text-align: left;
+            color: #333333;
+            border-width: 1px;
+            border-color: #666666;
+            border-collapse: collapse;
+        }
+
+        table th {
+            padding: 8px 15px;
+            border-width: 1px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #dedede;
+        }
+
+        table td {
+            padding: 8px 15px;
+            border-width: 1px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+        }
+    </style>
 
     <!-- 百度统计 -->
-     <script>
+    <script>
         var _hmt = _hmt || [];
-        (function() {
-          var hm = document.createElement("script");
-          hm.src = "https://hm.baidu.com/hm.js?d761f5ea90a278293246bc62758cac30";
-          var s = document.getElementsByTagName("script")[0];
-          s.parentNode.insertBefore(hm, s);
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d761f5ea90a278293246bc62758cac30";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
         })();
-      </script>
+    </script>
     <!-- 百度联盟 -->
     <meta name="baidu_union_verify" content="c2f387067cf0849991ea870f73c055f2">
-
-
-
-
 
 
 </head>
