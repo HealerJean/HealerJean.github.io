@@ -12,9 +12,13 @@ description: Mysql中解释Explain详解
 
  Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
- 博客：[http://blog.healerjean.com](http://HealerJean.github.io)          
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)           
 
-**mysql优化器在数据量不同的情况下，也会到结果产生影响**    
+
+
+> 数据准备   
+>
+> **mysql优化器在数据量不同的情况下，也会到结果产生影响**    
 
 
 
@@ -85,15 +89,11 @@ INSERT INTO d001_index_order_info (ref_user_id, product_name, price,num)VALUES (
 INSERT INTO d001_index_order_info (ref_user_id, product_name, price,num)VALUES (8, 'p9', 5,3);
 INSERT INTO d001_index_order_info (ref_user_id, product_name, price,num)VALUES (9, 'p3', 7,1);
 
-    
-    
-    
-
 ```
 
 
 
-## 1、解释参数含义
+
 
 
 | 参数           | 含义 |
@@ -113,11 +113,22 @@ INSERT INTO d001_index_order_info (ref_user_id, product_name, price,num)VALUES (
 
 
 
-### 1.1、select_type
+# 1、`select_type`  
 
-#### 1.1.1、SIMPLE 简单查询
 
-##### **解释：此查询不包含 UNION 查询或子查询**
+
+| select_type | 说明     | 解释 |
+| ----------- | -------- | ---- |
+| SIMPLE      | 简单查询 |      |
+| UNION       | 联合查询 |      |
+|             |          |      |
+|             |          |      |
+
+
+
+## 1.1、`SIMPLE` 简单查询
+
+> ##### **解释：此查询不包含 UNION 查询或子查询**
 
 
 
@@ -129,20 +140,20 @@ SELECT * from d001_index_user_info ;
 | ---- | ----------- | -------------------- | ---------- | ---- | ------------- | ---- | ------- | ---- | ---- | -------- | ----- |
 | 1    | SIMPLE      | d001_index_user_info |            | ALL  |               |      |         |      | 10   | 100      |       |
 
-#### 1.1.2、UNION 联合查询
 
-##### **解释：表示此查询是 UNION 的第二或随后的查询**
+
+## 1.2、`UNION` 联合查询  
+
+> ##### **解释：表示此查询是 UNION 的第二或随后的查询**
+>
 
 ```sql
-explain  	 select * from d001_index_user_info union select * from d001_index_user_info ;
+explain  	 select * from d001_index_user_info union select * from d001_index_user_info ;  
 
+#`id = 1`  row是4行，说明第一个select查询最`PRIMARY` 外层查询    
+#`id = 2`  row是2行，说明第二个select查询 是`UNION `联合查询
+#`id = 3`  UNION RESULT 很明显为联合查询的结果
 ```
-
-1、`id = 1`  row是4行，说明第一个select查询最`PRIMARY` 外层查询    
-
-2、`id = 2` row是2行，说明第二个select查询 是`UNION `联合查询
-
-3、`id = 3` `UNION RESULT` 很明显为联合查询的结果
 
 
 <table border="1" style="border-collapse:collapse">
@@ -150,6 +161,16 @@ explain  	 select * from d001_index_user_info union select * from d001_index_use
 <tr><td>1</td><td>PRIMARY</td><td>d001_index_user_info</td><td>NULL</td><td>range</td><td>PRIMARY</td><td>PRIMARY</td><td>8</td><td>NULL</td><td>4</td><td>100</td><td>Using where</td></tr>
 <tr><td>2</td><td>UNION</td><td>d001_index_user_info</td><td>NULL</td><td>range</td><td>PRIMARY</td><td>PRIMARY</td><td>8</td><td>NULL</td><td>2</td><td>100</td><td>Using where</td></tr>
 <tr><td>NULL</td><td>UNION RESULT</td><td>&lt;union1,2&gt;</td><td>NULL</td><td>ALL</td><td>NULL</td><td>NULL</td><td>NULL</td><td>NULL</td><td>NULL</td><td>NULL</td><td>Using temporary</td></tr></table>
+
+
+
+
+|      |      |      |      |      |      |      |      |      |      |      |      |
+| ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+|      |      |      |      |      |      |      |      |      |      |      |      |
+|      |      |      |      |      |      |      |      |      |      |      |      |
+|      |      |      |      |      |      |      |      |      |      |      |      |
+
 
 
 
