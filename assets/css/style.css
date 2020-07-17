@@ -1050,7 +1050,7 @@ article .article-content h3 {
     line-height: 1em;
     margin-top: 1.0em;
     margin-bottom: 1.0em ;
-    color: #1c5fce;
+    color: #24292e;
 
 }
 
@@ -1059,7 +1059,7 @@ article .article-content h4 {
     line-height: 1em;
     margin-top: 1.0em;
     margin-bottom: 1.0em;
-    color: #1c5fce;
+    color: #24292e;
 
 }
 
@@ -1068,7 +1068,7 @@ article .article-content h5 {
     line-height: 1em;
     margin-top: 1.0em;
     margin-bottom: 1.0em ;
-    color: #1c5fce;
+    color: #24292e;
 
 }
 article .article-content h6{
@@ -1076,7 +1076,7 @@ article .article-content h6{
     line-height: 1em;
     margin-top: 1.3em;
     margin-bottom: 1.0em ;
-    color: #1c5fce;
+    color: #24292e;
 
 }
 
@@ -1086,8 +1086,8 @@ article .article-content h6{
 
 
 article .article-content h1 > code, article .article-content h2 > code, article .article-content h3 > code, article .article-content h4 > code, article .article-content h5 > code, article .article-content h6 > code {
-    color: #1c5fce;
-    background: #e1e8d2;
+    color: #f36161;
+    background: #eeeeee;
     border: 1px solid #d6d6d6;
 }
 
