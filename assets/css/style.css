@@ -7,7 +7,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
     font-style: inherit;
     font-family: inherit;
     font-size: 100%;
-    vertical-align: baseline
+    vertical-align: baseline;
 }
 
 body {
@@ -1130,9 +1130,9 @@ article .article-content blockquote cite {
 }
 
 article .article-content ul, article .article-content ol {
-    padding-left: 1.5em;
-    font-size: 100%;
-    padding-top: .7em;
+    /*padding-left: 1.5em;*/
+    font-size: 1.3em;
+    /*padding-top: .7em;*/
 }
 
 @media only screen and (min-width: 768px) {
