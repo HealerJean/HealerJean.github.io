@@ -1,6 +1,6 @@
 // https://github.com/ghiculescu/jekyll-table-of-contents
 (function($){
-    
+
     function Stack(){
         this.dataStore = []
         this.top    = 0;
@@ -11,27 +11,27 @@
         this.toc_number = toc_number;
         this.inc_number = inc_number;
     }
-    
+
     function push(element){
         this.dataStore[this.top++] = element;
     }
-    
+
     function peek(element){
         return this.dataStore[this.top-1];
     }
-    
+
     function pop(){
         return this.dataStore[--this.top];
     }
-    
+
     function clear(){
         this.top = 0
     }
-    
+
     function length(){
         return this.top
     }
-    
+
     function toc_number() {
         var num = "";
         for (i = 0; i < this.top; i++) {
@@ -39,11 +39,11 @@
         }
         return num;
     }
-    
+
     function inc_number() {
         this.dataStore[this.top - 1]++;
     }
-    
+
   $.fn.toc = function(options) {
     var defaults = {
       noBackToTopLinks: false,
@@ -85,7 +85,7 @@
     var get_level = function(ele) { return parseInt(ele.nodeName.replace("H", ""), 10); }
     var highest_level = headers.map(function(_, ele) { return get_level(ele); }).get().sort()[0];
     var return_to_top = '<i class="icon-arrow-up back-to-top"> </i>';
-    
+
     var stack = new Stack();
     stack.push(0);
     var level = get_level(headers[0]),
@@ -93,9 +93,10 @@
       html = "<strong class=\"toc-title\">" + settings.title + "</strong>\n";
       html += " <"+settings.listType+" class=\"toc\">";
     headers.on('click', function() {
-      if (!settings.noBackToTopLinks) {
-        window.location.hash = this.id;
-      }
+        // 注释掉下面的，点击标题不自动弹
+      // if (!settings.noBackToTopLinks) {
+      //   window.location.hash = this.id;
+      // }
     })
     .addClass('clickable-header')
     .each(function(_, header) {
@@ -110,7 +111,7 @@
         // html += "<span class='toc-number'>" + stack.toc_number() + "</span>"
         html += "<span class='toc-text'>" + header.innerHTML + "</span>";
         html += "</a>";
-        
+
       } else if (this_level <= level){ // higher level than before; end parent ol
         for(i = this_level; i < level; i++) {
           stack.pop();
