@@ -725,7 +725,6 @@ public class ConsumerController extends BaseController {
     @Reference(version = "0.1", group = "inter_one", mock = "com.healerjean.proj.service.impl.Apple")
     private ProviderDubboService providerDubboService;
 
-    
     @GetMapping(value = "connect")
     public String connectProvider(String name) {
         String connect = providerDubboService.connect(name);
@@ -733,13 +732,20 @@ public class ConsumerController extends BaseController {
     }
 
 }
-
-
 ```
 
 
 
+```java
+@Slf4j
+public class Apple implements Fruits {
 
+    @Override
+    public void name() {
+        log.info("Fruits--------苹果");
+    }
+}
+```
 
 
 

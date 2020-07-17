@@ -1032,52 +1032,51 @@ article .article-content h1, article .article-content h2, article .article-conte
 
 
 article .article-content h1 {
-    font-size: 300%;
+    font-size: 170%;
     line-height: 1.0em;
     /*padding-bottom: .3em;*/
     margin-top: 1.0em;
     margin-bottom: 1.0em;
 }
 article .article-content h2{
-    font-size: 270%;
+    font-size: 170%;
     line-height: 1.0em;
     margin-top: 1.0em;
     margin-bottom: 1.0em ;
-
 }
 
 article .article-content h3 {
-    font-size: 240%;
+    font-size: 170%;
     line-height: 1em;
     margin-top: 1.0em;
     margin-bottom: 1.0em ;
-    color: #8e62e8;
+    color: #1c5fce;
 
 }
 
 article .article-content h4 {
-    font-size: 210%;
+    font-size: 170%;
     line-height: 1em;
     margin-top: 1.0em;
     margin-bottom: 1.0em;
-    color: #e863d0;
+    color: #1c5fce;
 
 }
 
 article .article-content h5 {
-    font-size: 180%;
+    font-size: 170%;
     line-height: 1em;
     margin-top: 1.0em;
     margin-bottom: 1.0em ;
-    color: #e82f4b;
+    color: #1c5fce;
 
 }
 article .article-content h6{
-    font-size: 150%;
+    font-size: 170%;
     line-height: 1em;
     margin-top: 1.3em;
     margin-bottom: 1.0em ;
-    color: #2aaa15;
+    color: #1c5fce;
 
 }
 
