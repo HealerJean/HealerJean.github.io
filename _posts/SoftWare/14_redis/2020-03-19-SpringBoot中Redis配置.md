@@ -28,96 +28,29 @@ description: SpringBoot中Redis配置
 
 ```properties
 ####################################
-### redis
+### redis ok
 ####################################
 spring.redis.host=127.0.0.1
 spring.redis.port=6379
 spring.redis.password=
 spring.redis.database=0
 spring.redis.timeout=3000ms
-spring.redis.jedis.pool.max-active=100
-spring.redis.jedis.pool.min-idle=0
-spring.redis.jedis.pool.max-idle=5
-spring.redis.jedis.pool.max-wait=3000ms
-####################################
+spring.redis.pool.max-idle=300
+spring.redis.pool.max-total=600
+spring.redis.pool.max-active=600
+spring.redis.pool.max-wait=1000
+spring.redis.pool.testOnBrow=true
 ```
 
 
 
 ### 1.1.2、RedisConfig
 
-
-
 ```java
-package com.healerjean.proj.config;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisPassword;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import java.io.Serializable;
-import java.time.Duration;
 
 @Configuration
-@AutoConfigureAfter(RedisAutoConfiguration.class)
 public class RedisConfig {
 
-    @Value("${spring.redis.host}")
-    private String host;
-
-    @Value("${spring.redis.port}")
-    private int port;
-
-    @Value("${spring.redis.database}")
-    private int database;
-
-    @Value("${spring.redis.password}")
-    private String password;
-
-    @Value("${spring.redis.timeout}")
-    private String timeout;
-
-    @Value("${spring.redis.jedis.pool.max-active}")
-    private int maxActive;
-
-    @Value("${spring.redis.jedis.pool.max-idle}")
-    private int maxIdle;
-
-    @Value("${spring.redis.jedis.pool.min-idle}")
-    private int minIdle;
-
-    @Value("${spring.redis.jedis.pool.max-wait}")
-    private String maxWaitMillis;
-
-    @Bean
-    public JedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName(host);
-        redisStandaloneConfiguration.setPort(port);
-        redisStandaloneConfiguration.setDatabase(database);
-        redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
-        JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration = JedisClientConfiguration.builder();
-        jedisClientConfiguration.connectTimeout(Duration.ofMillis(Long.valueOf(timeout.substring(0, timeout.length() - 2))));
-        JedisConnectionFactory factory = new JedisConnectionFactory(redisStandaloneConfiguration,
-                jedisClientConfiguration.build());
-        return factory;
-    }
 
     @Bean(name = "redisTemplate")
     public RedisTemplate<String, Serializable> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
@@ -132,6 +65,12 @@ public class RedisConfig {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        javaTimeModule.addSerializer(LocalDateTime.class,new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        javaTimeModule.addSerializer(LocalDate.class,new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        javaTimeModule.addDeserializer(LocalDateTime.class,new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        javaTimeModule.addDeserializer(LocalDate.class,new LocalDateDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        objectMapper.registerModule(javaTimeModule);
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
         template.setValueSerializer(jackson2JsonRedisSerializer);
@@ -139,9 +78,6 @@ public class RedisConfig {
         template.setConnectionFactory(redisConnectionFactory);
         return template;
     }
-
-}
-
 ```
 
 
