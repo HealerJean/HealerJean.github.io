@@ -4,7 +4,9 @@ import com.healerjean.proj.config.properties.DemoProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
 
@@ -15,9 +17,15 @@ import javax.annotation.PostConstruct;
  * @Description
  */
 @Configuration
-// @EnableConfigurationProperties(DemoProperties.class)
 @Slf4j
-public class DemoPropertiesAutoConfiguration {
+public class DemoPropertiesAutoConfiguration implements EnvironmentAware {
+
+    private Environment environment;
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
 
     @Autowired
     private DemoProperties demoProperties;
@@ -25,6 +33,9 @@ public class DemoPropertiesAutoConfiguration {
     @PostConstruct
     public void init() {
         log.info("配置文件属性--------{}", demoProperties);
+        log.info("demo.name ==> {}" , environment.getProperty("demo.name"));
+        log.info("demo.version ==> {}" , environment.getProperty("demo.version"));
+
     }
 
 }
