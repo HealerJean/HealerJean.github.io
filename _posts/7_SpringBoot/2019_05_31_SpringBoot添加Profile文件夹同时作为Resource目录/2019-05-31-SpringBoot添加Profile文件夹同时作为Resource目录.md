@@ -88,6 +88,7 @@ description: SpringBoot添加Profile文件夹同时作为Resource目录
     <resources>
         <resource>
             <directory>src/main/resources</directory>
+            <filtering>true</filtering>
         </resource>
         <resource>
             <directory>${profiles.active}</directory>
