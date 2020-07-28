@@ -75,7 +75,6 @@ public class SpringBoot_Application {
         SpringApplication.run(SpringBoot_Application.class, args);
 
     }
-
 }
 
 ```
@@ -139,8 +138,6 @@ this.webApplicationType = WebApplicationType.deduceFromClasspath();
 ```
 
 
-
-> 如果是使用外部tomcat启动，则是`REACTIVE`，如果适应内置tomcat则是`SERVLET`
 
 ```java
 package org.springframework.boot;
@@ -273,7 +270,7 @@ private <T> Collection<T> getSpringFactoriesInstances(Class<T> type, Class<?>[] 
 public static List<String> loadFactoryNames(Class<?> factoryType, @Nullable ClassLoader classLoader) {
     //org.springframework.context.ApplicationContextInitializer  
     String factoryTypeName = factoryType.getName();
-    
+
     //类似于注解@EnableAutoConfiguration 获取可自动装配的
     //从`classpath`中搜寻所有的 `META-INF/spring.factories` 配置文件，
     //并将其中`org.springframework.context.ApplicationContextInitializer` 对应的配置项中所有符合条件的制作成List包           
@@ -296,7 +293,7 @@ private static Map<String, List<String>> loadSpringFactories(@Nullable ClassLoad
     }
 
     try {
-         //从类路径的META-INF/spring.factories中加载所有默认的自动配置类
+        //从类路径的META-INF/spring.factories中加载所有默认的自动配置类
         Enumeration<URL> urls = (classLoader != null ?
                                  classLoader.getResources(FACTORIES_RESOURCE_LOCATION) :
                                  ClassLoader.getSystemResources(FACTORIES_RESOURCE_LOCATION));
@@ -304,7 +301,7 @@ private static Map<String, List<String>> loadSpringFactories(@Nullable ClassLoad
         while (urls.hasMoreElements()) {
             URL url = urls.nextElement();
             UrlResource resource = new UrlResource(url);
-            
+
             //获取org.springframework.context.ApplicationContextInitializer的所有值
             Properties properties = PropertiesLoaderUtils.loadProperties(resource);
             for (Map.Entry<?, ?> entry : properties.entrySet()) {
@@ -343,7 +340,7 @@ org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingL
 
 
 
-### 1.2.2、根据names来进行反射实例化对象
+### 1.2.2、创建实例，根据`name`来进行反射实例化对象
 
 ```java
  List<T> instances = createSpringFactoriesInstances(type, parameterTypes, classLoader, args, names);
@@ -392,8 +389,6 @@ private <T> List<T> createSpringFactoriesInstances(Class<T> type,
 ```java
 setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
 ```
-
-
 
 
 
@@ -882,15 +877,15 @@ configureIgnoreBeanInfo(environment);
 ```java
 private ConfigurableEnvironment prepareEnvironment(SpringApplicationRunListeners listeners,
                                                    ApplicationArguments applicationArguments) {
-    
+
     //获取对应的ConfigurableEnvironment
     ConfigurableEnvironment environment = getOrCreateEnvironment();
-    
-      //配置
+
+    //配置环境
     configureEnvironment(environment, applicationArguments.getSourceArgs());
     ConfigurationPropertySources.attach(environment);
-   
-    
+
+
     //发布环境已准备事件，这是第二次发布事件
     listeners.environmentPrepared(environment);
     bindToSpringApplication(environment);
@@ -907,7 +902,7 @@ private ConfigurableEnvironment prepareEnvironment(SpringApplicationRunListeners
 
 
 
-### 2.2.1、获取类型获取`ConfigurableEnvironment`
+### 2.2.1、获取应用类型获取`ConfigurableEnvironment`
 
 ```java
 private ConfigurableEnvironment getOrCreateEnvironment() {
@@ -1001,8 +996,6 @@ public void multicastEvent(final ApplicationEvent event, @Nullable ResolvableTyp
 
 
 
-
-
 主要来看一下**`ConfigFileApplicationListener`**，该监听器非常核心，主要用来处理项目配置。项目中的 properties 和yml文件都是其内部类所加载。具体来看一下：
 
 ```java
@@ -1018,6 +1011,7 @@ public void onApplicationEvent(ApplicationEvent event) {
 
 private void onApplicationEnvironmentPreparedEvent(ApplicationEnvironmentPreparedEvent event) {
     List<EnvironmentPostProcessor> postProcessors = loadPostProcessors();
+    //当前监听器也是一个 环境后置处理器，添加进去等待执行
     postProcessors.add(this);
     AnnotationAwareOrderComparator.sort(postProcessors);
     for (EnvironmentPostProcessor postProcessor : postProcessors) {
@@ -1025,8 +1019,6 @@ private void onApplicationEnvironmentPreparedEvent(ApplicationEnvironmentPrepare
     }
 }
 ```
-
-![image-20200616163505148](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200616163505148.png)   
 
 
 
@@ -1052,9 +1044,67 @@ org.springframework.boot.env.SystemEnvironmentPropertySourceEnvironmentPostProce
 
 
 
+![image-20200616163505148](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200616163505148.png)   
 
 
-在执行完上述`Processor`（其实这几个也是监听器）流程后，`ConfigFileApplicationListener`会执行该类本身的逻辑。由其内部类`Loader`加载项目制定路径下的配置文件：    
+
+
+
+
+
+在执行完上述`Processor`流程后，`ConfigFileApplicationListener`会执行该类本身的逻辑。由其内部类`Loader`加载项目制定路径下的配置文件：     
+
+​     
+
+![image-20200727154002641](D:\study\HealerJean.github.io\blogImages\image-20200727154002641.png)
+
+
+
+```java
+@Override
+public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+    addPropertySources(environment, application.getResourceLoader());
+}
+
+
+protected void addPropertySources(ConfigurableEnvironment environment, ResourceLoader resourceLoader) {
+    RandomValuePropertySource.addToEnvironment(environment);
+    new Loader(environment, resourceLoader).load();
+}
+
+
+```
+
+
+
+```java
+
+		void load() {
+			FilteredPropertySource.apply(this.environment, DEFAULT_PROPERTIES, LOAD_FILTERED_PROPERTY,
+					(defaultProperties) -> {
+						this.profiles = new LinkedList<>();
+						this.processedProfiles = new LinkedList<>();
+						this.activatedProfiles = false;
+						this.loaded = new LinkedHashMap<>();
+						initializeProfiles();
+						while (!this.profiles.isEmpty()) {
+							Profile profile = this.profiles.poll();
+							if (isDefaultProfile(profile)) {
+								addProfileToEnvironment(profile.getName());
+							}
+							load(profile, this::getPositiveProfileFilter,
+									addToLoaded(MutablePropertySources::addLast, false));
+							this.processedProfiles.add(profile);
+						}
+						load(null, this::getNegativeProfileFilter, addToLoaded(MutablePropertySources::addFirst, true));
+						addLoadedPropertySources();
+						applyActiveProfiles(defaultProperties);
+					});
+        }
+
+```
+
+
 
 ```java
 private static final String DEFAULT_SEARCH_LOCATIONS = "classpath:/,classpath:/config/,file:./,file:./config/";
@@ -1220,7 +1270,7 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 >
 > 
 >
->  `BeanUtils.instantiateClass(contextClass) `这个方法中，不但初始化了`AnnotationConfigServletWebServerApplicationContext`类，也就是我们的上下文`context`，同样也触发了`GenericApplicationContext`类的构造函数，从而IoC容器也创建了。仔细看他的构造函数，有没有发现一个很熟悉的类`DefaultListableBeanFactory`，没错，`DefaultListableBeanFactory`就是IoC容器真实面目了。在后面的refresh()方法分析中，`DefaultListableBeanFactory`是无处不在的存在感。   
+>  `BeanUtils.instantiateClass(contextClass) `这个方法中，不但初始化了`AnnotationConfigServletWebServerApplicationContext`类，也就是我们的上下文`context`，同样也触发了`GenericApplicationContext`类的构造函数，从而`IoC`容器也创建了。仔细看他的构造函数，有没有发现一个很熟悉的类`DefaultListableBeanFactory`，没错，`DefaultListableBeanFactory`就是IoC容器真实面目了。在后面的`refresh()`方法分析中，`DefaultListableBeanFactory`是无处不在的存在感。   
 
 
 
@@ -1397,7 +1447,7 @@ listeners.contextPrepared(context
 
 ### 2.4.3、加载启动指定类（重点）    
 
-> 启动类`SpringBoot_Application.class`被加载到 bean工厂的  `beanDefinitionMap`中，后续该启动类将作为开启自动化配置的入口，    
+> 启动类`SpringBoot_Application.class`被加载到 `bean`工厂的  `beanDefinitionMap`中，后续该启动类将作为开启自动化配置的入口，    
 
 ```java
 Set<Object> sources = getAllSources();
@@ -1407,19 +1457,19 @@ load(context, sources.toArray(new Object[0]));
 
 
 
-> 大家先回到文章最开始看看，在创建**SpringApplication**实例时，先将**SpringBoot_Application.class**存储在`this.primarySources`属性中，现在就是用到这个属性的时候了，我们来看看`getAllSources（）`
+> 大家先回到文章最开始看看，在创建`SpringApplication`实例时，先将`SpringBoot_Application.class`存储在`this.primarySources`属性中，现在就是用到这个属性的时候了，我们来看看`getAllSources（）`
 
 ```java
-	public Set<Object> getAllSources() {
-		Set<Object> allSources = new LinkedHashSet<>();
-		if (!CollectionUtils.isEmpty(this.primarySources)) {
-			allSources.addAll(this.primarySources);
-		}
-		if (!CollectionUtils.isEmpty(this.sources)) {
-			allSources.addAll(this.sources);
-		}
-		return Collections.unmodifiableSet(allSources);
-	}
+public Set<Object> getAllSources() {
+    Set<Object> allSources = new LinkedHashSet<>();
+    if (!CollectionUtils.isEmpty(this.primarySources)) {
+        allSources.addAll(this.primarySources);
+    }
+    if (!CollectionUtils.isEmpty(this.sources)) {
+        allSources.addAll(this.sources);
+    }
+    return Collections.unmodifiableSet(allSources);
+}
 ```
 
 
@@ -1568,7 +1618,7 @@ private int load(Class<?> source) {
 
 #### 2.4.3.4、`registerBeanDefinition`  
 
-> 因为启动类`BeanDefinition`的注册流程和后面我们自定义的BeanDefinition的注册流程是一样的。这先介绍一遍这个流程，后面熟悉了这个流程就好理解了。后面马上就到最最最重要的refresh()方法了。   
+> 因为启动类`BeanDefinition`的注册流程和后面我们自定义的`BeanDefinition`的注册流程是一样的。这先介绍一遍这个流程，后面熟悉了这个流程就好理解了。后面马上就到最最最重要的`refresh()`方法了。   
 
 
 
@@ -1645,11 +1695,9 @@ pblic class AnnotatedBeanDefinitionReader {
 
 
 
-
-
-> 到了这里很关键了，用到了适配器，委托模式，可以观察到下面的`registry`，其实就是我们的上下文`AnnotationConfigServletWebServerApplicationContext`    
+> 到了这里很关键了，可以观察到`this.registry`，其实就是我们的上下文`AnnotationConfigServletWebServerApplicationContext`    
 >
-> 而我们使用鼠标进行寻找实现方法`registerBeanDefinition`d的时候，发现出现了`DefaultListableBeanFactory`（这个类不就是我们日夜想的ioc容器），但是仔细观察之后，regsiter是`AnnotationConfigServletWebServerApplicationContext`， 它继承了`GenericApplicationContext`，`GenericApplicationContext`又实现了`DefaultListableBeanFactory`。 所以此事的`registe`r代表的是`GenericApplicationContext`     
+> 而我们使用鼠标进行寻找实现方法`registerBeanDefinition`d的时候，发现出现了`DefaultListableBeanFactory`（这个类不就是我们日夜想的ioc容器），但是仔细观察之后，`regsiter`是`AnnotationConfigServletWebServerApplicationContext`， 它继承了`GenericApplicationContext`，`GenericApplicationContext`又实现了`DefaultListableBeanFactory`。 所以此事的`registe`r代表的是`GenericApplicationContext`     
 
 
 
@@ -2052,7 +2100,7 @@ protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
 
 
 
-### 2.5.3、`postProcessBeanFactory(beanFactory);`
+### 2.5.3、`postProcessBeanFactory(beanFactory)`;`,beanFactory`后置处理
 
 > `postProcessBeanFactory()`方法向上下文中添加了一系列的`Bean`的后置处理器（`BeanPostProcesser`），。后置处理器工作的时机是在所有的`beanDenifition`加载完成之后，`bean`实例化之前执行。简单来说Bean的后置处理器可以修改`BeanDefinition`的属性信息。
 
@@ -2083,8 +2131,6 @@ protected void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactor
     registerWebApplicationScopes();
 }
 ```
-
-
 
 
 
@@ -2683,7 +2729,7 @@ protected void afterRefresh(ConfigurableApplicationContext context,
 
 
 
-## 2.6、监听器：发布容器启动完成事件  
+## 2.6、监听器：`started`发布容器启动完成事件  
 
 > 获取`EventPublishingRunListener`监听器，并执行其started方法，并且将创建的Spring容器传进去了，创建一个ApplicationStartedEvent事件，并执行ConfigurableApplicationContext 的publishEvent方法，也就是说这里是在Spring容器中发布事件，并不是在SpringApplication中发布事件，      
 >
