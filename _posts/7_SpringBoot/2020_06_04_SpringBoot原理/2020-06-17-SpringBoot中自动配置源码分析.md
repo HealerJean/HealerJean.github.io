@@ -18,7 +18,7 @@ description: SpringBoot中自动配置源码分析
 
 # 1、SpringBoot启动类加载
 
-> 首先加载springBoot启动类注入到`spring`容器中`beanDefinitionMap`中，看下prepareContext方法中的load方法：load(context, sources.toArray(new Object[0]));
+> 首先加载`springBoot`启动类注入到`spring`容器中`beanDefinitionMap`中，看下`prepareContext`方法中的`load`方法：`load(context, sources.toArray(new Object[0]));`
 > 跟进该方法最终会执行BeanDefinitionLoader的load方法：   
 
 
