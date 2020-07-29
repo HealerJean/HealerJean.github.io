@@ -1305,6 +1305,16 @@ public void test(){
 
 
 
+
+
+## 4.4、分页查询
+
+
+
+
+
+
+
 # 5、问题
 
 
@@ -1565,11 +1575,9 @@ org.springframework.dao.InvalidDataAccessApiUsageException: Error attempting to 
 
 ```java
 
-    UserDTO queryLocalDate();
+UserDTO queryLocalDate();
 
-
-
-    List<UserDTO> selectLocalDateByMappeXml(UserDTO userDTO);
+List<UserDTO> selectLocalDateByMappeXml(UserDTO userDTO);
 ```
 
 
@@ -1577,8 +1585,6 @@ org.springframework.dao.InvalidDataAccessApiUsageException: Error attempting to 
 
 
 #### 5.1.3.3、`Mapper.xml`
-
-
 
 ```xml
 
@@ -1689,6 +1695,20 @@ loanOrderDTO.setNextRepayDate( DateUtils.toLocalDateTime(
 					loanOrderModel.getNextRepayDate()).toLocalDate());
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
