@@ -1311,7 +1311,13 @@ public void test(){
 
 
 
+```java
 
+Wrapper<CsfSysDictionaryType> sysDictionaryDataWrapper = new QueryWrapper<CsfSysDictionaryType>().lambda()
+    Page<CsfSysDictionaryType> page = new Page<>(typeDTO.getPageNo(), typeDTO.getPageSize());
+IPage<CsfSysDictionaryType> sysDictionaryDataIPage = sysDictionaryTypeMapper.selectPage(page, sysDictionaryDataWrapper);
+
+```
 
 
 
