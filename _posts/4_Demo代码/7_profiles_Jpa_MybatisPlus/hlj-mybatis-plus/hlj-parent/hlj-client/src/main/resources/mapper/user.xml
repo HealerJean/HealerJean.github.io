@@ -7,9 +7,21 @@
               select * from user where name = #{name}
     </select>
 
-
     <select id="selectLocalDateTimeByMappeXml" resultType="com.healerjean.proj.dto.UserDTO">
                select * from user where name = #{name}
+    </select>
+
+
+    <select id="selectMapperXmlPage" resultType="com.healerjean.proj.dto.UserDTO">
+        select * from user where name = #{name}
+    </select>
+
+    <select id="selectMapperXmlFZPage" resultType="com.healerjean.proj.dto.UserDTO">
+        select * from user  ${ew.customSqlSegment}
+    </select>
+
+    <select id="selectMapperXmlEntity" resultType="com.healerjean.proj.dto.UserDTO">
+        select * from user where  name = #{userDTO.name}
     </select>
 
 </mapper>

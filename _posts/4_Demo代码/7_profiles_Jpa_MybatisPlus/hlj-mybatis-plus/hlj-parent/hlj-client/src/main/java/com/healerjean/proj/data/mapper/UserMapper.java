@@ -1,9 +1,15 @@
 package com.healerjean.proj.data.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.healerjean.proj.config.keycenter.one.CustomTypeHandler;
 import com.healerjean.proj.data.entity.User;
 import com.healerjean.proj.dto.UserDTO;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -61,4 +67,13 @@ public interface UserMapper extends BaseMapper<User> {
             @Result(column = "tel_phone", property = "telPhone", typeHandler = CustomTypeHandler.class)})
     @Select("select * from user where id = #{id}")
     List<User> selectDncryptList(Long id);
+
+    IPage<UserDTO> selectMapperXmlPage(Page<UserDTO> page , String name);
+
+    IPage<UserDTO> selectMapperXmlFZPage(Page page,   @Param(Constants.WRAPPER) QueryWrapper<UserDTO> queryWrapper);
+
+    IPage<UserDTO> selectMapperXmlEntity(Page page,   @Param("userDTO") UserDTO userDTO);
+    List<UserDTO> selectMapperXmlEntity( @Param("userDTO") UserDTO userDTO);
+
+
 }
