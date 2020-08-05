@@ -1,4 +1,4 @@
-package com.fintech.confin.web.utils.validate.anno;
+package com.fintech.csf.api.dto.validate.anno;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

@@ -1,7 +1,6 @@
-package com.fintech.confin.web.utils.validate.validator;
+package com.fintech.csf.utils.validate.validator;
 
-
-import com.fintech.confin.web.utils.validate.anno.DigitsIncloudZero;
+import com.fintech.csf.api.dto.validate.anno.DigitsIncloudZero;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -13,7 +12,7 @@ import java.math.BigDecimal;
  * @Date 2019/7/9 10:42
  * @Description 校验数字整数位和小数位，小数位为0时可接受
  */
-public class DigitsIncloudZeroValidatorForNumber implements ConstraintValidator<DigitsIncloudZero, Number> {
+public class DigitsIncloudZeroValidator implements ConstraintValidator<DigitsIncloudZero, Object> {
 
 
     private int maxIntegerLength;
@@ -26,7 +25,7 @@ public class DigitsIncloudZeroValidatorForNumber implements ConstraintValidator<
     }
 
     @Override
-    public boolean isValid(Number num, ConstraintValidatorContext context) {
+    public boolean isValid(Object num, ConstraintValidatorContext context) {
         if (num == null) {
             return true;
         }
@@ -44,6 +43,8 @@ public class DigitsIncloudZeroValidatorForNumber implements ConstraintValidator<
         BigDecimal bigNum;
         if (num instanceof BigDecimal) {
             bigNum = (BigDecimal) num;
+        } else if (num instanceof CharSequence) {
+            bigNum = getBigDecimalValue((CharSequence) num);
         } else {
             bigNum = new BigDecimal(num.toString()).stripTrailingZeros();
         }
@@ -56,6 +57,17 @@ public class DigitsIncloudZeroValidatorForNumber implements ConstraintValidator<
             fractionFlag = maxFractionLength >= fractionPartLength || 0 == bigNum.setScale(0, BigDecimal.ROUND_DOWN).compareTo(bigNum);
         }
         return integerFlag & fractionFlag;
+    }
+
+
+    private BigDecimal getBigDecimalValue(CharSequence charSequence) {
+        BigDecimal bd;
+        try {
+            bd = new BigDecimal(charSequence.toString());
+        } catch (NumberFormatException nfe) {
+            return null;
+        }
+        return bd;
     }
 
 }
