@@ -28,10 +28,10 @@
         </dependency>
 
 
-        <!--hlj-service-api-->
+        <!--hlj-api-->
         <dependency>
             <groupId>com.healerjean.proj</groupId>
-            <artifactId>hlj-service-api</artifactId>
+            <artifactId>hlj-api</artifactId>
             <version>${project.healerjean.version}</version>
         </dependency>
 
