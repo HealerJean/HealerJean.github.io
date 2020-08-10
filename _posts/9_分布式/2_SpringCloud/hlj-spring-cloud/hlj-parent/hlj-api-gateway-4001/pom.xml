@@ -27,7 +27,7 @@
             <artifactId>spring-cloud-starter-zuul</artifactId>
         </dependency>
 
-        <!--eureka-->
+        <!--eureka 客户端，处理服务的注册和发现-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-eureka</artifactId>

@@ -2,13 +2,13 @@ package com.healerjean.proj;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import zipkin.server.EnableZipkinServer;
 
 // 开启 Zipkin Server 的功能
 @EnableZipkinServer
-//开启Eureka服务注册中心的支持,用来供给其他应用进行对话
-@EnableEurekaServer
+//开启服务发现
+@EnableDiscoveryClient
 @SpringBootApplication
 public class ZipkinServer_9001_Application {
 
