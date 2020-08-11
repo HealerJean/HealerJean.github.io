@@ -12,9 +12,7 @@
      %L : 日志输出所在行数
      %n是换行符 -->
     -->
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level -[%-32X[%X{traceId}/%X{spanId}]] - %msg  -%logger{50}.%M[%L]%n "/>
-
-
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level -[%X{X-B3-TraceId}, %X{X-B3-SpanId}, %X{X-Span-Export}] - %msg  -%logger{50}.%M[%L]%n "/>
 
     <property name="LOG_PATH" value="/Users/healerjean/Desktop/logs"/>
     <property name="FILE_PATH_INFO"  value="${LOG_PATH}/hlj-logback.log"/>

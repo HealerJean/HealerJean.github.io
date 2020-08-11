@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2020/4/14  16:09.
  * @Description
  */
-@Api(description = "服务消费者_3001_控制器-声明式服务调用Controller")
+@Api(description = "服务消费者_3001_控制器-ConsumerFeignZuulController")
 @RestController
 @RequestMapping("api/consumer/feign/zuul")
 @Slf4j
