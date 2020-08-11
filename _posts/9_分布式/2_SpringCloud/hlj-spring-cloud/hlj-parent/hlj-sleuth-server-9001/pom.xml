@@ -8,7 +8,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>hlj-zipkin-server-9001</artifactId>
+    <artifactId>hlj-sleuth-server-9001</artifactId>
     <version>${project.healerjean.version}</version>
 
     <properties>

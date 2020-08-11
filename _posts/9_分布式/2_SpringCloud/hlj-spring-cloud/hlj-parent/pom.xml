@@ -30,7 +30,7 @@
         <module>hlj-zookeeper-server-provider-7011</module>
         <module>hlj-zookeeper-server-consumer-7021</module>
 
-        <module>hlj-zipkin-server-9001</module>
+        <module>hlj-sleuth-server-9001</module>
 
         <module>hlj-api</module>
         <module>hlj-common</module>
