@@ -77,7 +77,6 @@ demo.name=healerjean
 demo.age=12
 demo.pomVal=pomValue
 demo.version=1.0.0-SNAPSHOT
-
 ```
 
 

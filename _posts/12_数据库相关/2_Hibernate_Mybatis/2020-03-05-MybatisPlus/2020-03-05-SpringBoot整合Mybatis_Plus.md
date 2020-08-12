@@ -1309,15 +1309,176 @@ public void test(){
 
 ## 4.4、分页查询
 
+### 4.4.1、准备数据
 
+#### 4.4.1.1、`@Configuration`
 
 ```java
+@Configuration
+@MapperScan("com.healerjean.proj.data.mapper")
+public class MybatisPlusConfig {
 
-Wrapper<CsfSysDictionaryType> sysDictionaryDataWrapper = new QueryWrapper<CsfSysDictionaryType>().lambda()
-    Page<CsfSysDictionaryType> page = new Page<>(typeDTO.getPageNo(), typeDTO.getPageSize());
-IPage<CsfSysDictionaryType> sysDictionaryDataIPage = sysDictionaryTypeMapper.selectPage(page, sysDictionaryDataWrapper);
+    @Bean
+    public PaginationInterceptor paginationInterceptor() {
+        PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
+        // 设置请求的页面大于最大页后操作， true调回到首页，false 继续请求  默认false
+        // paginationInterceptor.setOverflow(false);
+        // 设置最大单页限制数量，默认 500 条，-1 不受限制
+        // paginationInterceptor.setLimit(500);
+        // 开启 count 的 join 优化,只针对部分 left join
+        paginationInterceptor.setCountSqlParser(new JsqlParserCountOptimize(true));
+        return paginationInterceptor;
+    }
+
+}
 
 ```
+
+#### 4.4.1.2.、`BeanUtils`封装
+
+```java
+public static <T> PageDTO<T> toPageDTO(IPage iPage, List<T> datas) {
+    if (datas == null || datas.isEmpty() || iPage == null) {
+        return null;
+    } else {
+        return new PageDTO(iPage.getCurrent(), iPage.getSize(), iPage.getTotal(), iPage.getPages(), datas);
+    }
+}
+```
+
+
+
+### 4.4.2、简单分页
+
+#### 4.4.2.1、简单分页
+
+```java
+/** 传入QueryWrapper分页 */
+@Test
+public void page1 (){    
+    Page<User> page = new Page<>(1, 2);
+    Wrapper<User> userWrapper = new QueryWrapper<User>().lambda();
+    IPage<User> userIPage = userMapper.selectPage(page, userWrapper);
+    System.out.println(userIPage);
+}
+
+/** 传入普通参数分页 */
+@Test
+public void page2(){
+    Page<UserDTO> page = new Page<>(1, 2);
+    String name = "name";
+    IPage<UserDTO> users = userMapper.selectMapperXmlPage(page, name);
+    System.out.println(users);
+}
+
+```
+
+#### 4.4.2.1、`Mapper`
+
+```java
+public interface UserMapper extends BaseMapper<User> {
+
+    IPage<UserDTO> selectMapperXmlPage(Page<UserDTO> page , String name);
+
+}
+```
+
+```xml
+<select id="selectMapperXmlPage" resultType="com.healerjean.proj.dto.UserDTO">
+    select * from user where name = #{name}
+</select>
+```
+
+
+
+### 4.2.3、复杂分页 
+
+#### 4.2.3.1、`Service`
+
+```java
+@Test
+public void page3() {
+    Page page = new Page<>(1, 2);
+    QueryWrapper wrapper = Wrappers.<User>query().eq("name", "name");
+    IPage<UserDTO> users = userMapper.selectMapperXmlFZPage(page, wrapper);
+    System.out.println(users);
+}
+```
+
+#### 4.2.3.2、`Mapper`
+
+```java
+public interface UserMapper extends BaseMapper<User> {
+
+    IPage<UserDTO> selectMapperXmlFZPage(Page page,   @Param(Constants.WRAPPER) QueryWrapper<UserDTO> queryWrapper);
+}
+
+```
+
+```xml
+<select id="selectMapperXmlFZPage" resultType="com.healerjean.proj.dto.UserDTO">
+    select * from user  ${ew.customSqlSegment}
+</select>
+```
+
+
+
+### 4.2.4、传入实体对象分页
+
+#### 4.2.4.1、`Service`
+
+```java
+@Test
+public void page4() {
+    Page page = new Page<>(1, 2);
+    UserDTO userDTO = new UserDTO();
+    userDTO.setName("name");
+    //分页查询
+    IPage<UserDTO>  users = userMapper.selectMapperXmlEntity(page, userDTO);
+    System.out.println(users);
+
+    //list查询
+    List<UserDTO>  user2s = userMapper.selectMapperXmlEntity( userDTO);
+    System.out.println(user2s);
+}
+
+```
+
+#### 4.2.2.2、`Mapper`
+
+```java
+public interface UserMapper extends BaseMapper<User> {
+
+    IPage<UserDTO> selectMapperXmlEntity(Page page,   @Param("userDTO") UserDTO userDTO);
+    List<UserDTO> selectMapperXmlEntity( @Param("userDTO") UserDTO userDTO);
+}
+```
+
+```xml
+<select id="selectMapperXmlEntity" resultType="com.healerjean.proj.dto.UserDTO">
+    select * from user where  name = #{userDTO.name}
+</select>
+```
+
+
+
+## 4.3、`Wrapepr`复用
+
+```java
+@Test
+public void queryManyUse() {
+    QueryWrapper<User> queryWrapper = new QueryWrapper();
+    for (int i = 0; i < 2; i++) {
+        queryWrapper.lambda().clear();
+        queryWrapper.lambda().eq(User::getName, "healerjean");
+        queryWrapper.lambda().eq(User::getEmail, i==1 ? "healer@gmail.com" : "healerjean@gmail.com");
+        List<User> users =  userMapper.selectList(queryWrapper);
+        System.out.println(users);
+    }
+}
+```
+
+
 
 
 
