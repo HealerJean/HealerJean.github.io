@@ -24,4 +24,8 @@
         select * from user where  name = #{userDTO.name}
     </select>
 
+    <update id="updateSql">
+        update user u set u.name = #{name} where u.name = #{originName}
+    </update>
+
 </mapper>

@@ -220,15 +220,25 @@ public class d01_FileDemoMain {
 
 
     /**
-     * 9、File.createTempFile
-     * 前缀不得少于3个字符
-     * C:\Users\HealerJean\AppData\Local\Temp
+     * 9、File.createTempFile 所在目录 C:\Users\HealerJean\AppData\Local\Temp
+     * 注意：1、 prefix必须大于3个字符，2、suffix需要带上 . , 比如：.png、.zip
+     *
      */
     @Test
     public void test() {
         try {
-            File tempFile = File.createTempFile("a_name", ".jpg");
-            System.out.println(tempFile);
+            //创建文件 a_name.4788216370145255403.jpg ,中间是随机生成的
+            // File jpgFile = File.createTempFile("a_name.", ".jpg");
+
+
+            //创建目录 scf.contract.4137975757793800315.dir
+            File directory = File.createTempFile("scf.contract.", ".dir");
+            directory.delete();
+            directory.mkdirs();
+
+            //指定目录中创建文件
+            File pdfFile = File.createTempFile("scf.contract.", ".pdf", new File("C:\\Users\\HealerJean\\AppData\\Local\\Temp\\healerjean"));
+
         } catch (IOException e) {
             e.printStackTrace();
         }

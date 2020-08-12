@@ -76,4 +76,6 @@ public interface UserMapper extends BaseMapper<User> {
     List<UserDTO> selectMapperXmlEntity( @Param("userDTO") UserDTO userDTO);
 
 
+    int updateSql(User user);
+
 }

@@ -24,17 +24,15 @@ description: JapRepository和CruRepository以及jpa方法
 
 ### 1.1、继承关系
 
-PagingAndSortingRepository 继承 CrudRepository
-JpaRepository 继承 PagingAndSortingRepository
-<font  color="red" size="4">所以，我们以后一般用JpaRepository   </font>
-
-
+PagingAndSortingRepository 继承 CrudRepository，JpaRepository 继承 PagingAndSortingRepository，所以，我们以后一般用JpaRepository
 
 ### 12、使用关系
 
-CrudRepository 提供基本的增删改查；<br/>
-PagingAndSortingRepository 提供分页和排序方法；<br/>
-JpaRepository 提供JPA需要的方法。<br/>
+CrudRepository 提供基本的增删改查；    
+
+PagingAndSortingRepository 提供分页和排序方法；    
+
+JpaRepository 提供JPA需要的方法。
 
 
 ## 2、方法集锦
@@ -185,8 +183,6 @@ public interface DemoEntityJapCruRepository extends JpaRepository<DemoEntity,Lon
 
 @Query("select  new com.hlj.data.res.RspDemoModel(d.id,d.name,d.age)  from DemoEntity  d where d.id  = :id")
 RspDemoModel findDtoModel(@Param("id") Long id) ;
-
-
 ```
 
 
@@ -270,29 +266,29 @@ public interface DemoEntityCruRepository extends CrudRepository<DemoEntity,Long>
 
 ```java
 
-    //http://localhost:8080/demo/jpa/findOrGet?type=jpa&which=get&id=17
-    @ApiOperation(notes = "所有Demo实体类",
-            value = "所有Demo实体类",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            response = DemoEntity.class)
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "type",value = "jpa cru",required = true,dataType = "string",paramType = "query")
-    })
-    @GetMapping("findOrGet")
-    @ResponseBody
-    public ResponseBean  findOrGet(String type,String which, Long id){
-        try {
-            return ResponseBean.buildSuccess(demo02JapMethodService.findOrGet(type,which,id));
-        }catch (AppException e){
-            ExceptionLogUtils.log(e,this.getClass() );
-            return  ResponseBean.buildFailure(e.getCode(),e.getMessage());
-        }catch (Exception e){
-            ExceptionLogUtils.log(e,this.getClass() );
-            return  ResponseBean.buildFailure(e.getMessage());
-        }
+//http://localhost:8080/demo/jpa/findOrGet?type=jpa&which=get&id=17
+@ApiOperation(notes = "所有Demo实体类",
+              value = "所有Demo实体类",
+              consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+              produces = MediaType.APPLICATION_JSON_VALUE,
+              response = DemoEntity.class)
+@ApiImplicitParams({
+    @ApiImplicitParam(name = "type",value = "jpa cru",required = true,dataType = "string",paramType = "query")
+})
+@GetMapping("findOrGet")
+@ResponseBody
+public ResponseBean  findOrGet(String type,String which, Long id){
+    try {
+        return ResponseBean.buildSuccess(demo02JapMethodService.findOrGet(type,which,id));
+    }catch (AppException e){
+        ExceptionLogUtils.log(e,this.getClass() );
+        return  ResponseBean.buildFailure(e.getCode(),e.getMessage());
+    }catch (Exception e){
+        ExceptionLogUtils.log(e,this.getClass() );
+        return  ResponseBean.buildFailure(e.getMessage());
     }
-    
+}
+
 
 ```
 
