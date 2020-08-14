@@ -1,6 +1,7 @@
 package com.healerjean.proj.H02_Stream.H03_collect.H07_聚合计算;
 
 import com.healerjean.proj.H02_Stream.H03_collect.H04_groupby分组.dto.Person;
+import com.healerjean.proj.H02_Stream.H03_collect.H07_聚合计算.dto.SortEntry;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -28,6 +29,7 @@ public class TestMain {
         max = list.stream().max((o1, o2) -> o1 - o2);
         max = list.stream().max(Comparator.comparingInt(o -> o));
         max = list.stream().collect(Collectors.maxBy((o1, o2) -> o1 - o2));
+        max = list.stream().collect(Collectors.maxBy(Comparator.comparingInt(o -> o)));
         max = list.stream().collect(Collectors.collectingAndThen(Collectors.maxBy((o1, o2) -> o1 - o2), item -> item));
 
 
@@ -79,6 +81,51 @@ public class TestMain {
         sum = list.stream().collect(Collectors.summingInt(o -> o));
     }
 
+    @Test
+    public void sort() {
+        List<Integer> list = Arrays.asList(1, 2, 4);
 
-    
+        //逆序  [4, 2, 1]
+        Collections.reverse(list);
+        System.out.println("逆序   " + list);
+
+        //默认升序 [1, 2, 4]
+        Collections.sort(list);
+        Collections.sort(list, (o1, o2) -> o1 - o2);
+        list.stream().sorted(Comparator.comparingInt(o -> o));
+        System.out.println("默认升序" + list);
+
+        //降序Collections.reverseOrder() [4, 2, 1]
+        Collections.sort(list, Collections.reverseOrder());
+        System.out.println("降序   " + list);
+
+
+
+        //多条件排序
+        List<SortEntry> sortEntries = new ArrayList<>();
+        sortEntries.add(new SortEntry(23, 100));
+        sortEntries.add(new SortEntry(27, 98));
+        sortEntries.add(new SortEntry(29, 99));
+        sortEntries.add(new SortEntry(29, 98));
+        sortEntries.add(new SortEntry(22, 89));
+        Collections.sort(sortEntries, (o1, o2) -> {
+            int i = o1.getScore() - o2.getScore();  //先按照分数排序
+            if (i == 0) {
+                return o1.getAge() - o2.getAge();  //如果年龄相等了再用分数进行排序
+            }
+            return i;
+        });
+        System.out.println(sortEntries);
+
+        //数组首个排序
+        int[][] nums = {
+                {1, 2},
+                {3, 4},
+                {2, 2}
+        };
+        Arrays.sort(nums, (o1, o2) -> o1[0] - o2[0]);
+        Arrays.sort(nums, Comparator.comparingInt(o -> o[0]));
+
+    }
+
 }
