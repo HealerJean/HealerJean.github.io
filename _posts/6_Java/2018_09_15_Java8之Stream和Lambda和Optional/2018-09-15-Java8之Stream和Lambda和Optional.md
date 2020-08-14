@@ -1,11 +1,11 @@
 ---
-title: Java8之Stream和Lambda
+title: Java8之Stream和Lambda和Optional
 date: 2018-09-15 03:33:00
 tags: 
 - Java
 category: 
 - Java
-description: Java8之Stream
+description: Java8之Stream和Lambda和Optional
 ---
 # **前言**     
 
@@ -957,7 +957,7 @@ Collector<T, ?, Map<K,U>> toMap(Function<? super T, ? extends K> keyMapper,
 
 
 
-#### 2.3.2.1、普通数据收集成`map`:`Collectors.toMap`
+#### 2.3.2.1、`Collectors.toMap`：普通数据收集成`map`
 
 ```java
 public class TestMain {
@@ -978,7 +978,7 @@ public class TestMain {
 
 
 
-#### 2.3.2.2、对象收集成map：`Collectors.toMap`
+#### 2.3.2.2、`Collectors.toMap`：对象收集成map：
 
 ```java
 public class TestMain {
@@ -1009,7 +1009,7 @@ public class TestMain {
 
 
 
-### 2.2.3、收集并映射：`Collectors.mapping`：
+### 2.2.3、`Collectors.mapping`：收集并映射
 
 > **映射：先对集合中的元素进行映射，然后再对映射的结果使用`Collectors`操作**
 
@@ -1041,7 +1041,7 @@ public class TestMain {
 
 ### 2.3.4、`groupby` 分组
 
-#### 2.3.4.1、分组收集成`Collection`
+#### 2.3.4.1、`Collection`：分组收集
 
 ```java
 public class TestMain {
@@ -1133,7 +1133,7 @@ public class TestMain {
 
 
 
-### 2.3.5、收集并拼接：`Collectors.joining`
+### 2.3.5、`Collectors.joining`：收集并拼接
 
  **将字符串结果用逗号隔开**  
 
@@ -1238,6 +1238,7 @@ public class TestMain {
         max = list.stream().max((o1, o2) -> o1 - o2);
         max = list.stream().max(Comparator.comparingInt(o -> o));
         max = list.stream().collect(Collectors.maxBy((o1, o2) -> o1 - o2));
+        max = list.stream().collect(Collectors.maxBy(Comparator.comparingInt(o -> o)));
         max = list.stream().collect(Collectors.collectingAndThen(Collectors.maxBy((o1, o2) -> o1 - o2), item -> item));
 
 
@@ -1316,6 +1317,63 @@ public class TestMain {
 
 }
 ```
+
+
+
+
+
+### 2.4.4、排序
+
+```java
+@Test
+public void sort() {
+    List<Integer> list = Arrays.asList(1, 2, 4);
+    //逆序  [4, 2, 1]
+    Collections.reverse(list);
+    System.out.println("逆序   " + list);
+
+    //默认升序 [1, 2, 4]
+    Collections.sort(list);
+    Collections.sort(list, (o1, o2) -> o1 - o2);
+    list.stream().sorted(Comparator.comparingInt(o -> o));
+    System.out.println("默认升序" + list);
+
+    //降序Collections.reverseOrder() [4, 2, 1]
+    Collections.sort(list, Collections.reverseOrder());
+    System.out.println("降序   " + list);
+
+
+
+    //多条件排序
+    List<SortEntry> sortEntries = new ArrayList<>();
+    sortEntries.add(new SortEntry(23, 100));
+    sortEntries.add(new SortEntry(27, 98));
+    sortEntries.add(new SortEntry(29, 99));
+    sortEntries.add(new SortEntry(29, 98));
+    sortEntries.add(new SortEntry(22, 89));
+    Collections.sort(sortEntries, (o1, o2) -> {
+        int i = o1.getScore() - o2.getScore();  //先按照分数排序
+        if (i == 0) {
+            return o1.getAge() - o2.getAge();  //如果年龄相等了再用分数进行排序
+        }
+        return i;
+    });
+    System.out.println(sortEntries);
+
+    //数组首个排序
+    int[][] nums = {
+        {1, 2},
+        {3, 4},
+        {2, 2}
+    };
+    Arrays.sort(nums, (o1, o2) -> o1[0] - o2[0]);
+    Arrays.sort(nums, Comparator.comparingInt(o -> o[0]));
+
+}
+
+```
+
+
 
 
 
