@@ -520,24 +520,50 @@ select(i -> i.getProperty().startsWith("test"))
 
 
 
-## 2.2、`UpdateWrapper`
+## 2.2、`UpdateWrapper、LambdaUpdateChainWrapper`
 
 
 
 > 继承自 `AbstractWrapper` ,自身的内部属性 `entity` 、也用于生成 `where` 条件（主要是这个功能）
-> 及 `LambdaUpdateWrapper`, 可以通过 `new UpdateWrapper().lambda()` 方法获取!
-
-
+> 及 `LambdaUpdateWrapper`, `LambdaUpdateChainWrapper`可以通过 `new UpdateWrapper().lambda()` 方法获取!
 
 
 
 ```java
- userWrapper =new UpdateWrapper<User>().lambda()
-        .set(User::getEmail, "h@gmail.com") 
-         .setSql("age = 24").eq(User::getId, user.getId());
- user.setName("jjjjjk");
- user.setEmail("66666"); //以它为主，所以导致上面的不会生效。
- userMapper.update(user, userWrapper);
+/**
+* userMapper.updateById(user); //根据Id更新
+* userLambdaUpdateChainWrapper.update(); //条件更新
+*/
+@Test
+public void update(){
+
+    User user = userMapper.selectById(1L);
+    Wrapper userWrapper = new UpdateWrapper<User>().lambda()
+        .set(User::getEmail, "h@gmail.com")
+        .setSql("age = 24").eq(User::getId, user.getId())
+        .eq(User::getId, 2L);
+    user.setName("jjjjjk"); //会生效
+    user.setEmail("66666"); //不会生效 以updateWrapper里面的为主
+    //一般不用这二者的结合，毫无意义，写出来的sql也很有可能是错误的，一般用
+    userMapper.update(user, userWrapper);
+
+
+    //使用下面这两个
+    userMapper.updateById(user);
+
+    LambdaUpdateChainWrapper<User> userLambdaUpdateChainWrapper = new LambdaUpdateChainWrapper<>(userMapper)
+        .set(User::getName,"Name")
+        .set(User::getEmail, "update@gmail.com")
+        .eq(User::getId, 1L);
+    //一般我们使用这个非常好
+    userLambdaUpdateChainWrapper.update();
+
+    user.setAge(63); //会生效，
+    user.setEmail("66666"); //不会生效 以userLambdaUpdateChainWrapper里面的为主
+    //使用下面这个其实也毫无意义
+    userLambdaUpdateChainWrapper.update(user);
+}
+
 ```
 
 
@@ -996,7 +1022,7 @@ and(boolean condition, Consumer<Param> consumer)
 
 ```
 
-### 3.24.1、AND 嵌套
+### 3.24.1、`and` 嵌套
 
 ```java
 例:  and(i -> i.eq("name", "李白")
@@ -1028,20 +1054,20 @@ nested(boolean condition, Consumer<Param> consumer)
 
 ```java
 @Test
-    public void or() {
-        Wrapper<User> userWrapper = null;
-        List<User> users = null;
-        userWrapper = Wrappers.<User>lambdaQuery()
-                .or().eq(User::getName, "healer")
-                .nested(wapper -> wapper.eq(User::getAge, 21 ).eq(User::getAge, 32));
-        users = userMapper.selectList(userWrapper);
-        System.out.println(JsonUtils.toJsonString(users));
-    }
+public void or() {
+    Wrapper<User> userWrapper = null;
+    List<User> users = null;
+    userWrapper = Wrappers.<User>lambdaQuery()
+        .or().eq(User::getName, "healer")
+        .nested(wapper -> wapper.eq(User::getAge, 21 ).eq(User::getAge, 32));
+    users = userMapper.selectList(userWrapper);
+    System.out.println(JsonUtils.toJsonString(users));
+}
 
 
 
 SELECT id,name,age,email FROM user WHERE
-((age = ? AND age = ?) OR name = ? AND (age = ? AND age = ?)) 
+    ((age = ? AND age = ?) OR name = ? AND (age = ? AND age = ?)) 
 ```
 
 
