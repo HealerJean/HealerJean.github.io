@@ -1,23 +1,34 @@
+**前言**     
+
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
+
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)          
 
 
 
-## [HealerJean的梦想博客](blog.healerjean.top) [blog.healerjean.top](blog.healerjean.top)
 
 
-  很开心您能看到这里，博主这里都是一些个人的经验笔记，很适合初级的朋友浏览学习，里面某个小地方也许就有你需要的知识点。
-  
-  源码没有分享到github代码托管中去，都在笔记对应目录中。博主不想将自己写的东西全部分享出去，因为有的地方可能涉及到博主个人的隐私，都是给与有缘人的。如果您不小心看到了，请通知下博主，好进行修改。谢谢
-  
-  人来人往，一颗学习的心没有变！！！
-  
-   码的人生，我们不惧！！！ 
+# 1、[知识积累](https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts)
 
-  为了不写码，我们需要先多写码，没有梦想的程序员不是好的CTO，没有梦想的CTO不是好的CEO。
+## 1.1、[算法]([https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/13_%E7%AE%97%E6%B3%95](https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/13_算法))
 
-<br/><br/><br/>
-好朋友不在乎距离，程序员的距离是世界最近的距离。 
+## 1.2、[设计模式]([https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/1_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F](https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/1_设计模式))
 
-                                                            下面是联系博主的方式，请输入备注就可以联系到！！！
-|支付包 | 微信|微信公众号|
-|:-------:|:-------:|:------:|
-|![支付宝](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/alpay.jpg) | ![微信](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/tctip/weixin.jpg)|![微信公众号](https://raw.githubusercontent.com/HealerJean123/HealerJean123.github.io/master/assets/img/my/qrcode_for_gh_a23c07a2da9e_258.jpg)|
+## 1.3、[工具类]([https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/3_%E5%B7%A5%E5%85%B7%E7%B1%BB](https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/3_工具类))
+
+## 1.4、[`Java`基础](https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/6_Java)
+
+## 1.5、[`JVM`](https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/8_Jvm)
+
+## 1.6、[`SpringBoot`](https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/7_SpringBoot)
+
+## 1.7、[数据库总结]([https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/12_%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9B%B8%E5%85%B3](https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/12_数据库相关))
+
+## 1.8、[`Demo`代码]([https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/4_Demo%E4%BB%A3%E7%A0%81](https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/4_Demo代码))
+
+
+
+
+
+![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
+
