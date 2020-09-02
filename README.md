@@ -12,7 +12,7 @@
 
 ## 1.1、[算法](https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/13_算法)
 
-## 1.2、[设计模式](https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/1_设计模式))
+## 1.2、[设计模式](https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/1_设计模式)
 
 ## 1.3、[工具类](https://github.com/HealerJean/HealerJean.github.io/tree/master/_posts/3_工具类)
 
