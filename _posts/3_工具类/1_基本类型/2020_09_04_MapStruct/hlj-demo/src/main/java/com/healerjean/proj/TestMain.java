@@ -30,11 +30,6 @@ public class TestMain {
     }
 
 
-    @Test
-    public void test2(){
-        SystemEmum.SexEnum to = SystemEmum.SexEnum.to(1);
-        System.out.println(to);
-    }
 
 
 }
