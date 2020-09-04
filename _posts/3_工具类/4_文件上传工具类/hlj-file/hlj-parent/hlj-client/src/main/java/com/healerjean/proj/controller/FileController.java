@@ -3,6 +3,7 @@ package com.healerjean.proj.controller;
 import com.healerjean.proj.common.exception.BusinessException;
 import com.healerjean.proj.common.exception.ParameterErrorException;
 import com.healerjean.proj.util.EmptyUtil;
+import com.healerjean.proj.util.FileUploadContentTypeFilterUtils;
 import com.healerjean.proj.util.file.ZipUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,9 +58,19 @@ public class FileController {
     @PostMapping(value = "upload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String upload(MultipartFile file) {
         log.info("文件管理--------文件上传--------请求参数{}", file);
+
+        try {
+            boolean flag = FileUploadContentTypeFilterUtils.checkContentType(file.getInputStream());
+            if (!flag) {
+                throw new ParameterErrorException("该文件类型不允许上传");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         //1、确定文件存储目录
         String javaIoTmpdir = System.getProperty("java.io.tmpdir");
-        File tempFile = new File(javaIoTmpdir);
+        File tempFile = new File("D:");
         if (!tempFile.exists()) {
             tempFile.mkdirs();
         }
@@ -167,7 +179,7 @@ public class FileController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = String.class)
     @GetMapping(value = "zipDownload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void zipDownload(HttpServletResponse response,  String fileDir) throws IOException {
+    public void zipDownload(HttpServletResponse response, String fileDir) throws IOException {
         log.info("文件管理--------zip文件下载--------请求参数{}", fileDir);
         File dirFile = new File(fileDir);
         if (!dirFile.exists()) {
@@ -209,7 +221,7 @@ public class FileController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = String.class)
     @GetMapping(value = "zipDownload2", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void zipDownload2(HttpServletResponse response,  String fileDir) {
+    public void zipDownload2(HttpServletResponse response, String fileDir) {
         log.info("文件管理--------zip文件下载2--------请求参数{}", fileDir);
         File dirFile = new File(fileDir);
         if (!dirFile.exists()) {
