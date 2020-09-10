@@ -497,10 +497,13 @@ public interface ProviderDubboService {
 dubbo.application.name=hlj-server-provider
 dubbo.protocols.name=dubbo
 dubbo.protocols.port=20880
+dubbo.application.qosEnable=true
 dubbo.application.qos-port=40880
+dubbo.application.qosAcceptForeignIp=false
 dubbo.registry.address=zookeeper://127.0.0.1:2181
 # 配置Dubbo缓存文件,这个文件会缓存：注册中心的列表，服务提供者列表，有了这项配置后，当应用重启过程中，Dubbo注册中心不可用时则应用会从这个缓存文件读取服务提供者列表的信息，进一步保证应用可靠性。
 dubbo.registry.file=/home/work/temp/dubbu_tmp/public-info
+
 ```
 
 
@@ -730,19 +733,6 @@ public class ServerProvider_2001_Application {
 ### dubbo  zookeeper
 ####################################
 dubbo.application.name=hlj-server-consumer
-dubbo.registry.address=zookeeper://127.0.0.1:2181
-dubbo.consumer.timeout=3000
-```
-
-
-
-### 1.4.3、`application.properties`
-
-```properties
-####################################
-### dubbo  zookeeper
-####################################
-dubbo.application.name=hlj-server-consumer
 dubbo.protocols.name=dubbo
 dubbo.protocols.port=20890
 dubbo.application.qosEnable=true
@@ -750,6 +740,17 @@ dubbo.application.qosPort=40890
 dubbo.application.qosAcceptForeignIp=false
 dubbo.registry.address=zookeeper://127.0.0.1:2181
 dubbo.consumer.timeout=3000
+
+```
+
+
+
+### 1.4.3、`application.properties`
+
+```properties
+spring.application.name=hlj-server-consumer
+server.port=3001
+spring.main.allow-bean-definition-overriding=true
 
 ```
 
@@ -857,11 +858,12 @@ http://custom.network.com:3001/api/consumer/connect?name=HealerJean
 dubbo.application.name=hlj-server-provider
 dubbo.protocols.name=dubbo
 dubbo.protocols.port=20881
+dubbo.application.qosEnable=true
 dubbo.application.qos-port=40881
+dubbo.application.qosAcceptForeignIp=false
 dubbo.registry.address=zookeeper://127.0.0.1:2181
 # 配置Dubbo缓存文件,这个文件会缓存：注册中心的列表，服务提供者列表，有了这项配置后，当应用重启过程中，Dubbo注册中心不可用时则应用会从这个缓存文件读取服务提供者列表的信息，进一步保证应用可靠性。
 dubbo.registry.file=/home/work/temp/dubbu_tmp/public-info
-
 ```
 
 
@@ -901,12 +903,12 @@ http://custom.network.com:3001/api/consumer/connect?name=HealerJean
 
 # 2、dubbo注解的使用
 
-## 2.1、`@Service`
+## 2.1、`@DubboService`
 
 > 服务提供者，接口实现需要配置该注解
 
 ```java
-@Service(version = "0.1", group = "inter_one")
+@DubboService(version = "0.1", group = "inter_one")
 ```
 
 | 属性    | 值     | 说明                                                         |
@@ -920,7 +922,6 @@ http://custom.network.com:3001/api/consumer/connect?name=HealerJean
 public interface ProviderDubboService {
 
     String connect(String name);
-
 }
 
 ```
@@ -929,7 +930,7 @@ public interface ProviderDubboService {
 
 ```java
 @Slf4j
-@Service(version = "0.1", group = "inter_one")
+@DubboService(version = "0.1", group = "inter_one")
 public class ProviderDubboServiceImpl implements ProviderDubboService {
 
     @Override
@@ -947,7 +948,7 @@ public class ProviderDubboServiceImpl implements ProviderDubboService {
 
 ```java
 @Slf4j
-@Service(version = "0.1", group = "inter_other")
+@DubboService(version = "0.1", group = "inter_other")
 public class ProviderDubboOtherServiceImpl implements ProviderDubboService {
 
     @Override
@@ -964,11 +965,7 @@ public class ProviderDubboOtherServiceImpl implements ProviderDubboService {
 
 
 
-
-
-## 2.2、`@Reference`
-
-
+## 2.2、`@DubboReference`
 
 | 属性    | 值     | 说明                                                         |
 | ------- | ------ | ------------------------------------------------------------ |
@@ -983,7 +980,7 @@ public class ProviderDubboOtherServiceImpl implements ProviderDubboService {
 public class ConsumerController extends BaseController {
 
     // moke （非业务异常） 服务接口调用失败Mock实现类名，该Mock类必须有一个无参构造函数，与Local的区别在于，Local总是被执行，而Mock只在出现非业务异常(比如超时，网络异常等)时执行，Local在远程调用之前执行，Mock在远程调用后执行。
-    @Reference(version = "0.1", group = "inter_one", mock = "com.healerjean.proj.service.impl.Apple")
+    @DubboReference(version = "0.1", group = "inter_one", mock = "com.healerjean.proj.service.impl.Apple")
     private ProviderDubboService providerDubboService;
 
     @GetMapping(value = "connect")
