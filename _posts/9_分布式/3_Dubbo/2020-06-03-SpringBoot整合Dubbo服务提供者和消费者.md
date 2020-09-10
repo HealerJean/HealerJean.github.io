@@ -32,7 +32,7 @@ description: SpringBoot整合Dubbo服务提供者和消费者
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.1.RELEASE</version>
+        <version>2.2.7.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -66,19 +66,71 @@ description: SpringBoot整合Dubbo服务提供者和消费者
         <!-- zookeeper 版本-->
         <zookeeper.version>3.4.10</zookeeper.version>
         <!-- dubbo 版本-->
-        <dubbo.version>0.2.0</dubbo.version>
-
+        <dubbo.version>2.7.7</dubbo.version>
+        <curator.version>4.2.0</curator.version>
+        <zookeeper.version>3.4.9</zookeeper.version>
+        <disruptor.version>3.3.6</disruptor.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
 
-            <!---dubbo-->
+            <!-- Dubbo -->
             <dependency>
-                <groupId>com.alibaba.boot</groupId>
-                <artifactId>dubbo-spring-boot-starter</artifactId>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo</artifactId>
                 <version>${dubbo.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-context</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>servlet-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-framework</artifactId>
+                <version>${curator.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.zookeeper</groupId>
+                        <artifactId>zookeeper</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-recipes</artifactId>
+                <version>${curator.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+                <version>${zookeeper.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-log4j12</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+
 
             <!--lombok版本太低了，不支持java10  升级版本：>= 1.18.0-->
             <dependency>
@@ -277,10 +329,12 @@ description: SpringBoot整合Dubbo服务提供者和消费者
 ```java
 package com.healerjean.proj.service;
 
+import com.healerjean.proj.dto.UserDTO;
+
 
 public interface ProviderDubboService {
 
-    String connect(String name);
+    UserDTO connect(String name);
 
 }
 
@@ -299,18 +353,22 @@ public interface ProviderDubboService {
 ### 1.3.1、pom依赖
 
 ```xml
-<parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.1.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
-</parent>
-
-<!---dubbo-->
+<!-- dubbo-->
 <dependency>
-    <groupId>com.alibaba.boot</groupId>
-    <artifactId>dubbo-spring-boot-starter</artifactId>
-<dubbo.version>0.2.0</dubbo.version>
+    <groupId>org.apache.dubbo</groupId>
+    <artifactId>dubbo</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.apache.curator</groupId>
+    <artifactId>curator-framework</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.apache.curator</groupId>
+    <artifactId>curator-recipes</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.apache.zookeeper</groupId>
+    <artifactId>zookeeper</artifactId>
 </dependency>
 ```
 
@@ -336,19 +394,48 @@ public interface ProviderDubboService {
 
     <dependencies>
 
-        <!-- starter-web -->
+        <!--web-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions><!-- 去掉默认配置 -->
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!--hlj-service-api-->
+        <!--hlj-api-->
         <dependency>
             <groupId>com.healerjean.proj</groupId>
-            <artifactId>hlj-service-api</artifactId>
+            <artifactId>hlj-api</artifactId>
             <version>${project.healerjean.version}</version>
         </dependency>
 
+        <!-- dubbo-->
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-framework</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+        </dependency>
+
+        <!-- aop 切面 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
 
         <!--swagger-->
         <dependency>
@@ -370,6 +457,18 @@ public interface ProviderDubboService {
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- 引入log4j2依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+        <!-- Log4j2 异步支持 -->
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+            <version>3.3.7</version>
         </dependency>
 
     </dependencies>
@@ -396,10 +495,12 @@ public interface ProviderDubboService {
 ## Dubbo 服务提供者配置
 ####################################
 dubbo.application.name=hlj-server-provider
+dubbo.protocols.name=dubbo
+dubbo.protocols.port=20880
+dubbo.application.qos-port=40880
 dubbo.registry.address=zookeeper://127.0.0.1:2181
-dubbo.protocol.name=dubbo
-dubbo.protocol.port=20880
-
+# 配置Dubbo缓存文件,这个文件会缓存：注册中心的列表，服务提供者列表，有了这项配置后，当应用重启过程中，Dubbo注册中心不可用时则应用会从这个缓存文件读取服务提供者列表的信息，进一步保证应用可靠性。
+dubbo.registry.file=/home/work/temp/dubbu_tmp/public-info
 ```
 
 
@@ -409,6 +510,7 @@ dubbo.protocol.port=20880
 ```properties
 spring.application.name=hlj-server-provider
 server.port=2001
+spring.main.allow-bean-definition-overriding=true
 
 ```
 
@@ -419,20 +521,25 @@ server.port=2001
 > 注意这里的 `@Service` 是`dubbo`提供的
 
 ```java
-import com.alibaba.dubbo.config.annotation.Service;
+package com.healerjean.proj.service;
+
+
+import com.healerjean.proj.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboService;
 
 @Slf4j
-@Service
+@DubboService
 public class ProviderDubboServiceImpl implements ProviderDubboService {
 
     @Override
-    public String connect(String name) {
-        log.info("消费者：【{} 】连接成功", name);
-        return name + "：连接成功";
+    public UserDTO connect(String name) {
+        log.info("消费者：ProviderDubboServiceImpl 【{} 】连接成功", name);
+        return  new UserDTO().setName(name).setId(1L).setDescription("连接成功");
     }
 
 }
+
 ```
 
 
@@ -483,7 +590,7 @@ public class ServerProvider_2001_Application {
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>hlj-server-provider-2001</artifactId>
+    <artifactId>hlj-server-consumer-3001</artifactId>
     <version>${project.healerjean.version}</version>
 
     <properties>
@@ -491,20 +598,75 @@ public class ServerProvider_2001_Application {
     </properties>
 
     <dependencies>
-
-        <!-- starter-web -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <!--hlj-service-api-->
+        <!--hlj-api-->
         <dependency>
             <groupId>com.healerjean.proj</groupId>
-            <artifactId>hlj-service-api</artifactId>
+            <artifactId>hlj-api</artifactId>
             <version>${project.healerjean.version}</version>
         </dependency>
 
+        <!--web-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions><!-- 去掉默认配置 -->
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+        <!-- dubbo-->
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-framework</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>${zookeeper.version}</version>
+        </dependency>
+
+        <!--hlj-common-->
+        <dependency>
+            <groupId>com.healerjean.proj</groupId>
+            <artifactId>hlj-common</artifactId>
+            <version>${project.healerjean.version}</version>
+        </dependency>
+
+        <!-- aop 切面 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- dubbo-->
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-framework</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+        </dependency>
 
         <!--swagger-->
         <dependency>
@@ -526,6 +688,22 @@ public class ServerProvider_2001_Application {
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- 引入log4j2依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+        <!-- Log4j2 异步支持 -->
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+            <version>3.3.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 
     </dependencies>
@@ -561,8 +739,17 @@ dubbo.consumer.timeout=3000
 ### 1.4.3、`application.properties`
 
 ```properties
-spring.application.name=hlj-server-consumer
-server.port=3001
+####################################
+### dubbo  zookeeper
+####################################
+dubbo.application.name=hlj-server-consumer
+dubbo.protocols.name=dubbo
+dubbo.protocols.port=20890
+dubbo.application.qosEnable=true
+dubbo.application.qosPort=40890
+dubbo.application.qosAcceptForeignIp=false
+dubbo.registry.address=zookeeper://127.0.0.1:2181
+dubbo.consumer.timeout=3000
 
 ```
 
@@ -599,16 +786,16 @@ public class ServerConsumer_3001_Application {
 ```java
 package com.healerjean.proj.controller;
 
-import com.alibaba.dubbo.config.annotation.Reference;
+import com.healerjean.proj.dto.UserDTO;
 import com.healerjean.proj.service.ProviderDubboService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 @Api(description = "服务消费者_3001_控制器")
 @RestController
@@ -616,7 +803,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class ConsumerController extends BaseController {
 
-    @Reference
+    @DubboReference
     private ProviderDubboService providerDubboService;
 
     @ApiOperation(value = "connect",
@@ -625,14 +812,88 @@ public class ConsumerController extends BaseController {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             response = String.class)
     @GetMapping(value = "connect")
-    public String connectProvider(String name) {
+    public UserDTO connectProvider(String name) {
         log.info("服务消费者控制器--------connect--------");
         return providerDubboService.connect(name);
     }
 
 }
 
+
 ```
+
+
+
+### 1.4.6、访问测试
+
+```http
+http://custom.network.com:3001/api/consumer/connect?name=HealerJean
+```
+
+接口返回：
+
+```json
+{
+  "id": 1,
+  "name": "HealerJean",
+  "description": "连接成功"
+}
+```
+
+
+
+
+
+## 1.5、服务提供者_2002
+
+> 复制一份2001 的代码，改变dubbo配置文件，如下   
+
+### 1.5.1、`dubbo.properties`
+
+```properties
+####################################
+## Dubbo 服务提供者配置
+####################################
+dubbo.application.name=hlj-server-provider
+dubbo.protocols.name=dubbo
+dubbo.protocols.port=20881
+dubbo.application.qos-port=40881
+dubbo.registry.address=zookeeper://127.0.0.1:2181
+# 配置Dubbo缓存文件,这个文件会缓存：注册中心的列表，服务提供者列表，有了这项配置后，当应用重启过程中，Dubbo注册中心不可用时则应用会从这个缓存文件读取服务提供者列表的信息，进一步保证应用可靠性。
+dubbo.registry.file=/home/work/temp/dubbu_tmp/public-info
+
+```
+
+
+
+### 1.5.2、`application.properties`
+
+```properties
+spring.application.name=hlj-server-provider
+server.port=2002
+spring.main.allow-bean-definition-overriding=true
+
+```
+
+
+
+### 1.5.3、启动测试
+
+> 服务提供者2001      
+>
+> 服务提供者2002      
+>
+> 服务消费者3001
+
+
+
+#### 1.5.3.1、访问接口
+
+```http
+http://custom.network.com:3001/api/consumer/connect?name=HealerJean
+```
+
+会发现一会打到了服务提供者2001，一会打到了服务提供者2002 ，负载成功  
 
 
 
