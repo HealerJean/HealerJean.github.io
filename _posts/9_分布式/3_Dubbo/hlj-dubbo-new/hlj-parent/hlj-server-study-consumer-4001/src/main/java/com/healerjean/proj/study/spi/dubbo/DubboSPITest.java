@@ -30,8 +30,10 @@ public class DubboSPITest {
     }
 
 
+
+
     /**
-     * 1、 @SPI注解中有value值，URL中没有具体的值
+     * 1、@SPI注解中有value值，URL中没有具体的值
      * 2、@SPI注解中有value值，URL中也有具体的值
      */
     @Test
