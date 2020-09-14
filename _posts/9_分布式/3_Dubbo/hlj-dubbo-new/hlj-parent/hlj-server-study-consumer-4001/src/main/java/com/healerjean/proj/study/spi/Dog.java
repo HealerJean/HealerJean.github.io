@@ -11,7 +11,7 @@ import org.apache.dubbo.common.extension.Activate;
  * @date 2020/6/24  18:41.
  * @Description
  */
-@Activate(group = "default_group", value = "valueAc")
+// @Activate(group = "default_group", value = "valueAc")
 @Slf4j
 public class Dog implements Animal {
 
