@@ -32,13 +32,13 @@ public class JsonInterceptor {
      * ObjectMapper
      */
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     static {
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
 
     /**
-     *
      * @param point
      * @return
      * @throws Throwable
@@ -61,33 +61,34 @@ public class JsonInterceptor {
             jsonSerializer.filter(json.type(), json.include(), json.filter());
 
             //如果包装类是ResponBean
-            if(ResponseBean.class.getName().equals(  object.getClass().getName())){ //如果返回类型是ResponseBean
-                ResponseBean responseBean = (ResponseBean)object;
-                 String innerJsonStr = jsonSerializer.toJson(responseBean.getResult());
-                 Object jsonT = new JSONTokener(innerJsonStr).nextValue();
+            if (ResponseBean.class.getName().equals(object.getClass().getName())) { //如果返回类型是ResponseBean
+                ResponseBean responseBean = (ResponseBean) object;
+                String innerJsonStr = jsonSerializer.toJson(responseBean.getResult());
+                Object jsonT = new JSONTokener(innerJsonStr).nextValue();
 
-                if(jsonT instanceof JSONObject){
-                       responseBean.setResult (OBJECT_MAPPER.readValue(innerJsonStr, json.type()));
-                }else if (jsonT instanceof JSONArray) {
-                       responseBean.setResult (OBJECT_MAPPER.readValue(innerJsonStr, new TypeReference<List>() { } ));
+                if (jsonT instanceof JSONObject) {
+                    responseBean.setResult(OBJECT_MAPPER.readValue(innerJsonStr, json.type()));
+                } else if (jsonT instanceof JSONArray) {
+                    responseBean.setResult(OBJECT_MAPPER.readValue(innerJsonStr, new TypeReference<List>() {
+                    }));
                 }
-                return  responseBean ;
+                return responseBean;
             }
 
             //没有包装类
             String resultJson = jsonSerializer.toJson(object);
             Object jsonT = new JSONTokener(resultJson).nextValue();
-            if(jsonT instanceof JSONObject){
+            if (jsonT instanceof JSONObject) {
                 return OBJECT_MAPPER.readValue(resultJson, json.type());
-            }else if (jsonT instanceof JSONArray) {
-                return OBJECT_MAPPER.readValue(resultJson, new TypeReference<List>() { } );
+            } else if (jsonT instanceof JSONArray) {
+                return OBJECT_MAPPER.readValue(resultJson, new TypeReference<List>() {
+                });
             }
-            return   object;
+            return object;
         } catch (Exception e) {
             throw e;
         }
     }
-
 
 
 }
