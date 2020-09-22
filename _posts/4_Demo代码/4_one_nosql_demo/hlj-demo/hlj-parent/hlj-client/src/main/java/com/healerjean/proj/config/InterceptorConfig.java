@@ -39,9 +39,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(urlInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/develop/swagger/**");
-
-        registry.addInterceptor(new Log42jInterceptor())
-                .addPathPatterns("/**");
     }
 
 

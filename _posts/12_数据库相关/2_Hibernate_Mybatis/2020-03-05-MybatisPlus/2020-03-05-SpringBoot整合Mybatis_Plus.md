@@ -520,6 +520,17 @@ select(i -> i.getProperty().startsWith("test"))
 
 
 
+```java
+QueryWrapper<SysDistrict> queryWrapper = new QueryWrapper();
+queryWrapper.select("distinct province_code, province_name")
+    .lambda()
+    .eq(SysDistrict::getProvinceCode, provinceCode)
+    .eq(SysDistrict::getStatus, StatusEnum.EFFECT.getCode());
+SysDistrict sysDistrict = publicSysDistrictDao.selectOne(queryWrapper);
+```
+
+
+
 ## 2.2、`UpdateWrapper、LambdaUpdateChainWrapper`
 
 
