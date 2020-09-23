@@ -22,7 +22,6 @@ Ubuntu安装Nginx很简单的
 
 ```
 sudo apt-get install nginx
-
 ```
 
 ## 2、配置文件位置
