@@ -1369,6 +1369,17 @@ public void sort() {
     Arrays.sort(nums, (o1, o2) -> o1[0] - o2[0]);
     Arrays.sort(nums, Comparator.comparingInt(o -> o[0]));
 
+
+    //对象中子母排序
+    List<SortEntry> sortEntries2 = new ArrayList<>();
+    sortEntries2.add(new SortEntry("c"));
+    sortEntries2.add(new SortEntry("a"));
+    sortEntries2.add(new SortEntry("d"));
+    sortEntries2.add(new SortEntry("A"));
+    sortEntries2.add(new SortEntry("b"));
+    // sortEntries2 = sortEntries2.stream().sorted(Comparator.comparing(sortEntry -> sortEntry.getName())).collect(Collectors.toList());
+    Collections.sort(sortEntries2, Comparator.comparing(sortEntry -> sortEntry.getName()));
+    System.out.println(sortEntries2);
 }
 
 ```
