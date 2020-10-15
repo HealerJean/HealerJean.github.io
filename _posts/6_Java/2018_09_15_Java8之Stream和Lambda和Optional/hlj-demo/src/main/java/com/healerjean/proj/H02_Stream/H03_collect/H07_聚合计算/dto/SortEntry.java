@@ -13,9 +13,14 @@ public class SortEntry {
 
     private Integer age ;
     private Integer score;
+    private String name ;
 
     public SortEntry(Integer age, Integer score) {
         this.age = age;
         this.score = score;
+    }
+
+    public SortEntry( String name) {
+        this.name = name;
     }
 }
