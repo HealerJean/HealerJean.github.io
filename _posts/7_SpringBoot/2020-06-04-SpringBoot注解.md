@@ -1420,7 +1420,13 @@ public class DemoProperties {
 
 
 
+## 24、@DependsOn
 
+> 如果需要指定一个Bean A 先于 Bean B加载，那么可以在Bean B类前加入@DependsOn("beanA")，指定依赖加载顺序。
+
+```
+
+```
 
 
 

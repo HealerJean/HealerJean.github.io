@@ -219,8 +219,21 @@ public class D01_FieldMain {
             log.error("对象赋值失败", ex);
             throw new BusinessException("处理失败");
         }
-
     }
 
+
+    @Test
+    public void oebjectGetField() {
+        ReflectDTO obj = new ReflectDTO();
+        obj.setPrivateId(0L);
+        obj.setPrivateName("");
+        obj.setPrivateAge(0);
+
+        Field[] fields = obj.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            System.out.println(field.getName());
+        }
+    }
 
 }
