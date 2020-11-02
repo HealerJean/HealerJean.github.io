@@ -1,0 +1,3 @@
+adaptiveAnimal = com.healerjean.proj.study.spi.d02_dubbo.api.impl.AdaptiveAnimal
+cat = com.healerjean.proj.study.spi.d02_dubbo.api.impl.Cat
+dog = com.healerjean.proj.study.spi.d02_dubbo.api.impl.Dog
