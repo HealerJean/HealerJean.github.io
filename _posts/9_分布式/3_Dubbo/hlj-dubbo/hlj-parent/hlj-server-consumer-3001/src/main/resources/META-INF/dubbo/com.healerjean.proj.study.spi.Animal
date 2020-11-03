@@ -1,3 +1,0 @@
-cat = com.healerjean.proj.study.spi.Cat
-dog = com.healerjean.proj.study.spi.Dog
-adaptiveAnimal = com.healerjean.proj.study.spi.AdaptiveAnimal
