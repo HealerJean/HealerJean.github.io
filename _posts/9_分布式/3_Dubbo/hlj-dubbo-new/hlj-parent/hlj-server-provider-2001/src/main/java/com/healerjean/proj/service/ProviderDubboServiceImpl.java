@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 
 @Slf4j
-@DubboService
+@DubboService(version = "0.1", group = "healerjean")
 public class ProviderDubboServiceImpl implements ProviderDubboService {
 
     @Override
