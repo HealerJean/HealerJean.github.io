@@ -10,9 +10,4 @@ public interface Animal {
     @Adaptive(value = {"aname", "bname"})
     void call(String msg, URL url);
 
-    @Adaptive(value = {"a", "b"})
-    void call2(String msg, URL url);
-
-    void call3(String msg);
-
 }

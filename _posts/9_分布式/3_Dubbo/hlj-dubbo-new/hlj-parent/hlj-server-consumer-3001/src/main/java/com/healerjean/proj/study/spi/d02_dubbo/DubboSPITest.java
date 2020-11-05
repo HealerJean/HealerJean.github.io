@@ -28,9 +28,7 @@ public class DubboSPITest {
         log.info("----------------------------");
 
         Animal cat = extensionLoader.getExtension("dog");
-
         Animal adaptiveAnimal = extensionLoader.getExtension("adaptiveAnimal");
-
     }
 
 
@@ -111,3 +109,4 @@ public class DubboSPITest {
 
 
 }
+
