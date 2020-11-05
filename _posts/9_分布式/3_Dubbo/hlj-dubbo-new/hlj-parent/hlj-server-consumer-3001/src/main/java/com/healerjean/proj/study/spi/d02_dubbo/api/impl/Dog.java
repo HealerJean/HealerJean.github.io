@@ -15,18 +15,4 @@ public class Dog implements Animal {
         log.info("我是狗： {},", msg);
     }
 
-    @Override
-    public void call2(String msg, URL url) {
-
-    }
-
-    private Animal animal;
-    public void setHea(Animal animal){
-        this.animal = animal;
-    }
-
-    @Override
-    public void call3(String msg) {
-
-    }
 }

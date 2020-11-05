@@ -13,13 +13,5 @@ public class Cat implements Animal {
         log.info("我是猫： {}", msg);
     }
 
-    @Override
-    public void call2(String msg, URL url) {
 
-    }
-
-    @Override
-    public void call3(String msg) {
-
-    }
 }
