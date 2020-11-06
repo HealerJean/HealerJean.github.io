@@ -1,3 +1,0 @@
-ProviderRpcTraceFilter=com.healerjean.proj.config.dubbo.filter.ProviderRpcTraceFilter
-ProviderExceptionFilter=com.healerjean.proj.config.dubbo.filter.ProviderExceptionFilter
-

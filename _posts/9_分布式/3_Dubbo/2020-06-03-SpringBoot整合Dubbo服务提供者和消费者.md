@@ -898,7 +898,7 @@ http://custom.network.com:3001/api/consumer/connect?name=HealerJean
 会发现一会打到了服务提供者2001，一会打到了服务提供者2002 ，负载成功  
 
 
-
+    
 
 
 # 2、dubbo注解的使用
