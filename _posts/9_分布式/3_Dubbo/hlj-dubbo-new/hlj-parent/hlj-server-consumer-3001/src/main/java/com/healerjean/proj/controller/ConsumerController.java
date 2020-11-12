@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class ConsumerController extends BaseController {
 
-    @DubboReference
+    @DubboReference(version = "0.1", group = "healerjean")
     private ProviderDubboService providerDubboService;
 
     @ApiOperation(value = "connect",
