@@ -766,7 +766,7 @@ protected ServletWebServerFactory getWebServerFactory() {
 
 ## 4.1、`ServletRegistrationBean`、`FilterRegistrationBean`、`ServletListenerRegistrationBean`
 
-> 我们发现`RegistrationBean` 实现了`ServletContextInitializer`这个接口，并且有一个`onStartup`方法，`ServletRegistrationBean`、`FilterRegistrationBean`、S`ervletListenerRegistrationBean`都实现了**onStartup方法。 **     
+> 我们发现`RegistrationBean` 实现了`ServletContextInitializer`这个接口，并且有一个`onStartup`方法，`ServletRegistrationBean`、`FilterRegistrationBean`、`ServletListenerRegistrationBean`都实现了**onStartup方法。 **     
 >
 > `ServletContextInitializer`是 Servlet 容器初始化的时候，提供的初始化接口。所以，Servlet 容器初始化会获取并触发所有的`FilterRegistrationBean`、`FilterRegistrationBean`、`ServletListenerRegistrationBean`实例中`onStartup方法`
 
@@ -1041,7 +1041,7 @@ private void createWebServer() {
 
 
 
-![image-20200623145102076](D:\study\HealerJean.github.io\blogImages\image-20200623145102076.png)
+![image-20200623145102076](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200623145102076.png)
 
 
 
@@ -1106,13 +1106,13 @@ public class ServletContextInitializerBeans extends AbstractCollection<ServletCo
 
 
 
-![image-20200623144849444](D:\study\HealerJean.github.io\blogImages\image-20200623144849444.png)
+![image-20200623144849444](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200623144849444.png)
 
 
 
 
 
-![image-20200623145003700](D:\study\HealerJean.github.io\blogImages\image-20200623145003700.png)
+![image-20200623145003700](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200623145003700.png)
 
 
 
@@ -1189,7 +1189,7 @@ private void addServletContextInitializerBean(Class<?> type, String beanName, Se
 
 
 
-![image-20200623144309405](D:\study\HealerJean.github.io\blogImages\image-20200623144309405.png)
+![image-20200623144309405](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200623144309405.png)
 
 
 
@@ -1372,13 +1372,13 @@ public abstract class RegistrationBean implements ServletContextInitializer, Ord
 
 
 
-![image-20200623160656369](D:\study\HealerJean.github.io\blogImages\image-20200623160656369.png)
+![image-20200623160656369](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200623160656369.png)
 
 
 
 #### 4.2.2.1、`servletContext`容器中添加Servlet
 
-![image-20200623161024674](D:\study\HealerJean.github.io\blogImages\image-20200623161024674.png)
+![image-20200623161024674](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200623161024674.png)
 
 ```java
 @Override
@@ -1394,7 +1394,7 @@ protected final void register(String description, ServletContext servletContext)
 
 
 
-![image-20200623161059002](D:\study\HealerJean.github.io\blogImages\image-20200623161059002.png)
+![image-20200623161059002](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200623161059002.png)
 
 
 
@@ -1416,7 +1416,7 @@ protected ServletRegistration.Dynamic addRegistration(String description, Servle
 
 
 
-![image-20200623161207609](D:\study\HealerJean.github.io\blogImages\image-20200623161207609.png)
+![image-20200623161207609](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200623161207609.png)
 
 
 
@@ -1432,7 +1432,7 @@ protected final void register(String description, ServletContext servletContext)
 }
 ```
 
-![image-20200623161309361](D:\study\HealerJean.github.io\blogImages\image-20200623161309361.png)
+![image-20200623161309361](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200623161309361.png)
 
 
 
@@ -1454,7 +1454,7 @@ protected Dynamic addRegistration(String description, ServletContext servletCont
 
 #### 4.2.2.3、Servlet容器中添加`addListener`
 
-![image-20200623161355168](D:\study\HealerJean.github.io\blogImages\image-20200623161355168.png)
+![image-20200623161355168](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200623161355168.png)
 
 
 
@@ -1474,9 +1474,9 @@ protected void register(String description, ServletContext servletContext) {
 
 
 
-### 4.2.3、DispatcherServletAutoConfiguration
+### 4.2.3、`DispatcherServletAutoConfiguration`
 
-> Spring Boot在自动配置SpringMVC的时候，会自动注册SpringMVC前端控制器：**DispatcherServlet**，该控制器主要在**DispatcherServletAutoConfiguration**自动配置类中进行注册的。DispatcherServlet是SpringMVC中的核心分发器。DispatcherServletAutoConfiguration也在spring.factories中配置了    
+> Spring Boot在自动配置SpringMVC的时候，会自动注册SpringMVC前端控制器：**DispatcherServlet**，该控制器主要在**`DispatcherServletAutoConfiguration`**自动配置类中进行注册的。DispatcherServlet是SpringMVC中的核心分发器。DispatcherServletAutoConfiguration也在spring.factories中配置了    
 
 
 
@@ -1486,7 +1486,7 @@ protected void register(String description, ServletContext servletContext) {
 
 
 
-![image-20200623162302716](D:\study\HealerJean.github.io\blogImages\image-20200623162302716.png)
+![image-20200623162302716](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200623162302716.png)
 
 
 
