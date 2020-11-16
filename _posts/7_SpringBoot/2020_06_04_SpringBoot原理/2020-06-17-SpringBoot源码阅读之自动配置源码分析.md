@@ -1,11 +1,11 @@
 ---
-title: SpringBoot中自动配置源码分析
+title: SpringBoot源码阅读之自动配置源码分析
 date: 2020-02-20 03:33:00
 tags: 
 - SpringBoot
 category: 
 - SpringBoot
-description: SpringBoot中自动配置源码分析
+description: SpringBoot源码阅读之自动配置源码分析
 ---
 
 **前言**     
@@ -19,7 +19,7 @@ description: SpringBoot中自动配置源码分析
 # 1、SpringBoot启动类加载
 
 > 首先加载`springBoot`启动类注入到`spring`容器中`beanDefinitionMap`中，看下`prepareContext`方法中的`load`方法：`load(context, sources.toArray(new Object[0]));`
-> 跟进该方法最终会执行BeanDefinitionLoader的load方法：   
+> 跟进该方法最终会执行`BeanDefinitionLoader`的load方法：   
 
 
 
@@ -317,7 +317,7 @@ private <T> void doRegisterBean(Class<T> beanClass, @Nullable String name,
 
 
 
-![image-20200617192512795](D:\study\HealerJean.github.io\blogImages\image-20200617192512795.png)
+![image-20200617192512795](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200617192512795.png)
 
 
 
@@ -325,7 +325,7 @@ private <T> void doRegisterBean(Class<T> beanClass, @Nullable String name,
 
 
 
-# 2、SpringBoot中EnableAutuConfiguration注解的原理以及使用
+# 2、SpringBoot中`EnableAutuConfiguration`注解的原理以及使用
 
 ## 2.1、原理 
 
@@ -345,13 +345,13 @@ public class SpringBoot_Application {
 
 > @SpringBootApplication 由求他3个注解组成，分别是    
 >
-> 1、`@SpringBootConfiguration`：@SpringBootConfiguration 是继承自Spring的 @Configuration 注解  
+> 1、`@SpringBootConfiguration`：`@SpringBootConfiguration `是继承自`Spring`的 `@Configuration` 注解  
 >
-> 2、`@ComponentScan`：自动扫描 springBootApplication 同级别所在类（使用@Component @Service @Repository @Controller注释的类 ）     
+> 2、`@ComponentScan`：自动扫描 `springBootApplication` 同级别所在类（使用@Component @Service @Repository @Controller注释的类 ）     
 >
 > **3、`@EnableAutoConfiguration`：顾名思义，开启Spring Boot的自动配置功能 ，什么是自动配置功能呢？简单点说就是通知SpringBoot根据依赖中的jar包，自动选择实例化某些配置。**
->
-> 
+
+
 
 ```java
 @Target(ElementType.TYPE)
@@ -394,7 +394,7 @@ public @interface EnableAutoConfiguration {
 
 
 
-#### 2.1.2.1、@AutoConfigurationPackage    
+#### 2.1.2.1、`@AutoConfigurationPackage `  
 
 >  自动配置包，将`SpringBootApplication`主配置类所在包以及子包的所有子类扫描到`spring`容器
 
@@ -408,7 +408,7 @@ public @interface AutoConfigurationPackage {
 
 
 
-#### 2.1.2.2、@Import(AutoConfigurationImportSelector.class)
+#### 2.1.2.2、`@Import(AutoConfigurationImportSelector.class)`
 
 > 借助`AutoConfigurationImportSelector`，`@EnableAutoConfiguration`可以帮助SpringBoot应用将所有符合条件的`@Configuration`配置都加载到当前SpringBoot创建并使用的IoC容器。   
 >
@@ -551,23 +551,32 @@ static class Registrar implements ImportBeanDefinitionRegistrar, DeterminableImp
 
 
 ```java
+@Override
+public String[] selectImports(AnnotationMetadata annotationMetadata) {
+  if (!isEnabled(annotationMetadata)) {
+    return NO_IMPORTS;
+  }
+  AutoConfigurationEntry autoConfigurationEntry = getAutoConfigurationEntry(annotationMetadata);
+  return StringUtils.toStringArray(autoConfigurationEntry.getConfigurations());
+}
+
+
+
 protected AutoConfigurationEntry getAutoConfigurationEntry(AnnotationMetadata annotationMetadata) {
-    //支持自动配置 
-    if (!isEnabled(annotationMetadata)) {
-        return EMPTY_ENTRY;
-    }
-    //
-    AnnotationAttributes attributes = getAttributes(annotationMetadata);
-    //重点在这里，找出所有的配置文件名
-    List<String> configurations = getCandidateConfigurations(annotationMetadata, attributes);
-    //去除重复的
-    configurations = removeDuplicates(configurations);
-    Set<String> exclusions = getExclusions(annotationMetadata, attributes);
-    checkExcludedClasses(configurations, exclusions);
-    configurations.removeAll(exclusions);
-    configurations = getConfigurationClassFilter().filter(configurations);
-    fireAutoConfigurationImportEvents(configurations, exclusions);
-    return new AutoConfigurationEntry(configurations, exclusions);
+  //支持自动配置 
+  if (!isEnabled(annotationMetadata)) {
+    return EMPTY_ENTRY;
+  }
+  // = getAttributes(annotationMetadata);
+  //重点在这里，找出所有的配置文件名
+  List<String> configurations = getCandidateConfigurations(annotationMetadata, attributes);
+  //去除重复的 = removeDuplicates(configurations);
+  Set<String> exclusions = getExclusions(annotationMetadata, attributes);
+  checkExcludedClasses(configurations, exclusions);
+  configurations.removeAll(exclusions);
+  configurations = getConfigurationClassFilter().filter(configurations);
+  fireAutoConfigurationImportEvents(configurations, exclusions);
+  return new AutoConfigurationEntry(configurations, exclusions);
 }
 ```
 
@@ -675,7 +684,7 @@ private static Map<String, List<String>> loadSpringFactories(@Nullable ClassLoad
 
 ```
 
-![image-20200611162525077](D:\study\HealerJean.github.io\blogImages\image-20200611162525077.png)
+![image-20200611162525077](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200611162525077.png)
 
 
 

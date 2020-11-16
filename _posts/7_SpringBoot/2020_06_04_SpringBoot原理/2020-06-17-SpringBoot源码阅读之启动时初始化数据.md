@@ -1,11 +1,11 @@
 ---
-title: SpringBoot启动时初始化数据
+title: SpringBoot源码阅读之启动时初始化数据
 date: 2020-06-17 03:33:00
 tags: 
 - SpringBoot
 category: 
 - SpringBoot
-description: SpringBoot启动时初始化数据
+description: SpringBoot源码阅读之启动时初始化数据
 ---
 
 **前言**     
