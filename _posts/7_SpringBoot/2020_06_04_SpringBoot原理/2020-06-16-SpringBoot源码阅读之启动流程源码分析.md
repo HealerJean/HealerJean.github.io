@@ -1,11 +1,11 @@
 ---
-title: SpringBoot启动流程源码分析
+title: SpringBoot源码阅读之启动流程源码分析
 date: 2020-06-17 03:33:00
 tags: 
 - SpringBoot
 category: 
 - SpringBoot
-description: SpringBoot启动流程源码分析
+description: SpringBoot源码阅读之启动流程源码分析
 ---
 
 # 前言
@@ -22,7 +22,7 @@ description: SpringBoot启动流程源码分析
 
 **1，BeanFactory**     
 
-> `Bean工厂BeanFactory`是`Spring`框架最核心的接口，它提供了`IoC`的配置机制。它的一个实现`DefaultListableBeanFactory`在上下文中持有，也就是我们常说的IOC容器，
+> `Bean`工厂`BeanFactory`是`Spring`框架最核心的接口，它提供了`IoC`的配置机制。它的一个实现`DefaultListableBeanFactory`在上下文中持有，也就是我们常说的IOC容器，
 
 **2，ApplicationContext**    
 
@@ -32,7 +32,7 @@ description: SpringBoot启动流程源码分析
 
 **应用上下文可以理解成IoC容器的高级表现形式，应用上下文确实是在IoC容器的基础上丰富了一些高级功能**。     
 
-**应用上下文对IoC容器是持有的关系。他的一个属性beanFactory就是IoC容器（DefaultListableBeanFactory）。所以他们之间是持有，和扩展的关系**。
+**应用上下文对IoC容器是持有的关系。他的一个属性`beanFactory`就是IoC容器（`DefaultListableBeanFactory`）。所以他们之间是持有，和扩展的关系**。
 
 
 
@@ -52,7 +52,7 @@ description: SpringBoot启动流程源码分析
 
 
 
-![image-20200629181002029](D:\study\HealerJean.github.io\blogImages\image-20200629181002029.png)
+![image-20200629181002029](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200629181002029.png)
 
 
 
@@ -173,7 +173,7 @@ public enum WebApplicationType {
         "org.springframework.boot.web.reactive.context.ReactiveWebApplicationContext";
 
     
-     //这里主要是通过类加载器判断REACTIVE相关的Class是否存在，如果不存在，则web环境即为SERVLET类型。
+     //这里主要是通过类路径（类加载器）判断REACTIVE相关的Class是否存在，如果不存在，则web环境即为SERVLET类型。
     //这里设置好web环境类型，在后面会根据类型初始化对应环境。
 	static WebApplicationType deduceFromClasspath() {
 		if (ClassUtils.isPresent(WEBFLUX_INDICATOR_CLASS, null) && !ClassUtils.isPresent(WEBMVC_INDICATOR_CLASS, null)
@@ -248,7 +248,7 @@ private <T> Collection<T> getSpringFactoriesInstances(Class<T> type) {
 
 private <T> Collection<T> getSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes, Object... args) {
     ClassLoader classLoader = getClassLoader();
-    //这里面首先会根据入参type读取所有的names(是一个String集合)，然后根据这个集合来完成对应的实例化操作：
+    //这里面首先会根据入参type读取所有的names(是一个String集合)，然后根据这个集合来完成对应的实例化操作： 工厂加载机制
     Set<String> names = new LinkedHashSet<>(SpringFactoriesLoader.loadFactoryNames(type, classLoader));
     
     //根据names来进行实例化(parameterTypes 构造器的参数类型，args，构造器需要的参数，name对象的名称集合)
@@ -565,7 +565,7 @@ private SpringApplicationRunListeners getRunListeners(String[] args) {
 
 
 
-**这里仍然利用了`getSpringFactoriesInstances`方法来获取实例，大家可以看看前面的这个方法分析，从META-INF/spring.factories中读取Key为`org.springframework.boot.SpringApplicationRunListener`的Values：**     
+**这里仍然利用了`getSpringFactoriesInstances`方法来获取实例，大家可以看看前面的这个方法分析，从`META-INF/spring.factories`中读取Key为`org.springframework.boot.SpringApplicationRunListener`的Values：**     
 
 ```java
 private <T> Collection<T> getSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes, Object... args) {
@@ -1056,7 +1056,7 @@ org.springframework.boot.env.SystemEnvironmentPropertySourceEnvironmentPostProce
 
 ​     
 
-![image-20200727154002641](D:\study\HealerJean.github.io\blogImages\image-20200727154002641.png)
+![image-20200727154002641](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200727154002641.png)
 
 
 
@@ -1369,8 +1369,10 @@ private void prepareContext(ConfigurableApplicationContext context,
 
     //获取工厂，其实就是我们的ioc容器，DefaultListableBeanFactory
     ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
+  
     //将main函数中的args参数封装成单例Bean，注册进容器
     beanFactory.registerSingleton("springApplicationArguments", applicationArguments);
+  
     //将 printedBanner 也封装成单例，注册进容器
     if (printedBanner != null) {
         beanFactory.registerSingleton("springBootBanner", printedBanner);
@@ -1515,7 +1517,7 @@ private BeanDefinitionRegistry getBeanDefinitionRegistry(ApplicationContext cont
 }
 ```
 
-![image-20200630103829884](D:\study\HealerJean.github.io\blogImages\image-20200630103829884.png)
+![image-20200630103829884](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200630103829884.png)
 
 
 
@@ -1731,13 +1733,13 @@ public abstract class BeanDefinitionReaderUtils {
 
 
 
-![image-20200630141505260](D:\study\HealerJean.github.io\blogImages\image-20200630141505260.png)
+![image-20200630141505260](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200630141505260.png)
 
 
 
 
 
-![image-20200630142341487](D:\study\HealerJean.github.io\blogImages\image-20200630142341487.png)
+![image-20200630142341487](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200630142341487.png)
 
 
 
@@ -1856,10 +1858,6 @@ public void registerBeanDefinition(String beanName, BeanDefinition beanDefinitio
 
 }
 ```
-
-
-
-
 
 
 
@@ -2297,7 +2295,7 @@ class ConfigurationClassParser {
 
 ```
 
-![image-20200702170935072](D:\study\HealerJean.github.io\blogImages\image-20200702170935072.png)
+![image-20200702170935072](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200702170935072.png)
 
 
 
@@ -2468,7 +2466,7 @@ private void processMemberClasses(ConfigurationClass configClass, SourceClass so
 }
 ```
 
-![image-20200702180017842](D:\study\HealerJean.github.io\blogImages\image-20200702180017842.png)
+![image-20200702180017842](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200702180017842.png)
 
 
 
@@ -2512,7 +2510,7 @@ public Set<BeanDefinitionHolder> parse(AnnotationAttributes componentScan, final
 
 
 
-![image-20200708165850704](D:\study\HealerJean.github.io\blogImages\image-20200708165850704.png)
+![image-20200708165850704](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200708165850704.png)
 
 
 
@@ -2567,7 +2565,7 @@ protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
 }
 ```
 
-![image-20200708170346720](D:\study\HealerJean.github.io\blogImages\image-20200708170346720.png)
+![image-20200708170346720](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200708170346720.png)
 
 
 
@@ -2648,11 +2646,11 @@ private Set<BeanDefinition> scanCandidateComponents(String basePackage) {
 
 
 
-![image-20200708170637293](D:\study\HealerJean.github.io\blogImages\image-20200708170637293.png)
+![image-20200708170637293](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200708170637293.png)
 
 
 
-![image-20200708170903281](D:\study\HealerJean.github.io\blogImages\image-20200708170903281.png)
+![image-20200708170903281](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200708170903281.png)
 
 
 
@@ -2701,7 +2699,7 @@ private Set<SourceClass> getImports(SourceClass sourceClass) throws IOException 
 
 
 
-![image-20200708174218646](D:\study\HealerJean.github.io\blogImages\image-20200708174218646.png)
+![image-20200708174218646](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200708174218646.png)
 
 
 
@@ -2893,3 +2891,5 @@ catch (Throwable ex) {
     });
     gitalk.render('gitalk-container');
 </script> 
+
+
