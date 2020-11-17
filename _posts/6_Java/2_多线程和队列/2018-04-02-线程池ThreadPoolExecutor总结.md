@@ -186,7 +186,7 @@ public class ThreadPoolUtils {
 
 ### 1.1.5、`BlockingQueue workQueue`：该线程池中的任务队列：维护着等待执行的Runnable对象
 
-> 当所有的核心线程都在干活时，新添加的任务会被添加到这个队列中等待处理，如果队列满了，则新建非核心线程执行任务。 常用的`workQueue`类型：
+> > 当所有的核心线程都在干活时，新添加的任务会被添加到这个队列中等待处理，如果队列满了，则新建非核心线程执行任务。 常用的`workQueue`类型：
 
 
 
@@ -298,6 +298,8 @@ public ThreadPoolExecutor(int corePoolSize,
 
 
 
+
+
 ## 2.2、`ExecutorService`中`execute()`和`submit()`方法的区别
 
 > 1. 方法`execute()`没有返回值，而`submit()`方法可以有返回值（通过Callable和Future接口）    
@@ -402,8 +404,8 @@ public class NewCachedThreadPooltest {
 > 创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。   
 >
 > `newSingleThreadExecutor`将`corePoolSize`和`maximumPoolSize`都设置为1，队列为`LinkedBlockingQueue`；
->
-> 
+
+
 
 
 
@@ -442,6 +444,8 @@ while(true){
 
 
 
+
+
 ## 2.3、`shutdown()`、`shutdownNow()`、``awaitTerminate(long timeout,TimeUnit unit)`
 
 
@@ -472,7 +476,7 @@ while(true){
 
 **问：如何阻止新来的任务提交**    
 
-答：通过将线程池的状态改成STOP，当再将执行execute提交任务时，如果测试到状态不为`RUNNING`，则抛出`rejectedExecution`，从而达到阻止新任务提交的目的.<font color="red">（如果为RUNNING,这个线程没有抛出异常类型的阻塞，则继续阻塞，阻塞请看下个问题）</font>           
+答：通过将线程池的状态改成`STOP`，当再将执行execute提交任务时，如果测试到状态不为`RUNNING`，则抛出`rejectedExecution`，从而达到阻止新任务提交的目的.<font color="red">（如果为RUNNING,这个线程没有抛出异常类型的阻塞，则继续阻塞，阻塞请看下个问题）</font>           
 
 
 
@@ -529,7 +533,7 @@ public static void main(String[] args) {
 
 > 一般来说，线程执行完毕会自动结束，无需手动关闭     
 >
-> 线程提供给了一个Stop方法，可以即使终止一个线程，但是会发现stop已经被弃用了。Thread.stop()方法在结束线程的时候，会直接终止线程，这个线程就会立即释放掉所有的锁，而这些锁恰恰是用来维护对象的一致性的，如果此时写到了一半，强行中止，那么对象就会被破坏，或者线程可能在操作数据库，强⾏中断导致数据不一致，从而混乱的问题。所以现在不使用了
+> 线程提供给了一个·`Stop`方法，可以即使终止一个线程，但是会发现stop已经被弃用了。Thread.stop()方法在结束线程的时候，会直接终止线程，这个线程就会立即释放掉所有的锁，而这些锁恰恰是用来维护对象的一致性的，如果此时写到了一半，强行中止，那么对象就会被破坏，或者线程可能在操作数据库，强⾏中断导致数据不一致，从而混乱的问题。所以现在不使用了
 
 
 
@@ -549,7 +553,7 @@ public static void main(String[] args) {
 
 #### 2.5.2.2、`shuwdownnow()`关闭
 
-所以当我们使用`shutdownNow`方法关闭线程池时，一定要对任务里进行异常捕获（相当于线程中断）。或者线程中断的判断(当然如果上面出现了非抛出异常类型的阻塞，也会一直阻塞下去)     
+**所以当我们使用`shutdownNow`方法关闭线程池时，一定要对任务里进行异常捕获（相当于线程中断）。或者线程中断的判断(当然如果上面出现了非抛出异常类型的阻塞，也会一直阻塞下去)**     
 
 
 
@@ -938,7 +942,6 @@ public class CountDownLatchDemo implements Runnable {
         executorService.shutdown();
     }
 }
-
 ```
 
 
