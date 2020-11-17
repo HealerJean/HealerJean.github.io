@@ -6,6 +6,7 @@ tags:
 category: 
 - DesignPattern
 description: 设计模式之交给子类_FactoryMethod模式_将实例生成交给子类
+
 ---
 
 **前言**     
@@ -142,7 +143,6 @@ public class SendFactory {
 
 
 ```java
-
 public class FactoryTest {  
 	  
     public static void main(String[] args) {  
@@ -164,7 +164,6 @@ public class FactoryTest {
 
 ```java
 
-
 public class SendFactory {  
     
     public static Sender produceMail(){  
@@ -182,7 +181,6 @@ public class SendFactory {
 
 
 ```java
-
 public class FactoryTest {  
 	  
     public static void main(String[] args) {      
@@ -209,6 +207,7 @@ public class FactoryTest {
 <!-- Gitalk 评论 start  -->
 
 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
 <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script> 
 <div id="gitalk-container"></div>    
  <script type="text/javascript">
@@ -222,6 +221,7 @@ public class FactoryTest {
     });
     gitalk.render('gitalk-container');
 </script> 
+
 
 <!-- Gitalk end -->
 
