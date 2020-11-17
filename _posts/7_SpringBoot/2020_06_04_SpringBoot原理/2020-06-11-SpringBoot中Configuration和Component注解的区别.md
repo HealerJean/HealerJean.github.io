@@ -18,7 +18,7 @@ description: SpringBoot中Configuration和Component注解的区别
 
 
 
-# 1、@Configuration和@Component区别源码解析
+# 1、`@Configuration`和@`Component`区别源码解析
 
 > 为什么这么搞呢？    
 >
@@ -28,15 +28,15 @@ description: SpringBoot中Configuration和Component注解的区别
 
 
 
-## 1.1、找出带有@Configuration的的类，使它变成增强类  
+## 1.1、找出带有`@Configuration`的的类，使它变成增强类  
 
 
 
-> `ConfigurationClassPostProcessor `后置处理器  中的方法`enhanceConfigurationClasses`，使用cglib动态代理增强类替换原有的类      
+> `ConfigurationClassPostProcessor `后置处理器  中的方法`enhanceConfigurationClasses`，使用`cglib`动态代理增强类替换原有的类      
 >
-> 第一个for循环中，查找到所有带有 @Configuration 注解的 bean 定义，然后放入`configBeanDefs ,Map`中：        
+> 第一个for循环中，查找到所有带有 `@Configuration` 注解的 bean 定义，然后放入`configBeanDefs ,Map`中：        
 >
-> 第二个for循环，对带有@Configuration的类进行增强，具体就是，返回返回 Enhancer类替代原有的列，内部加入一些拦截器等    
+> 第二个for循环，对带有`@Configuration`的类进行增强，具体就是，返回返回 Enhancer类替代原有的列，内部加入一些拦截器等    
 
 
 
@@ -173,11 +173,11 @@ private Enhancer newEnhancer(Class<?> configSuperClass, @Nullable ClassLoader cl
 
 
 
-## 1.2、Clglib动态代理调用增强类，选择带有@Bean注释的方法，准备创建Bean 
+## 1.2、Clglib动态代理调用增强类，选择带有`@Bean`注释的方法，准备创建Bean 
 
 > cglib动态代理调用增强类`Enhancer`，,增强类内部有`emitMethods`作为调用的入口。     
 >
-> 然后调用`ConditionalCallbackFilter的accept方法`，判断是否有@Bean注解（千万注意，这里就是正常的@Bean哦）并返回拦截器的 索引，这个拦截器将会在创建Bean类的时候会执行  
+> 然后调用`ConditionalCallbackFilter的accept方法`，判断是否有`@Bean`注解（千万注意，这里就是正常的`@Bean`哦）并返回拦截器的 索引，这个拦截器将会在创建Bean类的时候会执行  
 >
 > 
 
@@ -319,7 +319,7 @@ public static boolean isSetBeanFactory(Method candidateMethod) {
 
 ## 1.3、拦截器开始创建Bean
 
-> 上面我们知道带有@Configuration 以及@Bean的类是如何被识别的。现在我们开始关注`BeanMethodInterceptor`，开始带有@Bean注解的方法执行逻辑 ，也就是创建Bean类     
+> 上面我们知道带有`@Configuration` 以及@Bean的类是如何被识别的。现在我们开始关注`BeanMethodInterceptor`，开始带有@Bean注解的方法执行逻辑 ，也就是创建Bean类     
 
 
 
@@ -366,7 +366,7 @@ private static class BeanMethodInterceptor implements MethodInterceptor, Conditi
             
             //重头戏来了，判断当前执行的方法是否为正在执行的 @Bean 方法，如果是的话，则执行，
             //appBean() 方法首次进入的时候，会执行下面的cglibMethodProxy.invokeSuper(enhancedConfigInstance, beanMethodArgs);
-            //appBean() 内部方法调用到dataBean()的时候，还会进来（请记住因为有烂机器的关系，dataBean()上面就有@Bean，如果是普通new就不会进来了），这个时候就是false，然后会执行 resolveBeanReference方法
+            //appBean() 内部方法调用到dataBean()的时候，还会进来（请记住因为有拦截器的关系，dataBean()上面就有@Bean，如果是普通new就不会进来了），这个时候就是false，然后会执行 resolveBeanReference方法
 			if (isCurrentlyInvokedFactoryMethod(beanMethod)) {
 				// The factory is calling the bean method in order to instantiate and register the bean
 				// (i.e. via a getBean() call) -> invoke the super implementation of the method to actually
