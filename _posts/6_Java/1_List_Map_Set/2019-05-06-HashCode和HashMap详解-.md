@@ -34,14 +34,14 @@ description:  HashCode和HashMap详解
 
 ```java
 
-    @Test
-    public void Integer_HashCode(){
+@Test
+public void Integer_HashCode(){
 
-        Integer one  = new Integer(20);
-        System.out.println(one.hashCode()); //20
-    }
+    Integer one  = new Integer(20);
+    System.out.println(one.hashCode()); //20
+}
 
-    /**
+/**
      * Integer 的 hashCode 就是它的value
      *
      *     public int hashCode() {

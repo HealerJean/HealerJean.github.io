@@ -69,7 +69,6 @@ private static class Node<E> {
         this.prev = prev;
     }
 }
-
 ```
 
 
@@ -141,9 +140,9 @@ void linkLast(E e) {
 
 ## 1.5、get 
 
-1、检查元素索引是否越界        
-
-2、链表查询  ，类似于2分法，距离链表头近，则从链表头`first节点`开始找，如果距离链表尾部近，则从链表尾部`last节点`开始找       
+> 1、检查元素索引是否越界            
+>
+> 2、链表查询  ，类似于2分法，距离链表头近，则从链表头`first节点`开始找，如果距离链表尾部近，则从链表尾部`last节点`开始找       
 
 
 
@@ -263,10 +262,6 @@ public E set(int index, E element) {
     return oldVal;
 }
 ```
-
-
-
-
 
 
 

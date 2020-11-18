@@ -184,7 +184,7 @@ private void grow(int minCapacity) {
     //如 10 + 5 = 15
     int newCapacity = oldCapacity + (oldCapacity >> 1);
 
-    //最少需要的容量比 新计算出来的容量还要打。）我们这个时候要使用期望的最小容量作为新的容量
+    //最少需要的容量比 新计算出来的容量还要大。）我们这个时候要使用期望的最小容量作为新的容量
     //情况1：无参构造器，数组初始化，
     //情况2：指定容量为1
     if (newCapacity - minCapacity < 0)
@@ -193,6 +193,7 @@ private void grow(int minCapacity) {
     //如果通过上面计算出来的容量，比数组允许的最大容量还要大，那肯定不行的。所以要根据实际需要的最小容量来减少，调用hugeCapacity重新获取新的容量
     if (newCapacity - MAX_ARRAY_SIZE > 0)
         newCapacity = hugeCapacity(minCapacity);
+    
     // minCapacity is usually close to size, so this is a win:
     //最小扩容容量通常是接近size的，所以这是一场胜利
     //这么臭美的吗
@@ -282,6 +283,130 @@ public E set(int index, E e) {
     return oldValue;
 }
 ```
+
+
+
+
+
+## 1.8、`for`的遍历问题
+
+> ArrayList、LinkedList、HashMap中都有一个字段叫modCount。    
+>
+
+### 1.8.1、modCount用途
+
+> 该字段被`Iterator`以及`ListIterator`的实现类所使用，如果该值被意外更改，`Iterator`或者`ListIterator` 将抛出`ConcurrentModificationException`异常    
+>
+> **1、在ArrayList中有个成员变量modCount，继承于AbstractArrAayList，每对List对象修改一次，也就每次add或者remove它的值都会加1.**          
+>
+> **2、Itr类里有一个成员变量`expectedModCount`，它的值为创建Iterator对象的时候List的modCount值。**                
+
+
+
+1、用此**expectedModCount**变量来检验在迭代过程中List对象是否被修改了，如果被修改了则抛出`java.util.ConcurrentModificationException`异常。       
+
+2、在每次调用Itr对象的`next`()或者`remove`方法的时候都会调用`checkForComodification`()方法进行一次检验，     
+
+3、`checkForComodification`()方法中做的工作就是比较`expectedModCount` 和modCount的值是否相等，**如果不相等， 就认为还有其他对象正在对当前的List进行操作，那个就会抛出`ConcurrentModificationException`异常**。   
+
+​      
+
+### 1.8.2、测试1
+
+> 将list对象里面的“c"删除了，同时list对象的`modCount`值加1，但是Itr对象的`expectedModCount`没有变，他们肯定是不相等了。等再一次执行`next`()方法的时候调用了`checkForComodification`()方法，这时候就抛出异常了。 
+>
+
+```java
+public static void main(String[] args) {
+    List<String> list = new ArrayList<String>();
+    
+    list.add("a");
+    list.add("b");
+    list.add("c");
+    list.add("d");
+    list.add("e");
+    Iterator iterator = list.iterator();
+    while(iterator.hasNext()){
+        String str = (String) iterator.next();
+        if(str.equals("c")){
+
+            list.remove(str);
+        }else{
+            System.out.println(str);
+        }
+    }
+    
+    
+    
+a
+Exception in thread "main" java.util.ConcurrentModificationException
+b
+at java.util.ArrayList$Itr.checkForComodification(ArrayList.java:907)
+at java.util.ArrayList$Itr.next(ArrayList.java:857)
+at com.hlj.Arraylist.ListForEach.main(ListForEach.java:25)
+
+    
+```
+
+此时将c变成d，它是通过Itr的对象的cursor（下一个索引）与List对象的size值来判断是否还有未迭代的对象，当遍历完“d"的时候cursor=4，删除”d"的时候，List对象的size就会减1，size首先为5，后来变为4，这时候cursor和size是相等的，hasNext()方法返回的是false，就认为遍历结束了，所以删除以后没有进去执行next()方法了，就没有抛出异常了，当然"e"也没有输出来。 
+
+
+
+```
+a
+b
+c
+
+```
+
+#### 11.3、测试2
+
+```java
+    @Test
+    public void remove(){
+        List<String> list = new ArrayList();
+        list.add("aaaaaa");
+        list.add("bbbbbb");
+        list.add("cccccc");
+        list.add("dddddd");
+        list.add("eeeeee");
+
+        Iterator it = list.iterator();
+        //it.remove(); //删除的是上一个元素 IllegalStateException
+        int i = 0;
+        String s = null;
+        while(it.hasNext()){
+            if(i==2){
+//              list.remove(it.next()); 如果用list.remove(it.next());会报异常checkForComodification
+
+                it.remove();//虽然移除了，但是后面的还会继续遍历哦
+            }
+            System.out.println("第"+i+"个元素"+it.next());
+            i++ ;
+        }
+        System.out.println("----------------");
+        Iterator it2 = list.iterator();
+        while(it2.hasNext()){
+            System.out.println(it2.next());
+        }
+
+    }
+
+第0个元素aaaaaa
+第1个元素bbbbbb
+第2个元素cccccc
+第3个元素dddddd
+第4个元素eeeeee
+----------------
+aaaaaa
+cccccc
+dddddd
+eeeeee
+
+
+```
+
+
 
 
 
