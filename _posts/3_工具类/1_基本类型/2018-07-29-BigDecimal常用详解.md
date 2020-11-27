@@ -178,7 +178,7 @@ new DecimalFormat("#.##").format(71015000009826 )
 
 
 
-![1574419571504](D:\study\HealerJean.github.io\blogImages\1574419571504.png)
+![1574419571504](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1574419571504.png)
 
 
 
@@ -214,7 +214,7 @@ public void UP() {
 
 
 
-![1574421575122](D:\study\HealerJean.github.io\blogImages\1574421575122.png)
+![1574421575122](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1574421575122.png)
 
 
 
@@ -252,7 +252,7 @@ public void DOWN() {
 
 
 
-![1574421590915](D:\study\HealerJean.github.io\blogImages\1574421590915.png)
+![1574421590915](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1574421590915.png)
 
 
 
@@ -293,7 +293,7 @@ public void CEILING() {
 
 
 
-![1574421618590](D:\study\HealerJean.github.io\blogImages\1574421618590.png)   
+![1574421618590](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1574421618590.png)   
 
 
 
