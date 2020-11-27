@@ -31,19 +31,19 @@ public class DemoEntityServiceImpl implements DemoEntityService {
     public void testNoHaveSaveButSaveSuccess() {
 
 
-DemoEntity demoEntity =demoEntityRepository.findOne(1L);
-demoEntity.setBalance(12L);
-demoEntity.setName("张宇晋"); //观察到下面没有save方法，但是这里实实在在显示到数据库中去了
+        DemoEntity demoEntity =demoEntityRepository.findOne(1L);
+        demoEntity.setBalance(12L);
+        demoEntity.setName("张宇晋"); //观察到下面没有save方法，但是这里实实在在显示到数据库中去了
 
-DemoEntity copy = demoEntity ;
-copy.setName("copyEntity"); //最终数据id为1的数据库中 name为 copyEntity ，因为是浅复制
+        DemoEntity copy = demoEntity ;
+        copy.setName("copyEntity"); //最终数据id为1的数据库中 name为 copyEntity ，因为是浅复制
 
 
-DemoEntity demoEntityT = new DemoEntity();
-demoEntityT.setName("z1");
-demoEntityRepository.save(demoEntityT);
+        DemoEntity demoEntityT = new DemoEntity();
+        demoEntityT.setName("z1");
+        demoEntityRepository.save(demoEntityT);
 
-demoEntityT.setBalance(12L); //会对上面的进行更新
+        demoEntityT.setBalance(12L); //会对上面的进行更新
 
 
     }
@@ -67,9 +67,8 @@ demoEntityT.setBalance(12L); //会对上面的进行更新
 
 1、如果我们只是想使用这个查出来的实体，并且在某种情况下，如果需要里面的值，并且要对它进行暂时的修改，却不是修改之后要保存到数据库中
 
-情景：淘宝的appkey和appSecret保存了，默认给提供一些渠道数据，当定时器在修改某个商品的渠道的时候，淘宝信息是我们需要的，但是它提供的渠道却不是我们需要的，所以时候是要set渠道一下一下。
+情景：淘宝的appkey和appSecret保存了，默认给提供一些渠道数据，当定时器在修改某个商品的渠道的时候，淘宝信息是我们需要的，但是它提供的渠道却不是我们需要的，所以时候是要set渠道一下一下。    
 
-<br/>
 2、添加一个data对象，用来存储数据库中查出来的数据。
 
 
@@ -109,7 +108,7 @@ public static TaobaoUserInfo getNewTaobaoUserInfo(TaobaoUserInfo source){
 
 
 ```java
-   
+
 package com.hlj.springboot.dome.common.moudle.service.impl;
 
 import com.hlj.springboot.dome.common.entity.DemoEntity;
@@ -142,13 +141,12 @@ public class DemoEntityServiceImpl implements DemoEntityService {
     @Override
     public void testNoHaveSaveButSaveSuccess() {
 
-
         DemoEntity demoEntity =demoEntityRepository.findOne(1L);
         demoEntity.setBalance(12L);
         demoEntity.setName("张宇晋"); //观察到下面没有save方法，但是这里实实在在显示到数据库中去了
 
-//        DemoEntity copy = demoEntity ;
-//        copy.setName("copyEntity");
+        //        DemoEntity copy = demoEntity ;
+        //        copy.setName("copyEntity");
 
         entityManager.persist(demoEntity);
 
@@ -161,7 +159,6 @@ public class DemoEntityServiceImpl implements DemoEntityService {
 
         System.out.println(demoEntity);
         System.out.println(demoEntityT);
-
 
     }
 
@@ -182,7 +179,7 @@ public class DemoEntityServiceImpl implements DemoEntityService {
       2.和hibernate的save()方法有些不同：如果对象有id，则不能执行insert操作，会抛出异常
      */
 
-@Override
+    @Override
     public void persist() {
         DemoEntity demoEntity = new DemoEntity();
         demoEntity.setName("persistNoId");
@@ -191,7 +188,7 @@ public class DemoEntityServiceImpl implements DemoEntityService {
 
         demoEntity.setBalance(1500l); //会保存到数据库中，持久化操作 DemoEntity(id=1, name=persistNoId, balance=1500)
     }
-    
+
 
     @Override
     public void persistHaveId() {
@@ -230,10 +227,10 @@ public class DemoEntityServiceImpl implements DemoEntityService {
         System.out.println(demoEntity); //DemoEntity(id=null, name=merge, balance=null)
 
         demoEntity.setBalance(1500l); //不会保存到数据库中，这里表示已经变成了托管状态，因为id，也没，去哪里保存啊，笨死了
-                                      // DemoEntity(id=null, name=merge, balance=null)
+        // DemoEntity(id=null, name=merge, balance=null)
 
     }
-    
+
     @Override
     public void mergeHaveId() {
         DemoEntity demoEntity110 = new DemoEntity();
@@ -259,7 +256,7 @@ public class DemoEntityServiceImpl implements DemoEntityService {
         demoEntity110.setName("demoEntity110");
         demoEntity110.setId(4L); //id在数据库中不存在
 
-//        entityManager.remove(demoEntity110); //异常
+        //        entityManager.remove(demoEntity110); //异常
 
         DemoEntity data = demoEntityRepository.findOne(4l);
         entityManager.remove(data);//从数据库中直接删除
@@ -267,12 +264,12 @@ public class DemoEntityServiceImpl implements DemoEntityService {
         System.out.println(data); //DemoEntity(id=4, name=4, balance=4)
     }**
 
-@Override
-    public void refresh() {
+        @Override
+        public void refresh() {
         DemoEntity demoEntity = new DemoEntity();
         demoEntity.setName("refresh");
-//        entityManager.merge(demoEntity);//没有显示数据库中的数据
-//        entityManager.refresh(demoEntity); 报错，必须是数据库中直接获取的
+        //        entityManager.merge(demoEntity);//没有显示数据库中的数据
+        //        entityManager.refresh(demoEntity); 报错，必须是数据库中直接获取的
 
         demoEntity = demoEntityRepository.findOne(1l);
         demoEntity.setName("refresh");
@@ -289,9 +286,9 @@ public class DemoEntityServiceImpl implements DemoEntityService {
 
 
     }
-    
-    
-   
+
+
+
 }
 
 

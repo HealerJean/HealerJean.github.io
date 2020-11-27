@@ -46,7 +46,7 @@ description: HashTable_ConcurrentHashMap
 
 ## 2.1、原理      
 
-JDK8中ConcurrentHashMap参考了JDK8 HashMap的实现，采用了**数组+链表+红黑树**的实现方式来设计
+JDK8中`ConcurrentHashMap`参考了JDK8 HashMap的实现，采用了**数组+链表+红黑树**的实现方式来设计
 
 **利用 ==CAS + synchronized== 来保证并发更新的安全 + volatile**    
 
@@ -100,7 +100,7 @@ private transient EntrySetView<K,V> entrySet;
 >
 > 负数代表正在进行初始化或扩容操作 ,其中-1代表正在初始化 ,-N 表示有N-1个线程正在进行扩容操作      
 >
-> 正数或0代表hash表还没有被初始化，**这个数值表示初始化或下一次进行扩容的阀值**，**类似于扩容阈值**。它的值始终是当前ConcurrentHashMap容量的0.75倍，这与loadfactor是对应的。**实际容量>=sizeCtl，则扩容**。
+> 正数或0代表hash表还没有被初始化，**这个数值表示初始化或下一次进行扩容的阀值**，**类似于扩容阈值**。它的值始终是当前ConcurrentHashMap容量的0.75倍，这与`loadfactor`是对应的。**实际容量>=sizeCtl，则扩容**。
 
 
 
@@ -154,7 +154,7 @@ private static final int MAX_RESIZERS = (1 << (32 - RESIZE_STAMP_BITS)) - 1;
 
 private static final int RESIZE_STAMP_SHIFT = 32 - RESIZE_STAMP_BITS;
 
-static final int MOVED = -1; // hash for forwarding nodes（forwarding nodes的hash值）、标示位
+static final int MOVED = -1;   // hash for forwarding nodes（forwarding nodes的hash值）、标示位
 
 static final int TREEBIN = -2; // hash for roots of trees（树根节点的hash值）
 
@@ -183,10 +183,11 @@ public ConcurrentHashMap() {
 public ConcurrentHashMap(int initialCapacity) {
     if (initialCapacity < 0)
         throw new IllegalArgumentException();
+	//如果初始化的容量太大，则选择最大的容量
     int cap = ((initialCapacity >= (MAXIMUM_CAPACITY >>> 1)) ?
                MAXIMUM_CAPACITY :
                tableSizeFor(initialCapacity + (initialCapacity >>> 1) + 1));
-    
+
     //需要初始化的桶的大小
     this.sizeCtl = cap;
 }
@@ -216,11 +217,15 @@ public ConcurrentHashMap(int initialCapacity,
                          float loadFactor, int concurrencyLevel) {
     if (!(loadFactor > 0.0f) || initialCapacity < 0 || concurrencyLevel <= 0)
         throw new IllegalArgumentException();
+    //如果初始给的容量，比给的最大线程数还要小，有可能是给错了，则按照最大线程数确定容量的值
     if (initialCapacity < concurrencyLevel)   // Use at least as many bins
         initialCapacity = concurrencyLevel;   // as estimated threads
+    
     long size = (long)(1.0 + (long)initialCapacity / loadFactor);
     int cap = (size >= (long)MAXIMUM_CAPACITY) ?
-        MAXIMUM_CAPACITY : tableSizeFor((int)size);
+     MAXIMUM_CAPACITY : tableSizeFor((int)size);
+    
+    
     this.sizeCtl = cap;
 }
 ```
@@ -373,71 +378,71 @@ static final class TreeNode<K,V> extends Node<K,V> {
 
 ### 2.1.3、`TreeBin<K,V> ` 
 
-> TreeBin用于封装维护TreeNode，包含putTreeVal、lookRoot、UNlookRoot、remove、balanceInsetion、balanceDeletion等方法，当链表转树时，用于封装TreeNode，也就是说，ConcurrentHashMap的红黑树存放的时TreeBin，而不是treeNode。
+> `TreeBin`用于封装维护TreeNode，包含putTreeVal、lookRoot、UNlookRoot、remove、balanceInsetion、balanceDeletion等方法，当链表转树时，用于封装`TreeNode`，也就是说，`ConcurrentHashMap`的红黑树存放的时`TreeBin`，而不是`treeNode`。
 >
 > TreeBins类代码太长，截取部分代码如下：   
 
 
 
 ```java
-    static final class TreeBin<K,V> extends Node<K,V> {
-        TreeNode<K,V> root;
-        volatile TreeNode<K,V> first;
-        volatile Thread waiter;
-        volatile int lockState;
-        // values for lockState
-        static final int WRITER = 1; // set while holding write lock
-        static final int WAITER = 2; // set when waiting for write lock
-        static final int READER = 4; // increment value for setting read lock
+static final class TreeBin<K,V> extends Node<K,V> {
+    TreeNode<K,V> root;
+    volatile TreeNode<K,V> first;
+    volatile Thread waiter;
+    volatile int lockState;
+    // values for lockState
+    static final int WRITER = 1; // set while holding write lock
+    static final int WAITER = 2; // set when waiting for write lock
+    static final int READER = 4; // increment value for setting read lock
 
-        /**
+    /**
          * Creates bin with initial set of nodes headed by b.
          */
-        TreeBin(TreeNode<K,V> b) {
-            super(TREEBIN, null, null, null);
-            this.first = b;
-            TreeNode<K,V> r = null;
-            for (TreeNode<K,V> x = b, next; x != null; x = next) {
-                next = (TreeNode<K,V>)x.next;
-                x.left = x.right = null;
-                if (r == null) {
-                    x.parent = null;
-                    x.red = false;
-                    r = x;
-                }
-                else {
-                    K k = x.key;
-                    int h = x.hash;
-                    Class<?> kc = null;
-                    for (TreeNode<K,V> p = r;;) {
-                        int dir, ph;
-                        K pk = p.key;
-                        if ((ph = p.hash) > h)
-                            dir = -1;
-                        else if (ph < h)
-                            dir = 1;
-                        else if ((kc == null &&
-                                  (kc = comparableClassFor(k)) == null) ||
-                                 (dir = compareComparables(kc, k, pk)) == 0)
-                            dir = tieBreakOrder(k, pk);
-                            TreeNode<K,V> xp = p;
-                        if ((p = (dir <= 0) ? p.left : p.right) == null) {
-                            x.parent = xp;
-                            if (dir <= 0)
-                                xp.left = x;
-                            else
-                                xp.right = x;
-                            r = balanceInsertion(r, x);
-                            break;
-                        }
+    TreeBin(TreeNode<K,V> b) {
+        super(TREEBIN, null, null, null);
+        this.first = b;
+        TreeNode<K,V> r = null;
+        for (TreeNode<K,V> x = b, next; x != null; x = next) {
+            next = (TreeNode<K,V>)x.next;
+            x.left = x.right = null;
+            if (r == null) {
+                x.parent = null;
+                x.red = false;
+                r = x;
+            }
+            else {
+                K k = x.key;
+                int h = x.hash;
+                Class<?> kc = null;
+                for (TreeNode<K,V> p = r;;) {
+                    int dir, ph;
+                    K pk = p.key;
+                    if ((ph = p.hash) > h)
+                        dir = -1;
+                    else if (ph < h)
+                        dir = 1;
+                    else if ((kc == null &&
+                              (kc = comparableClassFor(k)) == null) ||
+                             (dir = compareComparables(kc, k, pk)) == 0)
+                        dir = tieBreakOrder(k, pk);
+                    TreeNode<K,V> xp = p;
+                    if ((p = (dir <= 0) ? p.left : p.right) == null) {
+                        x.parent = xp;
+                        if (dir <= 0)
+                            xp.left = x;
+                        else
+                            xp.right = x;
+                        r = balanceInsertion(r, x);
+                        break;
                     }
                 }
             }
-            this.root = r;
-            assert checkInvariants(root);
         }
-        //........other methods
+        this.root = r;
+        assert checkInvariants(root);
     }
+    //........other methods
+}
 ```
 
 
@@ -447,44 +452,44 @@ static final class TreeNode<K,V> extends Node<K,V> {
 > 在transfer扩容操作中，将一个节点插入到桶中
 
 ```java
-    /*
+/*
      * A node inserted at head of bins during transfer operations.
      *在transfer操作中，一个节点插入到bins中
      */
-    static final class ForwardingNode<K,V> extends Node<K,V> {
-        final Node<K,V>[] nextTable;
-        ForwardingNode(Node<K,V>[] tab) {
-            //Node(int hash, K key, V val, Node<K,V> next)是Node类的构造函数
-            super(MOVED, null, null, null);
-            this.nextTable = tab;
-        }
+static final class ForwardingNode<K,V> extends Node<K,V> {
+    final Node<K,V>[] nextTable;
+    ForwardingNode(Node<K,V>[] tab) {
+        //Node(int hash, K key, V val, Node<K,V> next)是Node类的构造函数
+        super(MOVED, null, null, null);
+        this.nextTable = tab;
+    }
 
-        Node<K,V> find(int h, Object k) {
-            // loop to avoid arbitrarily deep recursion on forwarding nodes
-            outer: for (Node<K,V>[] tab = nextTable;;) {
-                Node<K,V> e; int n;
-                if (k == null || tab == null || (n = tab.length) == 0 ||
-                    (e = tabAt(tab, (n - 1) & h)) == null)
-                    return null;
-                for (;;) {
-                    int eh; K ek;
-                    if ((eh = e.hash) == h &&
-                        ((ek = e.key) == k || (ek != null && k.equals(ek))))
-                        return e;
-                    if (eh < 0) {
-                        if (e instanceof ForwardingNode) {
-                            tab = ((ForwardingNode<K,V>)e).nextTable;
-                            continue outer;
-                        }
-                        else
-                            return e.find(h, k);
+    Node<K,V> find(int h, Object k) {
+        // loop to avoid arbitrarily deep recursion on forwarding nodes
+        outer: for (Node<K,V>[] tab = nextTable;;) {
+            Node<K,V> e; int n;
+            if (k == null || tab == null || (n = tab.length) == 0 ||
+                (e = tabAt(tab, (n - 1) & h)) == null)
+                return null;
+            for (;;) {
+                int eh; K ek;
+                if ((eh = e.hash) == h &&
+                    ((ek = e.key) == k || (ek != null && k.equals(ek))))
+                    return e;
+                if (eh < 0) {
+                    if (e instanceof ForwardingNode) {
+                        tab = ((ForwardingNode<K,V>)e).nextTable;
+                        continue outer;
                     }
-                    if ((e = e.next) == null)
-                        return null;
+                    else
+                        return e.find(h, k);
                 }
+                if ((e = e.next) == null)
+                    return null;
             }
         }
     }
+}
 ```
 
 
@@ -524,28 +529,34 @@ public V put(K key, V value) {
 6、看看是否需要扩容，如果需要则扩容
 
 
-
-
 ```java
 
 /** Implementation for put and putIfAbsent */
 final V putVal(K key, V value, boolean onlyIfAbsent) {
+
+    //、检查key/value是否为空，如果为空，则抛空指针异常`NullPointerException`
     if (key == null || value == null) throw new NullPointerException();
+
+
+    //获取hash值
     int hash = spread(key.hashCode());
     int binCount = 0;
+
     for (Node<K,V>[] tab = table;;) { //死循环，直到插入成功 
         Node<K,V> f; int n, i, fh;
         if (tab == null || (n = tab.length) == 0)
+            //初始化表
             tab = initTable();
-        
-  	
-         //如果table[i]==null说明当前位置没有值，则利用CAS操作直接存储在该位置，如果CAS操作成功则退出死循环。否则一直继续for死循环执行
+
+
+        //如果table[i]==null说明当前位置没有值，则利用CAS操作直接存储在该位置，如果CAS操作成功则退出死循环。否则再一直继续for死循环执行
         else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
             if (casTabAt(tab, i, null,
                          new Node<K,V>(hash, key, value, null)))
                 break;                   // no lock when adding to empty bin
         }
-        else if ((fh = f.hash) == MOVED)////检查table[i]的节点的hash是否等于MOVED(静态常亮-1)，如果等于，则检测到正在扩容，则帮助其扩容
+        ////检查table[i]的节点的hash是否等于MOVED(静态常亮-1)，如果等于，则检测到正在扩容，则帮助其扩容
+        else if ((fh = f.hash) == MOVED)
             tab = helpTransfer(tab, f);
         else {
             ///运行到这里，说明table[i]的节点的hash值不等于MOVED(-1也就是不需要扩容)。
@@ -556,7 +567,7 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
                     if (fh >= 0) { //当前数组位置节点的hash值 >= 0 表示 链表节点
                         binCount = 1;
                         //下面的代码就是先查找链表中是否出现了此key，如果出现，则更新value，并跳出循环，否则将节点加入到链表末尾并跳出循环
-                            
+
                         for (Node<K,V> e = f;; ++binCount) {
                             K ek;
                             if (e.hash == hash &&
@@ -575,7 +586,7 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
                             }
                         }
                     }
-                   //如果当前数组位置为红黑树节点
+                    //如果当前数组位置为红黑树节点
                     else if (f instanceof TreeBin) {
                         Node<K,V> p;
                         binCount = 2;
@@ -588,7 +599,7 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
                     }
                 }
             }
-                
+
             //插入成功后，如果插入的是链表节点，则要判断下该桶位是否要转化为树
             if (binCount != 0) {
                 //实则是>8,执行else,说明该桶位本就有Node
@@ -611,16 +622,17 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
 
 #### 2.5.1.2、`tabAt` ：获取索引位置的node节点   
 
-> 该方法用来获取 table 数组中索引为 i 的 Node 元素   
+> 该方法用来获取 table 数组中索引为 i 的 Node 元素       
+>
 > `tabAt`方法原子读取`table[i]`；调用Unsafe对象的`getObjectVolatile方`法获取`tab[i]`，由于对volatile写操作happen-before于volatile读操作，因此其他线程对table的修改均对get读取可见；
-((long)i << ASHIFT) + ABASE)计算i元素的地址
+> ((long)i << ASHIFT) + ABASE)计算i元素的地址
 
 ```java
-  else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
-                if (casTabAt(tab, i, null,
-                             new Node<K,V>(hash, key, value, null)))
-                    break;                   // no lock when adding to empty bin
-            }
+else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
+    if (casTabAt(tab, i, null,
+                 new Node<K,V>(hash, key, value, null)))
+        break;                   // no lock when adding to empty bin
+}
 ```
 
 
@@ -630,17 +642,18 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
 
 // 数组对象的起始 offset
 long ABASE = unsafe.arrayBaseOffset(Class)
-// 对象的每个元素的长度，（boolean 1, char 2, short 2, int 4, reference 4, float 4, double 8, long 8）
-int scale = unsafe.arrayIndexScale(Class)
-// 需要移动的位数,如果数组元素是 int类型，则ASHIFT 为 2，即元素的偏移量为 ABASE + (1 << ASHIFT) * i. 第一个元素为 ABASE + 4； 第二个元素的偏移量为 ABASE + 8
-int ASHIFT = 31 - Integer.numberOfLeadingZeros() 
 
-// 使用 unsafe 以原子化的形式读取数组的第 i 个元素
+    // 对象的每个元素的长度，（boolean 1, char 2, short 2, int 4, reference 4, float 4, double 8, long 8）
+    int scale = unsafe.arrayIndexScale(Class)
 
+    // 需要移动的位数,如果数组元素是 int类型，则ASHIFT 为 2，即元素的偏移量为 ABASE + (1 << ASHIFT) * i. 第一个元素为 ABASE + 4； 第二个元素的偏移量为 ABASE + 8
+    int ASHIFT = 31 - Integer.numberOfLeadingZeros() 
 
- static final <K,V> Node<K,V> tabAt(Node<K,V>[] tab, int i) {
-        return (Node<K,V>)U.getObjectVolatile(tab, ((long)i << ASHIFT) + ABASE);
-    }
+    
+    // 使用 unsafe 以原子化的形式读取数组的第 i 个元素
+    static final <K,V> Node<K,V> tabAt(Node<K,V>[] tab, int i) {
+    return (Node<K,V>)U.getObjectVolatile(tab, ((long)i << ASHIFT) + ABASE);
+}
 ```
 
 
@@ -660,17 +673,17 @@ else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
 
 
 ```java
-    static final <K,V> boolean casTabAt(Node<K,V>[] tab, int i,
-                                        Node<K,V> c, Node<K,V> v) {
-        return U.compareAndSwapObject(tab, ((long)i << ASHIFT) + ABASE, c, v);
-    }
+static final <K,V> boolean casTabAt(Node<K,V>[] tab, int i,
+                                    Node<K,V> c, Node<K,V> v) {
+    return U.compareAndSwapObject(tab, ((long)i << ASHIFT) + ABASE, c, v);
+}
 ```
 
 
 
 #### 2.5.1.3、`setTabAt`：节点更新
 
-> 替换节点，这一步操作之前已经上了`synchronize`锁了,仅在synchronized同步块中被调用，更新键值对；
+> 替换节点，这一步操作之前已经上了`synchronize`锁了,仅在`synchronized`同步块中被调用，更新键值对；
 
 ```java
     static final <K,V> void setTabAt(Node<K,V>[] tab, int i, Node<K,V> v) {
@@ -680,26 +693,32 @@ else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
 
 
 
-## 2.6、initTable ：初始化数组 
+## 2.6、`#initTable` ：初始化数组 
 
 ```java
 private final Node<K,V>[] initTable() {
     Node<K,V>[] tab; int sc;
     while ((tab = table) == null || tab.length == 0) {
-        if ((sc = sizeCtl) < 0)//如果sizeCtl为负数，则说明已经有其它线程正在进行扩容或者初始化操作
-            Thread.yield(); // 线程谦让掉  
         
-        //如果CAS成功，说明我们要进行初始化操作，将sc将设置为 -1（volidate 原子性保证了可见性），最后再final中将会赋值给sizeCtl，否则说明其它线程已经对其正在初始化或是已经初始化完毕
+        //如果sizeCtl为负数，则说明已经有其它线程正在进行扩容或者初始化操作
+        if ((sc = sizeCtl) < 0) 
+            Thread.yield();    // 线程谦让掉,不执行  
+        
+        //如果CAS成功，说明我们要进行初始化操作
+        // 将sizeCtl将设置为 -1（volidate 原子性保证了可见性），防止其他线程抢到
         else if (U.compareAndSwapInt(this, SIZECTL, sc, -1)) {
             try {
-                if ((tab = table) == null || tab.length == 0) {//再一次检查确认是否还没有初始化
+                //再一次检查确认是否还没有初始化
+                if ((tab = table) == null || tab.length == 0) {
                     int n = (sc > 0) ? sc : DEFAULT_CAPACITY;
                     @SuppressWarnings("unchecked")
                     Node<K,V>[] nt = (Node<K,V>[])new Node<?,?>[n];
                     table = tab = nt;
+                    //变成扩容阀值
                     sc = n - (n >>> 2);//即sc = 0.75n。
                 }
             } finally {
+                //final中将sc会赋值给sizeCtl，这个就是下一次扩容的阀值了
                 sizeCtl = sc;//sizeCtl = 0.75*Capacity,为扩容门限
             }
             break;
@@ -712,49 +731,49 @@ private final Node<K,V>[] initTable() {
 
 
 
-## 2.7、treeifyBin ：链表转数 
+## 2.7、`treeifyBin` ：链表转数 
 
 > 这个方法之前已经校验过链表的长度是否大于等于8了    
 >
 > 此方法继续检查下table的长度是否大于等于MIN_TREEIFY_CAPACITY（64），如果不大于，则调用tryPresize方法将table两倍扩容就可以了，就不降链表转化为树了。如果大于，则就将table[i]的链表转化为树。
 
 ```java
-  /*
+/*
      *链表转树：将将数组tab的第index位置的链表转化为 树
      */
-    private final void treeifyBin(Node<K,V>[] tab, int index) {
-        Node<K,V> b; int n, sc;
-        if (tab != null) {
-            if ((n = tab.length) < MIN_TREEIFY_CAPACITY)// 容量<64，则table两倍扩容，不转树了
-                tryPresize(n << 1);
-            else if ((b = tabAt(tab, index)) != null && b.hash >= 0) {
-                synchronized (b) { // 读写锁  
-                    if (tabAt(tab, index) == b) {
-                        TreeNode<K,V> hd = null, tl = null;
-                        for (Node<K,V> e = b; e != null; e = e.next) {
-                            TreeNode<K,V> p =
-                                new TreeNode<K,V>(e.hash, e.key, e.val,
-                                                  null, null);
-                            if ((p.prev = tl) == null)
-                                hd = p;
-                            else
-                                tl.next = p;
-                            tl = p;
-                        }
-                        setTabAt(tab, index, new TreeBin<K,V>(hd));
+private final void treeifyBin(Node<K,V>[] tab, int index) {
+    Node<K,V> b; int n, sc;
+    if (tab != null) {
+        if ((n = tab.length) < MIN_TREEIFY_CAPACITY)// 容量<64，则table两倍扩容，不转树了
+            tryPresize(n << 1);
+        else if ((b = tabAt(tab, index)) != null && b.hash >= 0) {
+            synchronized (b) { // 读写锁  
+                if (tabAt(tab, index) == b) {
+                    TreeNode<K,V> hd = null, tl = null;
+                    for (Node<K,V> e = b; e != null; e = e.next) {
+                        TreeNode<K,V> p =
+                            new TreeNode<K,V>(e.hash, e.key, e.val,
+                                              null, null);
+                        if ((p.prev = tl) == null)
+                            hd = p;
+                        else
+                            tl.next = p;
+                        tl = p;
                     }
+                    setTabAt(tab, index, new TreeBin<K,V>(hd));
                 }
             }
         }
     }
+}
 
 ```
 
 
 
-## 2.8、get()方法  
+## 2.8、`#get()`方法  
 
-> 不上锁，所以ConcurrentHashMap不是强一致性的，因为val被volitale修饰，保证了可见性， 
+> 不上锁，所以`ConcurrentHashMap`不是强一致性的，因为`val`被`volitale`修饰，保证了可见性， 
 
 
 
@@ -771,7 +790,7 @@ public V get(Object key) {
         }
         
  
-        else if (eh < 0) //首个数组节点的位置，hash值为负数 table[i]为一颗树
+        else if (eh < 0)  //首个数组节点的位置，hash值为负数 table[i]为一颗树
             return (p = e.find(h, key)) != null ? p.val : null;
         
         ////以上都不成立，就是链表，遍历寻找即可
@@ -792,31 +811,30 @@ public V get(Object key) {
 ## 2.9、containsKey/containsValue
 
 ```java
-   public boolean containsKey(Object key) {
-        return get(key) != null;//直接调用get(int key)方法即可，如果有返回值，则说明是包含key的
-    }
-
+public boolean containsKey(Object key) {
+    return get(key) != null;//直接调用get(int key)方法即可，如果有返回值，则说明是包含key的
+}
 ```
 
 ```java
-  /*
+/*
      *功能，检查在所有映射(k,v)中只要出现一次及以上的v==value，返回true
      *注意：这个方法可能需要一个完全遍历Map，因此比containsKey要慢的多
      */
-    public boolean containsValue(Object value) {
-        if (value == null)
-            throw new NullPointerException();
-        Node<K,V>[] t;
-        if ((t = table) != null) {
-            Traverser<K,V> it = new Traverser<K,V>(t, t.length, 0, t.length);
-            for (Node<K,V> p; (p = it.advance()) != null; ) {
-                V v;
-                if ((v = p.val) == value || (v != null && value.equals(v)))
-                    return true;
-            }
+public boolean containsValue(Object value) {
+    if (value == null)
+        throw new NullPointerException();
+    Node<K,V>[] t;
+    if ((t = table) != null) {
+        Traverser<K,V> it = new Traverser<K,V>(t, t.length, 0, t.length);
+        for (Node<K,V> p; (p = it.advance()) != null; ) {
+            V v;
+            if ((v = p.val) == value || (v != null && value.equals(v)))
+                return true;
         }
-        return false;
     }
+    return false;
+}
 
 ```
 
@@ -828,9 +846,9 @@ public V get(Object key) {
 
  
 
-containsKey和 put 两个方法都是原子的，但在jvm中并不是将这段代码做为单条指令来执行的，   
-
-例如：假设连续生成2个随机数1，map的 containsKey 和 put 方法由线程A和B 同时执行 ，那么有可能会出现A线程还没有把 1 put进去时，B线程已经在进行if 的条件判断了，也就是如下的执行顺序：
+> containsKey和 put 两个方法都是原子的，但在jvm中并不是将这段代码做为单条指令来执行的，       
+>
+> 例如：假设连续生成2个随机数1，map的 containsKey 和 put 方法由线程A和B 同时执行 ，那么有可能会出现A线程还没有把 1 put进去时，B线程已经在进行if 的条件判断了，也就是如下的执行顺序：
 
 ```java
 
@@ -893,7 +911,7 @@ public static synchronized void countRandom(int randomNum){
 
 2.5、时间复杂度  
 
->  **从1.7到1.8版本，由于HashEntry从链表 变成了红黑树所以 concurrentHashMap的时间复杂度从O(n)到O(log(n))**
+>  **从1.7到1.8版本，由于HashEntry从链表 变成了红黑树所以 concurrentHashMap的时间复杂度链表上从O(n)到O(log(n))**
 
 
 

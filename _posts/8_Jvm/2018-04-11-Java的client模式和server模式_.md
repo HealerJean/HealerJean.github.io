@@ -23,9 +23,9 @@ description: Java的client模式和server模式
 
 ### 1.1、hotspot包括server和client两种模式的实现：    
 
-+ Java HotSpot Client VM(-client)，为在客户端环境中减少启动时间而优化；    
+Java HotSpot Client VM(-client)，为在客户端环境中减少启动时间而优化；       
 
-+ Java HotSpot Server VM(-server)，为在服务器环境中最大化程序执行速度而设计。   
+Java HotSpot Server VM(-server)，为在服务器环境中最大化程序执行速度而设计。   
 
 
 
