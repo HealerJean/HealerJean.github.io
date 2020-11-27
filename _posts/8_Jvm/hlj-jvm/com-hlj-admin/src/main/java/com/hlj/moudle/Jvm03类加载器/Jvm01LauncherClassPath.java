@@ -42,7 +42,6 @@ public class Jvm01LauncherClassPath {
     @Test
     public void ExtClassLoaderClassPath() {
         System.out.println(System.getProperty("java.ext.dirs"));
-
         //  /Users/healerjean/Library/Java/Extensions:
         //  /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre/lib/ext:
         //  /Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:
@@ -60,7 +59,6 @@ public class Jvm01LauncherClassPath {
     public void AppClassLoaderClassPath() {
         System.out.println(System.getProperty("java.class.path"));
     }
-
 
 
 }

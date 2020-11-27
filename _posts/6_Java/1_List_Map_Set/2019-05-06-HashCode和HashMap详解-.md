@@ -219,25 +219,25 @@ public static void calculateConflictRate(Integer multiplier, List<Integer> hashs
 
  
 
-> 从Object角度看，JVM每new一个Object，它都会将这个Object丢到一个Hash表中去，这样的话，下次做Object的比较或者取这个对象的时候（读取过程），它会根据对象的HashCode再从Hash表中取这个对象。这样做的目的是提高取对象的效率。若HashCode相同再去调用equal。      
+> 从`Object`角度看，`JVM`每`new`一个`Object`，它都会将这个`Object`丢到一个`Hash`表中去，这样的话，下次做`Object`的比较或者取这个对象的时候（读取过程），它会根据对象的`HashCod`e再从`Hash`表中取这个对象。这样做的目的是提高取对象的效率。若`HashCode`相同再去调用`equa`l。      
 
 
 
-（1）HashCode的存在主要是用于查找的快捷性，如Hashtable，HashMap等，HashCode是用来在散列存储结构中确定对象的存储地址的；    
+（1）`HashCode`的存在主要是用于查找的快捷性，如`Hashtable`，`HashMap`等，`HashCode`是用来在散列存储结构中确定对象的存储地址的；    
 
-（2）如果两个对象相同， equals方法一定返回true，这两个对象的HashCode一定相同；**除非重写了HashCode方法，及其特殊情况下，才回这样重写**    
+（2）如果两个对象相同， `equals`方法一定返回true，这两个对象的`HashCode`一定相同；**除非重写了`HashCode`方法，及其特殊情况下，才回这样重写**    
 
-（3）两个对象的HashCode相同，并不一定表示两个对象就相同，也就是equals方法不一定返回true，只能够说明这两个对象在散列存储结构中，如Hashtable，他们存放在同一个篮子里。    
+（3）两个对象的`HashCode`相同，并不一定表示两个对象就相同，也就是`equals`方法不一定返回`true`，只能够说明这两个对象在散列存储结构中，如`Hashtable`，他们存放在同一个篮子里。    
 
-（4）如果对象的equals方法被重写，那么对象的HashCode也尽量重写，并且产生HashCode使用的对象，一定要和equals方法中使用的一致，否则就会违反上面提到的第2点；      
+（4）如果对象的`equals`方法被重写，那么对象的`HashCode`也尽量重写，并且产生`HashCode`使用的对象，一定要和`equals`方法中使用的一致，否则就会违反上面提到的第2点；      
 
  
 
 ###  1.3.2、HashCode作用
 
-> Java中的集合（Collection）有两类，一类是List，再有一类是Set。前者集合内的元素是有序的，元素可以重复；后者元素无序，但元素不可重复。     
+> Java中的集合（`Collection`）有两类，一类是`Lis`t，再有一类是`Set`。前者集合内的元素是有序的，元素可以重复；后者元素无序，但元素不可重复。     
 >
->  equals方法可用于保证元素不重复，但是，如果每增加一个元素就检查一次，如果集合中现在已经有1000个元素，那么第1001个元素加入集合时，就要调用1000次equals方法。这显然会大大降低效率。     
+>  `equals`方法可用于保证元素不重复，但是，如果每增加一个元素就检查一次，如果集合中现在已经有1000个元素，那么第1001个元素加入集合时，就要调用`1000`次equals方法。这显然会大大降低效率。     
 >
 > 于是，Java采用了哈希表的原理。        
 
@@ -249,7 +249,7 @@ public static void calculateConflictRate(Integer multiplier, List<Integer> hashs
 
 但如果用HashCode那就会使效率提高很多。  定义我们的HashCode为ID％8，比如我们的ID为9，9除8的余数为1，那么我们就把该类存在1这个位置，如果ID是13，求得的余数是5，那么我们就把该类放在5这个位置。依此类推。           
 
-但是如果两个类有相同的HashCode，例如9除以8和17除以8的余数都是1，也就是说，我们先通过 HashCode来判断两个类是否存放某个桶里，但这个桶里可能有很多类，比如hashtable，那么我们就需要再通过 equals 在这个桶里找到我们要的类。  
+但是如果两个类有相同的`HashCode`，例如9除以8和17除以8的余数都是1，也就是说，我们先通过 `HashCode`来判断两个类是否存放某个桶里，但这个桶里可能有很多类，比如`hashtable`，那么我们就需要再通过 equals 在这个桶里找到我们要的类。  
 
 
 
@@ -262,23 +262,6 @@ public static void calculateConflictRate(Integer multiplier, List<Integer> hashs
 （3）不相同的话，也就是发生了Hash key相同导致冲突的情况，那么就在这个Hash key的地方产生一个链表，将所有产生相同HashCode的对象放到这个单链表上去，串在一起（很少出现）。这样一来实际调用**equals**方法的次数就大大降低了，几乎只需要一两次。 （下面1、的实例就为这里的测试实例）
 
  
-
-```java
-  @Test
-    public void test(){
-        Set<String> set = new HashSet<String>();
-        set.add("abc");
-        set.add(new String("abc"));
-        System.out.println(set.size()); //1
-
-
-        Map map = new HashMap();
-        map.put("abc", "ab");
-        map.put(new String("abc"), "ab");
-        System.out.println(map.size()); //1
-
-    }
-```
 
 
 
@@ -359,6 +342,10 @@ public class HashTest {
         this.i = i;    
     }    
     
+    
+    // public boolean equals(Object obj) {
+    //    return this == obj;
+    // }
     @Override
     public boolean equals(Object object) {    
         if (object == null) {    
@@ -396,7 +383,7 @@ public class HashTest {
         set.add(b);    
        
         System.out.println(a.hashCode() == b.hashCode());       //true   
-        System.out.println(a.equals(b));    //true   
+        System.out.println(a.equals(b));    //true   (因为是 || 或者关系也就是说 == 或者 equals 只要成立一个即可)
         
         System.out.println(set.size());     //1
         
@@ -425,17 +412,15 @@ https://blog.csdn.net/v123411739/article/details/78996181
 
  
 
-### 2.1.1、HashMap继承关系
+### 2.1.1、`HashMap`继承关系
 
 ![1570783709850](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1570783709850.png)
 
 
 
 ```java
-
 public class HashMap<K,V> extends AbstractMap<K,V>
     implements Map<K,V>, Cloneable, Serializable {
-
 }
 ```
 
@@ -533,7 +518,7 @@ static final int MAXIMUM_CAPACITY = 1 << 30;
 //只有hash桶桶的数量  大于 64 才会发生链表树化。64在承受范围之内，不需要转化，因为转化是会消耗时间的
 static final int MIN_TREEIFY_CAPACITY = 64;
 
-//链表长度大于 8 时，并且桶的数量大于等于 MIN_TREEIFY_CAPACITY 64时，链表树化（否则如果只是 长度大于8，但是桶的长度小于的时候，则扩容） 
+//链表长度大于 8 时，并且桶的数量大于等于 MIN_TREEIFY_CAPACITY 64时，链表树化（否则如果只是 长度大于8，但是桶的长度小于的时候，并且达到负载因子的时候，则扩容） 
 static final int TREEIFY_THRESHOLD = 8;
 
 //在哈希表扩容时,如果发现链表长度小于6,则会由树重新退化为链表，不是上面的8了，给了一个缓冲的余地
@@ -544,8 +529,6 @@ static final int UNTREEIFY_THRESHOLD = 6;
 
 
 ### 2.1.4、实例变量
-
-
 
 
 ```java
@@ -569,8 +552,6 @@ int threshold;
 
 
 ### 2.1.5、4个构造函数
-
-
 
 #### 2.5.1.1、全部使用默认值
 
@@ -605,7 +586,7 @@ public HashMap(int initialCapacity, float loadFactor) {
     if (initialCapacity < 0)
         throw new IllegalArgumentException("Illegal initial capacity: " +
                                            initialCapacity);
-    //桶的数量最大限制
+    //如果初始化的容量太大，则选择最大的容量
     if (initialCapacity > MAXIMUM_CAPACITY)
         initialCapacity = MAXIMUM_CAPACITY;
     
@@ -771,7 +752,9 @@ System.out.println(map.put("b" , "bbb"));//NULL
 
 1、如果该元素键的hash值小于当前节点的hash值的时候，就会作为当前节点的左节点，hash值大于当前节点hash值得时候作为当前节点的右节点。   
 
-2、如果hash值相同，     这时还是会先尝试看是否能够通过Comparable进行比较一下，要想看看是否能基于Comparable进行比较的话，首先要看该元素键是否实现了Comparable接口，此时就需要用到comparableClassFor方法来获取该元素键的Class。  
+2、如果hash值相同， 并且key也相等，则直接返回节点     
+
+3、如果hash值相同，但是key不相同，这时还是会先尝试看是否能够通过`Comparable`进行比较一下，要想看看是否能基于`Comparable`进行比较的话，首先要看该元素键是否实现了`Comparable`接口，此时就需要用到`comparableClassFor`方法来获取该元素键的Class。    否则定义一套规则来比较大小，确定是从左边查找树或者是右查找树
 
 
 
@@ -914,8 +897,6 @@ static Class<?> comparableClassFor(Object x) {
 
 
 #### 2.2.2.3、compareComparables 比较是否相等
-
-
 
 ```java
 /**
@@ -1314,8 +1295,9 @@ final Node<K,V>[] resize() {
             return oldTab;
         }
         // 将旧容量值<<1(相当于*2)赋值给 newCap
-         //这时新的桶长度 newCap <最大容量Integer.MAX_VALUE(2的30次幂) 如果等于或者大于的话，下面有一个代码会执行 ，并且旧桶长度>=初始的桶长度DEFAULT_INITIAL_CAPACITY（16），如果能进来证明此map是扩容而不是初始化
-          //操作：将原扩容阀界值<<1(相当于*2)赋值给 newThr，
+         //这时新的桶长度 newCap <最大容量Integer.MAX_VALUE(2的30次幂) 如果等于或者大于的话，下面有一个代码会执行 
+         //并且旧桶长度>=初始的桶长度DEFAULT_INITIAL_CAPACITY（16），olodCap小于DEFAULT_INITIAL_CAPACITY 的情况下面会执行
+         //操作：将原扩容阀界值<<1(相当于*2)赋值给 newThr，
         else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
                  oldCap >= DEFAULT_INITIAL_CAPACITY)
                 newThr = oldThr << 1; // double threshold
@@ -1370,6 +1352,7 @@ final Node<K,V>[] resize() {
                     do {
                         next = e.next;
                         // 9.1 如果e的hash值与老表的容量进行与运算为0,则扩容后的索引位置跟老表的索引位置一样
+                        // old 16=> 10000
                         if ((e.hash & oldCap) == 0) {
                             if (loTail == null) // 如果loTail为空, 代表该节点为第一个节点
                                 loHead = e; // 则将loHead赋值为第一个节点
@@ -1386,12 +1369,14 @@ final Node<K,V>[] resize() {
                             hiTail = e; // 并将hiTail赋值为新增的节点
                         }
                     } while ((e = next) != null);
+                    
                     // 10.如果loTail不为空（说明老表的数据有分布到新表上“原索引位置”的节点），则将最后一个节点
                     // 的next设为空，并将新表上索引位置为“原索引位置”的节点设置为对应的头节点
                     if (loTail != null) {
                         loTail.next = null;
                         newTab[j] = loHead;
                     }
+                    
                     // 11.如果hiTail不为空（说明老表的数据有分布到新表上“原索引+oldCap位置”的节点），则将最后
                     // 一个节点的next设为空，并将新表上索引位置为“原索引+oldCap”的节点设置为对应的头节点
                     if (hiTail != null) {
@@ -1411,7 +1396,8 @@ final Node<K,V>[] resize() {
 
 ### 2.4.1、红黑树操作 split
 
-
+> 开始的时候，和链表扩容有点像
+>
 
 ```java
 /**
