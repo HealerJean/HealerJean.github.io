@@ -13,18 +13,18 @@ description: Topic持久化和非持久化_虚拟Topic
 
 
 
-**前言**    
+**前言**     
 
-[博主github](https://github.com/HealerJean)    
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
-[博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)       
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)          
 
 
 
 
 ## 1、非持久化的topic消息：
 
-### 解释：必须接收方在线，这个不会帮我们保存
+> 必须接收方在线，这个不会帮我们保存
 
 
 
@@ -220,20 +220,18 @@ public class NoPersistenceConsumer {
 
 ## 2、持久化的topic消息 ：
 
-### 解释：
-
-+ **持久化的topic，即使还没有生产消息，但一般情况下需要消费者提前订阅，因为这样，即使不在线，下次连接，也可以接受之前从没收过的消息，而已经收到的消息，则不会重复接受**  
+> **持久化的topic，即使还没有生产消息，但一般情况下需要消费者提前订阅，因为这样，即使不在线，下次连接，也可以接受之前从没收过的消息，而已经收到的消息，则不会重复接受**  
 
 
 
-+ **持久化模式下可有有多个`clientID`同时在线,但是同一个`clientID`,只能同时在线一个消费者，这也是虚拟`topic`产生的原因之一 ：`activemq`区分消费者，是通过`clientID`和订阅客户名称来区分的，使用相同的`clientID`，则认为是同一个消费者。两个程序使用相同的`clientID`，则同时只能有一个连接到activemq，第二个连接的会报错**
+> **持久化模式下可有有多个`clientID`同时在线,但是同一个`clientID`,只能同时在线一个消费者，这也是虚拟`topic`产生的原因之一 ：   **
+>
+> **`activemq`区分消费者，是通过`clientID`和订阅客户名称来区分的，使用相同的`clientID`，则认为是同一个消费者。两个程序使用相同的`clientID`，则同时只能有一个连接到activemq，第二个连接的会报错**
 
 
 
 
 ### 2.1、创建生产者
-
-
 
 ```java
  MessageProducer producer = session.createProducer(topic);
@@ -576,13 +574,9 @@ TopicSubscriber consumer = session.createDurableSubscriber(topic, "name2");
 
 
 
-### 3.1、解释
-
- `VirtualTopic`**是为了解决持久化模式下多消费端同时接收同一条消息的问题。**     
-
-**分布式应用，这样可以避免同一个应用订阅同一个主题时导致必须修改`clientId`的限制(个人理解，其实我们就是在一个客户端下调用，用多个clientId不太好吧)，同时又可以在同一个应用的不同进行负载均衡**    
-
-
+>  `VirtualTopic`**是为了解决持久化模式下多消费端同时接收同一条消息的问题。**          
+>
+> **分布式应用，这样可以避免同一个应用订阅同一个主题时导致必须修改`clientId`的限制(个人理解，其实我们就是在一个客户端下调用，用多个clientId不太好吧)，同时又可以在同一个应用的不同进行负载均衡**    
 
 
 
@@ -596,20 +590,19 @@ TopicSubscriber consumer = session.createDurableSubscriber(topic, "name2");
 2、同时接收：既要归档，又要结算
 
 3、生产端只需向一个Destination发送：一把钥匙开一把锁，保持发送的一致性，否则容易乱套
-
 ```
 
 
 
 #### 3.2.1、可能的解决方案
 
-+ 方案A: 使用`Topic订阅模式`，虽然满足1对多同时接收，然而持久化模式下只能有一个持有`clientID`的消费者连接，不满足持久化需求（(**个人理解，其实我们就是在一个客户端下调用，用多个clientId不太好吧**)）
+方案A: 使用`Topic订阅模式`，虽然满足1对多同时接收，**然而持久化模式下只能有一个持有`clientID`的消费者连接，不满足持久化需求（(个人理解，其实我们就是在一个客户端下调用，用多个clientId不太好吧**)）    
 
-+ 方案B: 使用单队列，队列是1对1模式，消息只能给一个消费者，不满足多个同时接收的需求
+方案B: 使用单队列，队列是1对1模式，消息只能给一个消费者，不满足多个同时接收的需求    
 
-+ 方案C: 使用多队列，显然生产者不太愿意一条消息发送很多次，分别发送给不同的队列，万一队列A发送成功，队列B发送失败怎么办？一致性无法保证，容易乱套
+方案C: 使用多队列，显然生产者不太愿意一条消息发送很多次，分别发送给不同的队列，万一队列A发送成功，队列B发送失败怎么办？一致性无法保证，容易乱套    
 
-+ **方案D：就是将Topic和Queue相结合，各取所长。`VirtualTopic`,对生产者而言它是Topic，对消费者而言它是Queue **
+**方案D：就是将Topic和Queue相结合，各取所长。`VirtualTopic`,对生产者而言它是Topic，对消费者而言它是Queue **
 
 
 
@@ -617,7 +610,7 @@ TopicSubscriber consumer = session.createDurableSubscriber(topic, "name2");
 
 
 
-+ **对于消息发布者来说，就是一个正常的topic,名称以VirtualTopic.开始**
+> **对于消息发布者来说，就是一个正常的topic,名称以VirtualTopic.开始**
 
 ```java
 
@@ -690,11 +683,9 @@ public class Producer {
 
 ### 3.3、消费者 A 
 
+> **对于消息接收端来说，是个队列，不同应用里使用不同的前缀作为队列名称，即可表明自己的身份即可实现消费端应用分组**
 
 
-+ **对于消息接收端来说，是个队列，不同应用里使用不同的前缀作为队列名称，即可表明自己的身份即可实现消费端应用分组**
-
-  
 
 ```java
  Destination destination = session.createQueue("Consumer.AA.VirtualTopic.Name");

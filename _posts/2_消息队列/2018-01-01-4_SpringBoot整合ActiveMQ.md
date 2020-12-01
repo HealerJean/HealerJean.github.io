@@ -12,11 +12,11 @@ description: SpringBoot整合ActiveMQ
 
 
 
-**前言**        
+**前言**     
 
-[博主github](https://github.com/HealerJean)     
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
-[博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)           
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)          
 
 
 
@@ -40,12 +40,11 @@ description: SpringBoot整合ActiveMQ
 
 ```xml
 
-        <!-- activemq -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-activemq</artifactId>
-        </dependency>
-        
+<!-- activemq -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-activemq</artifactId>
+</dependency>
 ```
 
 
@@ -274,7 +273,7 @@ GET http://localhost:8888/hlj/activemq/defaultTopic?msg=hello
 
 
 
-## 2、自定义的JmsTemplate发送queue和topic（非持久化和持久化）
+## 2、自定义的`JmsTemplate`发送`queue`和`topic`（非持久化和持久化）
 
 
 
