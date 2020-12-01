@@ -107,35 +107,6 @@ spring.redis.timeout=3000ms
 ### 2.1.2、`RedisConfig`
 
 ```java
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.fintech.scf.service.core.dto.CompanyCertificateDTO;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-
 @Configuration
 public class RedisConfig {
 
@@ -155,10 +126,10 @@ public class RedisConfig {
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         JavaTimeModule javaTimeModule = new JavaTimeModule();
-        javaTimeModule.addSerializer(LocalDateTime.class,new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        javaTimeModule.addSerializer(LocalDate.class,new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        javaTimeModule.addDeserializer(LocalDateTime.class,new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        javaTimeModule.addDeserializer(LocalDate.class,new LocalDateDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         objectMapper.registerModule(javaTimeModule);
         jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
         template.setValueSerializer(jackson2JsonRedisSerializer);
@@ -166,6 +137,14 @@ public class RedisConfig {
         template.setConnectionFactory(redisConnectionFactory);
         return template;
     }
+
+    @Bean(name = "redisson")
+    public RedissonClient redissonClient() throws IOException {
+        InputStream in = this.getClass().getResourceAsStream("/redisson.yaml");
+        Config config = Config.fromYAML(in);
+        return Redisson.create(config);
+    }
+}
 
 ```
 
@@ -364,6 +343,108 @@ public class CacheServiceImpl implements CacheService {
 }
 
 ```
+
+
+
+
+
+## 2、CacheService
+
+```java
+@Service
+public class CacheServiceImpl implements CacheService {
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+    @Autowired
+    private RedissonClient redisson;
+
+    private final String SEQNO_FORMAT = "0000";
+    private final String REDIS_PREFIX = REDIS_CSF + ":";
+    private final String REDIS_LOCK_PREFIX = REDIS_LOCK + ":";
+
+    @Override
+    public void set(String key, Object value, long timeout, TimeUnit timeUnit) {
+        redisTemplate.opsForValue().set(REDIS_PREFIX + key, value, timeout, timeUnit);
+    }
+
+    @Override
+    public void set(String key, Object value) {
+        redisTemplate.opsForValue().set(REDIS_PREFIX + key, value);
+    }
+
+    @Override
+    public Object get(String key) {
+        return redisTemplate.opsForValue().get(REDIS_PREFIX + key);
+    }
+
+    @Override
+    public void delete(String key) {
+        redisTemplate.delete(REDIS_PREFIX + key);
+    }
+
+    @Override
+    public String generateSeqNo(String prefixKey) {
+        String minuteStr = DateUtils.toString(LocalDateTime.now(), DateUtils.YYYYMMddHHmmss);
+        StringBuffer sb = new StringBuffer();
+        sb.append(prefixKey).append(minuteStr);
+        String temp = sb.toString();
+        Long number = this.redisTemplate.opsForValue().increment(temp, 1L);
+        this.redisTemplate.expire(temp, 2L, TimeUnit.SECONDS);
+        DecimalFormat decimalFormat = new DecimalFormat(SEQNO_FORMAT);
+        return sb.append(decimalFormat.format(number)).toString();
+    }
+
+    @Override
+    public String generateSeqNo() {
+        String minuteStr = DateUtils.toString(LocalDateTime.now(), DateUtils.YYYYMMddHHmmss);
+        StringBuffer sb = new StringBuffer().append(minuteStr);
+        String temp = sb.toString();
+        Long number = this.redisTemplate.opsForValue().increment(temp, 1L);
+        this.redisTemplate.expire(temp, 2L, TimeUnit.SECONDS);
+        DecimalFormat decimalFormat = new DecimalFormat(SEQNO_FORMAT);
+        return sb.append(decimalFormat.format(number)).toString();
+    }
+
+    @Override
+    public Long increment(String key, long number) {
+        return redisTemplate.opsForValue().increment(REDIS_PREFIX + key, number);
+    }
+
+    @Override
+    public void expire(String key, long timeout, TimeUnit timeUnit) {
+        redisTemplate.expire(REDIS_PREFIX + key, timeout, timeUnit);
+    }
+
+    @Override
+    public boolean lock(String key, long timeout, TimeUnit timeUnit) {
+        try {
+            RLock lock = redisson.getLock(REDIS_PREFIX + REDIS_LOCK_PREFIX + key);
+            return lock.tryLock(0, timeout, timeUnit);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public void unlock(String key) {
+        RLock lock = redisson.getLock(REDIS_PREFIX + REDIS_LOCK_PREFIX + key);
+        lock.unlock();
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

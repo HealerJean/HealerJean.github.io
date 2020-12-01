@@ -339,8 +339,6 @@ private static void sendGroupMessage(Session session, MessageProducer producer)
 
 ### 2..5、如果没有组，则两个消费者，都会消费
 
-
-
 ```java
 private static void sendGroupMessage(Session session, MessageProducer producer) 
     throws JMSException {

@@ -8,15 +8,13 @@ category:
 description: ActiveMQ配置Mysql持久化
 ---
 
-#### 
+
 
 **前言**     
 
-[博主github](https://github.com/HealerJean)      
+ Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
-[博主个人博客http://blog.healerjean.com](http://HealerJean.github.io)      
-
-
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)          
 
 
 
@@ -517,7 +515,6 @@ public class MysqlQueueConsumer {
 
 
 
-
 ```
 
 
@@ -569,8 +566,6 @@ public class MysqlQueueConsumer {
 ### 2.5、运行消费者
 
 #### 2.5.1、观察控制台
-
-
 
 ```java
 收到消息ActiveMq 发送的消息1
@@ -757,8 +752,6 @@ public class MysqlPersistenceConsumer {
 
 ### 3.4、运行生产者
 
-
-
 #### 2.4.1、观察控制台
 
 ```java
@@ -801,7 +794,7 @@ public class MysqlPersistenceConsumer {
 
 ## 4、高速缓存
 
-**持久化topic先放到缓存中，提供给java程序执行，然后再慢慢放入到数据库中， 比如，消息比较多，我们先放到缓存中，提供给已知的订阅者服务，然后再放到数据库中，将来提供给其他未在线的人服务**
+> **持久化topic先放到缓存中，提供给java程序执行，然后再慢慢放入到数据库中， 比如，消息比较多，我们先放到缓存中，提供给已知的订阅者服务，然后再放到数据库中，将来提供给其他未在线的人服务**
 
 
 
