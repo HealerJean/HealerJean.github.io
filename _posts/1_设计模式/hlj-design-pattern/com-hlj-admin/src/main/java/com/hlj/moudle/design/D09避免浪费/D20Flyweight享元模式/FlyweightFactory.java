@@ -16,7 +16,6 @@ public class FlyweightFactory {
      * 获得网站分类
      */
     public AbstractWebSite getWebSiteCategory(String key) {
-        ThreadLocal
         if (!pool.containsKey(key)) {
             pool.put(key, new ConcreteWebSite(key));
         }

@@ -103,15 +103,11 @@ transient Node<E> last;
 
 
 
-## 1.4、`add(E e) `
+## 1.4、`add(E e) 、addLast(E e)`
 
 > 默认从链表的末尾添加数据      
 >
 > 如果当前链表为空，也就是`last`为空，则j新节点赋值给`last`节点，并且将新节点赋值给`first`节点。    如果`last`不为空，则`last`的`next`指向新的节点
-
-
-
-
 
 ```java
 public boolean add(E e) {
@@ -245,6 +241,59 @@ E unlink(Node<E> x) {
 
 
 
+## 1.7、 `remove(Object o) `
+
+```java
+public boolean remove(Object o) {
+    if (o == null) {
+        for (Node<E> x = first; x != null; x = x.next) {
+            if (x.item == null) {
+                unlink(x);
+                return true;
+            }
+        }
+    } else {
+        for (Node<E> x = first; x != null; x = x.next) {
+            if (o.equals(x.item)) {
+                unlink(x);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
+
+E unlink(Node<E> x) {
+    // assert x != null;
+    final E element = x.item;
+    final Node<E> next = x.next;
+    final Node<E> prev = x.prev;
+
+    if (prev == null) {
+        first = next;
+    } else {
+        prev.next = next;
+        x.prev = null;
+    }
+
+    if (next == null) {
+        last = prev;
+    } else {
+        next.prev = prev;
+        x.next = null;
+    }
+
+    x.item = null;
+    size--;
+    modCount++;
+    return element;
+}
+```
+
+
+
 ## 1.7、`set(int index, E element)`
 
 1、检查元素索引是否越界   
@@ -262,6 +311,10 @@ public E set(int index, E element) {
     return oldVal;
 }
 ```
+
+
+
+
 
 
 
