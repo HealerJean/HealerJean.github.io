@@ -255,6 +255,41 @@ private void rangeCheck(int index) {
 }
 ```
 
+
+
+```java
+@Test
+public  void RemoveIndexMethod() {
+    List<String> stringList = new ArrayList<String>();
+    stringList.add("String one");
+    stringList.add("String two");
+    stringList.add("String three");
+    stringList.remove(0);
+    System.out.println(stringList); //[String two, String three]
+
+
+    List<Integer> integerList = new ArrayList<>();
+    integerList.add(1);
+    integerList.add(2);
+    integerList.add(10000);
+    integerList.remove(0);
+    System.out.println(integerList); //[2, 10000]
+
+    integerList.remove((Integer)2);
+    System.out.println(integerList); //[10000]
+
+    integerList.remove((Integer)10000);
+    System.out.println(integerList); //[]
+
+    // [String two, String three]
+    // [2, 10000]
+    // [10000]
+    // []
+}
+```
+
+
+
 ## 1.6、`get(int index)`
 
 > 检查是否越界，直接返回数组下标 
@@ -359,7 +394,7 @@ c
 
 ```
 
-#### 11.3、测试2
+### 11.3、测试2
 
 ```java
     @Test
@@ -408,9 +443,57 @@ eeeeee
 
 
 
+## 1.9、`remove(Object o)`
+
+> 移除对象，只移除第一个重复的对象
+
+```java
+public boolean remove(Object o) {
+    if (o == null) {
+        for (int index = 0; index < size; index++)
+            if (elementData[index] == null) {
+                fastRemove(index);
+                return true;
+            }
+    } else {
+        for (int index = 0; index < size; index++)
+            if (o.equals(elementData[index])) {
+                fastRemove(index);
+                return true;
+            }
+    }
+    return false;
+}
+
+
+private void fastRemove(int index) {
+    modCount++;
+    int numMoved = size - index - 1;
+    if (numMoved > 0)
+        System.arraycopy(elementData, index+1, elementData, index,
+                         numMoved);
+    elementData[--size] = null; // clear to let GC do its work
+}
+```
 
 
 
+```java
+@Test
+	public void RemoveObjectMethod() {
+		List<String> stringList = new ArrayList<String>();
+		stringList.add("String one");
+		stringList.add("String one");
+		stringList.add("String two");
+
+		stringList.remove("String one"); //只能移除第一个重复元素
+		System.out.println(stringList.size()); //2
+		System.out.println(stringList); //[String one, String two]
+
+		// 2
+		// [String one, String two]
+	}
+```
 
 
 
