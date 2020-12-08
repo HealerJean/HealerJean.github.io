@@ -1,4 +1,4 @@
-package com.hlj.threadpool.thread;
+package com.hlj.threadpool;
 
 
 import java.util.concurrent.*;

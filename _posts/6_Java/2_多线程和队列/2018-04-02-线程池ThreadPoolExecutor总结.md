@@ -166,7 +166,8 @@ public class ThreadPoolUtils {
 
 ### 1.1.4、`imeUnit unit`：`keepAliveTime`的单位   
 
-> `TimeUnit`是一个枚举类型，其包括： NANOSECONDS ：     
+>  `TimeUnit`是一个枚举类型，其包括： NANOSECONDS ：     
+
 >
 > 1微毫秒 = 1微秒 / 1000 MICROSECONDS ：    
 >
@@ -186,7 +187,8 @@ public class ThreadPoolUtils {
 
 ### 1.1.5、`BlockingQueue workQueue`：该线程池中的任务队列：维护着等待执行的Runnable对象
 
-> > 当所有的核心线程都在干活时，新添加的任务会被添加到这个队列中等待处理，如果队列满了，则新建非核心线程执行任务。 常用的`workQueue`类型：
+> 当所有的核心线程都在干活时，新添加的任务会被添加到这个队列中等待处理，如果队列满了，则新建非核心线程执行任务。 常用的`workQueue`类型：
+>
 
 
 
@@ -302,9 +304,11 @@ public ThreadPoolExecutor(int corePoolSize,
 
 ## 2.2、`ExecutorService`中`execute()`和`submit()`方法的区别
 
-> 1. 方法`execute()`没有返回值，而`submit()`方法可以有返回值（通过Callable和Future接口）    
-> 2. 方法`execute()`提交的未执行的任务可以通过`remove(Runnable)`方法删除，而`submit()`提交的任务即使还未执行也不能通过`remove(Runnable)`方法删除    
-> 3. 方法`execute()`在默认情况下异常直接抛出（即打印堆栈信息），不能捕获，但是可以通过自定义`ThreadFactory`的方式进行捕获（通过`setUncaughtExceptionHandler`方法设置），而`submit()`方法在默认的情况下可以捕获异常
+> 1、方法`execute()`没有返回值，而`submit()`方法可以有返回值（通过Callable和Future接口）        
+>
+> 2、方法`execute()`提交的未执行的任务可以通过`remove(Runnable)`方法删除，而`submit()`提交的任务即使还未执行也不能通过`remove(Runnable)`方法删除        
+>
+> 3、方法`execute()`在默认情况下异常直接抛出（即打印堆栈信息），不能捕获，但是可以通过自定义`ThreadFactory`的方式进行捕获（通过`setUncaughtExceptionHandler`方法设置），而`submit()`方法在默认的情况下可以捕获异常
 
 
 
@@ -363,7 +367,7 @@ public class FixedThreadPoolTest {
 
 `corePoolSize`设置为0，`maximumPoolSize`为`Integer.MAX_VALUE`，    队列为`SynchronousQueue`，   
 
-`SynchronousQueue`：不存储元素的阻塞队列 ,每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态,每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态
+`SynchronousQueue`：**不存储元素的阻塞队列 ,每个插入操作必须等到另一个线程调用移除操作**，否则插入操作一直处于阻塞状态,每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态
 
 
 
@@ -410,8 +414,6 @@ public class NewCachedThreadPooltest {
 
 
 ## 2.2、中断判断  
-
-
 
 ### 2.2.1、`isShutDown()`     
 
@@ -595,7 +597,7 @@ public <T> Future<T> submit(Callable<T> task) {
 
 
 
-#### 2.6.1.3、这个时候回发现 `newTaskFor` 参数不同，返回的都是一个`FtureTask`对象  
+这个时候回发现 `newTaskFor` 参数不同，返回的都是一个`FtureTask`对象  
 
 ```java
 protected <T> RunnableFuture<T> newTaskFor(Runnable runnable, T value) {
@@ -612,8 +614,6 @@ protected <T> RunnableFuture<T> newTaskFor(Callable<T> callable) {
 
 
 **看到了下面，其实就大致可以知道，Runnable会在这里转化成Callable。我们来看下Executors.callable()**    
-
-
 
 ```java
 
@@ -632,11 +632,7 @@ public FutureTask(Callable<V> callable) {
 
 
 
-
-
-#### 2.6.1.4、`submit()`返回的是一个`RunnableFuture`类对象，真正是通过`newTaskFor()`方法返回一个`new FutureTask()`对象。所以`submit()`返回的真正的对象是`FutureTask`对象。   
-
-
+`submit()`返回的是一个`RunnableFuture`类对象，真正是通过`newTaskFor()`方法返回一个`new FutureTask()`对象。所以`submit()`返回的真正的对象是`FutureTask`对象。   
 
 ```java
 public interface RunnableFuture<V> extends Runnable, Future<V> {
@@ -854,36 +850,35 @@ public class D01FutureCancle {
     }
 
 
-class TaskCallable implements Callable<String> {
+    class TaskCallable implements Callable<String> {
 
-
-    @Override
-    public String call() throws Exception {
-        Thread.sleep(5000);
-        int i = 1/0 ;
-        System.out.println("submit方法执行任务完成" + "   thread name: " + Thread.currentThread().getName());
-        return SUCCESS;
+        @Override
+        public String call() throws Exception {
+            Thread.sleep(5000);
+            int i = 1/0 ;
+            System.out.println("submit方法执行任务完成" + "   thread name: " + Thread.currentThread().getName());
+            return SUCCESS;
+        }
     }
-}
 
 }
 
 
 
 线程开始执行
-future.isDone()=false
-ExecutionException future.isDone()=true
-java.util.concurrent.ExecutionException: java.lang.ArithmeticException: / by zero
-	at java.util.concurrent.FutureTask.report(FutureTask.java:122)
-	at java.util.concurrent.FutureTask.get(FutureTask.java:192)
-	at com.hlj.threadpool.d01Submit.D02SubmitFuture.D01FutureCancle.main(D01FutureCancle.java:24)
-Caused by: java.lang.ArithmeticException: / by zero
-	at com.hlj.threadpool.d01Submit.D02SubmitFuture.D01FutureCancle$TaskCallable.call(D01FutureCancle.java:46)
-	at com.hlj.threadpool.d01Submit.D02SubmitFuture.D01FutureCancle$TaskCallable.call(D01FutureCancle.java:40)
-	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
-	at java.lang.Thread.run(Thread.java:748)
+    future.isDone()=false
+    ExecutionException future.isDone()=true
+    java.util.concurrent.ExecutionException: java.lang.ArithmeticException: / by zero
+        at java.util.concurrent.FutureTask.report(FutureTask.java:122)
+        at java.util.concurrent.FutureTask.get(FutureTask.java:192)
+        at com.hlj.threadpool.d01Submit.D02SubmitFuture.D01FutureCancle.main(D01FutureCancle.java:24)
+        Caused by: java.lang.ArithmeticException: / by zero
+            at com.hlj.threadpool.d01Submit.D02SubmitFuture.D01FutureCancle$TaskCallable.call(D01FutureCancle.java:46)
+            at com.hlj.threadpool.d01Submit.D02SubmitFuture.D01FutureCancle$TaskCallable.call(D01FutureCancle.java:40)
+            at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+            at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+            at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+            at java.lang.Thread.run(Thread.java:748)
 ```
 
 

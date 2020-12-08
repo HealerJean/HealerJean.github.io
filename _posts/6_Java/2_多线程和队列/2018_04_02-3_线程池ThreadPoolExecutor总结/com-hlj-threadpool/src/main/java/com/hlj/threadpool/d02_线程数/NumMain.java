@@ -1,4 +1,4 @@
-package com.hlj.threadpool.ThreadNum;
+package com.hlj.threadpool.d02_线程数;
 
 /**
  * @Description
