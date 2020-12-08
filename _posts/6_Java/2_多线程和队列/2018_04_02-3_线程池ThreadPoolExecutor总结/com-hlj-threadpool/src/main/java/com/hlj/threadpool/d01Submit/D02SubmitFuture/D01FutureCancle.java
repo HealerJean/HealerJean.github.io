@@ -9,16 +9,22 @@ import java.util.concurrent.*;
  */
 public class D01FutureCancle {
 
-    /** 信号量 */
+    /**
+     * 信号量
+     */
     private Semaphore semaphore = new Semaphore(0); // 1
 
-    /** 线程池 */
+    /**
+     * 线程池
+     */
     private ThreadPoolExecutor pool = new ThreadPoolExecutor(3, 5, 3, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(3));
 
-    /** Future */
-    private Future<String> future ;
+    /**
+     * Future
+     */
+    private Future<String> future;
 
-    public void test(){
+    public void test() {
 
         future = pool.submit(new Callable<String>() {
 
@@ -40,7 +46,7 @@ public class D01FutureCancle {
         try {
             // 等待3s
             result = future.get(3, TimeUnit.SECONDS);
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("超时异常");
         }
 
@@ -48,8 +54,8 @@ public class D01FutureCancle {
         boolean cancelResult = future.cancel(true);
 
         System.out.println("result is " + result);
-        System.out.println("删除结果："  +cancelResult);
-        System.out.println("当前active线程数：" +pool.getActiveCount());
+        System.out.println("删除结果：" + cancelResult);
+        System.out.println("当前active线程数：" + pool.getActiveCount());
 
     }
 

@@ -18,8 +18,7 @@ public class CallableSubmit {
         System.out.println("线程开始执行");
 
         Future<String> future = executorService.submit(new CallableSubmit().new TaskCallable());
-        try {select shop, item, max(volumn) max_volumn from sales s1 where s1.volumn = (select max(volumn) from sales s2 where s1.shop = s2.shop)group by shop;
-
+        try {
             String s = future.get();
             if (SUCCESS.equals(s)) {
                 System.out.println("线程执行结束");
