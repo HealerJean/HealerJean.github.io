@@ -391,17 +391,24 @@ explain   select id from order_info  where  id = 1 and ref_user_id = 1;
 
 **回表：表示即使使用索引筛选了，但是查询的字段不是全部都是索引列**      
 
-| Extra                 | 说明                          |
-| --------------------- | ----------------------------- |
-| NULL                  | 查询的不全都是索引            |
-| using index           | 使用覆盖索引的时候就会出现    |
-| using index condition | 查询条件是索引的一个范围      |
-| using where           | 查询条件包含普通的条件        |
-| Using filesort        | 排序 不能通过索引达到排序效果 |
-
-
+| Extra                     | 说明                                                         |
+| ------------------------- | ------------------------------------------------------------ |
+| NULL                      | 查询的不全都是索引                                           |
+| using index               | 使用覆盖索引的时候就会出现                                   |
+| using where               | 查询条件包含普通的条件（在查找使用索引的情况下，需要回表去查询所需的数据） |
+| using index condition     | 查询条件是索引的一个范围：查找使用了索引，但是需要回表查询数据 |
+| using index & using where | **查找使用了索引，但是需要的数据都在索引列中能找到，所以不需要回表查询数据** |
+| Using filesort            | 排序 不能通过索引达到排序效果                                |
 
 `using index` > `using where` >  `using index condition` ，如果不需要回表查询数据，效率上应该比较快的
+
+
+
+
+
+
+
+
 
 
 
