@@ -90,20 +90,25 @@ Exception in thread "main" java.lang.NoSuchMethodError: org.junit.platform.commo
 ### 2.2、开始测试
 
 ```java
-@SpringBootTest
-class SpirngAopApplicationTests {
+@Slf4j
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = AppApplication.class)
+public class MainTest {
 
-   @Autowired
-    private AppBean appBean;
     @Autowired
-    private DataBean dataBean;
+    private CacheService cacheService ;
 
     @Test
     public void test(){
-        System.out.println(dataBean == appBean.getDataBean());
+        while (true){
+            boolean lock = cacheService.lock("TEST", 1, TimeUnit.MINUTES);
+            if (lock){
+                log.info("锁状态【{}】", lock);
+            }
+        }
     }
-}
 
+}
 ```
 
 

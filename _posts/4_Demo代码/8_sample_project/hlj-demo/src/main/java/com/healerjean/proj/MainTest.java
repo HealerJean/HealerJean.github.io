@@ -1,5 +1,6 @@
 package com.healerjean.proj;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 /**
@@ -9,10 +10,12 @@ import org.junit.Test;
  * @Description
  */
 
-public class TestMain {
+@Slf4j
+public class MainTest {
 
     @Test
     public void test() {
+        log.info("start--------middle--------end：{}", "1");
     }
 
 }
