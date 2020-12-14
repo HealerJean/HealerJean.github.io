@@ -188,7 +188,8 @@ public class ThreadPoolUtils {
 ### 1.1.5、`BlockingQueue workQueue`：该线程池中的任务队列：维护着等待执行的Runnable对象
 
 > 当所有的核心线程都在干活时，新添加的任务会被添加到这个队列中等待处理，如果队列满了，则新建非核心线程执行任务。 常用的`workQueue`类型：
->
+
+>**发现如果阻塞队列数量>0，则使用 LinkedBlockingQueue，否则使用 SynchronousQueue。**
 
 
 
