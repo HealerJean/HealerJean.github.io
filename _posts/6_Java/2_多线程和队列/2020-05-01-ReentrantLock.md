@@ -18,23 +18,23 @@ description: ReentrantLock
 
 # 1、AQS
 
-> **`AbstarctQueuedSynchronizer`简称`AQS`，是一个用于构建锁和同步容器的框架**。事实上`concurrent`包内许多类都是基于AQS构建的，     
+> 谈到并发，不得不谈ReentrantLock；而谈到ReentrantLock，不得不谈AbstractQueuedSynchronizer（AQS）！    
 >
-> 例如ReentrantLock，Semphore，CountDownLatch，ReentrantReadWriteLock，FutureTask等。AQS解决了在实现同步容器时大量的细节问题。
+> `AbstractQuenedSynchronizer`：类如其名，抽象的队列式的同步器，AQS定义了一套多线程访问共享资源的同步器框架，是除了java自带的synchronized关键字之外的锁机制。。事实上`concurrent`包内许多类都是基于AQS构建的。    
+>
+> > 例如ReentrantLock，Semphore，CountDownLatch，ReentrantReadWriteLock，FutureTask等。AQS解决了在实现同步容器时大量的细节问题
 
 
 
-AQS使用一个FIFO队列表示排队等待锁的线程，队列头结点称作“哨兵节点”或者“哑结点”，它不与任何线程关联。其他的节点与等待线程关联，每个阶段维护一个等待状态`waitStatus`。如图：
+![image-20201215102652905](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20201215102652905.png)
+
+它维护了一个`volatile int state`（代表共享资源）和一个FIFO线程等待队列（多线程争用资源被阻塞时会进入此队列）。 state用来持有同步状态。使用getState， setState， compareAndSetState方法来进行状态的获取和更新。 对state变量值的更新都采用CAS操作保证更新操作的原子性。     
 
 
 
-![image-20201214173045937](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20201214173045937.png)
+以`ReentrantLock`为例，`ReentrantLock`用它来表示线程重入锁的次数，`state`初始化为0，表示未锁定状态。A线程`lock()`时，会调用`tryAcquire()`独占该锁并将`state+1`。    
 
-
-
-
-
-AQS中还有一个表示状态的字段`state`，例如`ReentrantLock`用它来表示线程重入锁的次数，`Semphore`用它表示剩余的许可数量，`FutureTask`用它表示任务的状态。对`state`变量值的更新都采用CAS操作保证更新操作的原子性。    
+此后，其他线程再`tryAcquire()`时就会失败，直到A线程`unlock()`到`state=0`（即释放锁）为止，其它线程才有机会获取该锁。当然，释放锁之前，A线程自己是可以重复获取此锁的（state会累加），这就是可重入的概念。但要注意，**获取多少次就要释放多么次，这样才能保证state是能回到零态的**。
 
 
 
@@ -78,6 +78,30 @@ public abstract class AbstractOwnableSynchronizer
     }
 }
 
+```
+
+
+
+
+
+ **AQS的实现依赖内部的同步先进先出队列（FIFO双向队列）表示排队等待锁的线程。队列头节点称作“哨兵节点”或者“哑节点”。其他的节点与等待线程关联，每个节点维护一个等待状态waitStatus。如果当前线程获取同步状态失败，AQS会将该线程以及等待状态等信息构造成一个Node，将其加入同步队列的尾部，同时阻塞当前线程，当同步状态释放时，唤醒队列的头节点**。      
+
+
+
+Node结点是对每一个等待获取资源的线程的封装，其包含了需要同步的线程本身及其等待状态，如是否被阻塞、是否等待唤醒、是否已经被取消等。变量`waitStatus`则表示当前Node结点的等待状态，共有5种取值`CANCELLED`、`SIGNAL`、`CONDITION`、`PROPAGATE`、0。       
+
+注意，**负值表示结点处于有效等待状态，而正值表示结点已被取消。所以源码中很多地方用>0、<0来判断结点的状态是否正常**。
+
+```
+SIGNAL(-1)：表示后继结点在等待当前结点唤醒。后继结点入队时，会将前继结点的状态更新为SIGNAL。
+
+CONDITION(-2)：表示结点等待在Condition上，当其他线程调用了Condition的signal()方法后，CONDITION状态的结点将从等待队列转移到同步队列中，等待获取同步锁。
+
+PROPAGATE(-3)：共享模式下，前继结点不仅会唤醒其后继结点，同时也可能会唤醒后继的后继结点。
+
+CANCELLED(1)：表示当前结点已取消调度。当timeout或被中断（响应中断的情况下），会触发变更为此状态，进入该状态后的结点将不会再变化。
+
+0：新结点入队时的默认状态。
 ```
 
 
@@ -276,7 +300,11 @@ private Node enq(final Node node) {
 
 #### 2.2.1.3、第三步：挂起
 
-> 这个方法让已经入队的线程尝试获取锁，若失败则会被挂起。
+> 这个方法让已经入队的线程尝试获取锁，若失败则会被挂起。    
+>
+> 通过`tryAcquire()`和`addWaiter()`，该线程获取资源失败，已经被放入等待队列尾部了。聪明的你立刻应该能想到该线程下一部该干什么了吧：    
+>
+> **进入等待状态休息，直到其他线程彻底释放资源后唤醒自己，自己再拿到资源，然后就可以去干自己想干的事了**。没错，就是这样！是不是跟医院排队拿号有点相似~~acquireQueued()就是干这件事：**在等待队列中排队拿号（中间没其它事干可以休息），直到拿到号后再返回**。这个函数非常关键，还是上源码吧：
 
 ```java
 /**
@@ -288,42 +316,58 @@ final boolean acquireQueued(final Node node, int arg) {
         boolean interrupted = false; //标记线程是否被中断过
         for (;;) {
             final Node p = node.predecessor(); //获取前驱节点
-            //如果前驱是head,即该结点已成老二，那么便有资格去尝试获取锁
+           //如果前驱是head，即该结点已成老二，那么便有资格去尝试获取资源（可能是老大释放完资源唤醒自己的，当然也可能被interrupt了）。
             if (p == head && tryAcquire(arg)) {
-                setHead(node); // 获取成功,将当前节点设置为head节点
-                p.next = null; // 原head节点出队,在某个时间点被GC回收
+                setHead(node); // 拿到资源后，将head指向该结点。所以head所指的标杆结点，就是当前获取到资源的那个结点或null
+                p.next = null; //setHead中node.prev已置为null，此处再将head.next置为null，就是为了方便GC回收以前的head结点。也就意味着之前拿完资源的结点出队了！
                 failed = false; //获取成功
-                return interrupted; //返回是否被中断过
+                return interrupted; //返回等待过程中是否被中断过
             }
-            // 判断获取失败后是否可以挂起,若可以则挂起
+            
+            
+            // 如果自己可以休息了，就通过park()进入waiting状态，直到被unpark()。
+            // 如果不可中断的情况下被中断了，那么会从park()中醒过来，发现拿不到资源，从而继续进入park()等待
             if (shouldParkAfterFailedAcquire(p, node) &&
                 parkAndCheckInterrupt())
                 // 线程若被中断,设置interrupted为true
                 interrupted = true;
         }
     } finally {
+        // 如果等待过程中没有成功获取资源（如timeout，或者可中断的情况下被中断了），那么取消结点在队列中的等待。
         if (failed)
             cancelAcquire(node);
     }
 }
 
-// 值表示线程已被取消
-/** waitStatus value to indicate thread has cancelled */
+// 表示当前结点已取消调度。当timeout或被中断（响应中断的情况下），会触发变更为此状态，进入该状态后的结点将不会再变化。
 static final int CANCELLED =  1;
-//指示后续线程需要打开
-/** waitStatus value to indicate successor's thread needs unparking */
+// 表示后继结点在等待当前结点唤醒。后继结点入队时，会将前继结点的状态更新为SIGNAL。
 static final int SIGNAL    = -1;
-//指示线程处于等待状态
-/** waitStatus value to indicate thread is waiting on condition */
+// 表示结点等待在Condition上，当其他线程调用了Condition的signal()方法后，CONDITION状态的结点将从等待队列转移到同步队列中，等待获取同步锁。
 static final int CONDITION = -2;
-//指示下一个被默许的应该无条件地传播
-
-/**
- * 指示下一个被默许的应该无条件地传播
-*/
+// 共享模式下，前继结点不仅会唤醒其后继结点，同时也可能会唤醒后继的后继结点。
 static final int PROPAGATE = -3;
+//负值表示结点处于有效等待状态，而正值表示结点已被取消。所以源码中很多地方用>0、<0来判断结点的状态是否正常。
 
 
+
+```
+
+
+
+> 此方法主要用于检查状态，看看自己是否真的可以去休息了，万一队列前边的线程都放弃了只是瞎站着，那也说不定，对吧！   
+>
+> **线程入队后能够挂起的前提是，它的前驱节点的状态为`SIGNAL`，它的含义是“Hi，前面的兄弟，如果你获取锁并且出队后，记得把我唤醒！”。**    
+>
+> 所以`shouldParkAfterFailedAcquire`会先判断当前节点的前驱是否状态符合要求，   
+>
+> 若符合则返回true，   然后调用`parkAndCheckInterrupt`，将自己挂起,     
+>
+> 如果不符合，再看前驱节点是否>0(CANCELLED)，若是那么向前遍历直到找到第一个符合要求的前驱，若不是则将前驱节点的状态设置为SIGNAL。    
+
+
+
+```java
 /**
  * 判断当前线程获取锁失败之后是否需要挂起.
  */
@@ -331,46 +375,48 @@ private static boolean shouldParkAfterFailedAcquire(Node pred, Node node) {
     //前驱节点的状态
     int ws = pred.waitStatus;
     if (ws == Node.SIGNAL)
-        // 前驱节点状态为signal,返回true
+        // 前驱节点状态为signal,返回true, (如果已经告诉前驱拿完号后通知自己一下，那就可以安心休息了)
         return true;
     // 前驱节点状态为CANCELLED
     if (ws > 0) {
-        // 从队尾向前寻找第一个状态不为CANCELLED的节点
+        //  如果前驱放弃了，那就一直往前找，直到找到最近一个正常等待的状态，并排在它的后边。
+        // 注意：那些放弃的结点，由于被自己“加塞”到它们前边，它们相当于形成一个无引用链，稍后就会被保安大叔赶走了(GC回收)！
         do {
             node.prev = pred = pred.prev;
         } while (pred.waitStatus > 0);
         pred.next = node;
     } else {
-        // 将前驱节点的状态设置为SIGNAL
+        // 如果前驱正常，那就把前驱的状态设置成SIGNAL，告诉它拿完号后通知自己一下。有可能失败，人家说不定刚刚释放完呢！
         compareAndSetWaitStatus(pred, ws, Node.SIGNAL);
     }
     return false;
 }
 
+```
+
+
+
+
+
+> 如果线程找好安全休息点后，那就可以安心去休息了。此方法就是让线程去休息，真正进入等待状态。   
+>
+> `park()`会让当前线程进入`waiting`状态。在此状态下，有两种途径可以唤醒该线程：1）被unpark()；2）被interrupt()
+
+```java
 /**
  * 挂起当前线程,返回线程中断状态并重置
  */
 private final boolean parkAndCheckInterrupt() {
-    LockSupport.park(this);
-    return Thread.interrupted();
+    LockSupport.park(this); //调用park()使线程进入waiting状态
+    return Thread.interrupted(); //如果被唤醒，查看自己是不是被中断的。
 }
 ```
 
-**线程入队后能够挂起的前提是，它的前驱节点的状态为`SIGNAL`，它的含义是“Hi，前面的兄弟，如果你获取锁并且出队后，记得把我唤醒！”。**    
-
-所以`shouldParkAfterFailedAcquire`会先判断当前节点的前驱是否状态符合要求，   
-
-若符合则返回true，   然后调用`parkAndCheckInterrupt`，将自己挂起,     
-
-如果不符合，再看前驱节点是否>0(CANCELLED)，若是那么向前遍历直到找到第一个符合要求的前驱，若不是则将前驱节点的状态设置为SIGNAL。    
 
 
 
- 整个流程中，如果前驱结点的状态不是SIGNAL，那么自己就不能安心挂起，需要去找个安心的挂起点，同时可以再尝试下看有没有机会去尝试竞争锁。
 
-![image-20201214183852058](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20201214183852058.png)
-
-
+![image-20201215111651413](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20201215111651413.png)
 
 
 
@@ -383,9 +429,9 @@ public void unlock() {
   
 public final boolean release(int arg) {
     if (tryRelease(arg)) {
-        Node h = head;
+        Node h = head; ////找到头结点
         if (h != null && h.waitStatus != 0)
-            unparkSuccessor(h);
+            unparkSuccessor(h); ////唤醒等待队列里的下一个线程
         return true;
     }
     return false;
@@ -395,6 +441,12 @@ public final boolean release(int arg) {
 如果理解了加锁的过程，那么解锁看起来就容易多了。流程大致为先尝试释放锁，若释放成功，那么查看头结点的状态是否为SIGNAL，如果是则唤醒头结点的下个节点关联的线程，     
 
 **如果释放失败那么返回false表示解锁失败。这里我们也发现了，每次都只唤起头结点的下一个节点关联的线程。**
+
+
+
+
+
+> `tryRelease`的过程为：   当前释放锁的线程若不持有锁，则抛出异常。    若持有锁，计算释放后的state值是否为0，若为0表示锁已经被成功释放，并且则清空独占线程，最后更新state值，返回free。 
 
 ```java
 /**
@@ -421,11 +473,26 @@ protected final boolean tryRelease(int releases) {
 }
 ```
 
-`tryRelease`的过程为：   
 
-当前释放锁的线程若不持有锁，则抛出异常。    
 
-若持有锁，计算释放后的state值是否为0，若为0表示锁已经被成功释放，并且则清空独占线程，最后更新state值，返回free。 
+```java
+private void unparkSuccessor(Node node) {
+    //这里，node一般为当前线程所在的结点。
+    int ws = node.waitStatus;
+    if (ws < 0)//置零当前线程所在的结点状态，允许失败。
+        compareAndSetWaitStatus(node, ws, 0);
+
+    Node s = node.next;//找到下一个需要唤醒的结点s
+    if (s == null || s.waitStatus > 0) {//如果为空或已取消
+        s = null;
+        for (Node t = tail; t != null && t != node; t = t.prev) // 从后向前找。
+            if (t.waitStatus <= 0)//从这里可以看出，<=0的结点，都是还有效的结点。
+                s = t;
+    }
+    if (s != null)
+        LockSupport.unpark(s.thread);//唤醒
+}
+```
 
 
 
