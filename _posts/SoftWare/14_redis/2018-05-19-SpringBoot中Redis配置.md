@@ -1,6 +1,6 @@
 ---
 title: SpringBoot中Redis配置
-date: 2020-03-19 03:33:00
+date: 2019-05-19 03:33:00
 tags: 
 - Cache
 category: 
@@ -21,8 +21,6 @@ description: SpringBoot中Redis配置
 # 1、单节点 
 
 ## 1.1、自定义变量 
-
-
 
 ### 1.1.1、配置`application.properties`
 
