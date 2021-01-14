@@ -430,7 +430,7 @@ monitorexit;//离开同步块后，释放monitor许可证
 
 #### 2.2.1.1、加锁
 
-1、检查 mark word 的线程 id 。   
+1、检查 `mark word` 的线程 id 。   
 
 2、如果为空则设置 CAS 替换当前线程 id。如果替换成功则获取锁成功，如果失败则撤销偏向锁。   
 
@@ -466,7 +466,7 @@ monitorexit;//离开同步块后，释放monitor许可证
 
 #### 2.2.2.1、加锁
 
-1、JVM 在当前线程的栈帧中创建` Lock Reocrd`，并将对象头中的 `Mark Word` 复制到 Lock Reocrd 中。（Displaced Mark Word）    
+1、JVM 在当前线程的栈帧中创建` Lock Reocrd`，并将对象头中的 `Mark Word` 复制到 `Lock Reocrd` 中。（Displaced Mark Word）    
 
 2、线程尝试使用 CAS 将对象头中的 `Mark Word` 替换为指向 `Lock Reocrd` 的指针。如果成功则获得锁，如果失败则先检查对象的 `Mark Word` 是否指向当前线程的栈帧如果是则说明已经获取锁，否则说明其它线程竞争锁则膨胀为重量级锁。
 
@@ -474,7 +474,7 @@ monitorexit;//离开同步块后，释放monitor许可证
 
 #### 2.2.2.2、解锁
 
-1、使用 CAS 操作将 Mark Word 还原   
+1、使用 CAS 操作将 `Mark Word` 还原   
 
 2、如果第 1 步执行成功则释放完成    
 
