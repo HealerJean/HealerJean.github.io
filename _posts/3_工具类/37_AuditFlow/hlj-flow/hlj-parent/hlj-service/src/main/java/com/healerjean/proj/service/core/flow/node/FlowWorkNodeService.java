@@ -2,7 +2,6 @@ package com.healerjean.proj.service.core.flow.node;
 
 import com.healerjean.proj.dto.user.LoginUserDTO;
 import com.healerjean.proj.service.core.flow.dto.NodeTransferDataDTO;
-import com.healerjean.proj.service.core.flow.dto.ServiceNodeResult;
 import com.healerjean.proj.service.core.flow.enums.FlowEnum;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +66,7 @@ public abstract class FlowWorkNodeService {
      */
     protected abstract void fail(NodeTransferDataDTO nodeTransferDataDTO, LoginUserDTO loginUserDTO);
 
-    public boolean nextFlowNode(NodeBusisinessEnumTransferDataDTO nodeTransferDataDTO, LoginUserDTO loginUserDTO) {
+    public boolean nextFlowNode(NodeTransferDataDTO nodeTransferDataDTO, LoginUserDTO loginUserDTO) {
         if (nodeTransferDataDTO.getNext()) {
             FlowWorkNodeProcess.successForNextWorkNode(instantsNo, loginUserDTO);
             return true;

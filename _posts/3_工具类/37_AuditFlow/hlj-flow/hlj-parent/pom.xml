@@ -124,13 +124,6 @@
                 <version>${javax-validation.version}</version>
             </dependency>
 
-
-            <!--  taobao api  -->
-            <dependency>
-                <groupId>com.healerjean.proj</groupId>
-                <artifactId>taobao-api-20191021</artifactId>
-                <version>${taobao-api.version}</version>
-            </dependency>
         </dependencies>
 
     </dependencyManagement>

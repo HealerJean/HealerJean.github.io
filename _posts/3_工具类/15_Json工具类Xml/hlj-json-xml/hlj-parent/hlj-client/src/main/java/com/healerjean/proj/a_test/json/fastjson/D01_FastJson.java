@@ -232,4 +232,13 @@ public class D01_FastJson {
         log.info("json转集合 【 {} 】", list);
     }
 
+
+    @Test
+    public void testm(){
+        JsonDemoDTO jsonDemoDTO = JSONObject.parseObject("", JsonDemoDTO.class);
+        System.out.println(jsonDemoDTO);
+
+    }
+
+
 }
