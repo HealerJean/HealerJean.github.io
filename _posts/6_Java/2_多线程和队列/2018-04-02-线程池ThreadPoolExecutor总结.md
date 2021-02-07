@@ -211,13 +211,161 @@ public class ThreadPoolUtils {
 
 > `RejectedExecutionHandler`：任务拒绝/饱和策略，这玩意儿就是抛出异常专用的，下面会通过介绍`shotDowm`， `shotDownNow`来解释拒绝的过程
 
-`AbortPolicy`：直接抛出异常，默认     
+```java
+    import java.text.SimpleDateFormat;
+    import java.util.Date;
+    import java.util.concurrent.ArrayBlockingQueue;
+    import java.util.concurrent.BlockingQueue;
+    import java.util.concurrent.ThreadPoolExecutor;
+    import java.util.concurrent.TimeUnit;
 
-`CallerRunsPolicy`：只用调用所在的线程运行任务         
+    public class ExecutorDemo {
 
-`DiscardOldestPolicy`：丢弃队列里最近的一个任务，并执行当前任务。        
+        private static  SimpleDateFormat sdf  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        public static void main(String[] args) {
+            int corePoolSize = 1;
+            int maximumPoolSize = 1;
+            BlockingQueue queue = new  ArrayBlockingQueue<Runnable>(1);
+            ThreadPoolExecutor pool = new ThreadPoolExecutor(corePoolSize,  maximumPoolSize, 
+                    0, TimeUnit.SECONDS, queue ) ;
+            pool.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy ());
+            for(int i=0;i<10;i++){
+                final int index = i;
+                pool.submit(new Runnable(){
 
-`DiscardPolicy`：不处理，丢弃掉。在某些重要的场景下，可以采用记录日志或者存储到数据库中，而不应该直接丢弃。
+                    @Override
+                    public void run() {
+                        log(Thread.currentThread().getName()+"begin run task :"+index);
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        log(Thread.currentThread().getName()+" finish run  task :"+index);
+                    }
+
+                });
+            }
+
+            log("main thread before sleep!!!");
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log("before shutdown()");
+
+            pool.shutdown();
+
+            log("after shutdown(),pool.isTerminated=" + pool.isTerminated());
+            try {
+                pool.awaitTermination(1000L, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log("now,pool.isTerminated=" + pool.isTerminated());
+        }
+
+        protected static void log(String string) {
+            System.out.println(sdf.format(new Date())+"  "+string);
+        }
+
+    }
+```
+
+
+
+#### 1.1.7.1、`DiscardPolicy`：
+
+> 直接丢弃
+
+```java
+    2016-08-04 22:29:21  main thread before sleep!!!
+    2016-08-04 22:29:21  pool-1-thread-1begin run task :0
+    2016-08-04 22:29:22  pool-1-thread-1 finish run  task :0
+    2016-08-04 22:29:22  pool-1-thread-1begin run task :1
+    2016-08-04 22:29:23  pool-1-thread-1 finish run  task :1
+    2016-08-04 22:29:25  before shutdown()
+    2016-08-04 22:29:25  after shutdown(),pool.isTerminated=false
+    2016-08-04 22:29:25  now,pool.isTerminated=true
+
+```
+
+
+
+从结果可以看出，只有task0和task1两个任务被执行了。为什么只有task0和task1两个任务被执行了呢？   
+
+过程是这样的：由于我们的任务队列的容量为1.当task0正在执行的时候，task1被提交到了队列中但是还没有执行，受队列容量的限制，submit提交的task2~task9就都被直接抛弃了。因此就只有task0和task1被执行了。
+
+
+
+#### 1.1.7.2、`DiscardOldestPolicy`：
+
+> 丢弃队列中最老的任务   
+
+如果将拒绝策略改为：DiscardOldestPolicy(丢弃队列中比较久的任务)   
+
+```java
+    2016-08-04 22:31:58  pool-1-thread-1begin run task :0
+    2016-08-04 22:31:58  main thread before sleep!!!
+    2016-08-04 22:31:59  pool-1-thread-1 finish run  task :0
+    2016-08-04 22:31:59  pool-1-thread-1begin run task :9
+    2016-08-04 22:32:00  pool-1-thread-1 finish run  task :9
+    2016-08-04 22:32:02  before shutdown()
+    2016-08-04 22:32:02  after shutdown(),pool.isTerminated=false
+    2016-08-04 22:32:02  now,pool.isTerminated=true
+```
+
+从结果可以看出，只有task0和task9被执行了。
+
+
+
+
+
+#### 1.1.7.4、`CallerRunsPolicy`：将任务分给调用线程来执行
+
+> 没有任务被抛弃，而是将由的任务分配到main线程中执行了
+
+
+
+如果将拒绝策略改为：CallerRunsPolicy(即不用线程池中的线程执行，而是交给调用方来执行)   
+
+```java
+    2016-08-04 22:33:07  mainbegin run task :2
+    2016-08-04 22:33:07  pool-1-thread-1begin run task :0
+    2016-08-04 22:33:08  main finish run  task :2
+    2016-08-04 22:33:08  mainbegin run task :3
+    2016-08-04 22:33:08  pool-1-thread-1 finish run  task :0
+    2016-08-04 22:33:08  pool-1-thread-1begin run task :1
+    2016-08-04 22:33:09  pool-1-thread-1 finish run  task :1
+    2016-08-04 22:33:09  main finish run  task :3
+    2016-08-04 22:33:09  mainbegin run task :5
+    2016-08-04 22:33:09  pool-1-thread-1begin run task :4
+    2016-08-04 22:33:10  main finish run  task :5
+    2016-08-04 22:33:10  mainbegin run task :7
+    2016-08-04 22:33:10  pool-1-thread-1 finish run  task :4
+    2016-08-04 22:33:10  pool-1-thread-1begin run task :6
+    2016-08-04 22:33:11  main finish run  task :7
+    2016-08-04 22:33:11  mainbegin run task :9
+    2016-08-04 22:33:11  pool-1-thread-1 finish run  task :6
+    2016-08-04 22:33:11  pool-1-thread-1begin run task :8
+    2016-08-04 22:33:12  main finish run  task :9
+    2016-08-04 22:33:12  main thread before sleep!!!
+    2016-08-04 22:33:12  pool-1-thread-1 finish run  task :8
+    2016-08-04 22:33:16  before shutdown()
+    2016-08-04 22:33:16  after shutdown(),pool.isTerminated=false
+    2016-08-04 22:33:16  now,pool.isTerminated=true
+```
+
+从结果可以看出，没有任务被抛弃，而是将由的任务分配到main线程中执行了。
+
+
+
+#### 1.1.7.3、`AbortPolicy`：抛异常(默认)
+
+> 抛出异常的方式（AbortPolicy）丢弃任务并抛出RejectedExecutionException    
+
+
 
 
 
@@ -944,7 +1092,38 @@ public class CountDownLatchDemo implements Runnable {
 
 ### 2.4.2、使用submit提交任务，获取返回值判断线程池任务结束
 
-> 或者使用`idDone`判断  
+```java
+long startTime = System.currentTimeMillis();
+
+
+private void doOnceTasks(){
+  List<Future> futureList = Lists.newArrayListWithCapacity(15);
+  for(int i = 0; i < 15; ++i){
+    Future future = executor.submit(()->{
+      // 随机睡 0-5 秒
+      int sec = new Double(Math.random() * 5).intValue();
+      LockSupport.parkNanos(sec * 1000 * 1000 * 1000);
+      System.out.println(Thread.currentThread().getName() + "  end");
+    });
+    futureList.add(future);
+  }
+
+  // 等待所有任务执行结束
+  for(Future future : futureList){
+    try {
+      future.get();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+}
+long totalTime = (System.currentTimeMillis() - startTime) / NumberConstant.ONE_THOUSAND;
+
+```
+
+
+
+
 
 
 
