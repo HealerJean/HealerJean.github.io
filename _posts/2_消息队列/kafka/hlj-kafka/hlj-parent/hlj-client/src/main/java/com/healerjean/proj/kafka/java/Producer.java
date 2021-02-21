@@ -4,13 +4,13 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.junit.Test;
 
 import java.util.Properties;
 
 @Data
 @Slf4j
 public class Producer {
-
 
 
     private static final String TOPIC="HLJ_TOPIC_JAVA";
@@ -21,6 +21,7 @@ public class Producer {
         Properties configs = initConfig();
         producer = new KafkaProducer<>(configs);
     }
+
 
     private static Properties initConfig(){
         Properties properties = new Properties();
@@ -48,65 +49,82 @@ public class Producer {
 
         // 如果 acks=all，只有当所有参与复制的节点全部收到消息时，生产者才会收到一个来自服务器的成功响应。这种模式是最安全的，它可以保证不止一个服务器收到消息，
         // 就算有服务器发生崩溃，整个集群仍然可以运行。不过，它的延迟比 acks=1 时更高，因为我们要等待不只一个服务器节点接收消息。
-        properties.put(ProducerConfig.ACKS_CONFIG, "0");
+        properties.put(ProducerConfig.ACKS_CONFIG, "1");
 
         return properties;
     }
 
-    public static void main(String[] args){
 
+    /**
+     * 1、发送并忘记
+     * 解释：我们把消息发送给服务器，但并不关心它是否正常到达，本质上是一种异步的方式，只是它不会获取消息发送的返回结果，这种方式的吞吐量是最高的，但是无法保证消息的可靠性
+     *      大多数情况下，消息会正常到 达，因为 `Kafka` 是高可用的，而且生产者会自动尝试重发。不过，使用这种方式有时候 也会丢失一些消息。
+     * 注释1：我们使用生产者的 `send()` 方法发送 `ProducerRecord` 对象。从生产者的架构图里可以看 到，消息先是被放进缓冲区，然后使用单独的线程发送到服务器端。
+     * 注释2：`send() `方法会返 回一个包含 `RecordMetadata` 的 `Future` 对象，不过因为我们会忽略返回值，所以无法知 道消息是否发送成功。如果不关心发送结果，那么可以使用这种发送方式。比如，记录不太重要的应用程序日志。
+     * 注释3：**我们可以忽略发送消息时可能发生的错误或在服务器端可能发生的错误，但在发送消息之前，生产者还是有可能发生其他的异常**。这些异常有可能是 `SerializationException` (说明序列化消息失败)、`BufferExhaustedException` 或 `TimeoutException`(说明缓冲区已满)，又或者是` InterruptException`(说明发送线程被中断)。
+     */
+    @Test
+    public void sendAndForget(){
         String key = "Precision_Products";
-        ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, key, "Hello fireAndForgetRecord");
+        String value = "sendAndForget Msg";
+        ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, key, value);
+        try {
+            // 注释1
+            producer.send(record);
+        } catch (Exception e) {
+            // 注释2
+            log.info("消息发送失败", e);
+        }
+    }
 
-        //以下3种发送方式
-        //1、发送并忘记：我们把消息发送给服务器，但并不关心它是否正常到达。大多数情况下，消息会正常到达，因为 Kafka 是高可用的，而且生产者会自动尝试重发。不过，使用这种方式有时候 也会丢失一些消息
-        // 我们使用生产者的 send() 方法发送 ProducerRecord 对象。从生产者的架构图里可以看 到，消息先是被放进缓冲区，然后使用单独的线程发送到服务器端。
-        // send() 方法会返 回一个包含 RecordMetadata 的 Future 对象，不过因为我们会忽略返回值，所以无法知 道消息是否发送成功。如果不关心发送结果，那么可以使用这种发送方式。比如，记录不太重要的应用程序日志。
-        // try {
-        //     producer.send(record);
-        // } catch (Exception e) {
-        //     log.info("消息发送失败", e);
-        // }
 
+    /**
+     * 2、同步发送
+     * 解释：> 我们使用 `send()`方法发送消息，它会返回一个 `Future `对象，通过调用`get()` 方法进行等待，判断道消息是否发送成功。
+     * 注释1：在这里，`producer.send()` 方法先返回一个 `Future` 对象，然后调用 `Future` 对象的 `get()` 方法等待 `Kafka `响应。如果服务器返回错误，`get()` 方法会抛出异常。如果没有发生错误，我们会得到一个 `RecordMetadata` 对象，可以用它获取消息的偏移量
+     * 注释2：如果在发送数据之前或者在发送过程中发生了任何错误，比如 `broker` 返回了一个不允许重发消息的异常或者已经超过了重发的次数，那么就会抛出重试异常。另一类错误无法通过重试解决，比如“消息太大”异常。对于这类错误，KafkaProducer 不会进行任何重试，直接抛出异常。我们只是简单地把 异常信息打印出来。
+     */
+    @Test
+    public void sendSynchronize(){
+        String key = "Precision_Products";
+        String value = "sendSynchronize Msg" ;
+        ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, key, value);
+        try {
+            // 注释1
+            RecordMetadata recordMetadata = producer.send(record).get();
+            log.info("消息发送成功，返回结果【{}】",recordMetadata);
+        } catch (Exception e) {
+            // 注释2
+            log.error("消息发送失败", e);
+        }
 
-        //2、同步发送：我们使用 send() 方法发送消息，它会返回一个 Future 对象，调用 get() 方法进行等待， 就可以知道消息是否发送成功。
-        // //producer.send() 方法先返回一个 Future 对象，然后调用 Future 对象的 get() 方法等待 Kafka 响应。如果服务器返回错误，get() 方法会抛出异常。如果没有发生错 误，我们会得到一个 RecordMetadata 对象，可以用它获取消息的偏移量。
-        // try {
-        //     //在这里，producer.send() 方法先返回一个 Future 对象，然后调用 Future 对象的 get() 方法等待Kafka 响应。如果服务器返回错误，get() 方法会抛出异常。如果没有发生错 误，我们会得到一个 RecordMetadata 对象，可以用它获取消息的偏移量。
-        //     RecordMetadata recordMetadata = producer.send(record).get();
-        //     log.info("消息发送成功，返回结果【{}】",recordMetadata);
-        // } catch (Exception e) {
-        //     //如果在发送数据之前或者在发送过程中发生了任何错误，比如 broker 返回了一个不允许重发消息的异常或者已经超过了重发的次数，那么就会抛出异常。我们只是简单地把 异常信息打印出来。
-        //     log.error("消息发送失败", e);
-        // }
         // 打印日志
         // 2021-02-18 18:44:34 INFO  -[                                ]- 消息发送成功，返回结果【{"offset":0,"timestamp":1613645074360,"serializedKeySize":18,"serializedValueSize":25,"topicPartition":{"hash":-1133698772,"partition":0,"topic":"HLJ_TOPIC_JAVA"}}】 com.healerjean.proj.kafka.java.Producer.main[68]
         // 2021-02-18 18:45:14 INFO  -[                                ]- 消息发送成功，返回结果【{"offset":1,"timestamp":1613645114891,"serializedKeySize":18,"serializedValueSize":25,"topicPartition":{"hash":-1133698772,"partition":0,"topic":"HLJ_TOPIC_JAVA"}}】 com.healerjean.proj.kafka.java.Producer.main[68]
+    }
 
-
-        ProducerRecord<String, String> recordAck = new ProducerRecord<>("TEST_ACK_1", "TEST_ACK_KEY", "Hello");
-        for (int i = 0; i < 100000; i++) {
-            try {
-                //在这里，producer.send() 方法先返回一个 Future 对象，然后调用 Future 对象的 get() 方法等待Kafka 响应。如果服务器返回错误，get() 方法会抛出异常。如果没有发生错 误，我们会得到一个 RecordMetadata 对象，可以用它获取消息的偏移量。
-                RecordMetadata recordMetadata = producer.send(recordAck).get();
-                log.info("消息发送成功，返回结果【{}】",recordMetadata);
-            } catch (Exception e) {
-                //如果在发送数据之前或者在发送过程中发生了任何错误，比如 broker 返回了一个不允许重发消息的异常或者已经超过了重发的次数，那么就会抛出异常。我们只是简单地把 异常信息打印出来。
-                log.error("消息发送失败==========================", e);
+    /**
+     * 3、异步发送
+     */
+    @Test
+    public void sendAsync(){
+        String key = "Precision_Products";
+        String value = "sendAsync Msg" ;
+        ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, key, value);
+        producer.send(record, (metadata, exception) -> {
+            log.info("消息发送成功，返回结果【{}】",metadata);
+            if(exception != null){
+                exception.printStackTrace();
             }
-        }
-
-        // //3、异步发送
-        // producer.send(record, (metadata, exception) -> {
-        //     //如果 Kafka 返回一个错误，onCompletion 方法会抛出一个非空(non null)异常。这里 我们只是简单地把它打印出来，但是在生产环境应该有更好的处理方式。
-        //     log.info("消息发送成功，返回结果【{}】",metadata);
-        //     if(exception != null){
-        //         exception.printStackTrace();
-        //     }
-        // });
-        // 打印日志
+        });
+    }
 
 
+
+    public static void main(String[] args){
+
+        //以下3种发送方式
+        //1、发送并忘记：我们把消息发送给服务器，但并不关心它是否正常到达。大多数情况下，消息会正常到达，因为 Kafka 是高可用的，而且生产者会自动尝试重发。不过，使用这种方式有时候 也会丢失一些消息
 
         // // 其中 topic 和 value 是必填的， partition 和 key 是可选 的 。
         // // 1、如果指定了 partition，那么消息会 被发送至指定的 partition;
@@ -118,7 +136,6 @@ public class Producer {
         // producer.send(new ProducerRecord<>(TOPIC, "key", "(String topic, K key, V value)"));
         // producer.send(new ProducerRecord<>(TOPIC, "(String topic, V value)"));
         // producer.close();
-
     }
 
 
