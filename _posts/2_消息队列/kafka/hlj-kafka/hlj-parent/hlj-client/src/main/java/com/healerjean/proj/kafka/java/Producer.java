@@ -26,7 +26,8 @@ public class Producer {
     private static Properties initConfig(){
         Properties properties = new Properties();
 
-        // bootstrap.servers  表示 Kafka 集群 。 如果集群中有多台物理服务器 ，则服务器地址之间用逗号分隔，
+        // 指定 broker 的地址清单，表示 Kafka 集群， 如果集群中有多台物理服务器 ，则服务器地址之间用逗号分。
+        // 清单里不需要包含所有的 broker 地址，生产者会从给定的 broker 里查找到其他 broker 的信息。不过建议至少要 提供两个 broker 的信息，一旦其中一个宕机，生产者仍然能够连接到集群上。
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BROKER_LIST);
 
         // broker 希望接收到的消息的键和值都是字节数组  不过生 产者需要知道如何把这些 Java 对象转换成字节数组
