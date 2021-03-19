@@ -1,6 +1,6 @@
-package com.healerjean.proj.mapper;
+package com.healerjean.proj.springmachine.mapper;
 
-import com.healerjean.proj.entity.Order;
+import com.healerjean.proj.springmachine.entity.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

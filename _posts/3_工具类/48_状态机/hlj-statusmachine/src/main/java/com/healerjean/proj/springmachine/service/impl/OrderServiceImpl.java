@@ -1,10 +1,10 @@
-package com.healerjean.proj.service.impl;
+package com.healerjean.proj.springmachine.service.impl;
 
-import com.healerjean.proj.entity.Order;
-import com.healerjean.proj.entity.OrderEvent;
-import com.healerjean.proj.entity.OrderState;
-import com.healerjean.proj.mapper.OrderMapper;
-import com.healerjean.proj.service.OrderService;
+import com.healerjean.proj.springmachine.entity.Order;
+import com.healerjean.proj.springmachine.entity.OrderEvent;
+import com.healerjean.proj.springmachine.entity.OrderState;
+import com.healerjean.proj.springmachine.mapper.OrderMapper;
+import com.healerjean.proj.springmachine.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;

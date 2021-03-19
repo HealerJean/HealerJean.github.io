@@ -286,6 +286,11 @@ public class D01_Jackson {
 
 
 
+    @Test
+    public void test(){
+        System.out.println(JsonUtils.toObject(null, JsonDemoDTO.class));
+    }
+
 
 
 }
