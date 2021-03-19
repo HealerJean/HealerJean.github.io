@@ -1,6 +1,6 @@
-package com.healerjean.proj.listener;
+package com.healerjean.proj.springmachine.machine.listener;
 
-import com.healerjean.proj.entity.OrderEvent;
+import com.healerjean.proj.springmachine.entity.OrderEvent;
 import org.springframework.messaging.Message;
 import org.springframework.statemachine.annotation.OnTransition;
 import org.springframework.statemachine.annotation.WithStateMachine;

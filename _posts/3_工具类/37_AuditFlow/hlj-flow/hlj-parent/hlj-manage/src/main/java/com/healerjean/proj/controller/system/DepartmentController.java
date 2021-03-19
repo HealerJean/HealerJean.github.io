@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Table;
 import java.util.List;
 
 /**
@@ -47,7 +48,7 @@ public class DepartmentController extends BaseController {
         return ResponseBean.buildSuccess("获取树形结构所有部门成功", departmentTree);
     }
 
-
+@Table
     @ApiOperation(value = "部门添加",
             notes = "部门添加",
             consumes = MediaType.APPLICATION_JSON_VALUE,

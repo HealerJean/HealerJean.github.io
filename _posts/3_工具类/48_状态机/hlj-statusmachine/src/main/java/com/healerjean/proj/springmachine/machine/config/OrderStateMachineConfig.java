@@ -1,8 +1,8 @@
-package com.healerjean.proj.config;
+package com.healerjean.proj.springmachine.machine.config;
 
-import com.healerjean.proj.entity.Order;
-import com.healerjean.proj.entity.OrderEvent;
-import com.healerjean.proj.entity.OrderState;
+import com.healerjean.proj.springmachine.entity.Order;
+import com.healerjean.proj.springmachine.entity.OrderEvent;
+import com.healerjean.proj.springmachine.entity.OrderState;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.StateMachineContext;

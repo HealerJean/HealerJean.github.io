@@ -1,7 +1,7 @@
-package com.healerjean.proj.service;
+package com.healerjean.proj.springmachine.service;
 
 
-import com.healerjean.proj.entity.Order;
+import com.healerjean.proj.springmachine.entity.Order;
 
 /**
  * 订单服务

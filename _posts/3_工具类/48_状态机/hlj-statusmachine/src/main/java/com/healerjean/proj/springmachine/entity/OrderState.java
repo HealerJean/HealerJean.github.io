@@ -1,4 +1,4 @@
-package com.healerjean.proj.entity;
+package com.healerjean.proj.springmachine.entity;
 
 /**
  * 订单状态

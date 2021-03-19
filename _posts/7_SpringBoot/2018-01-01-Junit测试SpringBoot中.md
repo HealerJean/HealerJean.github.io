@@ -115,6 +115,81 @@ public class MainTest {
 
 
 
+# 3、单元测试可以暂停、继续(通过键盘控制)
+
+
+
+## 3.1、idea配置（记得重启idea）
+
+> **加上： -Deditable.java.test.console=true**
+
+
+
+![image-20210319175721399](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210319175721399.png)
+
+
+
+
+
+![image-20210319175737766](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210319175737766.png)
+
+
+
+
+
+## 3.2、测试
+
+
+
+```java
+@Slf4j
+@SpringBootTest(classes = StartApp.class)
+@RunWith(SpringRunner.class)
+public class BatteryInfoTest {
+
+
+  @Autowired
+  private CacheService cacheService ;
+
+
+  @Test
+  public void testSelect() {
+    before();
+
+    boolean lock = cacheService.lock("TEST", 1, TimeUnit.MINUTES);
+    if (lock){
+      log.info("锁状态【{}】", lock);
+    }
+
+    //继续调用
+    testSelect();
+  }
+  
+  
+  
+
+  public void before(){
+    Scanner scanner = new Scanner(System.in);
+    System.out.println("=========请输入任意内容即可继续=======================");
+    scanner.nextLine();
+  }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg) 
 
 

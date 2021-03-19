@@ -1,4 +1,4 @@
-package com.healerjean.proj.entity;
+package com.healerjean.proj.springmachine.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
