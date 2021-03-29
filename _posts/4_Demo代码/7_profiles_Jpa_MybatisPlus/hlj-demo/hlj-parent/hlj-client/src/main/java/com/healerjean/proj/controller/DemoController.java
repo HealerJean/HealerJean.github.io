@@ -116,7 +116,7 @@ public class DemoController {
     @GetMapping("demos")
     @ResponseBody
     public ResponseBean queryDemoList(DemoDTO demoDTO) {
-        log.info("样例--------查询Demo实体类-列表------数据信息", demoDTO);
+        log.info("样例--------查询Demo实体类-列表------数据信息 {}", demoDTO);
         if (demoDTO.getPage()) {
             return ResponseBean.buildSuccess(demoEntityService.queryDemoPage(demoDTO));
         }

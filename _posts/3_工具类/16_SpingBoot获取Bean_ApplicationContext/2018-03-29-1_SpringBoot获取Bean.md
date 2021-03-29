@@ -29,7 +29,7 @@ APIAdminUserService userService = SpringHelper.getBean(APIAdminUserService.class
 
 
 ```java
-package com.hlj.netty.websocket.helper;
+package com.sankuai.windmill.interact.support.utils;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -43,28 +43,28 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SpringHelper implements ApplicationContextAware {
-    private static ApplicationContext context = null;
+    private static ApplicationContext applicationContext = null;
 
     public SpringHelper() {
     }
 
+    @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        context = applicationContext;
+        SpringHelper.applicationContext = applicationContext;
     }
 
-    public static <T> T getBean(Class clazz) throws BeansException {
-        return context.getBean((Class<T>) clazz);
+    public static <T> T getBean(Class clazz) {
+        return applicationContext.getBean((Class<T>) clazz);
     }
 
-    public static <T> T getBean(String clazz) throws BeansException {
-        return (T) context.getBean(clazz);
+    public static <T> T getBean(String name, Class<T> clazz) {
+        return  applicationContext.getBean(name, clazz);
     }
 
     public static Object getBeanByName(String beanName) throws BeansException {
-        return context.getBean(beanName);
+        return applicationContext.getBean(beanName);
     }
 }
-
 
 ```
 

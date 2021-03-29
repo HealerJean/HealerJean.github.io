@@ -19,7 +19,7 @@
 
     <!-- 日志文件目录和压缩文件目录配置 -->
     <Properties>
-        <Property name="level">debug</Property>
+        <Property name="level">info</Property>
         <Property name="LOG_PATTERN">
             %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level -[%-32X{REQ_UID}]- %msg%xEx %logger{36}.%M[%L]%n
         </Property>
