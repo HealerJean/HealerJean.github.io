@@ -18,21 +18,12 @@ public final class ContextHolder {
      * @param userId
      */
     public static void setUserId(Long userId){
-        userIdCcontainer.set(userId);
+        if （userIdCcontainer.get() == null）{
+            userIdCcontainer.set(userId); 
+        }
     }
 
-    /**
-     * 把openId保存到上下文
-     * @param openId
-     */
-    public static void setOid(String openId){
-        oidContainer.set(openId);
-    }
-
-    public static void setUserIdAndOid(Long userId, String openId){
-        setUserId(userId);
-        setOid(openId);
-    }
+    
 
     /**
      * 获取用户ID
@@ -42,13 +33,6 @@ public final class ContextHolder {
         return userIdCcontainer.get();
     }
 
-    /**
-     * 获取用户oid
-     * @return
-     */
-    public static String getOid(){
-        return oidContainer.get();
-    }
 
     /**
      * 清空上下文
