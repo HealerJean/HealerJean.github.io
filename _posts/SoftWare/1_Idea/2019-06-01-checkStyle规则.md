@@ -1,11 +1,11 @@
 ---
-title: checkStyle分割
+title: checkStyle
 date: 2019-02-20 03:33:00
 tags: 
 - SpringBoot
 category: 
 - SpringBoot
-description: checkStyle分割
+description: checkStyle
 ---
 
 
