@@ -18,7 +18,7 @@ public class GrayUtil {
     /**
      * TODO 模拟数据 从配置中心获取
      */
-    public static final ImmutableMap<String, List<Object>> WHITE_MAP = ImmutableMap.of(
+    public static final ImmutableMap<String, List<?>> WHITE_MAP = ImmutableMap.of(
             GrayEnum.GrayBusinessEnum.TOPIC_CHANGE.getCode(), ImmutableList.of(10, 81),
             GrayEnum.GrayBusinessEnum.HELMET_ONLINE.getCode(), ImmutableList.of("10", "81")
     );
