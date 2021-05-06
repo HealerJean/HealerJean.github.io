@@ -1,11 +1,11 @@
 ---
-title: 四两拨千斤_HyperLogLog
+title: Rdis之四两拨千斤_HyperLogLog
 date: 2018-04-05 03:33:00
 tags: 
 - Redis
 category: 
 - Redis
-description: 四两拨千斤_HyperLogLog
+description: Rdis之四两拨千斤_HyperLogLog
 ---
 
 **前言**     
