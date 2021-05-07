@@ -1,6 +1,5 @@
-package com.healerjean.proj.cache.avengers.H01_hyperloglog;
+package com.healerjean.proj.cache.avengers.H01_四两拨千斤_HyperLogLog;
 
-import com.healerjean.proj.cache.avengers.H01_hyperloglog.dto.Experiment;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import redis.clients.jedis.Jedis;
@@ -48,14 +47,5 @@ public class TestMain {
     }
 
 
-
-    @Test
-    public void test(){
-        for (int i = 1000; i < 100000; i += 100) {
-            Experiment exp = new Experiment(i);
-            exp.work();
-            exp.debug();
-        }
-    }
 
 }

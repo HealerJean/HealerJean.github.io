@@ -13,7 +13,7 @@
         <Property name="fileGz">/Users/healerjean/Desktop/logs/gz</Property>
         <Property name="LOG_PATTERN">
 <!--            %d{yyyy-MM-dd HH:mm:ss} %-5level -[%-32X{REQ_UID}]- %msg%xEx %logger{36}.%M[%L]%n-->
-            %msg
+            %msg %n
         </Property>
     </Properties>
 
