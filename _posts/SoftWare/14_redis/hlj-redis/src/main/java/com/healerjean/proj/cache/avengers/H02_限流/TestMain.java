@@ -29,6 +29,10 @@ public class TestMain {
         }
     }
 
+    @Test
+    public void test1(){
+        System.out.println("1110011101011000101000010011000100110100001010101011".length());
+    }
 
 
 
