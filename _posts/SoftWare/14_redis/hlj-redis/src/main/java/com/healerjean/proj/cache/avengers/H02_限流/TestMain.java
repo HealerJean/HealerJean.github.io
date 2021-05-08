@@ -13,7 +13,6 @@ import redis.clients.jedis.Jedis;
 @Slf4j
 public class TestMain {
 
-
     @Test
     public void test() {
         Jedis jedis = new Jedis("127.0.0.1");
@@ -31,10 +30,9 @@ public class TestMain {
 
     @Test
     public void test1(){
+        System.out.println(Long.toBinaryString(4069885559915179L));
         System.out.println("1110011101011000101000010011000100110100001010101011".length());
     }
-
-
 
 
 }
