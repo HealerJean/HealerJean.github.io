@@ -1,21 +1,56 @@
 ---
-title: Redis发布订阅
-date: 2018-04-03 17:33:00
+title: Redis原理之小道消息_PubSub
+date: 2018-04-14 03:33:00
 tags: 
 - Redis
 category: 
 - Redis
-description: Redis发布订阅
+description: Redis原理之小道消息_PubSub
 ---
+
 **前言**     
 
  Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
 
- 博客：[http://blog.healerjean.com](http://HealerJean.github.io)           
+ 博客：[http://blog.healerjean.com](http://HealerJean.github.io)          
 
 
 
-# 1、发布/订阅
+# 1、`PubSub`
+
+> **前面我们讲了 `Redis` 消息队列的使用方法，但是没有提到 `Redis` 消息队列的不足之处，那就是消息队列不支持消息的多播机制。**
+
+![image-20210527150842748](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210527150842748.png)
+
+
+
+## 1.1、消息多播  
+
+> 答案：简单地说就是一个生产者对应多个消费者   
+
+1、消息多播允许生产者生产一次消息，中间件负责将消息复制到多个消息队列，每个消息队列由相应的消费组进行消费。它是分布式系统常用的一种解耦方式，用于将多个消费组的逻辑进行拆分。  (比如：`Kafka`)    
+
+2、支持了消息多播，多个消费组的逻辑就可以放到不同的子系统中。如果是普通的消息队列，就得将多个不同的消费组逻辑串接起来放在一个子系统中，进行连续消费。
+
+
+
+## 1.2、`PubSub介绍`
+
+> 为了支持消息多播，`Redis` 不能再依赖于那 5 种基本数据类型了。它单独使用了一个模块来支持消息多播，这个模块的名字叫着 `PubSub`，也就是 `PublisherSubscriber`，发布者订阅者模型。    
+
+
+
+### 1.2.1、生产者和消费者是不同的连接
+
+> 1、`Redis` `PubSub` 的生产者和消费者是不同的连接，也就是两个 `Redis` 的连接。这是必须的，**因为 `Redis` 不允许连接在 `subscribe` 等待消息时还要进行其它的操作**。     
+>
+>  2、在生产环境中，我们很少将生产者和消费者放在同一个线程里。如果它们真要在同一个线程里，何必通过中间件来流转，直接使用函数调用就行。      
+
+
+
+
+
+# 2、`PubSub`命令
 
 > Redis提供了基于发布/订阅的消息机制     
 >
@@ -25,7 +60,7 @@ description: Redis发布订阅
 
 
 
-## 1.1、发布消息
+## 2.1、发布消息
 
 > 发布客户端发布消息  
 >
@@ -46,11 +81,11 @@ description: Redis发布订阅
 
 
 
-## 1.2、订阅消息
+## 2.2、订阅消息
 
 > 1、当订阅的通道的时候，会进入订阅状态，一直等待消息接收，只能接收命令为`subscribe` ,`psubscribe `,`unsubscribe`,`punsubscribe`     
 >
-> 2、新开启的订阅，无法接收以前的消息，因为redis不会对之前的消息进行持久化     
+> 2、新开启的订阅，无法接收以前的消息，因为`redis`不会对之前的消息进行持久化     
 >
 > ```shell
 > `subscribe channel`
@@ -67,8 +102,8 @@ Reading messages... (press Ctrl-C to quit)
 3) (integer) 1
 …… 这里在等待接收下次
 
-这个时候，发布客户端发布一条消息，
 
+这个时候，发布客户端发布一条消息，
 127.0.0.1:6379> publish channel:student "gime start"
 (integer) 1
 127.0.0.1:6379> 
@@ -76,7 +111,6 @@ Reading messages... (press Ctrl-C to quit)
 
 
 订阅客户端如下
-
 127.0.0.1:6379> subscribe channel:student
 Reading messages... (press Ctrl-C to quit)
 1) "subscribe"
@@ -90,7 +124,8 @@ Reading messages... (press Ctrl-C to quit)
 ```
 
 
-## 1.3、取消订阅
+
+## 2.3、取消订阅
 
 
 ```shell
@@ -99,7 +134,11 @@ unsubscribe channel:student
 
 
 
-## 1.4、按照匹配模式订阅和取消订阅
+## 2.4、按照匹配模式订阅和取消订阅
+
+> 如果现在要增加一个主题，客户端必须也跟着增加一个订阅指令才可以收 到新开主题的消息推送。但是为了简化订阅的繁琐，`redis` 提供了模式订阅功能 `Pattern Subscribe`，这样就可以一次订阅多个主题，即使生产者新增加了同模式的主题，消费者也可以立即收到消息    
+
+
 
 
 ```shell
@@ -111,9 +150,9 @@ unsubscribe channel:student
 
 
 
-## 1.5、查询订阅
+## 2.5、查询订阅
 
-### 1.5.1、查看活跃的频道
+### 2.5.1、查看活跃的频道
 
 > 所谓活跃的频道是指至少有一个频道被订阅，如果没有的被定义则返回0    
 >
@@ -124,7 +163,7 @@ unsubscribe channel:student
 
 
 ```shell
-6379> pubsub channels
+127.0.0.1:6379> pubsub channels
 1) "channel:student"
 127.0.0.1:6379> 
 
@@ -136,7 +175,7 @@ unsubscribe channel:student
 
 
 
-### 1.5.2、查看频道订阅数
+### 2.5.2、查看频道订阅数
 
 
 ```shell
@@ -144,19 +183,6 @@ unsubscribe channel:student
 1) "channel:student"
 2) (integer) 1
 127.0.0.1:6379> 
-
-
-```
-
-
-
-### 1.5.3、查看按照模式的订阅数 
-
-
-```shell
-127.0.0.1:6379>pubsub numpat 
-（integer） 1
-
 ```
 
 
@@ -308,100 +334,19 @@ public class ListenerController {
 
 
 
+# 3、缺点和总结：
+
+**1、消费者挂掉，重启后收不到历史消息**：`PubSub` 的生产者传递过来一个消息，`Redis` 会直接找到相应的消费者传递过去。如果一 个消费者都没有，那么消息直接丢弃。如果开始有三个消费者，一个消费者突然挂掉了，生 产者会继续发送消息，另外两个消费者可以持续收到消息。但是挂掉的消费者重新连上的时 候，这断连期间生产者发送的消息，对于这个消费者来说就是彻底丢失了。
+
+**2、无法持久化：**如果 `Redis` 停机重启，`PubSub` 的消息是不会持久化的，毕竟 `Redis` 宕机就相当于一个 消费者都没有，所有的消息直接被丢弃。   
 
 
 
+**总结：因为 `PubSub` 有这些缺点，它几乎找不到合适的应用场景。**       
 
-# 2、GEO （地理信息定位）
-> 支持存储地理位置信息来实现比如地理位置，摇一摇等依赖于地理位置信息的孤男寡女，对于实现这些功能的开发者来说绝对是一个福音   
-
-
-
-## 2.1、增加地理位置信息
-
-> 添加背景的地理位置信息  
->
-> ```
->  `geoadd key 经度 纬度 城市`
-> ```
+同步：近期 `Redis5.0 `新增了 `Stream` 数据结构，这个功能给 `Redis `带来了持久化消息队列， 从此 `PubSub` 可以消失了
 
 
-
-
-```
-返回结果表示成功的个数，如果已经存在则返回0 ，
-127.0.0.1:6379> geoadd cities:location 116.28 39.55 beijing
-(integer) 1
-127.0.0.1:6379> geoadd cities:location 116.28 39.550 beijing
-(integer) 0
-127.0.0.1:6379> 
-
-
-同时添加多个地理位置信息 
-
-127.0.0.1:6379> geoadd cities:location 116.28 39 beijing  11.78 44.5 shanghai
-(integer) 1
-127.0.0.1:6379> 
-
-```
-
-
-
-## 2.2、获取地理位置信息
-
-
-```
-127.0.0.1:6379> geopos cities:location beijing
-1) 1) "116.28000229597091675"
-   2) "38.99999918434559731"
-127.0.0.1:6379> 
-
-```
-
-
-
-## 2.3、获取两个地理位置之间的距离
-
-```
-geodist key city1 city2 [unit] m米 km千米 mi英里 ft 尺
-```
-
-
-
-```
-127.0.0.1:6379> geodist cities:location beijing shanghai
-"8053178.4504"
-127.0.0.1:6379> 
-```
-
-
-
-## 2.4、获取指定位置范围内的地理信息位置集合
-
-```
-redis> georadiusbymember cities:location beijing 60000km
-1) "Agrigento"
-2) "Palermo
-```
-
-
-
-## 2.5、删除地理信息 
-
-这里需要知道的是这里存放的数据类型为zset
-
-
-```
-127.0.0.1:6379> type cities:location
-zset
-127.0.0.1:6379> 
-```
-
-```
-删除
-zrem  cities:location beijing
-
-```
 
 
 
@@ -412,6 +357,8 @@ zrem  cities:location beijing
 ![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
+
+<!-- Gitalk 评论 start  -->
 
 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
 
@@ -424,7 +371,15 @@ zrem  cities:location beijing
 		repo: `HealerJean.github.io`,
 		owner: 'HealerJean',
 		admin: ['HealerJean'],
-		id: 'xkIOzhZZ6cOnwpmo',
+		id: 'LVxZFHCmg054nsq7',
     });
     gitalk.render('gitalk-container');
 </script> 
+
+
+
+
+<!-- Gitalk end -->
+
+
+
