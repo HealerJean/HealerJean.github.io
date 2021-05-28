@@ -1,11 +1,11 @@
 ---
-title: Redis之近水楼台_GeoHash
+title: Redis之_近水楼台_GeoHash
 date: 2018-04-08 17:33:00
 tags: 
 - Redis
 category: 
 - Redis
-description: Redis之近水楼台_GeoHash
+description: Redis之_近水楼台_GeoHash
 ---
 **前言**     
 
@@ -144,7 +144,6 @@ lat = ((latitude - (-85))/ (85- (-85))) * (1 << GEO_STEP_MAX)
 > ⬤ 精度 4，范围可以精确到20Km
 >
 > ⬤ 精度 8，范围可以精确到19m     
->
 
 
 

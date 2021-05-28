@@ -1,11 +1,11 @@
 ---
-title: Redis之大海捞针_Scan
+title: Redis之_大海捞针_Scan
 date: 2018-04-09 03:33:00
 tags: 
 - Redis
 category: 
 - Redis
-description: Redis之大海捞针_Scan
+description: Redis之_大海捞针_Scan
 ---
 
 
@@ -20,7 +20,7 @@ description: Redis之大海捞针_Scan
 
 # 1、引入
 
-> `redis`提供了两个命令遍历所有的键分别是keys scan
+> `redis`提供了两个命令遍历所有的键分别是`keys` `scan`
 
 
 
@@ -94,7 +94,7 @@ OK
 
 ## 1.2、问题总结
 
-**问题1：keys命令有什么缺点**     
+**问题1：`keys`命令有什么缺点**     
 
 **1、没有 `offset`、`limit` 参数**，一次性吐出所有满足条件的 `key`，万一实例中有几百 w 个`key` 满足条件，当你看到满屏的字符串刷的没有尽头时，你就知道难受了。        
 

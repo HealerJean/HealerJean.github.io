@@ -1,11 +1,11 @@
 ---
-title: Redis原理之小道消息_PubSub
+title: Redis原理之_小道消息_PubSub
 date: 2018-04-14 03:33:00
 tags: 
 - Redis
 category: 
 - Redis
-description: Redis原理之小道消息_PubSub
+description: Redis原理之_小道消息_PubSub
 ---
 
 **前言**     
