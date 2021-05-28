@@ -1,11 +1,11 @@
 ---
-title: Redis原理之雷厉风行_管道
+title: Redis原理之_雷厉风行_管道pipeline
 date: 2018-04-13 03:33:00
 tags: 
 - Redis
 category: 
 - Redis
-description: Redis原理之雷厉风行_管道
+description: Redis原理之_雷厉风行_管道pipeline
 ---
 
 **前言**     
