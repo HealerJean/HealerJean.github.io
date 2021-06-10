@@ -237,6 +237,42 @@ GET x
 
 
 
+# 10、`Redis` 主从复制、哨兵和集群原理与区别
+
+> **复制(`Replication`)**：则是负责让一个`Redis`服务器可以配备多个备份的服务器，**`Redis`为了解决单点数据库问题，会把数据复制多个副本部署到其他节点上，通过复制，实现`Redis`的高可用性，实现对数据的冗余备份，保证数据和服务的高度可靠性**。         
+>
+> **哨兵(`Sentinel`)**：可以管理多个`Redis`服务器，它提供了监控，提醒以及自动的故障转移的功能，哨兵是`Redis`集群架构中非常重要的一个组件，**哨兵的出现主要是解决了主从复制出现故障时需要人为干预的问题**。      
+>
+> > **1. 主从复制**：**读写分离，备份数据、负载均衡，一个`Master`可以有多个`Slaves`。**   
+> >
+> > **2. 哨兵`sentinel`**：为了高可用，监控，自动转移，哨兵发现主服务器挂了后，就会从`slave`中重新选举一个主服务器。    
+> >
+> > **3. 集群**：为了解决单机 `Redis` 容量有限的问题，将数据按一定的规则分配到多台机器，内存/`QPS`不受限于单机，可受益于分布式集群高扩展性。
+
+
+
+![image-20201221173352445](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20201221173352445.png)
+
+
+
+> 
+
+
+
+![image-20201221173752786](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20201221173752786.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
