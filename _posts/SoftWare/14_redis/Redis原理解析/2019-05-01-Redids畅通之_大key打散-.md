@@ -124,6 +124,156 @@ OK
 
 ## 4.1、`String`
 
+### 4.1.1、该对象需要每次都整存整取
+
+**方案1：**  可以尝试将对象分拆成几个`key` - `value`， 使用`multiGet`获取值，这样分拆的意义在于分拆单次操作的压力，将操作压力平摊到多个`redis`实例中，降低对单个`redis`的`IO`影响；   
+
+
+
+
+
+### 4.1.4、该对象每次只需要存取部分数据
+
+**方案1：** 可以尝试将对象分拆成几个`key` - `value`， 使用`multiGet`获取值，这样分拆的意义在于分拆单次操作的压力，将操作压力平摊到多个`redis`实例中，降低对单个`redis`的`IO`影响；            
+
+**方案2：**可以将这个存储在一个`hash`中，每个`field`代表一个具体的属性，使用`hget`, `hmget`来获取部分的`value`，使用`hset`，`hmset`来更新部分属性   
+
+
+
+## 4.2、`hash`， `set`，`zset`，`list` 
+
+> 类似于场景一种的第一个做法，可以将这些元素分拆。   以下以以 `hash` 为例，`set`, `zset`, `list` 也可以类似上述做法     
+
+1、原先的正常存取流程是  
+
+```java
+hget(hashKey, field) ; 
+hset(hashKey, field, value)
+```
+
+
+
+2、现在，固定一个桶的数量，比如 `10000`， 每次存取的时候，先在本地计算`field`的`hash`值，模除 `10000`， 确定了该`field`落在哪个`key`上。
+
+```
+newHashKey  =  hashKey + (hash(field) % 10000）;  
+```
+
+
+
+3、使用新的`hash` `key`
+
+```
+hset (newHashKey, field, value) ;  
+hget(newHashKey, field)
+```
+
+ 
+
+### 4.2.1、不适合的场景
+
+1、要保证 `lpop` 的数据的确是最早`push`到`list`中去的，这个就需要一些附加的属性，或者是在`key`的拼接上做一些工作（比如`list`按照时间来分拆）。
+
+
+
+## 4.3、大`Bitmap`或布隆过滤器（`Bloom` ）拆分
+
+> 使用`bitmap`或布隆过滤器的场景，往往是数据量极大的情况，在这种情况下，`Bitmap`和布隆过滤器使用空间也比较大，比如用于公司`userid`匹配的布隆过滤器，就需要`512MB`的大小，这对`redis`来说是绝对的大`value`了。      
+>
+> 方案：这种场景下，我们就需要对其进行拆分，拆分为足够小的`Bitmap`，比如将`512MB`的大`Bitmap`拆分为`1024`个`512KB`的`Bitmap`。         
+>
+> > **不过拆分的时候需要注意，要将保证 一个`key`计算出的一系列`Hash`值都落在一个`Bitmap`上。 把所有拆分后的`Bitmap`当作独立的`bitmap`，然后通过分桶原理将不同的`key`分配给不同的小`bitmap`上，这样做后每次请求都只要在`redis`中一个`bitmap`上操作即可**。     
+> >
+> > **建议 ： `k` 取 13 个，  单个`bloomfilter`控制在 512KB 以下**
+
+![image-20210615175822706](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210615175822706.png)
+
+**问题1：通过这样拆分后，相当于`Bitmap`变小了，会不会增加布隆过滤器的误判率？**      
+
+答案：实际上是不会的，布隆过滤器的误判率是哈希函数个数`k`，集合元素个数`n`，以及`Bitmap`大小`m`所决定的。      
+
+
+
+
+
+
+
+# 5、`key` 太多
+
+> 如果`key`的个数过多会带来更多的内存空间占用，  这两个方面在`key`个数上亿的时候消耗内存十分明显（`Redis 3.2`及以下版本均存在这个问题，`4.0`有优化）；  
+>
+> > 1、`key`本身的占用      
+> >
+> > 2、集群模式中，服务端需要建立一些`slot2key`的映射关系，这其中的指针占用在`key`多的情况下也是浪费巨大空间     
+
+
+
+## 5.1、`key` 本身就有很强的相关性
+
+> 比如：多个`key` 代表一个对象，每个`key`是对象的一个属性    
+>
+> 方案：这种可直接按照特定对象的特征来设置一个新 `Key`——`Hash` 结构， 原先的 `key` 则作为这个新`Hash` 的 `field`。
+
+
+
+ 举例： 原先存储的三个`key` ，  
+
+```
+user.zhangsan-id = 123;  
+user.zhangsan-age = 18; 
+user.zhangsan-country = china;   
+```
+
+这三个`key`本身就具有很强的相关特性，转成`Hash`存储就像这样
+
+```
+key = user.zhangsan
+
+field:id = 123; 
+field:age = 18; 
+field:country = china;
+```
+
+ 即`redis`中存储的是一个`key` ：`user.zhangsan`， 他有三个 `field`， 每个`field + key` 就对应原先的一个key
+
+
+
+## 5.2、`key` 本身没有相关性
+
+> 比如现在预估 `key` 的总数为 `2` 亿，      
+>
+> 方案：我们可以按照一个`hash`存储 `100`个`field`来算，需要 `2亿` / `100` = `200W` 个桶 (`200W` 个`key`占用的空间很少，`2`亿可能有将近 `20G` )
+
+举例：有三个 `key` （`userId`） ：  `123456789`  ,  `987654321`，   `678912345`       
+
+现在按照`200W` 固定桶分就是先计算出桶的序号  `hash(12345678)`  % `200W` ， 这里最好保证这个 `hash`算法的值是个正数，否则需要调整下模除的规则；        
+
+这样算出三个`key` 的桶分别是   `1` ， `2`， `2`         
+
+**这里 `bucket` `key` 为了标识出来意义， 加了个前缀 `userid` - `bucket`，  不影响整体逻辑，业务自行判断**     
+
+```
+存储的时候
+	原先 set (realKey, value)      
+	现在 hset（bucketKey，realKey， value ），
+读取的时候
+	原先 get（realKey）   
+	现在 hget（bucketKey， realKey）   
+
+ 
+key1 : 
+	hset（userid-bucket-1,  123456789 ,  value ）      
+	hget（userid-bucket-1,  123456789）
+
+key2:  
+ hset (userid-bucket-2,  987654321,  value )       
+ hget（ userid-bucket-2,  987654321）
+
+key3:  
+	hset（userid-bucket-2,  678912345,  value)         
+	hget（userid-bucket-2,  678912345）
+```
+
 
 
 
