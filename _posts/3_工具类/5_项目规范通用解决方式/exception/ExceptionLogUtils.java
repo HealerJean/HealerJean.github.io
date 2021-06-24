@@ -71,18 +71,13 @@ public class ExceptionLogUtils {
      * @param throwable
      * @return
      */
-    public static String getStackTrace(Throwable throwable){
+      public static String getStackTrace(Throwable throwable) {
         StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        try
-        {
-            throwable.printStackTrace(pw);
-            return sw.toString();
-        } finally
-        {
-            pw.close();
-        }
+        PrintWriter pw = new PrintWriter(sw, true);
+        throwable.printStackTrace(pw);
+        return sw.getBuffer().toString();
     }
+
 
 
     /**

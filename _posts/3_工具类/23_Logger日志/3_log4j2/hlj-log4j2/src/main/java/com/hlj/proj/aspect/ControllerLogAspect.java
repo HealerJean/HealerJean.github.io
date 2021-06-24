@@ -57,7 +57,7 @@ public class ControllerLogAspect {
             return result;
         } catch (Exception e) {
             long timeCost = System.currentTimeMillis() - start;
-            log.info("请求出错 ，路径:【{}】, 类名：【{}】，方法名:【{}】, 参数:【{}】, 耗时:{}ms", request.getRequestURI(), className, methodName, args, timeCost);
+            log.error("请求出错 ，路径:【{}】, 类名：【{}】，方法名:【{}】, 参数:【{}】, 耗时:{}ms", request.getRequestURI(), className, methodName, args, timeCost);
             throw e;
         }
     }
