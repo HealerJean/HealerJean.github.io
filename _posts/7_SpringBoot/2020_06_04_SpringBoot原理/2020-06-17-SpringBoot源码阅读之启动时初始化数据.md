@@ -28,9 +28,9 @@ description: SpringBoot源码阅读之启动时初始化数据
 
 # 1、SpringBoot启动时初始化数据
 
-## 1.1、ApplicationRunner与CommandLineRunner
+## 1.1、`ApplicationRunner`与`CommandLineRunner`
 
-> 我们可以实现 `ApplicationRunner `或 `CommandLineRunner `接口， 这两个接口工作方式相同，都只提供单一的run方法，该方法在SpringApplication.run(…)完成之前调用，不知道大家还对我上一篇文章结尾有没有印象，我们先来看看这两个接口     
+> 我们可以实现 `ApplicationRunner `或 `CommandLineRunner `接口， 这两个接口工作方式相同，都只提供单一的`run`方法，该方法在`SpringApplication.run(…)`完成之前调用，不知道大家还对我上一篇文章结尾有没有印象，我们先来看看这两个接口     
 >
 > 这两个接口的不同之处在于：`ApplicationRunne`r中`run`方法的参数为`ApplicationArguments`，而`CommandLineRunner`接口中`run`方法的参数为`String`数组。，`CommandLineRunner`的参数是最原始的参数，没有进行任何处理，`ApplicationRunner`的参数是`ApplicationArguments`,是对原始参数的进一步封装    
 
@@ -538,4 +538,3 @@ public interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
     });
     gitalk.render('gitalk-container');
 </script> 
-
