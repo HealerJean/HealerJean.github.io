@@ -21,7 +21,7 @@ description: 3、线程池ThreadPoolExecutor总结
 
 
 
-> 线程池的概念是`Executo`r这个接口`ExecutorService`继承了它，具体实现为`ThreadPoolExecutor`类，学习Java中的线程池，就可以直接学习对线程池的配置，就是对`ThreadPoolExecutor`构造函数的参数的配置
+> 线程池的概念是 `Executor` 这个接口 `ExecutorService` 继承了它，具体实现为 `ThreadPoolExecutor` 类，学习Java中的线程池，就可以直接学习对线程池的配置，就是对`ThreadPoolExecutor`构造函数的参数的配置
 
 ```java
 public abstract class AbstractExecutorService implements ExecutorService {
@@ -185,11 +185,11 @@ public class ThreadPoolUtils {
 
 
 
-### 1.1.5、`BlockingQueue workQueue`：该线程池中的任务队列：维护着等待执行的Runnable对象
+### 1.1.5、`BlockingQueue workQueue`：该线程池中的任务队列：维护着等待执行的`Runnable`对象
 
 > 当所有的核心线程都在干活时，新添加的任务会被添加到这个队列中等待处理，如果队列满了，则新建非核心线程执行任务。 常用的`workQueue`类型：
 
->**发现如果阻塞队列数量>0，则使用 LinkedBlockingQueue，否则使用 SynchronousQueue。**
+>**发现如果阻塞队列数量>0，则使用 `LinkedBlockingQueue`，否则使用 `SynchronousQueue`。**
 
 
 
@@ -293,9 +293,9 @@ public class ThreadPoolUtils {
 
 
 
-从结果可以看出，只有task0和task1两个任务被执行了。为什么只有task0和task1两个任务被执行了呢？   
+从结果可以看出，只有`task0`和 `task1`两个任务被执行了。为什么只有`task0` 和 `task1` 两个任务被执行了呢？   
 
-过程是这样的：由于我们的任务队列的容量为1.当task0正在执行的时候，task1被提交到了队列中但是还没有执行，受队列容量的限制，submit提交的task2~task9就都被直接抛弃了。因此就只有task0和task1被执行了。
+过程是这样的：由于我们的任务队列的容量为1.当`task0`正在执行的时候，`task1`被提交到了队列中但是还没有执行，受队列容量的限制，`submit`提交的`task2~task9`就都被直接抛弃了。因此就只有`task0`和`task1`被执行了。
 
 
 
@@ -303,7 +303,7 @@ public class ThreadPoolUtils {
 
 > 丢弃队列中最老的任务   
 
-如果将拒绝策略改为：DiscardOldestPolicy(丢弃队列中比较久的任务)   
+如果将拒绝策略改为：`DiscardOldestPolicy` (丢弃队列中比较久的任务)   
 
 ```java
     2016-08-04 22:31:58  pool-1-thread-1begin run task :0
@@ -316,7 +316,7 @@ public class ThreadPoolUtils {
     2016-08-04 22:32:02  now,pool.isTerminated=true
 ```
 
-从结果可以看出，只有task0和task9被执行了。
+从结果可以看出，只有`task0`和`task9`被执行了。
 
 
 
@@ -328,7 +328,7 @@ public class ThreadPoolUtils {
 
 
 
-如果将拒绝策略改为：CallerRunsPolicy(即不用线程池中的线程执行，而是交给调用方来执行)   
+如果将拒绝策略改为：`CallerRunsPolicy` (即不用线程池中的线程执行，而是交给调用方来执行)   
 
 ```java
     2016-08-04 22:33:07  mainbegin run task :2
@@ -440,7 +440,15 @@ public ThreadPoolExecutor(int corePoolSize,
 
 ### 2..1.1、好处
 
-> 减少创建和销毁线程的次数，每个工作线程可以多次使用，可根据系统情况调整执行的线程数量，防止消耗过多内存  
+> **1、降低资源消耗**：通过池化技术重复利用已创建的线程，降低线程创建和销毁造成的损耗。       
+>
+> **2、提高响应速度**：任务到达时，无需等待线程创建即可立即执行。       
+>
+> **3、提高线程的可管理性**：线程是稀缺资源，如果无限制创建，不仅会消耗系统资源，还会因为线程的不合理分布导致资源调度失衡，降低系统的稳定性。使用线程池可以进行统一的分配、调优和监控。         
+>
+> **4、提供更多更强大的功能**：线程池具备可拓展性，允许开发人员向其中增加更多的功能。比如延时定时线程池`ScheduledThreadPoolExecutor`，就允许任务延期执行或定期执行。                  
+
+
 
 ### 2.1.2、风险  
 
@@ -566,7 +574,7 @@ public class NewCachedThreadPooltest {
 
 ### 2.2.1、`isShutDown()`     
 
-`isShutDown()`当调用`shutdown()`或`shutdownNow()`方法后返回为`true`。    
+`isShutDown()` 当调用`shutdown()`或`shutdownNow()`方法后返回为`true`。    
 
 如果线程池任务正常完成，为false（表示没有中断哦）
 
@@ -627,7 +635,7 @@ while(true){
 
 **问：如何阻止新来的任务提交**    
 
-答：通过将线程池的状态改成`STOP`，当再将执行execute提交任务时，如果测试到状态不为`RUNNING`，则抛出`rejectedExecution`，从而达到阻止新任务提交的目的.<font color="red">（如果为RUNNING,这个线程没有抛出异常类型的阻塞，则继续阻塞，阻塞请看下个问题）</font>           
+答：通过将线程池的状态改成 `STOP`，当再将执行execute提交任务时，如果测试到状态不为`RUNNING`，则抛出`rejectedExecution`，从而达到阻止新任务提交的目的.<font color="red">（如果为RUNNING,这个线程没有抛出异常类型的阻塞，则继续阻塞，阻塞请看下个问题）</font>           
 
 
 
@@ -688,7 +696,7 @@ public static void main(String[] args) {
 
 
 
-### 2.5.1、线程的interrupt
+### 2.5.1、线程的`interrupt`
 
 > 1、中断异常的抛出：如果此线程处于阻塞状态(比如调⽤了wait方法，io等待)，则会立刻退出阻塞，并抛出`InterruptedException`异常，线程就可以通过捕获`InterruptedException`来做⼀定的处理，然后让线程退出。
 
@@ -712,7 +720,7 @@ public static void main(String[] args) {
 
 ### 2.6.1、`sumbit()`返回代码详解  
 
-#### 2.6.1.1、submit中可以放三个参数  
+#### 2.6.1.1、`submit` 中可以放三个参数  
 
 ```java
 
@@ -725,7 +733,7 @@ Future<?> submit(Runnable runnable);
 
 
 
-#### 2.6.1.2、分析下 Runable和Callable的不同  
+#### 2.6.1.2、分析下 `Runable`和Callable的不同  
 
 ```java
 public Future<?> submit(Runnable task) {
@@ -762,7 +770,7 @@ protected <T> RunnableFuture<T> newTaskFor(Callable<T> callable) {
 
 
 
-**看到了下面，其实就大致可以知道，Runnable会在这里转化成Callable。我们来看下Executors.callable()**    
+**看到了下面，其实就大致可以知道，`Runnable` 会在这里转化成 `Callable`。我们来看下 `Executors.callable()`**    
 
 ```java
 
@@ -781,7 +789,7 @@ public FutureTask(Callable<V> callable) {
 
 
 
-`submit()`返回的是一个`RunnableFuture`类对象，真正是通过`newTaskFor()`方法返回一个`new FutureTask()`对象。所以`submit()`返回的真正的对象是`FutureTask`对象。   
+`submit()`返回的是一个 `RunnableFuture` 类对象，真正是通过`newTaskFor()`方法返回一个`new FutureTask()`对象。所以`submit()`返回的真正的对象是`FutureTask `对象。   
 
 ```java
 public interface RunnableFuture<V> extends Runnable, Future<V> {
@@ -958,9 +966,7 @@ public class CallableSubmit {
 
 
 
-### 2.6.3、`isDone  `:  执行结束（完成/取消/异常）返回true
-
-
+### 2.6.3、`isDone  `:  执行结束（完成/取消/异常）返回`true`
 
 ```java
 
@@ -1036,9 +1042,9 @@ public class D01FutureCancle {
 
 > **未开始或已完成返回false，参数表示是否中断执行中的线程**    
 >
-> true：会中断正在运行的任务（相当于停止）      
+> `true`：会中断正在运行的任务（相当于停止）      
 >
-> false：会让线程正常执行至完成，取消的是还没有开始执行的任务，如果任务以及开始，则由它执行下去   
+> `false`：会让线程正常执行至完成，取消的是还没有开始执行的任务，如果任务以及开始，则由它执行下去   
 
 
 
@@ -1120,6 +1126,224 @@ private void doOnceTasks(){
 long totalTime = (System.currentTimeMillis() - startTime) / NumberConstant.ONE_THOUSAND;
 
 ```
+
+
+
+
+
+## 2.5、线程池几种状态
+
+| 运行状态       | 状态描述                                                     |
+| :------------- | :----------------------------------------------------------- |
+| **RUNNING**    | 能接受新提交的任务，并且也能处理阻塞队列中的任务。           |
+| **SHUTDOWN**   | 关闭状态，不再接受新提交的任务，但却可以继续处理阻塞队列中已保存的任务。 |
+| **STOP**       | 不能接受新任务，也不处理队列中的任务，会中断正在处理任务的线程。 |
+| **TERMINATED** | 在 `terminated() `方法执行完后进入该状态                     |
+| **TIDYING**    | 所有的任务都已终止了，`workerCount` (有效线程数) 为0         |
+
+ ![image-20210730155956344](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730155956344.png)
+
+
+
+## 2.6、任务执行机制
+
+### 2.6.1、任务调度
+
+1、首先检测线程池运行状态，如果不是**RUNNING**，则直接拒绝，线程池要保证在RUNNING的状态下执行任务。    
+
+2、如果workerCount < corePoolSize，则创建并启动一个线程来执行新提交的任务。       
+
+3、如果workerCount >= corePoolSize，且线程池内的阻塞队列未满，则将任务添加到该阻塞队列中。     
+
+4、如果workerCount >= corePoolSize && workerCount < maximumPoolSize，且线程池内的阻塞队列已满，则创建并启动一个线程来执行新提交的任务。        
+
+5、如果workerCount >= maximumPoolSize，并且线程池内的阻塞队列已满, 则根据拒绝策略来处理该任务, 默认的处理方式是直接抛异常。
+
+![image-20210730160103636](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730160103636.png)
+
+
+
+### 2.6.2、任务缓冲
+
+> 任务缓冲模块是线程池能够管理任务的核心部分。线程池的本质是对任务和线程的管理，而做到这一点最关键的思想就是将任务和线程两者解耦，不让两者直接关联，才可以做后续的分配工作。线程池中是以生产者消费者模式，通过一个阻塞队列来实现的。阻塞队列缓存任务，工作线程从阻塞队列中获取任务。      
+
+
+
+| 名称                  | 描述                                                         |
+| :-------------------- | :----------------------------------------------------------- |
+| ArrayBlockingQueue    | **一个用数组实现的有界阻塞队列**，此队列按照先进先出(FIFO)的原则对元素进行排序。支持公平锁和非公平锁。 |
+| LinkedBlockingQueue   | **一个由链表结构组成的有界队列**，此队列按照先进先出(FIFO)的原则对元素进行排序。此队列的默认长度为Integer.MAX_VALUE，所以默认创建的该队列有容量危险。 |
+| PriorityBlockingQueue | **一个支持线程优先级排序的无界队列**，默认自然序进行排序，也可以自定义实现compareTo()方法来指定元素排序规则，不能保证同优先级元素的顺序。 |
+| DelayQueue            | 一个实现`PriorityBlockingQueue`实现延迟获取的无界队列，在创建元素时，可以指定多久才能从队列中获取当前元素。只有延时期满后才能从队列中获取元素。 |
+| SynchronousQueue      | **一个不存储元素的阻塞队列**，每一个put操作必须等待take操作，否则不能添加元素。支持公平锁和非公平锁。SynchronousQueue的一个使用场景是在线程池里。Executors.newCachedThreadPool()就使用了SynchronousQueue，这个线程池根据需要（新任务到来时）创建新的线程，如果有空闲线程则会重复使用，线程空闲了60秒后会被回收。 |
+| LinkedTransferQueue   | **一个由链表结构组成的无界阻塞队列**，相当于其它队列，LinkedTransferQueue队列多了transfer和tryTransfer方法。 |
+| LinkedBlockingDeque   | **一个由链表结构组成的双向阻塞队列**。队列头部和尾部都可以添加和移除元素，多线程并发时，可以将锁的竞争最多降到一半。 |
+
+ 
+
+# 3、业务实战
+
+## 3.1、业务背景
+
+### 3.1.1、场景1：快速响应用户请求
+
+> **描述**：用户发起的实时请求，服务追求响应时间。比如说用户要查看一个商品的信息，那么我们需要将商品维度的一系列信息如商品的价格、优惠、库存、图片等等聚合起来，展示给用户。     
+>
+> **分析**：从用户体验角度看，这个结果响应的越快越好，如果一个页面半天都刷不出，用户可能就放弃查看这个商品了。而面向用户的功能聚合通常非常复杂，伴随着调用与调用之间的级联、多级级联等情况，业务开发同学往往会选择使用线程池这种简单的方式，将调用封装成任务并行的执行，缩短总体响应时间。另外，使用线程池也是有考量的，这种场景最重要的就是获取最大的响应速度去满足用户，**所以应该不设置队列去缓冲并发任务，调高`corePoolSize` 和 `maxPoolSize` 去尽可能创造多的线程快速执行任务。**
+
+![image-20210730162000392](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730162000392.png)
+
+
+
+
+
+### **3.1.1、场景1：快速处理批量任务**
+
+> **描述**：离线的大量计算任务，需要快速执行。比如说，统计某个报表，需要计算出全国各个门店中有哪些商品有某种属性，用于后续营销策略的分析，那么我们需要查询全国所有门店中的所有商品，并且记录具有某属性的商品，然后快速生成报表。        
+>
+> **分析**：这种场景需要执行大量的任务，我们也会希望任务执行的越快越好。这种情况下，也应该使用多线程策略，并行计算。     **但与响应速度优先的场景区别在于，这类场景任务量巨大，并不需要瞬时的完成，而是关注如何使用有限的资源，尽可能在单位时间内处理更多的任务，也就是吞吐量优先的问题。所以应该设置队列去缓冲并发任务，调整合适的corePoolSize去设置处理任务的线程数。在这里，设置的线程数过多可能还会引发线程上下文切换频繁的问题，也会降低处理任务的速度，降低吞吐量**。
+
+
+
+![image-20210730162010971](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730162010971.png)
+
+## 3.2、实际问题及方案思考
+
+### 3.2.1、问题1：最大核心数偏小，导致任务拒绝服务降级
+
+> **事故描述**：XX页面展示接口产生大量调用降级，数量级在几十到上百。      
+>
+> **事故原因**：该服务展示接口内部逻辑使用线程池做并行计算，由于没有预估好调用的流量，导致**最大核心数设置偏小**，大量抛出`RejectedExecutionException`，触发接口降级条件，示意图如下：
+
+
+
+![image-20210730162233535](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730162233535.png)
+
+### 3.2.2、问题2：队列过长，任务执行时间拉长，导致超时
+
+> **事故描述**：XX业务提供的服务执行时间过长，作为上游服务整体超时，大量下游服务调用失败。      
+>
+> **事故原因**：该服务处理请求内部逻辑使用线程池做资源隔离，由于**队列设置过长**，最大线程数设置失效，导致请求数量增加时，大量任务堆积在队列中，任务执行时间过长，最终导致下游服务的大量调用超时失败。示意图如下：
+
+![image-20210730162412222](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730162412222.png)
+
+
+
+## 3.3、如何设置参数才合理
+
+> 线程池使用面临的核心的问题在于：**线程池的参数并不好配置**。     
+>
+> ⬤ 一方面线程池的运行机制不是很好理解，配置合理需要强依赖开发人员的个人经验和知识；         
+>
+> ⬤ 另一方面，线程池执行的情况和任务类型相关性较大，`IO`密集型和`CPU`密集型的任务运行起来的情况差异非常大，这导致业界并没有一些成熟的经验策略帮助开发人员参考。    
+>
+> > 这导致业界并没有一些成熟的经验策略帮助开发人员参考，下面罗列了几个业界线程池参数配置方案：
+
+|      | 方案                                                         | 问题                                                         |
+| ---- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 1    | ⬤ cup的个数（Ncpu）=当前机器的cpu核数<br/>⬤ cup的利用率(Rcpu)=目标cpu的利用率（0<= 利用率<=1） <br/>⬤ cpu的等待时间和计算时间百分比(W/C)=cpu的等待时间/cpu的计算时间 <br/>⬤ 保持处理器的理想利用率的最佳池大小是Nthreads=Ncpu * Rcpu * (1+W/C) | 出自《Java并发编程实践》该方案偏理论化。首先，线程计算的时间和等待的时间要如何确定呢？这个在实际开发中很难得到确切的值。       **另外计算出来的线程个数逼近线程实体的个数，Java线程池可以利用线程切换的方式最大程度利用CPU核数，这样计算出来的结果是非常偏离业务场景的** |
+| 2    | **核心线程数=2\*cpu的个数**》<br/>**最大线程数**=25\*cpu的个数** | 没有考虑应用中往往使用多个线程池的情况，统一的配置明显不符合多样的业务场景。 |
+| 3    | *核心线程数=Tps\*time**最大线程数=tps\*time\*(1.7-2)*        | 这种计算方式，考虑到了业务场景，但是该模型是在假定流量平均分布得出的。业务场景的流量往往是随机的，这样不符合真实情况。 |
+
+ 
+
+### 3.3.1、动态化线程池
+
+#### 3.3.1.1、新流程图
+
+> 调研了以上业界方案后，我们并没有得出通用的线程池计算方式，这样就导致了下面两个问题：         
+>
+> **1、程序开发期难以敲定合适的线程池参数配置**；         
+>
+> **2、程序运行期难以更改线程池参数，需要重新修改程序再重新上线，投入成本巨大**；
+
+
+
+![image-20210730163623141](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730163623141.png)
+
+#### 3.3.1.2、使用场景参数配置
+
+> 线程池构造参数有8个，但是最核心的是3个：corePoolSize、maximumPoolSize，workQueue，它们最大程度地决定了线程池的任务分配和线程分配策略。考虑到在实际应用中我们获取并发性的场景主要是两种
+>
+> > **1、并行执行子任务，提高响应速度。这种情况下，应该使用同步队列，没有什么任务应该被缓存下来，而是应该立即执行**。            
+> >
+> > **2、并行执行大批次任务，提升吞吐量。**这种情况下，应该使用有界队列，使用队列去缓冲大批量的任务，队列容量必须声明，防止任务无限制堆积。所以线程池只需要提供这三个关键参数的配置，并且提供两种队列的选择，就可以满足绝大多数的业务需求，Less is More。
+
+
+
+#### 3.3.1.3、功能架构
+
+**动态调参：**支持线程池参数动态调整、界面化操作；包括修改线程池核心大小、最大核心大小、队列长度等；参数修改后及时生效。     
+
+**任务监控：**支持应用粒度、线程池粒度、任务粒度监控；可以看到线程池的任务执行情况、最大任务执行时间、平均任务执行时间、`95`/`99`线等。         
+
+⬤ 事前，线程池定义了“活跃度”这个概念，来让用户在发生`Reject`异常之前能够感知线程池负载问题，线程池活跃度计算公式为：线程池活跃度 = `activeCount`/`maximumPoolSize`。这个公式代表当活跃线程数趋向于`maximumPoolSize`的时候，代表线程负载趋高。       
+
+⬤ 事中，也可以从两方面来看线程池的过载判定条件，一个是发生了`Reject`异常，一个是队列中有等待任务（支持定制阈值）。以上两种情况发生了都会触发告警，告警信息会通过大象推送给服务所关联的负责人。
+
+   
+
+**负载告警：**线程池队列任务积压到一定值的时候告知应用开发负责人；当线程池负载数达到一定阈值的时候会通过大象告知应用开发负责人。            
+
+**操作监控：**创建/修改和删除线程池都会通知到应用的开发负责人。      
+
+**操作日志：**可以查看线程池参数的修改记录，谁在什么时候修改了线程池参数、修改前的参数值是什么。       
+
+**权限校验：**只有应用开发负责人才能够修改应用的线程池参数。
+
+
+
+### 3.3.2、利特尔法则合理配置参数值
+
+> 我们认为线程池是由队列连接的一个或多个服务提供程序，这样我们也可以通过科特尔法则来定义线程池大小。我们只需计算请求到达率和请求处理的平均时间。然后，将上述值放到利特尔法则（Little’s law）就可以算出系统平均请求数。     
+>
+> ⬤ 若请求数小于我们线程池的大小，就相应地减小线程池的大小。      
+>
+> ⬤ 与之相反，如果请求数大于线程池大小，事情就有点复杂了,因为不可能无限放大线程池线程数，也不能无限放大线程池队列数，太大了，服务会崩溃掉。所以最好的办法就是通过压力测试来合理的设置线程池大小。
+
+![image-20210730164313732](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730164313732.png)
+
+
+
+ 实际业务场景参数：
+
+⬤ tasks: 每秒的任务数，假设是500~1000    
+
+⬤ taskcost: 每个任务花费的时间，假设为0.1s         
+
+⬤ responsetime: 系统允许容忍的最大响应时间，假设为1s        
+
+
+
+  结合利特尔法则做几个计算：
+
+1、corePoolSize = 每秒需要多少个线程处理？     
+
+⬤ **threadcount = tasks/(1/taskcost) =tasks\*taskcost** =(500~1000)*0.1 = 50~100 个线程。corePoolSize设置应该大于50        
+
+⬤ 根据8020原则，如果80%的每秒任务数小于800，那么corePoolSize设置为80即可        *
+
+
+
+**2、queueCapacity = (coreSizePool/taskcost)responsetime** = 80/0.1 * 1 = 800 （0.1s 线程池可处理80个任务，1s 线程池可处理800个任务）也就是说队列里的线程可以等待1s，超过了的需要新开线程来执行              
+
+⬤  切记不能设置为Integer.MAX_VALUE，这样队列会很大，线程数只会保持在corePoolSize大小，当任务陡增时，不能新开线程来执行，响应时间会随之陡增。        
+
+
+
+**3、maxPoolSize = (max(tasks)- queueCapacity)/(1/taskcost)**（最大任务数-队列容量）/每个线程每秒处理能力 = 最大线程数）       
+
+   
+
+4、**rejectedExecutionHandler**：根据具体情况来决定，任务不重要可丢弃，任务重要则要利用一些缓冲机制来处理。      
+
+​        
+
+**5、keepAliveTime和allowCoreThreadTimeout采用默认通常能满足**。
+
+
+
+
 
 
 

@@ -58,7 +58,7 @@ description: Redis集群之_分时而治_Codis
 
 # 3、`Codis` 分片原理
 
-> `Codis` 要负责将特定的 `key `转发到特定的 `Redis` 实例，那么这种对应关系 `Codis `是如 何管理的呢?
+> `Codis` 要负责将特定的 `key ` 转发到特定的 `Redis` 实例，那么这种对应关系 `Codis `是如 何管理的呢?
 >
 > > 1、`Codis` 将所有的 `key` 默认划分为 `1024` 个槽位(`slot`)，它首先对客户端传过来的 `key` 进 行 `crc32` 运算计算哈希值     
 > >

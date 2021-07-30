@@ -138,9 +138,9 @@ private final Map<String, Object> earlySingletonObjects = new HashMap<String, Ob
 
 1、Spring首先从一级缓存`singletonObjects`中获取。   
 
-2、如果获取不到 并且对象正在创建中，就再从二级缓存`earlySingletonObjects`中获取。       
+2、如果获取不到 并且对象正在创建中，就再从二级缓存 `earlySingletonObjects`中获取。       
 
-3、如果还是获取不到且允许`singletonFactories`通过`getObject()`获取，就从三级缓存`singletonFactory.getObject()`(三级缓存)获取，如果获取到了则：从`singletonFactories`中移除，并放入`earlySingletonObjects`中。其实也就是从三级缓存移动到了二级缓存。
+3、如果还是获取不到且允许 `singletonFactories`通 过`getObject()`获取，就从三级缓存`singletonFactory.getObject()`(三级缓存)获取，如果获取到了则：从`singletonFactories`中移除，并放入`earlySingletonObjects`中。其实也就是从三级缓存移动到了二级缓存。
 
 
 
