@@ -70,7 +70,7 @@ description: Redis原理之_小道消息_PubSub
 
 
 
-下面在频道`channel:student` 发布了一条消息，返回值为订阅者个数，此时没有订阅者，返回为0
+下面在频道 `channel:student` 发布了一条消息，返回值为订阅者个数，此时没有订阅者，返回为0
 
 
 ```shell
@@ -345,6 +345,12 @@ public class ListenerController {
 **总结：因为 `PubSub` 有这些缺点，它几乎找不到合适的应用场景。**       
 
 同步：近期 `Redis5.0 `新增了 `Stream` 数据结构，这个功能给 `Redis `带来了持久化消息队列， 从此 `PubSub` 可以消失了
+
+
+
+
+
+
 
 
 

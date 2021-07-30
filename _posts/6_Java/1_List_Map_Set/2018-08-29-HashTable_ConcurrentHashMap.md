@@ -42,15 +42,15 @@ description: HashTable_ConcurrentHashMap
 
 
 
-# 2、ConcurrentHashMap   
+# 2、`ConcurrentHashMap`   
 
 ## 2.1、原理      
 
-JDK8中`ConcurrentHashMap`参考了JDK8 HashMap的实现，采用了**数组+链表+红黑树**的实现方式来设计
+JDK8中`ConcurrentHashMap`参考了`JDK8` `HashMap`的实现，采用了**数组+链表+红黑树**的实现方式来设计
 
-**利用 ==CAS + synchronized== 来保证并发更新的安全 + volatile**    
+**利用 ==`CAS` + `synchronized`== 来保证并发更新的安全 + `volatile`**    
 
-  ![1587957489217](D:\study\HealerJean.github.io\blogImages\1587957489217.png)
+  ![1587957489217](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1587957489217.png)
 
 
 
@@ -96,11 +96,11 @@ private transient EntrySetView<K,V> entrySet;
 
 ### 2.1.1、`int sizeCtl`
 
-> sizeCtl最重要的属性之一   
+> `sizeCtl`最重要的属性之一   
 >
 > 负数代表正在进行初始化或扩容操作 ,其中-1代表正在初始化 ,-N 表示有N-1个线程正在进行扩容操作      
 >
-> 正数或0代表hash表还没有被初始化，**这个数值表示初始化或下一次进行扩容的阀值**，**类似于扩容阈值**。它的值始终是当前ConcurrentHashMap容量的0.75倍，这与`loadfactor`是对应的。**实际容量>=sizeCtl，则扩容**。
+> 正数或0代表`hash`表还没有被初始化，**这个数值表示初始化或下一次进行扩容的阀值**，**类似于扩容阈值**。它的值始终是当前`ConcurrentHashMap`容量的0.75倍，这与`loadfactor`是对应的。**实际容量>=sizeCtl，则扩容**。
 
 
 
@@ -196,7 +196,7 @@ public ConcurrentHashMap(int initialCapacity) {
 
 
 
-hash桶没有在构造函数中初始化，`tableSizeFor(initialCapacity)`方法，这个方法的作用是，将你传入的`initialCapacity`做计算，返回一个大于等于`initialCapacity` 最小的2的幂次方。**这个暂时作为桶的初始化数量，没有初始化桶，只有在put存储键值对的时候才回进行桶的初始化**       
+`hash`桶没有在构造函数中初始化，`tableSizeFor(initialCapacity)`方法，这个方法的作用是，将你传入的`initialCapacity`做计算，返回一个大于等于`initialCapacity` 最小的2的幂次方。**这个暂时作为桶的初始化数量，没有初始化桶，只有在`put`存储键值对的时候才回进行桶的初始化**       
 
 
 
@@ -232,7 +232,7 @@ public ConcurrentHashMap(int initialCapacity,
 
 
 
-`concurrencyLevel`，**表示能够同时更新`ConccurentHashMap`且不产生锁竞争的最大线程数。默认值为16**，(即允许16个线程并发可能不会产生竞争)。为了保证并发的性能，**我们要很好的估计出concurrencyLevel值，不然要么竞争相当厉害，从而导致线程试图写入当前锁定的段时阻塞**。       
+`concurrencyLevel`，**表示能够同时更新`ConccurentHashMap`且不产生锁竞争的最大线程数。默认值为16**，(即允许16个线程并发可能不会产生竞争)。为了保证并发的性能，**我们要很好的估计出`concurrencyLevel`值，不然要么竞争相当厉害，从而导致线程试图写入当前锁定的段时阻塞**。       
 
 保证初始化的桶`initialCapacity`的大小比`concurrencyLevel`小的时候，**肯定是开发人员放错了，谁会将线程数设置的比桶的数量大呢**。`initialCapacity`就不可用了,初始化桶的数量就等于了`concurrencyLevel`    
 
@@ -508,23 +508,23 @@ public V put(K key, V value) {
 
 
 
-1、检查key/value是否为空，如果为空，则抛空指针异常`NullPointerException`，否则进行2    
+1、检查`key/value`是否为空，如果为空，则抛空指针异常`NullPointerException`，否则进行2    
 
-2、一个关闭Node数组for的死循环，进行3，一直到插入成功。    
+2、一个关闭`Node`数组`for`的死循环，进行3，一直到插入成功。    
 
-3、检查table是否初始化了，如果没有，则调用initTable()进行初始化然后进行 2，否则进行4   
+3、检查`table`是否初始化了，如果没有，则调用`initTable()`进行初始化然后进行 2，否则进行4   
 
-4、根据key的hash值计算出其应该在table中储存的位置i，取出table[i]的节点用f表示，根据f的不同有如下三种情况     
+4、根据`key`的`hash`值计算出其应该在`table`中储存的位置i，取出`table[i]`的节点用`f`表示，根据`f`的不同有如下三种情况     
 
-1）   如果`table[i]==null`(即该位置的节点为空)， **则利用CAS死循环操作直到存储在该位置**     
+1）   如果`table[i]==null`(即该位置的节点为空)， **则利用`CAS`死循环操作直到存储在该位置**     
 
-2）如果`table[i]!=null`(即该位置已经有其它节点)，**开始为这个数组节点`table[i]`头synchronized上锁**，碰撞处理也有两种情况。      
+2）   如果`table[i]!=null`(即该位置已经有其它节点)，**开始为这个数组节点`table[i]`头`synchronized`上锁**，碰撞处理也有两种情况。      
 
-2.1）检查table[i]的节点的hash是否等于MOVED（-1），如果等于，则检测到正在扩容，则帮助其扩容        
+2.1）检查 `table[i]` 的节点的 `hash` 是否等于 `MOVED（-1）`，如果等于，则检测到正在扩容，则帮助其扩容        
 
-2.2）说明table[i]的节点的hash值不等于MOVED，如果table[i]为链表节点，则将此节点插入链表中即可，如果table[i]为树节点，则将此节点插入树中即可 。插入成功后进行5    
+2.2）说明`table[i]` 的节点的`hash`值不等于 `MOVED`，如果 `table[i]` 为链表节点，则将此节点插入链表中即可，如果 `table[i]` 为树节点，则将此节点插入树中即可 。插入成功后进行5    
 
-5、如果table[i]的节点是链表节点，则检查table的第`i`个位置的链表是否需要转化为数（满足2个条件，同hashmap），如果需要则调用`treeifyBin`函数进行转化   
+5、如果 `table[i]` 的节点是链表节点，则检查`table`的第 `i`个位置的链表是否需要转化为数（满足2个条件，同`hashmap`），如果需要则调用`treeifyBin`函数进行转化   
 
 6、看看是否需要扩容，如果需要则扩容
 
@@ -622,7 +622,7 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
 
 #### 2.5.1.2、`tabAt` ：获取索引位置的node节点   
 
-> 该方法用来获取 table 数组中索引为 i 的 Node 元素       
+> 该方法用来获取 `table` 数组中索引为 `i` 的 `Node` 元素       
 >
 > `tabAt`方法原子读取`table[i]`；调用Unsafe对象的`getObjectVolatile方`法获取`tab[i]`，由于对volatile写操作happen-before于volatile读操作，因此其他线程对table的修改均对get读取可见；
 > ((long)i << ASHIFT) + ABASE)计算i元素的地址
@@ -775,8 +775,6 @@ private final void treeifyBin(Node<K,V>[] tab, int index) {
 
 > 不上锁，所以`ConcurrentHashMap`不是强一致性的，因为`val`被`volitale`修饰，保证了可见性， 
 
-
-
 ```java
 //会发现源码中没有一处加了锁
 public V get(Object key) {
@@ -842,13 +840,11 @@ public boolean containsValue(Object value) {
 
 
 
-## 2.6、ConcurrentHashMap 线程不安全行为  
+## 2.6、`ConcurrentHashMap` 线程不安全行为  
 
- 
-
-> containsKey和 put 两个方法都是原子的，但在jvm中并不是将这段代码做为单条指令来执行的，       
+> `containsKey`和 `put` 两个方法都是原子的，但在 `jvm`中并不是将这段代码做为单条指令来执行的，       
 >
-> 例如：假设连续生成2个随机数1，map的 containsKey 和 put 方法由线程A和B 同时执行 ，那么有可能会出现A线程还没有把 1 put进去时，B线程已经在进行if 的条件判断了，也就是如下的执行顺序：
+> 例如：假设连续生成2个随机数1，`map`的 `containsKey` 和 `put` 方法由线程A和B 同时执行 ，那么有可能会出现A线程还没有把 1 put进去时，B线程已经在进行`if` 的条件判断了，也就是如下的执行顺序：
 
 ```java
 
@@ -911,11 +907,19 @@ public static synchronized void countRandom(int randomNum){
 
 2.5、时间复杂度  
 
->  **从1.7到1.8版本，由于HashEntry从链表 变成了红黑树所以 concurrentHashMap的时间复杂度链表上从O(n)到O(log(n))**
+>  **从1.7到1.8版本，由于`HashEntry`从链表 变成了红黑树所以 concurrentHashMap的时间复杂度链表上从O(n)到O(log(n))**
 
 
 
-而对于锁的粒度，调整为对每个数组元素加锁（Node）。然后是定位节点的hash算法被简化了，这样带来的弊端是Hash冲突会加剧。因此在链表节点数量大于8时，会将链表转化为红黑树进行存储。这样一来，查询的时间复杂度就会由原先的O(n)变为O(logN)。下面是其基本结构：
+而对于锁的粒度，调整为对每个数组元素加锁（`Node`）。然后是定位节点的`hash`算法被简化了，这样带来的弊端是Hash冲突会加剧。因此在链表节点数量大于8时，会将链表转化为红黑树进行存储。这样一来，查询的时间复杂度就会由原先的O(n)变为O(logN)。下面是其基本结构：
+
+
+
+
+
+
+
+
 
 
 

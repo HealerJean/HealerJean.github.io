@@ -1512,4 +1512,3 @@ public @interface EnableAutoConfiguration {
     });
     gitalk.render('gitalk-container');
 </script> 
-

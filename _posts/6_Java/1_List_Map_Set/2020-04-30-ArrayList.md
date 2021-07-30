@@ -18,9 +18,9 @@ description: ArrayList
 
 # 1、ArrayList
 
-> 底层的数据结构就是数组，数组元素类型为Object类型，即可以存放所有类型数据。    
+> 底层的数据结构就是数组，数组元素类型为`Object`类型，即可以存放所有类型数据。    
 >
-> 我们对ArrayList类的实例的所有的操作底层都是基于数组的。下面我们来分析通过数组是如何保证库函数的正确实现的。  
+> 我们对`ArrayList`类的实例的所有的操作底层都是基于数组的。下面我们来分析通过数组是如何保证库函数的正确实现的。  
 
 
 
@@ -35,8 +35,6 @@ public class ArrayList<E> extends AbstractList<E>
 
 
 ## 1.2、静态变量 
-
-
 
 ```java
 //数组默认初始容量
@@ -67,7 +65,6 @@ transient Object[] elementData;
 
 // 实际元素大小，默认为0
 private int size;
-
 ```
 
 
@@ -107,7 +104,7 @@ public ArrayList(int initialCapacity) {
 
 ## 1.4、`add(E e)`、grow初始化和扩容  
 
-1、一进来就首先确保elementData数组有合适的大小，调用`ensureCapacityInternal(int minCapacity)`，`minCapacity`为数组最少需要的容量，也可以作为扩容阀值。执行2
+1、一进来就首先确保 `elementData`数组有合适的大小，调用`ensureCapacityInternal(int minCapacity)`，`minCapacity`为数组最少需要的容量，也可以作为扩容阀值。执行2
 
 2、**如果数组没有初始化，也就是说数组为空，比较默认数组的大小`DEFAULT_CAPACITY`(10)和这个最少需要的容量,选最大值，**这个比较个人理解认为没有意义。因为数组为空，肯定是初始化`minCapacity`肯定是1,**所以最少需要的容量就设置为`DEFAULT_CAPACITY`(10)  ，这就是初始化的数组长度**      
 
@@ -325,20 +322,19 @@ public E set(int index, E e) {
 
 ## 1.8、`for`的遍历问题
 
-> ArrayList、LinkedList、HashMap中都有一个字段叫modCount。    
->
+> `ArrayList`、`LinkedList`、`HashMap`中都有一个字段叫`modCount`。    
 
 ### 1.8.1、modCount用途
 
 > 该字段被`Iterator`以及`ListIterator`的实现类所使用，如果该值被意外更改，`Iterator`或者`ListIterator` 将抛出`ConcurrentModificationException`异常    
 >
-> **1、在ArrayList中有个成员变量modCount，继承于AbstractArrAayList，每对List对象修改一次，也就每次add或者remove它的值都会加1.**          
+> **1、在ArrayList中有个成员变量`modCount`，继承于`AbstractArrAayList`，每对List对象修改一次，也就每次add或者remove它的值都会加1.**          
 >
 > **2、Itr类里有一个成员变量`expectedModCount`，它的值为创建Iterator对象的时候List的modCount值。**                
 
 
 
-1、用此**expectedModCount**变量来检验在迭代过程中List对象是否被修改了，如果被修改了则抛出`java.util.ConcurrentModificationException`异常。       
+1、用此**`expectedModCount`**变量来检验在迭代过程中List对象是否被修改了，如果被修改了则抛出`java.util.ConcurrentModificationException`异常。       
 
 2、在每次调用Itr对象的`next`()或者`remove`方法的时候都会调用`checkForComodification`()方法进行一次检验，     
 
@@ -349,7 +345,6 @@ public E set(int index, E e) {
 ### 1.8.2、测试1
 
 > 将list对象里面的“c"删除了，同时list对象的`modCount`值加1，但是Itr对象的`expectedModCount`没有变，他们肯定是不相等了。等再一次执行`next`()方法的时候调用了`checkForComodification`()方法，这时候就抛出异常了。 
->
 
 ```java
 public static void main(String[] args) {

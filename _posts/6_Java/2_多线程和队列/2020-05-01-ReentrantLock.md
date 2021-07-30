@@ -18,23 +18,23 @@ description: ReentrantLock
 
 # 1、AQS
 
-> 谈到并发，不得不谈ReentrantLock；而谈到ReentrantLock，不得不谈AbstractQueuedSynchronizer（AQS）！    
+> 谈到并发，不得不谈`ReentrantLock`；而谈到`ReentrantLock`，不得不谈`AbstractQueuedSynchronizer`（AQS）！    
 >
-> `AbstractQuenedSynchronizer`：类如其名，抽象的队列式的同步器，AQS定义了一套多线程访问共享资源的同步器框架，是除了java自带的synchronized关键字之外的锁机制。。事实上`concurrent`包内许多类都是基于AQS构建的。    
+> `AbstractQuenedSynchronizer`：类如其名，抽象的队列式的同步器，`AQS`定义了一套多**线程访问共享资源的同步器框架，是除了java自带的`synchronized`关键字之外的锁机制**。。事实上`concurrent`包内许多类都是基于AQS构建的。    
 >
-> > 例如ReentrantLock，Semphore，CountDownLatch，ReentrantReadWriteLock，FutureTask等。AQS解决了在实现同步容器时大量的细节问题
+> > 例如`ReentrantLock`，	Semphore，`CountDownLatch`，`ReentrantReadWriteLock`，FutureTask等。AQS解决了在实现同步容器时大量的细节问题
 
 
 
 ![image-20201215102652905](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20201215102652905.png)
 
-它维护了一个`volatile int state`（代表共享资源）和一个FIFO线程等待队列（多线程争用资源被阻塞时会进入此队列）。 state用来持有同步状态。使用getState， setState， compareAndSetState方法来进行状态的获取和更新。 对state变量值的更新都采用CAS操作保证更新操作的原子性。     
+它维护了一个`volatile int state`（代表共享资源）和一个`FIFO` 线程等待队列（多线程争用资源被阻塞时会进入此队列）。 `state`用来持有同步状态。使用`getState`， `setState`， `compareAndSetState`方法来进行状态的获取和更新。 对`state`变量值的更新都采用`CAS`操作保证更新操作的原子性。     
 
 
 
-以`ReentrantLock`为例，`ReentrantLock`用它来表示线程重入锁的次数，`state`初始化为0，表示未锁定状态。A线程`lock()`时，会调用`tryAcquire()`独占该锁并将`state+1`。    
+以`ReentrantLock`为例，`ReentrantLock `用它来表示线程重入锁的次数，`state`初始化为0，表示未锁定状态。A线程`lock()`时，会调用 `tryAcquire()`独占该锁并将`state+1`。    
 
-此后，其他线程再`tryAcquire()`时就会失败，直到A线程`unlock()`到`state=0`（即释放锁）为止，其它线程才有机会获取该锁。当然，释放锁之前，A线程自己是可以重复获取此锁的（state会累加），这就是可重入的概念。但要注意，**获取多少次就要释放多么次，这样才能保证state是能回到零态的**。
+此后，其他线程再`tryAcquire()`时就会失败，直到A线程`unlock()`到`state=0`（即释放锁）为止，其它线程才有机会获取该锁。当然，释放锁之前，`A` 线程自己是可以重复获取此锁的（`state`会累加），这就是可重入的概念。但要注意，**获取多少次就要释放多么次，这样才能保证`state`是能回到零态的**。
 
 
 
@@ -54,7 +54,7 @@ public abstract class AbstractQueuedSynchronizer
 
 
 
-`AbstractQueuedSynchronized`继承了`AbstractOwnableSynchronized`，这个类只有一个变量：`exclusiveOwnerThread`，表示当前占用该锁的线程，并且提供了相应的get，set方法。
+`AbstractQueuedSynchronized`继承了`AbstractOwnableSynchronized`，这个类只有一个变量：`exclusiveOwnerThread`，表示当前占用该锁的线程，并且提供了相应的`get`，`set` 方法。
 
 ```java
 public abstract class AbstractOwnableSynchronizer
@@ -84,11 +84,11 @@ public abstract class AbstractOwnableSynchronizer
 
 
 
- **AQS的实现依赖内部的同步先进先出队列（FIFO双向队列）表示排队等待锁的线程。队列头节点称作“哨兵节点”或者“哑节点”。其他的节点与等待线程关联，每个节点维护一个等待状态waitStatus。如果当前线程获取同步状态失败，AQS会将该线程以及等待状态等信息构造成一个Node，将其加入同步队列的尾部，同时阻塞当前线程，当同步状态释放时，唤醒队列的头节点**。      
+ **AQS的实现依赖内部的同步先进先出队列（FIFO双向队列）表示排队等待锁的线程。队列头节点称作“哨兵节点”或者“哑节点”。其他的节点与等待线程关联，每个节点维护一个等待状态`waitStatus`。如果当前线程获取同步状态失败，`AQS`会将该线程以及等待状态等信息构造成一个`Node`，将其加入同步队列的尾部，同时阻塞当前线程，当同步状态释放时，唤醒队列的头节点**。      
 
 
 
-Node结点是对每一个等待获取资源的线程的封装，其包含了需要同步的线程本身及其等待状态，如是否被阻塞、是否等待唤醒、是否已经被取消等。变量`waitStatus`则表示当前Node结点的等待状态，共有5种取值`CANCELLED`、`SIGNAL`、`CONDITION`、`PROPAGATE`、0。       
+`Node`结点是对每一个等待获取资源的线程的封装，其包含了需要同步的线程本身及其等待状态，如是否被阻塞、是否等待唤醒、是否已经被取消等。变量 `waitStatus` 则表示当前Node结点的等待状态，共有5种取值`CANCELLED`、`SIGNAL`、`CONDITION`、`PROPAGATE`、0。       
 
 注意，**负值表示结点处于有效等待状态，而正值表示结点已被取消。所以源码中很多地方用>0、<0来判断结点的状态是否正常**。
 
@@ -147,13 +147,13 @@ public ReentrantLock(boolean fair) {
 
 
 
-## 2.2、NonfairSync
+## 2.2、`NonfairSync` 
 
 ![image-20201214184713073](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20201214184713073.png)
 
 
 
-### 2.2.1、`#lock`
+### 2.2.1、`#lock` 
 
 > 我们从源代码出发，分析非公平锁获取锁和释放锁的过程。 
 
@@ -191,11 +191,11 @@ protected final void setExclusiveOwnerThread(Thread thread) {
 
 ### 2.2.2、`#acquire`
 
-> 非公平锁tryAcquire的流程是：    
+> 非公平锁`tryAcquire`的流程是：    
 >
-> 1、检查state字段，若为0，表示锁未被占用，那么尝试占用，    
+> 1、检查`state`字段，若为`0`，表示锁未被占用，那么尝试占用，    
 >
-> 2、若不为0，检查当前锁是否被自己占用，若被自己占用，则更新state字段，表示重入锁的次数。    
+> 2、若不为`0`，检查当前锁是否被自己占用，若被自己占用，则更新state字段，表示重入锁的次数。    
 >
 > 3、如果以上两点都没有成功，则获取锁失败，返回false。
 
@@ -302,7 +302,7 @@ private Node enq(final Node node) {
 
 > 这个方法让已经入队的线程尝试获取锁，若失败则会被挂起。    
 >
-> 通过`tryAcquire()`和`addWaiter()`，该线程获取资源失败，已经被放入等待队列尾部了。聪明的你立刻应该能想到该线程下一部该干什么了吧：    
+> 通过 `tryAcquire()` 和 `addWaiter()`，该线程获取资源失败，已经被放入等待队列尾部了。聪明的你立刻应该能想到该线程下一部该干什么了吧：    
 >
 > **进入等待状态休息，直到其他线程彻底释放资源后唤醒自己，自己再拿到资源，然后就可以去干自己想干的事了**。没错，就是这样！是不是跟医院排队拿号有点相似~~acquireQueued()就是干这件事：**在等待队列中排队拿号（中间没其它事干可以休息），直到拿到号后再返回**。这个函数非常关键，还是上源码吧：
 
@@ -438,7 +438,7 @@ public final boolean release(int arg) {
 }
 ```
 
-如果理解了加锁的过程，那么解锁看起来就容易多了。流程大致为先尝试释放锁，若释放成功，那么查看头结点的状态是否为SIGNAL，如果是则唤醒头结点的下个节点关联的线程，     
+如果理解了加锁的过程，那么解锁看起来就容易多了。流程大致为先尝试释放锁，若释放成功，那么查看头结点的状态是否为`SIGNAL`，如果是则唤醒头结点的下个节点关联的线程，     
 
 **如果释放失败那么返回false表示解锁失败。这里我们也发现了，每次都只唤起头结点的下一个节点关联的线程。**
 

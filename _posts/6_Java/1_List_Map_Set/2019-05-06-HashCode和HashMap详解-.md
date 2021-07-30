@@ -223,7 +223,7 @@ public static void calculateConflictRate(Integer multiplier, List<Integer> hashs
 
 
 
-（1）`HashCode`的存在主要是用于查找的快捷性，如`Hashtable`，`HashMap`等，`HashCode`是用来在散列存储结构中确定对象的存储地址的；    
+（1）`HashCode` 的存在主要是用于查找的快捷性，如`Hashtable`，`HashMap`等，`HashCode`是用来在散列存储结构中确定对象的存储地址的；    
 
 （2）如果两个对象相同， `equals`方法一定返回true，这两个对象的`HashCode`一定相同；**除非重写了`HashCode`方法，及其特殊情况下，才回这样重写**    
 
@@ -259,7 +259,7 @@ public static void calculateConflictRate(Integer multiplier, List<Integer> hashs
 
 （2）如果这个位置上已经有元素了，就调用它的equals方法与新元素进行比较，相同的话就不存了；     
 
-（3）不相同的话，也就是发生了Hash key相同导致冲突的情况，那么就在这个Hash key的地方产生一个链表，将所有产生相同HashCode的对象放到这个单链表上去，串在一起（很少出现）。这样一来实际调用**equals**方法的次数就大大降低了，几乎只需要一两次。 （下面1、的实例就为这里的测试实例）
+（3）不相同的话，也就是发生了`Hash key`相同导致冲突的情况，那么就在这个Hash key的地方产生一个链表，将所有产生相同HashCode的对象放到这个单链表上去，串在一起（很少出现）。这样一来实际调用**equals**方法的次数就大大降低了，几乎只需要一两次。 （下面1、的实例就为这里的测试实例）
 
  
 
@@ -426,7 +426,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
 
 
 
-### 2.1.2、HashMap内部类
+### 2.1.2、`HashMap` 内部类
 
 #### 2.1.2.1、`Node<K,V>`：链表节点
 
@@ -604,7 +604,7 @@ public HashMap(int initialCapacity, float loadFactor) {
 
  
 
-hash桶没有在构造函数中初始化，`tableSizeFor(initialCapacity)`方法，这个方法的作用是，将你传入的`initialCapacity`做计算，返回一个大于等于`initialCapacity` 最小的2的幂次方。**这个暂时作为桶的初始化数量，没有初始化桶，只有在put存储键值对的时候才回进行桶的初始化**   
+`hash`桶没有在构造函数中初始化，`tableSizeFor(initialCapacity)`方法，这个方法的作用是，将你传入的`initialCapacity`做计算，返回一个大于等于`initialCapacity` 最小的2的幂次方。**这个暂时作为桶的初始化数量，没有初始化桶，只有在put存储键值对的时候才回进行桶的初始化**   
 
 
 
@@ -641,21 +641,21 @@ public HashMap(Map<? extends K, ? extends V> m) {
 
 ## 2.2、put方法   
 
-1、先计算key的hash值，然后判断数组table是不是空的，如果是空的，则要进行调用`resize()`初始化数组   
+1、先计算`key`的`hash`值，然后判断数组`table`是不是空的，如果是空的，则要进行调用`resize()`初始化数组   
 
-2、通过1中计算的hash值，和table的大小n-1进行与运算获得table数组的下标位置，如果这个位置为null的话，直接放进去，否则执行3  
+2、通过1中计算的`hash`值，和table的大小n-1进行与运算获得table数组的下标位置，如果这个位置为null的话，直接放进去，否则执行3  
 
 3、  数组当前位置有值了，**判断当前数组节点的的hash值和传入的hash值是否相等**，以及key和p的key是否完全一致（包括==和equals），如果完全一致，则返回旧的数据，放入新的数据，否则执行4/5，要形成链表或者红黑树了，  
 
 4、如果是红黑树节点，则调用红黑树的方法`putTreeVal`查找替换或者放入      
 
-5、 如果是链表节点， 则调用方法`newNode`遍历链表，如果key相同则替换，当找不到目标节点的时候，则插入链表尾部，**然后，当链表的节点大于8 并且hash桶的长度大于64的时候会进行链表树化。变成红黑树**。
+5、 如果是链表节点， 则调用方法`newNode`遍历链表，如果`key`相同则替换，当找不到目标节点的时候，则插入链表尾部，**然后，当链表的节点大于8 并且`hash`桶的长度大于`64`的时候会进行链表树化。变成红黑树**。
 
 6、最后，以上操作如果触发了扩容机制，则会扩容   
 
 
 
-![1588223117169](D:\study\HealerJean.github.io\blogImages\1588223117169.png)
+![1588223117169](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1588223117169.png)
 
 
 
@@ -1265,8 +1265,6 @@ static Class<?> comparableClassFor(Object x) {
 
 ## 2.4、resize方法（初始化hash桶也是用这个） 
 
-  
-
 1、 **判断旧的桶的最大容量是否为空，如果为空（初始化桶）则执行3**，如果不为空，则表示桶里面现在是有数据的， 这个时候判断旧hash桶是否超过最大容量值：如果超过则将阈值设置为Integer.MAX_VALUE(2的30次幂)，并直接返回老表。这样就不会扩容了，一直往红黑树，链表，数组中放入数据，如果不超过最大容量，则表示可以扩容   
 
 2、   这时新的桶长度 = 旧的桶长度* 2 ，然后要求小于最大容量Integer.MAX_VALUE(2的30次幂) ，防止溢出，，并且旧桶长度 >= 初始的桶长度（16）, 则将新阈值设置为原来的两倍，**总之目的就是得到新的桶的大小以及新阀值**   
@@ -1397,7 +1395,6 @@ final Node<K,V>[] resize() {
 ### 2.4.1、红黑树操作 split
 
 > 开始的时候，和链表扩容有点像
->
 
 ```java
 /**
@@ -1876,8 +1873,6 @@ static final int hash(Object key) {
 
 #### 2.5.3.1、为什么要右移16位
 
-
-
 > 当 table 长度为 16 时，table.length - 1 = 15 ，用二进制来看，此时低 4 位全是 1，高 28 位全是 0，与 0 进行 & 运算必然为 0，因此此时 hashCode 与 “table.length - 1” 的 & 运算结果只取决于 hashCode 的低 4 位，    
 >
 > 在这种情况下，hashCode 的高 28 位就没有任何作用，并且由于 hash 结果只取决于 hashCode 的低 4 位，hash 冲突的概率也会增加。因此，在 JDK 1.8 中，**将高位也参与计算，目的是为了降低 hash 冲突的概率**。
@@ -1978,7 +1973,7 @@ tab[ (n - 1) & hash   ]；
 
 
 
-### 2.5.7、Jdk1.8和Jdk1.7中hashmap区别 
+### 2.5.7、`Jdk1.8` 和 `Jdk1.7`中 `hashmap`区别 
 
 > **JDK1.7进行多线程put操作，之后遍历，直接死循环，CPU飙到100%**，**JDK1.8中进行多线程操作会出现节点和value值丢失**          
 >
@@ -2023,8 +2018,6 @@ do {
 
 
 **2）线程一被调度回来执行。**
-
-  
 
 ```java
 do {
