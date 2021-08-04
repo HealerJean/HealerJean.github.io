@@ -173,9 +173,13 @@ protected T initialValue() {
 
 ### 3.1、为什么使用弱引用
 
-`key` 使用强引用：引用的 `ThreadLocal` 对象被回收了，这时候 `Entry`中的 `ThreadLocal`理应被回收了，但是如果 `Entry` 的 `key`被设置成强引用则该 `ThreadLocal` 就不能被回收，这就是将其设置成弱引用的目的。
+`key` 使用强引用：当`ThreadLocalMap`的`key`为强引用回收`ThreadLocal`时，因为`ThreadLocalMap`还持有`ThreadLocal`的强引用，如果没有key 使用弱引用：手动删除，`ThreadLocal`不会被回收，导致`Entry`内存泄漏。 譬如 设置：`ThreadLocal=null` 以后，应该会被回收的，但实际情况是`ThreadLocalMap`还有一个强引用，导致无法回收           
 
-key 使用弱引用：引用的`ThreadLocal`的对象被回收了，由于`ThreadLocalMap`持有`ThreadLocal`的弱引用，即使没有手动删除，`ThreadLocal`也会被回收。即，`ThreadLocal` 对象只是作为`ThreadLocalMap`的一个`key`而存在的，现在它被回收了，但是它对应的`value`并没有被回收，内存泄露依然存在！而且`key`被删了之后，变成了`null`，`value`更是无法被访问到了！针对这一问题，`ThreadLocalMap`类的设计本身已经有了这一问题的解决方案，那就是在每次`get()`/`set()`/`remove()` `ThreadLocalMap`中的值的时候，会自动清理`key`为 `null` 的 `value`。如此一来，value也能被回收了。
+`key` 使用弱引用：当`ThreadLocalMap`的`key`为弱引用回收`ThreadLocal`时，由于`ThreadLocalMap`持有`ThreadLocal`的弱引用，即使没有手动删除，`ThreadLocal`也会被回收。当`key`为`null`，在下一次`ThreadLocalMap`调用`set()` ,`get()`，`remove()`方法的时候会被清除`value`值。（`ThreadLocal` 对象只是作为`ThreadLocalMap`的一个`key`而存在的，现在它被回收了，但是它对应的`value`并没有被回收，内存泄露依然存在！而且`key`被删了之后，变成了`null`，`value`更是无法被访问到了！针对这一问题，`ThreadLocalMap`类的设计本身已经有了这一问题的解决方案，那就是在每次`get()`/`set()`/`remove()` `ThreadLocalMap`中的值的时候，会自动清理`key`为 `null` 的 `value`。如此一来，value也能被回收了）        
+
+​       
+
+譬如 设置：`ThreadLocal=null` 以后，强引用已没有，`ThreadLocalMap`还有一个弱引用，下次`GC`就会被回收
 
 
 
@@ -185,6 +189,8 @@ key 使用弱引用：引用的`ThreadLocal`的对象被回收了，由于`Threa
 
 ThreadLocal的remove()方法会先将Entry中对key的弱引用断开，设置为null，然后再清除对应的key为null的value。 
 ```
+
+
 
 
 
