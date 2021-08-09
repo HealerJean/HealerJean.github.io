@@ -20,9 +20,7 @@ description: SpringBoot如何解决循环依赖问题
 
 （1）构造器的循环依赖    （无法解决）
 
-（2）field属性的循环依赖。
-
-
+（2）`field` 属性的循环依赖。
 
 ```java
 @Slf4j
@@ -57,17 +55,9 @@ public class BService {
 
 
 
-检测循环依赖相对比较容易，Bean在创建的时候可以给该Bean打标，如果递归调用回来发现正在创建中的话，即说明了循环依赖了。
+检测循环依赖相对比较容易，`Bean`在创建的时候可以给该`Bean`打标，如果递归调用回来发现正在创建中的话，即说明了循环依赖了。
 
-
-
-
-
-或者控制台报错
-
-
-
-
+或者控制台报
 
 ```
 Description:
@@ -106,22 +96,22 @@ Spring的单例对象的初始化主要分为三步：
 
 
 
-从上面讲述的单例bean初始化步骤我们可以知道，循环依赖主要发生在第一、第二部。也就是构造器循环依赖和field循环依赖。   
+从上面讲述的单例`bean`初始化步骤我们可以知道，循环依赖主要发生在第一、第二部。也就是构造器循环依赖和`field`循环依赖。   
 
-那么我们要解决循环引用也应该从初始化过程着手，对于单例来说，在Spring容器整个生命周期内，有且只有一个对象，所以很容易想到这个对象应该存在Cache中，Spring为了解决单例的循环依赖问题，使用了**三级缓存**。   
+那么我们要解决循环引用也应该从初始化过程着手，对于单例来说，在 `Spring`容器整个生命周期内，有且只有一个对象，所以很容易想到这个对象应该存在`Cache`中，`Spring`为了解决单例的循环依赖问题，使用了**三级缓存**。   
 
 ```java
 /** Cache of singleton objects: bean name --> bean instance */
 
-singletonFactories ： 单例对象工厂的cache
+//一级缓存 singletonFactories ： 单例对象工厂的cache 
 private final Map<String, Object> singletonObjects = new ConcurrentHashMap<String, Object>(256);
 
 /** Cache of singleton factories: bean name --> ObjectFactory */
-earlySingletonObjects ：提前暴光的单例对象的Cache
+ // 三级缓存 earlySingletonObjects ：提前暴光的单例对象的Cache
 private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<String, ObjectFactory<?>>(16);
 
 /** Cache of early singleton objects: bean name --> bean instance */
-singletonObjects：单例对象的cache
+// 二级缓存中找 singletonObjects：单例对象的cache
 private final Map<String, Object> earlySingletonObjects = new HashMap<String, Object>(16);
 
 ```
@@ -130,13 +120,13 @@ private final Map<String, Object> earlySingletonObjects = new HashMap<String, Ob
 
 `Object sharedInstance = getSingleton(beanName);`    
 
-如注释所说，首先回去找在容器中是不是已经存在该单例。具体在哪找我们在前面的文章中已经说得很清楚了。看一下getSingleton()方法   
+如注释所说，首先回去找在容器中是不是已经存在该单例。具体在哪找我们在前面的文章中已经说得很清楚了。看一下`getSingleton()`方法   
 
 
 
 分析`getSingleton()`的整个过程，   
 
-1、Spring首先从一级缓存`singletonObjects`中获取。   
+1、`Spring`首先从一级缓存`singletonObjects`中获取。   
 
 2、如果获取不到 并且对象正在创建中，就再从二级缓存 `earlySingletonObjects`中获取。       
 
@@ -181,9 +171,7 @@ protected Object getSingleton(String beanName, boolean allowEarlyReference) {
 
 
 
-
-
-从上面三级缓存的分析，我们可以知道，Spring解决循环依赖的诀窍就在于`singletonFactories`这个三级cache。这个cache的类型是ObjectFactory，定义如下：   
+从上面三级缓存的分析，我们可以知道，`Spring`解决循环依赖的诀窍就在于`singletonFactories`这个三级cache。这个cache的类型是`ObjectFactory`，定义如下：   
 
 　在`DefaultSingletonBeanRegistry`类中的`singletonObjects`属性就是存singleton bean的地方。    
 
@@ -208,15 +196,15 @@ protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFa
 
 
 
-这里就是解决循环依赖的关键，这段代码发生在`createBeanInstance`之后，也就是说单例对象此时已经被创建出来(调用了构造器)。这个对象已经被生产出来了，虽然还不完美（还没有进行初始化的第二步和第三步），但是已经能被人认出来了（根据对象引用能定位到堆中的对象），所以Spring此时将这个对象提前曝光出来让大家认识，让大家使用。
+这里就是解决循环依赖的关键，这段代码发生在`createBeanInstance`之后，也就是说单例对象此时已经被创建出来(调用了构造器)。这个对象已经被生产出来了，虽然还不完美（还没有进行初始化的第二步和第三步），但是已经能被人认出来了（根据对象引用能定位到堆中的对象），所以`Spring`此时将这个对象提前曝光出来让大家认识，让大家使用。
 
 
 
-这样做有什么好处呢？让我们来分析一下“A的某个field或者setter依赖了B的实例对象，同时B的某个field或者setter依赖了A的实例对象”这种循环依赖的情况。A首先完成了初始化的第一步，并且将自己提前曝光到singletonFactories中，此时进行初始化的第二步，发现自己依赖对象B，此时就尝试去get(B)，发现B还没有被create，所以走create流程，B在初始化第一步的时候发现自己依赖了对象A，于是尝试get(A)，尝试一级缓存singletonObjects(肯定没有，因为A还没初始化完全)，尝试二级缓存earlySingletonObjects（也没有），尝试三级缓存singletonFactories，由于A通过ObjectFactory将自己提前曝光了，所以B能够通过ObjectFactory.getObject拿到A对象(虽然A还没有初始化完全，但是总比没有好呀)，B拿到A对象后顺利完成了初始化阶段1、2、3，完全初始化之后将自己放入到一级缓存singletonObjects中。此时返回A中，A此时能拿到B的对象顺利完成自己的初始化阶段2、3，**最终A也完成了初始化，进去了一级缓存singletonObjects中，而且更加幸运的是，由于B拿到了A的对象引用，所以B现在hold住的A对象完成了初始化。**
+这样做有什么好处呢？让我们来分析一下“A的某个field或者setter依赖了B的实例对象，同时B的某个field或者setter依赖了A的实例对象”这种循环依赖的情况。A首先完成了初始化的第一步，并且将自己提前曝光到singletonFactories中，此时进行初始化的第二步，发现自己依赖对象B，此时就尝试去get(B)，发现B还没有被create，所以走create流程，B在初始化第一步的时候发现自己依赖了对象A，于是尝试get(A)，尝试一级缓存singletonObjects(肯定没有，因为A还没初始化完全)，尝试二级缓存earlySingletonObjects（也没有），尝试三级缓存singletonFactories，由于A通过`ObjectFactory`将自己提前曝光了，所以B能够通过`ObjectFactory.getObject`拿到A对象(虽然A还没有初始化完全，但是总比没有好呀)，B拿到A对象后顺利完成了初始化阶段1、2、3，完全初始化之后将自己放入到一级缓存singletonObjects中。此时返回A中，A此时能拿到B的对象顺利完成自己的初始化阶段2、3，**最终A也完成了初始化，进去了一级缓存singletonObjects中，而且更加幸运的是，由于B拿到了A的对象引用，所以B现在`hold`住的A对象完成了初始化。**
 
 
 
-知道了这个原理时候，肯定就知道为啥Spring不能解决“A的构造方法中依赖了B的实例对象，同时B的构造方法中依赖了A的实例对象”这类问题了！因为加入`singletonFactories`三级缓存的前提是执行了构造器，所以构造器的循环依赖没法解决。
+知道了这个原理时候，肯定就知道为啥Spring不能解决“A的构造方法中依赖了B的实例对象，同时B的构造方法中依赖了A的实例对象”这类问题了！因为加入`singletonFactories `三级缓存的前提是执行了构造器，所以构造器的循环依赖没法解决。
 
 
 

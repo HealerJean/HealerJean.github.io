@@ -22,7 +22,7 @@ description: ReentrantLock
 >
 > `AbstractQuenedSynchronizer`：类如其名，抽象的队列式的同步器，`AQS`定义了一套多**线程访问共享资源的同步器框架，是除了java自带的`synchronized`关键字之外的锁机制**。。事实上`concurrent`包内许多类都是基于AQS构建的。    
 >
-> > 例如`ReentrantLock`，	Semphore，`CountDownLatch`，`ReentrantReadWriteLock`，FutureTask等。AQS解决了在实现同步容器时大量的细节问题
+> > 例如`ReentrantLock`，	`Semphore`，`CountDownLatch`，`ReentrantReadWriteLock`，FutureTask等。AQS解决了在实现同步容器时大量的细节问题
 
 
 
@@ -123,8 +123,6 @@ CANCELLED(1)：表示当前结点已取消调度。当timeout或被中断（响�
 
 
 ## 2.1、构造器
-
-
 
 ```java
 //默认构造器初始化为NonfairSync对象，即非公平锁，
