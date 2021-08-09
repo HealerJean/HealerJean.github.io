@@ -114,8 +114,6 @@ public void preInstantiateSingletons() throws BeansException {
 
 跟踪其调用栈，`getBean(beanName);`方法，我们再梳理一下`getBean()`方法，前面总结过该方法在`IoC`容器的顶层接口`BeanFactory`中定义，然后在IoC容器的具体产品`DefaultListableBeanFactory`类的基类`AbstractBeanFactory`实现了`getBean()`方法。接着看代码。    
 
-
-
 ​    
 
 ```java
@@ -343,8 +341,6 @@ protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredTy
 
 
 ## 1.2、`createBean()`的过程
-
-
 
 > 前面说了`getBean()`是依赖注入的起点，之后会调用`createBean()`，下面通过`createBean()`代码来了解这个过程。在这个过程中，Bean对象会根据`BeanDefinition`定义的要求生成。
 
