@@ -24,13 +24,13 @@ description:  HashCode和HashMap详解
 
 
 
-# 1、HashCode  
+# 1、`HashCode`  
 
 
 
-## 1.1、一些常见的HashCode
+## 1.1、一些常见的 `HashCode`
 
-### 1.1.1、Integer
+### 1.1.1、`Integer`
 
 ```java
 
@@ -52,7 +52,7 @@ public void Integer_HashCode(){
 
 
 
-### 1.1.2、String
+### 1.1.2、`String`
 
 ```java
 
@@ -92,7 +92,7 @@ public void String_HashCode(){
 
 
 
-## 1.2、为什么HashCode 会使用31
+## 1.2、为什么`HashCode` 会使用31
 
 关于网上的一些解释    
 
@@ -213,9 +213,9 @@ public static void calculateConflictRate(Integer multiplier, List<Integer> hashs
 
 
 
-## 1.3、HashCode使用
+## 1.3、`HashCode` 使用
 
-### 1.3.1、HashCode特性（确定位置，但不能确定地址）
+### 1.3.1、`HashCode` 特性（确定位置，但不能确定地址）
 
  
 
@@ -233,7 +233,7 @@ public static void calculateConflictRate(Integer multiplier, List<Integer> hashs
 
  
 
-###  1.3.2、HashCode作用
+###  1.3.2、`HashCode` 作用
 
 > Java中的集合（`Collection`）有两类，一类是`Lis`t，再有一类是`Set`。前者集合内的元素是有序的，元素可以重复；后者元素无序，但元素不可重复。     
 >

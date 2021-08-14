@@ -19,13 +19,13 @@ description: Java8之Stream和Lambda和Optional
 
 # 1、`lambda`
 
-## 1.1、lambd使用前提
+## 1.1、`lambd` 使用前提
 
 > **1、必须保证只有一个接口，而且其中的抽象方法有且只有一个**        
 >
 > **2、必须具有上下文环境（代理所在的环境）**   
 >
-> **3、根据局部变量的赋值来推到lambda接口**    
+> **3、根据局部变量的赋值来推到 `lambda` 接口**    
 
 
 
@@ -52,14 +52,14 @@ public interface Calculator {
 
 ```java
 Person[] array = {
-        new Person("迪丽热巴",13),
-        new Person("张宇晋",26),
-        new Person("赵春宇",13),
-        new Person("刘利",15)
+  new Person("迪丽热巴",13),
+  new Person("张宇晋",26),
+  new Person("赵春宇",13),
+  new Person("刘利",15)
 };
 
 Arrays.sort(array, (Person o1,Person o2) ->{
-    return o1.getAge()-o2.getAge();
+  return o1.getAge()-o2.getAge();
 });
 
 ```
@@ -444,7 +444,7 @@ public class TestMain {
 
 
 
-### 1.5.3、Supplier：
+### 1.5.3、`Supplier`：
 
 > 解释：直接返回结果
 

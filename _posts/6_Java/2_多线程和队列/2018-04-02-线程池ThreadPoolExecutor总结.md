@@ -733,7 +733,7 @@ Future<?> submit(Runnable runnable);
 
 
 
-#### 2.6.1.2、分析下 `Runable`和Callable的不同  
+#### 2.6.1.2、分析下 `Runable`和`Callable`的不同  
 
 ```java
 public Future<?> submit(Runnable task) {
