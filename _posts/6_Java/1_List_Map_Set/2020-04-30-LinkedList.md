@@ -44,8 +44,6 @@ public class LinkedList<E>
     implements List<E>, Deque<E>, Cloneable, java.io.Serializable
 {
 
-
-
 ```
 
 

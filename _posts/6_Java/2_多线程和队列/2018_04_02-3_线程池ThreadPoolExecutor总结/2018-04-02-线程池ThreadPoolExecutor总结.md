@@ -1179,7 +1179,13 @@ long totalTime = (System.currentTimeMillis() - startTime) / NumberConstant.ONE_T
 | LinkedTransferQueue   | **一个由链表结构组成的无界阻塞队列**，相当于其它队列，LinkedTransferQueue队列多了transfer和tryTransfer方法。 |
 | LinkedBlockingDeque   | **一个由链表结构组成的双向阻塞队列**。队列头部和尾部都可以添加和移除元素，多线程并发时，可以将锁的竞争最多降到一半。 |
 
- 
+
+
+## 2.7、线程执行接口
+
+### 2.7.1、最多50ms等待时间
+
+
 
 # 3、业务实战
 
