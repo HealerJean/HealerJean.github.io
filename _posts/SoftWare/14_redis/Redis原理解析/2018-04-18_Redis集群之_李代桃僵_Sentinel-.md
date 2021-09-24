@@ -92,7 +92,7 @@ description: Redis集群之_李代桃僵_Sentinel
 
 **1、每1秒，`sentinel`发送`ping`命令**
 
->每个`sentinel`对其他`sentinel`和`redis`主、从节点执行`ping`操作（心跳检测，失败判定的依据），确认当前节点是否可达
+>每个 `sentinel` 对其他 `sentinel` 和 `redis`主、从节点执行`ping`操作（心跳检测，失败判定的依据），确认当前节点是否可达
 
 
 

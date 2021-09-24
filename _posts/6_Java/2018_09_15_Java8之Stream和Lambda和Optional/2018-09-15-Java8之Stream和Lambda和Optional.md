@@ -524,7 +524,7 @@ public class TestMain {
 
 ```java
 @Test
-    public void test() {
+public void test() {
         //1、集合获取Stream
         Stream<Integer> stream = new ArrayList<Integer>().stream();
 
