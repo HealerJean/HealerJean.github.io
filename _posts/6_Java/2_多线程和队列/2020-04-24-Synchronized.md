@@ -27,7 +27,6 @@ description: synchronized
 ### 1.1.1、`demo`方法
 
 ```java
-
 public class Synchronized_1 {
 
     public static void main(String[] args) {
@@ -244,7 +243,6 @@ class ThreeTwoMyThread extends Thread {
 
 
 ```java
-
 public class Synchronized_4 {
 
 	public static void main(String[] args) {
