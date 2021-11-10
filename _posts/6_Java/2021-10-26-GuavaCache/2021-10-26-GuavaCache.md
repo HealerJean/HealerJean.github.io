@@ -1,11 +1,11 @@
 ---
-title: GuavaCach
+title: GuavaCache
 date: 2021-10-26 00:00:00
 tags: 
 - Java
 category: 
 - Java
-description: GuavaCach
+description: GuavaCache
 ---
 
 **前言**     
@@ -22,7 +22,7 @@ description: GuavaCach
 
 ## 1.1、缓存
 
-### 1.1.1、JVM缓存
+### 1.1.1、`JVM` 缓存
 
 > ` JVM` 缓存，也可以认为是堆缓存。其实就是创建一些全局变量，如 `Map、List` 之类的容器用于存放数据
 
@@ -47,8 +47,6 @@ description: GuavaCach
 > 上面的两种缓存其实都是堆内缓存，只能在单个节点中使用，这样在分布式场景下就招架不住了。于是也有了一些缓存中间件，如 `Redis`、`Memcached`，在分布式环境下可以共享内存。
 
 
-
-# 
 
 # 2、`maven`
 
@@ -193,9 +191,9 @@ cache = CacheBuilder.newBuilder()
 
 **2、`expireAfterWrite` 与 `refreshAfterWrite` 同时配置的话。**    
 
-> > ⬤ `expire` 小于等于 `refresh` 时间，优先expire失效，同时满足走 `expire`（无法refresh）。    `expire `大于 `refresh `时间 
+> > ⬤ `expire` 小于等于 `refresh` 时间，优先 `expire`失效，同时满足走 `expire`（无法refresh）。     
 > >
-> > ⬤ 优先 `refresh`，同时满足走`expire`。
+> > ⬤ `expire `大于 `refresh `时间，优先 `refresh`，同时满足走`expire`。
 
 
 

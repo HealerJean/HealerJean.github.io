@@ -46,10 +46,6 @@
         <!--校验-->
         <javax-validation.version>2.0.1.Final</javax-validation.version>
         <hibernate-validator.version>6.0.9.Final</hibernate-validator.version>
-
-        <!--淘宝api版本 20191015-->
-        <taobao-api.version>1.0.1</taobao-api.version>
-
     </properties>
 
 
@@ -116,13 +112,6 @@
                 <version>${javax-validation.version}</version>
             </dependency>
 
-
-            <!--  taobao api  -->
-            <dependency>
-                <groupId>com.healerjean.proj</groupId>
-                <artifactId>taobao-api-20191021</artifactId>
-                <version>${taobao-api.version}</version>
-            </dependency>
         </dependencies>
 
     </dependencyManagement>

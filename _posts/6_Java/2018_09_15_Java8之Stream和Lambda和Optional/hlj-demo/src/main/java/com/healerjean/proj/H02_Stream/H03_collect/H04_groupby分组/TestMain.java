@@ -16,17 +16,42 @@ import java.util.stream.Collectors;
 public class TestMain {
 
 
-    @Test
-    public void test1() {
+    public static void main(String[] args) {
         List<Person> personList = Arrays.asList(
-                new Person(1L, "a"),
+                new Person(1L, null),
                 new Person(1L, "b"),
+                new Person(1L, null),
                 new Person(2L, "b"),
                 new Person(3L, "c"));
 
         //1、分组，组内数据收集成list
-        Map<Long, List<Person>> mapListPerson = personList.stream()
-                .collect(Collectors.groupingBy(item -> item.getId(), Collectors.toList()));
+        // Map<Long, List<Person>> mapListPerson = personList.stream()
+        //         .collect(Collectors.groupingBy(item -> item.getId(), Collectors.toList()));
+        // System.out.println(mapListPerson);
+
+
+        Map<String, List<Person>> mapListPerson = personList.stream()
+                .collect(Collectors.groupingBy(item -> item.getId() + "_" +  (item.getName() == null ? "####" : item.getName()), Collectors.toList()));
+        System.out.println(mapListPerson);
+    }
+
+    @Test
+    public void test1() {
+        List<Person> personList = Arrays.asList(
+                new Person(1L, null),
+                new Person(1L, "b"),
+                new Person(1L, null),
+                new Person(2L, "b"),
+                new Person(3L, "c"));
+
+        //1、分组，组内数据收集成list
+        // Map<Long, List<Person>> mapListPerson = personList.stream()
+        //         .collect(Collectors.groupingBy(item -> item.getId(), Collectors.toList()));
+        // System.out.println(mapListPerson);
+
+
+        Map<String, List<Person>> mapListPerson = personList.stream()
+                .collect(Collectors.groupingBy(item -> item.getId() + "_" + item.getName(), Collectors.toList()));
         System.out.println(mapListPerson);
 
         //1.2、组内数据再映射
