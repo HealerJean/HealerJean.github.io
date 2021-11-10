@@ -16,6 +16,7 @@ public class LogCallTestService {
         ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setAgeRes(requestDTO.getAge() + System.currentTimeMillis());
         responseDTO.setNameRes(requestDTO.getName() + System.currentTimeMillis());
+        int i = 1/0 ;
         return responseDTO;
     }
 

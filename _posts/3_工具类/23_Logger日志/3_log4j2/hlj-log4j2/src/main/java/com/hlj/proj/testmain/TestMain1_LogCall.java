@@ -28,5 +28,12 @@ public class TestMain1_LogCall {
         ThirdInvokeLogAspect.call("invokeMethod", requestDTO, () -> logCallTestService.invokeMethod(requestDTO), log, LogLevel.INFO);
         ThirdInvokeLogAspect.call("invokeMethod", requestDTO, () -> logCallTestService.invokeMethod(requestDTO), log, LogLevel.WARN);
         ThirdInvokeLogAspect.call("invokeMethod", requestDTO, () -> logCallTestService.invokeMethod(requestDTO), log, LogLevel.ERROR);
+
+        try {
+            Thread.sleep(100000l);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 }
