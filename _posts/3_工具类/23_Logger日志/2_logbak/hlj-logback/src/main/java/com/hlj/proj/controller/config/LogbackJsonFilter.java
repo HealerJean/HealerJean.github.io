@@ -15,16 +15,16 @@ import com.hlj.proj.controller.utils.JsonUtils;
 public class LogbackJsonFilter extends Filter<ILoggingEvent> {
     @Override
     public FilterReply decide(ILoggingEvent event) {
-        if (event.getLoggerName().startsWith("com.hlj")) {
-            Object[] params = event.getArgumentArray();
-            for (int index = 0; index < params.length; index++) {
-                Object param = params[index];
-                // class.isPrimitive() 8种基本类型的时候为 true，其他为false
-                if (!param.getClass().isPrimitive()) {
-                    params[index] = JsonUtils.toJsonString(param);
-                }
-            }
-        }
+        // if (event.getLoggerName().startsWith("com.hlj")) {
+        //     Object[] params = event.getArgumentArray();
+        //     for (int index = 0; index < params.length; index++) {
+        //         Object param = params[index];
+        //         // class.isPrimitive() 8种基本类型的时候为 true，其他为false
+        //         if (!param.getClass().isPrimitive()) {
+        //             params[index] = JsonUtils.toJsonString(param);
+        //         }
+        //     }
+        // }
         return FilterReply.ACCEPT;
     }
 }
