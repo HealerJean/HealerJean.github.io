@@ -1,6 +1,7 @@
 package com.hlj.threadpool.d03_队列.d01_普通队列;
 
-import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
 
 import java.util.concurrent.*;
 

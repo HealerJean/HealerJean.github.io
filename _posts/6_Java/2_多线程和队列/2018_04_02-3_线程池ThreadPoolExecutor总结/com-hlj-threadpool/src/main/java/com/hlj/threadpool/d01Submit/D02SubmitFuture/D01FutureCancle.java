@@ -1,5 +1,7 @@
 package com.hlj.threadpool.d01Submit.D02SubmitFuture;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.concurrent.*;
 
 /**
@@ -7,6 +9,7 @@ import java.util.concurrent.*;
  * 日期 ：2019/3/13  下午2:00.
  * 类描述：
  */
+@Slf4j
 public class D01FutureCancle {
 
     /**
@@ -26,37 +29,32 @@ public class D01FutureCancle {
 
     public void test() {
 
-        future = pool.submit(new Callable<String>() {
-
-            @Override
-            public String call() {
-                String result = null;
-                try {
-                    // 同步阻塞获取信号量
-                    semaphore.acquire();
-                    result = "ok";
-                } catch (InterruptedException e) {
-                    result = "interrupted";
-                }
-                return result;
+        future = pool.submit(() -> {
+            String result;
+            try {
+                // 同步阻塞获取信号量
+                semaphore.acquire();
+                result = "ok";
+            } catch (InterruptedException e) {
+                result = "interrupted";
             }
+            return result;
         });
 
-        String result = "timeout";
+        String result = null;
         try {
             // 等待3s
             result = future.get(3, TimeUnit.SECONDS);
         } catch (Exception e) {
-            System.out.println("超时异常");
+            log.error("[future.get] error", e);
         }
 
         // 删除线程池中任务
         boolean cancelResult = future.cancel(true);
 
-        System.out.println("result is " + result);
-        System.out.println("删除结果：" + cancelResult);
-        System.out.println("当前active线程数：" + pool.getActiveCount());
-
+        log.info("result:{}", result);
+        log.info("cancelResult:{}", cancelResult);
+        log.info("当前active线程数:{}", pool.getActiveCount());
     }
 
     public static void main(String[] args) {
