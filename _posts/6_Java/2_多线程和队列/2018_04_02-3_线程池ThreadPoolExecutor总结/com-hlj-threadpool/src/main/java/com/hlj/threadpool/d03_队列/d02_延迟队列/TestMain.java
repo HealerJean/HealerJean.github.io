@@ -1,12 +1,11 @@
-package com.hlj.threadpool.d03_队列.d02_阻塞队列;
+package com.hlj.threadpool.d03_队列.d02_延迟队列;
 
-import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.TimerTask;
 import java.util.concurrent.DelayQueue;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**

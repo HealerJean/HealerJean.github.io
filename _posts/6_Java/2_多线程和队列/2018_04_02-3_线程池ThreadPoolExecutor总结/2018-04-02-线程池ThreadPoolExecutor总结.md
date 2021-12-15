@@ -805,9 +805,7 @@ public class FutureTask<V> implements RunnableFuture<V> {
 
 ### 2.6.2、`get方法 `   
 
-> `V get(long timeOut, TimeUnit unit)`：获取结果，超时返回null
-
-
+> `V get(long timeOut, TimeUnit unit)`：获取结果，超时抛出异常
 
 ```java
 //Runable接口的对象，这样当调用get方法的时候，如果线程执行成功会直接返回null，如果线程执行异常会抛出异常
@@ -978,7 +976,6 @@ public class D01FutureCancle {
 
     private static final String SUCCESS = "success";
 
-
     public static void main(String[] args) {
 
         ExecutorService executorService = Executors.newFixedThreadPool(3);
@@ -1048,11 +1045,11 @@ public class D01FutureCancle {
 
 
 
-**等待状态的任务。此时调用cancel()方法不管传入true还是false都会标记为取消，任务依然保存在任务队列中，但当轮到此任务运行时会直接跳过**。     
+⬤ **等待状态的任务。此时调用cancel()方法不管传入true还是false都会标记为取消，任务依然保存在任务队列中，但当轮到此任务运行时会直接跳过**。     
 
-**运行中的任务。此时传入true会中断正在执行的任务，传入false则不会中断。**    
+⬤ **运行中的任务。此时传入true会中断正在执行的任务，传入false则不会中断。**    
 
-**完成状态。此时cancel()不会起任何作用，因为任务已经完成了。**     
+⬤ **完成状态。此时cancel()不会起任何作用，因为任务已经完成了。**     
 
 
 

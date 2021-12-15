@@ -1,4 +1,4 @@
-package com.hlj.threadpool.d03_队列.d02_阻塞队列;
+package com.hlj.threadpool.d03_队列.d02_延迟队列;
 
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
