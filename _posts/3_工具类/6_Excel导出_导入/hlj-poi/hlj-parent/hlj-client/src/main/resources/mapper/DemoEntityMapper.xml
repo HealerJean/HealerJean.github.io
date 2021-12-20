@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.healerjean.proj.dao.mapper.DemoEntityMapper">
+
+    <sql id="Selective_Column_List">
+        ID,
+        <if test="name != null">
+            name,
+        </if>
+        <if test="phone != null">
+            phone,
+        </if>
+        <if test="email != null">
+            email,
+        </if>
+        <if test="age != null">
+            age,
+        </if>
+        <if test="status != null">
+            status,
+        </if>
+        <if test="createUser != null">
+            create_user,
+        </if>
+        <if test="createName != null">
+            create_name,
+        </if>
+        <if test="updateUser != null">
+            update_user,
+        </if>
+        <if test="updateName != null">
+            update_name,
+        </if>
+    </sql>
+
+    <insert id="insertSelective"  useGeneratedKeys="true" keyProperty="id">
+        insert into demo_entity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="Selective_Column_List" />
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="Selective_Value_List" />
+        </trim>
+    </insert>
+
+    <sql id="Selective_Value_List">
+        #{id},
+
+        <if test="name != null">
+            #{name},
+        </if>
+        <if test="phone != null">
+            #{phone},
+        </if>
+        <if test="email != null">
+            #{email},
+        </if>
+        <if test="age != null">
+            #{age},
+        </if>
+        <if test="status != null">
+            #{status},
+        </if>
+        <if test="createUser != null">
+            #{create_user},
+        </if>
+        <if test="createName != null">
+            #{create_name},
+        </if>
+        <if test="updateUser != null">
+            #{update_user},
+        </if>
+        <if test="updateName != null">
+            #{update_name},
+        </if>
+    </sql>
+</mapper>

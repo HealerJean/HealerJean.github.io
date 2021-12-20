@@ -1,0 +1,50 @@
+package com.healerjean.proj.listener;
+
+import com.alibaba.excel.context.AnalysisContext;
+import com.alibaba.excel.event.AnalysisEventListener;
+import com.alibaba.excel.util.ListUtils;
+import com.healerjean.proj.utils.json.JsonUtils;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author zhangyujin
+ * @date 2021/12/17  8:43 下午.
+ * @description
+ */
+@Slf4j
+public class NoModelDataListener extends AnalysisEventListener<Map<Integer, String>> {
+    /**
+     * 每隔5条存储数据库，实际使用中可以100条，然后清理list ，方便内存回收
+     */
+    private static final int BATCH_COUNT = 5;
+    // Map<KEY(列索引)>
+    private List<Map<Integer, String>> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+
+    @Override
+    public void invoke(Map<Integer, String> data, AnalysisContext context) {
+        log.info("解析到一条数据:{}", JsonUtils.toJsonString(data));
+        cachedDataList.add(data);
+        if (cachedDataList.size() >= BATCH_COUNT) {
+            saveData();
+            cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+        }
+    }
+
+    @Override
+    public void doAfterAllAnalysed(AnalysisContext context) {
+        saveData();
+        log.info("所有数据解析完成！");
+    }
+
+    /**
+     * 加上存储数据库
+     */
+    private void saveData() {
+        log.info("{}条数据，开始存储数据库！", cachedDataList.size());
+        log.info("存储数据库成功！");
+    }
+}
+
