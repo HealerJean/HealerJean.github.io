@@ -33,7 +33,7 @@ public class ReadExcelServiceImpl implements ReadExcelService {
     private static final String EXTRA_EXCEL_FILE = PATH + "extra.xlsx";
 
     /**
-     * 最简单的读
+     * 1、最简单的读
      * 1. 创建excel对应的实体对象 参照{@link DemoData}
      * 2. 由于默认一行行的读取excel，所以需要创建excel一行一行的回调监听器，参照{@link DemoDataListener}
      * 3. 直接读即可
@@ -135,7 +135,6 @@ public class ReadExcelServiceImpl implements ReadExcelService {
      */
     @Override
     public void synchronousRead() {
-
         // 这里 需要指定读用哪个class去读，然后读取第一个sheet 同步读取会自动finish
         List<DemoData> list = EasyExcel.read(DEMO_EXCEL_FILE).head(DemoData.class).sheet().doReadSync();
         for (DemoData data : list) {

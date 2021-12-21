@@ -332,16 +332,16 @@ public class WriteExcelServiceImpl implements WriteExcelService {
         return list;
     }
 
-    private List<DemoData> data () {
-            List<DemoData> list = Lists.newArrayList();
-            for (int i = 0; i < 10; i++) {
-                DemoData data = new DemoData();
-                data.setString("字符串" + i);
-                data.setDate(new Date());
-                data.setDoubleData(0.56);
-                list.add(data);
-            }
-            return list;
+    private List<DemoData> data() {
+        List<DemoData> list = Lists.newArrayList();
+        for (int i = 0; i < 10; i++) {
+            DemoData data = new DemoData();
+            data.setString("字符串" + i);
+            data.setDate(new Date());
+            data.setDoubleData(0.56);
+            list.add(data);
         }
+        return list;
+    }
 
     }
