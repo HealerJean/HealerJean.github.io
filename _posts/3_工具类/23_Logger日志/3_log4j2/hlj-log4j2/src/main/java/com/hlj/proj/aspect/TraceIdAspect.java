@@ -2,7 +2,9 @@ package com.hlj.proj.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -33,6 +35,12 @@ public class TraceIdAspect {
         }
         try {
             return proceedingJoinPoint.proceed();
+        } catch (Exception e) {
+            Signature sig = proceedingJoinPoint.getSignature();
+            String className = sig.getDeclaringTypeName();
+            String methodName = proceedingJoinPoint.getSignature().getName();
+            log.error("[{}.{}] error:{} ", className, methodName, ExceptionUtils.getStackTrace(e));
+            throw e;
         } finally {
             MDC.remove(TRACE_ID_NAME);
         }

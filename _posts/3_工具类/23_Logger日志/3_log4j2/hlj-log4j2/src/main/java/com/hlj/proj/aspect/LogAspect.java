@@ -2,15 +2,21 @@ package com.hlj.proj.aspect;
 
 import com.hlj.proj.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.junit.Test;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.*;
 
 /**
  * @author zhangyujin
@@ -26,20 +32,37 @@ public class LogAspect {
     @Around(value = "(execution(* *(..)) && @annotation(logIndex))", argNames = "pjp,logIndex")
     public Object printLog(final ProceedingJoinPoint pjp, LogIndex logIndex) throws Throwable {
         Object[] args = pjp.getArgs();
-        String methodName = pjp.getSignature().getName();
         Signature sig = pjp.getSignature();
-        String className = sig.getDeclaringTypeName();
         long start = System.currentTimeMillis();
-
+        Method method = null;
+        String methodName = null;
+        String className = null;
         Object result = null;
+        Object reqParams = null;
         try {
-            result = pjp.proceed();
+            methodName = pjp.getSignature().getName();
+            className = sig.getDeclaringTypeName();
+            if ((sig instanceof MethodSignature)) {
+                MethodSignature signature = (MethodSignature) sig;
+                Object target = pjp.getTarget();
+                method = target.getClass().getMethod(signature.getName(), signature.getParameterTypes());
+            } else {
+                log.error("signature is not instanceof MethodSignature!");
+            }
+
+            if (method == null) {
+                return pjp.proceed();
+            } else {
+                Parameter[] parameters = method.getParameters();
+                reqParams = getRequestParams(args, parameters);
+                result = pjp.proceed();
+            }
         } finally {
             long timeCost = System.currentTimeMillis() - start;
             Map<String, Object> map = new HashMap<>();
             map.put("class", className);
             map.put("method", className + "." + methodName);
-            map.put("requestParams", args);
+            map.put("requestParams", reqParams);
             map.put("responseParams", result);
             map.put("timeCost", timeCost + "ms");
             log.info("LogAspect：{}", JsonUtils.toJsonString(map));
@@ -47,5 +70,33 @@ public class LogAspect {
         return result;
     }
 
+    public Object getRequestParams(Object[] args, Parameter[] parameters) {
+        if (Objects.isNull(args)) {
+            return null;
+        }
+        if (args.length == 1 && !(args[0] instanceof HttpServletRequest) && !(args[0] instanceof HttpServletResponse)) {
+            return args[0];
+        }
 
+        List<Object> result = new ArrayList();
+        try {
+            for (int i = 0; i < args.length; i++) {
+                Object param = args[i];
+                if (param instanceof HttpServletRequest) {
+                    result.add("HttpServletRequest");
+                    continue;
+                }
+                if (param instanceof HttpServletResponse) {
+                    result.add("HttpServletResponse");
+                    continue;
+                }
+                Map<Object, Object> map = new HashMap<>();
+                map.put(parameters[i].getName(), param);
+                result.add(map);
+            }
+        } catch (Exception e) {
+            log.warn("LogAspect getRequestParams error:{}", ExceptionUtils.getStackTrace(e));
+        }
+        return result;
+    }
 }
