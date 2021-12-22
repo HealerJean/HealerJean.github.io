@@ -2,10 +2,14 @@ package com.hlj.proj.controller;
 
 import com.hlj.proj.aspect.LogIndex;
 import com.hlj.proj.bean.LogBean;
+import com.hlj.proj.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author HealerJean
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class Log4j2Controller {
 
+
     @LogIndex
     @GetMapping("log4j2")
     public String log4j2(LogBean logBean) {
@@ -26,9 +31,21 @@ public class Log4j2Controller {
         log.info("info日志=================={}", logBean);
         log.warn("warn日志=================={}", logBean);
         log.error("error日志================{}", logBean);
-        log.info("{}", 1/0);
+        // log.info("{}", 1/0);
         return "日志处理成功";
     }
 
+    @LogIndex
+    @GetMapping("many")
+    public String log4j2(String name, Integer age) {
+        return name + age;
+    }
+    @LogIndex
+    @GetMapping("request")
+    public String log4j2(HttpServletRequest request, HttpServletResponse response) {
+        // log.info("info日志 json============= request:{}", JsonUtils.toJsonString(request));
+        log.info("info日志 json============= response:{}",JsonUtils.toJsonString(response));
+        return "日志处理成功";
+    }
 
 }
