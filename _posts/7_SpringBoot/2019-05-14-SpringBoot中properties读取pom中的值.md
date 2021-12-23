@@ -135,4 +135,3 @@ public class Customonfiguration implements EnvironmentAware {
     });
     gitalk.render('gitalk-container');
 </script> 
-
