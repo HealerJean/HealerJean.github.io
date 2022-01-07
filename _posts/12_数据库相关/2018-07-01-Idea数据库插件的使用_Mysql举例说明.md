@@ -74,15 +74,11 @@ INSERT INTO duodianyouhui.coupon_item_good (id, couponAdzoneId, itemUrl, itemId,
 ## 4、显示历史命令
 ![WX20190129-182726](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20190129-182726.png)
 
-
 ## 5、显示字段名称
 
-Editor —> General —> Apppearance —> 右侧栏目中 Show parameter name hints
+File→settings → Editor →Inlay Hints ->SQL
 
-
-![WX20190129-183650@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20190129-183650@2x.png)
-
-![1](https://img-blog.csdn.net/2018082012030550?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3podXFpdWh1aQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![image-20220108000936981](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20220108000936981.png)
 
 
 
@@ -109,6 +105,5 @@ Editor —> General —> Apppearance —> 右侧栏目中 Show parameter name hi
     });
     gitalk.render('gitalk-container');
 </script> 
-
 <!-- Gitalk end -->
 
