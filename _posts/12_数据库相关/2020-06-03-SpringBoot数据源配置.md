@@ -158,13 +158,26 @@ public class DataResourceConfig {
 }
 ```
 
+# 3、项目应用
+
+## 3.1、MT
+
+```java
+    private int minPoolSize = 5;
+    private int maxPoolSize = 20;
+    private int initialPoolSize = 5;
+    private int checkoutTimeout = 3000;
+    private boolean removeAbandoned = true;
+    private int timeBetweenEvictionRunsMillis = 600000;
+    private int minEvictableIdleTimeMillis = 300000;
+```
 
 
 
-
-
-
-
+```
+max_user_connections：限制每个用户的session连接个数，例如max_user_connections=1 ，那么用户u1只能连接的session数为1，如果还有用户u2，还是可以连接，但是连接数仍然为1
+max_connections ：是对整个服务器的用户限制，整个服务器只能开这么多session，而不考虑用户！
+```
 
 
 
@@ -207,4 +220,3 @@ public class DataResourceConfig {
     });
     gitalk.render('gitalk-container');
 </script> 
-

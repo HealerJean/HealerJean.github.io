@@ -8,7 +8,6 @@ import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.junit.Test;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +20,7 @@ import java.util.*;
 /**
  * @author zhangyujin
  * @date 2021/11/9  5:24 下午
- * @description
+ * @desciption 切面日志
  */
 @Slf4j
 @Component
@@ -59,7 +58,7 @@ public class LogAspect {
             }
         } finally {
             long timeCost = System.currentTimeMillis() - start;
-            Map<String, Object> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<>(8);
             map.put("class", className);
             map.put("method", className + "." + methodName);
             map.put("requestParams", reqParams);
@@ -70,6 +69,12 @@ public class LogAspect {
         return result;
     }
 
+    /**
+     * 重构请求参数
+     * @param args 参数
+     * @param parameters 参数名
+     * @return 重构后的请求参数
+     */
     public Object getRequestParams(Object[] args, Parameter[] parameters) {
         if (Objects.isNull(args)) {
             return null;
@@ -78,7 +83,7 @@ public class LogAspect {
             return args[0];
         }
 
-        List<Object> result = new ArrayList();
+        List<Object> result = new ArrayList<>();
         try {
             for (int i = 0; i < args.length; i++) {
                 Object param = args[i];
@@ -90,7 +95,7 @@ public class LogAspect {
                     result.add("HttpServletResponse");
                     continue;
                 }
-                Map<Object, Object> map = new HashMap<>();
+                Map<Object, Object> map = new HashMap<>(2);
                 map.put(parameters[i].getName(), param);
                 result.add(map);
             }
