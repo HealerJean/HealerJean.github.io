@@ -35,6 +35,10 @@
         <Property name="errorLogGz">${errorLogDri}/gz</Property>
         <Property name="errorLogFileName">${logFileName}.error</Property>
 
+
+        <Property name="businessLogDri">${logDri}/business</Property>
+        <Property name="businessLogGz">${businessLogDri}/gz</Property>
+        <Property name="businessLogFileName">${logFileName}.bus.log</Property>
     </Properties>
 
     <appenders>
@@ -48,7 +52,7 @@
 
         <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
         <RollingRandomAccessFile name="infoFile" fileName="${infoLogDri}/${infoLogFileName}"
-                                 filePattern="${infoLogGz}/$${date:yyyy-MM}/%d{yyyy-MM-dd}-%i.${infoLogFileName}.gz">
+                                 filePattern="${infoLogGz}/${date:yyyy-MM}/%d{yyyy-MM-dd}-%i.${infoLogFileName}.gz">
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
                 <!-- 基于指定文件大小的滚动策略，size属性用来定义每个日志文件的大小 -->
@@ -70,7 +74,7 @@
 
         <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
         <RollingRandomAccessFile name="errorFile" fileName="${errorLogDri}/${errorLogFileName}"
-                                 filePattern="${errorLogGz}/$${date:yyyy-MM}/%d{yyyy-MM-dd}-%i.${errorLogFileName}.gz">
+                                 filePattern="${errorLogGz}/${date:yyyy-MM}/%d{yyyy-MM-dd}-%i.${errorLogFileName}.gz">
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
                 <!-- 基于指定文件大小的滚动策略，size属性用来定义每个日志文件的大小 -->
@@ -89,6 +93,21 @@
         </RollingRandomAccessFile>
 
 
+        <!--操作日志-->
+        <RollingRandomAccessFile name="businessLog" fileName="${businessLogDri}/${businessLogFileName}"
+                                 filePattern="${businessLogGz}/${date:yyyy-MM}/%d{yyyy-MM-dd}-%i.${businessLogFileName}.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="500 MB"/>
+                <TimeBasedTriggeringPolicy interval="6" modulate="true"/>
+            </Policies>
+            <Filters>
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <DefaultRolloverStrategy max="2000"/>
+        </RollingRandomAccessFile>
+
+
     </appenders>
 
 
@@ -101,7 +120,10 @@
             <AppenderRef ref="infoFile"/>
             <AppenderRef ref="errorFile"/>
         </AsyncRoot>
-    </loggers>
 
+        <logger name="businessLog" additivity="false" level="INFO">
+            <appender-ref ref="businessLog"/>
+        </logger>
+    </loggers>
 
 </configuration>
