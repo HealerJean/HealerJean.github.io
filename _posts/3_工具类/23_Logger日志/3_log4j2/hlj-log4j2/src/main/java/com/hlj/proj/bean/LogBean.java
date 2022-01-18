@@ -15,4 +15,6 @@ public class LogBean {
     private String name;
 
     private Integer age;
+
+    private String bizNo;
 }
