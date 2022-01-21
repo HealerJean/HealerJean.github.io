@@ -60,6 +60,13 @@
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
+        <!--  测试 自定义@Enalbe* @autoEnableConfiguration -->
+        <dependency>
+            <groupId>com.custom.proj</groupId>
+            <artifactId>spring-stater-enable-custom</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
     <build>
