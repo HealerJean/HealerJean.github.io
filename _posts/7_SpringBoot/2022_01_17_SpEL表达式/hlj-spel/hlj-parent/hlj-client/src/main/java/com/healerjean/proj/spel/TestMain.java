@@ -270,7 +270,7 @@ public class TestMain {
 
          //定义一个新变量，名为 newVal
         context.setVariable("newVal", "Jack");
-        String newVal = (String) parser.parseExpression(" #newVal").getValue(context);
+        String newVal = (String) parser.parseExpression("#{{newVal}}").getValue(context);
         System.out.println("newVal:" + newVal);
 
         //this 操作符表示集合中的某个元素

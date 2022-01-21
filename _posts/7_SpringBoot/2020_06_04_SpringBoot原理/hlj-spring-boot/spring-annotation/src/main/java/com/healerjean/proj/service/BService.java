@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class BService {
 
-    public BService(AService aService){
-      log.info(aService.toString());
-    }
+    // public BService(AService aService){
+    //   log.info(aService.toString());
+    // }
 }

@@ -59,7 +59,6 @@ public class LogAspect {
         } finally {
             long timeCost = System.currentTimeMillis() - start;
             Map<String, Object> map = new HashMap<>(8);
-            map.put("class", className);
             map.put("method", className + "." + methodName);
             map.put("requestParams", reqParams);
             map.put("responseParams", result);
