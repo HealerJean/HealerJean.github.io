@@ -1,10 +1,10 @@
 package com.healerjean.proj.controller;
 
-import com.custom.proj.service.CounterEnableService;
+import com.custom.proj.configuration.service.IronManService;
+import com.custom.proj.configuration.service.SpiderMainService;
+import com.custom.proj.register.service.MonitorEnableBService;
+import com.custom.proj.selector.service.CounterEnableAService;
 import com.custom.proj.service.LoggerEnableService;
-import com.custom.proj.service.MonitorEnableService;
-import com.custom.proj.service.inner.IronManService;
-import com.custom.proj.service.inner.SpiderMainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +20,13 @@ public class EnableController {
     @Resource
     private LoggerEnableService loggerEnableService;
     @Resource
-    private CounterEnableService counterEnableService;
+    private CounterEnableAService counterEnableAService;
+    // @Resource
+    // private CounterEnableBService counterEnableBService;
+    // @Resource
+    // private MonitorEnableAService monitorEnableAService;
     @Resource
-    private MonitorEnableService monitorEnableService;
+    private MonitorEnableBService monitorEnableBService;
     @Resource
     private SpiderMainService spiderMainService;
     @Resource
@@ -31,8 +35,12 @@ public class EnableController {
     @GetMapping("test")
     public String test() {
         loggerEnableService.saveLog("message");
-        counterEnableService.add(1);
-        monitorEnableService.saveMonitor();
+
+        counterEnableAService.add(1);
+        // counterEnableBService.add(1);
+
+        // monitorEnableAService.saveMonitor();
+        monitorEnableBService.saveMonitor();
 
         //configuration
         spiderMainService.spiderPrint();

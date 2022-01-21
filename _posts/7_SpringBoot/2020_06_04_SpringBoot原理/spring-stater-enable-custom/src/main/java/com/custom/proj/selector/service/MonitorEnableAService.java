@@ -1,4 +1,4 @@
-package com.custom.proj.service;
+package com.custom.proj.selector.service;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -8,8 +8,8 @@ import lombok.extern.slf4j.Slf4j;
  * @description
  */
 @Slf4j
-public class MonitorEnableService {
+public class MonitorEnableAService {
     public  void saveMonitor(){
-        log.info("[CounterEnableService#saveMonitor] ok:{}");
+        log.info("[MonitorEnableAService#saveMonitor] ok:{}");
     }
 }

@@ -1,4 +1,4 @@
-package com.custom.proj.service;
+package com.custom.proj.register.service;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -8,9 +8,9 @@ import lombok.extern.slf4j.Slf4j;
  * @description
  */
 @Slf4j
-public class CounterEnableService {
+public class CounterEnableAService {
 
     public void add(int count ){
-        log.info("CounterEnableService#add]  count:{}", count);
+        log.info("CounterEnableAService#add]  count:{}", count);
     }
 }

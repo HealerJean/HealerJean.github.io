@@ -12,6 +12,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class LoggerEnableService {
     public void saveLog(String logMsg){
-        log.info("[CounterEnableService#saveLog] logMsg:{}", logMsg);
+        log.info("[LoggerEnableService#saveLog] logMsg:{}", logMsg);
     }
 }

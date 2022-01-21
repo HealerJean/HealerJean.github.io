@@ -1,4 +1,4 @@
-package com.custom.proj.service.inner;
+package com.custom.proj.configuration.service;
 
 import lombok.extern.slf4j.Slf4j;
 
