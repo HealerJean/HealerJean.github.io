@@ -18,7 +18,6 @@ public class DemoEntityServiceImpl implements DemoEntityService {
     @Override
     public DemoDTO getMmethod(DemoDTO demoEntity) {
         log.info("Service--------getMmethod");
-        int i = 1/0;
         return demoEntity;
     }
 
