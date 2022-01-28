@@ -2,9 +2,9 @@
 title: CompletableFuture
 date: 2021-12-14 00:00:00
 tags: 
-- Java
+- Thread
 category: 
-- Java
+- Thread
 description: CompletableFuture
 ---
 
@@ -163,7 +163,7 @@ Caused by: java.lang.ArithmeticException: / by zero
 
 ## 3.2、`thenApply() `  同步 有入参，无返回值
 
-> `thenApply() ` 有入参，有返回值，不传线程池 （和 `CompletableFuture.supplyAsync`  用的一个线程池，非异步）
+> `thenApply() ` 有入参，有返回值，不传线程池 （`Main`线程）
 
 ```java
 /**
@@ -171,6 +171,7 @@ Caused by: java.lang.ArithmeticException: / by zero
  */
 @Test
 public void test() throws ExecutionException, InterruptedException {
+          log.info("[test]  currentThread:{}", Thread.currentThread().getId());
     long start = System.currentTimeMillis();
     ExecutorService service = Executors.newFixedThreadPool(10);
     CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
@@ -297,20 +298,6 @@ public void test4(){
 
 
 
-## 4.2、两个任务都完成其中一个完成，第三个任务才开始执行
-
-```
-
-```
-
-## 4.3、当一个任务失败后快速返回
-
-```java
-
-```
-
-
-
 # 5、等待所有任务结束
 
 > 循环使用 `get` 方法等待任务结束耗时比 `allOf`  方法多
@@ -417,9 +404,126 @@ public void test6(){
 }
 ```
 
+# 7、异步超时设置
+
+> `java8` 中 `CompletableFuture` 异步处理超时的方法     
+>
+> ⬤ `Java` 8 的 `CompletableFuture` 并没有 `timeout` 机制，虽然可以在 `get` 的时候指定 `timeout`，是一个同步堵塞的操作。怎样让 `timeout` 也是异步的呢？`Java` 8 内有内建的机制支持，一般的实现方案是启动一个 `ScheduledThreadpoolExecutor` 线程在 `timeout` 时间后直接调用 `CompletableFuture`.`completeExceptionally`(`new` `TimeoutException`())，然后用`acceptEither() `或者 `applyToEither` 看是先计算完成还是先超时：    
+>
+> ⬤ 在 `java` 9 引入了 `orTimeout` 和 `completeOnTimeOut` 两个方法支持 异步 `timeout` 机制：内部实现上跟我们上面的实现方案是一模一样的，只是现在不需要自己实现了。
 
 
 
+## 7.1、`CompletableFutureTimeout`
+
+> 注意：异常会被吃掉，返回超时的默认值。我就猜想，如果代码无法保证，既然有超时这种默认值，那么本身的业务异常应该毫无意义
+
+```java
+
+import java.util.concurrent.*;
+import java.util.function.Function;
+
+public class CompletableFutureTimeout {
+  static final class Delayer {
+    static ScheduledFuture<?> delay(Runnable command, long delay,
+                                    TimeUnit unit) {
+      return delayer.schedule(command, delay, unit);
+    }
+
+    static final class DaemonThreadFactory implements ThreadFactory {
+      @Override
+      public Thread newThread(Runnable r) {
+        Thread t = new Thread(r);
+        t.setDaemon(true);
+        t.setName("CompletableFutureDelayScheduler");
+        return t;
+      }
+    }
+
+    static final ScheduledThreadPoolExecutor delayer;
+
+    // 注意，这里使用一个线程就可以搞定 因为这个线程并不真的执行请求 而是仅仅抛出一个异常
+    static {
+      (delayer = new ScheduledThreadPoolExecutor(
+        1, new CompletableFutureTimeout.Delayer.DaemonThreadFactory())).
+        setRemoveOnCancelPolicy(true);
+    }
+  }
+
+
+  /**
+     * 哪个先完成 就apply哪一个结果 这是一个关键的API,exceptionally出现异常后返回默认值
+     */
+  public static  <T> CompletableFuture<T> completeOnTimeout( CompletableFuture<T> future,T t, long timeout, TimeUnit unit) {
+    final CompletableFuture<T> timeoutFuture = timeoutAfter(timeout, unit);
+    return future.applyToEither(timeoutFuture, Function.identity()).exceptionally((throwable) -> t);
+  }
+
+
+
+  private static <T> CompletableFuture<T> timeoutAfter(long timeout, TimeUnit unit) {
+    CompletableFuture<T> result = new CompletableFuture<T>();
+    CompletableFutureTimeout.Delayer.delayer.schedule(() -> result.completeExceptionally(new TimeoutException()), timeout, unit);
+    return result;
+  }
+
+}
+```
+
+## 7.2、测试
+
+```java
+ @Test
+    public void test() throws ExecutionException, InterruptedException {
+        long start = System.currentTimeMillis();
+        CompletableFuture<String> task1 = CompletableFuture.supplyAsync(() -> {
+            log.info("task1 start ");
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log.info("task1 end ");
+            return "task1 success";
+        });
+
+        CompletableFuture<Integer> task2 = CompletableFuture.supplyAsync(() -> {
+            log.info("task2 start ");
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log.info("task2 end ");
+            return 100;
+        });
+        CompletableFuture<String> task3 = CompletableFuture.supplyAsync(() -> {
+            log.info("task3 start ");
+
+            try {
+                Thread.sleep(3500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log.info("task3 end ");
+            return "task3 success";
+        });
+
+        CompletableFuture<String> completableFuture1 = CompletableFutureTimeout.completeOnTimeout(task1, "InterTimeOut", 2, TimeUnit.SECONDS);
+        CompletableFuture<Integer> completableFuture2 = CompletableFutureTimeout.completeOnTimeout(task2, 0, 2, TimeUnit.SECONDS);
+        CompletableFuture<String> completableFuture3 = CompletableFutureTimeout.completeOnTimeout(task3, "InterTimeOut", 2, TimeUnit.SECONDS);
+
+        String result1 = completableFuture1.get();
+        Integer result2 = completableFuture2.get();
+        String result3 = completableFuture3.get();
+        Long cost = System.currentTimeMillis() - start;
+        log.info("result1: {}, cost:{}", result1, cost);
+        log.info("result2: {}, cost:{}", result2, cost);
+        log.info("result3: {}, cost:{}", result3, cost);
+        Thread.sleep(500000L);
+    }
+```
 
 
 

@@ -1,4 +1,4 @@
-package com.hlj.threadpool.d01Submit.D02SubmitFuture;
+package com.healerjean.proj.d01Submit.D02SubmitFuture;
 
 import lombok.extern.slf4j.Slf4j;
 

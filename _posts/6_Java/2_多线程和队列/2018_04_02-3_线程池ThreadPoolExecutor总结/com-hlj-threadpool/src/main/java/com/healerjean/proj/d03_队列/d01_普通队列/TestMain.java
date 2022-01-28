@@ -1,4 +1,4 @@
-package com.hlj.threadpool.d03_队列.d01_普通队列;
+package com.healerjean.proj.d03_队列.d01_普通队列;
 
 
 import org.junit.Test;
