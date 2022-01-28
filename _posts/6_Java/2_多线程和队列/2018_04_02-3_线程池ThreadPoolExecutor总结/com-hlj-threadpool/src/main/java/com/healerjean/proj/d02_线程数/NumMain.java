@@ -1,4 +1,4 @@
-package com.hlj.threadpool.d02_线程数;
+package com.healerjean.proj.d02_线程数;
 
 /**
  * @Description

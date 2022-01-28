@@ -1,15 +1,15 @@
-package com.hlj.threadpool.d04_多接口返回;
+package com.healerjean.proj.d04_多接口返回;
 
+import com.healerjean.proj.d04_多接口返回.utils.CompletableFutureTimeout;
+import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.concurrent.*;
 
 /**
  * @author zhangyujin
@@ -92,6 +92,8 @@ public class TestMain {
      */
     @Test
     public void test3() throws ExecutionException, InterruptedException {
+        log.info("[test]  currentThread:{}", Thread.currentThread().getId());
+
         long start = System.currentTimeMillis();
         ExecutorService service = Executors.newFixedThreadPool(10);
         CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
@@ -102,12 +104,12 @@ public class TestMain {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            return "HealerJean" ;
+            return "HealerJean";
         }, service);
 
         // 1、thenRunAsync() 无入参，无返回值 、线程池执行
         completableFuture.thenRunAsync(() -> {
-            long cost  = System.currentTimeMillis() - start;
+            long cost = System.currentTimeMillis() - start;
             log.info("[completableFuture.thenRunAsync] currentThread:{}, cost:{}", Thread.currentThread().getId(), cost);
         }, service);
 
@@ -143,7 +145,7 @@ public class TestMain {
      * 4、异步，两任务组合 ：两个异步任务都完成，第三个任务才开始执行
      */
     @Test
-    public void test4(){
+    public void test4() {
         ExecutorService service = Executors.newFixedThreadPool(10);
         //定义两个任务
         //任务一
@@ -185,15 +187,15 @@ public class TestMain {
 
 
     /**
-     *  4.3、当一个任务失败后快速返回
+     * 4.3、当一个任务失败后快速返回
      */
     @Test
-    public void test4_3(){
+    public void test4_3() {
         ExecutorService service = Executors.newFixedThreadPool(10);
         long start = System.currentTimeMillis();
         CompletableFuture<String> task1 = CompletableFuture.supplyAsync(() -> {
             try {
-                int i = 1/0;
+                int i = 1 / 0;
                 Thread.sleep(100L);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -211,7 +213,7 @@ public class TestMain {
             return "task_2";
         }, service);
 
-        CompletableFuture<String> task3= CompletableFuture.supplyAsync(() -> {
+        CompletableFuture<String> task3 = CompletableFuture.supplyAsync(() -> {
             try {
                 Thread.sleep(2000L);
             } catch (InterruptedException e) {
@@ -222,10 +224,10 @@ public class TestMain {
         }, service);
 
 
-        CompletableFuture[] completableFutures = new CompletableFuture[]{task1,task2, task3};
+        CompletableFuture[] completableFutures = new CompletableFuture[]{task1, task2, task3};
         try {
             CompletableFuture.allOf(completableFutures).join();
-        }catch (Exception e){
+        } catch (Exception e) {
             log.info("[CompletableFuture.allOf] error", e);
         }
         Long cost = System.currentTimeMillis() - start;
@@ -259,7 +261,7 @@ public class TestMain {
             return "task_2";
         }, service);
 
-        CompletableFuture<String> task3= CompletableFuture.supplyAsync(() -> {
+        CompletableFuture<String> task3 = CompletableFuture.supplyAsync(() -> {
             log.info("[completableFuture.supplyAsync] task3 currentThread:{}", Thread.currentThread().getId());
             try {
                 Thread.sleep(1000L);
@@ -271,7 +273,7 @@ public class TestMain {
 
 
         // 第一种方式：CompletableFuture.allOf
-        CompletableFuture[] completableFutures = new CompletableFuture[]{task1,task2, task3};
+        CompletableFuture[] completableFutures = new CompletableFuture[]{task1, task2, task3};
         CompletableFuture.allOf(completableFutures).join();
         Long cost = System.currentTimeMillis() - start;
         log.info("[test] task finish cost:{}", cost);
@@ -286,10 +288,10 @@ public class TestMain {
 
 
     /**
-     * 一个任务完成则结束
+     * 6、一个任务完成则结束
      */
     @Test
-    public void test6(){
+    public void test6() {
         ExecutorService service = Executors.newFixedThreadPool(10);
         long start = System.currentTimeMillis();
         CompletableFuture<String> task1 = CompletableFuture.supplyAsync(() -> {
@@ -311,7 +313,7 @@ public class TestMain {
             return "task_2";
         }, service);
 
-        CompletableFuture<String> task3= CompletableFuture.supplyAsync(() -> {
+        CompletableFuture<String> task3 = CompletableFuture.supplyAsync(() -> {
             log.info("[completableFuture.supplyAsync] task3 currentThread:{}", Thread.currentThread().getId());
             try {
                 Thread.sleep(100L);
@@ -322,25 +324,63 @@ public class TestMain {
         }, service);
 
 
-        CompletableFuture[] completableFutures = new CompletableFuture[]{task1,task2, task3};
+        CompletableFuture[] completableFutures = new CompletableFuture[]{task1, task2, task3};
         Object result = CompletableFuture.anyOf(completableFutures).join();
         Long cost = System.currentTimeMillis() - start;
         log.info("[test] task finish cost:{}, result:{}", cost, result);
     }
 
 
+    @Test
+    public void test() throws ExecutionException, InterruptedException {
+        long start = System.currentTimeMillis();
+        CompletableFuture<String> task1 = CompletableFuture.supplyAsync(() -> {
+            log.info("task1 start ");
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log.info("task1 end ");
+            return "task1 success";
+        });
 
-    /**
-     * 异步，两任务组合 ：两个任务都完成其中一个完成，第三个任务才开始执行
-     */
+        CompletableFuture<Integer> task2 = CompletableFuture.supplyAsync(() -> {
+            log.info("task2 start ");
 
-    /**
-     * runAfterEither 无传入值、无返回值
-     * acceptEither 有传入值、无返回值
-     * applyToEither 有传入值、有返回值
-     * 代码同上！
-     */
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log.info("task2 end ");
+            return 100;
+        });
+        CompletableFuture<String> task3 = CompletableFuture.supplyAsync(() -> {
+            log.info("task3 start ");
 
+            try {
+                Thread.sleep(3500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log.info("task3 end ");
+            return "task3 success";
+        });
+
+        CompletableFuture<String> completableFuture1 = CompletableFutureTimeout.completeOnTimeout(task1, "InterTimeOut", 2, TimeUnit.SECONDS);
+        CompletableFuture<Integer> completableFuture2 = CompletableFutureTimeout.completeOnTimeout(task2, 0, 2, TimeUnit.SECONDS);
+        CompletableFuture<String> completableFuture3 = CompletableFutureTimeout.completeOnTimeout(task3, "InterTimeOut", 2, TimeUnit.SECONDS);
+
+        String result1 = completableFuture1.get();
+        Integer result2 = completableFuture2.get();
+        String result3 = completableFuture3.get();
+        Long cost = System.currentTimeMillis() - start;
+        log.info("result1: {}, cost:{}", result1, cost);
+        log.info("result2: {}, cost:{}", result2, cost);
+        log.info("result3: {}, cost:{}", result3, cost);
+        Thread.sleep(500000L);
+    }
 
 
 }
