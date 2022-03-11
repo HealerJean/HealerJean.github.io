@@ -21,7 +21,7 @@
     <Properties>
         <Property name="level">debug</Property>
         <Property name="LOG_PATTERN">
-            %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level -[%-32X{REQ_UID}]- %msg%xEx %logger{36}.%M[%L]%n
+            %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level -[%-32X{REQ_UID}] %-32X{SON_UID} - %msg%xEx %logger{36}.%M[%L]%n
         </Property>
 
         <Property name="logDri">/Users/healerjean/Desktop/logs</Property>
