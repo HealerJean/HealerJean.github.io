@@ -2,7 +2,6 @@ package com.healerjean.proj.a_test;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.UUID;
@@ -185,19 +184,12 @@ public class d01_FileDemoMain {
      */
     @Test
     public void readFileLineContent() throws Exception {
-        File file = new File("D:\\test\\file\\file.txt");
-        FileInputStream fileInputStream = new FileInputStream(file);
-        ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-        int len = 0;
-        byte[] buffer = new byte[1024];
-        while ((len = fileInputStream.read(buffer)) != -1) {
-            byteOutputStream.write(buffer, 0, len);
-        }
-        byte[] txtByteArray = (byteOutputStream.toByteArray());
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(txtByteArray), "utf-8"));
+        FileInputStream inputStream = new FileInputStream("/Users/healerjean/Desktop/logs/hlj-log4j.log");
+        InputStreamReader inputReader = new InputStreamReader(inputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputReader);
         String lineContent = null;
         int line = 0;
-        while ((lineContent = reader.readLine()) != null) {
+        while ((lineContent = bufferedReader.readLine()) != null) {
             line++;
             log.info("第【{}】行的内容为：{}", line, lineContent);
         }
