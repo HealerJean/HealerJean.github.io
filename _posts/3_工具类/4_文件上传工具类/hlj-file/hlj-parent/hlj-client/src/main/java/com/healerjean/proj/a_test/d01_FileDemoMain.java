@@ -134,7 +134,6 @@ public class d01_FileDemoMain {
             if (f.isDirectory()) {
                 cycleFileContent(f, content);
             } else {
-                String path = f.getPath();
                 FileInputStream fileInputStream = new FileInputStream(f);
                 ByteArrayOutputStream outStream = new ByteArrayOutputStream();
                 byte[] buffer = new byte[1024];
@@ -193,6 +192,8 @@ public class d01_FileDemoMain {
             line++;
             log.info("第【{}】行的内容为：{}", line, lineContent);
         }
+
+        Thread.sleep(100000);
     }
 
 
