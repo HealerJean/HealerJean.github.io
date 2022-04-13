@@ -1,11 +1,11 @@
 ---
-title: @Retryable重试注解
+title: 重试注解Retryable
 date: 2022-04-12 00:00:00
 tags: 
 - SpringBoot
 category: 
 - SpringBoot
-description: @Retryable重试注解
+description: 重试注解Retryable
 ---
 
 **前言**     
