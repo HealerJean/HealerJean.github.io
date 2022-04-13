@@ -1,11 +1,11 @@
 ---
-title: SpringBoot中properties读取pom中的值
+title: SpringBoot中properties读取`pom`中的值
 date: 2019-05-14 03:33:00
 tags: 
 - SpringBoot
 category: 
 - SpringBoot
-description: SpringBoot中properties读取pom中的值
+description: SpringBoot中properties读取`pom`中的值
 ---
 
 **前言**     
@@ -16,9 +16,9 @@ description: SpringBoot中properties读取pom中的值
 
 
 
+# 1、读取`pom`中的值
 
-
-# 1、`pom.xml`
+## 1.1、`pom.xml`
 
 ```xml
 <properties>
@@ -66,7 +66,7 @@ description: SpringBoot中properties读取pom中的值
 
 
 
-# 2、`demo.properties`  
+## 1.2、`demo.properties`  
 
 ![image-20200724151323802](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200724151323802.png)
 
@@ -83,7 +83,7 @@ demo.version=1.0.0-SNAPSHOT
 
 
 
-# 3、使用
+## 1.3、使用
 
 ```java
 @Configuration
@@ -107,6 +107,14 @@ public class Customonfiguration implements EnvironmentAware {
 }
 
 ```
+
+
+
+
+
+
+
+
 
 
 

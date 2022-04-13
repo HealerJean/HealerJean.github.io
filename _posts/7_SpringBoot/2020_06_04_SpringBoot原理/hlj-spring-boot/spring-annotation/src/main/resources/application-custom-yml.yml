@@ -1,0 +1,12 @@
+custom.flow.config:
+  customEnum: ONE
+  check:
+    - check1
+    - check2
+  ymlInnerConfig:
+    5000001:
+      name: Healerjen
+      check:
+        - 5000001_check1
+        - 5000001_check2
+        - 5000001_check3

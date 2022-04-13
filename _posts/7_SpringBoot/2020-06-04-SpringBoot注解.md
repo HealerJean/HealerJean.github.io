@@ -18,7 +18,7 @@ description: SpringBoot注解
 
 
 
-# 1、@Bean
+# 1、`@Bean`
 
 > 从spring3.0开始，在`spring framework`模块中提供了这个注解，`@Bean`搭配`@Configuration`注解，可以完全不依赖xml配置，**在运行时完成bean的创建和初始化工作**    
 
@@ -416,7 +416,7 @@ public class AppConfig {
 
 ## 4.2、和`@Configuration`搭配使用 
 
-> 可以看到只注册了`AppConfig.class`，容器自动会把@Import指向的配置类初始化
+> 可以看到只注册了`AppConfig.class`，容器自动会把`@Import`指向的配置类初始化
 
 ### 4.2.1、`DataConfig.java`：
 
@@ -461,15 +461,15 @@ public class AppConfig {
 
  
 
-# 5、Condition相关注解
+# 5、`Condition`相关注解
 
 > 可以根据代码中设置的条件装载不同的bean，  
 
 
 
-## 5.1、@Conditional  
+## 5.1、`@Conditional ` 
 
-> `@Conditional`注解定义如下，其内部主要就是利用了Condition接口，来判断是否满足条件，从而决定是否需要加载Bean  ,   
+> `@Conditional`注解定义如下，其内部主要就是利用了`Condition`接口，来判断是否满足条件，从而决定是否需要加载Bean  ,   
 >
 > 可以观察到可以注释到类，比如配置类，以及方法上去，方法比如@Bean注解的方法     
 
@@ -583,7 +583,7 @@ public class DataConfig {
 
 
 
-## 5.2、@ConditionalOnProperty
+## 5.2、`@ConditionalOnProperty`
 
 > 参数设置或者值一致时起效  
 >
@@ -659,7 +659,7 @@ public class DataConfig {
 
 
 
-# 6、@ConfigurationProperties
+# 6、`@ConfigurationProperties`
 
 > 识别配置文件的前缀prefix，可以通过一个注解ConfigurationProperties然后根据属性进行注入   
 >
@@ -775,7 +775,7 @@ public void myMethod()
 
 # 9、`@ImportResource`
 
-> springboot加载spring配置文件，`@ImportResource`：      
+> `springboot`加载`spring`配置文件，`@ImportResource`：      
 >
 > 通过locations属性加载对应的xml配置文件，同时需要配合`@Configuration`注解一起使用，定义为配置类   
 
@@ -899,7 +899,7 @@ public class Demo(){
 
 
 
-### 14.1、修改和json字符串的字段映射【name】
+### 14.1、修改和`json`字符串的字段映射【name】
 
 ```java
 @JSONField(name="testid") 　
@@ -993,7 +993,7 @@ public class SellerInfoEntity {
 
 > `@JsonIgnoreType` 标注在类上，当其他类有该类作为属性时，该属性将被忽略。,   
 >
-> 比如：SomeEntity 中的 entity 属性在json处理时会被忽略。
+> 比如：`SomeEntity` 中的 `entity` 属性在json处理时会被忽略。
 
 ```java
 package org.lifw.jackosn.annotation;
@@ -1275,7 +1275,7 @@ public class GlobalExceptionHandler {
 
 
 
-1、@ModelAttribute放在方法的注解上时，代表的是**Controller的所有方法在调用前，先执行此@ModelAttribute方法**   
+1、`@ModelAttribute`放在方法的注解上时，代表的是**Controller的所有方法在调用前，先执行此@ModelAttribute方法**   
 
 ```java
 /**
@@ -1420,7 +1420,7 @@ public class DemoProperties {
 
 
 
-## 24、@DependsOn
+# 24、`@DependsOn`
 
 > 如果需要指定一个Bean A 先于 Bean B加载，那么可以在Bean B类前加入@DependsOn("beanA")，指定依赖加载顺序。
 
@@ -1430,13 +1430,107 @@ public class DemoProperties {
 
 
 
+# 25、读取配置文件`map`或`list`
+
+## 25.1、`properties `读取
+
+### 25.1.1、`properties `
+
+```properties
+custom.map={"k1":"HealerJean","k2":"IRO_MAN"}
+custom.list=HealerJean,IRO_MAN
+custom.set=HealerJean,IRO_MAN,HealerJean
+```
+
+### 25.1.2、读取
+
+```java
+@Slf4j
+@Configuration
+public class CollectionProperties {
+
+    @Value("#{${custom.map}}")
+    private Map<String, String> customMap;
+
+    @Value("#{'${custom.list}'.split(',')}")
+    private List<String> customList;
+
+    @Value("#{'${custom.set}'.split(',')}")
+    private Set<String> customSet;
+
+}
+
+```
+
+
+
+## 25.2、`YML`读取
+
+### 25.2.1、`YML`文件
+
+```yaml
+custom.flow.config:
+  customEnum: ONE
+  check:
+    - check1
+    - check2
+  ymlInnerConfig:
+    5000001:
+      name: Healerjen
+      check:
+        - 5000001_check1
+        - 5000001_check2
+        - 5000001_check3
+```
+
+### 25.2.1、读取
+
+```java
+@Slf4j
+@Configuration
+@ConfigurationProperties(prefix = "custom.flow.config")
+@Data
+public class CollectionYml {
+
+    private CustomEnum customEnum;
+    private List<String> check;
+    private Map<String,YmlInnerConfig> ymlInnerConfig;
+
+
+    @PostConstruct
+    public void init() {
+        log.info("[CollectionYml] customEnum:{}", customEnum);
+        log.info("[CollectionYml] check:{}", check);
+        log.info("[CollectionYml] ymlInnerConfig:{}", ymlInnerConfig);
+    }
+
+}
+
+
+
+@Data
+public class YmlInnerConfig {
+
+    private String name;
+    private Set<String> check;
+
+}
+
+```
+
+
+
+
+
+
+
 
 
 # 2、理论注解
 
-## 2.1、@EnableAutoConfiguration
+## 2.1、`@EnableAutoConfiguration`
 
-> 开启自动配置功能   **@EnableAutoConfiguration**通知SpringBoot开启自动配置功能，这样自动配置才能生效。   
+> 开启自动配置功能   `**@EnableAutoConfiguration`**通知SpringBoot开启自动配置功能，这样自动配置才能生效。   
 >
 > `@AutoConfigurationPackage`  ：自动配置包注解
 
@@ -1454,7 +1548,7 @@ public @interface EnableAutoConfiguration {
 
 
 
-## 2.2、@SpringBootAppliction
+## 2.2、`@SpringBootAppliction`
 
 > 注解它的表示一个启动类，里面包含main方法      
 >
