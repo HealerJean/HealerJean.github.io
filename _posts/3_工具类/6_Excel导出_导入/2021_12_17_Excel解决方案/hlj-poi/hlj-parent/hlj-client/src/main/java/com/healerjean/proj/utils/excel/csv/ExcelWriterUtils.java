@@ -16,7 +16,7 @@ import java.io.Writer;
 import java.util.List;
 
 @Slf4j
-public final class CsvWriterUtils {
+public final class ExcelWriterUtils {
     /**
      * CSV文件后缀
      */
@@ -36,7 +36,7 @@ public final class CsvWriterUtils {
      * @param columnMapping 列顺序
      * @param headerMapping 表头顺序
      */
-    private CsvWriterUtils(String[] columnMapping, String[] headerMapping) {
+    private ExcelWriterUtils(String[] columnMapping, String[] headerMapping) {
         this.columnMapping = columnMapping;
         this.headerMapping = headerMapping;
     }
@@ -48,8 +48,8 @@ public final class CsvWriterUtils {
      * @param headerMapping 表头顺序
      * @return 实例
      */
-    public static CsvWriterUtils getInstance(String[] columnMapping, String[] headerMapping) {
-        return new CsvWriterUtils(columnMapping, headerMapping);
+    public static ExcelWriterUtils getInstance(String[] columnMapping, String[] headerMapping) {
+        return new ExcelWriterUtils(columnMapping, headerMapping);
     }
 
     /**

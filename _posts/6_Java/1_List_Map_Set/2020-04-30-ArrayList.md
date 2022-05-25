@@ -16,7 +16,7 @@ description: ArrayList
 
 
 
-# 1、ArrayList
+# 1、`ArrayList`
 
 > 底层的数据结构就是数组，数组元素类型为`Object`类型，即可以存放所有类型数据。    
 >
@@ -324,19 +324,19 @@ public E set(int index, E e) {
 
 > `ArrayList`、`LinkedList`、`HashMap`中都有一个字段叫`modCount`。    
 
-### 1.8.1、modCount用途
+### 1.8.1、`modCount`用途
 
 > 该字段被`Iterator`以及`ListIterator`的实现类所使用，如果该值被意外更改，`Iterator`或者`ListIterator` 将抛出`ConcurrentModificationException`异常    
 >
-> **1、在ArrayList中有个成员变量`modCount`，继承于`AbstractArrAayList`，每对List对象修改一次，也就每次add或者remove它的值都会加1.**          
+> **1、在 `ArrayList`中有个成员变量`modCount`，继承于`AbstractArrAayList`，每对 `List`对象修改一次，也就每次`add`或者`remove`它的值都会加1.**          
 >
-> **2、Itr类里有一个成员变量`expectedModCount`，它的值为创建Iterator对象的时候List的modCount值。**                
+> **2、`Itr`类里有一个成员变量`expectedModCount`，它的值为创建Iterator对象的时候`List`的`modCount`值。**                
 
 
 
-1、用此**`expectedModCount`**变量来检验在迭代过程中List对象是否被修改了，如果被修改了则抛出`java.util.ConcurrentModificationException`异常。       
+1、用此**`expectedModCount`**变量来检验在迭代过程中`List`对象是否被修改了，如果被修改了则抛出`java.util.ConcurrentModificationException`异常。       
 
-2、在每次调用Itr对象的`next`()或者`remove`方法的时候都会调用`checkForComodification`()方法进行一次检验，     
+2、在每次调用`Itr`对象的`next`()或者`remove`方法的时候都会调用`checkForComodification`()方法进行一次检验，     
 
 3、`checkForComodification`()方法中做的工作就是比较`expectedModCount` 和modCount的值是否相等，**如果不相等， 就认为还有其他对象正在对当前的List进行操作，那个就会抛出`ConcurrentModificationException`异常**。   
 
@@ -344,7 +344,7 @@ public E set(int index, E e) {
 
 ### 1.8.2、测试1
 
-> 将list对象里面的“c"删除了，同时list对象的`modCount`值加1，但是Itr对象的`expectedModCount`没有变，他们肯定是不相等了。等再一次执行`next`()方法的时候调用了`checkForComodification`()方法，这时候就抛出异常了。 
+> 将 `lis`t对象里面的“c"删除了，同时list对象的`modCount`值加1，但是Itr对象的`expectedModCount`没有变，他们肯定是不相等了。等再一次执行`next`()方法的时候调用了`checkForComodification`()方法，这时候就抛出异常了。 
 
 ```java
 public static void main(String[] args) {
@@ -389,49 +389,49 @@ c
 
 ```
 
-### 11.3、测试2
+### 1.8.3、测试2
 
 ```java
-    @Test
-    public void remove(){
-        List<String> list = new ArrayList();
-        list.add("aaaaaa");
-        list.add("bbbbbb");
-        list.add("cccccc");
-        list.add("dddddd");
-        list.add("eeeeee");
+@Test
+public void remove(){
+  List<String> list = new ArrayList();
+  list.add("aaaaaa");
+  list.add("bbbbbb");
+  list.add("cccccc");
+  list.add("dddddd");
+  list.add("eeeeee");
 
-        Iterator it = list.iterator();
-        //it.remove(); //删除的是上一个元素 IllegalStateException
-        int i = 0;
-        String s = null;
-        while(it.hasNext()){
-            if(i==2){
-//              list.remove(it.next()); 如果用list.remove(it.next());会报异常checkForComodification
+  Iterator it = list.iterator();
+  //it.remove(); //删除的是上一个元素 IllegalStateException
+  int i = 0;
+  String s = null;
+  while(it.hasNext()){
+    if(i==2){
+      // list.remove(it.next()); 如果用list.remove(it.next());会报异常checkForComodification
 
-                it.remove();//虽然移除了，但是后面的还会继续遍历哦
-            }
-            System.out.println("第"+i+"个元素"+it.next());
-            i++ ;
-        }
-        System.out.println("----------------");
-        Iterator it2 = list.iterator();
-        while(it2.hasNext()){
-            System.out.println(it2.next());
-        }
-
+      it.remove();//虽然移除了，但是后面的还会继续遍历哦
     }
+    System.out.println("第"+i+"个元素"+it.next());
+    i++ ;
+  }
+  System.out.println("----------------");
+  Iterator it2 = list.iterator();
+  while(it2.hasNext()){
+    System.out.println(it2.next());
+  }
+
+}
 
 第0个元素aaaaaa
-第1个元素bbbbbb
-第2个元素cccccc
-第3个元素dddddd
-第4个元素eeeeee
-----------------
-aaaaaa
-cccccc
-dddddd
-eeeeee
+  第1个元素bbbbbb
+  第2个元素cccccc
+  第3个元素dddddd
+  第4个元素eeeeee
+  ----------------
+  aaaaaa
+  cccccc
+  dddddd
+  eeeeee
 
 
 ```

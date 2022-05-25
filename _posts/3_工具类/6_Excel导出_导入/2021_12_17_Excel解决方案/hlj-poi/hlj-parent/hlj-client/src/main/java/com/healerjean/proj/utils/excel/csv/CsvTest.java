@@ -1,7 +1,6 @@
 package com.healerjean.proj.utils.excel.csv;
 
 import com.healerjean.proj.dto.csv.CsvDemoDTO;
-import lombok.Data;
 import org.junit.Test;
 
 import java.io.File;
@@ -27,13 +26,13 @@ public class CsvTest {
             demo.setName("11111111111" + i);
             list.add(demo);
         }
-        CsvWriterUtils.getInstance(cm, hm).writeCsv(list, "test.csv", "/Users/healerjean/Desktop/logs/", CsvDemoDTO.class);
+        ExcelWriterUtils.getInstance(cm, hm).writeCsv(list, "test.csv", "/Users/healerjean/Desktop/logs/", CsvDemoDTO.class);
     }
 
     @Test
     public void testRead() throws FileNotFoundException {
         File file = new File("/Users/healerjean/Desktop/logs/test.csv");
-        List<CsvDemoDTO> list = CsvReaderUtils.getInstance().readerCsv(file, CsvDemoDTO.class);
+        List<CsvDemoDTO> list = ExcelReaderUtils.getInstance().readerCsv(file, CsvDemoDTO.class);
         System.out.println(list.size());
     }
 
