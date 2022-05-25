@@ -1,6 +1,8 @@
 package com.healerjean.proj.d04_多接口返回.utils;
 
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.concurrent.*;
 import java.util.function.Function;
 
@@ -20,6 +22,7 @@ import java.util.function.Function;
  * 实际上hystrix等熔断的框架，其实现线程Timeout之后就关闭线程，也是基于同样的道理，所以我们可以看到hystrix中会有一个Timer Thread
  *
  */
+@Slf4j
 public class CompletableFutureTimeout {
 
     static final class Delayer {
@@ -48,21 +51,43 @@ public class CompletableFutureTimeout {
         }
     }
 
+    static final class FutureTimeOutException extends RuntimeException {
 
+        public FutureTimeOutException() {
+        }
+    }
+
+    static class ExceptionUtils {
+        public static Throwable extractRealException(Throwable throwable) {
+            //这里判断异常类型是否为CompletionException、ExecutionException，如果是则进行提取，否则直接返回。
+            if (throwable instanceof CompletionException || throwable instanceof ExecutionException) {
+                if (throwable.getCause() != null) {
+                    return throwable.getCause();
+                }
+            }
+            return throwable;
+        }
+    }
     /**
      * 哪个先完成 就apply哪一个结果 这是一个关键的API,exceptionally出现异常后返回默认值
      */
-    public static  <T> CompletableFuture<T> completeOnTimeout( CompletableFuture<T> future,T t, long timeout, TimeUnit unit) {
+    public static  <T> CompletableFuture<T> completeOnTimeout( CompletableFuture<T> future,T t, T to, long timeout, TimeUnit unit) {
         final CompletableFuture<T> timeoutFuture = timeoutAfter(timeout, unit);
-        return future.applyToEither(timeoutFuture, Function.identity()).exceptionally((throwable) -> t);
-    }
+        return future.applyToEither(timeoutFuture, Function.identity()).exceptionally(throwable -> {
 
+            if (ExceptionUtils.extractRealException(throwable) instanceof FutureTimeOutException){
+                return to;
+            }
+            return t;
+        });
+    }
 
 
     private static <T> CompletableFuture<T> timeoutAfter(long timeout, TimeUnit unit) {
         CompletableFuture<T> result = new CompletableFuture<T>();
-        CompletableFutureTimeout.Delayer.delayer.schedule(() -> result.completeExceptionally(new TimeoutException()), timeout, unit);
+        CompletableFutureTimeout.Delayer.delayer.schedule(() -> result.completeExceptionally(new FutureTimeOutException()), timeout, unit);
         return result;
     }
+
 
 }

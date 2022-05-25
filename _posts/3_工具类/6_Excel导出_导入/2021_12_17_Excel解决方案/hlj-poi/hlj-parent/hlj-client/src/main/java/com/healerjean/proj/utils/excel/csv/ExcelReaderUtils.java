@@ -1,5 +1,8 @@
 package com.healerjean.proj.utils.excel.csv;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.context.AnalysisContext;
+import com.alibaba.excel.read.listener.ReadListener;
 import com.opencsv.ICSVParser;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
@@ -7,15 +10,16 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class CsvReaderUtils {
+public class ExcelReaderUtils {
 
     /**
      * 构造函数
      */
-    private CsvReaderUtils() {
+    private ExcelReaderUtils() {
 
     }
 
@@ -24,8 +28,11 @@ public class CsvReaderUtils {
      *
      * @return 实例
      */
-    public static CsvReaderUtils getInstance() {
-        return new CsvReaderUtils();
+    public static ExcelReaderUtils getInstance() {
+        return new ExcelReaderUtils();
+    }
+
+    public static void readerExcel(InputStream inputStream) {
     }
 
     /**
@@ -81,10 +88,33 @@ public class CsvReaderUtils {
      * @param <E>  E
      * @return List<E>
      */
-    public <E> List<E> readerCsvInputStream(InputStream inputStream, Class<E> type){
+    public static  <E> List<E> readerCsvInputStream(InputStream inputStream, Class<E> type){
         return readerCsvInputStream(inputStream, 1, ICSVParser.DEFAULT_SEPARATOR, type);
     }
 
+    /**
+     * 处理Excel数据
+     *
+     * @param inputStream InputStream
+     * @param type        Class<E>
+     * @param <E>         E
+     * @return List<E>
+     */
+    public static <E> List<E> readerExcel(InputStream inputStream, Class<E> type) {
+        List<E> list = new ArrayList<>();
+        EasyExcel.read(inputStream, type, new ReadListener<E>() {
+            @Override
+            public void invoke(E data, AnalysisContext context) {
+                list.add(data);
+            }
+
+            @Override
+            public void doAfterAllAnalysed(AnalysisContext context) {
+
+            }
+        }).sheet().doRead();
+        return list;
+    }
     /**
      * 读取CSV
      *
@@ -95,7 +125,7 @@ public class CsvReaderUtils {
      * @param <E>       E
      * @return List<E>
      */
-    public <E> List<E> readerCsvInputStream(InputStream inputStream, int skipLines, char separator, Class<E> type){
+    public static  <E> List<E> readerCsvInputStream(InputStream inputStream, int skipLines, char separator, Class<E> type){
         ColumnPositionMappingStrategy<E> mappingStrategy = new ColumnPositionMappingStrategy<>();
         mappingStrategy.setType(type);
         CsvToBean<E> build = new CsvToBeanBuilder<E>(new InputStreamReader(inputStream))

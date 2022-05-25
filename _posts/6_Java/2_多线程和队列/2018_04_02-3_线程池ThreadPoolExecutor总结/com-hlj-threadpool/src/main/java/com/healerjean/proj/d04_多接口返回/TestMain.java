@@ -1,14 +1,9 @@
 package com.healerjean.proj.d04_多接口返回;
 
 import com.healerjean.proj.d04_多接口返回.utils.CompletableFutureTimeout;
-import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.*;
 
 /**
@@ -38,7 +33,7 @@ public class TestMain {
      * 2.有返回值异步任务 CompletableFuture.supplyAsync
      */
     @Test
-    public void test2() {
+    public void test2() throws ExecutionException, InterruptedException {
         ExecutorService service = Executors.newFixedThreadPool(10);
 
         CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
@@ -52,28 +47,29 @@ public class TestMain {
         // 1、whenComplete
         // 第一个参数是结果
         // 第二个参数是异常，他可以感知异常，无法返回默认数据
-        completableFuture.whenComplete((r, e) -> {
+        CompletableFuture<String> completableFuture1 = completableFuture.whenComplete((r, e) -> {
             log.info("[completableFuture.whenComplete] result:{} ", r, e);
         });
 
         log.info("==============");
         // 2、exceptionally
-        // 只有一个参数是异常类型，他可以感知异常，同时返回默认数据10
-        completableFuture.exceptionally(e -> {
+        // 只有一个参数是异常类型，他可以感知异常，同时返回默认数据
+        CompletableFuture<String> exceptionally = completableFuture.exceptionally(e -> {
             log.error("[completableFuture.exceptionally] error", e);
             return "exceptionally";
         });
+        System.out.println("-------" + exceptionally.get());
 
         log.info("==============");
         // 3、handler
         // 既可以感知异常，也可以返回默认数据，是whenComplete和exceptionally的结合
         completableFuture.handle((r, e) -> {
             if (r != null) {
-                log.error("[completableFuture.handle] ", r);
+                log.error("[completableFuture.handle] result {}", r);
                 return r;
             }
             if (e != null) {
-                log.error("[completableFuture.handle] error", r);
+                log.error("[completableFuture.handle] error", e);
                 return "error";
             }
             return "";
@@ -114,7 +110,7 @@ public class TestMain {
         }, service);
 
 
-        // 2、thenAccept() 有入参，无返回值，不传线程池 （和CompletableFuture.supplyAsync 用的一个线程池，非异步）
+        // 2、thenAccept() 有入参，无返回值，不传线程池
         completableFuture.thenAccept((r) -> {
             long cost = System.currentTimeMillis() - start;
             log.info("[completableFuture.thenAccept]  currentThread:{}, result:{}, cost:{}", Thread.currentThread().getId(), r, cost);
@@ -359,6 +355,7 @@ public class TestMain {
         CompletableFuture<String> task3 = CompletableFuture.supplyAsync(() -> {
             log.info("task3 start ");
 
+            int i = 1/0;
             try {
                 Thread.sleep(3500);
             } catch (InterruptedException e) {
@@ -368,9 +365,9 @@ public class TestMain {
             return "task3 success";
         });
 
-        CompletableFuture<String> completableFuture1 = CompletableFutureTimeout.completeOnTimeout(task1, "InterTimeOut", 2, TimeUnit.SECONDS);
-        CompletableFuture<Integer> completableFuture2 = CompletableFutureTimeout.completeOnTimeout(task2, 0, 2, TimeUnit.SECONDS);
-        CompletableFuture<String> completableFuture3 = CompletableFutureTimeout.completeOnTimeout(task3, "InterTimeOut", 2, TimeUnit.SECONDS);
+        CompletableFuture<String> completableFuture1 = CompletableFutureTimeout.completeOnTimeout(task1, "Exception", "TimeOutException", 2, TimeUnit.MILLISECONDS);
+        CompletableFuture<Integer> completableFuture2 = CompletableFutureTimeout.completeOnTimeout(task2, 0, -1,1, TimeUnit.SECONDS);
+        CompletableFuture<String> completableFuture3 = CompletableFutureTimeout.completeOnTimeout(task3, "Exception","TimeOutException", 1, TimeUnit.MILLISECONDS);
 
         String result1 = completableFuture1.get();
         Integer result2 = completableFuture2.get();
