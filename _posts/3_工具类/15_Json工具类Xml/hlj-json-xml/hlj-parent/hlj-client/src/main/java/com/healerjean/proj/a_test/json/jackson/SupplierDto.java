@@ -16,16 +16,16 @@ public class SupplierDto implements Serializable {
     /**
      * 保司Id
      */
-    private String supplierId;
+    private String id;
 
     /**
      * 保司名称
      */
-    private String supplierName;
+    private String name;
 
     /**
      * 保司手机号
      */
-    private String supplierPhone;
+    private String phone;
 
 }
