@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2020/9/16  14:21.
  * @description
  */
-public class MainTest {
+public class MainTestMain {
 
     @Test
     public void test1() throws JsonProcessingException {
