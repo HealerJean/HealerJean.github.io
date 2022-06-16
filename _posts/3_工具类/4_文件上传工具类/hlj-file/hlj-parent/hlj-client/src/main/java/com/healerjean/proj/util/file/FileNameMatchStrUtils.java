@@ -43,9 +43,8 @@ public class FileNameMatchStrUtils {
     public void cycleFileContent(File file, List<String> list) throws Exception {
         if (file.isFile()){
             for (String content : list) {
-                if (file.getName().equals(content) && !existList.contains(content)) {
-                    existList.add(content);
-                    log.info("匹配到内容{}，路径为：{}", content, file.getPath());
+                if (file.getName().equals(content)) {
+                    file.delete();
                 }
             }
             return;
