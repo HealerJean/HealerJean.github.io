@@ -36,7 +36,6 @@ node_modules
 target/
 bin/
 classess/
-test/
 !.mvn/wrapper/maven-wrapper.jar
 *.log
 *.log.gz

@@ -19,95 +19,51 @@ description: Git_之_gitignore
 
 
 ```
-# Gradle
-build
-.gradle
-
-testdata/
-# Java gitignore #
-.class
-.log
+# java  #
+*.class
 
 # Package Files #
+*.jar
 *.war
-*.ear
 
-# maven gitignore#
-target/**
-
-.svn/
-
-# intelliJ.gitignore #
+### IntelliJ IDEA ###
 .idea
+.idea/
+*.iws
 *.iml
 *.ipr
-*.iws
 
-# Eclipse git ignore#
-*.pydevproject
+
+
+# web #
+.gradle
+/build/
+node_modules
+!gradle/wrapper/gradle-wrapper.jar
+
+### STS ###
+.apt_generated
+.factorypath
+.settings
+.springBeans
+
+
+######other####
 .project
-.metadata
-bin/**
-target/**
-*/bin/**
-*/target/**
-tmp/**
-tmp/**/*
-configuration/**
-*.tmp
-*.bak
-*.orig
-*.swp
-*~.nib
+!/.project
 .classpath
-.settings/
-.loadpath
-.fileTable*
-.cache
-pom.xml.versionsBackup
-
-# External tool builders
-.externalToolBuilders/
-
-# Locally stored "Eclipse launch configurations"
-*.launch
-
-# CDT-specific
-.cproject
-
-# PDT-specific
-.buildpath
-
-#log
-*.log
-*.log.*
-
-# Windows Thumbs.db
-*.db
-
-# OSX
 .DS_Store
-
-# sass gitignore#
-.sass-cache
-.idea
-
-# tcc_coverage
-coverage.ec
-
-
-
-config.client.*
-
-temp/
-*.pid
-*.orig
-
-hsf.configuration/
-
-# code coverage report
-*.ec
-
+.settings/
+target/
+bin/
+classess/
+!.mvn/wrapper/maven-wrapper.jar
+*.log
+*.log.gz
+out/
+overlays/
+MANIFEST.MF
+HELP.md
 
 
 ```
