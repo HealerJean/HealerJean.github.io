@@ -67,6 +67,21 @@ public class UserController {
         return ResponseBean.buildSuccess(user);
     }
 
+    @GetMapping(value = "insertSubString", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public ResponseBean insertSubString(UserDTO userDTO) {
+        User user = new User();
+        user.setId(userDTO.getId());
+        user.setName(userDTO.getName());
+        user.setAge(userDTO.getAge());
+        user.setEmail(userDTO.getEmail());
+        userMapper.insert(user);
+        log.info("用户管理--------insertSubString：【{}】", JsonUtils.toJsonString(user));
+        return ResponseBean.buildSuccess(user);
+    }
+
+
+
 
 
 }

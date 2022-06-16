@@ -18,7 +18,7 @@ import java.util.Set;
  * @description
  */
 @Slf4j
-public class FileMatchStrUtils {
+public class FileContentMatchStrUtils {
 
 
     private static final Set<String> existList = new HashSet<>();

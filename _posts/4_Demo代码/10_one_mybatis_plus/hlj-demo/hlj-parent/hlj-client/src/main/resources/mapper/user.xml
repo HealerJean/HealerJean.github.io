@@ -28,4 +28,15 @@
         update user u set u.name = #{name} where u.name = #{originName}
     </update>
 
+    <insert id="insertSubString">
+        <![CDATA[
+        INSERT INTO user (name)
+        VALUES (substring(#{name,jdbcType=VARCHAR}, 20) )
+        ]]>
+    </insert>
+
+    <update id="updateSubString">
+        update user u set u.name = left(#{name,jdbcType=VARCHAR}, 20)  where u.id = #{id}
+    </update>
+
 </mapper>
