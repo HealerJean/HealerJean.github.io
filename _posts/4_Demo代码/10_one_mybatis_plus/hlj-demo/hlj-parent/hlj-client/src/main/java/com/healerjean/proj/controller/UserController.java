@@ -75,12 +75,24 @@ public class UserController {
         user.setName(userDTO.getName());
         user.setAge(userDTO.getAge());
         user.setEmail(userDTO.getEmail());
-        userMapper.insert(user);
+        userMapper.insertSubString(user);
         log.info("用户管理--------insertSubString：【{}】", JsonUtils.toJsonString(user));
         return ResponseBean.buildSuccess(user);
     }
 
 
+    @GetMapping(value = "updateSubString", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public ResponseBean updateSubString(UserDTO userDTO) {
+        User user = new User();
+        user.setId(userDTO.getId());
+        user.setName(userDTO.getName());
+        user.setAge(userDTO.getAge());
+        user.setEmail(userDTO.getEmail());
+        userMapper.updateSubString(user);
+        log.info("用户管理--------insertSubString：【{}】", JsonUtils.toJsonString(user));
+        return ResponseBean.buildSuccess(user);
+    }
 
 
 

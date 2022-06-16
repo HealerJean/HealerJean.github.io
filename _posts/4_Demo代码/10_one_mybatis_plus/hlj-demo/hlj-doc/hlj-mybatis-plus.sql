@@ -2,7 +2,7 @@ drop table if exists user;
 create table `user`
 (
     `id`          bigint(20)  not null comment '主键id',
-    `name`        varchar(30) default null comment '姓名',
+    `name`        varchar(5) default null comment '姓名',
     `age`         int(11)     default null comment '年龄',
     tel_phone     varchar(20) default null comment '电话',
     `email`       varchar(50) default null comment '邮箱',

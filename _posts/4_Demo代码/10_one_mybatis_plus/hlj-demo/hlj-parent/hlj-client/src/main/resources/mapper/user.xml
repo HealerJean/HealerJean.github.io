@@ -31,12 +31,12 @@
     <insert id="insertSubString">
         <![CDATA[
         INSERT INTO user (name)
-        VALUES (substring(#{name,jdbcType=VARCHAR}, 20) )
+        VALUES (left(#{name}, 5) )
         ]]>
     </insert>
 
     <update id="updateSubString">
-        update user u set u.name = left(#{name,jdbcType=VARCHAR}, 20)  where u.id = #{id}
+        update user u set u.name = left(#{name}, 5)  where u.id = #{id}
     </update>
 
 </mapper>
