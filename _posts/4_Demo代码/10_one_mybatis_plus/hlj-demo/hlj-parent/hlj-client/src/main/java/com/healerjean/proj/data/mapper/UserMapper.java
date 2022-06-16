@@ -78,4 +78,5 @@ public interface UserMapper extends BaseMapper<User> {
 
     int updateSql(User user);
 
+    int insertSubString(User user);
 }
