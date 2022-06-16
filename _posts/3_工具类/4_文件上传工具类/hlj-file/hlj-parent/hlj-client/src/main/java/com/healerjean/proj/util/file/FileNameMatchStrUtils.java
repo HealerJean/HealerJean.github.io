@@ -44,7 +44,7 @@ public class FileNameMatchStrUtils {
         if (file.isFile()){
             for (String content : list) {
                 if (file.getName().equals(content)) {
-                    file.delete();
+                    log.info("匹配到内容{}，路径为：{}", content, file.getPath());
                 }
             }
             return;
