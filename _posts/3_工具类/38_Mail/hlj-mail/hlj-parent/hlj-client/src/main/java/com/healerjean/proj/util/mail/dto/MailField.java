@@ -6,12 +6,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author zhangyujin
- * @date 2021/12/15  4:54 下午.
- * @description
+ * Mail
+ * 邮件注解
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
-public @interface ExcelAttribute {
-    String name();
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
+public @interface MailField {
+    /**
+     * 映射字段名称
+     *
+     * @return 映射字段名称
+     */
+    String value() default "";
 }

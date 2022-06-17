@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.healerjean.proj.common.ResponseBean;
 import com.healerjean.proj.dto.mail.SendMailDTO;
 import com.healerjean.proj.util.mail.MailUtils;
-import com.healerjean.proj.util.mail.ListToHtmlTableUtils;
+import com.healerjean.proj.util.mail.ListToHtmlUtils;
 import com.healerjean.proj.util.mail.dto.ListHtmlTableDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -65,12 +65,8 @@ public class MailController {
         list.add(listHtmlTableDTO);
         list.add(listHtmlTableDTO2);
         list.add(listHtmlTableDTO3);
-        StringBuffer content = new StringBuffer("<h2>title</h2>");
-        StringBuffer listTable=  ListToHtmlTableUtils.listToTable(list);
-        content.append(listTable);
-        content.append(listTable);
-        content.append("<h2>bottom</h2>");
-        sendMailDTO.setContent(content.toString());
+        String content=  ListToHtmlUtils.convertHtml(list, "title", "bottom");
+        sendMailDTO.setContent(content);
         mailUtils.sendMail(sendMailDTO);
         return ResponseBean.buildSuccess();
     }
