@@ -10,9 +10,9 @@ import lombok.Data;
 @Data
 public class ListHtmlTableDTO {
 
-    @ExcelAttribute(name = "系统")
+    @MailField("系统")
     private String systemName;
 
-    @ExcelAttribute(name = "名称")
+    @MailField("名称")
     private String name;
 }
