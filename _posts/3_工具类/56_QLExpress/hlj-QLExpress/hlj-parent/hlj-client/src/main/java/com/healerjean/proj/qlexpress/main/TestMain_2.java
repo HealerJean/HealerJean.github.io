@@ -1,8 +1,10 @@
 package com.healerjean.proj.qlexpress.main;
 
+import com.healerjean.proj.qlexpress.main.operator.OperatorContextPut;
 import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
 import com.ql.util.express.IExpressContext;
+import com.ql.util.express.instruction.op.OperatorBase;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -66,7 +68,6 @@ public class TestMain_2 {
 
     /**
      * 3、isTrace 是否输出所有的跟踪信息，同时还需要log级别是DEBUG级别
-     * @throws Exception
      */
     @Test
     public void testTrace() throws Exception {
@@ -90,5 +91,22 @@ public class TestMain_2 {
                 System.out.println(error);
             }
         }
+    }
+
+
+    /**
+     * 3、自定义函数操作符获取原始的 `context` 控制上下文
+     */
+    @Test
+    public void test() throws Exception {
+        ExpressRunner runner = new ExpressRunner();
+        OperatorBase op = new OperatorContextPut("contextPut");
+        runner.addFunction("contextPut", op);
+        String express = "contextPut('success', 'false'); contextPut('error', '错误信息'); contextPut('warning', '提醒信息')";
+        IExpressContext<String, Object> context = new DefaultContext<>();
+        context.put("success", "true");
+        Object result = runner.execute(express, context, null, false, true);
+        System.out.println("返回结果：result：".concat(result.toString()));
+        System.out.println("返回context：context：".concat(result.toString()));
     }
 }
