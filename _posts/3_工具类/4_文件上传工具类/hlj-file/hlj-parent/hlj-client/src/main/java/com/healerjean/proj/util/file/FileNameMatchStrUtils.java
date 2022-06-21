@@ -28,14 +28,10 @@ public class FileNameMatchStrUtils {
         List<String> list = new ArrayList<>(jsfList);
 
         File file = new File("/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/_posts");
-        File[] files = file.listFiles();
-        for (File f : files) {
-            // log.info("-------name{}", f.getName());
-
+        for (File f : file.listFiles()) {
             cycleFileContent(f, list);
         }
         log.info("=======================");
-
         Thread.sleep(5000L);
     }
 

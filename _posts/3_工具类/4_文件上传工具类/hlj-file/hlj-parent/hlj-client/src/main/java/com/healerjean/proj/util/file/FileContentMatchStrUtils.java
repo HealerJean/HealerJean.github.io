@@ -1,6 +1,7 @@
 package com.healerjean.proj.util.file;
 
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Lists;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -26,45 +27,49 @@ public class FileContentMatchStrUtils {
     @Test
     public void test() throws Exception {
 
-        List<String> jsfList = readList(new File("/Users/healerjean/Desktop/jsf.txt"));
-        List<String> mqList = readList(new File("/Users/healerjean/Desktop/mq.txt"));
-        List<String> list = new ArrayList<>();
-        list.addAll(jsfList);
-        list.addAll(mqList);
+        // List<String> jsfList = readList(new File("/Users/healerjean/Desktop/jsf.txt"));
+        // List<String> mqList = readList(new File("/Users/healerjean/Desktop/mq.txt"));
+        List<String> list = Lists.newArrayList("QLExpress");
 
-        File file = new File("/Users/healerjean/Desktop/HealerJean/A_Company/JD/code/merchant-mq-route");
-        File[] files = file.listFiles();
-        for (File f : files) {
-            if (f.isDirectory() && f.getName().startsWith("merchant")){
-                log.info("SSSS========file:{}===============", f.getName());
-                cycleFileContent(f, list);
-                log.info("EEEE========file:{}===============", f.getName());
-            }
+        // List<String> list = new ArrayList<>();
+        // list.addAll(jsfList);
+        // list.addAll(mqList);
+
+        File originFile = new File("/Users/healerjean/Desktop/HealerJean/A_Company/MOKA/code");
+        for (File file : originFile.listFiles()) {
+                log.info("SSSS========file:{}===============", file.getName());
+                cycleFileContent(file, list);
+                log.info("EEEE========file:{}===============", file.getName());
+
         }
         log.info("=======================");
     }
 
 
     public void cycleFileContent(File file, List<String> list) throws Exception {
-        File[] files = file.listFiles();
-        for (File f : files) {
-            if (f.isDirectory()) {
-                cycleFileContent(f, list);
-            } else {
-
-                InputStreamReader inputReader = new InputStreamReader(new FileInputStream(f));
-                BufferedReader bufferedReader = new BufferedReader(inputReader);
-                String lineContent;
-                while ((lineContent = bufferedReader.readLine()) != null) {
-                    for (String content : list) {
-                        if (lineContent.contains(content) && !existList.contains(content)) {
-                            existList.add(content);
-                            log.info("匹配到内容{}，路径为：{}", content, f.getPath());
-                        }
+        if (file.isFile()){
+            InputStreamReader inputReader = new InputStreamReader(new FileInputStream(file));
+            BufferedReader bufferedReader = new BufferedReader(inputReader);
+            String lineContent;
+            while ((lineContent = bufferedReader.readLine()) != null) {
+                for (String content : list) {
+                    if (lineContent.contains(content) && !existList.contains(content)) {
+                        existList.add(content);
+                        log.info("匹配到内容{}，路径为：{}", content, file.getPath());
                     }
-
                 }
             }
+            inputReader.close();
+            return;
+        }
+
+        File[] files = file.listFiles();
+        if (files == null){
+            return;
+        }
+
+        for (File f : files) {
+            cycleFileContent(f, list);
         }
     }
 
