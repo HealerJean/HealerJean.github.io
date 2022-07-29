@@ -9,7 +9,7 @@ public interface NumberConstant {
 
     Integer ZERO = 0;
 
-    Integer ONW = 2;
+    Integer ONW = 1;
 
     Integer TWO = 2;
 
