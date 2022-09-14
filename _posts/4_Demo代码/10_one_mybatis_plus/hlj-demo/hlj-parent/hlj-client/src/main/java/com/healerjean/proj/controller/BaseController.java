@@ -3,12 +3,6 @@ package com.healerjean.proj.controller;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-/**
- * @author HealerJean
- * @ClassName BaseController
- * @date 2019/10/21  19:09.
- * @Description
- */
 @ApiResponses(value = {
         @ApiResponse(code = 200, message = "访问正常"),
         @ApiResponse(code = 301, message = "逻辑错误"),

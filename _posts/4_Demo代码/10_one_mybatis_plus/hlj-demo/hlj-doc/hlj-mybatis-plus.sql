@@ -1,13 +1,13 @@
-drop table if exists user;
-create table `user`
+drop table if exists user_demo;
+create table `user_demo`
 (
-    `id`          bigint(20)  not null comment '主键id',
-    `name`        varchar(5) default null comment '姓名',
-    `age`         int(11)     default null comment '年龄',
-    tel_phone     varchar(20) default null comment '电话',
-    `email`       varchar(50) default null comment '邮箱',
-    `create_date` date        default null comment '日期',
-    `create_time` datetime    default null comment '年月日',
+    id            bigint(20) unsigned not null auto_increment comment '主键',
+    `name`        varchar(32)         not null default '' comment '姓名',
+    `age`         int(11)             not null default 0 comment '年龄',
+    `tel_phone`   varchar(20)         not null default '' comment '电话',
+    `email`       varchar(50)         not null default '' comment '邮箱',
+    `create_time` datetime            not null default current_timestamp comment '创建时间',
+    `update_time` datetime            not null default current_timestamp on update current_timestamp comment '更新时间',
     primary key (`id`)
 ) engine = innodb
   default charset = utf8;
