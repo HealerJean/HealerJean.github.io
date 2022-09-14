@@ -1211,7 +1211,7 @@ public void userDTO(){
 
 
 
-## 4.2、原生SQL使用Script语句 
+## 4.2、原生·SQL·使用 ·Script· 语句 
 
 ### 4.2.1、Mapper
 
@@ -1849,8 +1849,6 @@ public void testDateList(){
 
 
 ### 5.2.2、 数据库日期类型为`datetime`， 序列化为 ` yyyy-MM-dd`，会少一天（不管是LocalDate还是Date序列化）
-
-
 
 ```java
 @Data
