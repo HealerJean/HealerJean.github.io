@@ -1,4 +1,4 @@
-package com.hlj.proj.service.log;
+package com.hlj.proj.service;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

@@ -1,8 +1,8 @@
 package com.hlj.proj.testmain;
 
 
-import com.hlj.proj.service.log.LogCallTestService;
-import com.hlj.proj.service.log.ThirdInvokeLogAspect;
+import com.hlj.proj.service.LogCallTestService;
+import com.hlj.proj.service.ThirdInvokeLogAspect;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.boot.logging.LogLevel;

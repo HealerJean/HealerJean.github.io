@@ -13,6 +13,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.session.ResultHandler;
 
 import java.util.List;
 
@@ -78,4 +79,10 @@ public interface UserMapper extends BaseMapper<User> {
 
     int updateSql(User user);
 
+
+    /**
+     * 流式读取所有数据
+     * @return List<UserDTO>
+     */
+    void getStreamAll(ResultHandler<User> handler);
 }
