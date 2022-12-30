@@ -8,6 +8,7 @@ import com.healerjean.proj.dto.Demo.DemoDTO;
 import com.healerjean.proj.common.ResponseBean;
 import com.healerjean.proj.common.enums.ResponseEnum;
 import com.healerjean.proj.common.exception.BusinessException;
+import com.healerjean.proj.service.inner.InterfaceService;
 import com.healerjean.proj.util.json.JsonUtils;
 import com.healerjean.proj.util.validate.ValidateUtils;
 import io.swagger.annotations.*;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 /**
  * @author HealerJean
@@ -41,6 +44,11 @@ public class DemoController {
     @Autowired
     private DemoEntityService demoEntityService;
 
+    @Resource(name = "aInterfaceService")
+    private InterfaceService aInterfaceService;
+
+    @Resource(name = "bInterfaceService")
+    private InterfaceService bInterfaceService;
 
     @InterfaceName("demo控制器--------demo实体")
     @ApiOperation(value = "demo实体",
@@ -55,6 +63,8 @@ public class DemoController {
         if (!validate.equals(CommonConstants.COMMON_SUCCESS)) {
             throw new BusinessException(ResponseEnum.参数错误, validate);
         }
+        aInterfaceService.doMethod();
+        bInterfaceService.doMethod();
         return ResponseBean.buildSuccess(demoEntityService.getMmethod(demoDTO));
     }
 

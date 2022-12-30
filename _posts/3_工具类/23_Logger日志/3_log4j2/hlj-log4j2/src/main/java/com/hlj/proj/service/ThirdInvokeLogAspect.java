@@ -1,4 +1,4 @@
-package com.hlj.proj.service.log;
+package com.hlj.proj.service;
 
 /**
  * @author zhangyujin

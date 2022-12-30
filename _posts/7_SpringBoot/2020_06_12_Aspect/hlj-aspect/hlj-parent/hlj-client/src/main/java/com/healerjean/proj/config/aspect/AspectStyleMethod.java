@@ -15,7 +15,7 @@ public class AspectStyleMethod {
     /**
      * @Pointcut 放在方法头上，定义一个可被别的方法引用的切入点表达式
      */
-    @Pointcut("execution(* com.healerjean.proj.service.*Service.*(..))")
+    @Pointcut("execution(* com.healerjean.proj.service..*(..))")
     private void anyMethod() {
     }
 
@@ -75,6 +75,14 @@ public class AspectStyleMethod {
     public Object doBasicProfiling(ProceedingJoinPoint pjp) throws Throwable {
         log.info("@Around   pjp.proceed() 准备执行");
         try {
+
+            // 类名
+            String className = pjp.getTarget().getClass().getName();
+            //方法名
+            String methodName = pjp.getSignature().getName();
+
+            log.info("className.methodName{}.{}", className, methodName);
+
             Object object = pjp.proceed();
             //下面的log.info不会执行，因为AspectStyleService中有了异常，所以不会到这一步
             log.info("@Around   pjp.proceed() 正常执行完毕");
