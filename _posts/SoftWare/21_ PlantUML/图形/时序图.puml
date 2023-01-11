@@ -1,0 +1,31 @@
+@startuml
+
+
+title 页面标题
+
+skinparam sequenceMessageAlign center
+
+participant 老板
+participant 小王员工
+participant 小张同事
+
+autonumber 1
+老板 -> 小王员工 ++ :  小张最近在干嘛呢
+
+
+autonumber 1
+小王员工 ->  小王员工 ++-- : 老板依然问了，我打听下吧
+
+小王员工 -> 小张同事 ++ : 最近干嘛呢
+小张同事 --> 小王员工 -- : 准备跑路了
+
+小王员工 -> 小王员工 ++-- : 我要告诉老板
+
+autonumber 2
+小王员工 --> 老板 -- : 完蛋了，小张准备跑路了，还不告诉我
+
+老板 -> 小王员工 ++ : 帮我问下他去哪里高就
+小王员工 -> 小张同事 --++ : 告诉我你去哪里
+小张同事 ->  老板 !! : 我去哪里关你老板屁事
+
+@enduml

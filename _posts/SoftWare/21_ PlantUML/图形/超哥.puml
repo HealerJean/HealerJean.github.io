@@ -1,0 +1,86 @@
+@startuml
+title 活动图示例 升级版
+'文字背景样式---------------------------------'
+<style>
+activityDiagram {
+
+}
+</style>
+'定义条件样式---------------------------------'
+skinparam conditionStyle InsideDiamond
+skinparam conditionEndStyle hline
+
+'定义泳道---------------------------------'
+'|#palegreen|a|A area'
+'|#gold|b| B area'
+'开始描述----------------------------------------'
+
+
+start;
+note right
+判断的样式
+diamond /InsideDiamond
+判断结束样式
+hline
+end note
+
+
+
+:FeeSkuPriceServiceImpl;
+note left
+    sku算费类改造
+end note
+
+
+if(险种过滤方式) then(SKU过滤)
+:验证保费计算方式;
+  if(保费计算方式) then(按费率表)
+    #pink:抛出异常;
+    kill;
+  else(其他模式)
+    #f5be61:原始处理逻辑;
+    :返回保费数据;
+    stop;
+  endif;
+else if(类目过滤)
+:验证保费计算方式;
+  if(保费计算方式) then(按费率表)
+    -[#f56761]->
+    :按费率表计算处理;
+    note left
+      本次重点改动
+    end note
+    repeat: 遍历SKU;
+      :获取SKU类目费率数据;
+      note left
+        按类目匹配出对应的
+        保费区间数据
+      end note
+      :验证费率计算方式;
+      if(计算方式为空) then(是)
+      #pink:抛出异常;
+      kill;
+      else (否)
+      endif;
+      if(费率计算方式) then(按比例)
+        :SKU实付价 * 费率;
+      else(固定保费)
+        :固定保费值;
+      endif;
+      :SKU保费相加;
+    repeat while (SKU存在);
+    -[#blue,dashed]->
+  else(其他模式)
+    #f5be61:原始处理逻辑;
+    :返回保费数据;
+    stop;
+  endif;
+else (不过滤)
+ #f5be61:原始处理逻辑;
+ :返回保费数据;
+  stop;
+endif;
+-[#blue,dashed]->
+:设置最终保费和保额;
+stop;
+@enduml
