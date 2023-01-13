@@ -16,13 +16,13 @@ description: ReentrantLock
 
 
 
-# 1、AQS
+# 1、`AQS`
 
 > 谈到并发，不得不谈`ReentrantLock`；而谈到`ReentrantLock`，不得不谈`AbstractQueuedSynchronizer`（AQS）！    
 >
-> `AbstractQuenedSynchronizer`：类如其名，抽象的队列式的同步器，`AQS`定义了一套多**线程访问共享资源的同步器框架，是除了java自带的`synchronized`关键字之外的锁机制**。。事实上`concurrent`包内许多类都是基于AQS构建的。    
+> `AbstractQuenedSynchronizer`：类如其名，抽象的队列式的同步器，`AQS`定义了一套多**线程访问共享资源的同步器框架，是除了java自带的`synchronized`关键字之外的锁机制**。。事实上`concurrent`包内许多类都是基于 `AQS` 构建的。    
 >
-> > 例如`ReentrantLock`，	`Semphore`，`CountDownLatch`，`ReentrantReadWriteLock`，FutureTask等。AQS解决了在实现同步容器时大量的细节问题
+> > 例如`ReentrantLock`，	`Semphore`，`CountDownLatch`，`ReentrantReadWriteLock`，`FutureTask` 等。AQS解决了在实现同步容器时大量的细节问题
 
 
 
