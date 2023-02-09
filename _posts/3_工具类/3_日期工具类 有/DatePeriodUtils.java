@@ -625,4 +625,37 @@ public final class DatePeriodUtils {
     }
 
 
+ /**
+     * YYYY_MM_DD
+     */
+    public static final String YYYY_MM_DD = "yyyy-MM-dd";
+
+    /**
+     * 获取两个日期之间的所有日期
+     *
+     * @param pattern   日期格式
+     * @param startDate 开始日期
+     * @param endDate   结束日期
+     * @return Set<String>
+     */
+    public static List<String> getDates(String pattern, Date startDate, Date endDate) {
+        List<String> result = new ArrayList<>();
+        Calendar startCalendar = Calendar.getInstance();
+        Calendar endCalendar = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat(pattern);
+        startCalendar.setTime(startDate);
+        endCalendar.setTime(endDate);
+        result.add(df.format(startCalendar.getTime()));
+        while (true) {
+            startCalendar.add(Calendar.DAY_OF_MONTH, 1);
+            if (startCalendar.getTimeInMillis() <= endCalendar.getTimeInMillis()) {
+                result.add(df.format(startCalendar.getTime()));
+            } else {
+                break;
+            }
+        }
+        return result;
+    }
+
+
 }

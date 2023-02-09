@@ -81,4 +81,23 @@ public class LocalDateUtils {
         return instant.atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
+      /**
+     *  获取今天的起始时间
+     * @param localDateTime localDateTime
+     * @return LocalDateTime
+     */
+    public static LocalDateTime getStartDay(LocalDateTime localDateTime) {
+        return LocalDateTime.of(localDateTime.toLocalDate(), LocalTime.MIN);
+    }
+
+    /**
+     *  获取今天的最大时间
+     * @param localDateTime localDateTime
+     * @return LocalDateTime
+     */
+    public static LocalDateTime getEndDay(LocalDateTime localDateTime) {
+        return LocalDateTime.of(localDateTime.toLocalDate(), LocalTime.MAX);
+    }
+
+
 }
