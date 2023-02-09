@@ -1,15 +1,19 @@
-package com.hlj.util.Z012日期.D01Local;
+package com.jdd.baoxian.core.trade.merchant.domain.bo;
 
 import com.google.common.collect.Lists;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 切割时间工具类
@@ -24,6 +28,25 @@ public class SplitDateTimeUtils {
     private static final String HOUR = "HOUR";
     private static final String MINUTE = "MINUTE";
     private static final String SECOND = "SECOND";
+
+
+    /**
+     * getBetweenDate
+     *
+     * @param startDate startDate
+     * @param endDate   endDate
+     * @return List<LocalDate>
+     */
+    public static List<LocalDate> getBetweenDate(LocalDate startDate, LocalDate endDate) {
+        List<LocalDate> result = new ArrayList<>();
+        long distance = ChronoUnit.DAYS.between(startDate, endDate);
+        if (distance < 1) {
+            return result;
+        }
+
+        Stream.iterate(startDate, d -> d.plusDays(1)).limit(distance + 1).forEach(result::add);
+        return result;
+    }
 
 
     /**
@@ -185,10 +208,10 @@ public class SplitDateTimeUtils {
     }
 
     public static void main(String[] args) {
-        LocalDateTime startTime = LocalDateTime.parse("2020-06-12 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        LocalDateTime endTime = LocalDateTime.parse("2020-06-12 13:01:58", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        List<Map<String, LocalDateTime>> mapList = splitDateByMinute(startTime, endTime, 60);
-        mapList.forEach(e -> System.out.println(e.get(START_TIME) + "--->" + e.get(END_TIME)));
+        LocalDate startDate = LocalDate.parse("2020-06-12", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate endDate = LocalDate.parse("2020-07-02", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        List<LocalDate> betweenDate = getBetweenDate(startDate, endDate);
+        System.out.println(betweenDate);
     }
 }
 
