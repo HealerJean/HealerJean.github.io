@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
+ * BaseJunit5MockitoTest
  * @author zhangyujin
  * @date 2023/3/23  17:34.
  */
