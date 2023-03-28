@@ -293,14 +293,12 @@ description: Mybatis和Jpa的扫描配置
 
 
 
-##  1.1、扫描Pojo和Example、mapper.java和mapper.xml
+##  1.1、扫描 `Pojo` 和 `Example`、`mapper`.`java `和 `mapper`.`xml`
 
 > zzr
 
 
 ```xml
-
-
 <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
     <property name="dataSource" ref="dataSource" />
     <property name="typeAliasesPackage">
@@ -330,21 +328,17 @@ description: Mybatis和Jpa的扫描配置
         </value>
     </property>
 </bean>
-
-
 ```
 
 
 
-## 1.2、mapper和xml的扫描
+## 1.2、`mapper` 和 `xml 的扫描
 
 > 多点的时候
 
 ### 1.2.1、pom依赖
 
 ```xml
-
-
 <!--mybatis-->
 <dependency>
     <groupId>org.mybatis</groupId>
@@ -366,25 +360,26 @@ description: Mybatis和Jpa的扫描配置
 @Configuration
 public class MybatisConfig {
 
-    @Bean
-    public MapperScannerConfigurer mapperScannerConfigurer(){
-        MapperScannerConfigurer configurer = new MapperScannerConfigurer();
-        configurer.setBasePackage("com.hlj.dao.mybatis.*");
-        return configurer;
-    }
+  @Bean
+  public MapperScannerConfigurer mapperScannerConfigurer(){
+      MapperScannerConfigurer configurer = new MapperScannerConfigurer();
+      configurer.setBasePackage("com.hlj.dao.mybatis.*");
+      return configurer;
+  }
 
-    @Bean
-    public SqlSessionFactoryBean sessionFactory(DataSource dataSource, ApplicationContext applicationContext) throws IOException {
-        SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
-        sessionFactoryBean.setDataSource(dataSource);
-        sessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:mybatis.xml"));
+  @Bean
+  public SqlSessionFactoryBean sessionFactory(DataSource dataSource, 
+                                              ApplicationContext applicationContext) throws IOException {
+      SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
+      sessionFactoryBean.setDataSource(dataSource);
+      sessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:mybatis.xml"));
 
-        Resource[] resources = ArrayUtils.addAll(
-            applicationContext.getResources("classpath*:com/hlj/dao/mybatis/**/mysql/*.xml")
-        );
-        sessionFactoryBean.setMapperLocations(resources);
-        return sessionFactoryBean;
-    }
+      Resource[] resources = ArrayUtils.addAll(
+          applicationContext.getResources("classpath*:com/hlj/dao/mybatis/**/mysql/*.xml")
+      );
+      sessionFactoryBean.setMapperLocations(resources);
+      return sessionFactoryBean;
+  }
 
 }
 
@@ -403,13 +398,12 @@ public class MybatisConfig {
         <setting name="lazyLoadingEnabled" value="false" />
         <setting name="defaultStatementTimeout" value="25000" />
     </settings>
-
 </configuration>
 ```
 
 
 
-## 1.3、@MapperScan注解和xml的扫描 
+## 1.3、`@MapperScan` 注解和xml的扫描 
 
 > 其实和1.2是一回事  
 
@@ -420,7 +414,6 @@ public class MybatisConfig {
 
 //可以没有sqlSessionTemplateRef 以及关于它的Bean，使用它的情况是 当你有多个Datasource时，需要指定使用哪一个SqlSessionTemplate
 @MapperScan(basePackages = {"com.hlj.proj.data.dao.mybatis"}, sqlSessionTemplateRef  = "sqlSessionTemplate")
-
 
 
 
