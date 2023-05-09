@@ -1,28 +1,32 @@
-package com.healerjean.proj.util;
+package com.jd.merchant.erp.common.utils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+/**
+ * @author zhangyujin
+ * @date 2023/4/12  15:47.
+ */
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * 当web服务器收到静态的资源文件请求时，依据请求文件的后缀名在服务器的MIME配置文件中找到对应的MIME Type，再根据MIME Type设置HTTP Response的Content-Type，然后浏览器根据Content-Type的值处理文件。
+ *
  * @author HealerJean
- * @ClassName FileTypeRestrictionUtils
  * @date 2020/9/4  16:11.
- * @Description 当web服务器收到静态的资源文件请求时，依据请求文件的后缀名在服务器的MIME配置文件中找到对应的MIME Type，
- * 再根据MIME Type设置HTTP Response的Content-Type，然后浏览器根据Content-Type的值处理文件。
  */
 public class FileUploadContentTypeFilterUtils {
 
-    //默认判断文件头前三个字节内容
-    private static int CHECK_BYTES_NUMBER = 3;
-    private static final Map<String, String> FILE_TYPE_MAP = new HashMap<>();
+    /**
+     * 默认判断文件头前三个字节内容
+     */
+    private final static int CHECK_BYTES_NUMBER = 3;
 
-    private FileUploadContentTypeFilterUtils() {
-    }
+    /**
+     * FILE_TYPE_MAP
+     */
+    private final static Map<String, String> FILE_TYPE_MAP = new HashMap<>();
 
     static {
         FILE_TYPE_MAP.put("ffd8ffe000104a464946", "jpg");
@@ -96,6 +100,11 @@ public class FileUploadContentTypeFilterUtils {
         return false;
     }
 
+    /**
+     * 获取文件类型
+     * @param in in
+     * @return String
+     */
     public static String getFileType(InputStream in) {
         String res = null;
         try {
@@ -103,18 +112,13 @@ public class FileUploadContentTypeFilterUtils {
             byte[] b = new byte[CHECK_BYTES_NUMBER];
             in.read(b, 0, b.length);
             String fileCode = bytesToHexString(b);
-
             //这种方法在字典的头代码不够位数的时候可以用但是速度相对慢一点
-            Iterator<String> keyIter = FILE_TYPE_MAP.keySet().iterator();
-            while (keyIter.hasNext()) {
-                String key = keyIter.next();
+            for (String key : FILE_TYPE_MAP.keySet()) {
                 if (key.toLowerCase().startsWith(fileCode.toLowerCase()) || fileCode.toLowerCase().startsWith(key.toLowerCase())) {
                     res = FILE_TYPE_MAP.get(key);
                     break;
                 }
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e.getMessage(), e);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

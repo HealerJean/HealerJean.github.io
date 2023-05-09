@@ -32,7 +32,7 @@ description: ReentrantLock
 
 
 
-以`ReentrantLock`为例，`ReentrantLock `用它来表示线程重入锁的次数，`state`初始化为0，表示未锁定状态。A线程`lock()`时，会调用 `tryAcquire()`独占该锁并将`state+1`。    
+以`ReentrantLock`为例，`ReentrantLock `用它来表示线程重入锁的次数，`state`初始化为0，表示未锁定状态。A线程 `lock()`时，会调用  `tryAcquire()` 独占该锁并将 `state+1`。    
 
 此后，其他线程再`tryAcquire()`时就会失败，直到A线程`unlock()`到`state=0`（即释放锁）为止，其它线程才有机会获取该锁。当然，释放锁之前，`A` 线程自己是可以重复获取此锁的（`state`会累加），这就是可重入的概念。但要注意，**获取多少次就要释放多么次，这样才能保证`state`是能回到零态的**。
 

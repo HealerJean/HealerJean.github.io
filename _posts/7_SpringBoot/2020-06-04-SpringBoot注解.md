@@ -839,11 +839,9 @@ import javax.persistence.Table;
 
 
 
-# 11、@Profile
+# 11、`@Profile`
 
-> @Profile根据注解选中不同的配置文件   
-
-
+> `@Profile` 根据注解选中不同的配置文件   
 
 ```java
 @profile("prop")  

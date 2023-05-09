@@ -492,14 +492,6 @@ private void fastRemove(int index) {
 
 
 
-
-
-
-
-
-
-
-
 ![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
 
 
