@@ -1,69 +1,34 @@
-package com.hlj.util.z028_灰度工具;
+package com.jd.merchant.mq.route.util;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import com.alibaba.fastjson.JSON;
+import com.jd.merchant.mq.route.bean.GrayInsuranceBusinessDto;
+import com.jd.merchant.mq.route.config.DuccBypassInsuranceConfiguration;
+import com.jd.merchant.mq.route.enums.GrayEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import java.util.List;
+import javax.annotation.Resource;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 
 /**
- * 自制工具类，还未战斗过
+ * 自制工具类
+ *
+ * @author healerjean
+ * @date 2022-09-21 22:27
  */
 @Service
 @Slf4j
 public class GrayUtil {
 
     /**
-     * TODO 模拟数据 从配置中心获取
+     * duccBypassInsuranceConfiguration
      */
-    public static final ImmutableMap<String, List<?>> WHITE_MAP = ImmutableMap.of(
-            GrayEnum.GrayBusinessEnum.TOPIC_CHANGE.getCode(), ImmutableList.of(10, 81),
-            GrayEnum.GrayBusinessEnum.HELMET_ONLINE.getCode(), ImmutableList.of("10", "81")
-    );
-
-
-    /**
-     * 判断所属业务灰度是否打开
-     *
-     * @param grayBusinessEnum 灰度业务枚举
-     * @return
-     */
-    public static boolean graySwitch(GrayEnum.GrayBusinessEnum grayBusinessEnum) {
-        //TODO 正常情况下是需要 从配置中心获取开关数据，如果配置中心不存在的时候，根据业务属性选择默认值
-        return grayBusinessEnum.getDefaultSwitch();
-    }
-
-
-    /**
-     * 是否命中灰度白名单
-     *
-     * @return
-     */
-    public static <T> boolean hitGrayWhiteList(GrayEnum.GrayBusinessEnum grayBusinessEnum, T grayObject) {
-        if (!grayBusinessEnum.isWhiteSupport()) {
-            return false;
-        }
-
-        // TODO 根据业务属性，判断grayObject 是何种类型，然后判断该业务是否支持白名单，如果支持，则从配置中心获取白名单数据，并判断是否包含
-        return WHITE_MAP.get(grayBusinessEnum.getCode()).contains(grayObject);
-    }
-
-
-    /**
-     * 是否命中灰度百分比
-     *
-     * @param grayValue
-     * @param percent
-     * @param grayPercentEnum
-     * @return
-     */
-    public static boolean hitGrayPercent(int grayValue, int percent, GrayEnum.GrayPercentEnum grayPercentEnum) {
-        int rate = Math.abs(grayValue) % grayPercentEnum.getCode();
-        return rate <= percent;
-    }
-
+    @Resource
+    private DuccBypassInsuranceConfiguration duccBypassInsuranceConfiguration;
 
     /**
      * 是否命中灰度
@@ -71,36 +36,87 @@ public class GrayUtil {
      * 2、判断灰度对象是否在灰度白名单中
      * 3、判断是否命中灰度百分比
      *
-     * @param grayBusinessEnum
-     * @param grayObject
-     * @param percent
-     * @param grayPercentEnum
-     * @return
+     * @param grayBusinessEnum 灰度业务枚举
+     * @param grayObject       灰度值
+     * @return 灰度开关是否打开
      */
-    public static <T> boolean hitGray(GrayEnum.GrayBusinessEnum grayBusinessEnum, T grayObject, int percent, GrayEnum.GrayPercentEnum grayPercentEnum) {
-        // 1、判断灰度开关是否打开
-        boolean gray = graySwitch(grayBusinessEnum);
-        if (!gray) {
-            log.info("GrayUtil【{}】灰度开关状态：{}", grayBusinessEnum, gray);
-            return false;
+    public <T> boolean hitGray(GrayEnum.GrayBusinessEnum grayBusinessEnum, T grayObject) {
+        if (grayObject instanceof String) {
+            return getInsuranceVendorGraySwitch(grayBusinessEnum, (String) grayObject);
         }
-
-        // 2、判断灰度对象是否在灰度白名单中
-        gray = hitGrayWhiteList(grayBusinessEnum, grayObject);
-        if (gray) {
-            log.info("GrayUtil【{}】灰度对象:{}, 白名单匹配成功", grayBusinessEnum, grayObject);
-            return true;
-        }
-        // 3、判断是否命中灰度百分比
-        gray = hitGrayPercent(grayObject.hashCode(), percent, grayPercentEnum);
-        if (gray) {
-            log.info("GrayUtil【{}】灰度对象:{}, 命中灰度比分[{},{}] ", grayBusinessEnum, grayObject, grayPercentEnum.getCode(), percent);
-            return true;
-        }
-
         return false;
     }
 
 
+
+    /**
+     * ducc险种灰度开关 (定制化)
+     * 1、如果ducc配置为空或入参为空，则返回false
+     * 2、灰度开关判断
+     * 2.1、如果灰度对象为空，则返回false
+     * 2.2、如果灰度开关状态不存在或者开关关闭，则返回false
+     * 2.3、如果灰度开关状态显示全量，则返回true
+     * 3、商家白名单判断,如果商家在白名单，则返回true
+     * 4、灰度比例判断
+     * 4.1、灰度比例不存在，则返回false
+     * 4.2、灰度比例计算，命中返回ture，不命中返回false
+     *
+     * @param insuranceId 险种Id
+     * @return 路由切换开关
+     */
+    private boolean getInsuranceVendorGraySwitch(GrayEnum.GrayBusinessEnum grayBusinessEnum, String vendorId) {
+        Map<String, GrayInsuranceBusinessDto> bypassInsuranceSwitchMap = duccBypassInsuranceConfiguration.getBypassGrayVendorMap();
+
+        // 1、如果ducc配置为空或入参为空，则返回 灰度关闭
+        if (CollectionUtils.isEmpty(bypassInsuranceSwitchMap)) {
+            return false;
+        }
+
+        //ducc 这个小傻瓜不支持直接转对象
+        String json = JSON.toJSONString(bypassInsuranceSwitchMap.get(grayBusinessEnum.getInsuranceId())) ;
+        GrayInsuranceBusinessDto grayVendor =JSON.parseObject(json, GrayInsuranceBusinessDto.class);
+
+        // 2.1、如果灰度对象为空，则返回false
+        if (Objects.isNull(grayVendor)) {
+            return false;
+        }
+
+        // 2.2、如果灰度开关状态不存在或者开关关闭，则返回false
+        String graySwitchCode = grayVendor.getGraySwitchCode();
+        GrayEnum.GraySwitchEnum graySwitchEnum = GrayEnum.GraySwitchEnum.toGraySwitchEnum(graySwitchCode);
+        if (Objects.isNull(graySwitchEnum) || GrayEnum.GraySwitchEnum.GRAY_CLOSE == graySwitchEnum) {
+            return false;
+        }
+
+        // 2.3、如果灰度开关状态显示全量，则返回true
+        if (GrayEnum.GraySwitchEnum.ALL_PERCENT == graySwitchEnum) {
+            return true;
+        }
+        if (GrayEnum.GraySwitchEnum.GRAY_PERCENT != graySwitchEnum) {
+            return false;
+        }
+
+        // 3、商家白名单判断,如果商家在白名单，则返回true
+        Set<String> whiteVendorIds = grayVendor.getWhiteVendorIds();
+        if (!CollectionUtils.isEmpty(whiteVendorIds) && whiteVendorIds.contains(vendorId)) {
+            log.info("[GrayUtil#getInsuranceVendorGraySwitch] 商家白名单命中，商家id:{}, 白名单商家集合:{}：灰度状态：true", vendorId, JSON.toJSONString(whiteVendorIds));
+            return true;
+        }
+
+        // 4.1、灰度比例不存在，则返回false
+        Integer grayPercent = grayVendor.getGrayPercent();
+        Integer grayPercentAmount = grayVendor.getGrayPercentAmount();
+        if (Objects.isNull(grayPercent) || Objects.isNull(grayPercentAmount)) {
+            return false;
+        }
+        // 4.2、灰度比例计算，命中返回ture，不命中返回false
+        int hashCode = vendorId.hashCode();
+        int rate = Math.abs(hashCode) % grayPercentAmount;
+        if (rate <= grayPercent) {
+            log.info("[GrayUtil#getInsuranceVendorGraySwitch] 商家Id:{}，命中灰度:{} grayPercent:{}, grayPercentAmount:{}， 灰度状态：true", vendorId, rate, grayPercent, grayPercentAmount);
+            return true;
+        }
+        return false;
+    }
 
 }
