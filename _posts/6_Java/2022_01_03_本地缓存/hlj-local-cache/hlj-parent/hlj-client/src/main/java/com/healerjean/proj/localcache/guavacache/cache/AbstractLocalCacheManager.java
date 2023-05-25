@@ -10,6 +10,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 /**
@@ -37,6 +38,21 @@ public abstract class AbstractLocalCacheManager<K, V> {
     public void init() {
         refreshAll();
     }
+
+
+    /**
+     * 获取全部缓存信息
+     *
+     * @return
+     */
+    public Map<String, V> getAllLocalCache() {
+        ConcurrentMap<String, V> concurrentMap = localCache.asMap();
+        if (CollectionUtils.isEmpty(concurrentMap)) {
+            refreshAll();
+        }
+        return localCache.asMap();
+    }
+
 
 
     /**
@@ -180,7 +196,7 @@ public abstract class AbstractLocalCacheManager<K, V> {
      * @param k k
      * @param v v
      */
-    protected void writeCache(K k, V v) {
+    private void writeCache(K k, V v) {
         String localKey = toLocalKey(k);
         localCache.put(localKey, v);
     }

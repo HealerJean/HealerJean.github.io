@@ -1,81 +1,116 @@
-package com.hlj.util.z028_灰度工具;
+package com.jd.merchant.mq.route.enums;
+
+import java.util.Arrays;
 
 /**
- * @author healejean
+ * GrayEnum
+ * @author zhangyujin1
  * @date 2021/4/14  2:24 下午.
- * @description
  */
 public interface GrayEnum {
-
 
     /**
      * 灰度业务
      */
     enum GrayBusinessEnum implements GrayEnum {
-
-        TOPIC_CHANGE("TopicChange", true, true, "主题变更"),
-        HELMET_ONLINE("HelmetOnline", true, true, "头盔上线"),
+        /**
+         * INSURANCE_6067
+         */
+        INSURANCE_6067("6067", "晚发赔"),
+        INSURANCE_6072("6072", "6072"),
+        INSURANCE_6073("6073", "6073"),
+        INSURANCE_6074("6074", "6074"),
         ;
 
-        private final String code;
-        private final boolean defaultSwitch;
-        private final boolean whiteSupport;
+        /**
+         * insuranceId
+         */
+        private final String insuranceId;
+        /**
+         * desc
+         */
         private final String desc;
 
-        GrayBusinessEnum(String code, boolean defaultSwitch, boolean whiteSupport, String desc) {
-            this.code = code;
-            this.defaultSwitch = defaultSwitch;
-            this.whiteSupport = whiteSupport;
+        /**
+         * GrayBusinessEnum
+         *
+         * @param insuranceId insuranceId
+         * @param desc        desc
+         */
+        GrayBusinessEnum(String insuranceId, String desc) {
+            this.insuranceId = insuranceId;
             this.desc = desc;
+        }
+
+        public String getInsuranceId() {
+            return insuranceId;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        /**
+         * GrayBusinessEnum
+         * @param insuranceId insuranceId
+         * @return GrayBusinessEnum
+         */
+        public static GrayBusinessEnum toGrayBusinessEnum(String insuranceId) {
+            return Arrays.stream(GrayBusinessEnum.values()).filter(item->item.getInsuranceId().equals(insuranceId)).findAny().orElse(null);
+        }
+    }
+
+
+    /**
+     * 灰度业务
+     */
+    enum GraySwitchEnum implements GrayEnum {
+
+        /**
+         * GRAY_CLOSE
+         */
+        GRAY_CLOSE("GrayClose", "灰度关闭"),
+        GRAY_PERCENT("Percent", "灰度中"),
+        ALL_PERCENT("AllPercent", "全量"),
+
+        ;
+
+        /**
+         * code
+         */
+        private final String code;
+        /**
+         * desc
+         */
+        private final String desc;
+
+        /**
+         * GrayBusinessEnum
+         *
+         * @param code insuranceId
+         * @param desc desc
+         */
+        GraySwitchEnum(String code, String desc) {
+            this.code = code;
+            this.desc = desc;
+        }
+
+        /**
+         * GraySwitchEnum
+         *
+         * @param code code
+         * @return GraySwitchEnum
+         */
+        public static GraySwitchEnum toGraySwitchEnum(String code) {
+            return Arrays.stream(GraySwitchEnum.values()).filter(item -> item.getCode().equals(code)).findAny().orElse(null);
         }
 
         public String getCode() {
             return code;
         }
 
-        public boolean getDefaultSwitch() {
-            return defaultSwitch;
-        }
-
-        public boolean isWhiteSupport() {
-            return whiteSupport;
-        }
-    }
-
-
-    /**
-     * 灰度基数
-     */
-    enum GrayPercentEnum implements GrayEnum {
-
-        ONE_HUNDRED(100, "百"),
-
-        ONE_THOUSAND(1000, "千"),
-
-        TEN_THOUSAND(10000, "万"),
-
-        ONE_HUNDRED_THOUSAND(100000, "十万"),
-
-        ONE_MILLION(1000000, "百万"),
-
-        TWN_MILLION(10000000, "千万"),
-
-        ONE_HUNDRED_MILLION(100000000, "亿"),
-
-        ;
-
-
-        private final int code;
-        private final String desc;
-
-
-        GrayPercentEnum(Integer code, String desc) {
-            this.code = code;
-            this.desc = desc;
-        }
-
-        public int getCode() {
-            return code;
+        public String getDesc() {
+            return desc;
         }
     }
 
