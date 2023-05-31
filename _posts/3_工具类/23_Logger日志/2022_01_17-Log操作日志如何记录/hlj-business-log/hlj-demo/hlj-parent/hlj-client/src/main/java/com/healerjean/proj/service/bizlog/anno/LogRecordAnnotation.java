@@ -24,7 +24,7 @@ public @interface LogRecordAnnotation {
     String operator() default "";
 
     /**
-     * todo
+     * 日志类型
      */
     String prefix();
 

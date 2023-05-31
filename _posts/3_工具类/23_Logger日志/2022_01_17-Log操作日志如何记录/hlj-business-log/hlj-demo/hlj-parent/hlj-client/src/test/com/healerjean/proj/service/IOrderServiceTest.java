@@ -6,9 +6,19 @@ import org.junit.Test;
 
 import javax.annotation.Resource;
 
+/**
+ * IOrderServiceTest
+ * @author zhangyujin
+ * @date 2023/5/31  20:53
+ */
 public class IOrderServiceTest extends BaseTest {
+
+    /**
+     * orderService
+     */
     @Resource
     private IOrderService orderService;
+
 
     @Test
     public void createOrder() {

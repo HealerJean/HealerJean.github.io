@@ -21,7 +21,6 @@ import java.util.*;
  * @date 2023/5/30  18:59.
  */
 @Slf4j
-//todo
 @Service
 public class BizLogServiceImpl implements BizLogService {
 
