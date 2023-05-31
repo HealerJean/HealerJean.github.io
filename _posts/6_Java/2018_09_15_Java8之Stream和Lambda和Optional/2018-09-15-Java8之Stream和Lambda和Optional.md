@@ -1008,10 +1008,9 @@ public class TestMain {
                 .collect(Collectors.toMap(k -> k.getId(), v -> v));
 
       //假如id存在重复值，则会报错Duplicate key xxx, 解决方案是：
-      Map<String, Student> map = list.stream().collect(
-        Collectors.toMap(Student::getId,
-                         Function.identity(),
-                         (oldValue,newValue) -> newValue))
+     Map<Long, Person> map = list.stream()
+        .collect(Collectors.toMap(Student::getId, v1 -> v1,(v1,v2)->v1));
+
 
 ```
 

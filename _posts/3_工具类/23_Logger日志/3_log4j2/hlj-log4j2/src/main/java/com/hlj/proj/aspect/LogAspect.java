@@ -53,24 +53,31 @@ public class LogAspect {
                 return pjp.proceed();
             } else {
                 Parameter[] parameters = method.getParameters();
-                reqParams = getRequestParams(args, parameters);
+                if (Boolean.TRUE.equals(logIndex.reqFlag())) {
+                    reqParams = getRequestParams(args, parameters);
+                }
                 result = pjp.proceed();
             }
         } finally {
             long timeCost = System.currentTimeMillis() - start;
             Map<String, Object> map = new HashMap<>(8);
             map.put("method", className + "." + methodName);
-            map.put("requestParams", reqParams);
-            map.put("responseParams", result);
+            if (Boolean.TRUE.equals(logIndex.reqFlag())) {
+                map.put("req", reqParams);
+            }
+            if (Boolean.TRUE.equals(logIndex.resFlag())) {
+                map.put("res", result);
+            }
             map.put("timeCost", timeCost + "ms");
-            log.info("LogAspect：{}", JsonUtils.toJsonString(map));
+            log.info("LogAspect:{}", JsonUtils.toJsonString(map));
         }
         return result;
     }
 
     /**
      * 重构请求参数
-     * @param args 参数
+     *
+     * @param args       参数
      * @param parameters 参数名
      * @return 重构后的请求参数
      */

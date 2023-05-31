@@ -21,7 +21,6 @@
         <module>hlj-api</module>
         <module>hlj-service</module>
         <module>hlj-client</module>
-        <module>hlj-business-log-sdk</module>
     </modules>
 
 
