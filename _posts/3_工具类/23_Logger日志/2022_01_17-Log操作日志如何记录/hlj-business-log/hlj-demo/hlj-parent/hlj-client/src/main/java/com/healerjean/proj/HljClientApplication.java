@@ -1,10 +1,12 @@
 package com.healerjean.proj;
 
-import com.healerjean.proj.starter.annotation.EnableLogRecord;
+//todo tm
+// import com.healerjean.proj.starter.annotation.EnableLogRecord;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@EnableLogRecord(tenant = "com.healerjean.test")
+//todo tm
+// @EnableLogRecord(tenant = "com.healerjean.test")
 @SpringBootApplication
 public class HljClientApplication {
 

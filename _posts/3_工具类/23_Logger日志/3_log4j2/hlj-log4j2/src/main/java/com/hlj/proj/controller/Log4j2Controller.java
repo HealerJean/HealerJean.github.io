@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 public class Log4j2Controller {
 
 
-    @LogIndex
+    @LogIndex(resFlag = false)
     @GetMapping("log4j2")
     public String log4j2(LogBean logBean) {
         log.debug("debug日志================{}", logBean);

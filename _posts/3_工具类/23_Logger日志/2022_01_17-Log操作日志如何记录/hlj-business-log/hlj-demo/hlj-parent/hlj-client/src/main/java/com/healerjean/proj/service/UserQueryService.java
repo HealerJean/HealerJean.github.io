@@ -1,13 +1,19 @@
 package com.healerjean.proj.service;
 
-import org.apache.catalina.User;
 
-import java.util.List;
+import com.healerjean.proj.service.bizlog.data.po.User;
 
 /**
- * @author muzhantong
- * create on 2021/2/10 11:13 上午
+ * UserQueryService
+ * @author zhangyujin
+ * @date 2023/5/31  16:02
  */
 public interface UserQueryService {
-    List<User> getUserList(List<String> userIds);
+
+    /**
+     * getUser
+     * @param userId userId
+     * @return User
+     */
+    User getUser(String userId);
 }

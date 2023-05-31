@@ -1,25 +1,28 @@
 package com.healerjean.proj.service.impl;
 
-import com.healerjean.proj.beans.Order;
-import com.healerjean.proj.constants.LogRecordType;
-import com.healerjean.proj.context.LogRecordContext;
 import com.healerjean.proj.service.IOrderService;
 import com.healerjean.proj.service.UserQueryService;
-import com.healerjean.proj.starter.annotation.LogRecordAnnotation;
+import com.healerjean.proj.service.bizlog.anno.LogRecordAnnotation;
+import com.healerjean.proj.service.bizlog.common.BizLogConstants;
+import com.healerjean.proj.service.bizlog.data.po.Order;
+import com.healerjean.proj.service.bizlog.utils.LogTheadLocal;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
 /**
- * @author muzhantong
- * create on 2020/6/12 11:08 上午
+ * OrderServiceImpl
+ * @author zhangyujin
+ * @date 2023/5/31  16:10
  */
 @Service
 @Slf4j
 public class OrderServiceImpl implements IOrderService {
 
+    /**
+     * userQueryService
+     */
     @Resource
     private UserQueryService userQueryService;
 
@@ -31,19 +34,22 @@ public class OrderServiceImpl implements IOrderService {
             detail = "{{#order.toString()}}",
             operator = "{{#currentUser}}",
             success = "{{#order.purchaseName}}下了一个订单,购买商品「{{#order.productName}}」,测试变量「{{#innerOrder.productName}}」,下单结果:{{#_ret}}",
-            prefix = LogRecordType.ORDER, bizNo = "{{#order.orderNo}}")
+            prefix = BizLogConstants.BizLogTypeConstant.ORDER_TYPE,
+            bizNo = "{{#order.orderNo}}")
     public boolean createOrder(Order order) {
         log.info("【创建订单】orderNo: {}", order.getOrderNo());
         // db insert order
         Order order1 = new Order();
         order1.setProductName("内部变量测试");
-        LogRecordContext.putVariable("innerOrder", order1);
+        LogTheadLocal.putVariable("innerOrder", order1);
+        LogTheadLocal.putVariable("currentUser", "healerJean");
         return true;
     }
 
     @Override
-    @LogRecordAnnotation(success = "更新了订单{ORDER{#order.orderId}},更新内容为...",
-            prefix = LogRecordType.ORDER, bizNo = "{{#order.orderNo}}",
+    @LogRecordAnnotation(success = "更新了订单{orderParse{#order.orderId}},更新内容为...",
+            prefix = BizLogConstants.BizLogTypeConstant.ORDER_TYPE,
+            bizNo = "{{#order.orderNo}}",
             detail = "{{#order.toString()}}")
     public boolean update(Long orderId, Order order) {
         order.setOrderId(10000L);
@@ -51,19 +57,21 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    @LogRecordAnnotation(success = "更新了订单ORDER{#orderId}},更新内容为...",
-            prefix = LogRecordType.ORDER, bizNo = "{{#order.orderNo}}",
+    @LogRecordAnnotation(success = "更新了订单{orderParse{#orderId}},更新内容为...",
+            prefix = BizLogConstants.BizLogTypeConstant.ORDER_TYPE,
+            bizNo = "{{#order.orderNo}}",
             condition = "{{#condition == null}}")
     public boolean testCondition(Long orderId, Order order, String condition) {
         return false;
     }
 
     @Override
-    @LogRecordAnnotation(success = "更新了订单ORDER{#orderId}},更新内容为..{{#title}}}",
-            prefix = LogRecordType.ORDER, bizNo = "{{#order.orderNo}}")
+    @LogRecordAnnotation(success = "更新了订单{orderParse{#orderId}},更新内容为..{{#title}}}",
+            prefix = BizLogConstants.BizLogTypeConstant.ORDER_TYPE,
+            bizNo = "{{#order.orderNo}}")
     public boolean testContextCallContext(Long orderId, Order order) {
-        LogRecordContext.putVariable("title", "外层调用");
-        userQueryService.getUserList(Lists.newArrayList("mzt"));
+        LogTheadLocal.putVariable("title", "外层调用");
+        userQueryService.getUser(order.getUserId());
         return false;
     }
 }

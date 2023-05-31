@@ -70,6 +70,13 @@
                 <version>${mybatis-plus-boot-starter.version}</version>
             </dependency>
 
+            <!-- aop 切面 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-aop</artifactId>
+                <version>3.1.0</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>

@@ -1,6 +1,6 @@
 package com.healerjean.proj.service;
 
-import com.healerjean.proj.beans.Order;
+import com.healerjean.proj.service.bizlog.data.po.Order;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,7 +18,6 @@ public class IOrderServiceTest extends BaseTest {
         order.setPurchaseName("张三");
         boolean ret = orderService.createOrder(order);
         Assert.assertTrue(ret);
-
     }
 
     @Test

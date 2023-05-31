@@ -1,7 +1,7 @@
 package com.healerjean.proj.service;
 
 
-import com.healerjean.proj.beans.Order;
+import com.healerjean.proj.service.bizlog.data.po.Order;
 
 /**
  * @author muzhantong

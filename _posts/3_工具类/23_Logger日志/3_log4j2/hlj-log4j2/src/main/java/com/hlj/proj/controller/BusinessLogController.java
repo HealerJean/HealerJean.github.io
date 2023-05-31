@@ -1,8 +1,8 @@
 package com.hlj.proj.controller;
 
+import com.hlj.proj.aspect.BusinessLog;
 import com.hlj.proj.aspect.LogIndex;
-import com.hlj.proj.aspect.business.LogRecordAnnotation;
-import com.hlj.proj.bean.LogBean;
+import com.hlj.proj.bean.BusinessDTO;
 import com.hlj.proj.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class BusinessLogController {
 
-    @LogRecordAnnotation(operator = "#logBean.name", content =  "发起请求", bizNo = "#logBean.bizNo")
+    @BusinessLog(operator = "#bus.operator", action = "创建", bizNo = "#bus.orderId")
     @LogIndex
     @GetMapping("demo")
-    public String log4j2(LogBean logBean) {
-        return JsonUtils.toJsonString(logBean);
+    public String add(BusinessDTO bus) {
+        return JsonUtils.toJsonString(bus);
     }
 
 }
