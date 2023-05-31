@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class UserQueryServiceImpl implements UserQueryService {
 
     /**
-     * getUserList
+     * getUser
      * @param userId userId
      * @return User
      */
