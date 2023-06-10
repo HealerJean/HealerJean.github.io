@@ -1,12 +1,10 @@
 package com.healerjean.proj.common.anno;
 
 import com.healerjean.proj.common.RedisConstants;
-import com.jd.merchant.business.platform.core.common.RedisConstants;
 
 import java.lang.annotation.*;
 
 /**
- *
  * @author zhangyujin
  * @date 2023/5/26  11:42
  */

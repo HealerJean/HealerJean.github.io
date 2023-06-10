@@ -531,6 +531,50 @@ SysDistrict sysDistrict = publicSysDistrictDao.selectOne(queryWrapper);
 
 
 
+```java
+package com.jd.merchant.business.platform.core.dao;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+
+import java.util.List;
+import java.util.function.Predicate;
+
+/**
+* MybatisPlusUtil
+* @author zhangyujin
+* @date 2023/6/5  15:23.
+*/
+public class MybatisPlusUtil {
+
+
+  /**
+   * fieldValues
+   * @param fieldValues fieldValues
+   * @param queryWrapper queryWrapper
+   * @param aClass aClass
+   * @param <T>  <T>
+   */
+  public static <T> void fieldValues(List<String> fieldValues, 
+                                     LambdaQueryWrapper<T> queryWrapper, 
+                                     Class<T> aClass) {
+      if (CollectionUtils.isEmpty(fieldValues)) {
+          return;
+      }
+      Predicate<TableFieldInfo> predicate = null;
+      for (String field : fieldValues) {
+          predicate = predicate == null ? p -> p.getColumn().equals(field) : predicate.or(p -> p.getColumn().equals(field));
+      }
+      queryWrapper.select(aClass, predicate);
+  }
+
+}
+
+```
+
+
+
 ## 2.2、`UpdateWrapper、LambdaUpdateChainWrapper`
 
 
@@ -994,7 +1038,7 @@ or(boolean condition)
 
 
 
-### 3.23.1、OR嵌套 
+### 3.23.1、`OR` 嵌套 
 
 ```java
 例: or(i -> i.eq("name", "李白")
@@ -1835,76 +1879,61 @@ public void testDateList(){
 
 
 
-> 可能会遇到日期格式的时间段问题，当数据库的时间为DATE类型时，MyBatis的`jdbcType`应该使用DATE
+> 可能会遇到日期格式的时间段问题，当数据库的时间为 `DATE` 类型时，`MyBatis` 的`jdbcType`应该使用DATE
 > `jdbcType=DATE`，而不是使用`jdbcType=TIMESTAMP`
 
 
 
-### 5.2.1、 Date类型` JsonFormat`失效  
+## 5.3、更新 `Null` 字段
 
-解决方案：如果直接从数据库中取出来，再放到前台，序列化为`yyyy-MM-dd HH:mm:ss`，会失败，最后解决方案为添加一个中间对象（Model），然后再转化为`LocalDateTime`
+> **updateById() 方法不能更新字段为 null 的原因及解决办法。**
+>
+> `Mybatis-plus` 的字段策略（`FieldStrategy`）有三种策略：默认的更新策略是 `NOT_NULL`，即通过接口更新数据时数据为 `NULL`值时将不更新进数据库。
 
-(具体原理不知)
+
+
+| 策略            | 说明                |
+| --------------- | ------------------- |
+| **IGNORED**：   | 0 忽略              |
+| **NOT_NULL**：  | 1 非 NULL，默认策略 |
+| **NOT_EMPTY**： | 2 非空              |
+
+### 5.3.1、方案1：在配置文件中修改全局策略
+
+> 这样做是进行全局配置，在更新时会忽略对所有字段的判断。但是如果一些字段没有传值过来，会被直接更新为null，可能会影响其它业务数据的准确性。不推荐使用此方法。
+
+```yaml
+mybatis-plus.global-config.db-config.field-strategy=ignored
+
+#yml文件格式：
+mybatis-plus:
+  global-config:
+      #字段策略 0:"忽略判断",1:"非 NULL 判断",2:"非空判断"
+    field-strategy: 0
+```
 
 
 
-### 5.2.2、 数据库日期类型为`datetime`， 序列化为 ` yyyy-MM-dd`，会少一天（不管是LocalDate还是Date序列化）
+### 5.3.2、方案2：对指定的字段单独设置 `field-strategy`
+
+> 设置好了之后，在更新时就可以直接使用 `mybatis-plus` 中的 `updateById` 方法就可以成功将字段更新为 `null,`但是这样做存在一定的弊端，就是当需要这样处理的字段比较多时，要给对应的字段都要添加上这样的注解。
 
 ```java
-@Data
-public class LoanOrderModel {
+@TableField(updateStrategy = FieldStrategy.IGNORED)
+private String updateBy;
+```
 
-    /** 申请时间 */
-    private Date applyDate;
-    /** 下次还款时间 */
-    private Date nextRepayDate;
-    
+### 5.3.3、方案2：使用 `update`方法结合`UpdateWrapper`方式更新
+
+```java
+User user=userService.lambdaQuery().eq(User::getUserId,userId).one();
+if(user!=null){
+    userService.update(user,new UpdateWrapper<User>().lambda()
+               .set(User::getUserName,null)
+               .eq(User::getUserId,user.getUserId()));
 }
 
-
-
-@Data
-public class LoanOrderDTO {
-
-    /** 申请时间 */
-    private LocalDateTime applyDate;
-    /** 下次还款时间 */
-    private LocalDate nextRepayDate;
-
-}
-
 ```
-
-
-
-**数据库存储的时间是 2020-04-25 00:00:00：如果直接使用如下，则到了前台日期会少一天 2020-04-24**
-
-```java
-loanOrderDTO.setNextRepayDate( DateUtils.toLocalDate(loanOrderModel.getNextRepayDate()));
-
-```
-
-
-
-#### 5.2.2.1、解决方案
-
-> **先变成`LocalDateTime`，再变成`LocalDate`**   
-
-(具体原理不知)
-
-```java
-loanOrderDTO.setNextRepayDate( DateUtils.toLocalDateTime(
-					loanOrderModel.getNextRepayDate()).toLocalDate());
-
-```
-
-
-
-
-
-
-
-
 
 
 

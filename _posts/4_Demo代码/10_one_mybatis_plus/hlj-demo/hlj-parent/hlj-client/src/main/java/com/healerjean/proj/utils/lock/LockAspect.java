@@ -33,14 +33,6 @@ public class LockAspect {
     private RedisService redisService;
 
     /**
-     * 注解切面
-     */
-    @Pointcut("@annotation(com.healerjean.proj.common.anno.InsLock)")
-    public void pointcutInterface() {
-        // Do nothing because of pointcut expression
-    }
-
-    /**
      * 方法锁
      *
      * @param joinPoint 切点
@@ -48,7 +40,7 @@ public class LockAspect {
      * @return Object
      * @throws Throwable Throwable
      */
-    @Around("pointcutInterface() && @annotation(insLock)")
+    @Around(value = "(execution(* *(..)) && @annotation(insLock))", argNames = "joinPoint,insLock")
     public Object doAroundAdvice(ProceedingJoinPoint joinPoint, InsLock insLock) throws Throwable {
         if (null == insLock.value()) {
             return joinPoint.proceed();

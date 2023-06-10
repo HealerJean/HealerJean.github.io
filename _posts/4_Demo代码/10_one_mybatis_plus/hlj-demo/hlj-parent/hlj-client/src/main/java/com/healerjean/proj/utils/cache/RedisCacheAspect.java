@@ -10,7 +10,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
@@ -28,32 +27,20 @@ import java.lang.reflect.Method;
 @Slf4j
 public class RedisCacheAspect {
     /**
-     * 空集合字符标识
-     */
-    public static final String EMP_LIST_STR = "[]";
-    /**
      * 缓存工具
      */
     @Resource
     private RedisService redisService;
 
     /**
-     * 注解切面
-     */
-    @Pointcut("@annotation(com.jd.merchant.business.platform.core.common.annotation.R2mCache)")
-    public void pointcutInterface() {
-        // Do nothing because of pointcut expression
-    }
-
-    /**
      * 环绕缓存
      *
-     * @param joinPoint 切点
-     * @param redisCache  缓存配置项
+     * @param joinPoint  切点
+     * @param redisCache 缓存配置项
      * @return Object
      * @throws Throwable Throwable
      */
-    @Around("pointcutInterface() && @annotation(redisCache)")
+    @Around(value = "(execution(* *(..)) && @annotation(redisCache))", argNames = "joinPoint,redisCache")
     public Object doAroundAdvice(ProceedingJoinPoint joinPoint, RedisCache redisCache) throws Throwable {
         if (!redisCache.enabled() || null == redisCache.value()) {
             return joinPoint.proceed();

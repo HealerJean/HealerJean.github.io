@@ -4,7 +4,9 @@ package com.hlj.util.Z025_utils;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Created by shiwei.li on 2018/4/26.
+ * CheckBankCardUtils
+ * @author zhangyujin
+ * @date 2023/6/10  11:24
  */
 public class CheckBankCardUtils {
 

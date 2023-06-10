@@ -19,7 +19,7 @@
 
     <!-- 日志文件目录和压缩文件目录配置 -->
     <Properties>
-        <Property name="level">debug</Property>
+        <Property name="level">INFO</Property>
         <Property name="LOG_PATTERN">
             %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level -[%-32X{REQ_UID}] %-32X{SON_UID} - %logger{36}.%M[%L] - %msg%n
         </Property>
@@ -113,6 +113,9 @@
 
     <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
     <loggers>
+
+        <logger name="com.hlj.proj.controller"  level="ERROR"/>
+
         <!-- AsyncRoot - 异步记录日志 - 需要LMAX Disruptor的支持 -->
         <!-- additivity如果设置为true将会输出两次日志，意思和log4j里面意思是否追加 -->
         <AsyncRoot level="${level}" additivity="false" includeLocation="true">
@@ -124,6 +127,7 @@
         <logger name="businessLog" additivity="false" level="INFO">
             <appender-ref ref="businessLog"/>
         </logger>
+
     </loggers>
 
 </configuration>
