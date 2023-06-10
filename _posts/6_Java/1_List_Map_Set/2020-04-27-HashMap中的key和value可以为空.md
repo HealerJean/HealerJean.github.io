@@ -28,11 +28,11 @@ description: HashMap中的key和value可以为空
 
 
 
-## 1.1、从HashMap分析  
+## 1.1、从 `HashMap` 分析  
 
 **key可以为空：**
 
-> `HashMap`在`put`的时候会调用`hash()`方法来**计算key的hashcode值**，可以从hash算法中看出**当key==null时返回的值为0**。因此key为null时，hash算法返回值为0，不会调用key的hashcode方法。      
+> `HashMap`在`put`的时候会调用`hash()`方法来**计算 `key` 的 `hashcode` 值**，可以从 `hash` 算法中看出**当 `key==nul` l时返回的值为0**。因此 `key` 为 `null` 时，`hash` 算法返回值为0，不会调用 `key` 的 `hashcode`方法。      
 
 
 
@@ -53,15 +53,15 @@ static final int hash(Object key) { // 计算key的hash值
 
 
 
-## 1.2、从HashTable分析
+## 1.2、从`HashTable`分析
 
-**value不可以为空 ：**，  
+**`value`不可以为空 ：**，  
 
 >  **可以很清晰看到，直接就抛出异常了**    
 
 
 
-**key不可以为空：**
+**`key`不可以为空：**
 
 > `key`为空，在执行到`int  hash = key.hashCode()`时同样会抛出`NullPointerException`异常   
 
@@ -181,9 +181,9 @@ public synchronized V put(K key, V value) {
 
 个人理解：   
 
-1、HashMap本身使用key和value为null就不应该存在，   
+1、`HashMap`本身使用 `key` 和 `value` 为 `null` 就不应该存在，   
 
-比如下面这行代码 ，我们还是不知道这个null是没有映射的null还是存的值就是null。
+比如下面这行代码 ，我们还是不知道这个 `null` 是没有映射的 `null` 还是存的值就是 `null`。
 
 ```java
 System.out.println(hashMap.get("1")); //null
@@ -191,7 +191,19 @@ System.out.println(hashMap.get("1")); //null
 
 
 
-2、null指针本身就是一个让开发人员头大的问题，HashMap只在单线程中使用，不会存在修改了，有找不到的情况，但是多线程则的设计其实就更为复杂，既然复杂为什么不去掉呢，网上解释的什么 玩意。    
+2、`null` 指针本身就是一个让开发人员头大的问题，`HashMap`只在单线程中使用，不会存在修改了，有找不到的情况，但是多线程则的设计其实就更为复杂，既然复杂为什么不去掉呢，网上解释的什么 玩意。    
+
+
+
+3、在 `HashMap`中，因为它的设计就是给单线程用的，所以当我们 `map.get(key)` 返回 `null`  的时候，我们是可以通过`map.contains(key`) 检查来进行检测的，如果它返回 `true`，则认为是存了一个 `null`，否则就是因为没找到而返回了`null`。
+
+但是，像 `ConcurrentHashMap`，它是为并发而生的，它是要用在并发场景中的，当我们map.get(key)返回null的时候，是没办法通过通过`map.contains(key)`检查来准确的检测，因为在检测过程中可能会被其他线程锁修改，而导致检测结果并不可靠。
+
+
+
+
+
+
 
 
 

@@ -256,7 +256,7 @@ public ConcurrentHashMap(Map<? extends K, ? extends V> m) {
 
 ## 2.5、内部类 
 
-### 2.5.1、Node<K,V>   
+### 2.5.1、`Node<K,V>  `
 
 ```java
 static class Node<K,V> implements Map.Entry<K,V> {
@@ -309,7 +309,7 @@ static class Node<K,V> implements Map.Entry<K,V> {
 
 
 
-### 2.5.2、TreeNode<K,V>红黑树   
+### 2.5.2、`TreeNode`<K,V>红黑树   
 
 > 和`HashMap`相比，这里的`TreeNode`相当简洁；`ConcurrentHashMap`链表转树时，并不会直接转，**只是把这些链表节点包装成`TreeNode`放到`TreeBin`中，再由`TreeBin`来转化红黑树**。红黑树不理解没关系，并不影响看`ConcurrentHashMap`的内部实现
 
@@ -618,7 +618,7 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
 
 
 
-### 2.5.1、CAS操作    
+### 2.5.1、`CAS` 操作    
 
 #### 2.5.1.2、`tabAt` ：获取索引位置的node节点   
 

@@ -64,7 +64,7 @@ spring.datasource.encrypt=true
 
 
 
-## 1.2、Java数据库连接 
+## 1.2、`Java` 数据库连接 
 
 ```java
 package com.fintech.confin.web.config;
@@ -261,7 +261,7 @@ public class CustomTypeHandler<T> extends BaseTypeHandler<T> {
 
 
 
-## 2.3、Handle的使用  
+## 2.3、`Handle` 的使用  
 
 
 
@@ -299,7 +299,7 @@ public class User {
 
 
 
-### 2.3.2、自定义sql查询的配置  
+### 2.3.2、自定义 `sql`查询的配置  
 
 > 如果不是mybatisPlus的 BaseMapper内部的方法，则需要我们自己放入我们自定义的`typeHandler`
 
@@ -375,26 +375,146 @@ System.out.println(users);
 
 
 
-# 3、敏感字段模糊查询
+# 3、敏感字段模糊查询-分词密文映射表
 
-## 3.1、方案
+## 3.1、原理
 
-参考：https://open.taobao.com/docV3.htm?docId=106213&docType=1
-
-> 为什么不能密文上直接搜索呢，因为直接加密后搜索肯定不能命中密文呢
-
-1、首先在存储的时候需要分段加密，例如：我的天啊，我们可以两个汉字分一段，“我的”，“的天”，“天啊” 进行分三次加密，(这里大家可以自定义算法（个人认为 `hash算法` 就行），但是不要太短的组合，避免安全下降）     
-
-2、然后把分段加密的密文拼接起来
-例如：“我的”，“的天”，“天啊”，密文：“kshe!_=s”，“ek(+=s2F”，“2J0s=sw_”，结果：kshe!_=sek(+=s2F2J0s=sw_     
-
-3、这样就可以模糊匹配了，把命中的密文按照规则解密出来就是我们需要的内容
+> 主流的方法。新建一张分词密文映射表，在敏感字段数据新增、修改的后，对敏感字段进行分词组合，     
+>
+> 1、如“15503770537”的分词组合有“155”、“0377”、“0537”等，再对每个分词进行加密，建立起敏感字段的分词密文与目标数据行主键的关联关系；    
+>
+> 2、在处理模糊查询的时候，对模糊查询关键字进行加密，用加密后的模糊查询关键字，对分词密文映射表进行`like`查询，得到目标数据行的主键，再以目标数据行的主键为条件返回目标表进行精确查询。
 
 
 
+## 3.2、敏感字段模糊查询方案
+
+淘宝密文字段检索方案 ：https://open.taobao.com/docV3.htm?docId=106213&docType=1     
+
+阿里巴巴文字段检索方案：https://jaq-doc.alibaba.com/docs/doc.htm?treeId=1&articleId=106213&docType=1    
+
+拼多多密文字段检索方案：https://open.pinduoduo.com/application/document/browse?idStr=3407B605226E77F2    
+
+京东密文字段检索方案：https://jos.jd.com/commondoc?listId=345
 
 
 
+**问题1：为什么推荐这种方案？**
+
+答案：这种方法的优点就是原理简单，实现起来也不复杂，但是有一定的局限性，算是一个对性能、业务相折中的一个方案，相比较之下，在能想的方法中，比较推荐这种方法，             
+
+
+
+**问题2：分词太多，势必会对性能有影响，怎么解决呢？**   
+
+答案：**对模糊查询的关键字的长度，要在业务层面进行限制**；以手机号为例，可以要求对模糊查询的关键字是四位或者是五位，具体可以再根据具体的场景进行详细划分。               
+
+
+
+**问题3：为什么要增加这样的限制呢？**     
+
+答案：因为明文加密后长度为变长，有额外的存储成本和查询性能成本，分词组合越多，需要的存储空间以及所消耗的查询性能成本也就更大，**并且分词越短，被硬破解的可能性也就越大，也会在一定程度上导致安全性降低**；
+
+
+
+## 3.3、实现
+
+### 3.3.1、分词密文映射表
+
+```sql
+create table if not exists sys_person_phone_encrypt
+(
+   id bigint auto_increment comment '主键' primary key,
+   person_id int not null comment '关联人员信息表主键',
+   phone_key varchar(500) not null comment '手机号码分词密文'
+)
+comment '人员的手机号码分词密文映射表';
+```
+
+
+
+### 3.3.2、`aop` 切面进行分词
+
+> 敏感字段数据在保存入库的时候，对敏感字段进行分词组合并加密码，存储在分词密文映射表    
+>
+> 在注册人员信息的时候，先取出通过 `AOP` 进行加密过的手机号码进行解密；手机号码解密之后，对手机号码按照连续四位进行分词组合，并对每一个手机号码的分词进行加密，最后把所有的加密后手机号码分词拼接成一个字符串，与人员id一起保存到人员的手机号码分词密文映射表；
+
+
+
+```java
+ublic Person registe(Person person) {
+    this.personDao.insert(person);
+    String phone = this.decrypt(person.getPhoneNumber());
+    String phoneKeywords = this.phoneKeywords(phone);
+    this.personDao.insertPhoneKeyworkds(person.getId(),phoneKeywords);
+    return person;
+}
+
+private String phoneKeywords(String phone) {
+    String keywords = this.keywords(phone, 4);
+    System.out.println(keywords.length());
+    return keywords;
+}
+ 
+
+//分词组合加密
+private String keywords(String word, int len) {
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < word.length(); i++) {
+        int start = i;
+        int end = i + len;
+        String sub1 = word.substring(start, end);
+        sb.append(this.encrypt(sub1));
+        if (end == word.length()) {
+            break;
+        }
+    }
+    return sb.toString();
+}
+
+
+public String encrypt(String val) {
+    //这里特别注意一下，对称加密是根据密钥进行加密和解密的，加密和解密的密钥是相同的，一旦泄漏，就无秘密可言，
+    //“fanfu-csdn”就是我自定义的密钥，这里仅作演示使用，实际业务中，这个密钥要以安全的方式存储；
+    byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.DES.getValue(), "fanfu-csdn".getBytes()).getEncoded();
+    SymmetricCrypto aes = new SymmetricCrypto(SymmetricAlgorithm.DES, key);
+    String encryptValue = aes.encryptBase64(val);
+    return encryptValue;
+}
+
+public String decrypt(String val) {
+    //这里特别注意一下，对称加密是根据密钥进行加密和解密的，加密和解密的密钥是相同的，一旦泄漏，就无秘密可言，
+    //“fanfu-csdn”就是我自定义的密钥，这里仅作演示使用，实际业务中，这个密钥要以安全的方式存储；
+    byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.DES.getValue(), "fanfu-csdn".getBytes()).getEncoded();
+    SymmetricCrypto aes = new SymmetricCrypto(SymmetricAlgorithm.DES, key);
+    String encryptValue = aes.decryptStr(val);
+    return encryptValue;
+}
+```
+
+
+
+### 3.3.3、模糊查询
+
+> 模糊查询的时候，对模糊查询关键字进行加密，以加密后的关键字密文为查询条件，查询密文映射表，得到目标数据行的id，再以目标数据行id为查询条件，查询目标数据表；      
+>
+> 根据手机号码的四位进行模糊查询的时候，以加密后模糊查询的关键字为条件，查询 `sys_person_phone_encrypt`表（人员的手机号码分词密文映射表），得到人员信息id；再以人员信息id，查询人员信息表；
+
+```java
+public List<Person> getPersonList(String phoneVal) {
+    if (phoneVal != null) {
+       return this.personDao.queryByPhoneEncrypt(this.encrypt(phoneVal));
+    }
+    return this.personDao.queryList(phoneVal);
+}
+
+
+<select id="queryByPhoneEncrypt" resultMap="personMap">
+    select * from sys_person where id in 
+    (select person_id from sys_person_phone_encrypt
+     where phone_key like concat('%',#{phoneVal},'%'))
+</select>
+```
 
 
 
