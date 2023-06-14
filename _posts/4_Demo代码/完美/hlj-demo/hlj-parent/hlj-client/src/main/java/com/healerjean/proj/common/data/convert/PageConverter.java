@@ -21,12 +21,12 @@ import java.util.stream.Collectors;
  * @date 2023/6/14  13:56.
  */
 @Mapper
-public interface PageCoverter {
+public interface PageConverter {
 
     /**
      * 实例
      */
-    PageCoverter INSTANCE = Mappers.getMapper(PageCoverter.class);
+    PageConverter INSTANCE = Mappers.getMapper(PageConverter.class);
 
 
     /**

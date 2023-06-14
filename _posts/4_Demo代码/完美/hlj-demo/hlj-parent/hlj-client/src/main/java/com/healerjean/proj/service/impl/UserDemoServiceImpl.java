@@ -1,10 +1,9 @@
 package com.healerjean.proj.service.impl;
 
-import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.healerjean.proj.common.data.bo.PageBO;
 import com.healerjean.proj.common.data.bo.PageQueryBO;
-import com.healerjean.proj.common.data.convert.PageCoverter;
+import com.healerjean.proj.common.data.convert.PageConverter;
 import com.healerjean.proj.common.enums.SystemEnum;
 import com.healerjean.proj.data.bo.UserDemoBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * UserService
@@ -109,6 +107,6 @@ public class UserDemoServiceImpl implements UserDemoService {
     public PageBO<UserDemoBO> queryUserDemoPage(PageQueryBO<UserDemoQueryBO> pageQuery) {
         Page<UserDemo> page = userDemoManager.queryUserDemoPage(pageQuery);
         List<UserDemoBO> userDemoBos = UserConverter.INSTANCE.covertUserDemoPoToBoList(page.getRecords());
-        return PageCoverter.INSTANCE.covertPageBoToBo(page, userDemoBos);
+        return PageConverter.INSTANCE.covertPageBoToBo(page, userDemoBos);
     }
 }
