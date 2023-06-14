@@ -22,7 +22,7 @@ description: SpringBoot中Redis配置
 
 ## 1.1、自定义变量 
 
-### 1.1.1、配置`application.properties`
+### 1.1.1、配置 `application.properties`
 
 ```properties
 ####################################
@@ -154,9 +154,9 @@ public class RedisConfig {
 
 
 
-## 1、  CacheService
+## 1、  `CacheService`
 
-### 1.1、CacheService
+### 1.1、`CacheService`
 
 ```java
 package com.healerjean.proj.service.system.cache;
@@ -346,7 +346,7 @@ public class CacheServiceImpl implements CacheService {
 
 
 
-## 2、CacheService
+## 2、`CacheService`
 
 ```java
 @Service

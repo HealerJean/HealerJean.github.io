@@ -26,7 +26,7 @@ description: SpringBoot整合Mybatis-Plus
 
 ```xml
 <!--mybatis-plus-->
-<mybatis-plus-boot-starter.version>3.3.1.tmp</mybatis-plus-boot-starter.version>
+<mybatis-plus-boot-starter.version>3.4.1</mybatis-plus-boot-starter.version>
 
 <!--mybatis-plus-->
 <dependency>
@@ -69,7 +69,7 @@ description: SpringBoot整合Mybatis-Plus
         <!--数据源 注意提高下面的版本，否则不支持LocalDate-->
         <com-alibaba-druid.version>1.1.9</com-alibaba-druid.version>
         <!--mybatis plus-->
-        <mybatis-plus-boot-starter.version>3.3.1.tmp</mybatis-plus-boot-starter.version>
+        <mybatis-plus-boot-starter.version>3.4.1</mybatis-plus-boot-starter.version>
     </properties>
 
     <modules>
@@ -311,13 +311,27 @@ mybatis-plus.id-type: 0
 // @TableId(value = "id", type = IdType.AUTO)
 //private Long id;
     
- #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+ #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断" （默认2）
 mybatis-plus.field-strategy: 2
  #数据库大写下划线转换
 mybatis-plus.capital-mode: true
 mybatis-plus.refresh-mapper: true
 
 ```
+
+| 配置 |      |
+| ---- | ---- |
+|      |      |
+|      |      |
+|      |      |
+|      |      |
+|      |      |
+|      |      |
+|      |      |
+|      |      |
+|      |      |
+
+
 
 ### 1.2.2、`application-local.properties`
 

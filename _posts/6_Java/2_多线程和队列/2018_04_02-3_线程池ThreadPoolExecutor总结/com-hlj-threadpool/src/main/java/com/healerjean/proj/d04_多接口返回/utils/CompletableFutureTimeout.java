@@ -68,8 +68,16 @@ public class CompletableFutureTimeout {
             return throwable;
         }
     }
+
     /**
      * 哪个先完成 就apply哪一个结果 这是一个关键的API,exceptionally出现异常后返回默认值
+     * @param future future
+     * @param t 异常返回默认结果
+     * @param to 超时返回默认结果
+     * @param timeout 超时时间
+     * @param unit 时间单位
+     * @return
+     * @param <T>
      */
     public static  <T> CompletableFuture<T> completeOnTimeout( CompletableFuture<T> future,T t, T to, long timeout, TimeUnit unit) {
         final CompletableFuture<T> timeoutFuture = timeoutAfter(timeout, unit);
