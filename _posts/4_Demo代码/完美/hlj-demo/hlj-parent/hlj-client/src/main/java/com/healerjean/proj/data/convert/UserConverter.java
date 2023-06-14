@@ -1,7 +1,7 @@
 package com.healerjean.proj.data.convert;
 
 import com.healerjean.proj.common.data.bo.PageQueryBO;
-import com.healerjean.proj.common.data.convert.PageCoverter;
+import com.healerjean.proj.common.data.convert.PageConverter;
 import com.healerjean.proj.common.data.req.PageReq;
 import com.healerjean.proj.data.bo.UserDemoBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
@@ -129,7 +129,7 @@ public interface UserConverter {
         userDemoQueryBO.setLikeName(req.getLikeName());
         userDemoQueryBO.setLikePhone(req.getLikePhone());
         userDemoQueryBO.setSelectFields(req.getSelectFields());
-        userDemoQueryBO.setOrderByList(PageCoverter.INSTANCE.coverOrderByDtoToBoList(req.getOrderByList()));
+        userDemoQueryBO.setOrderByList(PageConverter.INSTANCE.coverOrderByDtoToBoList(req.getOrderByList()));
         return userDemoQueryBO;
 
     }
@@ -168,7 +168,7 @@ public interface UserConverter {
             return null;
         }
         UserDemoQueryBO result = Optional.ofNullable(covertUserDemoQueryReqToBo(req.getData())).orElse(new UserDemoQueryBO());
-        PageQueryBO<UserDemoQueryBO> pageQuery = PageCoverter.INSTANCE.pageQueryDtoToBo(req.getPageQuery());
+        PageQueryBO<UserDemoQueryBO> pageQuery = PageConverter.INSTANCE.pageQueryDtoToBo(req.getPageQuery());
         pageQuery.setData(result);
         return pageQuery;
     }

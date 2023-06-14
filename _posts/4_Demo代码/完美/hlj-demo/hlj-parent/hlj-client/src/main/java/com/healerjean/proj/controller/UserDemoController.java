@@ -9,7 +9,7 @@ import com.healerjean.proj.common.data.ValidateGroup;
 import com.healerjean.proj.common.data.bo.PageBO;
 import com.healerjean.proj.common.data.bo.PageQueryBO;
 import com.healerjean.proj.common.data.bo.ResponseBean;
-import com.healerjean.proj.common.data.convert.PageCoverter;
+import com.healerjean.proj.common.data.convert.PageConverter;
 import com.healerjean.proj.common.data.req.PageReq;
 import com.healerjean.proj.common.data.vo.PageVO;
 import com.healerjean.proj.data.bo.UserDemoBO;
@@ -107,7 +107,7 @@ public class UserDemoController {
         PageQueryBO<UserDemoQueryBO> userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryPageReqToBo(req);
         PageBO<UserDemoBO> pageBo = userDemoService.queryUserDemoPage(userDemoPageQuery);
         List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(pageBo.getList());
-        PageVO<UserDemoVO> pageVo = PageCoverter.INSTANCE.covertPageBoToVo(pageBo, userDemoVos);
+        PageVO<UserDemoVO> pageVo = PageConverter.INSTANCE.covertPageBoToVo(pageBo, userDemoVos);
         return ResponseBean.buildSuccess(pageVo);
     }
 
