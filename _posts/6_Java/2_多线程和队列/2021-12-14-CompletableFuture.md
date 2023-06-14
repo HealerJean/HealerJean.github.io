@@ -53,9 +53,7 @@ public void test1() {
 
 ## 2.3、`handle`
 
-> 既可以感知异常，也可以返回默认数据，是whenComplete和exceptionally的结合
-
-
+> 既可以感知异常，也可以返回默认数据，是 `whenComplete` 和 `exceptionally`的结合
 
 ```java
 /**
@@ -456,7 +454,9 @@ public void test6(){
 }
 ```
 
-# 5、异步超时设置
+# 5、异步超时
+
+## 5.1、`CompletableFutureTimeout`
 
 > `java8` 中 `CompletableFuture` 异步处理超时的方法     
 >
@@ -466,83 +466,91 @@ public void test6(){
 
 
 
-## 5.1、`CompletableFutureTimeout`
+### 5.1.1、`CompletableFutureTimeout`
 
-> 注意：异常会被吃掉，返回超时的默认值。我就猜想，如果代码无法保证，既然有超时这种默认值，那么本身的业务异常应该毫无意义
+> **注意：异常会被吃掉，返回超时的默认值。我就猜想，如果代码无法保证，既然有超时这种默认值，那么本身的业务异常应该毫无意义**
 
 ```java
 @Slf4j
 public class CompletableFutureTimeout {
 
-    static final class Delayer {
-        static ScheduledFuture<?> delay(Runnable command, long delay,
-                                        TimeUnit unit) {
-            return delayer.schedule(command, delay, unit);
-        }
+  static final class Delayer {
+      static ScheduledFuture<?> delay(Runnable command, long delay,
+                                      TimeUnit unit) {
+          return delayer.schedule(command, delay, unit);
+      }
 
-        static final class DaemonThreadFactory implements ThreadFactory {
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread t = new Thread(r);
-                t.setDaemon(true);
-                t.setName("CompletableFutureDelayScheduler");
-                return t;
-            }
-        }
+      static final class DaemonThreadFactory implements ThreadFactory {
+          @Override
+          public Thread newThread(Runnable r) {
+              Thread t = new Thread(r);
+              t.setDaemon(true);
+              t.setName("CompletableFutureDelayScheduler");
+              return t;
+          }
+      }
 
-        static final ScheduledThreadPoolExecutor delayer;
+      static final ScheduledThreadPoolExecutor delayer;
 
-        // 注意，这里使用一个线程就可以搞定 因为这个线程并不真的执行请求 而是仅仅抛出一个异常
-        static {
-            (delayer = new ScheduledThreadPoolExecutor(
-                    1, new CompletableFutureTimeout.Delayer.DaemonThreadFactory())).
-                    setRemoveOnCancelPolicy(true);
-        }
-    }
+      // 注意，这里使用一个线程就可以搞定 因为这个线程并不真的执行请求 而是仅仅抛出一个异常
+      static {
+          (delayer = new ScheduledThreadPoolExecutor(
+                  1, new CompletableFutureTimeout.Delayer.DaemonThreadFactory())).
+                  setRemoveOnCancelPolicy(true);
+      }
+  }
 
-    static final class FutureTimeOutException extends RuntimeException {
+  static final class FutureTimeOutException extends RuntimeException {
 
-        public FutureTimeOutException() {
-        }
-    }
+      public FutureTimeOutException() {
+      }
+  }
 
-    static class ExceptionUtils {
-        public static Throwable extractRealException(Throwable throwable) {
-            //这里判断异常类型是否为CompletionException、ExecutionException，如果是则进行提取，否则直接返回。
-            if (throwable instanceof CompletionException || throwable instanceof ExecutionException) {
-                if (throwable.getCause() != null) {
-                    return throwable.getCause();
-                }
-            }
-            return throwable;
-        }
-    }
-    /**
-     * 哪个先完成 就apply哪一个结果 这是一个关键的API,exceptionally出现异常后返回默认值
-     */
-    public static  <T> CompletableFuture<T> completeOnTimeout( CompletableFuture<T> future,T t, T to, long timeout, TimeUnit unit) {
-        final CompletableFuture<T> timeoutFuture = timeoutAfter(timeout, unit);
-        return future.applyToEither(timeoutFuture, Function.identity()).exceptionally(throwable -> {
+  static class ExceptionUtils {
+      public static Throwable extractRealException(Throwable throwable) {
+          //这里判断异常类型是否为CompletionException、ExecutionException，如果是则进行提取，否则直接返回。
+          if (throwable instanceof CompletionException || throwable instanceof ExecutionException) {
+              if (throwable.getCause() != null) {
+                  return throwable.getCause();
+              }
+          }
+          return throwable;
+      }
+  }
 
-            if (ExceptionUtils.extractRealException(throwable) instanceof FutureTimeOutException){
-                return to;
-            }
-            return t;
-        });
-    }
+  /**
+   * 哪个先完成 就apply哪一个结果 这是一个关键的API,exceptionally出现异常后返回默认值
+   * @param future future
+   * @param t 异常返回默认结果
+   * @param to 超时返回默认结果
+   * @param timeout 超时时间
+   * @param unit 时间单位
+   * @return
+   * @param <T>
+   */
+  public static  <T> CompletableFuture<T> completeOnTimeout( CompletableFuture<T> future,T t, T to, long timeout, TimeUnit unit) {
+      final CompletableFuture<T> timeoutFuture = timeoutAfter(timeout, unit);
+      return future.applyToEither(timeoutFuture, Function.identity()).exceptionally(throwable -> {
+
+          if (ExceptionUtils.extractRealException(throwable) instanceof FutureTimeOutException){
+              return to;
+          }
+          return t;
+      });
+  }
 
 
-    private static <T> CompletableFuture<T> timeoutAfter(long timeout, TimeUnit unit) {
-        CompletableFuture<T> result = new CompletableFuture<T>();
-        CompletableFutureTimeout.Delayer.delayer.schedule(() -> result.completeExceptionally(new FutureTimeOutException()), timeout, unit);
-        return result;
-    }
+  private static <T> CompletableFuture<T> timeoutAfter(long timeout, TimeUnit unit) {
+      CompletableFuture<T> result = new CompletableFuture<T>();
+      CompletableFutureTimeout.Delayer.delayer.schedule(() -> result.completeExceptionally(new FutureTimeOutException()), timeout, unit);
+      return result;
+  }
 
 
 }
 ```
 
-## 5.2、测试
+### 5.1.2、测试
 
 ```java
 @Test
@@ -597,7 +605,137 @@ public void test() throws ExecutionException, InterruptedException {
   Thread.sleep(500000L);
 }
 
+
+20:36:13.418 [ForkJoinPool.commonPool-worker-11] INFO com.healerjean.proj.d04_多接口返回.TestMain - task3 start 
+20:36:13.418 [ForkJoinPool.commonPool-worker-2] INFO com.healerjean.proj.d04_多接口返回.TestMain - task2 start 
+20:36:13.418 [ForkJoinPool.commonPool-worker-9] INFO com.healerjean.proj.d04_多接口返回.TestMain - task1 start 
+20:36:13.437 [ForkJoinPool.commonPool-worker-9] INFO com.healerjean.proj.d04_多接口返回.TestMain - task1 end 
+20:36:14.431 [main] INFO com.healerjean.proj.d04_多接口返回.TestMain - result1: TimeOutException, cost:1121
+20:36:14.435 [main] INFO com.healerjean.proj.d04_多接口返回.TestMain - result2: -1, cost:1121
+20:36:14.435 [main] INFO com.healerjean.proj.d04_多接口返回.TestMain - result3: Exception, cost:1121
+20:36:16.429 [ForkJoinPool.commonPool-worker-2] INFO com.healerjean.proj.d04_多接口返回.TestMain - task2 end 
+
 ```
+
+
+
+## 5.2、`completableFuture`
+
+```java
+@Test
+  public void testTimeOut2() {
+      CompletableFuture<String> task1 = CompletableFuture.supplyAsync(() -> {
+          log.info("task1 start ");
+          try {
+              Thread.sleep(10);
+          } catch (InterruptedException e) {
+              e.printStackTrace();
+          }
+          log.info("task1 end ");
+          return "task1 success";
+      });
+
+      CompletableFuture<String> task3 = CompletableFuture.supplyAsync(() -> {
+          log.info("task3 start ");
+          try {
+              Thread.sleep(3500);
+          } catch (InterruptedException e) {
+              e.printStackTrace();
+          }
+          log.info("task3 end ");
+          return "task3 success";
+      });
+
+
+      CompletableFuture<String>[] allCheckFuture = new CompletableFuture[]{
+              task1,
+              task3};
+
+      ThreadPoolTaskExecutor threadPoolTaskExecutor = threadPoolTaskExecutor();
+      Map<Integer, String> map = new ConcurrentHashMap<>();
+      CompletableFuture<Void> completableFuture = 
+        CompletableFuture.runAsync(() -> allCheckFutureResult(map, 
+                                                              allCheckFuture), 
+                                   threadPoolTaskExecutor);
+      int timeOut = 50;
+      try {
+          completableFuture.get(timeOut, TimeUnit.MILLISECONDS);
+      } catch (TimeoutException e) {
+          log.info("任务超时");
+      } catch (Exception e) {
+          log.error("失败", e);
+      }
+      log.info("map:{}", map);
+  }
+
+
+20:53:23.930 [main] INFO com.healerjean.proj.d04_多接口返回.TestMain - Executor - threadPoolTaskExecutor injected!
+20:53:23.984 [main] INFO com.healerjean.proj.d04_多接口返回.TestMain - 任务超时
+20:53:23.984 [main] INFO com.healerjean.proj.d04_多接口返回.TestMain - map:{0=task1 success}
+```
+
+
+
+
+
+```java
+/**
+ * 试算超时
+ *
+ * @param allCheckFuture allCheckFuture
+ * @return MarginCheckBO
+ */
+public MarginCheckContextBO trialAllCheckFutureResult(CompletableFuture<MarginCheckContextBO>[] allCheckFuture) {
+    MarginCheckContextBO marginCheck = new MarginCheckContextBO();
+    CompletableFuture<MarginEnum.InsuredFailEnum> insureCheckFuture = CompletableFuture.supplyAsync(() -> allCheckFutureResult(allCheckFuture), threadPoolTaskExecutor);
+    int timeOut = 3;
+    try {
+        MarginEnum.InsuredFailEnum insuredFailEnum = insureCheckFuture.get(timeOut, TimeUnit.SECONDS);
+        marginCheck.setInsuredFailEnum(insuredFailEnum);
+    } catch (TimeoutException e) {
+        log.warn("[MarginService#premiumTrial] 商家试算验超时3s，直接算费");
+        marginCheck.setTrialTimeOut(Boolean.TRUE);
+        marginCheck.setInsuredFailEnum(MarginEnum.InsuredFailEnum.SUCCESSFUL);
+    } catch (Exception e) {
+        log.error("[MarginService#premiumTrial] 试算失败", e);
+        throw new AppRunException(e.getMessage());
+    }
+    return marginCheck;
+
+}
+```
+
+
+
+```java
+    /**
+     * 获取线程池结果
+     *
+     * @param allCheckFuture allCheckFuture
+     * @return MarginEnum.InsuredFailEnum
+     */
+    public MarginEnum.InsuredFailEnum allCheckFutureResult(CompletableFuture<MarginCheckContextBO>[] allCheckFuture) {
+        for (CompletableFuture<MarginCheckContextBO> completableFuture : allCheckFuture) {
+            if (Objects.isNull(completableFuture)) {
+                continue;
+            }
+            try {
+                MarginCheckContextBO marginCheckContextBo = completableFuture.get();
+                if (MarginEnum.InsuredFailEnum.SUCCESSFUL != marginCheckContextBo.getInsuredFailEnum()) {
+                    return marginCheckContextBo.getInsuredFailEnum();
+                }
+            } catch (Exception e) {
+                log.error("[MarginService#vendorInsureCheck] ERROR", e);
+                throw new AppRunException(e.getMessage());
+            }
+        }
+        return MarginEnum.InsuredFailEnum.SUCCESSFUL;
+    }
+```
+
+
+
+
 
 
 
@@ -790,7 +928,7 @@ CompletableFuture<String> result = cf6.thenApply(v -> {
 
 ## 6.4、`CompletbleFuture`  原理
 
-> `CompletableFuture` 中包含两个字段：**`result`** 和 **`stack`**。 `result` 用于存储当前 `CF` 的结果，`stack`（`Completion`）表示当前`CF`完成后需要触发的依赖动作（`Dependency` `Actions`），去触发依赖它的 `CF` 的计算，依赖动作可以有多个（表示有多个依赖它的CF），以栈[`Treiber stack`]的形式存储，`stack` 表示栈顶元素。
+> `CompletableFuture` 中包含两个字段：**`result`** 和 **`stack`**。 `result` 用于存储当前 `CF` 的结果，`stack`（`Completion`）表示当前`CF`完成后需要触发的依赖动作（`Dependency` `Actions`），去触发依赖它的 `CF` 的计算，依赖动作可以有多个（表示有多个依赖它的 `CF`），以栈[`Treiber stack`]的形式存储，`stack` 表示栈顶元素。
 
 
 
@@ -800,7 +938,7 @@ CompletableFuture<String> result = cf6.thenApply(v -> {
 
 这种方式类似“观察者模式”，依赖动作（`Dependency Action`）都封装在一个单独 `Completion`子类中。下面是 `Completion` 类关系结构图。`CompletableFuture`中的每个方法都对应了图中的一个 `Completion` 的子类，`Completion` 本身是**观察者**的基类。
 
-- `UniCompletion` 继承了 `Completion`，是一元依赖的基类，例如 `thenApply` 的实现类`UniApply`就继承自 `UniCompletion`。
+- `UniCompletion` 继承了 `Completion`，是一元依赖的基类，例如 `thenApply` 的实现类 `UniApply`就继承自 `UniCompletion`。
 - `BiCompletion` 继承了 `UniCompletion`，是二元依赖的基类，同时也是多元依赖的基类。例如 `thenCombine`的实现类 `BiRelay`就继承自`BiCompletion`。
 
 ### 6.4.1、设计思想

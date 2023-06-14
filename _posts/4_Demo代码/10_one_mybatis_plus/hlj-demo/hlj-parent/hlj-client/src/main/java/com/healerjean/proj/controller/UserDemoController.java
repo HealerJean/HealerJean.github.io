@@ -25,7 +25,7 @@ public class UserDemoController {
     @Resource
     private UserMapper userMapper;
 
-    @GetMapping(value = "selectById", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "selectById", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseBean selectById(UserDemoDTO userDemoDTO) {
         UserDemo userDemo = userMapper.selectById(userDemoDTO.getId());
@@ -33,7 +33,7 @@ public class UserDemoController {
         return ResponseBean.buildSuccess(userDemo);
     }
 
-    @GetMapping(value = "selectList", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "selectList", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseBean selectList(UserDemoDTO userDemoDTO) {
         List<UserDemo> userDemos = userMapper.selectList(null);
@@ -42,7 +42,7 @@ public class UserDemoController {
     }
 
 
-    @GetMapping(value = "insert", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "insert", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseBean insert(UserDemoDTO userDemoDTO) {
         UserDemo userDemo = new UserDemo();

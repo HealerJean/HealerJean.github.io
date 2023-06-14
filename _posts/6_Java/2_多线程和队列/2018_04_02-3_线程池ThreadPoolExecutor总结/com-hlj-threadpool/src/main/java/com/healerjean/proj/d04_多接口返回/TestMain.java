@@ -3,7 +3,9 @@ package com.healerjean.proj.d04_多接口返回;
 import com.healerjean.proj.d04_多接口返回.utils.CompletableFutureTimeout;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import java.util.*;
 import java.util.concurrent.*;
 
 /**
@@ -377,6 +379,120 @@ public class TestMain {
         log.info("result2: {}, cost:{}", result2, cost);
         log.info("result3: {}, cost:{}", result3, cost);
         Thread.sleep(500000L);
+    }
+
+    public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        // 核心线程数：线程池创建时候初始化的线程数
+        taskExecutor.setCorePoolSize(10);
+        // 最大线程数：只有在缓冲队列满了之后才会申请超过核心线程数的线程
+        taskExecutor.setMaxPoolSize(100);
+        // 缓存队列：用来缓冲执行任务的队列
+        taskExecutor.setQueueCapacity(500);
+        // 线程池维护线程所允许的空闲时间：当超过了核心线程出之外的线程在空闲时间到达之后会被销毁
+        taskExecutor.setKeepAliveSeconds(60);
+        // threadPoolTaskExecutor
+        taskExecutor.setThreadNamePrefix("threadPoolTaskExecutor");
+        // 调度器shutdown被调用时等待当前被调度的任务完成：用来设置线程池关闭的时候等待所有任务都完成再继续销毁其他的Bean
+        taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
+        //该方法用来设置线程池中任务的等待时间:如果超过这个时候还没有销毁就强制销毁，以确保应用最后能够被关闭，而不是阻塞住
+        taskExecutor.setAwaitTerminationSeconds(60);
+        taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        taskExecutor.initialize();
+        log.info("Executor - threadPoolTaskExecutor injected!");
+        return taskExecutor;
+    }
+
+    @Test
+    public void testTimeOut() throws InterruptedException, ExecutionException {
+        ThreadPoolTaskExecutor threadPoolTaskExecutor = threadPoolTaskExecutor();
+
+        CompletionService<String> completionService = new ExecutorCompletionService<>(threadPoolTaskExecutor);
+        List<Future<String>> futures = Arrays.asList(
+                completionService.submit(() -> {
+                    Thread.sleep(5000);
+                    return "5000";
+                }),
+                completionService.submit(() -> {
+                    Thread.sleep(1000);
+                    return "1000";
+                }),
+                completionService.submit(() -> {
+                    Thread.sleep(6000);
+                    return "6000";
+                })
+        );
+
+        int timeOut = 2500;
+        for (int i = 0; i < futures.size(); i++) {
+            Future<String> future = completionService.poll(timeOut, TimeUnit.MILLISECONDS);
+            if (future == null){
+                System.out.println("获取任务超时");
+                continue;
+            }
+            System.out.println(future.get());
+        }
+    }
+
+
+    @Test
+    public void testTimeOut2() {
+        CompletableFuture<String> task1 = CompletableFuture.supplyAsync(() -> {
+            log.info("task1 start ");
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log.info("task1 end ");
+            return "task1 success";
+        });
+
+        CompletableFuture<String> task3 = CompletableFuture.supplyAsync(() -> {
+            log.info("task3 start ");
+            try {
+                Thread.sleep(3500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            log.info("task3 end ");
+            return "task3 success";
+        });
+
+
+        CompletableFuture<String>[] allCheckFuture = new CompletableFuture[]{
+                task1,
+                task3};
+
+        ThreadPoolTaskExecutor threadPoolTaskExecutor = threadPoolTaskExecutor();
+        Map<Integer, String> map = new ConcurrentHashMap<>();
+        CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(() -> allCheckFutureResult(map, allCheckFuture), threadPoolTaskExecutor);
+        int timeOut = 50;
+        try {
+            completableFuture.get(timeOut, TimeUnit.MILLISECONDS);
+        } catch (TimeoutException e) {
+            log.info("任务超时");
+        } catch (Exception e) {
+            log.error("失败", e);
+        }
+        log.info("map:{}", map);
+    }
+
+    /**
+     * 获取线程池结果
+     *
+     * @param allCheckFuture allCheckFuture
+     * @return MarginEnum.InsuredFailEnum
+     */
+    public void allCheckFutureResult( Map<Integer, String> result, CompletableFuture<String>[] allCheckFuture) {
+        for (int i = 0; i < allCheckFuture.length; i++) {
+            CompletableFuture<String>  completableFuture =  allCheckFuture[i];
+            try {
+                result.put(i, completableFuture.get());
+            } catch (Exception e) {
+                log.error("[MarginService#vendorInsureCheck] ERROR", e);
+            }
+        }
     }
 
 
