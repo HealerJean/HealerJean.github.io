@@ -64,10 +64,10 @@ public class RedisCacheAspect {
         String r2mKey = redisCache.value().join(paramKey);
         String value = redisService.get(r2mKey);
         if (StringUtils.isNotBlank(value)) {
-            return JsonUtils.toObject(value, method.getGenericReturnType().getClass());
+            return JsonUtils.toObject(value, method.getGenericReturnType());
         }
         Object proceed = joinPoint.proceed();
-        redisService.set(r2mKey, JsonUtils.toJsonString(proceed), redisCache.value().getExpireSec());
+        redisService.set(r2mKey, JsonUtils.toString(proceed), redisCache.value().getExpireSec());
         return proceed;
     }
 }

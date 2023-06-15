@@ -15,7 +15,7 @@ public interface CodeEnum {
         ERROR_CODE_SUCCESS("00000", "成功"),
         ERROR_CODE_PARAMS_ERROR("10000", "参数错误"),
         ERROR_CODE_BUSINESS_ERROR("20000", "业务处理失败"),
-        ERROR_CODE_PRC_ERROR("30000", "接口调处理失败"),
+        ERROR_CODE_PRC_ERROR("30000", "接口调用失败"),
         ERROR_CODE_FAIL("99999", "系统太火爆了，请稍后重试!"),
         ;
         private final String code;
@@ -69,33 +69,6 @@ public interface CodeEnum {
         public String getShowMsg() {
             return showMsg;
         }
-    }
-
-
-    enum ParamsErrorEnum implements CodeEnum {
-
-        ERROR_CODE_10000("10000", "参数错误"),
-        ERROR_CODE_10001("10001", "不支持的请求方式"),
-        ERROR_CODE_10002("10002", "参数格式异常"),
-
-        ;
-        private final String code;
-
-        private final String msg;
-
-        ParamsErrorEnum(String code, String msg) {
-            this.code = code;
-            this.msg = msg;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-        public String getMsg() {
-            return msg;
-        }
-
     }
 
 

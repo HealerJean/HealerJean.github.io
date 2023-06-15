@@ -1,17 +1,12 @@
-package com.healerjean.proj.utils;
+package com.healerjean.proj.utils.date;
 
-import java.sql.Timestamp;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
-
-/**
- * @ClassName DateUtils
- * @Author TD
- * @Date 2019/4/19 17:24
- * @Description 时间工具
- */
 
 /**
  * DateUtils
@@ -181,13 +176,22 @@ public class DateUtils {
     }
 
     /**
-     * toTimeInMills
+     * 获取今天的起始时间
      *
      * @param localDateTime localDateTime
-     * @return Long
+     * @return LocalDateTime
      */
-    public static Long toTimeInMills(LocalDateTime localDateTime) {
-        return Optional.ofNullable(localDateTime).map(item -> Timestamp.valueOf(localDateTime).getTime()).orElse(null);
+    public static LocalDateTime getStartDay(LocalDateTime localDateTime) {
+        return LocalDateTime.of(localDateTime.toLocalDate(), LocalTime.MIN);
+    }
 
+    /**
+     * 获取今天的最大时间
+     *
+     * @param localDateTime localDateTime
+     * @return LocalDateTime
+     */
+    public static LocalDateTime getEndDay(LocalDateTime localDateTime) {
+        return LocalDateTime.of(localDateTime.toLocalDate(), LocalTime.MAX);
     }
 }
