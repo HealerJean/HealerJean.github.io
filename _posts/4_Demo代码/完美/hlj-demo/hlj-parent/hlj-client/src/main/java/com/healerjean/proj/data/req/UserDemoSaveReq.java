@@ -21,10 +21,6 @@ public class UserDemoSaveReq implements Serializable {
     private static final long serialVersionUID = 6956929596959647085L;
 
     /**
-     * id
-     */
-    private Long id;
-    /**
      * 名字
      */
     @NotBlank(message = "名字 不能为空")
@@ -60,7 +56,7 @@ public class UserDemoSaveReq implements Serializable {
     /**
      * 1 有效 0 实现
      */
-    @CollectionIncluded(message = "必须是1或者0", collections = "0,1")
+    @CollectionIncluded(message = "必须是1或者0", collections = "0,1", groups = {ValidateGroup.SaveUserDemo.class})
     @NotNull(message = "状态 不能为空")
     private Integer validFlag;
 }

@@ -24,6 +24,8 @@ public class UserDemoVO implements Serializable {
      */
     private static final long serialVersionUID = 7590059129464368394L;
 
+    public UserDemoVO() {
+    }
 
     /**
      * Id

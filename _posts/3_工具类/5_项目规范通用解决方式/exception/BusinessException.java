@@ -1,61 +1,69 @@
-package com.healerjean.proj.exception;
+package com.healerjean.proj.exceptions;
 
 
-import com.healerjean.proj.enums.ResponseEnum;
+import com.healerjean.proj.common.enums.CodeEnum;
 
 /**
- * 系统业务异常
+ * 业务异常 BusinessException
+ *
+ * @author zhangyujin
+ * @date 2023/5/22  17:02.
  */
 public class BusinessException extends RuntimeException {
 
-    private int code;
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 799633539625676004L;
 
-    public BusinessException(int code) {
-        this.code = code;
+    /**
+     * 返回错误码
+     */
+    private  String code;
+
+    /**
+     * 展示信息
+     */
+    private  String showMsg;
+
+
+    /**
+     * BusinessException
+     *
+     * @param businessErrorEnum businessErrorEnum
+     */
+    public BusinessException(CodeEnum.BusinessErrorEnum businessErrorEnum) {
+        super(businessErrorEnum.getMsg());
+        this.code = businessErrorEnum.getCode();
+        this.showMsg = businessErrorEnum.getShowMsg();
+
     }
 
+    /**
+     * BusinessException
+     *
+     * @param message message
+     */
     public BusinessException(String message) {
         super(message);
-        this.code = ResponseEnum.逻辑错误.code;
-    }
-
-    public BusinessException(int code, String message) {
-        super(message);
-        this.code = code;
-    }
-
-    public BusinessException(ResponseEnum responseEnum) {
-        super(responseEnum.msg);
-        this.code = responseEnum.code ;
-    }
-
-    public BusinessException(ResponseEnum responseEnum,String message) {
-        super(message);
-        this.code = responseEnum.code ;
-    }
-
-    public BusinessException(String message, Throwable cause) {
-        super(message, cause);
-        this.code = ResponseEnum.逻辑错误.code;
-    }
-
-    public BusinessException(int code ,Throwable e) {
-        super(e);
-        this.code = code;
-    }
-
-    public BusinessException(ResponseEnum responseEnum, Throwable t) {
-        super(responseEnum.msg, t);
-        this.code = responseEnum.code;
+        this.code = CodeEnum.ErrorCodeEnum.ERROR_CODE_BUSINESS_ERROR.getCode();
+        this.showMsg = message;
     }
 
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getShowMsg() {
+        return showMsg;
+    }
+
+    public void setShowMsg(String showMsg) {
+        this.showMsg = showMsg;
+    }
 }

@@ -8,7 +8,7 @@ import com.healerjean.proj.common.contants.RedisConstants;
 import com.healerjean.proj.common.data.ValidateGroup;
 import com.healerjean.proj.common.data.bo.PageBO;
 import com.healerjean.proj.common.data.bo.PageQueryBO;
-import com.healerjean.proj.common.data.bo.ResponseBean;
+import com.healerjean.proj.common.data.bo.BaseRes;
 import com.healerjean.proj.common.data.convert.PageConverter;
 import com.healerjean.proj.common.data.req.PageReq;
 import com.healerjean.proj.common.data.vo.PageVO;
@@ -18,6 +18,7 @@ import com.healerjean.proj.data.convert.UserConverter;
 import com.healerjean.proj.data.req.UserDemoQueryReq;
 import com.healerjean.proj.data.req.UserDemoSaveReq;
 import com.healerjean.proj.data.vo.UserDemoVO;
+import com.healerjean.proj.exceptions.ParameterException;
 import com.healerjean.proj.service.UserDemoService;
 import com.healerjean.proj.utils.JsonUtils;
 import com.healerjean.proj.utils.validate.ValidateUtils;
@@ -48,33 +49,33 @@ public class UserDemoController {
     @LogIndex
     @PostMapping("user/save")
     @ResponseBody
-    public ResponseBean<Boolean> saveUserDemo(@ElParam("#req.name") @RequestBody UserDemoSaveReq req) {
+    public BaseRes<Boolean> saveUserDemo(@ElParam("#req.name") @RequestBody UserDemoSaveReq req) {
         String errorMessage = ValidateUtils.validate(req, ValidateGroup.SaveUserDemo.class);
         if (!ValidateUtils.COMMON_SUCCESS.equals(errorMessage)) {
-            return ResponseBean.buildParamsFailure(errorMessage);
+            throw new ParameterException(errorMessage);
         }
         UserDemoBO userDemoBo = UserConverter.INSTANCE.covertUserDemoSaveReqToBo(req);
         boolean success = userDemoService.saveUserDemo(userDemoBo);
-        return ResponseBean.buildSuccess(success);
+        return BaseRes.buildSuccess(success);
     }
 
     @ApiOperation(value = "用户信息-删除", notes = "用户信息-删除-描述")
     @LogIndex
     @DeleteMapping("user/{id}")
-    public ResponseBean<Boolean> deleteUserDemo(@PathVariable Long id) {
+    public BaseRes<Boolean> deleteUserDemo(@PathVariable Long id) {
         boolean success = userDemoService.deleteUserDemo(id);
-        return ResponseBean.buildSuccess(success);
+        return BaseRes.buildSuccess(success);
     }
 
     @ApiOperation(value = "用户信息-修改", notes = "用户信息-修改-描述")
     @LogIndex
     @PutMapping("user/{id}")
     @ResponseBody
-    public ResponseBean<Boolean> updateUserDemo(@NotNull @PathVariable Long id, @RequestBody UserDemoSaveReq req) {
+    public BaseRes<Boolean> updateUserDemo(@NotNull @PathVariable Long id, @RequestBody UserDemoSaveReq req) {
         UserDemoBO userDemoBo = UserConverter.INSTANCE.covertUserDemoSaveReqToBo(req);
         userDemoBo.setId(id);
         boolean success = userDemoService.updateUserDemo(userDemoBo);
-        return ResponseBean.buildSuccess(success);
+        return BaseRes.buildSuccess(success);
     }
 
     @ApiOperation(value = "用户信息-单条查询", notes = "用户信息-单条查询-描述")
@@ -82,33 +83,33 @@ public class UserDemoController {
     @LogIndex
     @GetMapping("user/{userId}")
     @ResponseBody
-    public ResponseBean<UserDemoVO> selectById(@ElParam("userId") @PathVariable("userId") Long userId) {
+    public BaseRes<UserDemoVO> selectById(@ElParam @PathVariable("userId") Long userId) {
         UserDemoBO userDemoBo = userDemoService.selectById(userId);
         UserDemoVO userDemoVo = UserConverter.INSTANCE.covertUserDemoBoToVo(userDemoBo);
-        return ResponseBean.buildSuccess(userDemoVo);
+        return BaseRes.buildSuccess(userDemoVo);
     }
 
     @ApiOperation(value = "用户信息-列表查询", notes = "用户信息-列表查询-描述")
     @LogIndex
     @GetMapping("user/list")
     @ResponseBody
-    public ResponseBean<List<UserDemoVO>> queryUserDemoList(UserDemoQueryReq req) {
+    public BaseRes<List<UserDemoVO>> queryUserDemoList(UserDemoQueryReq req) {
         UserDemoQueryBO userDemoQueryBo = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
         List<UserDemoBO> userDemoBos = userDemoService.queryUserDemoList(userDemoQueryBo);
         List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(userDemoBos);
-        return ResponseBean.buildSuccess(userDemoVos);
+        return BaseRes.buildSuccess(userDemoVos);
     }
 
     @ApiOperation(value = "用户信息-分页查询", notes = "用户信息-分页查询-描述")
     @LogIndex
     @PostMapping("user/page")
     @ResponseBody
-    public ResponseBean<PageVO<UserDemoVO>> queryUserDemoPage(@RequestBody PageReq<UserDemoQueryReq> req) {
+    public BaseRes<PageVO<UserDemoVO>> queryUserDemoPage(@RequestBody PageReq<UserDemoQueryReq> req) {
         PageQueryBO<UserDemoQueryBO> userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryPageReqToBo(req);
         PageBO<UserDemoBO> pageBo = userDemoService.queryUserDemoPage(userDemoPageQuery);
         List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(pageBo.getList());
         PageVO<UserDemoVO> pageVo = PageConverter.INSTANCE.covertPageBoToVo(pageBo, userDemoVos);
-        return ResponseBean.buildSuccess(pageVo);
+        return BaseRes.buildSuccess(pageVo);
     }
 
 
@@ -120,6 +121,6 @@ public class UserDemoController {
         UserDemoQueryBO userDemoQueryBo = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
         List<UserDemoBO> userDemoBos = userDemoService.queryUserDemoList(userDemoQueryBo);
         List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(userDemoBos);
-        return JsonUtils.toJsonStringWithSensitivity(ResponseBean.buildSuccess(userDemoVos));
+        return JsonUtils.toJsonStringWithSensitivity(BaseRes.buildSuccess(userDemoVos));
     }
 }

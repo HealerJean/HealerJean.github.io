@@ -9,7 +9,7 @@ import com.healerjean.proj.data.po.UserDemo;
 import com.healerjean.proj.data.req.UserDemoQueryReq;
 import com.healerjean.proj.data.req.UserDemoSaveReq;
 import com.healerjean.proj.data.vo.UserDemoVO;
-import com.healerjean.proj.utils.DateUtils;
+import com.healerjean.proj.utils.date.DateUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.util.CollectionUtils;

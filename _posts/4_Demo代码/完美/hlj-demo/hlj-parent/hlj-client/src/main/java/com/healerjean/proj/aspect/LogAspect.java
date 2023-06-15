@@ -68,7 +68,7 @@ public class LogAspect {
                 map.put("res", result);
             }
             map.put("timeCost", timeCost + "ms");
-            log.info("{}, aspectLog:{}", className + "." + methodName, JsonUtils.toJsonString(map));
+            log.info("{}, aspectLog:{}", className + "." + methodName, JsonUtils.toString(map));
         }
         return result;
     }

@@ -1,15 +1,14 @@
-package com.healerjean.proj.config;
+package com.healerjean.proj.controller;
 
-import com.healerjean.proj.dto.ResponseBean;
-import com.healerjean.proj.enums.ResponseEnum;
-import com.healerjean.proj.exception.BusinessException;
-import com.healerjean.proj.exception.ParameterErrorException;
-import com.healerjean.proj.utils.JsonUtils;
+import com.healerjean.proj.common.data.bo.BaseRes;
+import com.healerjean.proj.common.enums.CodeEnum;
+import com.healerjean.proj.exceptions.BusinessException;
+import com.healerjean.proj.exceptions.ParameterException;
+import com.healerjean.proj.exceptions.RpcException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -21,15 +20,12 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.UnexpectedTypeException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * @author HealerJean
- * @version 1.0v
- * @ClassName ControllerHandleExceptionConfig
- * @date 2019/5/31  20:19.
- * @Description
+ * ControllerHandleConfig
+ *
+ * @author zhangyujin
+ * @date 2023/6/15  10:55.
  */
 @Slf4j
 @ControllerAdvice
@@ -40,9 +36,9 @@ public class ControllerHandleConfig {
      */
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
-    public ResponseBean methodNotSupportExceptionHandler(HttpRequestMethodNotSupportedException e) {
+    public BaseRes<?> methodNotSupportExceptionHandler(HttpRequestMethodNotSupportedException e) {
         log.error("不支持的请求方式", e);
-        return ResponseBean.buildFailure(ResponseEnum.不支持的请求方式.code, e.getMessage());
+        return BaseRes.buildFailure(CodeEnum.ParamsErrorEnum.ERROR_CODE_10001.getCode(), e.getMessage());
     }
 
 
@@ -54,9 +50,9 @@ public class ControllerHandleConfig {
     @ExceptionHandler(value = {BindException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ResponseBean bindExceptionHandler(BindException e) {
+    public BaseRes<?> bindExceptionHandler(BindException e) {
         log.error("====参数类型错误===", e);
-        return ResponseBean.buildFailure(ResponseEnum.参数类型错误.code, e.getMessage());
+        return BaseRes.buildFailure(CodeEnum.ParamsErrorEnum.ERROR_CODE_10000);
     }
 
 
@@ -66,22 +62,21 @@ public class ControllerHandleConfig {
     @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class, HttpMessageConversionException.class, UnexpectedTypeException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ResponseBean httpMessageConversionExceptionHandler(Exception e) {
+    public BaseRes<?> httpMessageConversionExceptionHandler(Exception e) {
         log.error("====参数格式异常===", e);
-        return ResponseBean.buildFailure(ResponseEnum.参数格式异常.code, e.getMessage());
+        return BaseRes.buildFailure(CodeEnum.ParamsErrorEnum.ERROR_CODE_10002);
     }
-
 
 
     /**
      * 参数错误
      */
-    @ExceptionHandler(value = ParameterErrorException.class)
+    @ExceptionHandler(value = ParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ResponseBean parameterErrorExceptionHandler(ParameterErrorException e) {
-        log.error("参数异常------------参数错误：code：{},message：{}", e.getCode(), e.getMessage());
-        return ResponseBean.buildFailure(e.getCode(), e.getMessage());
+    public BaseRes<?> parameterErrorExceptionHandler(ParameterException e) {
+        log.error("====参数异常===", e);
+        return BaseRes.buildFailure(e.getCode(), e.getMessage());
     }
 
 
@@ -91,32 +86,46 @@ public class ControllerHandleConfig {
     @ExceptionHandler(value = BusinessException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ResponseBean businessExceptionHandler(BusinessException e) {
-        log.error("业务异常------------异常信息：code:{},message{}" ,e.getCode(), e.getMessage());
-        return ResponseBean.buildFailure(e.getCode(),e.getMessage());
+    public BaseRes<?> businessExceptionHandler(BusinessException e) {
+        log.error("====业务异常===", e);
+        return BaseRes.buildFailure(e.getCode(), e.getShowMsg());
     }
 
 
-
+    /**
+     * RPC，给前台返回异常数据
+     */
+    @ExceptionHandler(value = RpcException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public BaseRes<?> rpcExceptionHandler(RpcException e) {
+        log.error("====RPC异常===", e);
+        return BaseRes.buildFailure(e.getCode(), CodeEnum.ErrorCodeEnum.ERROR_CODE_FAIL.getMsg());
+    }
 
     /**
      * 所有异常报错
      */
     @ExceptionHandler
     @ResponseBody
-    public HttpEntity<ResponseBean> allExceptionHandler(HttpServletResponse response, Exception e) {
+    public HttpEntity<BaseRes<?>> allExceptionHandler(HttpServletResponse response, Exception e) {
         log.error("====系统错误===", e);
-        response.setStatus(ResponseEnum.系统错误.code);
-        return returnMessage(ResponseBean.buildFailure(ResponseEnum.系统错误));
+        response.setStatus(500);
+        return returnMessage(BaseRes.buildFailure(CodeEnum.ErrorCodeEnum.ERROR_CODE_FAIL));
     }
 
-    private HttpEntity<ResponseBean> returnMessage(ResponseBean responseBean) {
+    /**
+     * returnMessage
+     *
+     * @param baseRes baseRes
+     * @return HttpEntity<BaseRes < ?>>
+     */
+    private HttpEntity<BaseRes<?>> returnMessage(BaseRes<?> baseRes) {
         HttpHeaders header = new HttpHeaders();
         header.add("Content-Type", "application/json");
         header.add("Charset", "UTF-8");
-        return new HttpEntity<>(responseBean, header);
+        return new HttpEntity<>(baseRes, header);
     }
-
 
 
     /**

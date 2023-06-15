@@ -1,6 +1,5 @@
 package com.healerjean.proj.data.req;
 
-import com.healerjean.proj.common.data.bo.PageQueryBO;
 import com.healerjean.proj.common.data.dto.OrderByDTO;
 import lombok.Data;
 import lombok.experimental.Accessors;
