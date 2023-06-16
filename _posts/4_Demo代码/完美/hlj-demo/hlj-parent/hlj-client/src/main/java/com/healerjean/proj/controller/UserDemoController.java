@@ -1,14 +1,14 @@
 package com.healerjean.proj.controller;
 
 import com.healerjean.proj.common.anno.ElParam;
+import com.healerjean.proj.common.anno.LogIndex;
 import com.healerjean.proj.common.anno.RedisCache;
 import com.healerjean.proj.common.anno.RedisLock;
-import com.healerjean.proj.common.anno.LogIndex;
 import com.healerjean.proj.common.contants.RedisConstants;
 import com.healerjean.proj.common.data.ValidateGroup;
+import com.healerjean.proj.common.data.bo.BaseRes;
 import com.healerjean.proj.common.data.bo.PageBO;
 import com.healerjean.proj.common.data.bo.PageQueryBO;
-import com.healerjean.proj.common.data.bo.BaseRes;
 import com.healerjean.proj.common.data.convert.PageConverter;
 import com.healerjean.proj.common.data.req.PageReq;
 import com.healerjean.proj.common.data.vo.PageVO;
@@ -79,11 +79,10 @@ public class UserDemoController {
     }
 
     @ApiOperation(value = "用户信息-单条查询", notes = "用户信息-单条查询-描述")
-    @RedisCache(RedisConstants.CacheEnum.COMMON)
     @LogIndex
     @GetMapping("user/{userId}")
     @ResponseBody
-    public BaseRes<UserDemoVO> selectById(@ElParam @PathVariable("userId") Long userId) {
+    public BaseRes<UserDemoVO> queryUserDemoSingle(@ElParam @PathVariable("userId") Long userId) {
         UserDemoBO userDemoBo = userDemoService.selectById(userId);
         UserDemoVO userDemoVo = UserConverter.INSTANCE.covertUserDemoBoToVo(userDemoBo);
         return BaseRes.buildSuccess(userDemoVo);
