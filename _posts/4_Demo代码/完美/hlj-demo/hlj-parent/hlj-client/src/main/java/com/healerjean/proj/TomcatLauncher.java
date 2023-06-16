@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author zhangyujin
  * @date 2023/6/14  15:30
  */
-@MapperScan("com.healerjean.proj.data.mapper")
 @SpringBootApplication
 public class TomcatLauncher {
 

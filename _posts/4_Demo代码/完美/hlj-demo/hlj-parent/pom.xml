@@ -20,7 +20,7 @@
         <!--lombok-->
         <lombok.version>1.18.16</lombok.version>
         <!--数据源-->
-        <com-alibaba-druid.version>1.1.21</com-alibaba-druid.version>
+        <com-alibaba-druid.version>1.2.18</com-alibaba-druid.version>
         <!--mybatis plus-->
         <mybatis-plus-boot-starter.version>3.4.1</mybatis-plus-boot-starter.version>
         <!--mapstruct-->
@@ -74,6 +74,11 @@
 
             <!--数据源-->
             <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+                <version>3.6.1</version>
+            </dependency>
+            <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
                 <version>${com-alibaba-druid.version}</version>
@@ -90,6 +95,15 @@
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus-boot-starter.version}</version>
             </dependency>
+
+            <!--h2database -->
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>2.1.214</version>
+                <scope>test</scope>
+            </dependency>
+
 
             <!-- aop 切面 -->
             <dependency>

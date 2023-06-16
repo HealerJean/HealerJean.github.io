@@ -161,10 +161,9 @@ import org.springframework.stereotype.Service;
 import java.util.Base64;
 
 /**
- * @author HealerJean
- * @ClassName AES
- * @date 2020/4/9  14:28.
- * @Description
+ * KeyCenterUtils
+ * @author zhangyujin
+ * @date 2023/6/15  13:48
  */
 @Service
 public class KeyCenterUtils {
@@ -174,8 +173,7 @@ public class KeyCenterUtils {
      */
     public  String encrypt(String src) {
         try {
-            String result = Base64.getEncoder().encodeToString(src.getBytes("UTF-8"));
-            return result;
+            return Base64.getEncoder().encodeToString(src.getBytes("UTF-8"));
         } catch (Exception e) {
             throw new RuntimeException("encrypt fail!", e);
         }
@@ -187,8 +185,7 @@ public class KeyCenterUtils {
     public  String decrypt(String src) {
         try {
             byte[] asBytes = Base64.getDecoder().decode(src);
-            String result = new String(asBytes, "UTF-8");
-            return result;
+            return new String(asBytes, "UTF-8");
         } catch (Exception e) {
             throw new RuntimeException("decrypt fail!", e);
         }
@@ -200,17 +197,11 @@ public class KeyCenterUtils {
 
 
 
-## 2.2、`CustomTypeHandler`数据库字段加解密控制器  
+## 2.2、`SecretTypeHandler`数据库字段加解密控制器  
 
 ```java
-package com.healerjean.proj.config.keycenter.one;
+package com.healerjean.proj.utils.db;
 
-/**
- * @author HealerJean
- * @ClassName AESTypeHandler
- * @date 2020/4/9  14:27.
- * @Description
- */
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -223,13 +214,24 @@ import org.apache.ibatis.type.JdbcType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * CustomTypeHandler
+ * @author zhangyujin
+ * @date 2023/6/15  13:48
+ */
 @Service
-public class CustomTypeHandler<T> extends BaseTypeHandler<T> {
+public class SecretTypeHandler<T> extends BaseTypeHandler<T> {
 
+    /**
+     * keyCenterUtils
+     */
     @Autowired
     private KeyCenterUtils keyCenterUtils;
 
-    public CustomTypeHandler() {
+    /**
+     * CustomTypeHandler
+     */
+    public SecretTypeHandler() {
     }
 
     @Override
@@ -252,6 +254,7 @@ public class CustomTypeHandler<T> extends BaseTypeHandler<T> {
     @Override
     public T getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
         String columnValue = cs.getString(columnIndex);
+        ;
         return StringUtils.isBlank(columnValue) ? (T)columnValue : (T)this.keyCenterUtils.decrypt(columnValue);
     }
 }
@@ -272,7 +275,7 @@ package com.healerjean.proj.data.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.healerjean.proj.config.keycenter.one.CustomTypeHandler;
+import com.healerjean.proj.config.keycenter.one.SecretTypeHandler;
 import lombok.Data;
 
 import java.util.Date;
@@ -285,10 +288,10 @@ public class User {
     private Integer age;
 
     //有了这个数据库BaseMapper插入的时候才能加密
-    @TableField(typeHandler = CustomTypeHandler.class)
+    @TableField(typeHandler = SecretTypeHandler.class)
     private String telPhone;
 
-    @TableField(typeHandler = CustomTypeHandler.class)
+    @TableField(typeHandler = SecretTypeHandler.class)
     private String email;
 
     private Date createDate;
@@ -301,12 +304,12 @@ public class User {
 
 ### 2.3.2、自定义 `sql`查询的配置  
 
-> 如果不是mybatisPlus的 BaseMapper内部的方法，则需要我们自己放入我们自定义的`typeHandler`
+> 如果不是 `mybatisPlus` 的 `BaseMapper` 内部的方法，则需要我们自己放入我们自定义的 `typeHandler`
 
 ```java
 @Results({
-    @Result(column = "email", property = "email", typeHandler = CustomTypeHandler.class),
-    @Result(column = "tel_phone", property = "telPhone", typeHandler = CustomTypeHandler.class)})
+    @Result(column = "email", property = "email", typeHandler = SecretTypeHandler.class),
+    @Result(column = "tel_phone", property = "telPhone", typeHandler = SecretTypeHandler.class)})
 @Select("select * from user where id = #{id}")
 List<User> selectDncryptList(Long id);
 ```

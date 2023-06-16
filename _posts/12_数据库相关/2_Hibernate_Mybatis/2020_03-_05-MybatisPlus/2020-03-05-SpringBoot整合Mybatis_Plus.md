@@ -300,6 +300,7 @@ spring.datasource.druid.testWhileIdle=true
 spring.datasource.druid.testOnBorrow=false
 spring.datasource.druid.testOnReturn=false
 
+# 本大爷啥也没配
 # 配置 mybatis的一些配置，也可以在 application.properties 中配置，如果配置了就不需要了mybatis.xml
 #mybatis-plus.config-location=classpath:mybatis.xml
 #Maven 多模块项目的扫描路径需以 classpath*: 开头 （即加载多个 jar 包下的 XML 文件）
@@ -319,18 +320,6 @@ mybatis-plus.refresh-mapper: true
 
 ```
 
-| 配置 |      |
-| ---- | ---- |
-|      |      |
-|      |      |
-|      |      |
-|      |      |
-|      |      |
-|      |      |
-|      |      |
-|      |      |
-|      |      |
-
 
 
 ### 1.2.2、`application-local.properties`
@@ -346,6 +335,39 @@ spring.datasource.druid.url=jdbc:mysql://localhost:3306/hlj_mybatis_plus?serverT
 spring.datasource.druid.username=root
 spring.datasource.druid.password=123456
 ####################################
+
+```
+
+### 1.2.3、`MybatisPlusConfiguration`
+
+```java
+
+/**
+ * mybatisPlusInterceptor
+ *
+ * @author zhangyujin
+ * @date 2023/6/15  11:54.
+ */
+@Slf4j
+@MapperScan("com.healerjean.proj.data.mapper")
+@Configuration
+public class MybatisPlusConfiguration {
+    /**
+     * MyBatis支持
+     *
+     * @return MybatisPlusInterceptor
+     */
+    @Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        long t1 = System.currentTimeMillis();
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor());
+        long t2 = System.currentTimeMillis();
+        log.info("MybatisPlusInterceptor injected! times:{}ms", t2 - t1);
+        return interceptor;
+    }
+
+}
 
 ```
 
@@ -365,7 +387,7 @@ CREATE TABLE `user` (
 
 
 
-## 1.4、Mapper扫描配置
+## 1.4、`Mapper` 扫描配置
 
 > 两种方式，一种是每个mapper上使用注解@Mapper  
 >
@@ -466,7 +488,7 @@ http://127.0.0.1:8888/hlj/user/selectById?id=1235553744515612673
 
 
 
-# 2、 Wrapper 对象
+# 2、 `Wrapper` 对象
 
 
 
