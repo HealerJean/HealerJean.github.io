@@ -1,4 +1,4 @@
-package com.healerjean.proj.rpc;
+package com.healerjean.proj.service.rpc;
 
 import org.springframework.stereotype.Service;
 

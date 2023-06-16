@@ -1,21 +1,17 @@
-package com.healerjean.proj.base.junit;
+package com.healerjean.proj.base;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.*;
 
 /**
- * BaseJunit5MockitoTest
+ * Junit5BaseTest
  * @author zhangyujin
- * @date 2023/3/23  17:34.
+ * @date 2023/3/23  15:43.
  */
 @Slf4j
-@ExtendWith(MockitoExtension.class)
-public class BaseJunit5MockitoTest {
+@DisplayName("junit5功能测试")
+public class BaseJunit5Test {
+
 
     /**
      * 所有测试方法运行前运行
@@ -44,5 +40,4 @@ public class BaseJunit5MockitoTest {
     @AfterAll
     public static void afterAll() {
     }
-
 }

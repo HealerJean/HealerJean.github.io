@@ -48,7 +48,6 @@ public class UserDemoController {
 
 
     @ApiOperation(value = "用户信息-新增", notes = "用户信息-新增-描述")
-    @RedisLock(RedisConstants.LockEnum.COMMON)
     @LogIndex
     @PostMapping("user/save")
     @ResponseBody

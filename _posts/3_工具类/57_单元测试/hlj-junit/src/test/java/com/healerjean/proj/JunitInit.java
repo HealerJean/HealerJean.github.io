@@ -1,15 +1,15 @@
-package com.healerjean.proj.base.junit;
+package com.healerjean.proj;
 
 import com.healerjean.proj.mock.DemoPrcResourceMock;
-import com.healerjean.proj.rpc.DemoPrcResource;
+import com.healerjean.proj.service.rpc.DemoPrcResource;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -20,16 +20,15 @@ import static org.mockito.Mockito.when;
  * @author zhanghanlin6
  * @date 2022/8/24
  */
-// @Component
+@Component
 @Slf4j
 public class JunitInit implements BeanPostProcessor {
 
     /**
-     * demoPrcResource
+     * Spring项目中只能有一个 @MockBean
      */
-    @Resource
+    @MockBean
     private DemoPrcResource demoPrcResource;
-
 
     @Override
     public Object postProcessBeforeInitialization(@NonNull Object bean, @NonNull String beanName) throws BeansException {
@@ -39,7 +38,6 @@ public class JunitInit implements BeanPostProcessor {
         switch (beanName) {
             case "demoRpcProxy":
                 when(demoPrcResource.rpcInvoke(anyString())).thenAnswer(DemoPrcResourceMock.rpcInvoke());
-                // when(demoPrcResource.rpcInvoke(anyString())).thenReturn(DemoPrcResourceMock.rpcInvokeReturn());
                 break;
             default:
                 break;

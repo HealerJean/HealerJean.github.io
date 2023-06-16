@@ -27,6 +27,9 @@ public class Junit5SpringTest extends BaseJunit5SpringTest {
     @Resource
     private TopService topService;
 
+    /**
+     * bottomService
+     */
     @MockBean
     private BottomService bottomService;
 

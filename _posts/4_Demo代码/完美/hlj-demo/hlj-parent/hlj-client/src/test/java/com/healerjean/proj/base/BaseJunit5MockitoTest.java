@@ -1,25 +1,21 @@
 package com.healerjean.proj.base;
 
-import com.healerjean.proj.TomcatLauncher;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
- * Junit5BaseTest
- *
+ * BaseJunit5MockitoTest
  * @author zhangyujin
- * @date 2023/6/14  17:23.
+ * @date 2023/3/23  17:34.
  */
 @Slf4j
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = TomcatLauncher.class)
-@DisplayName("Junit5BaseTest")
-public class Junit5BaseTest {
-
+@ExtendWith(MockitoExtension.class)
+public class BaseJunit5MockitoTest {
 
     /**
      * 所有测试方法运行前运行

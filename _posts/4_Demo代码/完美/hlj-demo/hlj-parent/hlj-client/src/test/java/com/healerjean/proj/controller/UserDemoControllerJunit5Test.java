@@ -1,6 +1,6 @@
 package com.healerjean.proj.controller;
 
-import com.healerjean.proj.base.junit.BaseJunit5SpringTest;
+import com.healerjean.proj.base.BaseJunit5SpringTest;
 import com.healerjean.proj.common.contants.DataSourceConstant;
 import com.healerjean.proj.common.data.bo.BaseRes;
 import com.healerjean.proj.data.vo.UserDemoVO;
@@ -35,7 +35,8 @@ public class UserDemoControllerJunit5Test extends BaseJunit5SpringTest {
     @DisplayName("testQueryUserDemoSingle")
     @ValueSource(longs = {100, 102, 103, 104, 999})
     @HSql(value = {"/ut/mock/sql/unit/controller/healerjean/UserDemoControllerTest/testQueryUserDemoSingle.sql"})
-    @HSql(value = {"/ut/mock/sql/clean/user_demo_clean.sql"}, executionPhase = HSql.ExecutionPhase.AFTER_TEST_METHOD)
+    @HSql(value = {"/ut/mock/sql/clean/user_demo_clean.sql"},
+            executionPhase = HSql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testQueryUserDemoSingle(long id) {
         BaseRes<UserDemoVO> res = userDemoController.queryUserDemoSingle(id);
         log.info("[UserDemoControllerTest#testQueryUserDemoSingle] id:{}, res:{}", id, JsonUtils.toString(res));

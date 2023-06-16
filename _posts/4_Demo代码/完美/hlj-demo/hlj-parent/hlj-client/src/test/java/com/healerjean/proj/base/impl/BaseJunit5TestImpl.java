@@ -1,6 +1,6 @@
-package com.healerjean.proj.base.junit.impl;
+package com.healerjean.proj.base.impl;
 
-import com.healerjean.proj.base.junit.BaseJunit5Test;
+import com.healerjean.proj.base.BaseJunit5Test;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
