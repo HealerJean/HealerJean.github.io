@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
  * @author zhangyujin
  * @date 2023/6/15  21:29.
  */
-@Service
+@Service("demoPrcResource")
 public class DemoPrcResource {
 
     /**

@@ -19,6 +19,7 @@ import com.healerjean.proj.data.req.UserDemoQueryReq;
 import com.healerjean.proj.data.req.UserDemoSaveReq;
 import com.healerjean.proj.data.vo.UserDemoVO;
 import com.healerjean.proj.exceptions.ParameterException;
+import com.healerjean.proj.rpc.DemoPrcResource;
 import com.healerjean.proj.service.UserDemoService;
 import com.healerjean.proj.utils.JsonUtils;
 import com.healerjean.proj.utils.validate.ValidateUtils;
@@ -42,6 +43,11 @@ public class UserDemoController {
      */
     @Resource
     private UserDemoService userDemoService;
+    /**
+     * demoPrcResource
+     */
+    @Resource
+    private DemoPrcResource demoPrcResource;
 
 
     @ApiOperation(value = "用户信息-新增", notes = "用户信息-新增-描述")
@@ -83,6 +89,9 @@ public class UserDemoController {
     @GetMapping("user/{userId}")
     @ResponseBody
     public BaseRes<UserDemoVO> queryUserDemoSingle(@ElParam @PathVariable("userId") Long userId) {
+        String testMock = demoPrcResource.rpcInvoke("testMock");
+        log.info("[saveUserDemo]testMock:{}", testMock);
+
         UserDemoBO userDemoBo = userDemoService.selectById(userId);
         UserDemoVO userDemoVo = UserConverter.INSTANCE.covertUserDemoBoToVo(userDemoBo);
         return BaseRes.buildSuccess(userDemoVo);

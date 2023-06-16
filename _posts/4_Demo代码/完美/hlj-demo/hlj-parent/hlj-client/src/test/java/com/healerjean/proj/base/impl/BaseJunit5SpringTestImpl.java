@@ -1,6 +1,6 @@
-package com.healerjean.proj.base.junit.impl;
+package com.healerjean.proj.base.impl;
 
-import com.healerjean.proj.base.junit.BaseJunit5SpringTest;
+import com.healerjean.proj.base.BaseJunit5SpringTest;
 import com.healerjean.proj.rpc.DemoPrcResource;
 import com.healerjean.proj.rpc.proxy.impl.DemoRpcProxyImpl;
 import lombok.extern.slf4j.Slf4j;
