@@ -900,17 +900,43 @@ public class UserController extends ApiController {
 
 ## 3、自定义模板：`V1-MybatisPlus`
 
-### 1）`PO.java`
+```v
+## 自定义全局变量
+#set($poPath=           "com.healerjean.proj.template.po")
+#set($boPath=           "com.healerjean.proj.template.bo")
+#set($dtoPath=          "com.healerjean.proj.template.dto")
+#set($voPath=           "com.healerjean.proj.template.vo")
+#set($mapperPath=       "com.healerjean.proj.template.mapper")
+#set($mapperXmlPath=    "com.healerjean.proj.template.mapper")
+#set($daoPath=          "com.healerjean.proj.template.dao")
+#set($daoImplPath=      "com.healerjean.proj.template.dao.impl")
+#set($managerPath=      "com.healerjean.proj.template.manager")
+#set($managerImplPath=  "com.healerjean.proj.template.manager.impl")
+#set($servicePath=      "com.healerjean.proj.template.service")
+#set($serviceImplPath=  "com.healerjean.proj.template.service.impl")
+#set($controllerPath=   "com.healerjean.proj.template.controller")
+#set($converterPath=    "com.healerjean.proj.template.converter")
+#set($reqPath=          "com.healerjean.proj.template.req")
+#set($resourcePath=     "com.healerjean.proj.template.resource")
+#set($resourceImplPath= "com.healerjean.proj.template.resource.impl")
+```
+
+
+
+### 1）实体
+
+#### a、`PO.java.vm`
 
 ```java
 ##导入宏定义
 $!{define.vm}
+$!{healerjean.vm}
 
 ##保存文件（宏定义）
 #save("/po", ".java")
 
 ##包路径（宏定义）
-#setPackageSuffix("com.healerjean.proj.template.po")
+#setPackageSuffix(${poPath})
 
 ##自动导入包（全局变量）
 $!{autoImport.vm}
@@ -973,26 +999,71 @@ public class $!{tableInfo.name} extends Model<$!{tableInfo.name}> {
 ```
 
 
-```java
-package com.healerjean.proj.template.po;
 
-import java.util.Date;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+#### b、`BO.java.vm`
+
+```v
+##导入宏定义
+$!{define.vm}
+$!{healerjean.vm}
+
+##设置表后缀（宏定义）
+#setTableSuffix("BO")
+
+##保存文件（宏定义）
+#save("/bo", "BO.java")
+
+##包路径（宏定义）
+#setPackageSuffix(${boPath})
+
+##自动导入包（全局变量）
+$!{autoImport.vm}
 import java.io.Serializable;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+
+##表注释（宏定义）
+#tableComment("BO对象")
+@Accessors(chain = true)
+@Data
+public class $!{tableName} implements Serializable {
+   
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
+
+#foreach($column in $tableInfo.fullColumn)
+    
+#if(${column.comment})
+    /**
+     * ${column.comment}
+     */
+#end
+    private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
+#end
+
+}
+
+```
+
+```java
+package com.healerjean.proj.template.bo;
+
+import java.util.Date;
+import java.io.Serializable;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
- * (UserDemo)表实体类
+ * (UserDemo)BO对象
  *
  * @author zhangyujin
- * @date 2023-06-17 15:57:33
+ * @date 2023-06-17 22:00:15
  */
+@Accessors(chain = true)
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class UserDemo extends Model<UserDemo> {
+public class UserDemoBO implements Serializable {
    
     /**
      * serialVersionUID
@@ -1003,7 +1074,6 @@ public class UserDemo extends Model<UserDemo> {
     /**
      * 主键
      */
-    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     
     /**
@@ -1051,67 +1121,6 @@ public class UserDemo extends Model<UserDemo> {
      */
     private Date updateTime;
 
-
-    
-    /**
-     * id
-     */
-    public static final String ID = "id";
-    
-    /**
-     * name
-     */
-    public static final String NAME = "name";
-    
-    /**
-     * age
-     */
-    public static final String AGE = "age";
-    
-    /**
-     * phone
-     */
-    public static final String PHONE = "phone";
-    
-    /**
-     * email
-     */
-    public static final String EMAIL = "email";
-    
-    /**
-     * start_time
-     */
-    public static final String START_TIME = "start_time";
-    
-    /**
-     * end_time
-     */
-    public static final String END_TIME = "end_time";
-    
-    /**
-     * valid_flag
-     */
-    public static final String VALID_FLAG = "valid_flag";
-    
-    /**
-     * create_time
-     */
-    public static final String CREATE_TIME = "create_time";
-    
-    /**
-     * update_time
-     */
-    public static final String UPDATE_TIME = "update_time";
-
-    /**
-     * 获取主键值
-     *
-     * @return 主键值
-     */
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
-    }
 }
 
 
@@ -1119,11 +1128,1083 @@ public class UserDemo extends Model<UserDemo> {
 
 
 
-### 2）`Mapper.java`
+#### c、`QueryBO.java.vm`
 
-```java
+```v
 ##导入宏定义
 $!{define.vm}
+$!{healerjean.vm}
+
+##设置表后缀（宏定义）
+#setTableSuffix("QueryBO")
+
+##保存文件（宏定义）
+#save("/bo", "QueryBO.java")
+
+##包路径（宏定义）
+#setPackageSuffix(${boPath})
+
+##自动导入包（全局变量）
+$!{autoImport.vm}
+import java.io.Serializable;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+##表注释（宏定义）
+#tableComment("QueryBO对象")
+@Accessors(chain = true)
+@Data
+public class $!{tableName} implements Serializable {
+   
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
+
+#foreach($column in $tableInfo.fullColumn)
+    
+#if(${column.comment})
+    /**
+     * ${column.comment}
+     */
+#end
+    private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
+#end
+
+}
+
+```
+
+```java
+package com.healerjean.proj.template.bo;
+
+import java.util.Date;
+import java.io.Serializable;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+/**
+ * (UserDemo)QueryBO对象
+ *
+ * @author zhangyujin
+ * @date 2023-06-17 22:00:15
+ */
+@Accessors(chain = true)
+@Data
+public class UserDemoQueryBO implements Serializable {
+   
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
+
+    
+    /**
+     * 主键
+     */
+    private Long id;
+    
+    /**
+     * 姓名
+     */
+    private String name;
+    
+    /**
+     * 年龄
+     */
+    private Integer age;
+    
+    /**
+     * 电话
+     */
+    private String phone;
+    
+    /**
+     * 邮箱
+     */
+    private String email;
+    
+    /**
+     * 开始时间
+     */
+    private Date startTime;
+    
+    /**
+     * 结束时间
+     */
+    private Date endTime;
+    
+    /**
+     * 1有效 0 废弃
+     */
+    private Integer validFlag;
+    
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+    
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
+
+}
+
+
+```
+
+
+
+#### d、`DTO.java.vm`
+
+```v
+##导入宏定义
+$!{define.vm}
+$!{healerjean.vm}
+
+##设置表后缀（宏定义）
+#setTableSuffix("DTO")
+
+##保存文件（宏定义）
+#save("/dto", "DTO.java")
+
+##包路径（宏定义）
+#setPackageSuffix(${dtoPath})
+
+##自动导入包（全局变量）
+$!{autoImport.vm}
+import java.io.Serializable;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+##表注释（宏定义）
+#tableComment("DTO对象")
+@Accessors(chain = true)
+@Data
+public class $!{tableName} implements Serializable {
+   
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
+
+#foreach($column in $tableInfo.fullColumn)
+    
+#if(${column.comment})
+    /**
+     * ${column.comment}
+     */
+#end
+    private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
+#end
+
+}
+
+```
+
+```java
+package com.healerjean.proj.template.dto;
+
+import java.util.Date;
+import java.io.Serializable;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+/**
+ * (UserDemo)DTO对象
+ *
+ * @author zhangyujin
+ * @date 2023-06-17 22:00:15
+ */
+@Accessors(chain = true)
+@Data
+public class UserDemoDTO implements Serializable {
+   
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
+
+    
+    /**
+     * 主键
+     */
+    private Long id;
+    
+    /**
+     * 姓名
+     */
+    private String name;
+    
+    /**
+     * 年龄
+     */
+    private Integer age;
+    
+    /**
+     * 电话
+     */
+    private String phone;
+    
+    /**
+     * 邮箱
+     */
+    private String email;
+    
+    /**
+     * 开始时间
+     */
+    private Date startTime;
+    
+    /**
+     * 结束时间
+     */
+    private Date endTime;
+    
+    /**
+     * 1有效 0 废弃
+     */
+    private Integer validFlag;
+    
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+    
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
+
+}
+
+
+```
+
+
+
+#### e、`VO.java.vm`
+
+```v
+##导入宏定义
+$!{define.vm}
+$!{healerjean.vm}
+
+##设置表后缀（宏定义）
+#setTableSuffix("VO")
+
+##保存文件（宏定义）
+#save("/vo", "VO.java")
+
+##包路径（宏定义）
+#setPackageSuffix(${voPath})
+
+##自动导入包（全局变量）
+$!{autoImport.vm}
+import java.io.Serializable;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+##表注释（宏定义）
+#tableComment("VO对象")
+@Accessors(chain = true)
+@Data
+public class $!{tableName} implements Serializable {
+   
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
+
+#foreach($column in $tableInfo.fullColumn)
+    
+#if(${column.comment})
+    /**
+     * ${column.comment}
+     */
+#end
+    private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
+#end
+
+}
+
+```
+
+```java
+package com.healerjean.proj.template.vo;
+
+import java.util.Date;
+import java.io.Serializable;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+/**
+ * (UserDemo)VO对象
+ *
+ * @author zhangyujin
+ * @date 2023-06-17 22:00:15
+ */
+@Accessors(chain = true)
+@Data
+public class UserDemoVO implements Serializable {
+   
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
+
+    
+    /**
+     * 主键
+     */
+    private Long id;
+    
+    /**
+     * 姓名
+     */
+    private String name;
+    
+    /**
+     * 年龄
+     */
+    private Integer age;
+    
+    /**
+     * 电话
+     */
+    private String phone;
+    
+    /**
+     * 邮箱
+     */
+    private String email;
+    
+    /**
+     * 开始时间
+     */
+    private Date startTime;
+    
+    /**
+     * 结束时间
+     */
+    private Date endTime;
+    
+    /**
+     * 1有效 0 废弃
+     */
+    private Integer validFlag;
+    
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+    
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
+
+}
+
+
+```
+
+
+
+#### f、`SaveReq.java.vm`
+
+```v
+##导入宏定义
+$!{define.vm}
+$!{healerjean.vm}
+
+##设置表后缀（宏定义）
+#setTableSuffix("SaveReq")
+
+##保存文件（宏定义）
+#save("/req", "SaveReq.java")
+
+##包路径（宏定义）
+#setPackageSuffix(${reqPath})
+
+##自动导入包（全局变量）
+$!{autoImport.vm}
+import java.io.Serializable;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+##表注释（宏定义）
+#tableComment("SaveReq对象")
+@Accessors(chain = true)
+@Data
+public class $!{tableName} implements Serializable {
+   
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
+
+#foreach($column in $tableInfo.fullColumn)
+    
+#if(${column.comment})
+    /**
+     * ${column.comment}
+     */
+#end
+    private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
+#end
+
+}
+
+```
+
+```java
+package com.healerjean.proj.template.req;
+
+import java.util.Date;
+import java.io.Serializable;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+/**
+ * (UserDemo)SaveReq对象
+ *
+ * @author zhangyujin
+ * @date 2023-06-17 22:00:15
+ */
+@Accessors(chain = true)
+@Data
+public class UserDemoSaveReq implements Serializable {
+   
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
+
+    
+    /**
+     * 主键
+     */
+    private Long id;
+    
+    /**
+     * 姓名
+     */
+    private String name;
+    
+    /**
+     * 年龄
+     */
+    private Integer age;
+    
+    /**
+     * 电话
+     */
+    private String phone;
+    
+    /**
+     * 邮箱
+     */
+    private String email;
+    
+    /**
+     * 开始时间
+     */
+    private Date startTime;
+    
+    /**
+     * 结束时间
+     */
+    private Date endTime;
+    
+    /**
+     * 1有效 0 废弃
+     */
+    private Integer validFlag;
+    
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+    
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
+
+}
+
+
+```
+
+
+
+#### g、`QueryReq.java.vm`
+
+```v
+##导入宏定义
+$!{define.vm}
+$!{healerjean.vm}
+
+##设置表后缀（宏定义）
+#setTableSuffix("QueryReq")
+
+##保存文件（宏定义）
+#save("/req", "QueryReq.java")
+
+##包路径（宏定义）
+#setPackageSuffix(${reqPath})
+
+##自动导入包（全局变量）
+$!{autoImport.vm}
+import java.io.Serializable;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+##表注释（宏定义）
+#tableComment("QueryReq对象")
+@Accessors(chain = true)
+@Data
+public class $!{tableName} implements Serializable {
+   
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
+
+#foreach($column in $tableInfo.fullColumn)
+    
+#if(${column.comment})
+    /**
+     * ${column.comment}
+     */
+#end
+    private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
+#end
+
+}
+
+```
+
+```java
+package com.healerjean.proj.template.req;
+
+import java.util.Date;
+import java.io.Serializable;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+/**
+ * (UserDemo)QueryReq对象
+ *
+ * @author zhangyujin
+ * @date 2023-06-17 22:00:15
+ */
+@Accessors(chain = true)
+@Data
+public class UserDemoQueryReq implements Serializable {
+   
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
+
+    
+    /**
+     * 主键
+     */
+    private Long id;
+    
+    /**
+     * 姓名
+     */
+    private String name;
+    
+    /**
+     * 年龄
+     */
+    private Integer age;
+    
+    /**
+     * 电话
+     */
+    private String phone;
+    
+    /**
+     * 邮箱
+     */
+    private String email;
+    
+    /**
+     * 开始时间
+     */
+    private Date startTime;
+    
+    /**
+     * 结束时间
+     */
+    private Date endTime;
+    
+    /**
+     * 1有效 0 废弃
+     */
+    private Integer validFlag;
+    
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+    
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
+
+}
+
+
+```
+
+
+
+#### h、`DeleteReq.java.vm`
+
+```v
+##导入宏定义
+$!{define.vm}
+$!{healerjean.vm}
+
+##设置表后缀（宏定义）
+#setTableSuffix("DeleteReq")
+
+##保存文件（宏定义）
+#save("/req", "DeleteReq.java")
+
+##包路径（宏定义）
+#setPackageSuffix(${reqPath})
+
+##自动导入包（全局变量）
+$!{autoImport.vm}
+import java.io.Serializable;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+##表注释（宏定义）
+#tableComment("DeleteReq对象")
+@Accessors(chain = true)
+@Data
+public class $!{tableName} implements Serializable {
+   
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
+
+#foreach($column in $tableInfo.fullColumn)
+    
+#if(${column.comment})
+    /**
+     * ${column.comment}
+     */
+#end
+    private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
+#end
+
+}
+
+```
+
+```java
+package com.healerjean.proj.template.req;
+
+import java.util.Date;
+import java.io.Serializable;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+/**
+ * (UserDemo)DeleteReq对象
+ *
+ * @author zhangyujin
+ * @date 2023-06-17 22:00:15
+ */
+@Accessors(chain = true)
+@Data
+public class UserDemoDeleteReq implements Serializable {
+   
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
+
+    
+    /**
+     * 主键
+     */
+    private Long id;
+    
+    /**
+     * 姓名
+     */
+    private String name;
+    
+    /**
+     * 年龄
+     */
+    private Integer age;
+    
+    /**
+     * 电话
+     */
+    private String phone;
+    
+    /**
+     * 邮箱
+     */
+    private String email;
+    
+    /**
+     * 开始时间
+     */
+    private Date startTime;
+    
+    /**
+     * 结束时间
+     */
+    private Date endTime;
+    
+    /**
+     * 1有效 0 废弃
+     */
+    private Integer validFlag;
+    
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+    
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
+
+}
+
+
+```
+
+
+
+### 2）`Converter.java.vm`
+
+```v
+##导入宏定义
+$!{define.vm}
+$!{healerjean.vm}
+
+##设置表后缀（宏定义）
+#setTableSuffix("Converter")
+
+##保存文件（宏定义）
+#save("/converter", "Converter.java")
+
+##包路径（宏定义）
+#setPackageSuffix(${converterPath})
+
+##自动导入包（全局变量）
+$!{autoImport.vm}
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+import java.util.List;
+import ${poPath}.${tableInfo.name};
+import ${boPath}.${tableInfo.name}BO;
+import ${boPath}.${tableInfo.name}QueryBO;
+import ${dtoPath}.${tableInfo.name}DTO;
+import ${voPath}.${tableInfo.name}VO;
+import ${reqPath}.${tableInfo.name}SaveReq;
+import ${reqPath}.${tableInfo.name}QueryReq;
+import ${reqPath}.${tableInfo.name}DeleteReq;
+
+
+
+##表注释（宏定义）
+#tableComment("Converter")
+@Mapper
+public interface $!{tableName} {
+
+    /**
+     * INSTANCE
+     */
+    $!{tableName} INSTANCE = Mappers.getMapper($!{tableName}.class);
+
+   
+     /**
+     * convert${tableInfo.name}PoToBO
+     *
+     * @param po po
+     * @return ${tableInfo.name}BO
+     */
+    ${tableInfo.name}BO convert${tableInfo.name}PoToBo(${tableInfo.name} po);
+    
+    
+     /**
+     * convert${tableInfo.name}PoToBoLists
+     *
+     * @param pos pos
+     * @return ${tableInfo.name}BO
+     */
+    List<${tableInfo.name}BO> convert${tableInfo.name}PoToBoList(List<${tableInfo.name}> pos);
+    
+    
+     /**
+     * convert${tableInfo.name}BoToPo
+     *
+     * @param bo bo
+     * @return ${tableInfo.name}BO
+     */
+    ${tableInfo.name} convert${tableInfo.name}BoToPo(${tableInfo.name}BO bo);
+    
+     /**
+     * convert${tableInfo.name}BoToPoList
+     *
+     * @param bos bos
+     * @return List<${tableInfo.name}>
+     */
+     List<${tableInfo.name}> convert${tableInfo.name}BoToPoList(List<${tableInfo.name}BO> bos);
+    
+    
+     /**
+     * convert${tableInfo.name}BoToDto
+     *
+     * @param bo bo
+     * @return ${tableInfo.name}DTO
+     */
+    ${tableInfo.name}DTO convert${tableInfo.name}BoToDto(${tableInfo.name}BO bo);
+
+     /**
+     * convert${tableInfo.name}BoToDtoList
+     *
+     * @param bos bos
+     * @return List<${tableInfo.name}DTO>
+     */
+     List<${tableInfo.name}DTO> convert${tableInfo.name}BoToDtoList(List<${tableInfo.name}BO> bos);
+      
+     /**
+     * convert${tableInfo.name}DtoToBo
+     *
+     * @param dto dto
+     * @return ${tableInfo.name}BO
+     */
+    ${tableInfo.name}BO convert${tableInfo.name}DtoToBo(${tableInfo.name}DTO dto);
+  
+     /**
+     * convert${tableInfo.name}DtoToBoList
+     *
+     * @param dtos dtos
+     * @return ${tableInfo.name}BO
+     */
+    List<${tableInfo.name}BO> convert${tableInfo.name}DtoToBoList(List<${tableInfo.name}DTO> dtos);
+  
+   
+    /**
+     * convert${tableInfo.name}VO
+     *
+     * @param bo bo
+     * @return ${tableInfo.name}VO
+     */
+    ${tableInfo.name}VO convert${tableInfo.name}BoToVo(${tableInfo.name}BO bo);
+    
+     /**
+     * convert${tableInfo.name}BoToVoList
+     *
+     * @param bos bos
+     * @return ${tableInfo.name}VO
+     */
+    List<${tableInfo.name}VO> convert${tableInfo.name}BoToVoList(List<${tableInfo.name}BO> bos);
+        
+     /**
+     * convert${tableInfo.name}SaveReqToBo
+     *
+     * @param req req
+     * @return ${tableInfo.name}BO
+     */
+    ${tableInfo.name}BO convert${tableInfo.name}SaveReqToBo(${tableInfo.name}SaveReq req);
+
+     /**
+     * convert${tableInfo.name}DeleteReqToBo
+     *
+     * @param req req
+     * @return ${tableInfo.name}BO
+     */
+    ${tableInfo.name}BO convert${tableInfo.name}DeleteReqToBo(${tableInfo.name}DeleteReq req);
+
+     /**
+     * convert${tableInfo.name}QueryReqToBo
+     *
+     * @param req req
+     * @return ${tableInfo.name}BO
+     */
+    ${tableInfo.name}QueryBO convert${tableInfo.name}QueryReqToBo(${tableInfo.name}QueryReq req);
+                      
+}
+
+```
+
+```java
+package com.healerjean.proj.template.converter;
+
+import java.util.Date;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+import java.util.List;
+import com.healerjean.proj.template.po.UserDemo;
+import com.healerjean.proj.template.bo.UserDemoBO;
+import com.healerjean.proj.template.bo.UserDemoQueryBO;
+import com.healerjean.proj.template.dto.UserDemoDTO;
+import com.healerjean.proj.template.vo.UserDemoVO;
+import com.healerjean.proj.template.req.UserDemoSaveReq;
+import com.healerjean.proj.template.req.UserDemoQueryReq;
+import com.healerjean.proj.template.req.UserDemoDeleteReq;
+
+
+
+/**
+ * (UserDemo)Converter
+ *
+ * @author zhangyujin
+ * @date 2023-06-17 22:00:15
+ */
+@Mapper
+public interface UserDemoConverter {
+
+    /**
+     * INSTANCE
+     */
+    UserDemoConverter INSTANCE = Mappers.getMapper(UserDemoConverter.class);
+
+   
+     /**
+     * convertUserDemoPoToBO
+     *
+     * @param po po
+     * @return UserDemoBO
+     */
+    UserDemoBO convertUserDemoPoToBo(UserDemo po);
+    
+    
+     /**
+     * convertUserDemoPoToBoLists
+     *
+     * @param pos pos
+     * @return UserDemoBO
+     */
+    List<UserDemoBO> convertUserDemoPoToBoList(List<UserDemo> pos);
+    
+    
+     /**
+     * convertUserDemoBoToPo
+     *
+     * @param bo bo
+     * @return UserDemoBO
+     */
+    UserDemo convertUserDemoBoToPo(UserDemoBO bo);
+    
+     /**
+     * convertUserDemoBoToPoList
+     *
+     * @param bos bos
+     * @return List<UserDemo>
+     */
+     List<UserDemo> convertUserDemoBoToPoList(List<UserDemoBO> bos);
+    
+    
+     /**
+     * convertUserDemoBoToDto
+     *
+     * @param bo bo
+     * @return UserDemoDTO
+     */
+    UserDemoDTO convertUserDemoBoToDto(UserDemoBO bo);
+
+     /**
+     * convertUserDemoBoToDtoList
+     *
+     * @param bos bos
+     * @return List<UserDemoDTO>
+     */
+     List<UserDemoDTO> convertUserDemoBoToDtoList(List<UserDemoBO> bos);
+      
+     /**
+     * convertUserDemoDtoToBo
+     *
+     * @param dto dto
+     * @return UserDemoBO
+     */
+    UserDemoBO convertUserDemoDtoToBo(UserDemoDTO dto);
+  
+     /**
+     * convertUserDemoDtoToBoList
+     *
+     * @param dtos dtos
+     * @return UserDemoBO
+     */
+    List<UserDemoBO> convertUserDemoDtoToBoList(List<UserDemoDTO> dtos);
+  
+   
+    /**
+     * convertUserDemoVO
+     *
+     * @param bo bo
+     * @return UserDemoVO
+     */
+    UserDemoVO convertUserDemoBoToVo(UserDemoBO bo);
+    
+     /**
+     * convertUserDemoBoToVoList
+     *
+     * @param bos bos
+     * @return UserDemoVO
+     */
+    List<UserDemoVO> convertUserDemoBoToVoList(List<UserDemoBO> bos);
+        
+     /**
+     * convertUserDemoSaveReqToBo
+     *
+     * @param req req
+     * @return UserDemoBO
+     */
+    UserDemoBO convertUserDemoSaveReqToBo(UserDemoSaveReq req);
+
+     /**
+     * convertUserDemoDeleteReqToBo
+     *
+     * @param req req
+     * @return UserDemoBO
+     */
+    UserDemoBO convertUserDemoDeleteReqToBo(UserDemoDeleteReq req);
+
+     /**
+     * convertUserDemoQueryReqToBo
+     *
+     * @param req req
+     * @return UserDemoBO
+     */
+    UserDemoQueryBO convertUserDemoQueryReqToBo(UserDemoQueryReq req);
+                      
+}
+
+
+```
+
+
+
+### 3）`Mapper.java.vm`
+
+```
+##导入宏定义
+$!{define.vm}
+$!{healerjean.vm}
 
 ##设置表后缀（宏定义）
 #setTableSuffix("Mapper")
@@ -1132,9 +2213,9 @@ $!{define.vm}
 #save("/mapper", "Mapper.java")
 
 ##包路径（宏定义）
-#setPackageSuffix("com.healerjean.proj.template.mapper")
+#setPackageSuffix(${mapperPath})
 
-import com.healerjean.proj.template.po.$!tableInfo.name;
+import ${poPath}.$!tableInfo.name;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 ##表注释（宏定义）
@@ -1146,9 +2227,7 @@ public interface $!{tableInfo.name}Mapper extends BaseMapper<$!{tableInfo.name}>
 
 ```
 
-
-
-```java
+```
 package com.healerjean.proj.template.mapper;
 
 import com.healerjean.proj.template.po.UserDemo;
@@ -1158,7 +2237,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * (UserDemo)表数据库访问层
  *
  * @author zhangyujin
- * @date 2023-06-17 15:57:33
+ * @date 2023-06-17 22:00:15
  */
 public interface UserDemoMapper extends BaseMapper<UserDemo> {
 
@@ -1170,11 +2249,12 @@ public interface UserDemoMapper extends BaseMapper<UserDemo> {
 
 
 
-### 3）`Mapper.xml`
+### 4）`Mapper.xml.vm`
 
-```java
+```v
 ##引入mybatis支持
 $!{mybatisSupport.vm}
+$!{healerjean.vm}
 
 ##设置保存名称与保存位置
 $!callback.setFileName($tool.append($!{tableInfo.name}, "Mapper.xml"))
@@ -1187,9 +2267,9 @@ $!callback.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
 
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.healerjean.proj.template.mapper.$!{tableInfo.name}Mapper">
+<mapper namespace="${mapperPath}.$!{tableInfo.name}Mapper">
 
-    <resultMap id="BaseResultMap" type="com.healerjean.proj.template.po.$!{tableInfo.name}">
+    <resultMap id="BaseResultMap" type="${poPath}.$!{tableInfo.name}">
 #foreach($column in $tableInfo.fullColumn)
         <result column="$!column.obj.name" property="$!column.name"/>
 #end
@@ -1204,13 +2284,12 @@ $!callback.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
 
 ```
 
-
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.healerjean.proj.template.mapper.UserDemoMapper">
+<mapper namespace="com.healerjean.proj.data.mapper.UserDemoMapper">
 
-    <resultMap id="BaseResultMap" type="com.healerjean.proj.template.po.UserDemo">
+    <resultMap id="BaseResultMap" type="com.healerjean.proj.data.po.UserDemo">
         <result column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="age" property="age"/>
@@ -1234,11 +2313,12 @@ $!callback.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
 
 
 
-### 4）`Dao.java`
+### 5）`Dao.java.vm`
 
-```java
+```
 ##导入宏定义
 $!{define.vm}
+$!{healerjean.vm}
 
 ##设置表后缀（宏定义）
 #setTableSuffix("Dao")
@@ -1247,10 +2327,10 @@ $!{define.vm}
 #save("/dao", "Dao.java")
 
 ##包路径（宏定义）
-#setPackageSuffix("com.healerjean.proj.template.dao")
+#setPackageSuffix(${daoPath})
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.healerjean.proj.template.po.$!tableInfo.name;
+import ${poPath}.$!tableInfo.name;
 
 ##表注释（宏定义）
 #tableComment("Dao接口")
@@ -1259,8 +2339,6 @@ public interface $!{tableName} extends IService<$!tableInfo.name> {
 }
 
 ```
-
-
 
 ```java
 package com.healerjean.proj.template.dao;
@@ -1272,7 +2350,7 @@ import com.healerjean.proj.template.po.UserDemo;
  * (UserDemo)Dao接口
  *
  * @author zhangyujin
- * @date 2023-06-17 15:57:33
+ * @date 2023-06-17 22:00:15
  */
 public interface UserDemoDao extends IService<UserDemo> {
 
@@ -1282,11 +2360,13 @@ public interface UserDemoDao extends IService<UserDemo> {
 ```
 
 
-### 5）`DaoImpl.java`
 
-```java
+### 6）`DaoImpl.java.vm`
+
+```v
 ##导入宏定义
 $!{define.vm}
+$!{healerjean.vm}
 
 ##设置表后缀（宏定义）
 #setTableSuffix("DaoImpl")
@@ -1295,13 +2375,13 @@ $!{define.vm}
 #save("/dao/impl", "DaoImpl.java")
 
 ##包路径（宏定义）
-#setPackageSuffix("com.healerjean.proj.template.dao.impl")
+#setPackageSuffix(${daoImplPath})
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.healerjean.proj.template.po.$!{tableInfo.name};
-import com.healerjean.proj.template.dao.$!{tableInfo.name}Dao;
-import com.healerjean.proj.template.mapper.$!{tableInfo.name}Mapper;
 import org.springframework.stereotype.Service;
+import ${poPath}.$!{tableInfo.name};
+import ${daoPath}.$!{tableInfo.name}Dao;
+import ${mapperPath}.$!{tableInfo.name}Mapper;
 
 ##表注释（宏定义）
 #tableComment("Dao实现类")
@@ -1316,16 +2396,16 @@ public class $!{tableName} extends ServiceImpl<$!{tableInfo.name}Mapper, $!{tabl
 package com.healerjean.proj.template.dao.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.stereotype.Service;
 import com.healerjean.proj.template.po.UserDemo;
 import com.healerjean.proj.template.dao.UserDemoDao;
 import com.healerjean.proj.template.mapper.UserDemoMapper;
-import org.springframework.stereotype.Service;
 
 /**
  * (UserDemo)Dao实现类
  *
  * @author zhangyujin
- * @date 2023-06-17 15:57:33
+ * @date 2023-06-17 22:00:15
  */
 @Service
 public class UserDemoDaoImpl extends ServiceImpl<UserDemoMapper, UserDemo> implements UserDemoDao {
@@ -1337,69 +2417,1049 @@ public class UserDemoDaoImpl extends ServiceImpl<UserDemoMapper, UserDemo> imple
 
 
 
-### 6）`Controller.java`
+### 7）`manager.java.vm`
 
+```v
+##导入宏定义
+$!{define.vm}
+$!{healerjean.vm}
+
+##设置表后缀（宏定义）
+#setTableSuffix("Manager")
+
+##保存文件（宏定义）
+#save("/manager", "Manager.java")
+
+##包路径（宏定义）
+#setPackageSuffix(${managerPath})
+
+import ${poPath}.${tableInfo.name};
+import ${boPath}.${tableInfo.name}QueryBO;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import java.util.List;
+
+##表注释（宏定义）
+#tableComment("Manager接口")
+public interface $!{tableName} {
+
+    /**
+     * 保存-$!tableInfo.name
+     *
+     * @param po po
+     * @return boolean
+     */    
+    boolean save${tableInfo.name}(${tableInfo.name} po);
+    
+     /**
+     * 删除-$!tableInfo.name
+     *
+     * @param id id
+     * @return boolean
+     */     
+    boolean delete${tableInfo.name}ById(Long id);
+    
+    /**
+     * 更新-$!tableInfo.name
+     *
+     * @param po po
+     * @return boolean
+     */    
+    boolean update${tableInfo.name}(${tableInfo.name} po);
+    
+     /**
+     * 单条主键查询-$!tableInfo.name
+     *
+     * @param id id
+     * @return ${tableInfo.name}
+     */     
+    ${tableInfo.name} query${tableInfo.name}ById(Long id);
+    
+    
+     /**
+     * 单条查询-$!tableInfo.name
+     *
+     * @param queryBo queryBo
+     * @return ${tableInfo.name}
+     */     
+    ${tableInfo.name} query${tableInfo.name}Single(${tableInfo.name}QueryBO queryBo);
+    
+    /**
+     * 列表查询-$!tableInfo.name
+     *
+     * @param queryBo queryBo
+     * @return List<${tableInfo.name}>
+     */    
+    List<${tableInfo.name}> query${tableInfo.name}List(${tableInfo.name}QueryBO queryBo);
+   
+    /**
+     * 分页查询-$!tableInfo.name
+     *
+     * @param queryBo queryBo
+     * @return Page<${tableInfo.name}>
+     */    
+    Page<${tableInfo.name}> query${tableInfo.name}Paga(${tableInfo.name}QueryBO queryBo);
+     
+}
+
+```
 
 ```java
-##定义初始变量
-#set($tableName = $tool.append($tableInfo.name, "Controller"))
-##设置回调
-$!callback.setFileName($tool.append($tableName, ".java"))
-$!callback.setSavePath($tool.append($tableInfo.savePath, "/controller"))
-##拿到主键
-#if(!$tableInfo.pkColumn.isEmpty())
-    #set($pk = $tableInfo.pkColumn.get(0))
-#end
+package com.healerjean.proj.template.manager;
 
-#if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}controller;
-
-import $!{tableInfo.savePackageName}.service.$!{tableInfo.name}Service;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.healerjean.proj.template.po.UserDemo;
+import com.healerjean.proj.template.bo.UserDemoQueryBO;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import java.util.List;
 
 /**
- * @author HealerJean
- * @date 2020-04-03 11:40:02
- * @Description
+ * (UserDemo)Manager接口
+ *
+ * @author zhangyujin
+ * @date 2023-06-17 22:00:16
  */
-@RestController
-@RequestMapping("api/$!tool.firstLowerCase($tableInfo.name)")
-public class $!{tableName} {
-    
-    @Autowired
-    private $!{tableInfo.name}Service $!tool.firstLowerCase($tableInfo.name)Service;
+public interface UserDemoManager {
 
+    /**
+     * 保存-UserDemo
+     *
+     * @param po po
+     * @return boolean
+     */    
+    boolean saveUserDemo(UserDemo po);
+    
+     /**
+     * 删除-UserDemo
+     *
+     * @param id id
+     * @return boolean
+     */     
+    boolean deleteUserDemoById(Long id);
+    
+    /**
+     * 更新-UserDemo
+     *
+     * @param po po
+     * @return boolean
+     */    
+    boolean updateUserDemo(UserDemo po);
+    
+     /**
+     * 单条主键查询-UserDemo
+     *
+     * @param id id
+     * @return UserDemo
+     */     
+    UserDemo queryUserDemoById(Long id);
+    
+    
+     /**
+     * 单条查询-UserDemo
+     *
+     * @param queryBo queryBo
+     * @return UserDemo
+     */     
+    UserDemo queryUserDemoSingle(UserDemoQueryBO queryBo);
+    
+    /**
+     * 列表查询-UserDemo
+     *
+     * @param queryBo queryBo
+     * @return List<UserDemo>
+     */    
+    List<UserDemo> queryUserDemoList(UserDemoQueryBO queryBo);
+   
+    /**
+     * 分页查询-UserDemo
+     *
+     * @param queryBo queryBo
+     * @return Page<UserDemo>
+     */    
+    Page<UserDemo> queryUserDemoPaga(UserDemoQueryBO queryBo);
+     
 }
+
+
 ```
 
 
-```java
-package com.controller;
 
-import com.service.UserService;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
+### 8）`managerImpl.java.vm`
 
-/**
- * @author HealerJean
- * @date 2020-04-03 11:40:02
- * @Description
- */
-@RestController
-@RequestMapping("api/user")
-public class UserController {
+```v
+##导入宏定义
+$!{define.vm}
+$!{healerjean.vm}
+
+##设置表后缀（宏定义）
+#setTableSuffix("ManagerImpl")
+
+##保存文件（宏定义）
+#save("/manager/impl", "ManagerImpl.java")
+
+##包路径（宏定义）
+#setPackageSuffix(${managerImplPath})
+##定义服务名
+#set($daoName = $!tool.append($!tool.firstLowerCase($!tableInfo.name), "Dao"))
+
+import ${poPath}.${tableInfo.name};
+import ${boPath}.${tableInfo.name}QueryBO;
+import ${daoPath}.${tableInfo.name}Dao;
+import ${managerPath}.${tableInfo.name}Manager;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import java.util.List;
+import javax.annotation.Resource;
+
+##表注释（宏定义）
+#tableComment("Manager接口")
+public class $!{tableName} implements $!{tableInfo.name}Manager {
+     
+     @Resource
+     private $!{tableInfo.name}Dao $daoName;
+        
+    /**
+     * 保存-$!tableInfo.name
+     *
+     * @param po po
+     * @return boolean
+     */    
+    public boolean save${tableInfo.name}(${tableInfo.name} po){
+        return $!{daoName}.save(po);
+    }
     
-    @Autowired
-    private UserService userService;
-
+     /**
+     * 删除-$!tableInfo.name
+     *
+     * @param id id
+     * @return boolean
+     */     
+    public boolean delete${tableInfo.name}ById(Long id){
+        //todo
+        return false;
+    }
+    
+    /**
+     * 更新-$!tableInfo.name
+     *
+     * @param po po
+     * @return boolean
+     */    
+    public boolean update${tableInfo.name}(${tableInfo.name} po){
+        LambdaUpdateWrapper<${tableInfo.name}> updateWrapper = Wrappers.lambdaUpdate(${tableInfo.name}.class);
+        //todo
+        return $!{daoName}.update(updateWrapper);
+    }
+    
+     /**
+     * 单条主键查询-$!tableInfo.name
+     *
+     * @param id id
+     * @return ${tableInfo.name}
+     */     
+    public ${tableInfo.name} query${tableInfo.name}ById(Long id){
+        return $!{daoName}.getById(id);
+    }
+    
+    
+     /**
+     * 单条查询-$!tableInfo.name
+     *
+     * @param queryBo queryBo
+     * @return ${tableInfo.name}
+     */     
+    public ${tableInfo.name} query${tableInfo.name}Single(${tableInfo.name}QueryBO queryBo){
+        LambdaQueryWrapper<${tableInfo.name}> queryWrapper = Wrappers.lambdaQuery(${tableInfo.name}.class);
+        //todo
+        return $!{daoName}.getOne(queryWrapper);
+    }
+    
+    /**
+     * 列表查询-$!tableInfo.name
+     *
+     * @param queryBo queryBo
+     * @return List<${tableInfo.name}>
+     */    
+    public List<${tableInfo.name}> query${tableInfo.name}List(${tableInfo.name}QueryBO queryBo){
+        LambdaQueryWrapper<${tableInfo.name}> queryWrapper = Wrappers.lambdaQuery(${tableInfo.name}.class);
+        //todo
+        return $!{daoName}.list(queryWrapper);
+    }
+   
+    /**
+     * 分页查询-$!tableInfo.name
+     *
+     * @param queryBo queryBo
+     * @return Page<${tableInfo.name}>
+     */    
+    public Page<${tableInfo.name}> query${tableInfo.name}Paga(${tableInfo.name}QueryBO queryBo){
+        LambdaQueryWrapper<${tableInfo.name}> queryWrapper = Wrappers.lambdaQuery(${tableInfo.name}.class);
+        //todo
+        Page<${tableInfo.name}> pageReq = new Page<>(0, 0, 0);
+        return $!{daoName}.page(pageReq, queryWrapper);
+    }
+     
 }
+
 ```
 
 
 
+```java
+package com.healerjean.proj.template.manager.impl;
+
+import com.healerjean.proj.template.po.UserDemo;
+import com.healerjean.proj.template.bo.UserDemoQueryBO;
+import com.healerjean.proj.template.dao.UserDemoDao;
+import com.healerjean.proj.template.manager.UserDemoManager;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import java.util.List;
+import javax.annotation.Resource;
+
+/**
+ * (UserDemo)Manager接口
+ *
+ * @author zhangyujin
+ * @date 2023-06-17 22:00:16
+ */
+public class UserDemoManagerImpl implements UserDemoManager {
+     
+     @Resource
+     private UserDemoDao userDemoDao;
+        
+    /**
+     * 保存-UserDemo
+     *
+     * @param po po
+     * @return boolean
+     */    
+    public boolean saveUserDemo(UserDemo po){
+        return userDemoDao.save(po);
+    }
+    
+     /**
+     * 删除-UserDemo
+     *
+     * @param id id
+     * @return boolean
+     */     
+    public boolean deleteUserDemoById(Long id){
+        //todo
+        return false;
+    }
+    
+    /**
+     * 更新-UserDemo
+     *
+     * @param po po
+     * @return boolean
+     */    
+    public boolean updateUserDemo(UserDemo po){
+        LambdaUpdateWrapper<UserDemo> updateWrapper = Wrappers.lambdaUpdate(UserDemo.class);
+        //todo
+        return userDemoDao.update(updateWrapper);
+    }
+    
+     /**
+     * 单条主键查询-UserDemo
+     *
+     * @param id id
+     * @return UserDemo
+     */     
+    public UserDemo queryUserDemoById(Long id){
+        return userDemoDao.getById(id);
+    }
+    
+    
+     /**
+     * 单条查询-UserDemo
+     *
+     * @param queryBo queryBo
+     * @return UserDemo
+     */     
+    public UserDemo queryUserDemoSingle(UserDemoQueryBO queryBo){
+        LambdaQueryWrapper<UserDemo> queryWrapper = Wrappers.lambdaQuery(UserDemo.class);
+        //todo
+        return userDemoDao.getOne(queryWrapper);
+    }
+    
+    /**
+     * 列表查询-UserDemo
+     *
+     * @param queryBo queryBo
+     * @return List<UserDemo>
+     */    
+    public List<UserDemo> queryUserDemoList(UserDemoQueryBO queryBo){
+        LambdaQueryWrapper<UserDemo> queryWrapper = Wrappers.lambdaQuery(UserDemo.class);
+        //todo
+        return userDemoDao.list(queryWrapper);
+    }
+   
+    /**
+     * 分页查询-UserDemo
+     *
+     * @param queryBo queryBo
+     * @return Page<UserDemo>
+     */    
+    public Page<UserDemo> queryUserDemoPaga(UserDemoQueryBO queryBo){
+        LambdaQueryWrapper<UserDemo> queryWrapper = Wrappers.lambdaQuery(UserDemo.class);
+        //todo
+        Page<UserDemo> pageReq = new Page<>(0, 0, 0);
+        return userDemoDao.page(pageReq, queryWrapper);
+    }
+     
+}
+
+
+```
 
 
 
+### 9）`Service.java.vm`
+
+```v
+##导入宏定义
+$!{define.vm}
+$!{healerjean.vm}
+
+##设置表后缀（宏定义）
+#setTableSuffix("Service")
+
+##保存文件（宏定义）
+#save("/service", "Service.java")
+
+##包路径（宏定义）
+#setPackageSuffix(${servicePath})
+
+import ${boPath}.${tableInfo.name}QueryBO;
+import ${boPath}.${tableInfo.name}BO;
+import java.util.List;
+
+##表注释（宏定义）
+#tableComment("Service接口")
+public interface $!{tableName} {
+
+    /**
+     * 保存-$!tableInfo.name
+     *
+     * @param bo bo
+     * @return boolean
+     */   
+    boolean save${tableInfo.name}(${tableInfo.name}BO bo);
+    
+     /**
+     * 删除-$!tableInfo.name
+     * 
+     * @param bo bo
+     * @return boolean
+     */  
+    boolean delete${tableInfo.name}(${tableInfo.name}BO bo);
+    
+     /**
+     * 更新-$!tableInfo.name
+     * 
+     * @param bo bo
+     * @return boolean
+     */    
+    boolean update${tableInfo.name}(${tableInfo.name}BO bo);
+    
+     /**
+     * 单条查询-$!tableInfo.name
+     * 
+     * @param queryBo queryBo
+     * @return ${tableInfo.name}BO
+     */    
+    ${tableInfo.name}BO query${tableInfo.name}Single(${tableInfo.name}QueryBO queryBo);
+    
+     /**
+     * 列表查询-$!tableInfo.name
+     * 
+     * @param queryBo queryBo
+     * @return List<${tableInfo.name}BO>
+     */     
+    List<${tableInfo.name}BO> query${tableInfo.name}List(${tableInfo.name}QueryBO queryBo);
+    
+}
+
+```
+
+```java
+package com.healerjean.proj.template.service;
+
+import com.healerjean.proj.template.bo.UserDemoQueryBO;
+import com.healerjean.proj.template.bo.UserDemoBO;
+import java.util.List;
+
+/**
+ * (UserDemo)Service接口
+ *
+ * @author zhangyujin
+ * @date 2023-06-17 22:00:16
+ */
+public interface UserDemoService {
+
+    /**
+     * 保存-UserDemo
+     *
+     * @param bo bo
+     * @return boolean
+     */   
+    boolean saveUserDemo(UserDemoBO bo);
+    
+     /**
+     * 删除-UserDemo
+     * 
+     * @param bo bo
+     * @return boolean
+     */  
+    boolean deleteUserDemo(UserDemoBO bo);
+    
+     /**
+     * 更新-UserDemo
+     * 
+     * @param bo bo
+     * @return boolean
+     */    
+    boolean updateUserDemo(UserDemoBO bo);
+    
+     /**
+     * 单条查询-UserDemo
+     * 
+     * @param queryBo queryBo
+     * @return UserDemoBO
+     */    
+    UserDemoBO queryUserDemoSingle(UserDemoQueryBO queryBo);
+    
+     /**
+     * 列表查询-UserDemo
+     * 
+     * @param queryBo queryBo
+     * @return List<UserDemoBO>
+     */     
+    List<UserDemoBO> queryUserDemoList(UserDemoQueryBO queryBo);
+    
+}
+
+
+```
+
+
+
+### 10）`ServiceImpl.java.vm`
+
+```v
+##导入宏定义
+$!{define.vm}
+$!{healerjean.vm}
+
+##设置表后缀（宏定义）
+#setTableSuffix("ServiceImpl")
+
+##保存文件（宏定义）
+#save("/service/impl", "ServiceImpl.java")
+
+##包路径（宏定义）
+#setPackageSuffix(${serviceImplPath})
+##定义服务名
+#set($managerName = $!tool.append($!tool.firstLowerCase($!tableInfo.name), "Manager"))
+
+import ${poPath}.${tableInfo.name};
+import ${boPath}.${tableInfo.name}QueryBO;
+import ${boPath}.${tableInfo.name}BO;
+import ${managerPath}.${tableInfo.name}Manager;
+import ${servicePath}.${tableInfo.name}Service;
+import ${converterPath}.${tableInfo.name}Converter;
+import java.util.List;
+import javax.annotation.Resource;
+
+##表注释（宏定义）
+#tableComment("Service")
+public class $!{tableName} implements $!{tableInfo.name}Service {
+
+    /**
+     * $managerName
+     */ 
+    @Resource
+    private $!{tableInfo.name}Manager $managerName;
+
+    /**
+     * 保存-$!tableInfo.name
+     *
+     * @param bo bo
+     * @return boolean
+     */    
+    public boolean save${tableInfo.name}($!{tableInfo.name}BO bo){
+        $!{tableInfo.name} po = $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}BoToPo(bo);
+        return $!{managerName}.save${tableInfo.name}(po);
+    }
+    
+     /**
+     * 删除-$!tableInfo.name
+     * 
+     * @param bo bo
+     * @return boolean
+     */     
+    public boolean delete${tableInfo.name}(${tableInfo.name}BO bo){
+        return $!{managerName}.delete${tableInfo.name}ById(bo.getId());
+    }
+    
+     /**
+     * 更新-$!tableInfo.name
+     * 
+     * @param bo bo
+     * @return boolean
+     */     
+    public boolean update${tableInfo.name}(${tableInfo.name}BO bo){
+        $!{tableInfo.name} po = $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}BoToPo(bo);
+        return $!{managerName}.update$!{tableInfo.name}(po);
+    }
+    
+     /**
+     * 单条查询-$!tableInfo.name
+     * 
+     * @param queryBo queryBo
+     * @return ${tableInfo.name}BO
+     */     
+    public ${tableInfo.name}BO query${tableInfo.name}Single(${tableInfo.name}QueryBO queryBo){
+        $!{tableInfo.name} po =  $!{managerName}.query${tableInfo.name}Single(queryBo);
+        return $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}PoToBo(po);
+    }
+    
+    /**
+     * 列表查询-$!tableInfo.name
+     * 
+     * @param queryBo queryBo
+     * @return List<${tableInfo.name}BO>
+     */     
+    public List<${tableInfo.name}BO> query${tableInfo.name}List(${tableInfo.name}QueryBO queryBo){
+        List<$!{tableInfo.name}> pos =  $!{managerName}.query${tableInfo.name}List(queryBo);
+        return $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}PoToBoList(pos);        
+    }
+    
+}
+
+```
+
+
+
+```java
+package com.healerjean.proj.template.service.impl;
+
+import com.healerjean.proj.template.po.UserDemo;
+import com.healerjean.proj.template.bo.UserDemoQueryBO;
+import com.healerjean.proj.template.bo.UserDemoBO;
+import com.healerjean.proj.template.manager.UserDemoManager;
+import com.healerjean.proj.template.service.UserDemoService;
+import com.healerjean.proj.template.converter.UserDemoConverter;
+import java.util.List;
+import javax.annotation.Resource;
+
+/**
+ * (UserDemo)Service
+ *
+ * @author zhangyujin
+ * @date 2023-06-17 22:00:16
+ */
+public class UserDemoServiceImpl implements UserDemoService {
+
+    /**
+     * userDemoManager
+     */ 
+    @Resource
+    private UserDemoManager userDemoManager;
+
+    /**
+     * 保存-UserDemo
+     *
+     * @param bo bo
+     * @return boolean
+     */    
+    public boolean saveUserDemo(UserDemoBO bo){
+        UserDemo po = UserDemoConverter.INSTANCE.convertUserDemoBoToPo(bo);
+        return userDemoManager.saveUserDemo(po);
+    }
+    
+     /**
+     * 删除-UserDemo
+     * 
+     * @param bo bo
+     * @return boolean
+     */     
+    public boolean deleteUserDemo(UserDemoBO bo){
+        return userDemoManager.deleteUserDemoById(bo.getId());
+    }
+    
+     /**
+     * 更新-UserDemo
+     * 
+     * @param bo bo
+     * @return boolean
+     */     
+    public boolean updateUserDemo(UserDemoBO bo){
+        UserDemo po = UserDemoConverter.INSTANCE.convertUserDemoBoToPo(bo);
+        return userDemoManager.updateUserDemo(po);
+    }
+    
+     /**
+     * 单条查询-UserDemo
+     * 
+     * @param queryBo queryBo
+     * @return UserDemoBO
+     */     
+    public UserDemoBO queryUserDemoSingle(UserDemoQueryBO queryBo){
+        UserDemo po =  userDemoManager.queryUserDemoSingle(queryBo);
+        return UserDemoConverter.INSTANCE.convertUserDemoPoToBo(po);
+    }
+    
+    /**
+     * 列表查询-UserDemo
+     * 
+     * @param queryBo queryBo
+     * @return List<UserDemoBO>
+     */     
+    public List<UserDemoBO> queryUserDemoList(UserDemoQueryBO queryBo){
+        List<UserDemo> pos =  userDemoManager.queryUserDemoList(queryBo);
+        return UserDemoConverter.INSTANCE.convertUserDemoPoToBoList(pos);        
+    }
+    
+}
+
+
+```
+
+
+
+### 11）`Resource.java.vm`
+
+```v
+##导入宏定义
+$!{define.vm}
+$!{healerjean.vm}
+
+##设置表后缀（宏定义）
+#setTableSuffix("Resource")
+
+##保存文件（宏定义）
+#save("/resource", "Resource.java")
+
+##包路径（宏定义）
+#setPackageSuffix(${resourcePath})
+
+import ${dtoPath}.${tableInfo.name}DTO;
+import ${reqPath}.${tableInfo.name}SaveReq;
+import ${reqPath}.${tableInfo.name}QueryReq;
+import ${reqPath}.${tableInfo.name}DeleteReq;
+import java.util.List;
+
+##表注释（宏定义）
+#tableComment("Service接口")
+public interface $!{tableName} {
+
+    /**
+     * 保存-$!tableInfo.name
+     *
+     * @param req req
+     * @return boolean
+     */   
+    boolean save${tableInfo.name}(${tableInfo.name}SaveReq req);
+    
+     /**
+     * 删除-$!tableInfo.name
+     * 
+     * @param req req
+     * @return boolean
+     */  
+    boolean delete${tableInfo.name}(${tableInfo.name}DeleteReq req);
+    
+     /**
+     * 更新-$!tableInfo.name
+     * 
+     * @param req req
+     * @return boolean
+     */    
+    boolean update${tableInfo.name}(${tableInfo.name}SaveReq req);
+    
+     /**
+     * 单条查询-$!tableInfo.name
+     * 
+     * @param req req
+     * @return ${tableInfo.name}DTO
+     */    
+    ${tableInfo.name}DTO query${tableInfo.name}Single(${tableInfo.name}QueryReq req);
+    
+     /**
+     * 列表查询-$!tableInfo.name
+     * 
+     * @param req req
+     * @return List<${tableInfo.name}DTO>
+     */     
+    List<${tableInfo.name}DTO> query${tableInfo.name}List(${tableInfo.name}QueryReq req);
+    
+}
+
+```
+
+```java
+package com.healerjean.proj.template.resource;
+
+import com.healerjean.proj.template.dto.UserDemoDTO;
+import com.healerjean.proj.template.req.UserDemoSaveReq;
+import com.healerjean.proj.template.req.UserDemoQueryReq;
+import com.healerjean.proj.template.req.UserDemoDeleteReq;
+import java.util.List;
+
+/**
+ * (UserDemo)Service接口
+ *
+ * @author zhangyujin
+ * @date 2023-06-17 22:00:16
+ */
+public interface UserDemoResource {
+
+    /**
+     * 保存-UserDemo
+     *
+     * @param req req
+     * @return boolean
+     */   
+    boolean saveUserDemo(UserDemoSaveReq req);
+    
+     /**
+     * 删除-UserDemo
+     * 
+     * @param req req
+     * @return boolean
+     */  
+    boolean deleteUserDemo(UserDemoDeleteReq req);
+    
+     /**
+     * 更新-UserDemo
+     * 
+     * @param req req
+     * @return boolean
+     */    
+    boolean updateUserDemo(UserDemoSaveReq req);
+    
+     /**
+     * 单条查询-UserDemo
+     * 
+     * @param req req
+     * @return UserDemoDTO
+     */    
+    UserDemoDTO queryUserDemoSingle(UserDemoQueryReq req);
+    
+     /**
+     * 列表查询-UserDemo
+     * 
+     * @param req req
+     * @return List<UserDemoDTO>
+     */     
+    List<UserDemoDTO> queryUserDemoList(UserDemoQueryReq req);
+    
+}
+
+
+```
+
+
+
+### 12）`ResourceImpl.java.vm`
+
+```v
+##导入宏定义
+$!{define.vm}
+$!{healerjean.vm}
+
+##设置表后缀（宏定义）
+#setTableSuffix("ResourceImpl")
+
+##保存文件（宏定义）
+#save("/resource/impl", "ResourceImpl.java")
+
+##包路径（宏定义）
+#setPackageSuffix(${resourceImplPath})
+##定义服务名
+#set($serviceName = $!tool.append($!tool.firstLowerCase($!tableInfo.name), "Service"))
+
+import ${boPath}.${tableInfo.name}QueryBO;
+import ${boPath}.${tableInfo.name}BO;
+import ${dtoPath}.${tableInfo.name}DTO;
+import ${reqPath}.${tableInfo.name}SaveReq;
+import ${reqPath}.${tableInfo.name}QueryReq;
+import ${reqPath}.${tableInfo.name}DeleteReq;
+import ${servicePath}.${tableInfo.name}Service;
+import ${resourcePath}.${tableInfo.name}Resource;
+import ${converterPath}.${tableInfo.name}Converter;
+import java.util.List;
+import javax.annotation.Resource;
+
+##表注释（宏定义）
+#tableComment("Resource接口")
+public class $!{tableName} implements $!{tableInfo.name}Resource {
+
+     /**
+     * $serviceName
+     */ 
+    @Resource
+    private $!{tableInfo.name}Service $serviceName;
+
+
+    /**
+     * 保存-$!tableInfo.name
+     *
+     * @param req req
+     * @return boolean
+     */   
+    public boolean save${tableInfo.name}(${tableInfo.name}SaveReq req){
+        $!{tableInfo.name}BO bo = $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}SaveReqToBo(req);
+        return $!{serviceName}.save${tableInfo.name}(bo);  
+    }
+    
+     /**
+     * 删除-$!tableInfo.name
+     * 
+     * @param req req
+     * @return boolean
+     */  
+    public boolean delete${tableInfo.name}(${tableInfo.name}DeleteReq req){
+        $!{tableInfo.name}BO bo = $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}DeleteReqToBo(req);
+        return $!{serviceName}.delete${tableInfo.name}(bo);  
+    }
+    
+     /**
+     * 更新-$!tableInfo.name
+     * 
+     * @param req req
+     * @return boolean
+     */    
+    public boolean update${tableInfo.name}(${tableInfo.name}SaveReq req){
+        $!{tableInfo.name}BO bo = $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}SaveReqToBo(req);
+        return $!{serviceName}.update${tableInfo.name}(bo);  
+    }
+    
+     /**
+     * 单条查询-$!tableInfo.name
+     * 
+     * @param req req
+     * @return ${tableInfo.name}DTO
+     */    
+    public ${tableInfo.name}DTO query${tableInfo.name}Single(${tableInfo.name}QueryReq req){
+        $!{tableInfo.name}QueryBO queryBo = $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}QueryReqToBo(req);
+        $!{tableInfo.name}BO bo = $!{serviceName}.query${tableInfo.name}Single(queryBo);  
+        return $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}BoToDto(bo);  
+    }
+    
+     /**
+     * 列表查询-$!tableInfo.name
+     * 
+     * @param req req
+     * @return List<${tableInfo.name}DTO>
+     */     
+    public List<${tableInfo.name}DTO> query${tableInfo.name}List(${tableInfo.name}QueryReq req){
+        $!{tableInfo.name}QueryBO queryBo = $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}QueryReqToBo(req);
+        List<$!{tableInfo.name}BO> bos = $!{serviceName}.query${tableInfo.name}List(queryBo);  
+        return $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}BoToDtoList(bos);  
+    }
+    
+}
+
+```
+
+```java
+package com.healerjean.proj.template.resource.impl;
+
+import com.healerjean.proj.template.bo.UserDemoQueryBO;
+import com.healerjean.proj.template.bo.UserDemoBO;
+import com.healerjean.proj.template.dto.UserDemoDTO;
+import com.healerjean.proj.template.req.UserDemoSaveReq;
+import com.healerjean.proj.template.req.UserDemoQueryReq;
+import com.healerjean.proj.template.req.UserDemoDeleteReq;
+import com.healerjean.proj.template.service.UserDemoService;
+import com.healerjean.proj.template.resource.UserDemoResource;
+import com.healerjean.proj.template.converter.UserDemoConverter;
+import java.util.List;
+import javax.annotation.Resource;
+
+/**
+ * (UserDemo)Resource接口
+ *
+ * @author zhangyujin
+ * @date 2023-06-17 22:00:16
+ */
+public class UserDemoResourceImpl implements UserDemoResource {
+
+     /**
+     * userDemoService
+     */ 
+    @Resource
+    private UserDemoService userDemoService;
+
+
+    /**
+     * 保存-UserDemo
+     *
+     * @param req req
+     * @return boolean
+     */   
+    public boolean saveUserDemo(UserDemoSaveReq req){
+        UserDemoBO bo = UserDemoConverter.INSTANCE.convertUserDemoSaveReqToBo(req);
+        return userDemoService.saveUserDemo(bo);  
+    }
+    
+     /**
+     * 删除-UserDemo
+     * 
+     * @param req req
+     * @return boolean
+     */  
+    public boolean deleteUserDemo(UserDemoDeleteReq req){
+        UserDemoBO bo = UserDemoConverter.INSTANCE.convertUserDemoDeleteReqToBo(req);
+        return userDemoService.deleteUserDemo(bo);  
+    }
+    
+     /**
+     * 更新-UserDemo
+     * 
+     * @param req req
+     * @return boolean
+     */    
+    public boolean updateUserDemo(UserDemoSaveReq req){
+        UserDemoBO bo = UserDemoConverter.INSTANCE.convertUserDemoSaveReqToBo(req);
+        return userDemoService.updateUserDemo(bo);  
+    }
+    
+     /**
+     * 单条查询-UserDemo
+     * 
+     * @param req req
+     * @return UserDemoDTO
+     */    
+    public UserDemoDTO queryUserDemoSingle(UserDemoQueryReq req){
+        UserDemoQueryBO queryBo = UserDemoConverter.INSTANCE.convertUserDemoQueryReqToBo(req);
+        UserDemoBO bo = userDemoService.queryUserDemoSingle(queryBo);  
+        return UserDemoConverter.INSTANCE.convertUserDemoBoToDto(bo);  
+    }
+    
+     /**
+     * 列表查询-UserDemo
+     * 
+     * @param req req
+     * @return List<UserDemoDTO>
+     */     
+    public List<UserDemoDTO> queryUserDemoList(UserDemoQueryReq req){
+        UserDemoQueryBO queryBo = UserDemoConverter.INSTANCE.convertUserDemoQueryReqToBo(req);
+        List<UserDemoBO> bos = userDemoService.queryUserDemoList(queryBo);  
+        return UserDemoConverter.INSTANCE.convertUserDemoBoToDtoList(bos);  
+    }
+    
+}
+
+
+```
 
 
 
