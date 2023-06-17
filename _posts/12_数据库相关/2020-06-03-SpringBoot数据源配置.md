@@ -18,7 +18,7 @@ description: SpringBoot数据源配置
 
 
 
-# 1、Spring配置文件
+# 1、`Spring` 配置文件
 
 ```xml
 <!-- 数据源 -->
@@ -61,7 +61,7 @@ spring.datasource.password=123456
 
 
 
-# 2、DataSourcerConfig
+# 2、`DataSourcerConfig`
 
 ```properties
 ####################################

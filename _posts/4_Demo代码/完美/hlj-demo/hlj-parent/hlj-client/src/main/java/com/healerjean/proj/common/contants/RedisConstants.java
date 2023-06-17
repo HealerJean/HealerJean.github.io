@@ -13,7 +13,7 @@ public class RedisConstants {
      * 工程名/应用名
      * 以下两个应用SERVER_NAME使用同一个
      */
-    private static final String SERVER_NAME = "projectName";
+    private static final String SERVER_NAME = "hlj-project";
     /**
      * 分隔符，尽量使用官方推荐的英文冒号
      */
