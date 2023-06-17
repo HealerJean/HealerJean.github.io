@@ -900,21 +900,23 @@ public class UserController extends ApiController {
 
 ## 3、自定义模板：`V1-MybatisPlus`
 
-### 1）`Entity.java`
+### 1）`PO.java`
 
 ```java
 ##导入宏定义
 $!{define.vm}
 
 ##保存文件（宏定义）
-#save("/entity", ".java")
+#save("/po", ".java")
 
 ##包路径（宏定义）
-#setPackageSuffix("entity")
+#setPackageSuffix("com.healerjean.proj.template.po")
 
 ##自动导入包（全局变量）
 $!{autoImport.vm}
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -925,28 +927,32 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class $!{tableInfo.name} extends Model<$!{tableInfo.name}> {
    
-   /**
+    /**
      * serialVersionUID
      */
     private static final long serialVersionUID = 1L;
-    
-#foreach($column in $tableInfo.fullColumn)
-    
-     #if(${column.comment})
-    /**
-     * ${column.comment}
-     */
-     #end
-    private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
-#end
 
 #foreach($column in $tableInfo.fullColumn)
     
-     #if(${column.name})
+#if(${column.comment})
+    /**
+     * ${column.comment}
+     */
+#end
+#if(${column.name}=="id")
+    @TableId(value = "id", type = IdType.AUTO)
+#end
+    private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
+#end
+
+
+#foreach($column in $tableInfo.fullColumn)
+    
+#if(${column.name})
     /**
      * ${column.obj.name}
      */
-     #end
+#end
     public static final String ${column.obj.name.toUpperCase()} = "${column.obj.name}";
 #end
 
@@ -960,7 +966,7 @@ public class $!{tableInfo.name} extends Model<$!{tableInfo.name}> {
     protected Serializable pkVal() {
         return this.$!column.name;
     }
-    #break
+#break
 #end
 }
 
@@ -968,129 +974,130 @@ public class $!{tableInfo.name} extends Model<$!{tableInfo.name}> {
 
 
 ```java
-package entity;
+package com.healerjean.proj.template.po;
 
 import java.util.Date;
-
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
  * (UserDemo)表实体类
  *
- * @author makejava
- * @date 2023-06-17 14:14:59
+ * @author zhangyujin
+ * @date 2023-06-17 15:57:33
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class UserDemo extends Model<UserDemo> {
-
+   
     /**
      * serialVersionUID
      */
     private static final long serialVersionUID = 1L;
 
-
+    
     /**
      * 主键
      */
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-
+    
     /**
      * 姓名
      */
     private String name;
-
+    
     /**
      * 年龄
      */
     private Integer age;
-
+    
     /**
      * 电话
      */
     private String phone;
-
+    
     /**
      * 邮箱
      */
     private String email;
-
+    
     /**
      * 开始时间
      */
     private Date startTime;
-
+    
     /**
      * 结束时间
      */
     private Date endTime;
-
+    
     /**
      * 1有效 0 废弃
      */
     private Integer validFlag;
-
+    
     /**
      * 创建时间
      */
     private Date createTime;
-
+    
     /**
      * 更新时间
      */
     private Date updateTime;
 
 
+    
     /**
      * id
      */
     public static final String ID = "id";
-
+    
     /**
      * name
      */
     public static final String NAME = "name";
-
+    
     /**
      * age
      */
     public static final String AGE = "age";
-
+    
     /**
      * phone
      */
     public static final String PHONE = "phone";
-
+    
     /**
      * email
      */
     public static final String EMAIL = "email";
-
+    
     /**
      * start_time
      */
     public static final String START_TIME = "start_time";
-
+    
     /**
      * end_time
      */
     public static final String END_TIME = "end_time";
-
+    
     /**
      * valid_flag
      */
     public static final String VALID_FLAG = "valid_flag";
-
+    
     /**
      * create_time
      */
     public static final String CREATE_TIME = "create_time";
-
+    
     /**
      * update_time
      */
@@ -1116,7 +1123,7 @@ public class UserDemo extends Model<UserDemo> {
 
 ```java
 ##导入宏定义
-$!define
+$!{define.vm}
 
 ##设置表后缀（宏定义）
 #setTableSuffix("Mapper")
@@ -1125,37 +1132,40 @@ $!define
 #save("/mapper", "Mapper.java")
 
 ##包路径（宏定义）
-#setPackageSuffix("mapper")
+#setPackageSuffix("com.healerjean.proj.template.mapper")
 
+import com.healerjean.proj.template.po.$!tableInfo.name;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import $!{tableInfo.savePackageName}.entity.$!tableInfo.name;
 
-/**
- * @author HealerJean
- * @date 2020-04-03 11:40:02
- * @Description
- */
-public interface $!{tableName} extends BaseMapper<$!tableInfo.name> {
+##表注释（宏定义）
+#tableComment("表数据库访问层")
+public interface $!{tableInfo.name}Mapper extends BaseMapper<$!{tableInfo.name}> {
+
 
 }
+
 ```
 
 
 
 ```java
-package com.mapper;
+package com.healerjean.proj.template.mapper;
 
+import com.healerjean.proj.template.po.UserDemo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.entity.User;
 
 /**
- * @author HealerJean
- * @date 2020-04-03 11:40:02
- * @Description
+ * (UserDemo)表数据库访问层
+ *
+ * @author zhangyujin
+ * @date 2023-06-17 15:57:33
  */
-public interface UserMapper extends BaseMapper<User> {
+public interface UserDemoMapper extends BaseMapper<UserDemo> {
+
 
 }
+
+
 ```
 
 
@@ -1164,7 +1174,7 @@ public interface UserMapper extends BaseMapper<User> {
 
 ```java
 ##引入mybatis支持
-$!mybatisSupport
+$!{mybatisSupport.vm}
 
 ##设置保存名称与保存位置
 $!callback.setFileName($tool.append($!{tableInfo.name}, "Mapper.xml"))
@@ -1177,140 +1187,152 @@ $!callback.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
 
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="$!{tableInfo.savePackageName}.mapper.$!{tableInfo.name}Mapper">
+<mapper namespace="com.healerjean.proj.template.mapper.$!{tableInfo.name}Mapper">
 
-    <resultMap type="$!{tableInfo.savePackageName}.entity.$!{tableInfo.name}" id="$!{tableInfo.name}Map">
+    <resultMap id="BaseResultMap" type="com.healerjean.proj.template.po.$!{tableInfo.name}">
 #foreach($column in $tableInfo.fullColumn)
-        <result property="$!column.name" column="$!column.obj.name" jdbcType="$!column.ext.jdbcType"/>
+        <result column="$!column.obj.name" property="$!column.name"/>
 #end
     </resultMap>
 
+        <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        #allSqlColumn()
+     </sql>
+
 </mapper>
+
 ```
 
 
-```java
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mapper.UserMapper">
+<mapper namespace="com.healerjean.proj.template.mapper.UserDemoMapper">
 
-    <resultMap type="com.entity.User" id="UserMap">
-        <result property="id" column="id" jdbcType="INTEGER"/>
-        <result property="city" column="city" jdbcType="VARCHAR"/>
-        <result property="name" column="name" jdbcType="VARCHAR"/>
-        <result property="status" column="status" jdbcType="INTEGER"/>
-        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    <resultMap id="BaseResultMap" type="com.healerjean.proj.template.po.UserDemo">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="age" property="age"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="valid_flag" property="validFlag"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
     </resultMap>
 
+        <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, age, phone, email, start_time, end_time, valid_flag, create_time, update_time     </sql>
+
 </mapper>
+
+
 ```
 
 
 
-### 4）`Service.java`
+### 4）`Dao.java`
 
 ```java
-##定义初始变量
-#set($tableName = $tool.append($tableInfo.name, "Service"))
-##设置回调
-$!callback.setFileName($tool.append($tableName, ".java"))
-$!callback.setSavePath($tool.append($tableInfo.savePath, "/service"))
+##导入宏定义
+$!{define.vm}
 
-##拿到主键
-#if(!$tableInfo.pkColumn.isEmpty())
-    #set($pk = $tableInfo.pkColumn.get(0))
-#end
+##设置表后缀（宏定义）
+#setTableSuffix("Dao")
 
-#if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}service;
+##保存文件（宏定义）
+#save("/dao", "Dao.java")
 
+##包路径（宏定义）
+#setPackageSuffix("com.healerjean.proj.template.dao")
 
-/**
- * @author HealerJean
- * @date 2020-04-03 11:40:02
- * @Description
- */
-public interface $!{tableName} {
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.healerjean.proj.template.po.$!tableInfo.name;
 
+##表注释（宏定义）
+#tableComment("Dao接口")
+public interface $!{tableName} extends IService<$!tableInfo.name> {
 
 }
+
 ```
 
 
 
 ```java
-package com.service;
+package com.healerjean.proj.template.dao;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.healerjean.proj.template.po.UserDemo;
 
 /**
- * @author HealerJean
- * @date 2020-04-03 11:40:02
- * @Description
+ * (UserDemo)Dao接口
+ *
+ * @author zhangyujin
+ * @date 2023-06-17 15:57:33
  */
-public interface UserService {
-
+public interface UserDemoDao extends IService<UserDemo> {
 
 }
+
+
 ```
 
 
-### 5）`ServiceImpl.java`
+### 5）`DaoImpl.java`
 
 ```java
-##定义初始变量
-#set($tableName = $tool.append($tableInfo.name, "ServiceImpl"))
-##设置回调
-$!callback.setFileName($tool.append($tableName, ".java"))
-$!callback.setSavePath($tool.append($tableInfo.savePath, "/service/impl"))
+##导入宏定义
+$!{define.vm}
 
-##拿到主键
-#if(!$tableInfo.pkColumn.isEmpty())
-    #set($pk = $tableInfo.pkColumn.get(0))
-#end
+##设置表后缀（宏定义）
+#setTableSuffix("DaoImpl")
 
-#if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}service.impl;
+##保存文件（宏定义）
+#save("/dao/impl", "DaoImpl.java")
 
-import $!{tableInfo.savePackageName}.mapper.$!{tableInfo.name}Mapper;
-import $!{tableInfo.savePackageName}.service.$!{tableInfo.name}Service;
+##包路径（宏定义）
+#setPackageSuffix("com.healerjean.proj.template.dao.impl")
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.healerjean.proj.template.po.$!{tableInfo.name};
+import com.healerjean.proj.template.dao.$!{tableInfo.name}Dao;
+import com.healerjean.proj.template.mapper.$!{tableInfo.name}Mapper;
 import org.springframework.stereotype.Service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+##表注释（宏定义）
+#tableComment("Dao实现类")
+@Service
+public class $!{tableName} extends ServiceImpl<$!{tableInfo.name}Mapper, $!{tableInfo.name}> implements $!{tableInfo.name}Dao {
 
-/**
- * @author HealerJean
- * @date 2020-04-03 11:40:02
- * @Description
- */
-@Service("$!tool.firstLowerCase($!{tableInfo.name})Service")
-public class $!{tableName} implements $!{tableInfo.name}Service {
-
-    @Autowired
-    private $!{tableInfo.name}Mapper $!tool.firstLowerCase($!{tableInfo.name})Mapper;
- 
 }
+
 ```
 
 ```java
-package com.service.impl;
+package com.healerjean.proj.template.dao.impl;
 
-import com.mapper.UserMapper;
-import com.service.UserService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.healerjean.proj.template.po.UserDemo;
+import com.healerjean.proj.template.dao.UserDemoDao;
+import com.healerjean.proj.template.mapper.UserDemoMapper;
 import org.springframework.stereotype.Service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 /**
- * @author HealerJean
- * @date 2020-04-03 11:40:02
- * @Description
+ * (UserDemo)Dao实现类
+ *
+ * @author zhangyujin
+ * @date 2023-06-17 15:57:33
  */
-@Service("userService")
-public class UserServiceImpl implements UserService {
+@Service
+public class UserDemoDaoImpl extends ServiceImpl<UserDemoMapper, UserDemo> implements UserDemoDao {
 
-    @Autowired
-    private UserMapper userMapper;
- 
 }
+
+
 ```
 
 
