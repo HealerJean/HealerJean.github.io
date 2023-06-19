@@ -28,16 +28,11 @@ import java.util.stream.Collectors;
 public interface UserConverter {
 
     /**
-     * 实例
+     * The constant INSTANCE.
      */
     UserConverter INSTANCE = Mappers.getMapper(UserConverter.class);
 
-    /**
-     * covertUserPoToBo
-     *
-     * @param userDemo userDemo
-     * @return UserDemoBO
-     */
+
     default UserDemoBO covertUserDemoPoToBo(UserDemo userDemo) {
         if (Objects.isNull(userDemo)) {
             return null;
