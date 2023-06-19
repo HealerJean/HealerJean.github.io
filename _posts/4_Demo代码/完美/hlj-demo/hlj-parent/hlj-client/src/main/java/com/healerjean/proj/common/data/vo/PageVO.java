@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+
 /**
  * PageBO
  *
@@ -18,8 +19,7 @@ public class PageVO<T> implements Serializable {
     /**
      * serialVersionUID
      */
-    private static final long serialVersionUID = 1817973891205894329L;
-
+    private static final long serialVersionUID = -4582298483405390844L;
     /**
      * 总记录数
      */
