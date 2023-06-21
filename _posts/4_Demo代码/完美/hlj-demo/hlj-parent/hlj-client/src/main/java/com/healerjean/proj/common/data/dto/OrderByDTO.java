@@ -25,6 +25,6 @@ public class OrderByDTO implements Serializable {
     /**
      * 排序方向
      */
-    private String direction;
+    private Boolean direction;
 
 }

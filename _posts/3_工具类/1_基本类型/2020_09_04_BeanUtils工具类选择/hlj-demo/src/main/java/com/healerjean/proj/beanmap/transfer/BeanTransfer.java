@@ -1,6 +1,6 @@
 package com.healerjean.proj.beanmap.transfer;
 
-import com.healerjean.proj.beanmap.BeanUtils;
+import com.healerjean.proj.enmus.MapperNamedConstant;
 import com.healerjean.proj.enmus.SystemEmum;
 import org.mapstruct.Named;
 
@@ -10,23 +10,20 @@ import java.time.ZoneId;
 import java.util.Date;
 
 /**
+ * BeanTransfer
+ *
  * @author HealerJean
- * @ClassName BeanTransfer
- * @date 2020/9/4  14:39.
- * @Description
+ * @date 2023-06-19 06:06:56
  */
 public interface BeanTransfer {
 
     /**
-     * Date和LocaDateTime互转
+     * Date和LocalDateTime互转
      */
-    @Named(BeanUtils.TRANSFER_OF_DATE_AND_LOCAL_DATE_TIME)
+    @Named(MapperNamedConstant.CLASS_TRANSFER_DATE)
     class TransferDateAndLocalDateTime implements BeanTransfer {
 
-        public static final String DateToLocalDateTime = "DateToLocalDateTime";
-        public static final String LocalDateTimeToDate = "LocalDateTimeToDate";
-
-        @Named(DateToLocalDateTime)
+        @Named(MapperNamedConstant.METHOD_DATE_TO_LOCAL_DATE_TIME)
         public static LocalDateTime toLocalDateTime(Date date) {
             if (date == null) {
                 return null;
@@ -37,7 +34,7 @@ public interface BeanTransfer {
         }
 
 
-        @Named(LocalDateTimeToDate)
+        @Named(MapperNamedConstant.METHOD_LOCAL_DATE_TIME_TO_DATE)
         public static Date toDate(LocalDateTime localDateTime) {
             if (localDateTime == null) {
                 return null;
@@ -52,17 +49,15 @@ public interface BeanTransfer {
     /**
      * Code和枚举互转
      */
-    @Named(BeanUtils.TRANSFER_OF_SEX_ENUM)
+    @Named(MapperNamedConstant.CLASS_TRANSFER_ENUM_SEX)
      class TransferSexEnum  implements BeanTransfer{
-        public static final String CODE_TO_SEX_ENUM = "CodeToSexEnum";
-        public static final String SEX_ENUM_TO_CODE = "SexEnumToCode";
 
-        @Named(CODE_TO_SEX_ENUM)
-        public SystemEmum.SexEnum codeToSexEnum(Integer code) {
+        @Named(MapperNamedConstant.METHOD_SEX_CODE_TO_ENUM)
+        public SystemEmum.SexEnum sexCodeToEnum(Integer code) {
             return SystemEmum.SexEnum.to(code);
         }
 
-        @Named(SEX_ENUM_TO_CODE)
+        @Named(MapperNamedConstant.METHOD_SEX_ENUM_TO_CODE)
         public Integer sexEnumToCode(SystemEmum.SexEnum sexEnum) {
             return sexEnum.getCode();
         }

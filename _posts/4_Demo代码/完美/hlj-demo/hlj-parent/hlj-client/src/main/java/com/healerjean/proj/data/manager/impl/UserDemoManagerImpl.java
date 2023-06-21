@@ -2,8 +2,9 @@ package com.healerjean.proj.data.manager.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.healerjean.proj.common.data.bo.PageQueryBO;
@@ -11,8 +12,8 @@ import com.healerjean.proj.data.bo.UserDemoQueryBO;
 import com.healerjean.proj.data.dao.UserDemoDao;
 import com.healerjean.proj.data.manager.UserDemoManager;
 import com.healerjean.proj.data.po.UserDemo;
-import com.healerjean.proj.utils.db.MybatisPlusUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -102,7 +103,15 @@ public class UserDemoManagerImpl implements UserDemoManager {
      */
     @Override
     public List<UserDemo> queryUserDemoList(UserDemoQueryBO query) {
-        LambdaQueryWrapper<UserDemo> queryWrapper = Wrappers.lambdaQuery(UserDemo.class)
+        QueryWrapper<UserDemo> queryWrapper = new QueryWrapper<>();
+        if (!CollectionUtils.isEmpty(query.getSelectFields())) {
+            queryWrapper.select(StringUtils.join(query.getSelectFields(), ","));
+        }
+        if (!CollectionUtils.isEmpty(query.getOrderByList())) {
+            query.getOrderByList().forEach(item -> queryWrapper.orderBy(Boolean.TRUE, item.getDirection(), item.getProperty()));
+        }
+
+        LambdaQueryWrapper<UserDemo> lambdaQueryWrapper = queryWrapper.lambda()
                 .eq(Objects.nonNull(query.getId()), UserDemo::getId, query.getId())
                 .eq(Objects.nonNull(query.getValidFlag()), UserDemo::getValidFlag, query.getValidFlag())
                 .eq(StringUtils.isNotBlank(query.getName()), UserDemo::getName, query.getName())
@@ -111,12 +120,8 @@ public class UserDemoManagerImpl implements UserDemoManager {
                 .like(StringUtils.isNotBlank(query.getLikeName()), UserDemo::getName, query.getLikeName())
                 .like(StringUtils.isNotBlank(query.getLikePhone()), UserDemo::getPhone, query.getLikePhone())
                 .lt(Objects.nonNull(query.getQueryTime()), UserDemo::getStartTime, query.getQueryTime())
-                .gt(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime())
-
-                .orderByDesc(UserDemo::getUpdateTime);
-
-        MybatisPlusUtil.fieldValues(query.getSelectFields(), queryWrapper, UserDemo.class);
-        return userDemoDao.list(queryWrapper);
+                .gt(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime());
+        return userDemoDao.list(lambdaQueryWrapper);
     }
 
     /**
@@ -128,7 +133,15 @@ public class UserDemoManagerImpl implements UserDemoManager {
     @Override
     public Page<UserDemo> queryUserDemoPage(PageQueryBO<UserDemoQueryBO> pageQuery) {
         UserDemoQueryBO query = pageQuery.getData();
-        LambdaQueryWrapper<UserDemo> queryWrapper = Wrappers.lambdaQuery(UserDemo.class)
+        QueryWrapper<UserDemo> queryWrapper = new QueryWrapper<>();
+        if (!CollectionUtils.isEmpty(query.getSelectFields())) {
+            queryWrapper.select(StringUtils.join(query.getSelectFields(), ","));
+        }
+
+        if (!CollectionUtils.isEmpty(query.getOrderByList())) {
+            query.getOrderByList().forEach(item -> queryWrapper.orderBy(Boolean.TRUE, item.getDirection(), item.getProperty()));
+        }
+        LambdaQueryWrapper<UserDemo> lambdaQueryWrapper = queryWrapper.lambda()
                 .eq(Objects.nonNull(query.getId()), UserDemo::getId, query.getId())
                 .eq(Objects.nonNull(query.getValidFlag()), UserDemo::getValidFlag, query.getValidFlag())
                 .eq(StringUtils.isNotBlank(query.getName()), UserDemo::getName, query.getName())
@@ -139,10 +152,7 @@ public class UserDemoManagerImpl implements UserDemoManager {
                 .like(StringUtils.isNotBlank(query.getLikePhone()), UserDemo::getPhone, query.getLikePhone())
                 .lt(Objects.nonNull(query.getQueryTime()), UserDemo::getStartTime, query.getQueryTime())
                 .gt(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime());
-
-
-        MybatisPlusUtil.fieldValues(query.getSelectFields(), queryWrapper, UserDemo.class);
         Page<UserDemo> page = new Page<>(pageQuery.getCurrPage(), pageQuery.getPageSize(), pageQuery.getSearchCountFlag());
-        return userDemoDao.page(page, queryWrapper);
+        return userDemoDao.page(page, lambdaQueryWrapper);
     }
 }

@@ -2,7 +2,6 @@ package com.healerjean.proj;
 
 import com.healerjean.proj.beanmap.BeanUtils;
 import com.healerjean.proj.dto.DictionaryType;
-import com.healerjean.proj.enmus.SystemEmum;
 import com.healerjean.proj.pojo.DictionaryTypeDTO;
 import org.junit.Test;
 
@@ -25,7 +24,7 @@ public class TestMain {
         dictionaryType.setStatus("10");
         dictionaryType.setCreateTime(new Date());
         dictionaryType.setSex(1);
-        DictionaryTypeDTO dto = BeanUtils.MAPPER.dictionaryType2DTO(dictionaryType);
+        DictionaryTypeDTO dto = BeanUtils.INSTANCE.dictionaryType2DTO(dictionaryType);
         System.out.println(dto);
     }
 

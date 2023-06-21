@@ -2,6 +2,7 @@ package com.healerjean.proj.beanmap;
 
 import com.healerjean.proj.beanmap.transfer.BeanTransfer;
 import com.healerjean.proj.dto.DictionaryType;
+import com.healerjean.proj.enmus.MapperNamedConstant;
 import com.healerjean.proj.pojo.DictionaryTypeDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,10 +21,10 @@ import org.mapstruct.factory.Mappers;
 })
 public interface BeanUtils {
 
-    BeanUtils MAPPER = Mappers.getMapper(BeanUtils.class);
-    String TRANSFER_OF_SEX_ENUM = "sexEnumTransfer";
-    String TRANSFER_OF_DATE_AND_LOCAL_DATE_TIME = "DateAndLocalDateTimeTransfer";
-
+    /**
+     * MAPPER
+     */
+    BeanUtils INSTANCE = Mappers.getMapper(BeanUtils.class);
 
     /**
      * 方法名称可任意
@@ -35,8 +36,8 @@ public interface BeanUtils {
             /** 名字不同转化 */
             @Mapping(source = "dictionaryTypeId", target = "id"),
             /** 类型和名字都不同转化 */
-            @Mapping(source = "sex", target = "sexEnum", qualifiedByName = {TRANSFER_OF_SEX_ENUM, BeanTransfer.TransferSexEnum.CODE_TO_SEX_ENUM}),
-            @Mapping(source = "createTime", target = "createTime", qualifiedByName = {TRANSFER_OF_DATE_AND_LOCAL_DATE_TIME, BeanTransfer.TransferDateAndLocalDateTime.DateToLocalDateTime}),
+            @Mapping(source = "sex", target = "sexEnum", qualifiedByName = {MapperNamedConstant.CLASS_TRANSFER_ENUM_SEX, MapperNamedConstant.METHOD_SEX_CODE_TO_ENUM}),
+            @Mapping(source = "createTime", target = "createTime", qualifiedByName = {MapperNamedConstant.CLASS_TRANSFER_DATE, MapperNamedConstant.METHOD_DATE_TO_LOCAL_DATE_TIME}),
             @Mapping(source = "status", target = "status", ignore = true),
     })
     DictionaryTypeDTO dictionaryType2DTO(DictionaryType dictionaryType);
