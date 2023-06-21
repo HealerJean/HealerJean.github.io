@@ -16,13 +16,13 @@ description: BeanUtils工具类选择
 
 
 
-# 1、BeanUtils 复制字段值
+# 1、`BeanUtils` 复制字段值
 
 
 
 ## 1.1、`org.springframework.beans.BeanUtils`
 
-> a拷贝到b
+> `a` 拷贝到 `b`
 
 ```java
 //source 源文件，target 目标文件 
@@ -48,7 +48,7 @@ BeanUtils.copyProperties(appsApp,data,ignore);
 
 ## 1.2、`org.apache.commons.beanutils.BeanUtils ` 
 
-> b拷贝到a
+> `b` 拷贝到 `a 
 
 
 
@@ -185,18 +185,32 @@ public interface SystemEmum {
 
 
 ```java
+package com.healerjean.proj.beanmap.transfer;
+
+import com.healerjean.proj.enmus.MapperNamedConstant;
+import com.healerjean.proj.enmus.SystemEmum;
+import org.mapstruct.Named;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
+/**
+ * BeanTransfer
+ * 
+ * @author HealerJean
+ * @date 2023-06-19 06:06:56
+ */
 public interface BeanTransfer {
 
     /**
-     * Date和LocaDateTime互转
+     * Date和LocalDateTime互转
      */
-    @Named(BeanUtils.TRANSFER_OF_DATE_AND_LOCAL_DATE_TIME)
+    @Named(MapperNamedConstant.CLASS_TRANSFER_DATE)
     class TransferDateAndLocalDateTime implements BeanTransfer {
 
-        public static final String DateToLocalDateTime = "DateToLocalDateTime";
-        public static final String LocalDateTimeToDate = "LocalDateTimeToDate";
-
-        @Named(DateToLocalDateTime)
+        @Named(MapperNamedConstant.METHOD_DATE_TO_LOCAL_DATE_TIME)
         public static LocalDateTime toLocalDateTime(Date date) {
             if (date == null) {
                 return null;
@@ -207,7 +221,7 @@ public interface BeanTransfer {
         }
 
 
-        @Named(LocalDateTimeToDate)
+        @Named(MapperNamedConstant.METHOD_LOCAL_DATE_TIME_TO_DATE)
         public static Date toDate(LocalDateTime localDateTime) {
             if (localDateTime == null) {
                 return null;
@@ -222,29 +236,70 @@ public interface BeanTransfer {
     /**
      * Code和枚举互转
      */
-    @Named(BeanUtils.TRANSFER_OF_SEX_ENUM)
+    @Named(MapperNamedConstant.CLASS_TRANSFER_ENUM_SEX)
      class TransferSexEnum  implements BeanTransfer{
-        public static final String CODE_TO_SEX_ENUM = "CodeToSexEnum";
-        public static final String SEX_ENUM_TO_CODE = "SexEnumToCode";
 
-        @Named(CODE_TO_SEX_ENUM)
-        public SystemEmum.SexEnum codeToSexEnum(Integer code) {
+        @Named(MapperNamedConstant.METHOD_SEX_CODE_TO_ENUM)
+        public SystemEmum.SexEnum sexCodeToEnum(Integer code) {
             return SystemEmum.SexEnum.to(code);
         }
 
-        @Named(SEX_ENUM_TO_CODE)
+        @Named(MapperNamedConstant.METHOD_SEX_ENUM_TO_CODE)
         public Integer sexEnumToCode(SystemEmum.SexEnum sexEnum) {
             return sexEnum.getCode();
         }
     }
 
-
 }
+
 ```
 
 
 
-### 2.3.5、BeanUtils工具类
+### 2.3.5、`MapperNamedConstant`
+
+```java
+package com.healerjean.proj.enmus;
+
+/**
+ * MapperNamedConstant
+ *
+ * @author HealerJean
+ * @date 2023-06-19 06:06:51
+ */
+public interface MapperNamedConstant {
+
+    /**
+     * CLASS_TRANSFER_ENUM_SEX
+     */
+    String CLASS_TRANSFER_ENUM_SEX = "transferEnumSexClass";
+    /**
+     * METHOD_SEX_CODE_TO_ENUM
+     */
+    String METHOD_SEX_CODE_TO_ENUM = "sexCodeToEnumMethod";
+    /**
+     * METHOD_SEX_ENUM_TO_CODE
+     */
+    String METHOD_SEX_ENUM_TO_CODE = "sexEnumToCodeMethod";
+
+
+    /**
+     * CLASS_TRANSFER_DATE
+     */
+    String CLASS_TRANSFER_DATE = "transferDateClass";
+    /**
+     * METHOD_DATE_TO_LOCAL_DATE_TIME
+     */
+    String METHOD_DATE_TO_LOCAL_DATE_TIME = "dateToLocalDateTimeMethod";
+    /**
+     * METHOD_LOCAL_DATE_TIME_TO_DATE
+     */
+    String METHOD_LOCAL_DATE_TIME_TO_DATE = "localDateTimeToDateMethod";
+
+}
+```
+
+### 2.3.6、`BeanUtils` 工具类
 
 ```java
 @Mapper(uses = {
@@ -286,9 +341,7 @@ public interface BeanUtils {
 
 
 
-### 2.3.6、测试
-
-
+### 2.3.7、测试
 
 ```java
 @Test
@@ -352,230 +405,6 @@ public class BeanUtilsImpl implements BeanUtils {
 
 
 
-# 3、代码生成Set、Get
-
-
-
-## 3.1、工具类
-
-```java
-package com.fintech.scf.utils;
-
-import com.fintech.scf.service.core.dto.ContractDTO;
-import com.xiaomi.utils.conf.FieldName;
-import org.hibernate.validator.constraints.Length;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-
-/**
- * @author HealerJean
- * @version 1.0v
- * @ClassName JsonToMarkDownTable
- * @date 2019/6/5  15:38.
- * @Description
- */
-public class MarkdownInterUtils {
-
-    private static final String TABLE_HEAD = "|  参数名称  | 参数类型 | 参数长度 | 是否必需 |      说明      |    备注     |\n";
-    private static final String TABLE_HEAD_DIVIDING_LINE = "| :--------: | :------: | :------: | :------: | :----------: | :---------: |\n";
-    private static final String TITLE = "## 接口名称\n> **说明**\n- 调用地址：URL\n- 调用方式：***METHOD***\n> **请求参数**\n\n";
-    private static final String REQUEST_EXAMPLE = "    \n> **请求报文样例**\n\n```\n\n```\n";
-    private static final String RESPONSE_PARAMS = "> **响应参数**\n\n\n";
-    private static final String RESPONSE_EXAMPLE = "   \n> **响应报文样例**\n\n```\n\n```\n";
-    private static final String RESPONSE_CODE = "> **返回码解析**\n\n| 返回码 |含义| 备注 |\n| :----: | :----------------: | :--: |\n|  200 |成功||\n";
-
-
-    public static void main(String[] args) {
-        System.out.println(interMarkdown(ContractDTO.class, ContractDTO.class));
-        // System.out.println(interTable(ContractDTO.class));
-
-    }
-
-    /**
-     * 制作markdown接口
-     *
-     * @param requestClass
-     * @param responseClass
-     * @return
-     */
-    public static String interMarkdown(Class requestClass, Class responseClass) {
-        StringBuilder res = new StringBuilder();
-        res.append(TITLE);
-
-        //请求参数
-        if (requestClass != null) {
-            res.append(TABLE_HEAD);
-            res.append(TABLE_HEAD_DIVIDING_LINE);
-            String requestTable = table(requestClass);
-            res.append(requestTable);
-        }
-        res.append(REQUEST_EXAMPLE);
-
-
-        //返回参数
-        res.append(RESPONSE_PARAMS);
-        res.append(TABLE_HEAD);
-        res.append(TABLE_HEAD_DIVIDING_LINE);
-        if (responseClass != null) {
-            String responseTable = table(responseClass);
-            res.append(responseTable);
-        }
-        res.append("| msg | 字符串 |255| 是| 返回结果 | \n   \n");
-        res.append(RESPONSE_EXAMPLE);
-
-
-
-        //返回Code
-        res.append(RESPONSE_CODE);
-        return res.toString();
-    }
-
-
-    /**
-     * 制作table表格
-     * @param clazz
-     * @return
-     */
-    public static String interTable(Class clazz) {
-        StringBuilder res = new StringBuilder();
-        res.append(TABLE_HEAD);
-        res.append(TABLE_HEAD_DIVIDING_LINE);
-        String requestTable = table(clazz);
-        res.append(requestTable);
-        return res.toString();
-    }
-
-
-    /**
-     * 获取所有字段名
-     */
-    public static Set<Field> getField(Class c) {
-        Set<Field> declaredFields = new HashSet<>();
-        Class tempClass = c;
-        //反射获取父类里面的属性
-        while (tempClass != null && !tempClass.getName().toLowerCase().equals("java.lang.object")) {
-            declaredFields.addAll(Arrays.asList(tempClass.getDeclaredFields()));
-            tempClass = tempClass.getSuperclass();
-        }
-        return declaredFields;
-    }
-
-    public static String table(Class clazz) {
-        StringBuilder table = new StringBuilder();
-        Set<Field> requestFields = getField(clazz);
-        for (Field field : requestFields) {
-            field.setAccessible(true);
-            String fieldType = field.getGenericType().toString();
-            //1、参数名称
-            table.append("| " + field.getName());
-            //2、参数类型
-            switch (fieldType) {
-                case "class java.lang.Integer":
-                case "class java.lang.Long":
-                case "class java.math.BigDecimal":
-                    table.append("|数字");
-                    break;
-                case "class java.time.LocalDate":
-                case "class java.time.LocalDateTime":
-                    table.append("|日期");
-                    break;
-                case "class java.lang.Boolean":
-                    table.append("|布尔");
-                    break;
-                case "class java.lang.String":
-                    table.append("|字符串");
-                    break;
-                default:
-                    if (fieldType.startsWith("java.util.List<java.lang.String>")) {
-                        table.append("|字符串集合 ");
-                    } else if (fieldType.startsWith("java.util.List<java.lang.Long>") || fieldType.startsWith("java.util.List<java.math.BigDecimal>")) {
-                        table.append("|数字集合 ");
-                    } else if (fieldType.startsWith("class com.")) {
-                        table.append("|对象 ");
-                    } else if (fieldType.startsWith("java.util.List<com.")) {
-                        table.append("|对象集合 ");
-                    } else if (fieldType.startsWith("java.util.List")) {
-                        table.append("|集合 ");
-                    }
-                    break;
-            }
-
-
-            if (field.getAnnotations() != null && field.getAnnotations().length > 0) {
-                //3、参数长度
-                if (field.isAnnotationPresent(Length.class)) {
-                    Length length = field.getAnnotation(Length.class);
-                    table.append("|  " + length.max() + "   ");
-                } else {
-                    table.append("|         ");
-                }
-
-
-                //4、是否必填
-                if ((field.isAnnotationPresent(NotBlank.class)) || (field.isAnnotationPresent(NotEmpty.class)) || (field.isAnnotationPresent(NotNull.class))) {
-                    table.append("|是");
-                } else {
-                    table.append("|否");
-                }
-
-                //5、说明
-                if (field.isAnnotationPresent(FieldName.class)) {
-                    FieldName fieldName = field.getAnnotation(FieldName.class);
-                    table.append("|  " + fieldName.value() + " |      |\n");
-                } else {
-                    table.append("|         |      |  \n");
-                }
-            } else {
-                //参数长度，是否必填
-                table.append("|      |否   ");
-                //说明，备注
-                table.append("|         |      |  \n");
-            }
-        }
-
-        return table.toString();
-    }
-
-
-}
-
-
-
-```
-
-
-
-## 3.2、Main测试
-
-```java
-
-public static void main(String[] args) {
-    CodeAutoUtils.beanCopy(ContractDTO.class, ScfContract.class);
-}
-
-
-
-
-
-target.setCreateTime(source.getCreateTime());
-target.setContractNo(source.getContractNo());
-target.setHistorySysFiles(source.getHistorySysFiles());
-target.setRefNo(source.getRefNo());
-target.setType(source.getType());
-target.setStatus(source.getStatus());
-target.setSponsorRefCompanyId(source.getSponsorRefCompanyId());
-target.setDescription(source.getDescription());
-target.setName(source.getName());
-target.setUserSignStatus(source.getUserSignStatus());
-```
-
 
 
 
@@ -601,4 +430,3 @@ target.setUserSignStatus(source.getUserSignStatus());
     });
     gitalk.render('gitalk-container');
 </script> 
-

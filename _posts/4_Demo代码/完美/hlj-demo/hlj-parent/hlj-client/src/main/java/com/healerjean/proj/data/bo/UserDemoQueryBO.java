@@ -77,6 +77,7 @@ public class UserDemoQueryBO implements Serializable {
      */
     private List<OrderByBO> orderByList;
 
+
 }
 
 

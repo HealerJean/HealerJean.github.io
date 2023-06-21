@@ -8,6 +8,12 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * UserDemo
+ *
+ * @author HealerJean
+ * @date 2023-06-21 01:06:40
+ */
 @Accessors(chain = true)
 @Data
 public class UserDemo implements Serializable {
@@ -64,4 +70,7 @@ public class UserDemo implements Serializable {
     private LocalDateTime updateTime;
 
 
+    public String getName() {
+        return name;
+    }
 }

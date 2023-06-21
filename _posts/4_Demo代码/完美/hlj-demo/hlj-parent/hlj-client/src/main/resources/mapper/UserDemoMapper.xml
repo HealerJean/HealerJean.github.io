@@ -15,9 +15,10 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
-        <!-- 通用查询结果列 -->
+    <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, age, phone, email, start_time, end_time, valid_flag, create_time, update_time     </sql>
+        id
+        , name, age, phone, email, start_time, end_time, valid_flag, create_time, update_time     </sql>
 
 </mapper>
 

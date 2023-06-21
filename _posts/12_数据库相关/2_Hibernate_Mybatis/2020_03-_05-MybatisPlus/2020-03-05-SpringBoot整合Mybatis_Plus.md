@@ -496,6 +496,12 @@ http://127.0.0.1:8888/hlj/user/selectById?id=1235553744515612673
 
 > 继承自 ·`AbstractWrapper` ,自身的内部属性 `entity` 也用于生成` where` 条件 及` LambdaQueryWrapper`,
 
+| 区别                                          | `QueryWrapper`               | `LambdaQueryWrapper`               |
+| --------------------------------------------- | ---------------------------- | ---------------------------------- |
+| `eq(boolean condition, R column, Object val)` | 不支持 `condition` 条件判断  | 支持条件判断                       |
+| `orderByDesc` 字符串                          | 支持字符串，不支持方法引用符 | 不支持排序字符串，只支持方法引用符 |
+| ` select `字符串                              | 支持字符串，不支持方法引用符 | 不支持排序字符串，只支持方法引用符 |
+
 
 
 ### 2.1.1、获取`QueryWrapper`对象  
@@ -503,8 +509,8 @@ http://127.0.0.1:8888/hlj/user/selectById?id=1235553744515612673
 #### 2.1.1.1、`Wrappers.<User>lambdaQuery()`
 
 ```java
-Wrapper<User> userWrapper = Wrappers.<User>lambdaQuery()
-    .eq(User::getName, "healer");
+LambdaQueryWrapper<User> userWrapper = Wrappers.<User>lambdaQuery()
+   .eq(StringUtils.isNotBlank(query.getName()), UserDemo::getName, query.getName())
 
 List<User> users = userMapper.selectList(userWrapper);
 System.out.println(JsonUtils.toJsonString(users));
@@ -515,8 +521,8 @@ System.out.println(JsonUtils.toJsonString(users));
 #### 2.1.1.2、`Wrappers.lambdaQuery(User.class)`  
 
 ```java
-Wrapper<User> userWrapper = Wrappers.lambdaQuery(User.class)
-    .eq(User::getName, "healer");
+LambdaQueryWrapper<User> userWrapper = Wrappers.lambdaQuery(User.class)
+   .eq(StringUtils.isNotBlank(query.getName()), UserDemo::getName, query.getName())
 
 List<User> users = userMapper.selectList(userWrapper);
 System.out.println(JsonUtils.toJsonString(users));
@@ -527,14 +533,39 @@ System.out.println(JsonUtils.toJsonString(users));
 #### 2.1.1.3、`new QueryWrapper<User>().lambda()`
 
 ```java
-Wrapper<User> userWrapper = new QueryWrapper<User>().lambda()
-    .eq(User::getName, "healer");
+LambdaQueryWrapper<User> userWrapper = new QueryWrapper<User>().lambda()
+   .eq(StringUtils.isNotBlank(query.getName()), UserDemo::getName, query.getName())
+
 
 List<User> users = userMapper.selectList(userWrapper);
 System.out.println(JsonUtils.toJsonString(users));
 ```
 
 
+
+#### 2.1.1.4、`new QueryWrapper<UserDemo>()`
+
+```java
+public Page<UserDemo> queryUserDemoPage(PageQueryBO<UserDemoQueryBO> pageQuery) {
+    UserDemoQueryBO query = pageQuery.getData();
+    QueryWrapper<UserDemo> queryWrapper = new QueryWrapper<>();
+    if (!CollectionUtils.isEmpty(query.getSelectFields())) {
+        queryWrapper.select(StringUtils.join(query.getSelectFields(), ","));
+    }
+    if (!CollectionUtils.isEmpty(query.getOrderByList())) {
+        query.getOrderByList().forEach(item -> queryWrapper.orderBy(Boolean.TRUE, 
+                                                                    item.getDirection(), 
+                                                                    item.getProperty()));
+    }
+    LambdaQueryWrapper<UserDemo> lambdaQueryWrapper = queryWrapper.lambda()
+            .eq(Objects.nonNull(query.getId()), UserDemo::getId, query.getId())
+            .eq(StringUtils.isNotBlank(query.getEmail()), UserDemo::getEmail, query.getEmail())
+
+    Page<UserDemo> page = new Page<>(pageQuery.getCurrPage(), pageQuery.getPageSize(), 
+                                     pageQuery.getSearchCountFlag());
+    return userDemoDao.page(page, lambdaQueryWrapper);
+}
+```
 
 
 
