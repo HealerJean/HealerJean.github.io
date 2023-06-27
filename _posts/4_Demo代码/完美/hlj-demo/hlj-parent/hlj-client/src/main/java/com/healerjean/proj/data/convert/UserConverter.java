@@ -5,6 +5,7 @@ import com.healerjean.proj.common.data.convert.PageConverter;
 import com.healerjean.proj.common.data.req.PageReq;
 import com.healerjean.proj.data.bo.UserDemoBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
+import com.healerjean.proj.data.excel.UserDemoExcel;
 import com.healerjean.proj.data.po.UserDemo;
 import com.healerjean.proj.data.req.UserDemoQueryReq;
 import com.healerjean.proj.data.req.UserDemoSaveReq;
@@ -87,6 +88,31 @@ public interface UserConverter {
             return Collections.emptyList();
         }
         return userDemos.stream().map(this::covertUserDemoPoToBo).collect(Collectors.toList());
+    }
+
+    /**
+     * covertUserDemoPoToBoList
+     *
+     * @param userDemos userDemos
+     * @return List<UserDemoBO>
+     */
+    default List<UserDemoExcel> covertUserDemoPoToExcelList(List<UserDemo> userDemos) {
+        if (CollectionUtils.isEmpty(userDemos)) {
+            return Collections.emptyList();
+        }
+        return userDemos.stream().map(this::covertUserDemoPoToExcel).collect(Collectors.toList());
+    }
+
+    default UserDemoExcel covertUserDemoPoToExcel(UserDemo userDemo) {
+        if (Objects.isNull(userDemo)) {
+            return null;
+        }
+        UserDemoExcel result = new UserDemoExcel();
+        result.setId(userDemo.getId());
+        result.setName(userDemo.getName());
+        result.setAge(userDemo.getAge());
+        result.setPhone(userDemo.getPhone());
+        return result;
     }
 
 

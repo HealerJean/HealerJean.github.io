@@ -1917,6 +1917,10 @@ $!{autoImport.vm}
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import java.util.List;
+import org.springframework.util.CollectionUtils;
+import java.util.Collections;
+import java.util.stream.Collectors;
+
 import ${poPath}.${tableInfo.name};
 import ${boPath}.${tableInfo.name}BO;
 import ${boPath}.${tableInfo.name}QueryBO;
@@ -1945,7 +1949,16 @@ public interface $!{tableName} {
      * @param po po
      * @return ${tableInfo.name}BO
      */
-    ${tableInfo.name}BO convert${tableInfo.name}PoToBo(${tableInfo.name} po);
+    default ${tableInfo.name}BO convert${tableInfo.name}PoToBo(${tableInfo.name} po){
+        if (po == null){
+            return null;
+        }
+        ${tableInfo.name}BO result = new ${tableInfo.name}BO();
+#foreach($column in $tableInfo.fullColumn)
+            result.set$!tool.append($!tool.firstUpperCase($!{column.name}))(po.get$!tool.append($!tool.firstUpperCase($!{column.name}))());
+#end
+        return result;
+    }
     
     
      /**
@@ -1954,7 +1967,12 @@ public interface $!{tableName} {
      * @param pos pos
      * @return ${tableInfo.name}BO
      */
-    List<${tableInfo.name}BO> convert${tableInfo.name}PoToBoList(List<${tableInfo.name}> pos);
+    default List<${tableInfo.name}BO> convert${tableInfo.name}PoToBoList(List<${tableInfo.name}> pos){
+        if (CollectionUtils.isEmpty(pos)) {
+            return Collections.emptyList();
+        }
+        return pos.stream().map(this::convert${tableInfo.name}PoToBo).collect(Collectors.toList());
+    }
     
     
      /**
@@ -1963,7 +1981,16 @@ public interface $!{tableName} {
      * @param bo bo
      * @return ${tableInfo.name}BO
      */
-    ${tableInfo.name} convert${tableInfo.name}BoToPo(${tableInfo.name}BO bo);
+    default ${tableInfo.name} convert${tableInfo.name}BoToPo(${tableInfo.name}BO bo){
+        if (bo == null){
+            return null;
+        }
+        ${tableInfo.name} result = new ${tableInfo.name}();
+#foreach($column in $tableInfo.fullColumn)
+            result.set$!tool.append($!tool.firstUpperCase($!{column.name}))(bo.get$!tool.append($!tool.firstUpperCase($!{column.name}))());
+#end
+        return result;    
+    }
     
      /**
      * convert${tableInfo.name}BoToPoList
@@ -1971,7 +1998,13 @@ public interface $!{tableName} {
      * @param bos bos
      * @return List<${tableInfo.name}>
      */
-     List<${tableInfo.name}> convert${tableInfo.name}BoToPoList(List<${tableInfo.name}BO> bos);
+     default List<${tableInfo.name}> convert${tableInfo.name}BoToPoList(List<${tableInfo.name}BO> bos){
+        if (CollectionUtils.isEmpty(bos)) {
+            return Collections.emptyList();
+        }
+        return bos.stream().map(this::convert${tableInfo.name}BoToPo).collect(Collectors.toList());
+     }
+    
     
     
      /**
@@ -1980,7 +2013,16 @@ public interface $!{tableName} {
      * @param bo bo
      * @return ${tableInfo.name}DTO
      */
-    ${tableInfo.name}DTO convert${tableInfo.name}BoToDto(${tableInfo.name}BO bo);
+    default ${tableInfo.name}DTO convert${tableInfo.name}BoToDto(${tableInfo.name}BO bo){
+       if (bo == null){
+            return null;
+        }
+        ${tableInfo.name}DTO result = new ${tableInfo.name}DTO();
+#foreach($column in $tableInfo.fullColumn)
+            result.set$!tool.append($!tool.firstUpperCase($!{column.name}))(bo.get$!tool.append($!tool.firstUpperCase($!{column.name}))());
+#end
+        return result;
+    }
 
      /**
      * convert${tableInfo.name}BoToDtoList
@@ -1988,7 +2030,12 @@ public interface $!{tableName} {
      * @param bos bos
      * @return List<${tableInfo.name}DTO>
      */
-     List<${tableInfo.name}DTO> convert${tableInfo.name}BoToDtoList(List<${tableInfo.name}BO> bos);
+     default List<${tableInfo.name}DTO> convert${tableInfo.name}BoToDtoList(List<${tableInfo.name}BO> bos){
+        if (CollectionUtils.isEmpty(bos)) {
+            return Collections.emptyList();
+        }
+        return bos.stream().map(this::convert${tableInfo.name}BoToDto).collect(Collectors.toList());
+     }
       
      /**
      * convert${tableInfo.name}DtoToBo
@@ -1996,7 +2043,16 @@ public interface $!{tableName} {
      * @param dto dto
      * @return ${tableInfo.name}BO
      */
-    ${tableInfo.name}BO convert${tableInfo.name}DtoToBo(${tableInfo.name}DTO dto);
+    default ${tableInfo.name}BO convert${tableInfo.name}DtoToBo(${tableInfo.name}DTO dto){
+       if (dto == null){
+            return null;
+        }
+        ${tableInfo.name}BO result = new ${tableInfo.name}BO();
+#foreach($column in $tableInfo.fullColumn)
+            result.set$!tool.append($!tool.firstUpperCase($!{column.name}))(dto.get$!tool.append($!tool.firstUpperCase($!{column.name}))());
+#end
+        return result;
+     }
   
      /**
      * convert${tableInfo.name}DtoToBoList
@@ -2004,7 +2060,12 @@ public interface $!{tableName} {
      * @param dtos dtos
      * @return ${tableInfo.name}BO
      */
-    List<${tableInfo.name}BO> convert${tableInfo.name}DtoToBoList(List<${tableInfo.name}DTO> dtos);
+    default List<${tableInfo.name}BO> convert${tableInfo.name}DtoToBoList(List<${tableInfo.name}DTO> dtos){
+        if (CollectionUtils.isEmpty(dtos)) {
+            return Collections.emptyList();
+        }
+        return dtos.stream().map(this::convert${tableInfo.name}DtoToBo).collect(Collectors.toList());
+     }
   
    
     /**
@@ -2013,7 +2074,16 @@ public interface $!{tableName} {
      * @param bo bo
      * @return ${tableInfo.name}VO
      */
-    ${tableInfo.name}VO convert${tableInfo.name}BoToVo(${tableInfo.name}BO bo);
+    default ${tableInfo.name}VO convert${tableInfo.name}BoToVo(${tableInfo.name}BO bo){
+       if (bo == null){
+            return null;
+        }
+        ${tableInfo.name}VO result = new ${tableInfo.name}VO();
+#foreach($column in $tableInfo.fullColumn)
+            result.set$!tool.append($!tool.firstUpperCase($!{column.name}))(bo.get$!tool.append($!tool.firstUpperCase($!{column.name}))());
+#end
+        return result;
+     }
     
      /**
      * convert${tableInfo.name}BoToVoList
@@ -2021,7 +2091,12 @@ public interface $!{tableName} {
      * @param bos bos
      * @return ${tableInfo.name}VO
      */
-    List<${tableInfo.name}VO> convert${tableInfo.name}BoToVoList(List<${tableInfo.name}BO> bos);
+    default List<${tableInfo.name}VO> convert${tableInfo.name}BoToVoList(List<${tableInfo.name}BO> bos){
+        if (CollectionUtils.isEmpty(bos)) {
+            return Collections.emptyList();
+        }
+        return bos.stream().map(this::convert${tableInfo.name}BoToVo).collect(Collectors.toList());
+     }
         
      /**
      * convert${tableInfo.name}SaveReqToBo
@@ -2029,7 +2104,16 @@ public interface $!{tableName} {
      * @param req req
      * @return ${tableInfo.name}BO
      */
-    ${tableInfo.name}BO convert${tableInfo.name}SaveReqToBo(${tableInfo.name}SaveReq req);
+    default ${tableInfo.name}BO convert${tableInfo.name}SaveReqToBo(${tableInfo.name}SaveReq req){
+       if (req == null){
+            return null;
+        }
+        ${tableInfo.name}BO result = new ${tableInfo.name}BO();
+#foreach($column in $tableInfo.fullColumn)
+            result.set$!tool.append($!tool.firstUpperCase($!{column.name}))(req.get$!tool.append($!tool.firstUpperCase($!{column.name}))());
+#end
+        return result;
+     }
 
      /**
      * convert${tableInfo.name}DeleteReqToBo
@@ -2037,7 +2121,16 @@ public interface $!{tableName} {
      * @param req req
      * @return ${tableInfo.name}BO
      */
-    ${tableInfo.name}BO convert${tableInfo.name}DeleteReqToBo(${tableInfo.name}DeleteReq req);
+    default ${tableInfo.name}BO convert${tableInfo.name}DeleteReqToBo(${tableInfo.name}DeleteReq req){
+       if (req == null){
+            return null;
+        }
+        ${tableInfo.name}BO result = new ${tableInfo.name}BO();
+#foreach($column in $tableInfo.fullColumn)
+            result.set$!tool.append($!tool.firstUpperCase($!{column.name}))(req.get$!tool.append($!tool.firstUpperCase($!{column.name}))());
+#end
+        return result;
+     }
 
      /**
      * convert${tableInfo.name}QueryReqToBo
@@ -2045,7 +2138,16 @@ public interface $!{tableName} {
      * @param req req
      * @return ${tableInfo.name}BO
      */
-    ${tableInfo.name}QueryBO convert${tableInfo.name}QueryReqToBo(${tableInfo.name}QueryReq req);
+    default ${tableInfo.name}QueryBO convert${tableInfo.name}QueryReqToBo(${tableInfo.name}QueryReq req){
+       if (req == null){
+            return null;
+        }
+        ${tableInfo.name}QueryBO result = new ${tableInfo.name}QueryBO();
+#foreach($column in $tableInfo.fullColumn)
+            result.set$!tool.append($!tool.firstUpperCase($!{column.name}))(req.get$!tool.append($!tool.firstUpperCase($!{column.name}))());
+#end
+        return result;
+     }
                       
 }
 
@@ -2054,26 +2156,28 @@ public interface $!{tableName} {
 ```java
 package com.healerjean.proj.template.converter;
 
-import java.util.Date;
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
-import java.util.List;
-import com.healerjean.proj.template.po.UserDemo;
 import com.healerjean.proj.template.bo.UserDemoBO;
 import com.healerjean.proj.template.bo.UserDemoQueryBO;
 import com.healerjean.proj.template.dto.UserDemoDTO;
-import com.healerjean.proj.template.vo.UserDemoVO;
-import com.healerjean.proj.template.req.UserDemoSaveReq;
-import com.healerjean.proj.template.req.UserDemoQueryReq;
+import com.healerjean.proj.template.po.UserDemo;
 import com.healerjean.proj.template.req.UserDemoDeleteReq;
+import com.healerjean.proj.template.req.UserDemoQueryReq;
+import com.healerjean.proj.template.req.UserDemoSaveReq;
+import com.healerjean.proj.template.vo.UserDemoVO;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
  * (UserDemo)Converter
  *
  * @author zhangyujin
- * @date 2023-06-17 22:00:15
+ * @date 2023-06-27 20:08:46
  */
 @Mapper
 public interface UserDemoConverter {
@@ -2083,115 +2187,268 @@ public interface UserDemoConverter {
      */
     UserDemoConverter INSTANCE = Mappers.getMapper(UserDemoConverter.class);
 
-   
-     /**
+
+    /**
      * convertUserDemoPoToBO
      *
      * @param po po
      * @return UserDemoBO
      */
-    UserDemoBO convertUserDemoPoToBo(UserDemo po);
-    
-    
-     /**
+    default UserDemoBO convertUserDemoPoToBo(UserDemo po) {
+        if (po == null) {
+            return null;
+        }
+        UserDemoBO result = new UserDemoBO();
+        result.setId(po.getId());
+        result.setName(po.getName());
+        result.setAge(po.getAge());
+        result.setPhone(po.getPhone());
+        result.setEmail(po.getEmail());
+        result.setStartTime(po.getStartTime());
+        result.setEndTime(po.getEndTime());
+        result.setValidFlag(po.getValidFlag());
+        result.setCreateTime(po.getCreateTime());
+        result.setUpdateTime(po.getUpdateTime());
+        return result;
+    }
+
+
+    /**
      * convertUserDemoPoToBoLists
      *
      * @param pos pos
      * @return UserDemoBO
      */
-    List<UserDemoBO> convertUserDemoPoToBoList(List<UserDemo> pos);
-    
-    
-     /**
+    default List<UserDemoBO> convertUserDemoPoToBoList(List<UserDemo> pos) {
+        if (CollectionUtils.isEmpty(pos)) {
+            return Collections.emptyList();
+        }
+        return pos.stream().map(this::convertUserDemoPoToBo).collect(Collectors.toList());
+    }
+
+
+    /**
      * convertUserDemoBoToPo
      *
      * @param bo bo
      * @return UserDemoBO
      */
-    UserDemo convertUserDemoBoToPo(UserDemoBO bo);
-    
-     /**
+    default UserDemo convertUserDemoBoToPo(UserDemoBO bo) {
+        if (bo == null) {
+            return null;
+        }
+        UserDemo result = new UserDemo();
+        result.setId(bo.getId());
+        result.setName(bo.getName());
+        result.setAge(bo.getAge());
+        result.setPhone(bo.getPhone());
+        result.setEmail(bo.getEmail());
+        result.setStartTime(bo.getStartTime());
+        result.setEndTime(bo.getEndTime());
+        result.setValidFlag(bo.getValidFlag());
+        result.setCreateTime(bo.getCreateTime());
+        result.setUpdateTime(bo.getUpdateTime());
+        return result;
+    }
+
+    /**
      * convertUserDemoBoToPoList
      *
      * @param bos bos
      * @return List<UserDemo>
      */
-     List<UserDemo> convertUserDemoBoToPoList(List<UserDemoBO> bos);
-    
-    
-     /**
+    default List<UserDemo> convertUserDemoBoToPoList(List<UserDemoBO> bos) {
+        if (CollectionUtils.isEmpty(bos)) {
+            return Collections.emptyList();
+        }
+        return bos.stream().map(this::convertUserDemoBoToPo).collect(Collectors.toList());
+    }
+
+
+    /**
      * convertUserDemoBoToDto
      *
      * @param bo bo
      * @return UserDemoDTO
      */
-    UserDemoDTO convertUserDemoBoToDto(UserDemoBO bo);
+    default UserDemoDTO convertUserDemoBoToDto(UserDemoBO bo) {
+        if (bo == null) {
+            return null;
+        }
+        UserDemoDTO result = new UserDemoDTO();
+        result.setId(bo.getId());
+        result.setName(bo.getName());
+        result.setAge(bo.getAge());
+        result.setPhone(bo.getPhone());
+        result.setEmail(bo.getEmail());
+        result.setStartTime(bo.getStartTime());
+        result.setEndTime(bo.getEndTime());
+        result.setValidFlag(bo.getValidFlag());
+        result.setCreateTime(bo.getCreateTime());
+        result.setUpdateTime(bo.getUpdateTime());
+        return result;
+    }
 
-     /**
+    /**
      * convertUserDemoBoToDtoList
      *
      * @param bos bos
      * @return List<UserDemoDTO>
      */
-     List<UserDemoDTO> convertUserDemoBoToDtoList(List<UserDemoBO> bos);
-      
-     /**
+    default List<UserDemoDTO> convertUserDemoBoToDtoList(List<UserDemoBO> bos) {
+        if (CollectionUtils.isEmpty(bos)) {
+            return Collections.emptyList();
+        }
+        return bos.stream().map(this::convertUserDemoBoToDto).collect(Collectors.toList());
+    }
+
+    /**
      * convertUserDemoDtoToBo
      *
      * @param dto dto
      * @return UserDemoBO
      */
-    UserDemoBO convertUserDemoDtoToBo(UserDemoDTO dto);
-  
-     /**
+    default UserDemoBO convertUserDemoDtoToBo(UserDemoDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        UserDemoBO result = new UserDemoBO();
+        result.setId(dto.getId());
+        result.setName(dto.getName());
+        result.setAge(dto.getAge());
+        result.setPhone(dto.getPhone());
+        result.setEmail(dto.getEmail());
+        result.setStartTime(dto.getStartTime());
+        result.setEndTime(dto.getEndTime());
+        result.setValidFlag(dto.getValidFlag());
+        result.setCreateTime(dto.getCreateTime());
+        result.setUpdateTime(dto.getUpdateTime());
+        return result;
+    }
+
+    /**
      * convertUserDemoDtoToBoList
      *
      * @param dtos dtos
      * @return UserDemoBO
      */
-    List<UserDemoBO> convertUserDemoDtoToBoList(List<UserDemoDTO> dtos);
-  
-   
+    default List<UserDemoBO> convertUserDemoDtoToBoList(List<UserDemoDTO> dtos) {
+        if (CollectionUtils.isEmpty(dtos)) {
+            return Collections.emptyList();
+        }
+        return dtos.stream().map(this::convertUserDemoDtoToBo).collect(Collectors.toList());
+    }
+
+
     /**
      * convertUserDemoVO
      *
      * @param bo bo
      * @return UserDemoVO
      */
-    UserDemoVO convertUserDemoBoToVo(UserDemoBO bo);
-    
-     /**
+    default UserDemoVO convertUserDemoBoToVo(UserDemoBO bo) {
+        if (bo == null) {
+            return null;
+        }
+        UserDemoVO result = new UserDemoVO();
+        result.setId(bo.getId());
+        result.setName(bo.getName());
+        result.setAge(bo.getAge());
+        result.setPhone(bo.getPhone());
+        result.setEmail(bo.getEmail());
+        result.setStartTime(bo.getStartTime());
+        result.setEndTime(bo.getEndTime());
+        result.setValidFlag(bo.getValidFlag());
+        result.setCreateTime(bo.getCreateTime());
+        result.setUpdateTime(bo.getUpdateTime());
+        return result;
+    }
+
+    /**
      * convertUserDemoBoToVoList
      *
      * @param bos bos
      * @return UserDemoVO
      */
-    List<UserDemoVO> convertUserDemoBoToVoList(List<UserDemoBO> bos);
-        
-     /**
+    default List<UserDemoVO> convertUserDemoBoToVoList(List<UserDemoBO> bos) {
+        if (CollectionUtils.isEmpty(bos)) {
+            return Collections.emptyList();
+        }
+        return bos.stream().map(this::convertUserDemoBoToVo).collect(Collectors.toList());
+    }
+
+    /**
      * convertUserDemoSaveReqToBo
      *
      * @param req req
      * @return UserDemoBO
      */
-    UserDemoBO convertUserDemoSaveReqToBo(UserDemoSaveReq req);
+    default UserDemoBO convertUserDemoSaveReqToBo(UserDemoSaveReq req) {
+        if (req == null) {
+            return null;
+        }
+        UserDemoBO result = new UserDemoBO();
+        result.setId(req.getId());
+        result.setName(req.getName());
+        result.setAge(req.getAge());
+        result.setPhone(req.getPhone());
+        result.setEmail(req.getEmail());
+        result.setStartTime(req.getStartTime());
+        result.setEndTime(req.getEndTime());
+        result.setValidFlag(req.getValidFlag());
+        result.setCreateTime(req.getCreateTime());
+        result.setUpdateTime(req.getUpdateTime());
+        return result;
+    }
 
-     /**
+    /**
      * convertUserDemoDeleteReqToBo
      *
      * @param req req
      * @return UserDemoBO
      */
-    UserDemoBO convertUserDemoDeleteReqToBo(UserDemoDeleteReq req);
+    default UserDemoBO convertUserDemoDeleteReqToBo(UserDemoDeleteReq req) {
+        if (req == null) {
+            return null;
+        }
+        UserDemoBO result = new UserDemoBO();
+        result.setId(req.getId());
+        result.setName(req.getName());
+        result.setAge(req.getAge());
+        result.setPhone(req.getPhone());
+        result.setEmail(req.getEmail());
+        result.setStartTime(req.getStartTime());
+        result.setEndTime(req.getEndTime());
+        result.setValidFlag(req.getValidFlag());
+        result.setCreateTime(req.getCreateTime());
+        result.setUpdateTime(req.getUpdateTime());
+        return result;
+    }
 
-     /**
+    /**
      * convertUserDemoQueryReqToBo
      *
      * @param req req
      * @return UserDemoBO
      */
-    UserDemoQueryBO convertUserDemoQueryReqToBo(UserDemoQueryReq req);
-                      
+    default UserDemoQueryBO convertUserDemoQueryReqToBo(UserDemoQueryReq req) {
+        if (req == null) {
+            return null;
+        }
+        UserDemoQueryBO result = new UserDemoQueryBO();
+        result.setId(req.getId());
+        result.setName(req.getName());
+        result.setAge(req.getAge());
+        result.setPhone(req.getPhone());
+        result.setEmail(req.getEmail());
+        result.setStartTime(req.getStartTime());
+        result.setEndTime(req.getEndTime());
+        result.setValidFlag(req.getValidFlag());
+        result.setCreateTime(req.getCreateTime());
+        result.setUpdateTime(req.getUpdateTime());
+        return result;
+    }
+
 }
 
 
@@ -2405,7 +2662,7 @@ import com.healerjean.proj.template.mapper.UserDemoMapper;
  * (UserDemo)Dao实现类
  *
  * @author zhangyujin
- * @date 2023-06-17 22:00:15
+ * @date 2023-06-27 19:39:23
  */
 @Service
 public class UserDemoDaoImpl extends ServiceImpl<UserDemoMapper, UserDemo> implements UserDemoDao {
@@ -2611,11 +2868,18 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.util.List;
 import javax.annotation.Resource;
+import org.springframework.util.CollectionUtils;
+import org.springframework.stereotype.Service;
+
 
 ##表注释（宏定义）
 #tableComment("Manager接口")
+@Service
 public class $!{tableName} implements $!{tableInfo.name}Manager {
      
+    /**
+     * $daoName
+     */  
      @Resource
      private $!{tableInfo.name}Dao $daoName;
         
@@ -2624,7 +2888,8 @@ public class $!{tableName} implements $!{tableInfo.name}Manager {
      *
      * @param po po
      * @return boolean
-     */    
+     */   
+    @Override 
     public boolean save${tableInfo.name}(${tableInfo.name} po){
         return $!{daoName}.save(po);
     }
@@ -2635,6 +2900,7 @@ public class $!{tableName} implements $!{tableInfo.name}Manager {
      * @param id id
      * @return boolean
      */     
+    @Override 
     public boolean delete${tableInfo.name}ById(Long id){
         //todo
         return false;
@@ -2646,9 +2912,17 @@ public class $!{tableName} implements $!{tableInfo.name}Manager {
      * @param po po
      * @return boolean
      */    
+    @Override 
     public boolean update${tableInfo.name}(${tableInfo.name} po){
-        LambdaUpdateWrapper<${tableInfo.name}> updateWrapper = Wrappers.lambdaUpdate(${tableInfo.name}.class);
-        //todo
+        LambdaUpdateWrapper<${tableInfo.name}> updateWrapper = Wrappers.lambdaUpdate(${tableInfo.name}.class)
+#foreach($column in $tableInfo.fullColumn)
+                .set(${tableInfo.name}::get$!tool.append($!tool.firstUpperCase($!{column.name})), po.get$!tool.append($!tool.firstUpperCase($!{column.name}))())
+#end
+
+#foreach($column in $tableInfo.fullColumn)
+                .eq(${tableInfo.name}::get$!tool.append($!tool.firstUpperCase($!{column.name})), po.get$!tool.append($!tool.firstUpperCase($!{column.name}))())
+#end;
+        //todo 多余删除，不足补齐
         return $!{daoName}.update(updateWrapper);
     }
     
@@ -2658,6 +2932,7 @@ public class $!{tableName} implements $!{tableInfo.name}Manager {
      * @param id id
      * @return ${tableInfo.name}
      */     
+    @Override 
     public ${tableInfo.name} query${tableInfo.name}ById(Long id){
         return $!{daoName}.getById(id);
     }
@@ -2669,10 +2944,18 @@ public class $!{tableName} implements $!{tableInfo.name}Manager {
      * @param queryBo queryBo
      * @return ${tableInfo.name}
      */     
+    @Override 
     public ${tableInfo.name} query${tableInfo.name}Single(${tableInfo.name}QueryBO queryBo){
-        LambdaQueryWrapper<${tableInfo.name}> queryWrapper = Wrappers.lambdaQuery(${tableInfo.name}.class);
-        //todo
-        return $!{daoName}.getOne(queryWrapper);
+        LambdaQueryWrapper<${tableInfo.name}> queryWrapper = Wrappers.lambdaQuery(${tableInfo.name}.class)
+#foreach($column in $tableInfo.fullColumn)
+                .eq(${tableInfo.name}::get$!tool.append($!tool.firstUpperCase($!{column.name})), queryBo.get$!tool.append($!tool.firstUpperCase($!{column.name}))())
+#end;
+        //todo 多余删除，不足补齐
+        List<${tableInfo.name}> list = $!{daoName}.list(queryWrapper);
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list.get(0);
     }
     
     /**
@@ -2681,9 +2964,13 @@ public class $!{tableName} implements $!{tableInfo.name}Manager {
      * @param queryBo queryBo
      * @return List<${tableInfo.name}>
      */    
+    @Override 
     public List<${tableInfo.name}> query${tableInfo.name}List(${tableInfo.name}QueryBO queryBo){
-        LambdaQueryWrapper<${tableInfo.name}> queryWrapper = Wrappers.lambdaQuery(${tableInfo.name}.class);
-        //todo
+        LambdaQueryWrapper<${tableInfo.name}> queryWrapper = Wrappers.lambdaQuery(${tableInfo.name}.class)
+#foreach($column in $tableInfo.fullColumn)
+                .eq(${tableInfo.name}::get$!tool.append($!tool.firstUpperCase($!{column.name})), queryBo.get$!tool.append($!tool.firstUpperCase($!{column.name}))())
+#end;
+        //todo 多余删除，不足补齐
         return $!{daoName}.list(queryWrapper);
     }
    
@@ -2693,9 +2980,13 @@ public class $!{tableName} implements $!{tableInfo.name}Manager {
      * @param queryBo queryBo
      * @return Page<${tableInfo.name}>
      */    
-    public Page<${tableInfo.name}> query${tableInfo.name}Paga(${tableInfo.name}QueryBO queryBo){
-        LambdaQueryWrapper<${tableInfo.name}> queryWrapper = Wrappers.lambdaQuery(${tableInfo.name}.class);
-        //todo
+    @Override 
+    public Page<${tableInfo.name}> query${tableInfo.name}Page(${tableInfo.name}QueryBO queryBo){
+        LambdaQueryWrapper<${tableInfo.name}> queryWrapper = Wrappers.lambdaQuery(${tableInfo.name}.class)
+#foreach($column in $tableInfo.fullColumn)
+                .eq(${tableInfo.name}::get$!tool.append($!tool.firstUpperCase($!{column.name})), queryBo.get$!tool.append($!tool.firstUpperCase($!{column.name}))())
+#end;
+        //todo 多余删除，不足补齐
         Page<${tableInfo.name}> pageReq = new Page<>(0, 0, 0);
         return $!{daoName}.page(pageReq, queryWrapper);
     }
@@ -2709,109 +3000,179 @@ public class $!{tableName} implements $!{tableInfo.name}Manager {
 ```java
 package com.healerjean.proj.template.manager.impl;
 
-import com.healerjean.proj.template.po.UserDemo;
-import com.healerjean.proj.template.bo.UserDemoQueryBO;
-import com.healerjean.proj.template.dao.UserDemoDao;
-import com.healerjean.proj.template.manager.UserDemoManager;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import java.util.List;
+import com.healerjean.proj.template.bo.UserDemoQueryBO;
+import com.healerjean.proj.template.dao.UserDemoDao;
+import com.healerjean.proj.template.manager.UserDemoManager;
+import com.healerjean.proj.template.po.UserDemo;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import javax.annotation.Resource;
+import java.util.List;
+
 
 /**
  * (UserDemo)Manager接口
  *
  * @author zhangyujin
- * @date 2023-06-17 22:00:16
+ * @date 2023-06-27 19:39:23
  */
+@Service
 public class UserDemoManagerImpl implements UserDemoManager {
-     
-     @Resource
-     private UserDemoDao userDemoDao;
-        
+
+    /**
+     * userDemoDao
+     */
+    @Resource
+    private UserDemoDao userDemoDao;
+
     /**
      * 保存-UserDemo
      *
      * @param po po
      * @return boolean
-     */    
-    public boolean saveUserDemo(UserDemo po){
+     */
+    @Override
+    public boolean saveUserDemo(UserDemo po) {
         return userDemoDao.save(po);
     }
-    
-     /**
+
+    /**
      * 删除-UserDemo
      *
      * @param id id
      * @return boolean
-     */     
-    public boolean deleteUserDemoById(Long id){
+     */
+    @Override
+    public boolean deleteUserDemoById(Long id) {
         //todo
         return false;
     }
-    
+
     /**
      * 更新-UserDemo
      *
      * @param po po
      * @return boolean
-     */    
-    public boolean updateUserDemo(UserDemo po){
-        LambdaUpdateWrapper<UserDemo> updateWrapper = Wrappers.lambdaUpdate(UserDemo.class);
-        //todo
+     */
+    @Override
+    public boolean updateUserDemo(UserDemo po) {
+        LambdaUpdateWrapper<UserDemo> updateWrapper = Wrappers.lambdaUpdate(UserDemo.class)
+                .set(UserDemo::getId, po.getId())
+                .set(UserDemo::getName, po.getName())
+                .set(UserDemo::getAge, po.getAge())
+                .set(UserDemo::getPhone, po.getPhone())
+                .set(UserDemo::getEmail, po.getEmail())
+                .set(UserDemo::getStartTime, po.getStartTime())
+                .set(UserDemo::getEndTime, po.getEndTime())
+                .set(UserDemo::getValidFlag, po.getValidFlag())
+                .set(UserDemo::getCreateTime, po.getCreateTime())
+                .set(UserDemo::getUpdateTime, po.getUpdateTime())
+
+                .eq(UserDemo::getId, po.getId())
+                .eq(UserDemo::getName, po.getName())
+                .eq(UserDemo::getAge, po.getAge())
+                .eq(UserDemo::getPhone, po.getPhone())
+                .eq(UserDemo::getEmail, po.getEmail())
+                .eq(UserDemo::getStartTime, po.getStartTime())
+                .eq(UserDemo::getEndTime, po.getEndTime())
+                .eq(UserDemo::getValidFlag, po.getValidFlag())
+                .eq(UserDemo::getCreateTime, po.getCreateTime())
+                .eq(UserDemo::getUpdateTime, po.getUpdateTime());
+        //todo 多余删除，不足补齐
         return userDemoDao.update(updateWrapper);
     }
-    
-     /**
+
+    /**
      * 单条主键查询-UserDemo
      *
      * @param id id
      * @return UserDemo
-     */     
-    public UserDemo queryUserDemoById(Long id){
+     */
+    @Override
+    public UserDemo queryUserDemoById(Long id) {
         return userDemoDao.getById(id);
     }
-    
-    
-     /**
+
+
+    /**
      * 单条查询-UserDemo
      *
      * @param queryBo queryBo
      * @return UserDemo
-     */     
-    public UserDemo queryUserDemoSingle(UserDemoQueryBO queryBo){
-        LambdaQueryWrapper<UserDemo> queryWrapper = Wrappers.lambdaQuery(UserDemo.class);
-        //todo
-        return userDemoDao.getOne(queryWrapper);
+     */
+    @Override
+    public UserDemo queryUserDemoSingle(UserDemoQueryBO queryBo) {
+        LambdaQueryWrapper<UserDemo> queryWrapper = Wrappers.lambdaQuery(UserDemo.class)
+                .eq(UserDemo::getId, queryBo.getId())
+                .eq(UserDemo::getName, queryBo.getName())
+                .eq(UserDemo::getAge, queryBo.getAge())
+                .eq(UserDemo::getPhone, queryBo.getPhone())
+                .eq(UserDemo::getEmail, queryBo.getEmail())
+                .eq(UserDemo::getStartTime, queryBo.getStartTime())
+                .eq(UserDemo::getEndTime, queryBo.getEndTime())
+                .eq(UserDemo::getValidFlag, queryBo.getValidFlag())
+                .eq(UserDemo::getCreateTime, queryBo.getCreateTime())
+                .eq(UserDemo::getUpdateTime, queryBo.getUpdateTime());
+        //todo 多余删除，不足补齐
+        List<UserDemo> list = userDemoDao.list(queryWrapper);
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list.get(0);
     }
-    
+
     /**
      * 列表查询-UserDemo
      *
      * @param queryBo queryBo
      * @return List<UserDemo>
-     */    
-    public List<UserDemo> queryUserDemoList(UserDemoQueryBO queryBo){
-        LambdaQueryWrapper<UserDemo> queryWrapper = Wrappers.lambdaQuery(UserDemo.class);
-        //todo
+     */
+    @Override
+    public List<UserDemo> queryUserDemoList(UserDemoQueryBO queryBo) {
+        LambdaQueryWrapper<UserDemo> queryWrapper = Wrappers.lambdaQuery(UserDemo.class)
+                .eq(UserDemo::getId, queryBo.getId())
+                .eq(UserDemo::getName, queryBo.getName())
+                .eq(UserDemo::getAge, queryBo.getAge())
+                .eq(UserDemo::getPhone, queryBo.getPhone())
+                .eq(UserDemo::getEmail, queryBo.getEmail())
+                .eq(UserDemo::getStartTime, queryBo.getStartTime())
+                .eq(UserDemo::getEndTime, queryBo.getEndTime())
+                .eq(UserDemo::getValidFlag, queryBo.getValidFlag())
+                .eq(UserDemo::getCreateTime, queryBo.getCreateTime())
+                .eq(UserDemo::getUpdateTime, queryBo.getUpdateTime());
+        //todo 多余删除，不足补齐
         return userDemoDao.list(queryWrapper);
     }
-   
+
     /**
      * 分页查询-UserDemo
      *
      * @param queryBo queryBo
      * @return Page<UserDemo>
-     */    
-    public Page<UserDemo> queryUserDemoPaga(UserDemoQueryBO queryBo){
-        LambdaQueryWrapper<UserDemo> queryWrapper = Wrappers.lambdaQuery(UserDemo.class);
-        //todo
+     */
+    @Override
+    public Page<UserDemo> queryUserDemoPage(UserDemoQueryBO queryBo) {
+        LambdaQueryWrapper<UserDemo> queryWrapper = Wrappers.lambdaQuery(UserDemo.class)
+                .eq(UserDemo::getId, queryBo.getId())
+                .eq(UserDemo::getName, queryBo.getName())
+                .eq(UserDemo::getAge, queryBo.getAge())
+                .eq(UserDemo::getPhone, queryBo.getPhone())
+                .eq(UserDemo::getEmail, queryBo.getEmail())
+                .eq(UserDemo::getStartTime, queryBo.getStartTime())
+                .eq(UserDemo::getEndTime, queryBo.getEndTime())
+                .eq(UserDemo::getValidFlag, queryBo.getValidFlag())
+                .eq(UserDemo::getCreateTime, queryBo.getCreateTime())
+                .eq(UserDemo::getUpdateTime, queryBo.getUpdateTime());
+        //todo 多余删除，不足补齐
         Page<UserDemo> pageReq = new Page<>(0, 0, 0);
         return userDemoDao.page(pageReq, queryWrapper);
     }
-     
+
 }
 
 
@@ -2975,9 +3336,11 @@ import ${servicePath}.${tableInfo.name}Service;
 import ${converterPath}.${tableInfo.name}Converter;
 import java.util.List;
 import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
 
 ##表注释（宏定义）
 #tableComment("Service")
+@Service
 public class $!{tableName} implements $!{tableInfo.name}Service {
 
     /**
@@ -2992,6 +3355,7 @@ public class $!{tableName} implements $!{tableInfo.name}Service {
      * @param bo bo
      * @return boolean
      */    
+    @Override 
     public boolean save${tableInfo.name}($!{tableInfo.name}BO bo){
         $!{tableInfo.name} po = $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}BoToPo(bo);
         return $!{managerName}.save${tableInfo.name}(po);
@@ -3003,6 +3367,7 @@ public class $!{tableName} implements $!{tableInfo.name}Service {
      * @param bo bo
      * @return boolean
      */     
+    @Override 
     public boolean delete${tableInfo.name}(${tableInfo.name}BO bo){
         return $!{managerName}.delete${tableInfo.name}ById(bo.getId());
     }
@@ -3013,6 +3378,7 @@ public class $!{tableName} implements $!{tableInfo.name}Service {
      * @param bo bo
      * @return boolean
      */     
+    @Override 
     public boolean update${tableInfo.name}(${tableInfo.name}BO bo){
         $!{tableInfo.name} po = $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}BoToPo(bo);
         return $!{managerName}.update$!{tableInfo.name}(po);
@@ -3024,6 +3390,7 @@ public class $!{tableName} implements $!{tableInfo.name}Service {
      * @param queryBo queryBo
      * @return ${tableInfo.name}BO
      */     
+    @Override 
     public ${tableInfo.name}BO query${tableInfo.name}Single(${tableInfo.name}QueryBO queryBo){
         $!{tableInfo.name} po =  $!{managerName}.query${tableInfo.name}Single(queryBo);
         return $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}PoToBo(po);
@@ -3035,6 +3402,7 @@ public class $!{tableName} implements $!{tableInfo.name}Service {
      * @param queryBo queryBo
      * @return List<${tableInfo.name}BO>
      */     
+    @Override 
     public List<${tableInfo.name}BO> query${tableInfo.name}List(${tableInfo.name}QueryBO queryBo){
         List<$!{tableInfo.name}> pos =  $!{managerName}.query${tableInfo.name}List(queryBo);
         return $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}PoToBoList(pos);        
@@ -3049,26 +3417,29 @@ public class $!{tableName} implements $!{tableInfo.name}Service {
 ```java
 package com.healerjean.proj.template.service.impl;
 
-import com.healerjean.proj.template.po.UserDemo;
-import com.healerjean.proj.template.bo.UserDemoQueryBO;
 import com.healerjean.proj.template.bo.UserDemoBO;
-import com.healerjean.proj.template.manager.UserDemoManager;
-import com.healerjean.proj.template.service.UserDemoService;
+import com.healerjean.proj.template.bo.UserDemoQueryBO;
 import com.healerjean.proj.template.converter.UserDemoConverter;
-import java.util.List;
+import com.healerjean.proj.template.manager.UserDemoManager;
+import com.healerjean.proj.template.po.UserDemo;
+import com.healerjean.proj.template.service.UserDemoService;
+import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * (UserDemo)Service
  *
  * @author zhangyujin
- * @date 2023-06-17 22:00:16
+ * @date 2023-06-27 19:39:24
  */
+@Service
 public class UserDemoServiceImpl implements UserDemoService {
 
     /**
      * userDemoManager
-     */ 
+     */
     @Resource
     private UserDemoManager userDemoManager;
 
@@ -3077,55 +3448,60 @@ public class UserDemoServiceImpl implements UserDemoService {
      *
      * @param bo bo
      * @return boolean
-     */    
-    public boolean saveUserDemo(UserDemoBO bo){
+     */
+    @Override
+    public boolean saveUserDemo(UserDemoBO bo) {
         UserDemo po = UserDemoConverter.INSTANCE.convertUserDemoBoToPo(bo);
         return userDemoManager.saveUserDemo(po);
     }
-    
-     /**
+
+    /**
      * 删除-UserDemo
-     * 
+     *
      * @param bo bo
      * @return boolean
-     */     
-    public boolean deleteUserDemo(UserDemoBO bo){
+     */
+    @Override
+    public boolean deleteUserDemo(UserDemoBO bo) {
         return userDemoManager.deleteUserDemoById(bo.getId());
     }
-    
-     /**
+
+    /**
      * 更新-UserDemo
-     * 
+     *
      * @param bo bo
      * @return boolean
-     */     
-    public boolean updateUserDemo(UserDemoBO bo){
+     */
+    @Override
+    public boolean updateUserDemo(UserDemoBO bo) {
         UserDemo po = UserDemoConverter.INSTANCE.convertUserDemoBoToPo(bo);
         return userDemoManager.updateUserDemo(po);
     }
-    
-     /**
+
+    /**
      * 单条查询-UserDemo
-     * 
+     *
      * @param queryBo queryBo
      * @return UserDemoBO
-     */     
-    public UserDemoBO queryUserDemoSingle(UserDemoQueryBO queryBo){
-        UserDemo po =  userDemoManager.queryUserDemoSingle(queryBo);
+     */
+    @Override
+    public UserDemoBO queryUserDemoSingle(UserDemoQueryBO queryBo) {
+        UserDemo po = userDemoManager.queryUserDemoSingle(queryBo);
         return UserDemoConverter.INSTANCE.convertUserDemoPoToBo(po);
     }
-    
+
     /**
      * 列表查询-UserDemo
-     * 
+     *
      * @param queryBo queryBo
      * @return List<UserDemoBO>
-     */     
-    public List<UserDemoBO> queryUserDemoList(UserDemoQueryBO queryBo){
-        List<UserDemo> pos =  userDemoManager.queryUserDemoList(queryBo);
-        return UserDemoConverter.INSTANCE.convertUserDemoPoToBoList(pos);        
+     */
+    @Override
+    public List<UserDemoBO> queryUserDemoList(UserDemoQueryBO queryBo) {
+        List<UserDemo> pos = userDemoManager.queryUserDemoList(queryBo);
+        return UserDemoConverter.INSTANCE.convertUserDemoPoToBoList(pos);
     }
-    
+
 }
 
 
@@ -3296,9 +3672,11 @@ import ${resourcePath}.${tableInfo.name}Resource;
 import ${converterPath}.${tableInfo.name}Converter;
 import java.util.List;
 import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
 
 ##表注释（宏定义）
 #tableComment("Resource接口")
+@Service
 public class $!{tableName} implements $!{tableInfo.name}Resource {
 
      /**
@@ -3314,6 +3692,7 @@ public class $!{tableName} implements $!{tableInfo.name}Resource {
      * @param req req
      * @return boolean
      */   
+    @Override 
     public boolean save${tableInfo.name}(${tableInfo.name}SaveReq req){
         $!{tableInfo.name}BO bo = $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}SaveReqToBo(req);
         return $!{serviceName}.save${tableInfo.name}(bo);  
@@ -3325,6 +3704,7 @@ public class $!{tableName} implements $!{tableInfo.name}Resource {
      * @param req req
      * @return boolean
      */  
+    @Override 
     public boolean delete${tableInfo.name}(${tableInfo.name}DeleteReq req){
         $!{tableInfo.name}BO bo = $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}DeleteReqToBo(req);
         return $!{serviceName}.delete${tableInfo.name}(bo);  
@@ -3336,6 +3716,7 @@ public class $!{tableName} implements $!{tableInfo.name}Resource {
      * @param req req
      * @return boolean
      */    
+    @Override 
     public boolean update${tableInfo.name}(${tableInfo.name}SaveReq req){
         $!{tableInfo.name}BO bo = $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}SaveReqToBo(req);
         return $!{serviceName}.update${tableInfo.name}(bo);  
@@ -3347,6 +3728,7 @@ public class $!{tableName} implements $!{tableInfo.name}Resource {
      * @param req req
      * @return ${tableInfo.name}DTO
      */    
+    @Override 
     public ${tableInfo.name}DTO query${tableInfo.name}Single(${tableInfo.name}QueryReq req){
         $!{tableInfo.name}QueryBO queryBo = $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}QueryReqToBo(req);
         $!{tableInfo.name}BO bo = $!{serviceName}.query${tableInfo.name}Single(queryBo);  
@@ -3359,6 +3741,7 @@ public class $!{tableName} implements $!{tableInfo.name}Resource {
      * @param req req
      * @return List<${tableInfo.name}DTO>
      */     
+    @Override 
     public List<${tableInfo.name}DTO> query${tableInfo.name}List(${tableInfo.name}QueryReq req){
         $!{tableInfo.name}QueryBO queryBo = $!{tableInfo.name}Converter.INSTANCE.convert$!{tableInfo.name}QueryReqToBo(req);
         List<$!{tableInfo.name}BO> bos = $!{serviceName}.query${tableInfo.name}List(queryBo);  
@@ -3372,29 +3755,32 @@ public class $!{tableName} implements $!{tableInfo.name}Resource {
 ```java
 package com.healerjean.proj.template.resource.impl;
 
-import com.healerjean.proj.template.bo.UserDemoQueryBO;
 import com.healerjean.proj.template.bo.UserDemoBO;
-import com.healerjean.proj.template.dto.UserDemoDTO;
-import com.healerjean.proj.template.req.UserDemoSaveReq;
-import com.healerjean.proj.template.req.UserDemoQueryReq;
-import com.healerjean.proj.template.req.UserDemoDeleteReq;
-import com.healerjean.proj.template.service.UserDemoService;
-import com.healerjean.proj.template.resource.UserDemoResource;
+import com.healerjean.proj.template.bo.UserDemoQueryBO;
 import com.healerjean.proj.template.converter.UserDemoConverter;
-import java.util.List;
+import com.healerjean.proj.template.dto.UserDemoDTO;
+import com.healerjean.proj.template.req.UserDemoDeleteReq;
+import com.healerjean.proj.template.req.UserDemoQueryReq;
+import com.healerjean.proj.template.req.UserDemoSaveReq;
+import com.healerjean.proj.template.resource.UserDemoResource;
+import com.healerjean.proj.template.service.UserDemoService;
+import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * (UserDemo)Resource接口
  *
  * @author zhangyujin
- * @date 2023-06-17 22:00:16
+ * @date 2023-06-27 19:39:24
  */
+@Service
 public class UserDemoResourceImpl implements UserDemoResource {
 
-     /**
+    /**
      * userDemoService
-     */ 
+     */
     @Resource
     private UserDemoService userDemoService;
 
@@ -3404,58 +3790,63 @@ public class UserDemoResourceImpl implements UserDemoResource {
      *
      * @param req req
      * @return boolean
-     */   
-    public boolean saveUserDemo(UserDemoSaveReq req){
+     */
+    @Override
+    public boolean saveUserDemo(UserDemoSaveReq req) {
         UserDemoBO bo = UserDemoConverter.INSTANCE.convertUserDemoSaveReqToBo(req);
-        return userDemoService.saveUserDemo(bo);  
+        return userDemoService.saveUserDemo(bo);
     }
-    
-     /**
+
+    /**
      * 删除-UserDemo
-     * 
+     *
      * @param req req
      * @return boolean
-     */  
-    public boolean deleteUserDemo(UserDemoDeleteReq req){
+     */
+    @Override
+    public boolean deleteUserDemo(UserDemoDeleteReq req) {
         UserDemoBO bo = UserDemoConverter.INSTANCE.convertUserDemoDeleteReqToBo(req);
-        return userDemoService.deleteUserDemo(bo);  
+        return userDemoService.deleteUserDemo(bo);
     }
-    
-     /**
+
+    /**
      * 更新-UserDemo
-     * 
+     *
      * @param req req
      * @return boolean
-     */    
-    public boolean updateUserDemo(UserDemoSaveReq req){
+     */
+    @Override
+    public boolean updateUserDemo(UserDemoSaveReq req) {
         UserDemoBO bo = UserDemoConverter.INSTANCE.convertUserDemoSaveReqToBo(req);
-        return userDemoService.updateUserDemo(bo);  
+        return userDemoService.updateUserDemo(bo);
     }
-    
-     /**
+
+    /**
      * 单条查询-UserDemo
-     * 
+     *
      * @param req req
      * @return UserDemoDTO
-     */    
-    public UserDemoDTO queryUserDemoSingle(UserDemoQueryReq req){
+     */
+    @Override
+    public UserDemoDTO queryUserDemoSingle(UserDemoQueryReq req) {
         UserDemoQueryBO queryBo = UserDemoConverter.INSTANCE.convertUserDemoQueryReqToBo(req);
-        UserDemoBO bo = userDemoService.queryUserDemoSingle(queryBo);  
-        return UserDemoConverter.INSTANCE.convertUserDemoBoToDto(bo);  
+        UserDemoBO bo = userDemoService.queryUserDemoSingle(queryBo);
+        return UserDemoConverter.INSTANCE.convertUserDemoBoToDto(bo);
     }
-    
-     /**
+
+    /**
      * 列表查询-UserDemo
-     * 
+     *
      * @param req req
      * @return List<UserDemoDTO>
-     */     
-    public List<UserDemoDTO> queryUserDemoList(UserDemoQueryReq req){
+     */
+    @Override
+    public List<UserDemoDTO> queryUserDemoList(UserDemoQueryReq req) {
         UserDemoQueryBO queryBo = UserDemoConverter.INSTANCE.convertUserDemoQueryReqToBo(req);
-        List<UserDemoBO> bos = userDemoService.queryUserDemoList(queryBo);  
-        return UserDemoConverter.INSTANCE.convertUserDemoBoToDtoList(bos);  
+        List<UserDemoBO> bos = userDemoService.queryUserDemoList(queryBo);
+        return UserDemoConverter.INSTANCE.convertUserDemoBoToDtoList(bos);
     }
-    
+
 }
 
 
