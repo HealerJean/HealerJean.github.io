@@ -4,10 +4,10 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * MybatisPlusConfig
+ *
  * @author HealerJean
- * @ClassName MybatisPlusConfig
  * @date 2020/3/5  21:03.
- * @Description
  */
 @Configuration
 @MapperScan("com.healerjean.proj.dao.mapper")

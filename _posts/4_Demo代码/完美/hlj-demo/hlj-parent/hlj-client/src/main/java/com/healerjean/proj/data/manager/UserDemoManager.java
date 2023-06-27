@@ -1,9 +1,8 @@
 package com.healerjean.proj.data.manager;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.healerjean.proj.common.data.bo.PageBO;
 import com.healerjean.proj.common.data.bo.PageQueryBO;
-import com.healerjean.proj.data.bo.UserDemoBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
 import com.healerjean.proj.data.po.UserDemo;
 
@@ -65,4 +64,11 @@ public interface UserDemoManager {
      * @return PageBO<UserDemo>
      */
     Page<UserDemo> queryUserDemoPage(PageQueryBO<UserDemoQueryBO> pageQuery);
+
+    /**
+     * queryFutureAll
+     * @param query query
+     * @return  List<Future<List<UserDemo>>>
+     */
+    LambdaQueryWrapper<UserDemo> queryBuilderQueryWrapper(UserDemoQueryBO query);
 }

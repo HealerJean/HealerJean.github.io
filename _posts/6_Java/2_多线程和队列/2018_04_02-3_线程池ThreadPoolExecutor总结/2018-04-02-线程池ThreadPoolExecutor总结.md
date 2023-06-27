@@ -1721,13 +1721,13 @@ public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
 
 | 方法                                         | 说明                                                         |
 | -------------------------------------------- | ------------------------------------------------------------ |
-| `completionService.take()`                   | 阻塞线程，直到有任务完成可以获取结果。                       |
-| `completionService.poll()`                   | poll直接返回，不阻塞线程。但是没有完成的任务则返回null。     |
+| `completionService.take()`                   | `take() `方法会阻塞线程，直到有已经完成的任务可用为止。      |
+| `completionService.poll()`                   | `poll()`方法会立即返回一个已经完成的任务，如果没有已经完成的任务，它会返回 `null`； |
 | `completionService.poll(5,TimeUnit.SECONDS)` | 阻塞线程等待指定时间，如果有完成结果返回，没有的直接返回null。 |
 
 **原理：**
 
-1、`CompletionService` 实际上可以看做是 `Executor` 和 `BlockingQueue`的结合体。`CompletionService` 在接收到要执行的任务时，通过类似 `BlockingQueue`的 `put` 和 `take` 获得任务执行的结果。`CompletionService` 的一个实现是`ExecutorCompletionService`，`ExecutorCompletionService` 把具体的计算任务交给Executor完成。    
+1、`CompletionService` 实际上可以看做是 `Executor` 和 `BlockingQueue`的结合体。`CompletionService` 在接收到要执行的任务时，通过类似 `BlockingQueue`的 `put` 和 `take` 获得任务执行的结果。`CompletionService` 的一个实现是`ExecutorCompletionService`，`ExecutorCompletionService` 把具体的计算任务交给 `Executor`完成。    
 
 2、在实现上，`ExecutorCompletionService` 在构造函数中会创建一个 `BlockingQueue`（使用的基于链表的无界队列`LinkedBlockingQueue`），**该 `BlockingQueue` 的作用是保存 `Executor` 执行的结果**。当计算完成时，调用 `FutureTask` 的 `done` 方法。当提交一个任务到 `ExecutorCompletionService`时，首先将任务包装成 `QueueingFuture`，它是 `FutureTask`的一个子类，然后改 写 `FutureTask` 的 `done` 方法，之后把 `Executor` 执行的计算结果放入 `BlockingQueue`中。
 

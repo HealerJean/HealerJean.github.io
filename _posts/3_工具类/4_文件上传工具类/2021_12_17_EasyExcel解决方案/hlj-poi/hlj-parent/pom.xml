@@ -34,9 +34,9 @@
         <profiles.active>src/profiles/local</profiles.active>
         <shiro.version>1.4.0</shiro.version>
         <!--数据源-->
-        <com-alibaba-druid.version>1.1.21</com-alibaba-druid.version>
+        <com-alibaba-druid.version>1.2.18</com-alibaba-druid.version>
         <!--mybatis plus-->
-        <mybatis-plus-boot-starter.version>3.3.1.tmp</mybatis-plus-boot-starter.version>
+        <mybatis-plus-boot-starter.version>3.4.1</mybatis-plus-boot-starter.version>
         <!--校验-->
         <javax-validation.version>2.0.1.Final</javax-validation.version>
         <hibernate-validator.version>6.0.9.Final</hibernate-validator.version>
@@ -75,11 +75,20 @@
 
             <!--数据源-->
             <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+                <version>3.6.1</version>
+            </dependency>
+            <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
                 <version>${com-alibaba-druid.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>5.1.45</version>
+            </dependency>
             <!--mybatis-plus-->
             <dependency>
                 <groupId>com.baomidou</groupId>

@@ -121,6 +121,7 @@ public class UserDemoManagerImpl implements UserDemoManager {
                 .like(StringUtils.isNotBlank(query.getLikePhone()), UserDemo::getPhone, query.getLikePhone())
                 .lt(Objects.nonNull(query.getQueryTime()), UserDemo::getStartTime, query.getQueryTime())
                 .gt(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime());
+
         return userDemoDao.list(lambdaQueryWrapper);
     }
 
@@ -152,7 +153,30 @@ public class UserDemoManagerImpl implements UserDemoManager {
                 .like(StringUtils.isNotBlank(query.getLikePhone()), UserDemo::getPhone, query.getLikePhone())
                 .lt(Objects.nonNull(query.getQueryTime()), UserDemo::getStartTime, query.getQueryTime())
                 .gt(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime());
+
         Page<UserDemo> page = new Page<>(pageQuery.getCurrPage(), pageQuery.getPageSize(), pageQuery.getSearchCountFlag());
         return userDemoDao.page(page, lambdaQueryWrapper);
+    }
+
+
+    @Override
+    public LambdaQueryWrapper<UserDemo> queryBuilderQueryWrapper(UserDemoQueryBO query) {
+        QueryWrapper<UserDemo> queryWrapper = new QueryWrapper<>();
+        if (!CollectionUtils.isEmpty(query.getSelectFields())) {
+            queryWrapper.select(StringUtils.join(query.getSelectFields(), ","));
+        }
+        if (!CollectionUtils.isEmpty(query.getOrderByList())) {
+            query.getOrderByList().forEach(item -> queryWrapper.orderBy(Boolean.TRUE, item.getDirection(), item.getProperty()));
+        }
+        return queryWrapper.lambda()
+                .eq(Objects.nonNull(query.getId()), UserDemo::getId, query.getId())
+                .eq(Objects.nonNull(query.getValidFlag()), UserDemo::getValidFlag, query.getValidFlag())
+                .eq(StringUtils.isNotBlank(query.getName()), UserDemo::getName, query.getName())
+                .eq(StringUtils.isNotBlank(query.getPhone()), UserDemo::getPhone, query.getPhone())
+                .eq(StringUtils.isNotBlank(query.getEmail()), UserDemo::getEmail, query.getEmail())
+                .like(StringUtils.isNotBlank(query.getLikeName()), UserDemo::getName, query.getLikeName())
+                .like(StringUtils.isNotBlank(query.getLikePhone()), UserDemo::getPhone, query.getLikePhone())
+                .lt(Objects.nonNull(query.getQueryTime()), UserDemo::getStartTime, query.getQueryTime())
+                .gt(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime());
     }
 }

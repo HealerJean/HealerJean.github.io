@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -22,15 +21,11 @@ public class FileTaskRecord implements Serializable {
      */
     private String taskId;
 
+
     /**
      * 任务类型：{@link TaskEnum.TaskTypeEnum}
      */
-    private String type;
-
-    /**
-     * 处理状态： {@link TaskEnum.TaskStatusEnum}
-     */
-    private String processStatus;
+    private String taskType;
 
     /**
      * 业务类型：{@link TaskEnum.BusinessTypeEnum}
@@ -38,9 +33,14 @@ public class FileTaskRecord implements Serializable {
     private String businessType;
 
     /**
-     * 业务类型：json
+     * 业务数据：json
      */
     private String businessData;
+
+    /**
+     * 任务状态： {@link TaskEnum.TaskStatusEnum}
+     */
+    private String taskStatus;
 
     /**
      * 结果文件名称
