@@ -1541,25 +1541,29 @@ public void isPresent() {
 
 
 
-## 3.6、`stream`使用
+## 3.6、`stream `使用
 
 ```java
-    @Test
-    public void map() {
-        Optional<String> name = Optional.ofNullable("HealerJean");
-        Optional<String> upperName = name.map((value) -> value.toUpperCase());
-    }
+@Test
+public void map() {
+    Optional<String> name = Optional.ofNullable("HealerJean");
+    Optional<String> upperName = name.map((value) -> value.toUpperCase());
+}
 
-    @Test
-    public void filter() {
-        Optional<String> name = Optional.of("HealerJean");
-        Optional<String> longName = name.filter((value) -> value.length() > 6);
-    }
+@Test
+public void filter() {
+    Optional<String> name = Optional.of("HealerJean");
+    Optional<String> longName = name.filter((value) -> value.length() > 6);
+}
 ```
 
 
 
+## 3.8、`orElseThrow`
 
+```java
+    Optional.ofNullable(null).orElseThrow(RuntimeException::new);
+```
 
 
 
