@@ -34,7 +34,7 @@ public class UserDemoControllerJunit5Test extends BaseJunit5SpringTest {
     @ParameterizedTest
     @DisplayName("testQueryUserDemoSingle")
     @ValueSource(longs = {100, 102, 103, 104, 999})
-    @HSql(value = {"/ut/mock/sql/unit/controller/healerjean/UserDemoControllerTest/testQueryUserDemoSingle.sql"})
+    @HSql(value = {"/ut/mock/sql/unit/controller/healerjean/UserDemoControllerTest/userDemos.sql"})
     @HSql(value = {"/ut/mock/sql/clean/user_demo_clean.sql"},
             executionPhase = HSql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testQueryUserDemoSingle(long id) {
@@ -49,7 +49,7 @@ public class UserDemoControllerJunit5Test extends BaseJunit5SpringTest {
     @DisplayName("testQueryUserDemoSingleDbTest")
     @ValueSource(longs = {1, 100, 102, 103, 104, 999})
     @HSql(config = @SqlConfig(dataSource = DataSourceConstant.MASTER_HEALER_JEAN),
-            value = {"/ut/mock/sql/unit/controller/healerjean/UserDemoControllerTest/testQueryUserDemoSingle.sql"})
+            value = {"/ut/mock/sql/unit/controller/healerjean/UserDemoControllerTest/userDemos.sql"})
     @HSql(config = @SqlConfig(dataSource = DataSourceConstant.MASTER_HEALER_JEAN),
             value = {"/ut/mock/sql/clean/user_demo_clean.sql"},
             executionPhase = HSql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -85,7 +85,7 @@ public class UserDemoControllerJunit5Test extends BaseJunit5SpringTest {
     @DisplayName("testQueryUserDemoSingleDbTest")
     @ValueSource(longs = {1, 100, 102, 103, 104, 999})
     @HSql(config = @SqlConfig(dataSource = DataSourceConstant.MASTER_HEALER_JEAN),
-            value = {"/ut/mock/sql/unit/controller/healerjean/UserDemoControllerTest/testQueryUserDemoSingle.sql"})
+            value = {"/ut/mock/sql/unit/controller/healerjean/UserDemoControllerTest/userDemos.sql"})
     @HSql(config = @SqlConfig(dataSource = DataSourceConstant.MASTER_HEALER_JEAN),
             value = {"/ut/mock/sql/clean/user_demo_clean.sql"},
             executionPhase = HSql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -95,6 +95,8 @@ public class UserDemoControllerJunit5Test extends BaseJunit5SpringTest {
         Assertions.assertNotNull(res, "res不能为空");
         Assertions.assertEquals(res.getSuccess(), Boolean.TRUE);
     }
+
+
 
 }
 

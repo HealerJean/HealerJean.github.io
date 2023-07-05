@@ -1576,102 +1576,65 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
 
 
 ```java
-package com.hlj.threadpool.thread;
+package com.healerjean.proj.d05_线程池;
+
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+* 线程池工具
+*
+* @author zhangyujin
+* @date 2023-07-05 09:07:42
+*/
+@Slf4j
+@Component
 public class ThreadPoolUtils {
+  /**
+   * 线程池工具 - DEFAULT_THREAD_POOL_EXECUTOR
+   */
+  public static ThreadPoolExecutor DEFAULT_THREAD_POOL_EXECUTOR;
 
-    private static AtomicLong atomicLong = new AtomicLong(0);
-    private ThreadPoolExecutor threadPoolExecutor;
 
-    private int corePoolSize = 10;
-    private int maximumPoolSize = 300;
-    private long keepAliveTime = 30000;
-    private TimeUnit unit = TimeUnit.MILLISECONDS;
-    private BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(10);
-    private ThreadFactory threadFactory = r -> new Thread(r, "ThreadPoolUtils" + atomicLong.incrementAndGet());
-    private RejectedExecutionHandler handler = new ThreadPoolExecutor.AbortPolicy();
+  static {
+      DEFAULT_THREAD_POOL_EXECUTOR = buildDefaultThreadPoolExecutor();
+  }
 
-    public void execute(Runnable runnable){
-        ThreadPoolExecutor threadPoolExecutor = getThreadPoolExecutor();
-        threadPoolExecutor.execute(runnable);
+    /**
+     * 构建默认线程池-ThreadPoolExecutor
+     *
+     * @return ThreadPoolExecutor
+     */
+    private static ThreadPoolExecutor buildDefaultThreadPoolExecutor() {
+        int corePoolSize = 10;
+        int maximumPoolSize = 100;
+        long keepAliveTime = 60;
+        TimeUnit unit = TimeUnit.SECONDS;
+        AtomicInteger tag = new AtomicInteger(1);
+        BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(500);
+        ThreadFactory threadFactory = r -> new Thread(r, "defaultThreadPoolExecutor" + tag.incrementAndGet());
+        RejectedExecutionHandler handler = new ThreadPoolExecutor.CallerRunsPolicy();
+        return new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, 
+                                      threadFactory, handler);
     }
 
-    private ThreadPoolExecutor getThreadPoolExecutor(){
-        if (threadPoolExecutor != null) {
-            return threadPoolExecutor;
+  
+      @Test
+    public void testThreadPoolExecutor() {
+        ThreadPoolExecutor defaultThreadPoolExecutor = ThreadPoolUtils.DEFAULT_THREAD_POOL_EXECUTOR;
+        for (int i = 0; i < 20; i++) {
+            int finalI = i;
+            defaultThreadPoolExecutor.submit(() -> System.out.println(finalI +  " " + 
+                                                                      Thread.currentThread().getName()));
         }
-        synchronized (this){
-            if (threadPoolExecutor != null){
-                return threadPoolExecutor;
-            }
-            threadPoolExecutor = new ThreadPoolExecutor(corePoolSize,maximumPoolSize,keepAliveTime,unit,workQueue,threadFactory,handler);
-            return threadPoolExecutor;
-        }
     }
-
-    public ThreadPoolUtils(){
-    }
-
-    public int getCorePoolSize() {
-        return corePoolSize;
-    }
-
-    public void setCorePoolSize(int corePoolSize) {
-        this.corePoolSize = corePoolSize;
-    }
-
-    public int getMaximumPoolSize() {
-        return maximumPoolSize;
-    }
-
-    public void setMaximumPoolSize(int maximumPoolSize) {
-        this.maximumPoolSize = maximumPoolSize;
-    }
-
-    public long getKeepAliveTime() {
-        return keepAliveTime;
-    }
-
-    public void setKeepAliveTime(long keepAliveTime) {
-        this.keepAliveTime = keepAliveTime;
-    }
-
-    public TimeUnit getUnit() {
-        return unit;
-    }
-
-    public void setUnit(TimeUnit unit) {
-        this.unit = unit;
-    }
-
-    public BlockingQueue<Runnable> getWorkQueue() {
-        return workQueue;
-    }
-
-    public void setWorkQueue(BlockingQueue<Runnable> workQueue) {
-        this.workQueue = workQueue;
-    }
-
-    public ThreadFactory getThreadFactory() {
-        return threadFactory;
-    }
-
-    public void setThreadFactory(ThreadFactory threadFactory) {
-        this.threadFactory = threadFactory;
-    }
-
-    public RejectedExecutionHandler getHandler() {
-        return handler;
-    }
-
-    public void setHandler(RejectedExecutionHandler handler) {
-        this.handler = handler;
-    }
-
 }
+
 ```
 
 
@@ -1683,34 +1646,103 @@ public class ThreadPoolUtils {
 > ⬤ 支持 `submit` 和 `execute`
 
 ```java
+package com.healerjean.proj.d05_线程池;
+
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Component;
+
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
-* 线程池支持
+* 线程池工具
 *
+* @author zhangyujin
+* @date 2023-07-05 09:07:42
 */
-@Bean
-public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
-    ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-    // 核心线程数：线程池创建时候初始化的线程数
-    taskExecutor.setCorePoolSize(10);
-    // 最大线程数：只有在缓冲队列满了之后才会申请超过核心线程数的线程
-    taskExecutor.setMaxPoolSize(100);
-    // 缓存队列：用来缓冲执行任务的队列
-    taskExecutor.setQueueCapacity(500);
+@Slf4j
+@Component
+public class ThreadPoolUtils {
 
-    // 线程池维护线程所允许的空闲时间：当超过了核心线程出之外的线程在空闲时间到达之后会被销毁
-    taskExecutor.setKeepAliveSeconds(60);
-    // threadPoolTaskExecutor
-    taskExecutor.setThreadNamePrefix("threadPoolTaskExecutor");
-    // 调度器shutdown被调用时等待当前被调度的任务完成：用来设置线程池关闭的时候等待所有任务都完成再继续销毁其他的Bean
-    taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
+  /**
+   * 默认线程池工具 - DEFAULT_THREAD_POOL_TASK_EXECUTOR
+   */
+  public static ThreadPoolTaskExecutor DEFAULT_THREAD_POOL_TASK_EXECUTOR;
 
-    //该方法用来设置线程池中任务的等待时间:如果超过这个时候还没有销毁就强制销毁，以确保应用最后能够被关闭，而不是阻塞住
-    taskExecutor.setAwaitTerminationSeconds(60);
-    taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-    taskExecutor.initialize();
-    log.info("Executor - threadPoolTaskExecutor injected!");
-  return taskExecutor;
+  static {
+      DEFAULT_THREAD_POOL_TASK_EXECUTOR = buildDefaultThreadPoolTaskExecutor();
+  }
+
+/**
+   * 构建默认线程池-ThreadPoolTaskExecutor
+   *
+   * @return ThreadPoolTaskExecutor
+   */
+  private static ThreadPoolTaskExecutor buildDefaultThreadPoolTaskExecutor() {
+      ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+      // 核心线程数：线程池创建时候初始化的线程数
+      taskExecutor.setCorePoolSize(10);
+      // 最大线程数：只有在缓冲队列满了之后才会申请超过核心线程数的线程
+      taskExecutor.setMaxPoolSize(100);
+      // 线程池维护线程所允许的空闲时间：当超过了核心线程出之外的线程在空闲时间到达之后会被销毁
+      taskExecutor.setKeepAliveSeconds(60);
+      // 缓存队列：用来缓冲执行任务的队列
+      taskExecutor.setQueueCapacity(500);
+      // 线程工厂
+      AtomicInteger tag = new AtomicInteger(1);
+      taskExecutor.setThreadFactory(r -> new Thread(r, "defaultThreadPoolTaskExecutor" + 
+                                                    tag.incrementAndGet()));
+      // 拒绝策略由调用线程处理该任务
+      taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+      // defaultThreadPoolTaskExecutor
+      taskExecutor.setThreadNamePrefix("defaultThreadPoolTaskExecutor");
+
+      // 调度器shutdown被调用时等待当前被调度的任务完成：用来设置线程池关闭的时候等待所有任务都完成再继续销毁其他的Bean
+      taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
+      //该方法用来设置线程池中任务的等待时间:如果超过这个时候还没有销毁就强制销毁，以确保应用最后能够被关闭，而不是阻塞住
+      taskExecutor.setAwaitTerminationSeconds(60);
+      taskExecutor.initialize();
+      log.info("Executor - threadPoolTaskExecutor injected!");
+      return taskExecutor;
+  }
+
+
+   @Test
+  public void testThreadPoolTaskExecutor() {
+      ThreadPoolTaskExecutor defaultThreadPoolTaskExecutor = ThreadPoolUtils.DEFAULT_THREAD_POOL_TASK_EXECUTOR;
+      for (int i = 0; i < 20; i++) {
+          int finalI = i;
+          defaultThreadPoolTaskExecutor.submit(() -> System.out.println(finalI + " " + 
+                                                                        Thread.currentThread().getName()));
+      }
+  }
+
+
+
+0 defaultThreadPoolTaskExecutor2
+1 defaultThreadPoolTaskExecutor3
+2 defaultThreadPoolTaskExecutor4
+3 defaultThreadPoolTaskExecutor5
+4 defaultThreadPoolTaskExecutor6
+5 defaultThreadPoolTaskExecutor7
+6 defaultThreadPoolTaskExecutor8
+7 defaultThreadPoolTaskExecutor9
+8 defaultThreadPoolTaskExecutor10
+9 defaultThreadPoolTaskExecutor11
+10 defaultThreadPoolTaskExecutor2
+12 defaultThreadPoolTaskExecutor4
+14 defaultThreadPoolTaskExecutor3
+15 defaultThreadPoolTaskExecutor5
+18 defaultThreadPoolTaskExecutor7
+11 defaultThreadPoolTaskExecutor11
+19 defaultThreadPoolTaskExecutor8
+17 defaultThreadPoolTaskExecutor3
+16 defaultThreadPoolTaskExecutor6
+13 defaultThreadPoolTaskExecutor2
 }
+
 ```
 
 

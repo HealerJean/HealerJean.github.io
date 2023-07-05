@@ -71,8 +71,16 @@ public interface UserDemoService {
 
     /**
      * 线程池查询所有数据
+     *
      * @param query query
-     * @return List<Future<List<UserDemoBO>>>
+     * @return List<Future < List < UserDemoBO>>>
      */
     List<Future<List<UserDemoExcel>>> queryFutureAll(CompletionService<List<UserDemoExcel>> completionService, UserDemoQueryBO query);
+
+    /**
+     * 根据id区间分页查询所有数据
+     * @param queryBO queryBO
+     * @return
+     */
+    List<Future<List<UserDemoExcel>>> queryUserDemoByIdSub(CompletionService<List<UserDemoExcel>> completionService, UserDemoQueryBO queryBO);
 }

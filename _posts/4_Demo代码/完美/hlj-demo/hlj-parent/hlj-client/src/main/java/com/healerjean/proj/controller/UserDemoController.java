@@ -20,11 +20,11 @@ import com.healerjean.proj.data.vo.UserDemoVO;
 import com.healerjean.proj.exceptions.ParameterException;
 import com.healerjean.proj.rpc.DemoPrcResource;
 import com.healerjean.proj.service.UserDemoService;
-import com.healerjean.proj.utils.JsonUtils;
 import com.healerjean.proj.utils.validate.ValidateUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -49,7 +49,7 @@ public class UserDemoController {
     private DemoPrcResource demoPrcResource;
 
 
-    @ApiOperation(value = "用户信息-新增", notes = "用户信息-新增-描述")
+    @ApiOperation("用户信息-新增")
     @RedisLock(RedisConstants.LockEnum.COMMON)
     @LogIndex
     @PostMapping("user/save")
@@ -64,7 +64,7 @@ public class UserDemoController {
         return BaseRes.buildSuccess(success);
     }
 
-    @ApiOperation(value = "用户信息-删除", notes = "用户信息-删除-描述")
+    @ApiOperation("用户信息-删除")
     @LogIndex
     @DeleteMapping("user/{id}")
     public BaseRes<Boolean> deleteUserDemo(@PathVariable Long id) {
@@ -72,7 +72,7 @@ public class UserDemoController {
         return BaseRes.buildSuccess(success);
     }
 
-    @ApiOperation(value = "用户信息-修改", notes = "用户信息-修改-描述")
+    @ApiOperation("用户信息-修改")
     @LogIndex
     @PutMapping("user/{id}")
     @ResponseBody
@@ -83,7 +83,7 @@ public class UserDemoController {
         return BaseRes.buildSuccess(success);
     }
 
-    @ApiOperation(value = "用户信息-单条查询", notes = "用户信息-单条查询-描述")
+    @ApiOperation("用户信息-单条查询")
     @LogIndex
     @GetMapping("user/{userId}")
     @ResponseBody
@@ -96,7 +96,7 @@ public class UserDemoController {
         return BaseRes.buildSuccess(userDemoVo);
     }
 
-    @ApiOperation(value = "用户信息-列表查询", notes = "用户信息-列表查询-描述")
+    @ApiOperation("用户信息-列表查询")
     @LogIndex
     @GetMapping("user/list")
     @ResponseBody
@@ -107,7 +107,7 @@ public class UserDemoController {
         return BaseRes.buildSuccess(userDemoVos);
     }
 
-    @ApiOperation(value = "用户信息-分页查询", notes = "用户信息-分页查询-描述")
+    @ApiOperation("用户信息-分页查询")
     @LogIndex
     @PostMapping("user/page")
     @ResponseBody
@@ -120,14 +120,6 @@ public class UserDemoController {
     }
 
 
-    @ApiOperation(value = "用户信息-脱敏查询", notes = "用户信息-脱敏查询-描述")
-    @LogIndex
-    @GetMapping("user/sensitiveList")
-    @ResponseBody
-    public String querySensitiveList(UserDemoQueryReq req) {
-        UserDemoQueryBO userDemoQueryBo = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
-        List<UserDemoBO> userDemoBos = userDemoService.queryUserDemoList(userDemoQueryBo);
-        List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(userDemoBos);
-        return JsonUtils.toJsonStringWithSensitivity(BaseRes.buildSuccess(userDemoVos));
-    }
+
+
 }
