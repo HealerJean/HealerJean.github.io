@@ -1,12 +1,16 @@
-package com.jd.merchant.business.platform.core.dao;
+package com.healerjean.proj.utils.db;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
-import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.Future;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * MybatisPlusQueryUtils
@@ -15,33 +19,6 @@ import java.util.function.BiFunction;
  * @date 2023/6/25$  12:05$
  */
 public final class MybatisBatchUtils {
-
- /**
-     * queryAll
-     *
-     * @param function function
-     * @param q        q
-     * @param pageSize pageSize
-     * @return {@link List<R>}
-     */
-    public static <Q, R> List<R> queryAll(Function<Q, List<R>> function, Q q, int pageSize) {
-        List<R> dbList = Lists.newArrayList();
-        PageInfo<R> pageInfo;
-        int pageNow = 1;
-        while (true) {
-            PageHelper.startPage(pageNow, pageSize);
-            pageInfo = new PageInfo<>(function.apply(q));
-            if (CollectionUtils.isEmpty(pageInfo.getList())) {
-                break;
-            }
-            dbList.addAll(pageInfo.getList());
-            if (pageInfo.getList().size() < pageSize) {
-                break;
-            }
-            PageHelper.startPage(pageNow + 1, pageSize);
-        }
-        return dbList;
-    }
 
 
     /**
@@ -74,5 +51,69 @@ public final class MybatisBatchUtils {
     }
 
 
+    /**
+     * queryAll
+     *
+     * @param executorService 线程池
+     * @param function        分页函数
+     * @param queryWrapper    查询条件
+     * @param pageSize        pageSize 分页大小
+     * @param coverFunction   coverFunction 对象转化
+     * @return {@link List< Future< List<T>>>}
+     */
+    public static <Q, R, T> List<Future<List<T>>> queryAll(CompletionService<List<T>> executorService,
+                                                           BiFunction<Page<R>, Q, IPage<R>> function,
+                                                           Q queryWrapper,
+                                                           int pageSize,
+                                                           Function<List<R>, List<T>> coverFunction) {
+
+        IPage<R> initPage = function.apply(new Page<>(1, 0), queryWrapper).setSize(pageSize);
+
+        List<Future<List<T>>> result = new ArrayList<>();
+        for (int i = 1; i <= initPage.getPages(); i++) {
+            int finalI = i;
+            Future<List<T>> future = executorService.submit(() -> {
+                IPage<R> page = function.apply(new Page<>(finalI, pageSize), queryWrapper);
+                return coverFunction.apply(page.getRecords());
+            });
+            result.add(future);
+        }
+        return result;
+    }
+
+
+    /**
+     * queryAll
+     *
+     * @param executorService 线程池
+     * @param function        分页函数
+     * @param query           查询条件
+     * @param minMax          minMax 最小Id和最大Id
+     * @param coverFunction   coverFunction 对象转化
+     */
+    public static <Q, R, T> List<Future<List<T>>> queryAll(CompletionService<List<T>> executorService,
+                                                           BiFunction<IdQueryBO, Q, List<R>> function,
+                                                           Q query,
+                                                           IdQueryBO minMax,
+                                                           Function<List<R>, List<T>> coverFunction) {
+        Long minId = minMax.getMinId();
+        Long maxId = minMax.getMaxId();
+        Long size = minMax.getSize();
+        List<Future<List<T>>> result = new ArrayList<>();
+        for (long i = minId; i <= maxId; i = i + size) {
+            long endId = Math.min(i + size, maxId);
+            boolean maxEqualFlag = endId == maxId;
+            IdQueryBO idQueryBO = new IdQueryBO(true, i, maxEqualFlag, endId, size);
+            Future<List<T>> future = executorService.submit(() -> {
+                List<R> list = function.apply(idQueryBO, query);
+                return coverFunction.apply(list);
+            });
+            result.add(future);
+            if (maxEqualFlag) {
+                break;
+            }
+        }
+        return result;
+    }
 
 }

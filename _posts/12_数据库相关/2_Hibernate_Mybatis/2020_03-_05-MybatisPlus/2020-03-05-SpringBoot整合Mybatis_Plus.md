@@ -1628,6 +1628,27 @@ public void queryManyUse() {
 
 
 
+## 4.4、返回自定义函数和字段
+
+> 注意大 使用双引号，否则出来是大写 `MINID`、`MAXID`
+
+```java
+QueryWrapper<UserDemo> queryWrapper = new QueryWrapper<>();
+queryWrapper.select("min(id) as \"minId\"", "max(id) as \"maxId\"");
+LambdaQueryWrapper<UserDemo> lambdaQueryWrapper = queryWrapper.lambda()
+        .eq(Objects.nonNull(query.getId()), UserDemo::getId, query.getId())
+        .eq(Objects.nonNull(query.getValidFlag()), UserDemo::getValidFlag, query.getValidFlag())
+        .like(StringUtils.isNotBlank(query.getName()), UserDemo::getName, query.getName())
+        .like(StringUtils.isNotBlank(query.getPhone()), UserDemo::getPhone, query.getPhone())
+        .like(StringUtils.isNotBlank(query.getEmail()), UserDemo::getEmail, query.getEmail())
+        .like(StringUtils.isNotBlank(query.getLikeName()), UserDemo::getName, query.getLikeName())
+        .like(StringUtils.isNotBlank(query.getLikePhone()), UserDemo::getPhone, query.getLikePhone())
+        .le(Objects.nonNull(query.getQueryTime()), UserDemo::getStartTime, query.getQueryTime())
+        .ge(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime());
+Map<String, Object> map = userDemoDao.getMap(lambdaQueryWrapper);
+return ImmutablePair.of(MapUtils.getLong(map, "minId"), MapUtils.getLong(map, "maxId"));
+```
+
 
 
 # 5、问题
@@ -1805,8 +1826,6 @@ public void testDate(){
 
 
 #### 5.1.2.2、查询集合List
-
-
 
 ##### 5.1.2.2.1、`Maper.java`
 

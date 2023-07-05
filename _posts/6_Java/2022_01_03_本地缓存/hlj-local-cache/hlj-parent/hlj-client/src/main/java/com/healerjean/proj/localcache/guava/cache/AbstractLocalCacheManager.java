@@ -1,16 +1,16 @@
-package com.healerjean.proj.localcache.caffeine.cache;
+package com.healerjean.proj.localcache.guava.cache;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Sets;
 import com.healerjean.proj.util.json.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Lists;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 /**
@@ -26,7 +26,7 @@ public abstract class AbstractLocalCacheManager<K, V> {
     /**
      * 缓存容器
      */
-    private final Cache<String, V> localCache = Caffeine.newBuilder()
+    private final Cache<String, V> localCache = CacheBuilder.newBuilder()
             .maximumSize(200000)
             .recordStats()
             .build();
@@ -38,6 +38,21 @@ public abstract class AbstractLocalCacheManager<K, V> {
     public void init() {
         refreshAll();
     }
+
+
+    /**
+     * 获取全部缓存信息
+     *
+     * @return
+     */
+    public Map<String, V> getAllLocalCache() {
+        ConcurrentMap<String, V> concurrentMap = localCache.asMap();
+        if (CollectionUtils.isEmpty(concurrentMap)) {
+            refreshAll();
+        }
+        return localCache.asMap();
+    }
+
 
 
     /**
@@ -103,7 +118,6 @@ public abstract class AbstractLocalCacheManager<K, V> {
      */
     public V getCache(K k) {
         String localKey = toLocalKey(k);
-        // 查找一个缓存元素， 没有查找到的时候返回null
         V ret = localCache.getIfPresent(localKey);
         if (ret == null) {
             return refresh(k);
@@ -132,18 +146,11 @@ public abstract class AbstractLocalCacheManager<K, V> {
      * @return V
      */
     public V refresh(K k) {
-        try {
-            V v = load(k);
-            if (v == null) {
-                delCaches(Lists.newArrayList(k));
-                return v;
-            }
+        V v = load(k);
+        if (v != null) {
             writeCache(k, v);
-            return v;
-        } catch (Exception e) {
-            log.info("[{}#refresh], error, key:{}, stats:{} ", this.getClass().getSimpleName(), k, JsonUtils.toJsonString(localCache.stats()));
-            throw new RuntimeException(e.getMessage(), e);
         }
+        return v;
     }
 
     /**
@@ -153,39 +160,23 @@ public abstract class AbstractLocalCacheManager<K, V> {
      * @return Map<K, V>
      */
     public Map<K, V> refresh(Set<K> keys) {
-        try {
-            Map<K, V> map = load(keys);
-            if (CollectionUtils.isEmpty(keys)) {
-                delCaches(keys);
-                return map;
-            }
+        Map<K, V> map = load(keys);
+        if (!CollectionUtils.isEmpty(map)) {
             map.forEach(this::writeCache);
-            Sets.SetView<K> difference = Sets.difference(keys, map.keySet());
-            delCaches(difference);
-            return map;
-        } catch (Exception e) {
-            log.info("[{}#refreshKeys] error, keys:{}, stats:{} ", this.getClass().getSimpleName(), JsonUtils.toJsonString(keys), JsonUtils.toJsonString(localCache.stats()));
-            throw new RuntimeException(e.getMessage(), e);
         }
+        return map;
     }
 
     /**
      * 刷新所有key
      */
     public void refreshAll() {
-        try {
-            long t1 = System.currentTimeMillis();
-            Map<K, V> map = loadAll();
-            if (CollectionUtils.isEmpty(map)) {
-                localCache.invalidateAll();
-                return;
-            }
+        long t1 = System.currentTimeMillis();
+        Map<K, V> map = loadAll();
+        if (!CollectionUtils.isEmpty(map)) {
             map.forEach(this::writeCache);
-            log.info("[{}#refreshAll] cost: {}ms, estimatedSize:{}, stats:{}", this.getClass().getSimpleName(), System.currentTimeMillis() - t1, localCache.estimatedSize(), JsonUtils.toJsonString(localCache.stats()));
-        } catch (Exception e) {
-            log.info("[{}#refreshAll] error, stats:{} ", this.getClass().getSimpleName(), JsonUtils.toJsonString(localCache.stats()));
-            throw new RuntimeException(e.getMessage(), e);
         }
+        log.info("[AbstractLocalCacheManager#refreshAll] {}, loadAll use time: {}ms , total: {} , stats:{}", this.getClass().getSimpleName(), System.currentTimeMillis() - t1, localCache.size(), JsonUtils.toJsonString(localCache.stats()));
     }
 
 
@@ -205,7 +196,7 @@ public abstract class AbstractLocalCacheManager<K, V> {
      * @param k k
      * @param v v
      */
-    protected void writeCache(K k, V v) {
+    private void writeCache(K k, V v) {
         String localKey = toLocalKey(k);
         localCache.put(localKey, v);
     }

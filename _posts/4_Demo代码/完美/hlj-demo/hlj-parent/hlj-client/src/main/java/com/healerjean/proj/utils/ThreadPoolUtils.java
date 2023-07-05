@@ -1,13 +1,11 @@
-package com.healerjean.proj.d05_线程池;
+package com.healerjean.proj.utils;
 
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 线程池工具
@@ -16,7 +14,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * @date 2023-07-05 09:07:42
  */
 @Slf4j
-@Component
 public class ThreadPoolUtils {
 
     /**

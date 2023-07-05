@@ -13,3 +13,25 @@ create table if not exists `user_demo`
     primary key (`id`)
 ) engine = innodb
   default charset = utf8;
+
+
+# 客户端中可以执行测试的存储过程代码
+drop procedure if exists test_batch_create;
+create procedure test_batch_create(in loop_counts int, in date varchar(50))
+begin
+    declare i int;
+    set i = 0;
+    set autocommit = 0; -- 关闭自动提交事务，提高插入效率
+    while i < loop_counts
+        do
+            insert into `user_demo` (name, age, phone, email, start_time, end_time, valid_flag)
+            values (concat('张', floor(rand() * 2 * i)), floor(rand() * i), floor(rand() * 3 * i),
+                    concat(floor(rand() * 2 * i), '@gmail.com'), date_add(date, interval i day),
+                    date_add(date, interval i * 2 day), 1);
+            set i = i + 1;
+        end while;
+    commit;
+end;
+
+
+CALL test_batch_create(10, '2023-07-01');

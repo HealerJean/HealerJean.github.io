@@ -9,6 +9,7 @@ import com.healerjean.proj.common.data.bo.BaseRes;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
 import com.healerjean.proj.data.excel.UserDemoExcel;
 import com.healerjean.proj.service.UserDemoService;
+import com.healerjean.proj.utils.ThreadPoolUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,6 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -39,31 +39,13 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ExcelController {
 
     /**
-     * excel sheet最大行数(算标题)
+     * excel sheet最大行数(算标题) 1000001
      */
-    public static final Integer EXCEL_SHEET_ROW_MAX_SIZE = 1000001;
-
+    public static final Integer EXCEL_SHEET_ROW_MAX_SIZE = 1;
 
     private static final String PATH = "/Users/healerjean/Desktop/data/write/";
     private static final String CURRENT_TIME_MILLIS_NAME = "CURRENT_TIME_MILLIS";
-
     private static final String WRITE_SIMPLE_EXCEL_RESULT_FILE = PATH + "simpleWrite" + CURRENT_TIME_MILLIS_NAME + ".xlsx";
-    private static final String WRITE_EXCLUDEORINCLUDEWRITE_EXCEL_RESULT_FILE = PATH + "excludeOrIncludeWrite" + CURRENT_TIME_MILLIS_NAME + ".xlsx";
-    private static final String WRITE_INDEXWRITE_EXCEL_RESULT_FILE = PATH + "indexWrite" + CURRENT_TIME_MILLIS_NAME + ".xlsx";
-    private static final String WRITE_COMPLEXHEADWRITE_EXCEL_RESULT_FILE = PATH + "complexHeadWrite" + CURRENT_TIME_MILLIS_NAME + ".xlsx";
-    private static final String WRITE_REPEATEDWRITE_EXCEL_RESULT_FILE = PATH + "repeatedWrite" + CURRENT_TIME_MILLIS_NAME + ".xlsx";
-    private static final String WRITE_CONVERTERWRITE_EXCEL_RESULT_FILE = PATH + "converterWrite" + CURRENT_TIME_MILLIS_NAME + ".xlsx";
-    private static final String WRITE_IMAGEWRITE_EXCEL_RESULT_FILE = PATH + "imageWrite" + CURRENT_TIME_MILLIS_NAME + ".xlsx";
-    private static final String WRITE_IMAGEWRITE_IMAGE_FILE = "/Users/healerjean/Desktop/data/write/image/img.jpg";
-
-    private static final String WRITE_DEMO_EXCEL_RESULT_FILE = PATH + "demo.xlsx";
-    private static final String WRITE_TEMPLATEWRITE_EXCEL_RESULT_FILE = PATH + "templateWrite" + CURRENT_TIME_MILLIS_NAME + ".xlsx";
-    private static final String WRITE_WIDTHANDHEIGHTWRITE_EXCEL_RESULT_FILE = PATH + "widthAndHeightWrite" + CURRENT_TIME_MILLIS_NAME + ".xlsx";
-    private static final String WRITE_ANNOTATIONSTYLEWRITE_EXCEL_RESULT_FILE = PATH + "annotationStyleWrite" + CURRENT_TIME_MILLIS_NAME + ".xlsx";
-    private static final String WRITE_MERGEWRITE_EXCEL_RESULT_FILE = PATH + "mergeWrite" + CURRENT_TIME_MILLIS_NAME + ".xlsx";
-    private static final String WRITE_LONGESTMATCHCOLUMNWIDTHWRITE_EXCEL_RESULT_FILE = PATH + "longestMatchColumnWidthWrite" + CURRENT_TIME_MILLIS_NAME + ".xlsx";
-    private static final String WRITE_DYNAMICHEADWRITE_EXCEL_RESULT_FILE = PATH + "dynamicHeadWrite" + CURRENT_TIME_MILLIS_NAME + ".xlsx";
-    private static final String WRITE_NOMODELWRITE_EXCEL_RESULT_FILE = PATH + "noModelWrite" + CURRENT_TIME_MILLIS_NAME + ".xlsx";
 
     /**
      * userDemoService
@@ -81,17 +63,18 @@ public class ExcelController {
         WriteSheet writeSheet = EasyExcel.writerSheet(1, "Sheet1").build();
 
         AtomicLong count = new AtomicLong();
-        CompletionService<List<UserDemoExcel>> completionService = new ExecutorCompletionService(Executors.newFixedThreadPool(10));
+        CompletionService<List<UserDemoExcel>> completionService = new ExecutorCompletionService(ThreadPoolUtils.DEFAULT_THREAD_POOL_TASK_EXECUTOR);
         List<Future<List<UserDemoExcel>>> futures = userDemoService.queryFutureAll(completionService, new UserDemoQueryBO());
+
         List<UserDemoExcel> all = Lists.newArrayList();
-        for (int i = 0;  i< futures.size() ; i++) {
+        for (int i = 0; i < futures.size(); i++) {
             try {
                 Future<List<UserDemoExcel>> future = completionService.take();
                 List<UserDemoExcel> userDemos = future.get();
                 if (CollectionUtils.isEmpty(userDemos)) {
                     continue;
                 }
-                writeSheet.setSheetNo((int) (count.addAndGet(userDemos.size()) /2 + 1));
+                writeSheet.setSheetNo((int) (count.addAndGet(userDemos.size()) / 2 + EXCEL_SHEET_ROW_MAX_SIZE));
                 writeSheet.setSheetName("Sheet" + writeSheet.getSheetNo());
                 excelWriter.write(userDemos, writeSheet);
                 all.addAll(future.get());

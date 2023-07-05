@@ -14,8 +14,10 @@ import com.healerjean.proj.data.excel.UserDemoExcel;
 import com.healerjean.proj.data.manager.UserDemoManager;
 import com.healerjean.proj.data.po.UserDemo;
 import com.healerjean.proj.service.UserDemoService;
+import com.healerjean.proj.utils.db.IdQueryBO;
 import com.healerjean.proj.utils.db.MybatisBatchUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -122,12 +124,41 @@ public class UserDemoServiceImpl implements UserDemoService {
         return PageConverter.INSTANCE.covertPageBoToBo(page, userDemoBos);
     }
 
+    /**
+     * queryFutureAll
+     *
+     * @param completionService completionService
+     * @param query             query
+     * @return List<Future < List < UserDemoExcel>>>
+     */
     @Override
     public List<Future<List<UserDemoExcel>>> queryFutureAll(CompletionService<List<UserDemoExcel>> completionService, UserDemoQueryBO query) {
         LambdaQueryWrapper<UserDemo> userDemoLambdaQueryWrapper = userDemoManager.queryBuilderQueryWrapper(query);
-        return MybatisBatchUtils.queryAll(completionService, (p, q) -> userDemoDao.page(p, q),
+        return MybatisBatchUtils.queryAll(completionService,
+                (p, q) -> userDemoDao.page(p, q),
                 userDemoLambdaQueryWrapper,
                 1,
+                UserConverter.INSTANCE::covertUserDemoPoToExcelList);
+    }
+
+
+    /**
+     * 根据
+     *
+     * @param completionService completionService
+     * @param query             queryBO
+     * @return List<Future < List < UserDemoExcel>>>
+     */
+    @Override
+    public List<Future<List<UserDemoExcel>>> queryUserDemoByIdSub(CompletionService<List<UserDemoExcel>> completionService, UserDemoQueryBO query) {
+        ImmutablePair<Long, Long> minAndMaxId = userDemoManager.queryMinAndMaxId(query);
+        Long minId = minAndMaxId.getLeft();
+        Long maxId = minAndMaxId.getRight();
+        IdQueryBO idQueryBO = new IdQueryBO(minId, maxId, 2L);
+        return MybatisBatchUtils.queryAll(completionService,
+                (p, q) -> userDemoManager.queryUserDemoByIdSub(p, q),
+                query,
+                idQueryBO,
                 UserConverter.INSTANCE::covertUserDemoPoToExcelList);
     }
 }
