@@ -1,6 +1,6 @@
 package com.healerjean.proj.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.healerjean.proj.common.data.bo.PageBO;
 import com.healerjean.proj.common.data.bo.PageQueryBO;
@@ -14,6 +14,7 @@ import com.healerjean.proj.data.excel.UserDemoExcel;
 import com.healerjean.proj.data.manager.UserDemoManager;
 import com.healerjean.proj.data.po.UserDemo;
 import com.healerjean.proj.service.UserDemoService;
+import com.healerjean.proj.utils.db.CommonResultHandler;
 import com.healerjean.proj.utils.db.IdQueryBO;
 import com.healerjean.proj.utils.db.MybatisBatchUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.Future;
@@ -132,11 +134,11 @@ public class UserDemoServiceImpl implements UserDemoService {
      * @return List<Future < List < UserDemoExcel>>>
      */
     @Override
-    public List<Future<List<UserDemoExcel>>> queryFutureAll(CompletionService<List<UserDemoExcel>> completionService, UserDemoQueryBO query) {
-        LambdaQueryWrapper<UserDemo> userDemoLambdaQueryWrapper = userDemoManager.queryBuilderQueryWrapper(query);
-        return MybatisBatchUtils.queryAll(completionService,
+    public List<Future<List<UserDemoExcel>>> queryAllUserDemoByPoolLimit(CompletionService<List<UserDemoExcel>> completionService, UserDemoQueryBO query) {
+        QueryWrapper<UserDemo> queryWrapper = userDemoManager.queryBuilderQueryWrapper(query);
+        return MybatisBatchUtils.queryAllByPoolLimit(completionService,
                 (p, q) -> userDemoDao.page(p, q),
-                userDemoLambdaQueryWrapper,
+                queryWrapper,
                 1,
                 UserConverter.INSTANCE::covertUserDemoPoToExcelList);
     }
@@ -150,16 +152,67 @@ public class UserDemoServiceImpl implements UserDemoService {
      * @return List<Future < List < UserDemoExcel>>>
      */
     @Override
-    public List<Future<List<UserDemoExcel>>> queryUserDemoByIdSub(CompletionService<List<UserDemoExcel>> completionService, UserDemoQueryBO query) {
+    public List<Future<List<UserDemoExcel>>> queryAllUserDemoByPoolIdSub(CompletionService<List<UserDemoExcel>> completionService, UserDemoQueryBO query) {
         ImmutablePair<Long, Long> minAndMaxId = userDemoManager.queryMinAndMaxId(query);
         Long minId = minAndMaxId.getLeft();
         Long maxId = minAndMaxId.getRight();
         IdQueryBO idQueryBO = new IdQueryBO(minId, maxId, 2L);
-        return MybatisBatchUtils.queryAll(completionService,
+        return MybatisBatchUtils.queryAllByPoolIdSub(completionService,
                 (p, q) -> userDemoManager.queryUserDemoByIdSub(p, q),
                 query,
                 idQueryBO,
                 UserConverter.INSTANCE::covertUserDemoPoToExcelList);
+    }
+
+
+    /**
+     * 大数据量-流式查询全部
+     *
+     * @param queryBO queryBO
+     * @return List<UserDemoBO>
+     */
+    @Override
+    public List<UserDemoBO> queryAllUserDemoByStream(UserDemoQueryBO queryBO) {
+        List<UserDemoBO> result = new ArrayList<>();
+        CommonResultHandler<UserDemo> resultHandler = new CommonResultHandler<UserDemo>() {
+            @Override
+            public void processing(UserDemo userDemo) {
+                UserDemoBO userDemoBO = UserConverter.INSTANCE.covertUserDemoPoToBo(userDemo);
+                result.add(userDemoBO);
+            }
+        };
+        userDemoManager.queryUserDemoByStream(queryBO, resultHandler);
+        return result;
+    }
+
+
+    /**
+     * 大数据量-分页查询全部
+     *
+     * @param queryBo queryBo
+     * @return List<UserDemoBO>
+     */
+    @Override
+    public List<UserDemoBO> queryAllUserDemoByLimit(UserDemoQueryBO queryBo) {
+        QueryWrapper<UserDemo> queryWrapper = userDemoManager.queryBuilderQueryWrapper(queryBo);
+        List<UserDemo> list = MybatisBatchUtils.queryAllByLimit((p, q) -> userDemoDao.page(p, q), queryWrapper, 2L);
+        return UserConverter.INSTANCE.covertUserDemoPoToBoList(list);
+    }
+
+    /**
+     * 大数据量-IdSize查询全部
+     *
+     * @param queryBo queryBo
+     * @return List<UserDemoBO>
+     */
+    @Override
+    public List<UserDemoBO> queryAllUserDemoByIdSize(UserDemoQueryBO queryBo) {
+        IdQueryBO idQueryBO = new IdQueryBO(0L, 2L);
+        List<UserDemo> list = MybatisBatchUtils.queryAllByIdSize(
+                (p, q) -> userDemoManager.queryUserDemoByIdSize(p, q),
+                queryBo,
+                idQueryBO);
+        return UserConverter.INSTANCE.covertUserDemoPoToBoList(list);
     }
 }
 

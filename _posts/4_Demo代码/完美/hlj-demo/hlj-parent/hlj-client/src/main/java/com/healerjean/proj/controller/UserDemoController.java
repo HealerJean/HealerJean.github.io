@@ -24,7 +24,6 @@ import com.healerjean.proj.utils.validate.ValidateUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -119,6 +118,39 @@ public class UserDemoController {
         return BaseRes.buildSuccess(pageVo);
     }
 
+    @ApiOperation("用户信息-大数据量-流式查询全部")
+    @LogIndex(resFlag = false)
+    @GetMapping("user/queryAllUserDemoByStream")
+    @ResponseBody
+    public BaseRes<List<UserDemoVO>> queryAllUserDemoByStream(UserDemoQueryReq req) {
+        UserDemoQueryBO userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
+        List<UserDemoBO> list = userDemoService.queryAllUserDemoByStream(userDemoPageQuery);
+        List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(list);
+        return BaseRes.buildSuccess(userDemoVos);
+    }
+
+
+    @ApiOperation("用户信息-大数据量-分页查询全部")
+    @LogIndex(resFlag = false)
+    @GetMapping("user/queryAllUserDemoByLimit")
+    @ResponseBody
+    public BaseRes<List<UserDemoVO>> queryAllUserDemoByLimit(UserDemoQueryReq req) {
+        UserDemoQueryBO userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
+        List<UserDemoBO> list = userDemoService.queryAllUserDemoByLimit(userDemoPageQuery);
+        List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(list);
+        return BaseRes.buildSuccess(userDemoVos);
+    }
+
+    @ApiOperation("用户信息-大数据量-IdSize查询全部")
+    @LogIndex(resFlag = false)
+    @GetMapping("user/queryAllUserDemoByIdSize")
+    @ResponseBody
+    public BaseRes<List<UserDemoVO>> queryAllUserDemoByIdSize(UserDemoQueryReq req) {
+        UserDemoQueryBO userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
+        List<UserDemoBO> list = userDemoService.queryAllUserDemoByIdSize(userDemoPageQuery);
+        List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(list);
+        return BaseRes.buildSuccess(userDemoVos);
+    }
 
 
 

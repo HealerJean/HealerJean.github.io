@@ -1,10 +1,11 @@
 package com.healerjean.proj.data.manager;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.healerjean.proj.common.data.bo.PageQueryBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
 import com.healerjean.proj.data.po.UserDemo;
+import com.healerjean.proj.utils.db.CommonResultHandler;
 import com.healerjean.proj.utils.db.IdQueryBO;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
@@ -73,7 +74,7 @@ public interface UserDemoManager {
      * @param query query
      * @return List<Future < List < UserDemo>>>
      */
-    LambdaQueryWrapper<UserDemo> queryBuilderQueryWrapper(UserDemoQueryBO query);
+    QueryWrapper<UserDemo> queryBuilderQueryWrapper(UserDemoQueryBO query);
 
     /**
      * 查询条件内最小的id和最大的id
@@ -91,4 +92,23 @@ public interface UserDemoManager {
      * @return List<UserDemo>
      */
     List<UserDemo> queryUserDemoByIdSub(IdQueryBO idQueryBO, UserDemoQueryBO userDemoQueryBO);
+
+    /**
+     * 根据Id区间查询所有记录
+     *
+     * @param idQueryBO       minMaxBO
+     * @param userDemoQueryBO userDemoQueryBO
+     * @return List<UserDemo>
+     */
+    List<UserDemo> queryUserDemoByIdSize(IdQueryBO idQueryBO, UserDemoQueryBO userDemoQueryBO);
+
+
+    /**
+     * 流式查询
+     *
+     * @param queryBO       queryBO
+     * @param resultHandler
+     * @return List<UserDemoBO>
+     */
+    void queryUserDemoByStream(UserDemoQueryBO queryBO, CommonResultHandler<UserDemo> resultHandler);
 }

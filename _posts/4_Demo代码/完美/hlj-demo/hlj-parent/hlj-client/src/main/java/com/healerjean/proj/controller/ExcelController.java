@@ -64,7 +64,7 @@ public class ExcelController {
 
         AtomicLong count = new AtomicLong();
         CompletionService<List<UserDemoExcel>> completionService = new ExecutorCompletionService(ThreadPoolUtils.DEFAULT_THREAD_POOL_TASK_EXECUTOR);
-        List<Future<List<UserDemoExcel>>> futures = userDemoService.queryFutureAll(completionService, new UserDemoQueryBO());
+        List<Future<List<UserDemoExcel>>> futures = userDemoService.queryAllUserDemoByPoolLimit(completionService, new UserDemoQueryBO());
 
         List<UserDemoExcel> all = Lists.newArrayList();
         for (int i = 0; i < futures.size(); i++) {
