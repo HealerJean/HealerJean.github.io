@@ -75,12 +75,37 @@ public interface UserDemoService {
      * @param query query
      * @return List<Future < List < UserDemoBO>>>
      */
-    List<Future<List<UserDemoExcel>>> queryFutureAll(CompletionService<List<UserDemoExcel>> completionService, UserDemoQueryBO query);
+    List<Future<List<UserDemoExcel>>> queryAllUserDemoByPoolLimit(CompletionService<List<UserDemoExcel>> completionService, UserDemoQueryBO query);
 
     /**
      * 根据id区间分页查询所有数据
      * @param queryBO queryBO
-     * @return
+     * @return List<UserDemoExcel>
      */
-    List<Future<List<UserDemoExcel>>> queryUserDemoByIdSub(CompletionService<List<UserDemoExcel>> completionService, UserDemoQueryBO queryBO);
+    List<Future<List<UserDemoExcel>>> queryAllUserDemoByPoolIdSub(CompletionService<List<UserDemoExcel>> completionService, UserDemoQueryBO queryBO);
+
+
+    /**
+     * 大数据量-流式查询全部
+     * @param queryBO queryBO
+     * @return List<UserDemoBO>
+     */
+    List<UserDemoBO> queryAllUserDemoByStream(UserDemoQueryBO queryBO);
+
+
+    /**
+     * 大数据量-分页查询全部
+     *
+     * @param queryBo queryBo
+     * @return List<UserDemoBO>
+     */
+    List<UserDemoBO> queryAllUserDemoByLimit(UserDemoQueryBO queryBo);
+
+    /**
+     * 大数据量-IdSize查询全部
+     *
+     * @param queryBo queryBo
+     * @return List<UserDemoBO>
+     */
+    List<UserDemoBO> queryAllUserDemoByIdSize(UserDemoQueryBO queryBo);
 }

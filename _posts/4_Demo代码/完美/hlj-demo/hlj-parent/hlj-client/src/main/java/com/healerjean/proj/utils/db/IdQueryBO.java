@@ -54,4 +54,9 @@ public class IdQueryBO implements Serializable {
         this.maxId = maxId;
         this.size = size;
     }
+
+    public IdQueryBO(Long minId, Long size) {
+        this.minId = minId;
+        this.size = size;
+    }
 }
