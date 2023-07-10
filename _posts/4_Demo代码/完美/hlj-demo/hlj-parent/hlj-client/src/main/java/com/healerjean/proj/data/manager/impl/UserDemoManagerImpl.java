@@ -12,13 +12,15 @@ import com.healerjean.proj.data.bo.UserDemoQueryBO;
 import com.healerjean.proj.data.dao.UserDemoDao;
 import com.healerjean.proj.data.manager.UserDemoManager;
 import com.healerjean.proj.data.po.UserDemo;
-import com.healerjean.proj.utils.db.CommonResultHandler;
 import com.healerjean.proj.utils.db.IdQueryBO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.ibatis.cursor.Cursor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -196,6 +198,37 @@ public class UserDemoManagerImpl implements UserDemoManager {
 
 
     /**
+     * 流查询构建
+     * @param query query
+     * @return QueryWrapper<UserDemo>
+     */
+    @Override
+    public QueryWrapper<UserDemo> querySteamBuilderQueryWrapper(UserDemoQueryBO query) {
+        QueryWrapper<UserDemo> queryWrapper = new QueryWrapper<>();
+        if (!CollectionUtils.isEmpty(query.getSelectFields())) {
+            queryWrapper.select(StringUtils.join(query.getSelectFields(), ","));
+        }
+        if (!CollectionUtils.isEmpty(query.getOrderByList())) {
+            query.getOrderByList().forEach(item -> queryWrapper.orderBy(Boolean.TRUE, item.getDirection(), item.getProperty()));
+        }
+        queryWrapper.lambda()
+                .eq(Objects.nonNull(query.getId()), UserDemo::getId, query.getId())
+                .eq(Objects.nonNull(query.getValidFlag()), UserDemo::getValidFlag, query.getValidFlag())
+                .eq(StringUtils.isNotBlank(query.getName()), UserDemo::getName, query.getName())
+                .eq(StringUtils.isNotBlank(query.getPhone()), UserDemo::getPhone, query.getPhone())
+                .eq(StringUtils.isNotBlank(query.getEmail()), UserDemo::getEmail, query.getEmail())
+                .like(StringUtils.isNotBlank(query.getLikeName()), UserDemo::getName, query.getLikeName())
+                .like(StringUtils.isNotBlank(query.getLikePhone()), UserDemo::getPhone, query.getLikePhone())
+                .lt(Objects.nonNull(query.getQueryTime()), UserDemo::getStartTime, query.getQueryTime())
+                .gt(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime())
+                .lt(Objects.nonNull(query.getQueryTime()), UserDemo::getStartTime, query.getQueryTime())
+                .gt(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime())
+                .last("limit 2");
+        return queryWrapper;
+
+    }
+
+    /**
      * 根据查询条件获取最大Id和最小Id
      *
      * @param query query
@@ -296,12 +329,12 @@ public class UserDemoManagerImpl implements UserDemoManager {
      * 流式查询
      *
      * @param queryBO       queryBO
-     * @param resultHandler resultHandler
      * @return List<UserDemoBO>
      */
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     @Override
-    public void queryUserDemoByStream(UserDemoQueryBO queryBO, CommonResultHandler<UserDemo> resultHandler) {
-        QueryWrapper<UserDemo> queryWrapper = queryBuilderQueryWrapper(queryBO);
-        userDemoDao.queryUserDemoByStream(queryWrapper, resultHandler);
+    public Cursor<UserDemo> queryUserDemoByStream(UserDemoQueryBO queryBO) {
+        QueryWrapper<UserDemo> queryWrapper = querySteamBuilderQueryWrapper(queryBO);
+        return userDemoDao.queryUserDemoByStream(queryWrapper);
     }
 }

@@ -4,12 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.healerjean.proj.data.po.UserDemo;
-import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.ResultType;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.cursor.Cursor;
 
 /**
  * UserDemoMapper
@@ -21,13 +17,8 @@ public interface UserDemoMapper extends BaseMapper<UserDemo> {
 
 
     /**
-     * 流式擦HX
+     * 流式查询
      * @param queryWrapper queryWrapper
-     * @param handler handler
      */
-    @Select("select * from user_demo ${ew.customSqlSegment}")
-    @Options(resultSetType = ResultSetType.FORWARD_ONLY, fetchSize = 1000)
-    @ResultType(UserDemo.class)
-    void queryUserDemoByStream(@Param(Constants.WRAPPER) QueryWrapper<UserDemo> queryWrapper, ResultHandler<UserDemo> handler);
-
+    Cursor<UserDemo> queryUserDemoByStream(@Param(Constants.WRAPPER) QueryWrapper<UserDemo> queryWrapper);
 }

@@ -12,13 +12,16 @@ import com.healerjean.proj.data.convert.UserConverter;
 import com.healerjean.proj.data.dao.UserDemoDao;
 import com.healerjean.proj.data.excel.UserDemoExcel;
 import com.healerjean.proj.data.manager.UserDemoManager;
+import com.healerjean.proj.data.mapper.UserDemoMapper;
 import com.healerjean.proj.data.po.UserDemo;
 import com.healerjean.proj.service.UserDemoService;
-import com.healerjean.proj.utils.db.CommonResultHandler;
 import com.healerjean.proj.utils.db.IdQueryBO;
 import com.healerjean.proj.utils.db.MybatisBatchUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.ibatis.cursor.Cursor;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -48,6 +51,13 @@ public class UserDemoServiceImpl implements UserDemoService {
      */
     @Resource
     private UserDemoDao userDemoDao;
+
+    /**
+     * sqlSessionFactory
+     */
+    @Resource
+    private SqlSessionFactory sqlSessionFactory;
+
 
     /**
      * userDemoBo
@@ -173,16 +183,16 @@ public class UserDemoServiceImpl implements UserDemoService {
      */
     @Override
     public List<UserDemoBO> queryAllUserDemoByStream(UserDemoQueryBO queryBO) {
-        List<UserDemoBO> result = new ArrayList<>();
-        CommonResultHandler<UserDemo> resultHandler = new CommonResultHandler<UserDemo>() {
-            @Override
-            public void processing(UserDemo userDemo) {
-                UserDemoBO userDemoBO = UserConverter.INSTANCE.covertUserDemoPoToBo(userDemo);
-                result.add(userDemoBO);
-            }
-        };
-        userDemoManager.queryUserDemoByStream(queryBO, resultHandler);
-        return result;
+        QueryWrapper<UserDemo> queryWrapper = userDemoManager.querySteamBuilderQueryWrapper(queryBO);
+        List<UserDemo> dbUserDemos = new ArrayList<>();
+        try (SqlSession sqlSession = sqlSessionFactory.openSession();
+             Cursor<UserDemo> cursor = sqlSession.getMapper(UserDemoMapper.class).queryUserDemoByStream(queryWrapper)) {
+            cursor.forEach(dbUserDemos::add);
+        } catch (Exception e) {
+            log.info("queryAllUserDemoByStream error", e);
+            return null;
+        }
+        return UserConverter.INSTANCE.covertUserDemoPoToBoList(dbUserDemos);
     }
 
 
@@ -195,7 +205,7 @@ public class UserDemoServiceImpl implements UserDemoService {
     @Override
     public List<UserDemoBO> queryAllUserDemoByLimit(UserDemoQueryBO queryBo) {
         QueryWrapper<UserDemo> queryWrapper = userDemoManager.queryBuilderQueryWrapper(queryBo);
-        List<UserDemo> list = MybatisBatchUtils.queryAllByLimit((p, q) -> userDemoDao.page(p, q), queryWrapper, 2L);
+        List<UserDemo> list = MybatisBatchUtils.queryAllByLimit((p, q) -> userDemoDao.page(p, q), queryWrapper, 1000L);
         return UserConverter.INSTANCE.covertUserDemoPoToBoList(list);
     }
 

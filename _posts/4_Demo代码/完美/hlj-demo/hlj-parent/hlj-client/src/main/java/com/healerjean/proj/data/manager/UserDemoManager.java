@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.healerjean.proj.common.data.bo.PageQueryBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
 import com.healerjean.proj.data.po.UserDemo;
-import com.healerjean.proj.utils.db.CommonResultHandler;
 import com.healerjean.proj.utils.db.IdQueryBO;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.ibatis.cursor.Cursor;
 
 import java.util.List;
 
@@ -77,6 +77,13 @@ public interface UserDemoManager {
     QueryWrapper<UserDemo> queryBuilderQueryWrapper(UserDemoQueryBO query);
 
     /**
+     * 流查询构建
+     * @param queryBO queryBO
+     * @return QueryWrapper<UserDemo>
+     */
+    QueryWrapper<UserDemo> querySteamBuilderQueryWrapper(UserDemoQueryBO queryBO);
+
+    /**
      * 查询条件内最小的id和最大的id
      *
      * @param query query
@@ -102,13 +109,13 @@ public interface UserDemoManager {
      */
     List<UserDemo> queryUserDemoByIdSize(IdQueryBO idQueryBO, UserDemoQueryBO userDemoQueryBO);
 
-
     /**
      * 流式查询
      *
      * @param queryBO       queryBO
-     * @param resultHandler
      * @return List<UserDemoBO>
      */
-    void queryUserDemoByStream(UserDemoQueryBO queryBO, CommonResultHandler<UserDemo> resultHandler);
+    Cursor<UserDemo> queryUserDemoByStream(UserDemoQueryBO queryBO);
+
+
 }

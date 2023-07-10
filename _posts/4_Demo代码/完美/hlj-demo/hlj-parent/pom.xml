@@ -20,7 +20,7 @@
         <!--lombok-->
         <lombok.version>1.18.16</lombok.version>
         <!--数据源-->
-        <com-alibaba-druid.version>1.2.18</com-alibaba-druid.version>
+        <com-alibaba-druid.version>1.2.6</com-alibaba-druid.version>
         <!--mybatis plus-->
         <mybatis-plus-boot-starter.version>3.4.1</mybatis-plus-boot-starter.version>
         <!--mapstruct-->

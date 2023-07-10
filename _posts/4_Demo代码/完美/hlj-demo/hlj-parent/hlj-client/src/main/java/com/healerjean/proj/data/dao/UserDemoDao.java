@@ -4,7 +4,7 @@ package com.healerjean.proj.data.dao;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.healerjean.proj.data.po.UserDemo;
-import com.healerjean.proj.utils.db.CommonResultHandler;
+import org.apache.ibatis.cursor.Cursor;
 
 /**
  * UserDemoDao
@@ -18,7 +18,6 @@ public interface UserDemoDao extends IService<UserDemo> {
      * 流查询
      *
      * @param queryWrapper  queryWrapper
-     * @param resultHandler resultHandler
      */
-    void queryUserDemoByStream(QueryWrapper<UserDemo> queryWrapper, CommonResultHandler<UserDemo> resultHandler);
+    Cursor<UserDemo> queryUserDemoByStream(QueryWrapper<UserDemo> queryWrapper);
 }
