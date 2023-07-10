@@ -32,21 +32,17 @@ public final class MybatisBatchUtils {
     public static <Q, R> List<R> queryAllByLimit(BiFunction<Page<R>, Q, IPage<R>> function,
                                                  Q queryWrapper,
                                                  long pageSize) {
-        List<R> dbList = Lists.newArrayList();
-        int pageNow = 1;
-        Page<R> pageReq = new Page<>(pageNow, pageSize);
-        while (true) {
-            IPage<R> page = function.apply(pageReq, queryWrapper);
+
+        IPage<R> initPage = function.apply(new Page<>(1, 0, true), queryWrapper).setSize(pageSize);
+        List<R> result = new ArrayList<>();
+        for (int i = 1; i <= initPage.getPages(); i++) {
+            IPage<R> page = function.apply(new Page<>(i, pageSize, false), queryWrapper);
             if (CollectionUtils.isEmpty(page.getRecords())) {
                 break;
             }
-            dbList.addAll(page.getRecords());
-            if (page.getRecords().size() < pageSize) {
-                break;
-            }
-            pageReq = new Page<>(page.getCurrent() + 1, pageSize);
+            result.addAll(page.getRecords());
         }
-        return dbList;
+        return result;
     }
 
 
@@ -124,13 +120,13 @@ public final class MybatisBatchUtils {
                                                                       int pageSize,
                                                                       Function<List<R>, List<T>> coverFunction) {
 
-        IPage<R> initPage = function.apply(new Page<>(1, 0), queryWrapper).setSize(pageSize);
+        IPage<R> initPage = function.apply(new Page<>(1, 0, true), queryWrapper).setSize(pageSize);
 
         List<Future<List<T>>> result = new ArrayList<>();
         for (int i = 1; i <= initPage.getPages(); i++) {
             int finalI = i;
             Future<List<T>> future = executorService.submit(() -> {
-                IPage<R> page = function.apply(new Page<>(finalI, pageSize), queryWrapper);
+                IPage<R> page = function.apply(new Page<>(finalI, pageSize, false), queryWrapper);
                 return coverFunction.apply(page.getRecords());
             });
             result.add(future);

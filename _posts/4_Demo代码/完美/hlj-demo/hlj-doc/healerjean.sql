@@ -25,7 +25,7 @@ begin
     set autocommit = 0; -- 关闭自动提交事务，提高插入效率
     while i < loop_counts
         do
-            insert into user_demo_batch (name, age, phone, email, start_time, end_time, valid_flag)
+            insert into user_demo (name, age, phone, email, start_time, end_time, valid_flag)
             values (concat('张', floor(rand() * 2 * i)), floor(rand() * i), floor(rand() * 3 * i),
                     concat(floor(rand() * 2 * i), '@gmail.com'), date_add(date, interval i day),
                     date_add(date, interval i * 2 day), 1);

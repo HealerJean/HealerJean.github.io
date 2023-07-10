@@ -20,5 +20,8 @@
         id
         , name, age, phone, email, start_time, end_time, valid_flag, create_time, update_time     </sql>
 
+    <select id="queryUserDemoByStream" resultType="com.healerjean.proj.data.po.UserDemo">
+        select * from user_demo ${ew.customSqlSegment}
+    </select>
 </mapper>
 
