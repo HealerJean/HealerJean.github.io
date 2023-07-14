@@ -1,8 +1,8 @@
 package com.healerjean.proj.base.impl;
 
 import com.healerjean.proj.base.BaseJunit5MockitoTest;
-import com.healerjean.proj.rpc.DemoPrcResource;
-import com.healerjean.proj.rpc.proxy.impl.DemoRpcProxyImpl;
+import com.healerjean.proj.rpc.provider.DemoPrcResource;
+import com.healerjean.proj.rpc.consumer.proxy.impl.DemoRpcProxyImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

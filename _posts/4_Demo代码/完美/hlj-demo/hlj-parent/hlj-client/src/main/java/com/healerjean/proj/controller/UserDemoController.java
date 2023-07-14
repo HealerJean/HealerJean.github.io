@@ -18,7 +18,7 @@ import com.healerjean.proj.data.req.UserDemoQueryReq;
 import com.healerjean.proj.data.req.UserDemoSaveReq;
 import com.healerjean.proj.data.vo.UserDemoVO;
 import com.healerjean.proj.exceptions.ParameterException;
-import com.healerjean.proj.rpc.DemoPrcResource;
+import com.healerjean.proj.rpc.provider.DemoPrcResource;
 import com.healerjean.proj.service.UserDemoService;
 import com.healerjean.proj.utils.validate.ValidateUtils;
 import io.swagger.annotations.Api;
