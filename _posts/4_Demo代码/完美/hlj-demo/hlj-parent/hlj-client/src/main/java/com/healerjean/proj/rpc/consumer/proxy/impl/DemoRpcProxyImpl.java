@@ -1,8 +1,8 @@
-package com.healerjean.proj.rpc.proxy.impl;
+package com.healerjean.proj.rpc.consumer.proxy.impl;
 
 import com.healerjean.proj.common.anno.LogIndex;
-import com.healerjean.proj.rpc.DemoPrcResource;
-import com.healerjean.proj.rpc.proxy.DemoRpcProxy;
+import com.healerjean.proj.rpc.provider.DemoPrcResource;
+import com.healerjean.proj.rpc.consumer.proxy.DemoRpcProxy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

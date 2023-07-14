@@ -1,4 +1,4 @@
-package com.healerjean.proj.rpc.proxy;
+package com.healerjean.proj.rpc.consumer.proxy;
 
 /**
  * DemoConsumer

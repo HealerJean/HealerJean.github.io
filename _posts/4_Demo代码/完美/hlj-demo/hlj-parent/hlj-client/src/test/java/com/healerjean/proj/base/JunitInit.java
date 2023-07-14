@@ -1,7 +1,7 @@
 package com.healerjean.proj.base;
 
 import com.healerjean.proj.mock.DemoPrcResourceMock;
-import com.healerjean.proj.rpc.DemoPrcResource;
+import com.healerjean.proj.rpc.provider.DemoPrcResource;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
