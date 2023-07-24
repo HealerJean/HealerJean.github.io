@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author example author
- * @since 2023-06-30
+ * @since 2023-07-14
  */
 @Service
 public class VenderPremiumRateModelDaoImpl extends ServiceImpl<VenderPremiumRateModelMapper, VenderPremiumRateModel> implements VenderPremiumRateModelDao {

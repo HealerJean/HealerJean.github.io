@@ -1234,7 +1234,20 @@ public void apply() {
 SELECT id,name,age,email FROM user WHERE (age = ? AND name = 'healer')
 ```
 
-
+```java
+LambdaQueryWrapper<SystemHelpDoc> queryWrapper = Wrappers.lambdaQuery(SystemHelpDoc.class)
+    .like(StringUtils.isNotBlank(queryBo.getTitle()), SystemHelpDoc::getTitle, queryBo.getTitle())
+    .in(CollectionUtils.isNotEmpty(queryBo.getIds()), SystemHelpDoc::getId, queryBo.getIds())
+    .eq(Objects.nonNull(queryBo.getStatus()), SystemHelpDoc::getStatus, queryBo.getStatus());
+if (StringUtils.isNotBlank(queryBo.getUserTypes())) {
+		String[] userTypes = queryBo.getUserTypes().split(",");
+		for (String userType : userTypes) {
+   		 String applySql = "find_in_set(?, user_types)";
+   		 queryWrapper.apply(StringUtils.isNotBlank(queryBo.getUserTypes()), applySql, userType);
+		}
+}
+queryWrapper.orderByDesc(SystemHelpDoc::getModifiedTime);
+```
 
 
 

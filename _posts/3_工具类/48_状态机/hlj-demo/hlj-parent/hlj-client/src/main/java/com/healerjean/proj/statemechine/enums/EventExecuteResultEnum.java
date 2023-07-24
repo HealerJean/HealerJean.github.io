@@ -1,8 +1,5 @@
 package com.healerjean.proj.statemechine.enums;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 /**
  * EventExecuteResultEnum
  *
@@ -42,30 +39,6 @@ public enum EventExecuteResultEnum {
         this.result = result;
     }
 
-
-    /**
-     * toEventExecuteResultEnum
-     *
-     * @param code code
-     * @return {@link EventExecuteResultEnum}
-     */
-    public static EventExecuteResultEnum toEventExecuteResultEnum(String code) {
-        return Arrays.stream(EventExecuteResultEnum.values()).filter(item -> item.getCode().equals(code)).findFirst().orElse(null);
-    }
-
-    /**
-     * getResult
-     *
-     * @param code code
-     * @return {@link Boolean}
-     */
-    public static Boolean getResult(String code) {
-        EventExecuteResultEnum eventExecuteResultEnum = toEventExecuteResultEnum(code);
-        if (Objects.nonNull(eventExecuteResultEnum)) {
-            return eventExecuteResultEnum.getResult();
-        }
-        return null;
-    }
 
     public String getCode() {
         return code;
