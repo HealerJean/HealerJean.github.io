@@ -2,6 +2,7 @@ package com.healerjean.proj.liteflow;
 
 import com.healerjean.proj.base.BaseJunit5SpringTest;
 import com.healerjean.proj.liteflow.context.DemoContext;
+import com.healerjean.proj.liteflow.context.UserContext;
 import com.healerjean.proj.utils.JsonUtils;
 import com.yomahub.liteflow.core.FlowExecutor;
 import com.yomahub.liteflow.flow.LiteflowResponse;
@@ -101,13 +102,22 @@ public class LiteFlowTest extends BaseJunit5SpringTest {
     }
 
 
+    /**
+     * Test feat 001.
+     */
     @DisplayName("高级特性-组件化参数")
     @Test
     public void testFeat001(){
         DemoContext demoContext = new DemoContext();
         demoContext.setBusinessType("高级特性");
-        LiteflowResponse response = flowExecutor.execute2Resp("featChain1", demoContext);
+
+        LiteflowResponse response = flowExecutor.execute2Resp("featChain1", demoContext, DemoContext.class, UserContext.class);
         log.info("[LiteFlowTest#高级特性] res:{}", JsonUtils.toString(response));
+
+
+
+        LiteflowResponse response2 = flowExecutor.execute2Resp("featChain1", demoContext, DemoContext.class);
+        log.info("[LiteFlowTest#高级特性] res:{}", JsonUtils.toString(response2));
     }
 
 
