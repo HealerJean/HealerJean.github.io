@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author example author
- * @since 2023-06-30
+ * @since 2023-07-14
  */
 public interface VenderPremiumRateModelMapper extends BaseMapper<VenderPremiumRateModel> {
 

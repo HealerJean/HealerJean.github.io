@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow>
+    <chain name="chain1">
+        THEN(流程A, 流程B, 流程C);
+    </chain>
+
+
+    <!--选择组件-根据NodeId进行选择-->
+    <chain name="switchChain1">
+        SWITCH(SwitchACmp).to(NormalBCmp, NormalCCmp);
+    </chain>
+
+    <!--选择组件-根据表达式的id进行选择-->
+    <chain name="switchChain2">
+        SWITCH(SwitchACmp).to(NormalBCmp, WHEN(NormalBCmp, NormalCCmp).id("1Id"));
+    </chain>
+
+    <!--选择组件-根据tag进行选择-->
+    <chain name="switchChain3">
+        SWITCH(SwitchACmp).to(NormalBCmp.tag("TagB"), NormalCCmp.tag("TagC"));
+    </chain>
+
+    <!--选择组件-表达式tag的选择-->
+    <chain name="switchChain4">
+        SWITCH(SwitchACmp).to(NormalBCmp, WHEN(NormalBCmp, NormalCCmp).tag("TagC"));
+    </chain>
+
+    <!--选择组件-链路tag的选择-->
+    <chain name="switchChain5">
+        SWITCH(SwitchACmp).to(NormalBCmp, switchChain5Sub.tag("TagC"));
+    </chain>
+    <chain name="switchChain5Sub">
+        THEN(NormalBCmp, NormalCCmp);
+    </chain>
+
+
+    <!--条件组件-->
+    <chain name="ifChain1">
+        <!-- XIfCmd 就是IF组件，为真，执行 IfNormalBCmp，为假，执行 IfNormalCCmp：-->
+        IF(XIfCmd, IfNormalBCmp, IfNormalCCmp);
+    </chain>
+
+    <!--高级特性-组件参数-->
+    <chain name="featChain1">
+        cmpBData = '{"name":"rose","age":20}';
+        THEN(FeatACmp, FeatBCmp.data(cmpBData), FeatCCmp);
+    </chain>
+
+</flow>

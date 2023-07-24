@@ -1331,25 +1331,44 @@ public class TestMain {
 
 ### 2.4.4、排序
 
+#### a、逆序
+
+```java
+List<Integer> list = Arrays.asList(1, 2, 4);
+//逆序  [4, 2, 1]
+Collections.reverse(list);
+```
+
+
+
+#### b、升序
+
+```java
+List<Integer> list = Arrays.asList(1, 2, 4);
+//默认升序 [1, 2, 4]
+Collections.sort(list);
+Collections.sort(list, (o1, o2) -> o1 - o2);
+list.stream().sorted(Comparator.comparingInt(o -> o));
+```
+
+
+
+#### c、降序
+
+```java
+List<Integer> list = Arrays.asList(1, 2, 4);
+//降序Collections.reverseOrder() [4, 2, 1]
+Collections.sort(list, Collections.reverseOrder());
+System.out.println("降序   " + list);
+```
+
+
+
+#### d、多条件排序
+
 ```java
 @Test
 public void sort() {
-    List<Integer> list = Arrays.asList(1, 2, 4);
-    //逆序  [4, 2, 1]
-    Collections.reverse(list);
-    System.out.println("逆序   " + list);
-
-    //默认升序 [1, 2, 4]
-    Collections.sort(list);
-    Collections.sort(list, (o1, o2) -> o1 - o2);
-    list.stream().sorted(Comparator.comparingInt(o -> o));
-    System.out.println("默认升序" + list);
-
-    //降序Collections.reverseOrder() [4, 2, 1]
-    Collections.sort(list, Collections.reverseOrder());
-    System.out.println("降序   " + list);
-
-
 
     //多条件排序
     List<SortEntry> sortEntries = new ArrayList<>();
@@ -1388,6 +1407,47 @@ public void sort() {
     Collections.sort(sortEntries2, Comparator.comparing(sortEntry -> sortEntry.getName()));
     System.out.println(sortEntries2);
 }
+
+```
+
+
+
+#### e、数组首个排序
+
+```java
+//数组首个排序
+int[][] nums = {
+    {1, 2},
+    {3, 4},
+    {2, 2}
+};
+Arrays.sort(nums, (o1, o2) -> o1[0] - o2[0]);
+Arrays.sort(nums, Comparator.comparingInt(o -> o[0]));
+
+```
+
+
+
+#### f、对象中字段排序
+
+```java
+//对象中子母排序
+List<SortEntry> sortEntries2 = new ArrayList<>();
+sortEntries2.add(new SortEntry("c"));
+sortEntries2.add(new SortEntry("a"));
+sortEntries2.add(new SortEntry("d"));
+sortEntries2.add(new SortEntry("A"));
+sortEntries2.add(new SortEntry("b"));
+//sortEntries2 = sortEntries2.stream().sorted(Comparator.comparing(sortEntry -> sortEntry.getName())).collect(Collectors.toList());
+
+Collections.sort(sortEntries2, Comparator.comparing(sortEntry -> sortEntry.getName()));
+```
+
+
+
+#### g、指定规则排序
+
+```
 
 ```
 
