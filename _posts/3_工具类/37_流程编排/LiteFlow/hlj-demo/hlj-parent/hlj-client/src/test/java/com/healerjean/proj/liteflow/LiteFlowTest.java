@@ -114,13 +114,7 @@ public class LiteFlowTest extends BaseJunit5SpringTest {
         LiteflowResponse response = flowExecutor.execute2Resp("featChain1", demoContext, DemoContext.class, UserContext.class);
         log.info("[LiteFlowTest#高级特性] res:{}", JsonUtils.toString(response));
 
-
-
-        LiteflowResponse response2 = flowExecutor.execute2Resp("featChain1", demoContext, DemoContext.class);
-        log.info("[LiteFlowTest#高级特性] res:{}", JsonUtils.toString(response2));
     }
-
-
 
 
 
