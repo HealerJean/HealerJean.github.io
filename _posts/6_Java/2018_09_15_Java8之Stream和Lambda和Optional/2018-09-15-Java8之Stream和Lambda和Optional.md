@@ -389,7 +389,7 @@ public class TestMain_2_lambda延迟加载 {
 
 ### 1.5.1、`function` 
 
-> 传入参数返回结果，Cousumer没有返回结果。Function 相当于stram中的map
+> 传入参数返回结果，`Cousumer` 没有返回结果。`Function` 相当于 `stram` 中的 `map`
 
 ```java
 public class TestMain {
@@ -468,7 +468,7 @@ public class TestMain {
 
 
 
-### 1.5.4、Predicate ：
+### 1.5.4、`Predicate` ：
 
 > 解释：断言，返回true或者false ，` stream`中相当于是 `filter()`中执行
 
@@ -872,7 +872,7 @@ public class TestMain {
 >
 > **`Collector`接口通常不需要自己实现，借助工具类中的  `Collectors.toList() Collectors.toSet()` 即可**     
 
-### 2.3.1、收集成Collection
+### 2.3.1、收集成 `Collection`
 
 ```java
 public class TestMain {
@@ -1018,7 +1018,7 @@ public class TestMain {
 
 ### 2.2.3、`Collectors.mapping`：收集并映射
 
-> **映射：先对集合中的元素进行映射，然后再对映射的结果使用`Collectors`操作**
+> **映射：先对集合中的元素进行映射，然后再对映射的结果使用 `Collectors` 操作**
 
 ```java
 public class TestMain {
@@ -1035,7 +1035,6 @@ public class TestMain {
 
         List<String> names = personList.stream()
             .collect(Collectors.mapping(k -> k.getName(), Collectors.toList()));
-
     }
 }
 
@@ -1447,8 +1446,19 @@ Collections.sort(sortEntries2, Comparator.comparing(sortEntry -> sortEntry.getNa
 
 #### g、指定规则排序
 
-```
+```java
+String[] sortRule = Lists.newArrayList("c", "a", "b");
 
+public static List<Person> sortByName(
+  List<Person> persons, 
+  String... order) {
+    persons.sort((o1, o2) -> {
+        int index1 = Arrays.binarySearch(order, o1.getButtonCode());
+        int index2 = Arrays.binarySearch(order, o2.getButtonCode());
+        return Integer.compare(index1, index2);
+    });
+    return buttonInfoList;
+}
 ```
 
 

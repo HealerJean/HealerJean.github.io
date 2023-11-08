@@ -12,20 +12,16 @@ import com.healerjean.proj.data.convert.UserConverter;
 import com.healerjean.proj.data.dao.UserDemoDao;
 import com.healerjean.proj.data.excel.UserDemoExcel;
 import com.healerjean.proj.data.manager.UserDemoManager;
-import com.healerjean.proj.data.mapper.UserDemoMapper;
 import com.healerjean.proj.data.po.UserDemo;
 import com.healerjean.proj.service.UserDemoService;
 import com.healerjean.proj.utils.db.IdQueryBO;
 import com.healerjean.proj.utils.db.MybatisBatchUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.ibatis.cursor.Cursor;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.Future;
@@ -174,26 +170,6 @@ public class UserDemoServiceImpl implements UserDemoService {
                 UserConverter.INSTANCE::covertUserDemoPoToExcelList);
     }
 
-
-    /**
-     * 大数据量-流式查询全部
-     *
-     * @param queryBO queryBO
-     * @return List<UserDemoBO>
-     */
-    @Override
-    public List<UserDemoBO> queryAllUserDemoByStream(UserDemoQueryBO queryBO) {
-        QueryWrapper<UserDemo> queryWrapper = userDemoManager.querySteamBuilderQueryWrapper(queryBO);
-        List<UserDemo> dbUserDemos = new ArrayList<>();
-        try (SqlSession sqlSession = sqlSessionFactory.openSession();
-             Cursor<UserDemo> cursor = sqlSession.getMapper(UserDemoMapper.class).queryUserDemoByStream(queryWrapper)) {
-            cursor.forEach(dbUserDemos::add);
-        } catch (Exception e) {
-            log.info("queryAllUserDemoByStream error", e);
-            return null;
-        }
-        return UserConverter.INSTANCE.covertUserDemoPoToBoList(dbUserDemos);
-    }
 
 
     /**

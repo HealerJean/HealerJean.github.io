@@ -17,10 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.ibatis.cursor.Cursor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -198,37 +195,6 @@ public class UserDemoManagerImpl implements UserDemoManager {
 
 
     /**
-     * 流查询构建
-     * @param query query
-     * @return QueryWrapper<UserDemo>
-     */
-    @Override
-    public QueryWrapper<UserDemo> querySteamBuilderQueryWrapper(UserDemoQueryBO query) {
-        QueryWrapper<UserDemo> queryWrapper = new QueryWrapper<>();
-        if (!CollectionUtils.isEmpty(query.getSelectFields())) {
-            queryWrapper.select(StringUtils.join(query.getSelectFields(), ","));
-        }
-        if (!CollectionUtils.isEmpty(query.getOrderByList())) {
-            query.getOrderByList().forEach(item -> queryWrapper.orderBy(Boolean.TRUE, item.getDirection(), item.getProperty()));
-        }
-        queryWrapper.lambda()
-                .eq(Objects.nonNull(query.getId()), UserDemo::getId, query.getId())
-                .eq(Objects.nonNull(query.getValidFlag()), UserDemo::getValidFlag, query.getValidFlag())
-                .eq(StringUtils.isNotBlank(query.getName()), UserDemo::getName, query.getName())
-                .eq(StringUtils.isNotBlank(query.getPhone()), UserDemo::getPhone, query.getPhone())
-                .eq(StringUtils.isNotBlank(query.getEmail()), UserDemo::getEmail, query.getEmail())
-                .like(StringUtils.isNotBlank(query.getLikeName()), UserDemo::getName, query.getLikeName())
-                .like(StringUtils.isNotBlank(query.getLikePhone()), UserDemo::getPhone, query.getLikePhone())
-                .lt(Objects.nonNull(query.getQueryTime()), UserDemo::getStartTime, query.getQueryTime())
-                .gt(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime())
-                .lt(Objects.nonNull(query.getQueryTime()), UserDemo::getStartTime, query.getQueryTime())
-                .gt(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime())
-                .last("limit 2");
-        return queryWrapper;
-
-    }
-
-    /**
      * 根据查询条件获取最大Id和最小Id
      *
      * @param query query
@@ -250,6 +216,42 @@ public class UserDemoManagerImpl implements UserDemoManager {
                 .ge(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime());
         Map<String, Object> map = userDemoDao.getMap(lambdaQueryWrapper);
         return ImmutablePair.of(MapUtils.getLong(map, "minId"), MapUtils.getLong(map, "maxId"));
+    }
+
+
+    /**
+     * 根据id区间查询数据
+     *
+     * @param idQueryBO idQueryBO
+     * @return {@link List< UserDemo>}
+     */
+    @Override
+    public List<UserDemo> queryUserDemoByIdSize(IdQueryBO idQueryBO, UserDemoQueryBO query) {
+        QueryWrapper<UserDemo> queryWrapper = new QueryWrapper<>();
+        if (!CollectionUtils.isEmpty(query.getSelectFields())) {
+            queryWrapper.select(StringUtils.join(query.getSelectFields(), ","));
+        }
+        LambdaQueryWrapper<UserDemo> lambdaQueryWrapper = queryWrapper.lambda()
+                .eq(Objects.nonNull(query.getId()), UserDemo::getId, query.getId())
+                .eq(Objects.nonNull(query.getValidFlag()), UserDemo::getValidFlag, query.getValidFlag())
+                .eq(StringUtils.isNotBlank(query.getName()), UserDemo::getName, query.getName())
+                .eq(StringUtils.isNotBlank(query.getPhone()), UserDemo::getPhone, query.getPhone())
+                .eq(StringUtils.isNotBlank(query.getEmail()), UserDemo::getEmail, query.getEmail())
+                .like(StringUtils.isNotBlank(query.getLikeName()), UserDemo::getName, query.getLikeName())
+                .like(StringUtils.isNotBlank(query.getLikePhone()), UserDemo::getPhone, query.getLikePhone())
+                .lt(Objects.nonNull(query.getQueryTime()), UserDemo::getStartTime, query.getQueryTime())
+                .gt(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime())
+                .gt(UserDemo::getId, idQueryBO.getMinId())
+                .orderByAsc(UserDemo::getId)
+                .last( "limit " + idQueryBO.getSize());
+
+        List<UserDemo> list = userDemoDao.list(lambdaQueryWrapper);
+        if (CollectionUtils.isEmpty(list)){
+            idQueryBO.setMaxId(null);
+            return null;
+        }
+        idQueryBO.setMaxId(list.get(list.size()-1).getId());
+        return list;
     }
 
     /**
@@ -289,52 +291,6 @@ public class UserDemoManagerImpl implements UserDemoManager {
         return userDemoDao.list(lambdaQueryWrapper);
     }
 
-    /**
-     * 根据id区间查询数据
-     *
-     * @param idQueryBO idQueryBO
-     * @return {@link List< UserDemo>}
-     */
-    @Override
-    public List<UserDemo> queryUserDemoByIdSize(IdQueryBO idQueryBO, UserDemoQueryBO query) {
-        QueryWrapper<UserDemo> queryWrapper = new QueryWrapper<>();
-        if (!CollectionUtils.isEmpty(query.getSelectFields())) {
-            queryWrapper.select(StringUtils.join(query.getSelectFields(), ","));
-        }
-        LambdaQueryWrapper<UserDemo> lambdaQueryWrapper = queryWrapper.lambda()
-                .eq(Objects.nonNull(query.getId()), UserDemo::getId, query.getId())
-                .eq(Objects.nonNull(query.getValidFlag()), UserDemo::getValidFlag, query.getValidFlag())
-                .eq(StringUtils.isNotBlank(query.getName()), UserDemo::getName, query.getName())
-                .eq(StringUtils.isNotBlank(query.getPhone()), UserDemo::getPhone, query.getPhone())
-                .eq(StringUtils.isNotBlank(query.getEmail()), UserDemo::getEmail, query.getEmail())
-                .like(StringUtils.isNotBlank(query.getLikeName()), UserDemo::getName, query.getLikeName())
-                .like(StringUtils.isNotBlank(query.getLikePhone()), UserDemo::getPhone, query.getLikePhone())
-                .lt(Objects.nonNull(query.getQueryTime()), UserDemo::getStartTime, query.getQueryTime())
-                .gt(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime())
-                .gt(UserDemo::getId, idQueryBO.getMinId())
-                .orderByAsc(UserDemo::getId)
-                .last( "limit " + idQueryBO.getSize());
-
-        List<UserDemo> list = userDemoDao.list(lambdaQueryWrapper);
-        if (CollectionUtils.isEmpty(list)){
-            idQueryBO.setMaxId(null);
-            return null;
-        }
-        idQueryBO.setMaxId(list.get(list.size()-1).getId());
-        return list;
-    }
 
 
-    /**
-     * 流式查询
-     *
-     * @param queryBO       queryBO
-     * @return List<UserDemoBO>
-     */
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-    @Override
-    public Cursor<UserDemo> queryUserDemoByStream(UserDemoQueryBO queryBO) {
-        QueryWrapper<UserDemo> queryWrapper = querySteamBuilderQueryWrapper(queryBO);
-        return userDemoDao.queryUserDemoByStream(queryWrapper);
-    }
 }

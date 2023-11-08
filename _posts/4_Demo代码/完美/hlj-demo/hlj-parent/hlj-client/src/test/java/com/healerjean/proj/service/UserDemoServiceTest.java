@@ -2,7 +2,6 @@ package com.healerjean.proj.service;
 
 import com.google.common.collect.Lists;
 import com.healerjean.proj.base.BaseJunit5SpringTest;
-import com.healerjean.proj.data.bo.UserDemoBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
 import com.healerjean.proj.data.excel.UserDemoExcel;
 import com.healerjean.proj.utils.JsonUtils;
@@ -83,12 +82,5 @@ public class UserDemoServiceTest extends BaseJunit5SpringTest {
     }
 
 
-    @DisplayName("testQueryUserDemoByStream")
-    @Test
-    public void testQueryUserDemoByStream() {
-        UserDemoQueryBO queryBO = new UserDemoQueryBO();
-        List<UserDemoBO> all = userDemoService.queryAllUserDemoByStream(queryBO);
-        log.info("[testQueryUserDemoByStream] res:{}", JsonUtils.toString(all));
-    }
 
 }

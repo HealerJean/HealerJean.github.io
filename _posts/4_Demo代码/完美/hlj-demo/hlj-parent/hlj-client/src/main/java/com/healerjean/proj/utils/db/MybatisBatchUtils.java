@@ -20,23 +20,24 @@ import java.util.function.Function;
  */
 public final class MybatisBatchUtils {
 
+
     /**
-     * queryAll
+     * queryAllByLimit
      *
-     * @param function     function
+     * @param dbPageFunction     function
      * @param queryWrapper queryWrapper
      * @param pageSize     pageSize
      * @return {@link List<R>}
      */
 
-    public static <Q, R> List<R> queryAllByLimit(BiFunction<Page<R>, Q, IPage<R>> function,
+    public static <Q, R> List<R> queryAllByLimit(BiFunction<Page<R>, Q, IPage<R>> dbPageFunction,
                                                  Q queryWrapper,
                                                  long pageSize) {
 
-        IPage<R> initPage = function.apply(new Page<>(1, 0, true), queryWrapper).setSize(pageSize);
+        IPage<R> initPage = dbPageFunction.apply(new Page<>(1, 0, true), queryWrapper).setSize(pageSize);
         List<R> result = new ArrayList<>();
         for (int i = 1; i <= initPage.getPages(); i++) {
-            IPage<R> page = function.apply(new Page<>(i, pageSize, false), queryWrapper);
+            IPage<R> page = dbPageFunction.apply(new Page<>(i, pageSize, false), queryWrapper);
             if (CollectionUtils.isEmpty(page.getRecords())) {
                 break;
             }
@@ -47,7 +48,7 @@ public final class MybatisBatchUtils {
 
 
     /**
-     * queryAll
+     * queryAllByIdSize
      *
      * @param function function
      * @param query    query
@@ -72,8 +73,10 @@ public final class MybatisBatchUtils {
         return result;
     }
 
+
+
     /**
-     * queryAll
+     * queryAllByIdSub
      *
      * @param function function
      * @param query    query
@@ -104,8 +107,9 @@ public final class MybatisBatchUtils {
     }
 
 
+
     /**
-     * queryAll
+     * queryAllByPoolLimit
      *
      * @param executorService 线程池
      * @param function        分页函数
@@ -136,7 +140,7 @@ public final class MybatisBatchUtils {
 
 
     /**
-     * queryAll
+     * queryAllByPoolIdSub
      *
      * @param executorService 线程池
      * @param function        分页函数

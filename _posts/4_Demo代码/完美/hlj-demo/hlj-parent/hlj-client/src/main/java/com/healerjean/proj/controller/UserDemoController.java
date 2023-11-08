@@ -118,18 +118,6 @@ public class UserDemoController {
         return BaseRes.buildSuccess(pageVo);
     }
 
-    @ApiOperation("用户信息-大数据量-流式查询全部")
-    @LogIndex(resFlag = false)
-    @GetMapping("user/queryAllUserDemoByStream")
-    @ResponseBody
-    public BaseRes<List<UserDemoVO>> queryAllUserDemoByStream(UserDemoQueryReq req) {
-        UserDemoQueryBO userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
-        List<UserDemoBO> list = userDemoService.queryAllUserDemoByStream(userDemoPageQuery);
-        List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(list);
-        return BaseRes.buildSuccess(userDemoVos);
-    }
-
-
     @ApiOperation("用户信息-大数据量-分页查询全部")
     @LogIndex(resFlag = false)
     @GetMapping("user/queryAllUserDemoByLimit")

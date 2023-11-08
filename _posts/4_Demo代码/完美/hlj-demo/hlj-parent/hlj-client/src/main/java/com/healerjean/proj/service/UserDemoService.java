@@ -86,14 +86,6 @@ public interface UserDemoService {
 
 
     /**
-     * 大数据量-流式查询全部
-     * @param queryBO queryBO
-     * @return List<UserDemoBO>
-     */
-    List<UserDemoBO> queryAllUserDemoByStream(UserDemoQueryBO queryBO);
-
-
-    /**
      * 大数据量-分页查询全部
      *
      * @param queryBo queryBo

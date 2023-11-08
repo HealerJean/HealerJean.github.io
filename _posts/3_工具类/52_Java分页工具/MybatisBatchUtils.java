@@ -22,37 +22,62 @@ public final class MybatisBatchUtils {
 
 
     /**
-     * queryAll
+     * queryAllByLimit
      *
-     * @param function     function
+     * @param dbPageFunction     function
      * @param queryWrapper queryWrapper
      * @param pageSize     pageSize
      * @return {@link List<R>}
      */
 
-    public static <Q, R> List<R> queryAll(BiFunction<Page<R>, Q, IPage<R>> function,
-                                          Q queryWrapper,
-                                          int pageSize) {
-        List<R> dbList = Lists.newArrayList();
-        int pageNow = 1;
-        Page<R> pageReq = new Page<>(pageNow, pageSize);
-        while (true) {
-            IPage<R> page = function.apply(pageReq, queryWrapper);
+    public static <Q, R> List<R> queryAllByLimit(BiFunction<Page<R>, Q, IPage<R>> dbPageFunction,
+                                                 Q queryWrapper,
+                                                 long pageSize) {
+
+        IPage<R> initPage = dbPageFunction.apply(new Page<>(1, 0, true), queryWrapper).setSize(pageSize);
+        List<R> result = new ArrayList<>();
+        for (int i = 1; i <= initPage.getPages(); i++) {
+            IPage<R> page = dbPageFunction.apply(new Page<>(i, pageSize, false), queryWrapper);
             if (CollectionUtils.isEmpty(page.getRecords())) {
                 break;
             }
-            dbList.addAll(page.getRecords());
-            if (page.getRecords().size() < pageSize) {
-                break;
-            }
-            pageReq = new Page<>(pageNow + 1, pageSize);
+            result.addAll(page.getRecords());
         }
-        return dbList;
+        return result;
     }
 
 
     /**
-     * queryAll
+     * queryAllByIdSize
+     *
+     * @param function function
+     * @param query    query
+     * @param minMax   minMax
+     * @return {@link List<R>}
+     */
+    public static <Q, R> List<R> queryAllByIdSize(BiFunction<IdQueryBO, Q, List<R>> function,
+                                                  Q query,
+                                                  IdQueryBO minMax) {
+        List<R> result = Lists.newArrayList();
+        Long minId = minMax.getMinId();
+        Long size = minMax.getSize();
+        while (minId != null) {
+            IdQueryBO idQueryBO = new IdQueryBO(minId, size);
+            List<R> dbList = function.apply(idQueryBO, query);
+            if (CollectionUtils.isEmpty(dbList)) {
+                break;
+            }
+            minId = idQueryBO.getMaxId();
+            result.addAll(dbList);
+        }
+        return result;
+    }
+
+
+
+
+    /**
+     * queryAllByPoolLimit
      *
      * @param executorService 线程池
      * @param function        分页函数
@@ -61,19 +86,19 @@ public final class MybatisBatchUtils {
      * @param coverFunction   coverFunction 对象转化
      * @return {@link List< Future< List<T>>>}
      */
-    public static <Q, R, T> List<Future<List<T>>> queryAll(CompletionService<List<T>> executorService,
-                                                           BiFunction<Page<R>, Q, IPage<R>> function,
-                                                           Q queryWrapper,
-                                                           int pageSize,
-                                                           Function<List<R>, List<T>> coverFunction) {
+    public static <Q, R, T> List<Future<List<T>>> queryAllByPoolLimit(CompletionService<List<T>> executorService,
+                                                                      BiFunction<Page<R>, Q, IPage<R>> function,
+                                                                      Q queryWrapper,
+                                                                      int pageSize,
+                                                                      Function<List<R>, List<T>> coverFunction) {
 
-        IPage<R> initPage = function.apply(new Page<>(1, 0), queryWrapper).setSize(pageSize);
+        IPage<R> initPage = function.apply(new Page<>(1, 0, true), queryWrapper).setSize(pageSize);
 
         List<Future<List<T>>> result = new ArrayList<>();
         for (int i = 1; i <= initPage.getPages(); i++) {
             int finalI = i;
             Future<List<T>> future = executorService.submit(() -> {
-                IPage<R> page = function.apply(new Page<>(finalI, pageSize), queryWrapper);
+                IPage<R> page = function.apply(new Page<>(finalI, pageSize, false), queryWrapper);
                 return coverFunction.apply(page.getRecords());
             });
             result.add(future);
@@ -83,7 +108,7 @@ public final class MybatisBatchUtils {
 
 
     /**
-     * queryAll
+     * queryAllByPoolIdSub
      *
      * @param executorService 线程池
      * @param function        分页函数
@@ -91,11 +116,11 @@ public final class MybatisBatchUtils {
      * @param minMax          minMax 最小Id和最大Id
      * @param coverFunction   coverFunction 对象转化
      */
-    public static <Q, R, T> List<Future<List<T>>> queryAll(CompletionService<List<T>> executorService,
-                                                           BiFunction<IdQueryBO, Q, List<R>> function,
-                                                           Q query,
-                                                           IdQueryBO minMax,
-                                                           Function<List<R>, List<T>> coverFunction) {
+    public static <Q, R, T> List<Future<List<T>>> queryAllByPoolIdSub(CompletionService<List<T>> executorService,
+                                                                      BiFunction<IdQueryBO, Q, List<R>> function,
+                                                                      Q query,
+                                                                      IdQueryBO minMax,
+                                                                      Function<List<R>, List<T>> coverFunction) {
         Long minId = minMax.getMinId();
         Long maxId = minMax.getMaxId();
         Long size = minMax.getSize();

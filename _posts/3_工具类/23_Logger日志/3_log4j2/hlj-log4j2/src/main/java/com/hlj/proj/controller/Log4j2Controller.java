@@ -4,8 +4,11 @@ import com.hlj.proj.aspect.LogIndex;
 import com.hlj.proj.bean.LogBean;
 import com.hlj.proj.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.junit.Test;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.boot.logging.LoggerConfiguration;
 import org.springframework.boot.logging.LoggingSystem;
@@ -69,7 +72,12 @@ public class Log4j2Controller {
         return "修改日志级别成功";
     }
 
-
+    @LogIndex(resFlag = false)
+    @GetMapping("noJson")
+    public String noJson(LogBean logBean) {
+        log.info("do sth and print log, data={}", ToStringBuilder.reflectionToString(logBean, ToStringStyle.SHORT_PREFIX_STYLE));
+        return JsonUtils.toJsonString(logBean);
+    }
 
 
 }

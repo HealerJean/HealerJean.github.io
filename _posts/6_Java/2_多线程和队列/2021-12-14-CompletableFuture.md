@@ -623,7 +623,8 @@ public void test() throws ExecutionException, InterruptedException {
 
 ```java
 @Test
-  public void testTimeOut2() {
+public void testTimeOut2() {
+      ThreadPoolTaskExecutor threadPoolTaskExecutor = threadPoolTaskExecutor();
       CompletableFuture<String> task1 = CompletableFuture.supplyAsync(() -> {
           log.info("task1 start ");
           try {
@@ -633,7 +634,7 @@ public void test() throws ExecutionException, InterruptedException {
           }
           log.info("task1 end ");
           return "task1 success";
-      });
+      }, threadPoolTaskExecutor);
 
       CompletableFuture<String> task3 = CompletableFuture.supplyAsync(() -> {
           log.info("task3 start ");
@@ -644,34 +645,20 @@ public void test() throws ExecutionException, InterruptedException {
           }
           log.info("task3 end ");
           return "task3 success";
-      });
+      }, threadPoolTaskExecutor);
 
 
-      CompletableFuture<String>[] allCheckFuture = new CompletableFuture[]{
-              task1,
-              task3};
-
-      ThreadPoolTaskExecutor threadPoolTaskExecutor = threadPoolTaskExecutor();
-      Map<Integer, String> map = new ConcurrentHashMap<>();
-      CompletableFuture<Void> completableFuture = 
-        CompletableFuture.runAsync(() -> allCheckFutureResult(map, 
-                                                              allCheckFuture), 
-                                   threadPoolTaskExecutor);
-      int timeOut = 50;
+      // 等待所有任务完成，或者直到50毫秒后超时
       try {
-          completableFuture.get(timeOut, TimeUnit.MILLISECONDS);
+          CompletableFuture.allOf(new CompletableFuture[]{task1,task3}).get(50, TimeUnit.MILLISECONDS);
       } catch (TimeoutException e) {
-          log.info("任务超时");
-      } catch (Exception e) {
-          log.error("失败", e);
+          // 这里处理超时异常
+          e.printStackTrace();
+      } catch (InterruptedException | ExecutionException e) {
+          // 这里处理其他可能的异常
+          e.printStackTrace();
       }
-      log.info("map:{}", map);
   }
-
-
-20:53:23.930 [main] INFO com.healerjean.proj.d04_多接口返回.TestMain - Executor - threadPoolTaskExecutor injected!
-20:53:23.984 [main] INFO com.healerjean.proj.d04_多接口返回.TestMain - 任务超时
-20:53:23.984 [main] INFO com.healerjean.proj.d04_多接口返回.TestMain - map:{0=task1 success}
 ```
 
 
