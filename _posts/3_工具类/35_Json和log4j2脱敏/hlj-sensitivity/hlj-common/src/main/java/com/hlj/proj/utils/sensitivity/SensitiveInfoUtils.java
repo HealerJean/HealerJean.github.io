@@ -1,5 +1,6 @@
 package com.hlj.proj.utils.sensitivity;
 
+import cn.hutool.core.util.DesensitizedUtil;
 import org.apache.commons.lang3.StringUtils;
 
 
@@ -77,7 +78,7 @@ public class SensitiveInfoUtils {
 
     private static String dealString(String str, int head_off, int tail_off) {
         int length = str.length();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         final String head = StringUtils.left(str, head_off);
         String tail = StringUtils.right(str, tail_off);
         sb.append(head);

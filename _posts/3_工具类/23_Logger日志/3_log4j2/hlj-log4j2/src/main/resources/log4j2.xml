@@ -114,7 +114,7 @@
     <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
     <loggers>
 
-        <logger name="com.hlj.proj.controller"  level="ERROR"/>
+        <logger name="com.hlj.proj.controller"  level="info"/>
 
         <!-- AsyncRoot - 异步记录日志 - 需要LMAX Disruptor的支持 -->
         <!-- additivity如果设置为true将会输出两次日志，意思和log4j里面意思是否追加 -->

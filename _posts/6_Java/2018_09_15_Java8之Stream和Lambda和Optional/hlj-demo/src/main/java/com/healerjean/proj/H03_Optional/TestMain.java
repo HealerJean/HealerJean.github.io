@@ -3,6 +3,8 @@ package com.healerjean.proj.H03_Optional;
 import com.healerjean.proj.H02_Stream.H03_collect.H04_groupby分组.dto.Person;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -142,5 +144,33 @@ public class TestMain {
         Optional<String> name = Optional.of("HealerJean");
         Optional<String> longName = name.filter((value) -> value.length() > 6);
     }
+
+
+    @Test
+    public void test() {
+        // String key = "info";
+        // Map<String, Object> map = new HashMap<>();
+        // map.put(key, "1,2");
+        // String value = Optional.ofNullable(map).map(m -> m.getOrDefault(key, "no_active").toString().split(",")[0]).orElse("no_active");
+        // System.out.println("map有数据" + value);
+
+
+        // String key = "info";
+        // Map<String, Object> map = new HashMap<>();
+        // String value = Optional.ofNullable(map).map(m -> m.getOrDefault(key, "no_active").toString().split(",")[0]).orElse("no_active");
+        // System.out.println("map没数据" + value);
+
+        // String key = "info";
+        // Map<String, Object> map = new HashMap<>();
+        // String value = Optional.ofNullable(map).map(m -> m.getOrDefault(key, "no_active").toString().split(",")[0]).orElse("no_active");
+        // System.out.println("map为空" + value);
+
+
+        String key = "info";
+        Map<String, Object> map = null;
+        String value = Optional.ofNullable(map).map(m -> m.getOrDefault(key, "no_active").toString().split(",")[0]).orElse("no_active");
+        System.out.println("map为null" + value);
+    }
+
 
 }
