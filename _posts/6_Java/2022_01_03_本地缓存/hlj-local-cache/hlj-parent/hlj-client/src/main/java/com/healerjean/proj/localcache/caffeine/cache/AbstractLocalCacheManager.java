@@ -3,14 +3,19 @@ package com.healerjean.proj.localcache.caffeine.cache;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.collect.Sets;
+import com.healerjean.proj.localcache.LocalCacheManage;
 import com.healerjean.proj.util.json.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Lists;
+import org.slf4j.helpers.MessageFormatter;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 /**
@@ -21,7 +26,28 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @EnableScheduling
-public abstract class AbstractLocalCacheManager<K, V> {
+public abstract class AbstractLocalCacheManager<K, V> implements LocalCacheManage<K, V> {
+
+    /**
+     * IGNORE_kEY
+     */
+    private Set<K> ignoreKey;
+
+    /**
+     * AbstractLocalCacheManager
+     */
+    public AbstractLocalCacheManager() {
+    }
+
+    /**
+     * AbstractLocalCacheManager
+     *
+     * @param ignoreKey ignoreKey
+     */
+    public AbstractLocalCacheManager(Set<K> ignoreKey) {
+        this.ignoreKey = ignoreKey;
+    }
+
 
     /**
      * 缓存容器
@@ -41,48 +67,49 @@ public abstract class AbstractLocalCacheManager<K, V> {
 
 
     /**
-     * @param k k
-     * @return V
+     * 获取全部缓存信息
+     *
+     * @return Map<String, V>
      */
-    protected abstract V load(K k);
+    @Override
+    public Map<String, V> getAllLocalCache() {
+        ConcurrentMap<String, V> concurrentMap = localCache.asMap();
+        if (CollectionUtils.isEmpty(concurrentMap)) {
+            refreshAll();
+        }
+        return localCache.asMap();
+    }
+
 
     /**
-     * load
+     * 获取多个Keys结果
      *
      * @param keys keys
      * @return Map<K, V>
      */
-    protected abstract Map<K, V> load(Set<K> keys);
-
-    /**
-     * loadAll
-     *
-     * @return Map<K, V>
-     */
-    protected abstract Map<K, V> loadAll();
-
-
-    /**
-     * 获取多个keys结果
-     *
-     * @param keys keys
-     * @return Map<K, V>
-     */
-    public Map<K, V> getCaches(Set<K> keys) {
+    @Override
+    public Map<K, V> getLocalCache(Set<K> keys) {
         if (CollectionUtils.isEmpty(keys)) {
             return Collections.emptyMap();
         }
+        if (!CollectionUtils.isEmpty(ignoreKey)) {
+            keys.removeAll(ignoreKey);
+        }
+        if (CollectionUtils.isEmpty(keys)) {
+            return Collections.emptyMap();
+        }
+
         // 转成本地key
         Map<String, K> localKeyMap = keys.stream().collect(Collectors.toMap(this::toLocalKey, k -> k));
         // 先获取本地结果
         Map<String, V> localResultMap = localCache.getAllPresent(localKeyMap.keySet());
-        // reload的结果
+        // 获取除本地缓存之外的其余信息
         Map<K, V> loadResultMap = Collections.emptyMap();
         if (localKeyMap.size() > localResultMap.size()) {
             Set<String> absentLocalKeys = Sets.difference(localKeyMap.keySet(), localResultMap.keySet());
             Set<K> absentKeys = absentLocalKeys.stream().map(localKeyMap::get).collect(Collectors.toSet());
             // 存在失效的key
-            if (absentKeys.size() > 0) {
+            if (!absentKeys.isEmpty()) {
                 loadResultMap = refresh(absentKeys);
             }
         }
@@ -96,14 +123,19 @@ public abstract class AbstractLocalCacheManager<K, V> {
     }
 
     /**
-     * 获取单个key
+     * 获取单个Key
      *
      * @param k k
      * @return V
      */
-    public V getCache(K k) {
+    public V getLocalCache(K k) {
+        if (k == null) {
+            return null;
+        }
+        if (!CollectionUtils.isEmpty(ignoreKey) && ignoreKey.contains(k)) {
+            return null;
+        }
         String localKey = toLocalKey(k);
-        // 查找一个缓存元素， 没有查找到的时候返回null
         V ret = localCache.getIfPresent(localKey);
         if (ret == null) {
             return refresh(k);
@@ -112,42 +144,28 @@ public abstract class AbstractLocalCacheManager<K, V> {
     }
 
     /**
-     * 删除key
+     * 重新加载Key,会对历史缓存进行清理
      *
-     * @param keys keys
+     * @param key key
+     * @return @return
      */
-    protected void delCaches(Collection<K> keys) {
-        if (CollectionUtils.isEmpty(keys)) {
-            return;
-        }
-        // 转成本地key
-        Set<String> localKeys = keys.stream().map(this::toLocalKey).collect(Collectors.toSet());
-        localCache.invalidateAll(localKeys);
-    }
-
-    /**
-     * 重新加载key
-     *
-     * @param k k
-     * @return V
-     */
-    public V refresh(K k) {
+    public V refresh(K key) {
         try {
-            V v = load(k);
-            if (v == null) {
-                delCaches(Lists.newArrayList(k));
-                return v;
+            V v = load(key);
+            localCache.invalidate(key);
+            if (v != null) {
+                writeCache(key, v);
             }
-            writeCache(k, v);
             return v;
-        } catch (Exception e) {
-            log.info("[{}#refresh], error, key:{}, stats:{} ", this.getClass().getSimpleName(), k, JsonUtils.toJsonString(localCache.stats()));
-            throw new RuntimeException(e.getMessage(), e);
+        } catch (Exception ex) {
+            String errorMsg = MessageFormatter.format("加载:{}.loadKey({})到内存-异常:", new Object[]{this.getClass().getSimpleName(), key}).getMessage();
+            log.error(errorMsg, ex);
+            throw new RuntimeException(errorMsg);
         }
     }
 
     /**
-     * 重新加载多个key
+     * 重新加载多个Key,会对历史缓存进行清理
      *
      * @param keys keys
      * @return Map<K, V>
@@ -155,48 +173,71 @@ public abstract class AbstractLocalCacheManager<K, V> {
     public Map<K, V> refresh(Set<K> keys) {
         try {
             Map<K, V> map = load(keys);
-            if (CollectionUtils.isEmpty(keys)) {
-                delCaches(keys);
-                return map;
+            localCache.invalidateAll(keys);
+            if (!CollectionUtils.isEmpty(map)) {
+                map.forEach(this::writeCache);
             }
-            map.forEach(this::writeCache);
-            Sets.SetView<K> difference = Sets.difference(keys, map.keySet());
-            delCaches(difference);
             return map;
-        } catch (Exception e) {
-            log.info("[{}#refreshKeys] error, keys:{}, stats:{} ", this.getClass().getSimpleName(), JsonUtils.toJsonString(keys), JsonUtils.toJsonString(localCache.stats()));
-            throw new RuntimeException(e.getMessage(), e);
+        } catch (Exception ex) {
+            String errorMsg = MessageFormatter.format("加载:{}.loadKeys({})到内存-异常:", new Object[]{this.getClass().getSimpleName(), JsonUtils.toJsonString(keys)}).getMessage();
+            log.error(errorMsg, ex);
+            throw new RuntimeException(errorMsg);
         }
+
     }
 
     /**
-     * 刷新所有key
+     * 刷新所有Key,会对历史缓存进行清理
      */
+    @Override
     public void refreshAll() {
         try {
             long t1 = System.currentTimeMillis();
             Map<K, V> map = loadAll();
-            if (CollectionUtils.isEmpty(map)) {
-                localCache.invalidateAll();
-                return;
+            localCache.invalidateAll();
+            if (!CollectionUtils.isEmpty(map)) {
+                map.forEach(this::writeCache);
             }
-            map.forEach(this::writeCache);
-            log.info("[{}#refreshAll] cost: {}ms, estimatedSize:{}, stats:{}", this.getClass().getSimpleName(), System.currentTimeMillis() - t1, localCache.estimatedSize(), JsonUtils.toJsonString(localCache.stats()));
-        } catch (Exception e) {
-            log.info("[{}#refreshAll] error, stats:{} ", this.getClass().getSimpleName(), JsonUtils.toJsonString(localCache.stats()));
-            throw new RuntimeException(e.getMessage(), e);
+            log.info("加载:{}.loadAll() success, stats:{},cost:{}ms", this.getClass().getSimpleName(), localCache.stats(), System.currentTimeMillis() - t1);
+        } catch (Exception ex) {
+            String errorMsg = MessageFormatter.format("加载:{}.loadAll()到内存-异常:", new Object[]{this.getClass().getSimpleName()}).getMessage();
+            log.error(errorMsg, ex);
+            throw new RuntimeException(errorMsg);
         }
     }
 
 
     /**
-     * toLocalKey
+     * 子类实现,缓存数据加载,单Key
+     *
+     * @param keys
+     * @return
+     */
+    protected abstract Map<K, V> load(Set<K> keys);
+
+    /**
+     * 子类实现,缓存数据加载,多Key
+     *
+     * @param key
+     * @return
+     */
+    protected abstract V load(K key);
+
+    /**
+     * 子类实现,缓存数据加载,全部Key
+     *
+     * @return Map<K, V>
+     */
+    protected abstract Map<K, V> loadAll();
+
+    /**
+     * 缓存Key转换
      *
      * @param k k
      * @return String
      */
     private String toLocalKey(K k) {
-        return String.format("%s_%s", this.getClass().getSimpleName(), k.toString());
+        return k.toString();
     }
 
     /**
@@ -205,8 +246,18 @@ public abstract class AbstractLocalCacheManager<K, V> {
      * @param k k
      * @param v v
      */
-    protected void writeCache(K k, V v) {
+    private void writeCache(K k, V v) {
         String localKey = toLocalKey(k);
         localCache.put(localKey, v);
     }
+
+    /**
+     * 删除缓存key
+     *
+     * @param k key
+     */
+    public void remove(K k) {
+        localCache.invalidate(k);
+    }
+
 }
