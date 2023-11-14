@@ -47,10 +47,7 @@ public class MultilevelCache extends AbstractValueAdaptingCache {
     private final MultilevelCacheConfig.RedisConfig redisConfig;
 
 
-    public MultilevelCache(String cacheName,
-                           RedisCache redisCache,
-                           Cache<Object, Object> caffeineCache,
-                           MultilevelCacheConfig multilevelCacheConfig) {
+    public MultilevelCache(String cacheName, RedisCache redisCache, Cache<Object, Object> caffeineCache, MultilevelCacheConfig multilevelCacheConfig) {
         super(multilevelCacheConfig.isAllowNullValues());
         this.cacheName = cacheName;
         this.redisCache = redisCache;
