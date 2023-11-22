@@ -57,7 +57,6 @@ public class JetCacheAnnoController {
     }
 
 
-    @CacheInvalidate(name = "userCache:", key = "#id")
     @ApiOperation("用户信息-删除")
     @LogIndex
     @DeleteMapping("user/{id}")

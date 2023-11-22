@@ -1,6 +1,7 @@
 package com.healerjean.proj.controller;
 
 import com.alicp.jetcache.Cache;
+import com.alicp.jetcache.CacheGetResult;
 import com.alicp.jetcache.anno.CacheInvalidate;
 import com.healerjean.proj.common.anno.ElParam;
 import com.healerjean.proj.common.anno.LogIndex;
@@ -91,7 +92,7 @@ public class JetCacheController {
             return BaseRes.buildFailure();
         }
         UserDemoVO userDemoVO = UserConverter.INSTANCE.covertUserDemoBoToVo(userDemoBo);
-        // 缓存更新
+        // 缓存插入
         userCache.put(userDemoBo.getId(), userDemoVO);
         return BaseRes.buildSuccess(userDemoVO);
     }
@@ -101,13 +102,18 @@ public class JetCacheController {
     @GetMapping("user/{userId}")
     @ResponseBody
     public BaseRes<UserDemoVO> queryUserDemoSingle(@ElParam @PathVariable("userId") Long userId) {
+        // 允许缓存空值
+        CacheGetResult<Object> cacheGetResult = userCache.GET(userId);
+        if (cacheGetResult.isSuccess()){
+            return BaseRes.buildSuccess((UserDemoVO) cacheGetResult.getValue());
+        }
+
         UserDemoBO userDemoBo = userDemoService.selectById(userId);
         UserDemoVO userDemoVo = UserConverter.INSTANCE.covertUserDemoBoToVo(userDemoBo);
         // 缓存插入
-        userCache.put(userDemoBo.getId(), userDemoVo);
+        userCache.put(userId, userDemoVo);
         return BaseRes.buildSuccess(userDemoVo);
     }
-
 
 
 }

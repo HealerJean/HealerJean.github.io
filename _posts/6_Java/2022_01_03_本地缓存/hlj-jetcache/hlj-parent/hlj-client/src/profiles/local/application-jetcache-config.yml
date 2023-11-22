@@ -9,13 +9,13 @@ jetcache:
     default:
       # 本地缓存类型，其他可选：caffeine/linkedhashmap
       type: linkedhashmap
-      keyConvertor: fastjson
+      keyConvertor: fastjson2
   # 长途缓存装备
   remote:
     default: # default表明全部收效，也能够指定某个cacheName
       type: redis
       # key转换器办法n
-      keyConvertor: fastjson
+      keyConvertor: fastjson2
       broadcastChannel: projectA
       # redis序列化办法
       valueEncoder: java
