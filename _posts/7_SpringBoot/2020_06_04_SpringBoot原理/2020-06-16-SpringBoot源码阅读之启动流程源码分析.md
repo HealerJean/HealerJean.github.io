@@ -132,12 +132,20 @@ public SpringApplication(ResourceLoader resourceLoader, Class<?>... primarySourc
 
 ## 1.1、设置应用类型   
 
+> NONE：该application将不会作为一个web服务运行，且不会内嵌一个web服务。    
+>
+> SERVLET：该application将会作为一个基于servlet运行的web服务，且会内嵌一个servlet的web服务。    
+>
+> REACTIVE：该application将会作为一个基于reactive运行的web服务，且会内嵌一个reactive的web服务。
+> 
+
 ```java
 //设置应用类型
 this.webApplicationType = WebApplicationType.deduceFromClasspath();
 ```
 
-
+> 
+>
 
 ```java
 package org.springframework.boot;
@@ -1413,9 +1421,9 @@ context.setEnvironment(environment);
 
 ### 2.4.2、调用初始化器
 
-> 这里终于用到了在创建SpringApplication实例时设置的初始化器了，依次对它们进行遍历，并调用`initialize`方法。       
+> 这里终于用到了在创建 `SpringApplication`实例时设置的初始化器了，依次对它们进行遍历，并调用`initialize`方法。       
 >
-> 我们也可以自定义初始化器， 并实现**initialize**方法，然后放入`META-INF/spring.factories`配置文件中Key为：`org.springframework.context.ApplicationContextInitializer`的value中，这里我们自定义的初始化器就会被调用，是我们项目初始化的一种方式    
+> 我们也可以自定义初始化器， 并实现 **`initialize`**方法，然后放入`META-INF/spring.factories`配置文件中Key为：`org.springframework.context.ApplicationContextInitializer`的value中，这里我们自定义的初始化器就会被调用，是我们项目初始化的一种方式    
 >
 > 
 
