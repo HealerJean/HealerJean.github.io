@@ -2,7 +2,7 @@ package com.hlj.proj.testmain;
 
 
 import com.hlj.proj.service.LogCallTestService;
-import com.hlj.proj.service.ThirdInvokeLogAspect;
+import com.hlj.proj.service.InvokeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.boot.logging.LogLevel;
@@ -16,24 +16,16 @@ import org.springframework.boot.logging.LogLevel;
 public class TestMain1_LogCall {
 
     @Test
-    public void test(){
+    public void test() {
         LogCallTestService logCallTestService = new LogCallTestService();
-        LogCallTestService.RequestDTO requestDTO = new  LogCallTestService.RequestDTO();
+        LogCallTestService.RequestDTO requestDTO = new LogCallTestService.RequestDTO();
         requestDTO.setName("healerjean");
         requestDTO.setAge(1L);
-        ThirdInvokeLogAspect.call("invokeMethod", requestDTO, () -> logCallTestService.invokeMethod(requestDTO), log);
+        LogCallTestService.ResponseDTO res = InvokeUtils.call("invokeMethod", requestDTO, logCallTestService::invokeMethod, log);
 
-
-        ThirdInvokeLogAspect.call("invokeMethod", requestDTO, () -> logCallTestService.invokeMethod(requestDTO), log, LogLevel.DEBUG);
-        ThirdInvokeLogAspect.call("invokeMethod", requestDTO, () -> logCallTestService.invokeMethod(requestDTO), log, LogLevel.INFO);
-        ThirdInvokeLogAspect.call("invokeMethod", requestDTO, () -> logCallTestService.invokeMethod(requestDTO), log, LogLevel.WARN);
-        ThirdInvokeLogAspect.call("invokeMethod", requestDTO, () -> logCallTestService.invokeMethod(requestDTO), log, LogLevel.ERROR);
-
-        try {
-            Thread.sleep(100000l);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+        res = InvokeUtils.call("invokeMethod", requestDTO, logCallTestService::invokeMethod, log, LogLevel.DEBUG);
+        res = InvokeUtils.call("invokeMethod", requestDTO, logCallTestService::invokeMethod, log, LogLevel.INFO);
+        res = InvokeUtils.call("invokeMethod", requestDTO, logCallTestService::invokeMethod, log, LogLevel.WARN);
+        res = InvokeUtils.call("invokeMethod", requestDTO, logCallTestService::invokeMethod, log, LogLevel.ERROR);
     }
 }

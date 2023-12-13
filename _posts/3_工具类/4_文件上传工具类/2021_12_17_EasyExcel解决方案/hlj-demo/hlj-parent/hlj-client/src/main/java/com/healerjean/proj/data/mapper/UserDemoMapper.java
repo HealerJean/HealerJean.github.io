@@ -11,5 +11,4 @@ import com.healerjean.proj.data.po.UserDemo;
  */
 public interface UserDemoMapper extends BaseMapper<UserDemo> {
 
-
 }

@@ -2,6 +2,7 @@ package com.healerjean.proj.controller;
 
 import com.healerjean.proj.common.anno.ElParam;
 import com.healerjean.proj.common.anno.LogIndex;
+import com.healerjean.proj.common.anno.RedisCache;
 import com.healerjean.proj.common.anno.RedisLock;
 import com.healerjean.proj.common.contants.RedisConstants;
 import com.healerjean.proj.common.data.ValidateGroup;
@@ -18,9 +19,8 @@ import com.healerjean.proj.data.req.UserDemoQueryReq;
 import com.healerjean.proj.data.req.UserDemoSaveReq;
 import com.healerjean.proj.data.vo.UserDemoVO;
 import com.healerjean.proj.exceptions.ParameterException;
-import com.healerjean.proj.rpc.DemoPrcResource;
+import com.healerjean.proj.rpc.provider.DemoPrcResource;
 import com.healerjean.proj.service.UserDemoService;
-import com.healerjean.proj.utils.JsonUtils;
 import com.healerjean.proj.utils.validate.ValidateUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,8 +32,8 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
-@RequestMapping("hlj/user")
-@Api(tags = "UserDemo-控制器")
+@RequestMapping("hlj")
+@Api(tags = "UserDemoController")
 @Slf4j
 public class UserDemoController {
 
@@ -49,10 +49,10 @@ public class UserDemoController {
     private DemoPrcResource demoPrcResource;
 
 
-    @ApiOperation(value = "用户信息-新增", notes = "用户信息-新增-描述")
+    @ApiOperation("用户信息-新增")
     @RedisLock(RedisConstants.LockEnum.COMMON)
     @LogIndex
-    @PostMapping("save")
+    @PostMapping("user/save")
     @ResponseBody
     public BaseRes<Boolean> saveUserDemo(@ElParam("#req.name") @RequestBody UserDemoSaveReq req) {
         String errorMessage = ValidateUtils.validate(req, ValidateGroup.SaveUserDemo.class);
@@ -64,17 +64,17 @@ public class UserDemoController {
         return BaseRes.buildSuccess(success);
     }
 
-    @ApiOperation(value = "用户信息-删除", notes = "用户信息-删除-描述")
+    @ApiOperation("用户信息-删除")
     @LogIndex
-    @DeleteMapping("{id}")
+    @DeleteMapping("user/{id}")
     public BaseRes<Boolean> deleteUserDemo(@PathVariable Long id) {
         boolean success = userDemoService.deleteUserDemo(id);
         return BaseRes.buildSuccess(success);
     }
 
-    @ApiOperation(value = "用户信息-修改", notes = "用户信息-修改-描述")
+    @ApiOperation("用户信息-修改")
     @LogIndex
-    @PutMapping("{id}")
+    @PutMapping("user/{id}")
     @ResponseBody
     public BaseRes<Boolean> updateUserDemo(@NotNull @PathVariable Long id, @RequestBody UserDemoSaveReq req) {
         UserDemoBO userDemoBo = UserConverter.INSTANCE.covertUserDemoSaveReqToBo(req);
@@ -83,9 +83,10 @@ public class UserDemoController {
         return BaseRes.buildSuccess(success);
     }
 
-    @ApiOperation(value = "用户信息-单条查询", notes = "用户信息-单条查询-描述")
+    @RedisCache(RedisConstants.CacheEnum.USER)
     @LogIndex
-    @GetMapping("{userId}")
+    @ApiOperation("用户信息-单条查询")
+    @GetMapping("user/{userId}")
     @ResponseBody
     public BaseRes<UserDemoVO> queryUserDemoSingle(@ElParam @PathVariable("userId") Long userId) {
         String testMock = demoPrcResource.rpcInvoke("testMock");
@@ -96,9 +97,9 @@ public class UserDemoController {
         return BaseRes.buildSuccess(userDemoVo);
     }
 
-    @ApiOperation(value = "用户信息-列表查询", notes = "用户信息-列表查询-描述")
+    @ApiOperation("用户信息-列表查询")
     @LogIndex
-    @GetMapping("list")
+    @GetMapping("user/list")
     @ResponseBody
     public BaseRes<List<UserDemoVO>> queryUserDemoList(UserDemoQueryReq req) {
         UserDemoQueryBO userDemoQueryBo = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
@@ -107,9 +108,9 @@ public class UserDemoController {
         return BaseRes.buildSuccess(userDemoVos);
     }
 
-    @ApiOperation(value = "用户信息-分页查询", notes = "用户信息-分页查询-描述")
+    @ApiOperation("用户信息-分页查询")
     @LogIndex
-    @PostMapping("page")
+    @PostMapping("user/page")
     @ResponseBody
     public BaseRes<PageVO<UserDemoVO>> queryUserDemoPage(@RequestBody PageReq<UserDemoQueryReq> req) {
         PageQueryBO<UserDemoQueryBO> userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryPageReqToBo(req);
@@ -119,15 +120,26 @@ public class UserDemoController {
         return BaseRes.buildSuccess(pageVo);
     }
 
-
-    @ApiOperation(value = "用户信息-脱敏查询", notes = "用户信息-脱敏查询-描述")
-    @LogIndex
-    @GetMapping("sensitiveList")
+    @ApiOperation("用户信息-大数据量-分页查询全部")
+    @LogIndex(resFlag = false)
+    @GetMapping("user/queryAllUserDemoByLimit")
     @ResponseBody
-    public String querySensitiveList(UserDemoQueryReq req) {
-        UserDemoQueryBO userDemoQueryBo = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
-        List<UserDemoBO> userDemoBos = userDemoService.queryUserDemoList(userDemoQueryBo);
-        List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(userDemoBos);
-        return JsonUtils.toJsonStringWithSensitivity(BaseRes.buildSuccess(userDemoVos));
+    public BaseRes<List<UserDemoVO>> queryAllUserDemoByLimit(UserDemoQueryReq req) {
+        UserDemoQueryBO userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
+        List<UserDemoBO> list = userDemoService.queryAllUserDemoByLimit(userDemoPageQuery);
+        List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(list);
+        return BaseRes.buildSuccess(userDemoVos);
     }
+
+    @ApiOperation("用户信息-大数据量-IdSize查询全部")
+    @LogIndex(resFlag = false)
+    @GetMapping("user/queryAllUserDemoByIdSize")
+    @ResponseBody
+    public BaseRes<List<UserDemoVO>> queryAllUserDemoByIdSize(UserDemoQueryReq req) {
+        UserDemoQueryBO userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
+        List<UserDemoBO> list = userDemoService.queryAllUserDemoByIdSize(userDemoPageQuery);
+        List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(list);
+        return BaseRes.buildSuccess(userDemoVos);
+    }
+
 }

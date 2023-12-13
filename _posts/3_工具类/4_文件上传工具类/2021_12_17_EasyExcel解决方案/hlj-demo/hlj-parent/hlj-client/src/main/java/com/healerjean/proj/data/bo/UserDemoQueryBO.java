@@ -65,7 +65,15 @@ public class UserDemoQueryBO implements Serializable {
      */
     private String likePhone;
 
+    /**
+     * 最小Id
+     */
+    private Long minId;
 
+    /**
+     * 最大Id
+     */
+    private Long maxId;
 
     /**
      * selectFields

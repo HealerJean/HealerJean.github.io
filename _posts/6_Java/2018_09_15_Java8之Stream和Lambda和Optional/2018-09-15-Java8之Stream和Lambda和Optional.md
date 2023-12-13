@@ -1137,8 +1137,6 @@ public class TestMain {
 
 
 
-
-
 ### 2.3.5、`Collectors.joining`：收集并拼接
 
  **将字符串结果用逗号隔开**  

@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public class Log4j2Controller {
 
 
-    @LogIndex(resFlag = false)
+    @LogIndex
     @GetMapping("log4j2")
     public String log4j2(LogBean logBean) {
         log.debug("debug日志================{}", logBean);
@@ -72,12 +72,6 @@ public class Log4j2Controller {
         return "修改日志级别成功";
     }
 
-    @LogIndex(resFlag = false)
-    @GetMapping("noJson")
-    public String noJson(LogBean logBean) {
-        log.info("do sth and print log, data={}", ToStringBuilder.reflectionToString(logBean, ToStringStyle.SHORT_PREFIX_STYLE));
-        return JsonUtils.toJsonString(logBean);
-    }
 
 
 }

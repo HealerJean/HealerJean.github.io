@@ -19,7 +19,6 @@ import com.healerjean.proj.data.req.UserDemoQueryReq;
 import com.healerjean.proj.data.req.UserDemoSaveReq;
 import com.healerjean.proj.data.vo.UserDemoVO;
 import com.healerjean.proj.exceptions.ParameterException;
-import com.healerjean.proj.rpc.provider.DemoPrcResource;
 import com.healerjean.proj.service.UserDemoService;
 import com.healerjean.proj.utils.validate.ValidateUtils;
 import io.swagger.annotations.Api;
@@ -42,11 +41,6 @@ public class UserDemoController {
      */
     @Resource
     private UserDemoService userDemoService;
-    /**
-     * demoPrcResource
-     */
-    @Resource
-    private DemoPrcResource demoPrcResource;
 
 
     @ApiOperation("用户信息-新增")
@@ -89,9 +83,6 @@ public class UserDemoController {
     @GetMapping("user/{userId}")
     @ResponseBody
     public BaseRes<UserDemoVO> queryUserDemoSingle(@ElParam @PathVariable("userId") Long userId) {
-        String testMock = demoPrcResource.rpcInvoke("testMock");
-        log.info("[saveUserDemo]testMock:{}", testMock);
-
         UserDemoBO userDemoBo = userDemoService.selectById(userId);
         UserDemoVO userDemoVo = UserConverter.INSTANCE.covertUserDemoBoToVo(userDemoBo);
         return BaseRes.buildSuccess(userDemoVo);
@@ -120,28 +111,16 @@ public class UserDemoController {
         return BaseRes.buildSuccess(pageVo);
     }
 
-    @ApiOperation("用户信息-大数据量-分页查询全部")
-    @LogIndex(resFlag = false)
-    @GetMapping("user/queryAllUserDemoByLimit")
+    @ApiOperation("用户信息-分页查询全部")
+    @LogIndex
+    @PostMapping("user/pageAll")
     @ResponseBody
-    public BaseRes<List<UserDemoVO>> queryAllUserDemoByLimit(UserDemoQueryReq req) {
-        UserDemoQueryBO userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
-        List<UserDemoBO> list = userDemoService.queryAllUserDemoByLimit(userDemoPageQuery);
-        List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(list);
+    public BaseRes<List<UserDemoVO>>  queryUserDemoPageAll(@RequestBody UserDemoQueryReq req) {
+        UserDemoQueryBO userDemoQueryBo = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
+        List<UserDemoBO> userDemoBos = userDemoService.queryUserDemoPageAll(userDemoQueryBo);
+        List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(userDemoBos);
         return BaseRes.buildSuccess(userDemoVos);
     }
-
-    @ApiOperation("用户信息-大数据量-IdSize查询全部")
-    @LogIndex(resFlag = false)
-    @GetMapping("user/queryAllUserDemoByIdSize")
-    @ResponseBody
-    public BaseRes<List<UserDemoVO>> queryAllUserDemoByIdSize(UserDemoQueryReq req) {
-        UserDemoQueryBO userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
-        List<UserDemoBO> list = userDemoService.queryAllUserDemoByIdSize(userDemoPageQuery);
-        List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(list);
-        return BaseRes.buildSuccess(userDemoVos);
-    }
-
 
 
 }
