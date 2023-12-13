@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.healerjean.proj.template.mapper.BPrizeExchangeDetailMapper">
+
+    <resultMap id="BaseResultMap" type="com.healerjean.proj.template.po.BPrizeExchangeDetail">
+        <result column="id" property="id"/>
+        <result column="created_date" property="createdDate"/>
+        <result column="modified_date" property="modifiedDate"/>
+        <result column="benefits_id" property="benefitsId"/>
+        <result column="vender_id" property="venderId"/>
+        <result column="exchange_time" property="exchangeTime"/>
+        <result column="benefits_name" property="benefitsName"/>
+        <result column="cost_score" property="costScore"/>
+        <result column="exchange" property="exchange"/>
+    </resultMap>
+
+
+</mapper>
+

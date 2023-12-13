@@ -137,7 +137,7 @@ public interface UserConverter {
      */
     default UserDemoQueryBO covertUserDemoQueryReqToBo(UserDemoQueryReq req) {
         if (Objects.isNull(req)) {
-            return null;
+            return new UserDemoQueryBO();
         }
         UserDemoQueryBO userDemoQueryBO = new UserDemoQueryBO();
         userDemoQueryBO.setId(req.getId());

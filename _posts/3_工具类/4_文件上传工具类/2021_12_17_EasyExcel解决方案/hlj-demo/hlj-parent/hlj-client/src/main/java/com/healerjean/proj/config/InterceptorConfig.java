@@ -31,7 +31,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(urlInterceptor)
-                .addPathPatterns("/**")
+                .addPathPatterns("/swagger**/**", "/webjars/**", "/v3/**", "/doc.html")
                 .excludePathPatterns("/develop/swagger/**");
     }
 

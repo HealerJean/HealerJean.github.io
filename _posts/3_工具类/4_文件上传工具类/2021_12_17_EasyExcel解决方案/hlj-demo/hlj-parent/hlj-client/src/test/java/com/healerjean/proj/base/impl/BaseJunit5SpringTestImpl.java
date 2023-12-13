@@ -1,12 +1,11 @@
 package com.healerjean.proj.base.impl;
 
 import com.healerjean.proj.base.BaseJunit5SpringTest;
-import com.healerjean.proj.rpc.DemoPrcResource;
-import com.healerjean.proj.rpc.proxy.impl.DemoRpcProxyImpl;
+import com.healerjean.proj.rpc.consumer.proxy.impl.DemoRpcProxyImpl;
+import com.healerjean.proj.rpc.provider.DemoPrcResource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.annotation.Resource;
 
@@ -28,7 +27,7 @@ public class BaseJunit5SpringTestImpl extends BaseJunit5SpringTest {
     @Resource
     private DemoRpcProxyImpl demoRpcProxy;
 
-    @MockBean
+    @Resource
     private DemoPrcResource demoPrcResource;
 
 
@@ -37,6 +36,9 @@ public class BaseJunit5SpringTestImpl extends BaseJunit5SpringTest {
     public void test1() {
         String result = demoRpcProxy.rpcInvoke("success");
         log.info("result:{}", result);
+
+        String result2 = demoRpcProxy.rpcInvoke("success");
+        log.info("result2:{}", result2);
     }
 
 
@@ -46,6 +48,10 @@ public class BaseJunit5SpringTestImpl extends BaseJunit5SpringTest {
         when(demoPrcResource.rpcInvoke(anyString())).thenReturn("test2MockMethod");
         String result = demoRpcProxy.rpcInvoke("success");
         log.info("result:{}", result);
+
+
+        String result2 = demoRpcProxy.rpcInvoke("success");
+        log.info("result2:{}", result2);
     }
 
 

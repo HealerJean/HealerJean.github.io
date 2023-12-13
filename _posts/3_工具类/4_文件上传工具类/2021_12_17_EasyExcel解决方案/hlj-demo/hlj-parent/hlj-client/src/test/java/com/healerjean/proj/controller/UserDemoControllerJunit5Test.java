@@ -31,12 +31,14 @@ public class UserDemoControllerJunit5Test extends BaseJunit5SpringTest {
     private UserDemoController userDemoController;
 
 
+    /**
+     * 默认数据源
+     */
     @ParameterizedTest
-    @DisplayName("testQueryUserDemoSingle")
+    @DisplayName("默认数据源")
     @ValueSource(longs = {100, 102, 103, 104, 999})
-    @HSql(value = {"/ut/mock/sql/unit/controller/healerjean/UserDemoControllerTest/testQueryUserDemoSingle.sql"})
-    @HSql(value = {"/ut/mock/sql/clean/user_demo_clean.sql"},
-            executionPhase = HSql.ExecutionPhase.AFTER_TEST_METHOD)
+    @HSql(value = {"/ut/mock/sql/unit/controller/healerjean/UserDemoControllerTest/userDemos.sql"})
+    @HSql(value = {"/ut/mock/sql/clean/user_demo_clean.sql"}, executionPhase = HSql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testQueryUserDemoSingle(long id) {
         BaseRes<UserDemoVO> res = userDemoController.queryUserDemoSingle(id);
         log.info("[UserDemoControllerTest#testQueryUserDemoSingle] id:{}, res:{}", id, JsonUtils.toString(res));
@@ -45,19 +47,16 @@ public class UserDemoControllerJunit5Test extends BaseJunit5SpringTest {
     }
 
 
+    /**
+     * 双数据源
+     */
     @ParameterizedTest
-    @DisplayName("testQueryUserDemoSingleDbTest")
+    @DisplayName("双数据源")
     @ValueSource(longs = {1, 100, 102, 103, 104, 999})
-    @HSql(config = @SqlConfig(dataSource = DataSourceConstant.MASTER_HEALER_JEAN),
-            value = {"/ut/mock/sql/unit/controller/healerjean/UserDemoControllerTest/testQueryUserDemoSingle.sql"})
-    @HSql(config = @SqlConfig(dataSource = DataSourceConstant.MASTER_HEALER_JEAN),
-            value = {"/ut/mock/sql/clean/user_demo_clean.sql"},
-            executionPhase = HSql.ExecutionPhase.AFTER_TEST_METHOD)
-    @HSql(config = @SqlConfig(dataSource = DataSourceConstant.SLAVE_TEST),
-            value = {"/ut/mock/sql/unit/controller/test/UserDemoControllerTest/testQueryUserDemoSingle.sql"})
-    @HSql(config = @SqlConfig(dataSource = DataSourceConstant.SLAVE_TEST),
-            value = {"/ut/mock/sql/clean/user_demo_clean.sql"},
-            executionPhase = HSql.ExecutionPhase.AFTER_TEST_METHOD)
+    @HSql(config = @SqlConfig(dataSource = DataSourceConstant.MASTER_HEALER_JEAN), value = {"/ut/mock/sql/unit/controller/healerjean/UserDemoControllerTest/userDemos.sql"})
+    @HSql(config = @SqlConfig(dataSource = DataSourceConstant.MASTER_HEALER_JEAN), value = {"/ut/mock/sql/clean/user_demo_clean.sql"}, executionPhase = HSql.ExecutionPhase.AFTER_TEST_METHOD)
+    @HSql(config = @SqlConfig(dataSource = DataSourceConstant.SLAVE_TEST), value = {"/ut/mock/sql/unit/controller/test/UserDemoControllerTest/testQueryUserDemoSingle.sql"})
+    @HSql(config = @SqlConfig(dataSource = DataSourceConstant.SLAVE_TEST), value = {"/ut/mock/sql/clean/user_demo_clean.sql"}, executionPhase = HSql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testQueryUserDemoSingleDbTest(long id) {
         BaseRes<UserDemoVO> res = userDemoController.queryUserDemoSingle(id);
         log.info("[UserDemoControllerTest#testQueryUserDemoSingleDbTest] id:{}, res:{}", id, JsonUtils.toString(res));
@@ -65,14 +64,15 @@ public class UserDemoControllerJunit5Test extends BaseJunit5SpringTest {
         Assertions.assertEquals(res.getSuccess(), Boolean.TRUE);
     }
 
+
+    /**
+     * 从数据源
+     */
     @ParameterizedTest
-    @DisplayName("testQueryUserDemoSingleDbTest")
+    @DisplayName("从数据源")
     @ValueSource(longs = {1, 100, 102, 103, 104, 999})
-    @HSql(config = @SqlConfig(dataSource = DataSourceConstant.SLAVE_TEST),
-            value = {"/ut/mock/sql/unit/controller/test/UserDemoControllerTest/testQueryUserDemoSingle.sql"})
-    @HSql(config = @SqlConfig(dataSource = DataSourceConstant.SLAVE_TEST),
-            value = {"/ut/mock/sql/clean/user_demo_clean.sql"},
-            executionPhase = HSql.ExecutionPhase.AFTER_TEST_METHOD)
+    @HSql(config = @SqlConfig(dataSource = DataSourceConstant.SLAVE_TEST), value = {"/ut/mock/sql/unit/controller/test/UserDemoControllerTest/testQueryUserDemoSingle.sql"})
+    @HSql(config = @SqlConfig(dataSource = DataSourceConstant.SLAVE_TEST), value = {"/ut/mock/sql/clean/user_demo_clean.sql"}, executionPhase = HSql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testQueryUserDemoSingleDbTest1(long id) {
         BaseRes<UserDemoVO> res = userDemoController.queryUserDemoSingle(id);
         log.info("[UserDemoControllerTest#testQueryUserDemoSingleDbTest] id:{}, res:{}", id, JsonUtils.toString(res));
@@ -81,20 +81,22 @@ public class UserDemoControllerJunit5Test extends BaseJunit5SpringTest {
     }
 
 
+    /**
+     * 主数据源
+     */
     @ParameterizedTest
-    @DisplayName("testQueryUserDemoSingleDbTest")
+    @DisplayName("主数据源")
     @ValueSource(longs = {1, 100, 102, 103, 104, 999})
-    @HSql(config = @SqlConfig(dataSource = DataSourceConstant.MASTER_HEALER_JEAN),
-            value = {"/ut/mock/sql/unit/controller/healerjean/UserDemoControllerTest/testQueryUserDemoSingle.sql"})
-    @HSql(config = @SqlConfig(dataSource = DataSourceConstant.MASTER_HEALER_JEAN),
-            value = {"/ut/mock/sql/clean/user_demo_clean.sql"},
-            executionPhase = HSql.ExecutionPhase.AFTER_TEST_METHOD)
+    @HSql(config = @SqlConfig(dataSource = DataSourceConstant.MASTER_HEALER_JEAN), value = {"/ut/mock/sql/unit/controller/healerjean/UserDemoControllerTest/userDemos.sql"})
+    @HSql(config = @SqlConfig(dataSource = DataSourceConstant.MASTER_HEALER_JEAN), value = {"/ut/mock/sql/clean/user_demo_clean.sql"}, executionPhase = HSql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testQueryUserDemoSingleDbTest2(long id) {
         BaseRes<UserDemoVO> res = userDemoController.queryUserDemoSingle(id);
         log.info("[UserDemoControllerTest#testQueryUserDemoSingleDbTest] id:{}, res:{}", id, JsonUtils.toString(res));
         Assertions.assertNotNull(res, "res不能为空");
         Assertions.assertEquals(res.getSuccess(), Boolean.TRUE);
     }
+
+
 
 }
 

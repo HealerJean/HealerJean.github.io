@@ -2532,11 +2532,6 @@ $!callback.setSavePath($tool.append($modulePath, "/src/main/resources/mapper"))
 #end
     </resultMap>
 
-        <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        #allSqlColumn()
-     </sql>
-
 </mapper>
 
 ```
