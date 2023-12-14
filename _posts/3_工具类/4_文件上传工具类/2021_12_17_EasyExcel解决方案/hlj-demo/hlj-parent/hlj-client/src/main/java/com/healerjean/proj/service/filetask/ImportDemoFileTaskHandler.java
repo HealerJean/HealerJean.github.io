@@ -36,20 +36,20 @@ public class ImportDemoFileTaskHandler extends AbstractImportFileTaskHandler {
      */
     @Override
     public FileTaskImportCheckResultBO checkImportExcel(FileTaskBO fileTask) {
-        return new FileTaskImportCheckResultBO<>();
+        return new FileTaskImportCheckResultBO<UserDemoImportExcel>();
     }
 
     /**
      * executeImportTask
      *
-     * @param fileTaskBO        fileTaskBO
+     * @param fileTaskBo        fileTaskBO
      * @param importCheckResult importCheckResult
      * @return FileTaskResultBO
      */
     @Override
-    public FileTaskResultBO executeImportTask(FileTaskBO fileTaskBO, FileTaskImportCheckResultBO importCheckResult) {
+    public FileTaskResultBO executeImportTask(FileTaskBO fileTaskBo, FileTaskImportCheckResultBO importCheckResult) {
         List<UserDemoImportExcel> importExcelList = importCheckResult.getImportExcelList();
-        return FileTaskResultBO.success(new FileTaskBO().setTaskId(fileTaskBO.getTaskId()));
+        return FileTaskResultBO.success(new FileTaskBO().setTaskId(fileTaskBo.getTaskId()));
     }
 
 

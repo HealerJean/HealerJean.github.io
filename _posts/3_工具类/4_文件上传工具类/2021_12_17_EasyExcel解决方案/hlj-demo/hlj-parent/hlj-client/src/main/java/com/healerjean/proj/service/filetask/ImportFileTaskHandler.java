@@ -18,13 +18,13 @@ public interface ImportFileTaskHandler extends FileTaskHandler {
      *
      * @return FileTaskResultBO
      */
-    FileTaskImportCheckResultBO<?> checkImportExcel(FileTaskBO fileTask);
+    FileTaskImportCheckResultBO checkImportExcel(FileTaskBO fileTask);
 
     /**
      * 执行导入任务
      *
      * @param fileTaskBO fileTaskBO
      */
-    FileTaskResultBO executeImportTask(FileTaskBO fileTaskBO, FileTaskImportCheckResultBO<? extends  Excel> importCheckResult);
+    FileTaskResultBO executeImportTask(FileTaskBO fileTaskBO, FileTaskImportCheckResultBO importCheckResult);
 
 }

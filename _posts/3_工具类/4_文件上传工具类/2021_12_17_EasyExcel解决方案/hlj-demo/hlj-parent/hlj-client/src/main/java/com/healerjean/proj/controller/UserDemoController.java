@@ -2,7 +2,6 @@ package com.healerjean.proj.controller;
 
 import com.healerjean.proj.common.anno.ElParam;
 import com.healerjean.proj.common.anno.LogIndex;
-import com.healerjean.proj.common.anno.RedisCache;
 import com.healerjean.proj.common.anno.RedisLock;
 import com.healerjean.proj.common.contants.RedisConstants;
 import com.healerjean.proj.common.data.ValidateGroup;
@@ -77,7 +76,6 @@ public class UserDemoController {
         return BaseRes.buildSuccess(success);
     }
 
-    @RedisCache(RedisConstants.CacheEnum.USER)
     @LogIndex
     @ApiOperation("用户信息-单条查询")
     @GetMapping("user/{userId}")

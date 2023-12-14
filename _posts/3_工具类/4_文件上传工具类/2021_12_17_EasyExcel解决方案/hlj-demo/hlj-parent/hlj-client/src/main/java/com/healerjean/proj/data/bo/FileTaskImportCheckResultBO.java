@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Accessors(chain = true)
 @Data
-public class FileTaskImportCheckResultBO<E> implements Serializable {
+public class FileTaskImportCheckResultBO<Excel> implements Serializable {
     /**
      * serialVersionUID
      */
@@ -34,11 +34,11 @@ public class FileTaskImportCheckResultBO<E> implements Serializable {
     /**
      * 上传需要导入的数据
      */
-    private List<E> importExcelList;
+    private List<Excel> importExcelList;
 
     /**
      * 上传结果Excel
      */
-    private List<E> excelResultList;
+    private List<Excel> excelResultList;
 
 }
