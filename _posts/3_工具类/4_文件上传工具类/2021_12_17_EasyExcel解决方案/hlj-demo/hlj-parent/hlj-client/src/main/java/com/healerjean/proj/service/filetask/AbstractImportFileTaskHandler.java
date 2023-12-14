@@ -3,6 +3,7 @@ package com.healerjean.proj.service.filetask;
 import com.healerjean.proj.data.bo.FileTaskBO;
 import com.healerjean.proj.data.bo.FileTaskImportCheckResultBO;
 import com.healerjean.proj.data.bo.FileTaskResultBO;
+import com.healerjean.proj.data.excel.Excel;
 import com.healerjean.proj.enums.FileTaskEnum;
 
 /**
@@ -35,7 +36,7 @@ public abstract class AbstractImportFileTaskHandler extends AbstractFileTaskHand
     @Override
     public FileTaskResultBO executeTask(FileTaskBO fileTaskBo) throws Exception {
         // 1、校验上传的excel
-        FileTaskImportCheckResultBO checkResult = checkImportExcel(fileTaskBo);
+        FileTaskImportCheckResultBO<?> checkResult = checkImportExcel(fileTaskBo);
         if (Boolean.FALSE.equals(checkResult.getCheckFlag())) {
             return FileTaskResultBO.fail(new FileTaskBO().setTaskId(fileTaskBo.getTaskId()), checkResult.getResultDesc());
         }
