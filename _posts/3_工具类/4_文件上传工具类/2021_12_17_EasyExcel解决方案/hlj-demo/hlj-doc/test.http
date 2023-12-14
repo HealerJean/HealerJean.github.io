@@ -1,0 +1,11 @@
+
+
+###
+POST http://localhost:8888/hlj/fileTask/save
+{
+  "userId": "healerjean",
+  "taskType": "export",
+  "businessType": "exportDemo",
+  "businessData": "{\"phone\": \"1234567\"}",
+  "taskStatus": "processing"
+}

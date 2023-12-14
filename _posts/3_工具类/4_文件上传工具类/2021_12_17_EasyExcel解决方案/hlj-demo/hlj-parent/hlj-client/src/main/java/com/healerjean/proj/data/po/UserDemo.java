@@ -69,8 +69,4 @@ public class UserDemo implements Serializable {
      */
     private LocalDateTime updateTime;
 
-
-    public String getName() {
-        return name;
-    }
 }

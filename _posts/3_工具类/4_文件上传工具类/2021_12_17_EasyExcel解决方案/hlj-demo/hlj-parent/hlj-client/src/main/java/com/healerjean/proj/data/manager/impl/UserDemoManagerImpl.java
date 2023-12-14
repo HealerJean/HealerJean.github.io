@@ -7,12 +7,17 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.healerjean.proj.common.data.bo.PageBO;
 import com.healerjean.proj.common.data.bo.PageQueryBO;
+import com.healerjean.proj.common.data.convert.PageConverter;
+import com.healerjean.proj.data.bo.UserDemoBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
+import com.healerjean.proj.data.converter.UserDemoConverter;
 import com.healerjean.proj.data.dao.UserDemoDao;
 import com.healerjean.proj.data.manager.UserDemoManager;
 import com.healerjean.proj.data.po.UserDemo;
 import com.healerjean.proj.utils.db.IdQueryBO;
+import com.healerjean.proj.utils.db.BatchQueryUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -95,8 +100,9 @@ public class UserDemoManagerImpl implements UserDemoManager {
      * @return UserDemoBO
      */
     @Override
-    public UserDemo selectById(Long id) {
-        return userDemoDao.getById(id);
+    public UserDemoBO selectById(Long id) {
+        UserDemo userDemo = userDemoDao.getById(id);
+        return UserDemoConverter.INSTANCE.covertUserDemoPoToBo(userDemo);
     }
 
     /**
@@ -106,7 +112,7 @@ public class UserDemoManagerImpl implements UserDemoManager {
      * @return List<UserDemoBO>
      */
     @Override
-    public List<UserDemo> queryUserDemoList(UserDemoQueryBO query) {
+    public List<UserDemoBO> queryUserDemoList(UserDemoQueryBO query) {
         QueryWrapper<UserDemo> queryWrapper = new QueryWrapper<>();
         if (!CollectionUtils.isEmpty(query.getSelectFields())) {
             queryWrapper.select(StringUtils.join(query.getSelectFields(), ","));
@@ -126,7 +132,8 @@ public class UserDemoManagerImpl implements UserDemoManager {
                 .lt(Objects.nonNull(query.getQueryTime()), UserDemo::getStartTime, query.getQueryTime())
                 .gt(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime());
 
-        return userDemoDao.list(lambdaQueryWrapper);
+        List<UserDemo> list = userDemoDao.list(lambdaQueryWrapper);
+        return UserDemoConverter.INSTANCE.covertUserDemoPoToBoList(list);
     }
 
     /**
@@ -136,7 +143,7 @@ public class UserDemoManagerImpl implements UserDemoManager {
      * @return PageBO<UserDemoBO>
      */
     @Override
-    public Page<UserDemo> queryUserDemoPage(PageQueryBO<UserDemoQueryBO> pageQuery) {
+    public PageBO<UserDemoBO> queryUserDemoPage(PageQueryBO<UserDemoQueryBO> pageQuery) {
         UserDemoQueryBO query = pageQuery.getData();
         QueryWrapper<UserDemo> queryWrapper = new QueryWrapper<>();
         if (!CollectionUtils.isEmpty(query.getSelectFields())) {
@@ -149,7 +156,7 @@ public class UserDemoManagerImpl implements UserDemoManager {
         LambdaQueryWrapper<UserDemo> lambdaQueryWrapper = queryWrapper.lambda()
                 .eq(Objects.nonNull(query.getId()), UserDemo::getId, query.getId())
                 .eq(Objects.nonNull(query.getValidFlag()), UserDemo::getValidFlag, query.getValidFlag())
-                .eq(StringUtils.isNotBlank(query.getName()), UserDemo::getName, query.getName())
+                .like(StringUtils.isNotBlank(query.getName()), UserDemo::getName, query.getName())
                 .eq(StringUtils.isNotBlank(query.getPhone()), UserDemo::getPhone, query.getPhone())
                 .eq(StringUtils.isNotBlank(query.getEmail()), UserDemo::getEmail, query.getEmail())
 
@@ -158,19 +165,19 @@ public class UserDemoManagerImpl implements UserDemoManager {
                 .lt(Objects.nonNull(query.getQueryTime()), UserDemo::getStartTime, query.getQueryTime())
                 .gt(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime());
 
-        Page<UserDemo> page = new Page<>(pageQuery.getCurrPage(), pageQuery.getPageSize(), pageQuery.getSearchCountFlag());
-        return userDemoDao.page(page, lambdaQueryWrapper);
+        Page<UserDemo> pageReq = new Page<>(pageQuery.getCurrPage(), pageQuery.getPageSize(), pageQuery.getSearchCountFlag());
+        Page<UserDemo> pagePo = userDemoDao.page(pageReq, lambdaQueryWrapper);
+        List<UserDemoBO> userDemoBos = UserDemoConverter.INSTANCE.covertUserDemoPoToBoList(pagePo.getRecords());
+        return PageConverter.INSTANCE.covertPageBoToBo(pagePo, userDemoBos);
     }
 
-
     /**
-     * 获取查询条件
-     *
+     * queryUserDemoPageAll
      * @param query query
-     * @return LambdaQueryWrapper<UserDemo>
+     * @return List<UserDemoBO>
      */
     @Override
-    public QueryWrapper<UserDemo> queryBuilderQueryWrapper(UserDemoQueryBO query) {
+    public List<UserDemoBO> queryUserDemoPageAll(UserDemoQueryBO query) {
         QueryWrapper<UserDemo> queryWrapper = new QueryWrapper<>();
         if (!CollectionUtils.isEmpty(query.getSelectFields())) {
             queryWrapper.select(StringUtils.join(query.getSelectFields(), ","));
@@ -178,7 +185,7 @@ public class UserDemoManagerImpl implements UserDemoManager {
         if (!CollectionUtils.isEmpty(query.getOrderByList())) {
             query.getOrderByList().forEach(item -> queryWrapper.orderBy(Boolean.TRUE, item.getDirection(), item.getProperty()));
         }
-         queryWrapper.lambda()
+        LambdaQueryWrapper<UserDemo> wrapper = queryWrapper.lambda()
                 .eq(Objects.nonNull(query.getId()), UserDemo::getId, query.getId())
                 .eq(Objects.nonNull(query.getValidFlag()), UserDemo::getValidFlag, query.getValidFlag())
                 .eq(StringUtils.isNotBlank(query.getName()), UserDemo::getName, query.getName())
@@ -187,12 +194,11 @@ public class UserDemoManagerImpl implements UserDemoManager {
                 .like(StringUtils.isNotBlank(query.getLikeName()), UserDemo::getName, query.getLikeName())
                 .like(StringUtils.isNotBlank(query.getLikePhone()), UserDemo::getPhone, query.getLikePhone())
                 .lt(Objects.nonNull(query.getQueryTime()), UserDemo::getStartTime, query.getQueryTime())
-                .gt(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime())
-                .lt(Objects.nonNull(query.getQueryTime()), UserDemo::getStartTime, query.getQueryTime())
                 .gt(Objects.nonNull(query.getQueryTime()), UserDemo::getEndTime, query.getQueryTime());
-        return queryWrapper;
-    }
 
+        List<UserDemo> list = BatchQueryUtils.queryDbAllByLimit((p, q) -> userDemoDao.page(p, q), wrapper, 1000);;
+        return UserDemoConverter.INSTANCE.covertUserDemoPoToBoList(list);
+    }
 
     /**
      * 根据查询条件获取最大Id和最小Id
@@ -223,7 +229,6 @@ public class UserDemoManagerImpl implements UserDemoManager {
      * 根据id区间查询数据
      *
      * @param idQueryBO idQueryBO
-     * @return {@link List< UserDemo>}
      */
     @Override
     public List<UserDemo> queryUserDemoByIdSize(IdQueryBO idQueryBO, UserDemoQueryBO query) {
