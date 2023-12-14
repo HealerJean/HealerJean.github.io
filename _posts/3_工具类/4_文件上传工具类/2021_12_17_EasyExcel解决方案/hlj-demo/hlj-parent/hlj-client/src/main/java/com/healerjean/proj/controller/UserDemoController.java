@@ -14,12 +14,11 @@ import com.healerjean.proj.common.data.req.PageReq;
 import com.healerjean.proj.common.data.vo.PageVO;
 import com.healerjean.proj.data.bo.UserDemoBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
-import com.healerjean.proj.data.convert.UserConverter;
+import com.healerjean.proj.data.converter.UserDemoConverter;
 import com.healerjean.proj.data.req.UserDemoQueryReq;
 import com.healerjean.proj.data.req.UserDemoSaveReq;
 import com.healerjean.proj.data.vo.UserDemoVO;
 import com.healerjean.proj.exceptions.ParameterException;
-import com.healerjean.proj.rpc.provider.DemoPrcResource;
 import com.healerjean.proj.service.UserDemoService;
 import com.healerjean.proj.utils.validate.ValidateUtils;
 import io.swagger.annotations.Api;
@@ -33,7 +32,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("hlj")
-@Api(tags = "UserDemoController")
+@Api(tags = "UserDemo-控制器")
 @Slf4j
 public class UserDemoController {
 
@@ -42,11 +41,6 @@ public class UserDemoController {
      */
     @Resource
     private UserDemoService userDemoService;
-    /**
-     * demoPrcResource
-     */
-    @Resource
-    private DemoPrcResource demoPrcResource;
 
 
     @ApiOperation("用户信息-新增")
@@ -59,7 +53,7 @@ public class UserDemoController {
         if (!ValidateUtils.COMMON_SUCCESS.equals(errorMessage)) {
             throw new ParameterException(errorMessage);
         }
-        UserDemoBO userDemoBo = UserConverter.INSTANCE.covertUserDemoSaveReqToBo(req);
+        UserDemoBO userDemoBo = UserDemoConverter.INSTANCE.covertUserDemoSaveReqToBo(req);
         boolean success = userDemoService.saveUserDemo(userDemoBo);
         return BaseRes.buildSuccess(success);
     }
@@ -77,7 +71,7 @@ public class UserDemoController {
     @PutMapping("user/{id}")
     @ResponseBody
     public BaseRes<Boolean> updateUserDemo(@NotNull @PathVariable Long id, @RequestBody UserDemoSaveReq req) {
-        UserDemoBO userDemoBo = UserConverter.INSTANCE.covertUserDemoSaveReqToBo(req);
+        UserDemoBO userDemoBo = UserDemoConverter.INSTANCE.covertUserDemoSaveReqToBo(req);
         userDemoBo.setId(id);
         boolean success = userDemoService.updateUserDemo(userDemoBo);
         return BaseRes.buildSuccess(success);
@@ -89,11 +83,8 @@ public class UserDemoController {
     @GetMapping("user/{userId}")
     @ResponseBody
     public BaseRes<UserDemoVO> queryUserDemoSingle(@ElParam @PathVariable("userId") Long userId) {
-        String testMock = demoPrcResource.rpcInvoke("testMock");
-        log.info("[saveUserDemo]testMock:{}", testMock);
-
         UserDemoBO userDemoBo = userDemoService.selectById(userId);
-        UserDemoVO userDemoVo = UserConverter.INSTANCE.covertUserDemoBoToVo(userDemoBo);
+        UserDemoVO userDemoVo = UserDemoConverter.INSTANCE.covertUserDemoBoToVo(userDemoBo);
         return BaseRes.buildSuccess(userDemoVo);
     }
 
@@ -102,9 +93,9 @@ public class UserDemoController {
     @GetMapping("user/list")
     @ResponseBody
     public BaseRes<List<UserDemoVO>> queryUserDemoList(UserDemoQueryReq req) {
-        UserDemoQueryBO userDemoQueryBo = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
+        UserDemoQueryBO userDemoQueryBo = UserDemoConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
         List<UserDemoBO> userDemoBos = userDemoService.queryUserDemoList(userDemoQueryBo);
-        List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(userDemoBos);
+        List<UserDemoVO> userDemoVos = UserDemoConverter.INSTANCE.covertUserDemoBoToVoList(userDemoBos);
         return BaseRes.buildSuccess(userDemoVos);
     }
 
@@ -113,33 +104,23 @@ public class UserDemoController {
     @PostMapping("user/page")
     @ResponseBody
     public BaseRes<PageVO<UserDemoVO>> queryUserDemoPage(@RequestBody PageReq<UserDemoQueryReq> req) {
-        PageQueryBO<UserDemoQueryBO> userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryPageReqToBo(req);
+        PageQueryBO<UserDemoQueryBO> userDemoPageQuery = UserDemoConverter.INSTANCE.covertUserDemoQueryPageReqToBo(req);
         PageBO<UserDemoBO> pageBo = userDemoService.queryUserDemoPage(userDemoPageQuery);
-        List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(pageBo.getList());
+        List<UserDemoVO> userDemoVos = UserDemoConverter.INSTANCE.covertUserDemoBoToVoList(pageBo.getList());
         PageVO<UserDemoVO> pageVo = PageConverter.INSTANCE.covertPageBoToVo(pageBo, userDemoVos);
         return BaseRes.buildSuccess(pageVo);
     }
 
-    @ApiOperation("用户信息-大数据量-分页查询全部")
-    @LogIndex(resFlag = false)
-    @GetMapping("user/queryAllUserDemoByLimit")
+    @ApiOperation("用户信息-分页查询全部")
+    @LogIndex
+    @PostMapping("user/pageAll")
     @ResponseBody
-    public BaseRes<List<UserDemoVO>> queryAllUserDemoByLimit(UserDemoQueryReq req) {
-        UserDemoQueryBO userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
-        List<UserDemoBO> list = userDemoService.queryAllUserDemoByLimit(userDemoPageQuery);
-        List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(list);
+    public BaseRes<List<UserDemoVO>>  queryUserDemoPageAll(@RequestBody UserDemoQueryReq req) {
+        UserDemoQueryBO userDemoQueryBo = UserDemoConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
+        List<UserDemoBO> userDemoBos = userDemoService.queryUserDemoPageAll(userDemoQueryBo);
+        List<UserDemoVO> userDemoVos = UserDemoConverter.INSTANCE.covertUserDemoBoToVoList(userDemoBos);
         return BaseRes.buildSuccess(userDemoVos);
     }
 
-    @ApiOperation("用户信息-大数据量-IdSize查询全部")
-    @LogIndex(resFlag = false)
-    @GetMapping("user/queryAllUserDemoByIdSize")
-    @ResponseBody
-    public BaseRes<List<UserDemoVO>> queryAllUserDemoByIdSize(UserDemoQueryReq req) {
-        UserDemoQueryBO userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
-        List<UserDemoBO> list = userDemoService.queryAllUserDemoByIdSize(userDemoPageQuery);
-        List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(list);
-        return BaseRes.buildSuccess(userDemoVos);
-    }
 
 }
