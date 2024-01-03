@@ -1,6 +1,7 @@
 package com.healerjean.proj.exceptions;
 
 import com.healerjean.proj.common.enums.CodeEnum;
+import lombok.Getter;
 
 /**
  * ParameterErrorException
@@ -8,6 +9,7 @@ import com.healerjean.proj.common.enums.CodeEnum;
  * @author zhangyujin
  * @date 2023/6/15  10:34.
  */
+@Getter
 public class ParameterException extends RuntimeException {
 
 
@@ -18,7 +20,7 @@ public class ParameterException extends RuntimeException {
     /**
      * 返回错误码
      */
-    private String code;
+    private final String code;
 
 
     /**
@@ -41,11 +43,4 @@ public class ParameterException extends RuntimeException {
         this.code = CodeEnum.ErrorCodeEnum.ERROR_CODE_PARAMS_ERROR.getCode();
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 }

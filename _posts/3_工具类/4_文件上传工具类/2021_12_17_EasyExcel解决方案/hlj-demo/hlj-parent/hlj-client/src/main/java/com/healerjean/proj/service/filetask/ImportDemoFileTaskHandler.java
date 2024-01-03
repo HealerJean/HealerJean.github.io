@@ -36,6 +36,7 @@ public class ImportDemoFileTaskHandler extends AbstractImportFileTaskHandler {
      */
     @Override
     public FileTaskImportCheckResultBO checkImportExcel(FileTaskBO fileTask) {
+        // todo 校验表格
         return new FileTaskImportCheckResultBO<UserDemoImportExcel>();
     }
 
@@ -48,6 +49,7 @@ public class ImportDemoFileTaskHandler extends AbstractImportFileTaskHandler {
      */
     @Override
     public FileTaskResultBO executeImportTask(FileTaskBO fileTaskBo, FileTaskImportCheckResultBO importCheckResult) {
+        // todo 导入数据
         List<UserDemoImportExcel> importExcelList = importCheckResult.getImportExcelList();
         return FileTaskResultBO.success(new FileTaskBO().setTaskId(fileTaskBo.getTaskId()));
     }
