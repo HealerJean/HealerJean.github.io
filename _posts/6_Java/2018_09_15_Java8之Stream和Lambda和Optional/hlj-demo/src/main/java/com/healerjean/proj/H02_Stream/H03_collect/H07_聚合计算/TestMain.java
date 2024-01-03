@@ -138,7 +138,42 @@ public class TestMain {
         Collections.sort(sortEntries2, Comparator.comparing(sortEntry -> sortEntry.getName()));
         System.out.println(sortEntries2);
 
+    }
 
+
+    @Test
+    public void sort2() {
+        List<String> list = new ArrayList<>();
+        list.add("c");
+        list.add("a");
+        list.add("b");
+        list.add(null);
+        list.add("d");
+
+        List<String> sortRule = new ArrayList<>();
+        sortRule.add("a");
+        sortRule.add("c");
+        sortRule.add("b");
+        list.sort(Comparator.comparingInt(sortRule::indexOf));
+        // [null, d, a, c, b]
+        System.out.println(list);
+
+        // 不在规则中的放到后面 [a, c, b, null, d]
+        Comparator<String> customComparator = (s1, s2) -> {
+            boolean s1InRule = sortRule.contains(s1);
+            boolean s2InRule = sortRule.contains(s2);
+            if (s1InRule && s2InRule) {
+                return Integer.compare(sortRule.indexOf(s1), sortRule.indexOf(s2));
+            } else if (s1InRule) {
+                return -1; // s1 在排序规则中，s2 不在排序规则中，将 s1 放在前面
+            } else if (s2InRule) {
+                return 1;  // s2 在排序规则中，s1 不在排序规则中，将 s2 放在前面
+            } else {
+                return 0; // s1 和 s2 都不在排序规则中，保持原顺序
+            }
+        };
+        list.sort(customComparator);
+        System.out.println(list);
     }
 
 }

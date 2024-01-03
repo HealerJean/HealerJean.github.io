@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @Accessors(chain = true)
 @Data
-public class ExcelWriteHolder implements Serializable {
+public class ExcelWriteUtils implements Serializable {
 
     /**
      * serialVersionUID
@@ -56,11 +56,11 @@ public class ExcelWriteHolder implements Serializable {
      * ExcelWriteHolderInstance
      *
      * @param excelObjEnum excelObjEnum
-     * @return {@link ExcelWriteHolder}
+     * @return {@link ExcelWriteUtils}
      */
-    public static ExcelWriteHolder instance(ExcelEnum.ExcelObjEnum excelObjEnum) {
+    public static ExcelWriteUtils instance(ExcelEnum.ExcelObjEnum excelObjEnum) {
         String filePath = ExcelUtils.DEFAULT_LOCAL_PATH + DateUtils.toDateString(LocalDateTime.now(), DateUtils.YYYYMMDD) + "/" + excelObjEnum.name().toLowerCase() + "/" + System.currentTimeMillis() + ".xlsx";
-        return new ExcelWriteHolder()
+        return new ExcelWriteUtils()
                 .setCount(new AtomicLong(0))
                 .setExcelWriter(EasyExcel.write(filePath, UserDemoExportExcel.class).registerWriteHandler(new LongestMatchColumnWidthStyleStrategy()).autoCloseStream(false).build())
                 .setWriteSheet(EasyExcel.writerSheet(1, "Sheet1").build())
@@ -75,7 +75,7 @@ public class ExcelWriteHolder implements Serializable {
             excelWriter.finish();
         }
 
-        // todo 张宇晋
+        // todo
         //清除文件
         // FileUtils.cleanFile(new File(filePath));
     }
@@ -85,7 +85,7 @@ public class ExcelWriteHolder implements Serializable {
      *
      * @param list list
      */
-    public ExcelWriteHolder write(List list) {
+    public ExcelWriteUtils write(List list) {
         writeSheet.setSheetNo((int) (count.addAndGet(list.size()) / ExcelUtils.EXCEL_SHEET_ROW_MAX_SIZE + 1));
         writeSheet.setSheetName("Sheet" + writeSheet.getSheetNo());
         excelWriter.write(list, writeSheet);

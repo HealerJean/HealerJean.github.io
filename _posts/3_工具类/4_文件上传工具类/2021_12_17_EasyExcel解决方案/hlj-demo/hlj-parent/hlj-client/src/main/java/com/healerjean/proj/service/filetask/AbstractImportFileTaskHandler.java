@@ -3,7 +3,6 @@ package com.healerjean.proj.service.filetask;
 import com.healerjean.proj.data.bo.FileTaskBO;
 import com.healerjean.proj.data.bo.FileTaskImportCheckResultBO;
 import com.healerjean.proj.data.bo.FileTaskResultBO;
-import com.healerjean.proj.data.excel.Excel;
 import com.healerjean.proj.enums.FileTaskEnum;
 
 /**

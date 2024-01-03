@@ -1,6 +1,9 @@
 package com.healerjean.proj.common.enums;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * CodeEnum
  *
@@ -10,34 +13,26 @@ package com.healerjean.proj.common.enums;
 public interface CodeEnum {
 
 
+    @Getter
+    @AllArgsConstructor
     enum ErrorCodeEnum implements CodeEnum {
 
         ERROR_CODE_SUCCESS("00000", "成功"),
         ERROR_CODE_PARAMS_ERROR("10000", "参数错误"),
         ERROR_CODE_BUSINESS_ERROR("20000", "业务处理失败"),
-        ERROR_CODE_PRC_ERROR("30000", "接口调处理失败"),
+        ERROR_CODE_PRC_ERROR("30000", "RPC处理失败"),
+        ERROR_CODE_RUNTIME_ERROR("40000", "运行时失败"),
         ERROR_CODE_FAIL("99999", "系统太火爆了，请稍后重试!"),
         ;
         private final String code;
         private final String msg;
 
-        ErrorCodeEnum(String code, String msg) {
-            this.code = code;
-            this.msg = msg;
-        }
-
-        public String getMsg() {
-            return msg;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
     }
 
 
 
+    @Getter
+    @AllArgsConstructor
     enum BusinessErrorEnum implements CodeEnum {
 
         ERROR_CODE_20000("20000", "业务处理失败", "系统太火爆了，请稍后重试!"),
@@ -51,27 +46,11 @@ public interface CodeEnum {
         private final String msg;
 
         private final String showMsg;
-
-        BusinessErrorEnum(String code, String msg, String showMsg) {
-            this.code = code;
-            this.msg = msg;
-            this.showMsg = showMsg;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-        public String getMsg() {
-            return msg;
-        }
-
-        public String getShowMsg() {
-            return showMsg;
-        }
     }
 
 
+    @Getter
+    @AllArgsConstructor
     enum ParamsErrorEnum implements CodeEnum {
 
         ERROR_CODE_10000("10000", "参数错误"),
@@ -83,44 +62,40 @@ public interface CodeEnum {
 
         private final String msg;
 
-        ParamsErrorEnum(String code, String msg) {
-            this.code = code;
-            this.msg = msg;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-        public String getMsg() {
-            return msg;
-        }
 
     }
 
 
+    @Getter
+    @AllArgsConstructor
     enum RpcErrorEnum implements CodeEnum {
 
-        ERROR_CODE_30000("30000", "RPC调用失败"),
-        ERROR_CODE_30001("30001", "模版查询-接口请求异常"),
-        ERROR_CODE_30002("30002", "协议查询-接口请求异常"),
+        /**
+         * 系统_失败分类（请求0、返回1）_业务_方法_调用方CODE码（代码补齐）
+         */
+        ERROR_CODE_USER_0_30001_0001("USER_0_30001_0001", "RPC异常-USER-用户信息-查询单个用户信息-接口调用失败"),
+        ERROR_CODE_USER_1_30001_0001("USER_1_30001_0001", "RPC异常-USER-用户信息-查询单个用户信息-接口返回失败"),
+        ERROR_CODE_USER_1_30001_0002("USER_1_30001_0002", "RPC异常-USER-用户信息-分页查询用户信息-接口返回失败"),
         ;
-        private String code;
-        private String msg;
+        private final String code;
+        private final String msg;
+    }
 
-        RpcErrorEnum(String code, String msg) {
-            this.code = code;
-            this.msg = msg;
-        }
 
-        public String getMsg() {
-            return msg;
-        }
+    @Getter
+    @AllArgsConstructor
+    enum PlatformErrorEnum implements CodeEnum {
 
-        public String getCode() {
-            return code;
-        }
+        ERROR_CODE_40000("40000", "运行时失败"),
+        ERROR_CODE_40001("40001", "路由消息处理失败"),
+
+        ;
+        private final String code;
+
+        private final String msg;
 
     }
+
+
 
 }

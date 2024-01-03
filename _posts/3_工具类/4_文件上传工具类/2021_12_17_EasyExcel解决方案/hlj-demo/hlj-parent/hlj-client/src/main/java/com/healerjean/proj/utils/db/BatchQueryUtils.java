@@ -33,7 +33,7 @@ public final class BatchQueryUtils {
     public static <Q, R> List<R> queryDbAllByLimit(BiFunction<Page<R>, Q, IPage<R>> function,
                                                    Q queryWrapper,
                                                    long pageSize) {
-        IPage<R> initPage = function.apply(new Page<>(1, 0, true), queryWrapper).setSize(pageSize);
+        IPage<R> initPage = function.apply(new Page<>(1, 1, true), queryWrapper).setSize(pageSize);
         List<R> result = new ArrayList<>();
         for (int i = 1; i <= initPage.getPages(); i++) {
             IPage<R> page = function.apply(new Page<>(i, pageSize, false), queryWrapper);
@@ -164,7 +164,7 @@ public final class BatchQueryUtils {
 
 
     /**
-     * 大数据量-线程池根据Id区间查询
+     * 大数据量-线程池Id区间查询
      *
      * @param executorService 线程池
      * @param function        分页函数

@@ -171,7 +171,7 @@ public @interface Configuration {
 
 
 
-## 3.1、@Configuration 和 @Component区别
+## 3.1、`@Configuration` 和 `@Component`区别
 
 >  通过上面的介绍，可以看到`@Configuration` 标记了`@Component`元注解，某种意义上来讲，二者的使用是没有区别的，但是他们的区别到底是什么呢  
 
@@ -722,11 +722,10 @@ private  String  statusName;
 
 
 
-# 8、@Deprecated
+# 8、`@Deprecated`
 
 > 这个注释是一个标记注释。所谓标记注释，就是在源程序中加入这个标记后，并不影响程序的编译，但有时编译器会显示一些警告信息。         
 >
-> 
 
  **那么Deprecated注释是什么意思呢？**      
 
@@ -1213,7 +1212,7 @@ public class Test {
 
 # 21、`@ControllerAdvice`
 
-## 21.1、处理局部异常（Controller内）
+## 21.1、处理局部异常（`Controller`内）
 
 ```java
 @Controller
@@ -1236,7 +1235,7 @@ public class LocalException {
 
 
 
-## 21.2、处理全局异常（所有Controller）
+## 21.2、处理全局异常（所有`Controller`）
 
 ```java
 @ControllerAdvice

@@ -1,6 +1,7 @@
 package com.healerjean.proj.exceptions;
 
 import com.healerjean.proj.common.enums.CodeEnum;
+import lombok.Getter;
 
 /**
  * RpcException
@@ -8,6 +9,7 @@ import com.healerjean.proj.common.enums.CodeEnum;
  * @author zhangyujin
  * @date 2023/6/15  10:37.
  */
+@Getter
 public class RpcException extends RuntimeException {
 
     /**
@@ -18,35 +20,49 @@ public class RpcException extends RuntimeException {
     /**
      * 返回错误码
      */
-    private  String code;
-
+    private final String code;
 
     /**
-     * BusinessException
+     * 展示信息
+     */
+    private final String showMsg;
+
+    /**
+     * RpcException-处理未知的异常
+     *
      *
      * @param rpcErrorEnum rpcErrorEnum
      */
     public RpcException(CodeEnum.RpcErrorEnum rpcErrorEnum) {
         super(rpcErrorEnum.getMsg());
         this.code = rpcErrorEnum.getCode();
+        this.showMsg = CodeEnum.ErrorCodeEnum.ERROR_CODE_FAIL.getMsg();
     }
 
     /**
-     * BusinessException
+     * RpcException 处理已知的异常
      *
-     * @param message message
+     * @param rpcErrorEnum rpcErrorEnum
+     * @param code         code
+     * @param showMsg      showMsg
      */
-    public RpcException(String message) {
-        super(message);
-        this.code = CodeEnum.ErrorCodeEnum.ERROR_CODE_PRC_ERROR.getCode();
+    public RpcException(CodeEnum.RpcErrorEnum rpcErrorEnum, String code, String showMsg) {
+        super(rpcErrorEnum.getMsg());
+        this.code = rpcErrorEnum.getCode() + "_" + code;
+        this.showMsg = showMsg;
     }
 
-
-    public String getCode() {
-        return code;
+    /**
+     * RpcException 处理已知的异常
+     *
+     * @param rpcErrorEnum rpcErrorEnum
+     * @param code         code
+     * @param showMsg      showMsg
+     */
+    public RpcException(CodeEnum.RpcErrorEnum rpcErrorEnum, String code, String msg, String showMsg) {
+        super(msg);
+        this.code = rpcErrorEnum.getCode() + "_" + code;
+        this.showMsg = showMsg;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
 }

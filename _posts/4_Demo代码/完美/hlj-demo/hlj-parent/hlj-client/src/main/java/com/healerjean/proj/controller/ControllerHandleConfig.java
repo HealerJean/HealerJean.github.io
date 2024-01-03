@@ -4,6 +4,7 @@ import com.healerjean.proj.common.data.bo.BaseRes;
 import com.healerjean.proj.common.enums.CodeEnum;
 import com.healerjean.proj.exceptions.BusinessException;
 import com.healerjean.proj.exceptions.ParameterException;
+import com.healerjean.proj.exceptions.PlatformException;
 import com.healerjean.proj.exceptions.RpcException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -75,7 +76,7 @@ public class ControllerHandleConfig {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public BaseRes<?> parameterErrorExceptionHandler(ParameterException e) {
-        log.error("====参数异常===", e);
+        log.error("====参数异常:code:{},msg:{}", e.getCode(), e.getMessage(), e);
         return BaseRes.buildFailure(e.getCode(), e.getMessage());
     }
 
@@ -87,7 +88,7 @@ public class ControllerHandleConfig {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public BaseRes<?> businessExceptionHandler(BusinessException e) {
-        log.error("====业务异常===", e);
+        log.error("====业务异常:code:{},msg:{},showMsg:{}", e.getCode(), e.getMessage(), e.getShowMsg(), e);
         return BaseRes.buildFailure(e.getCode(), e.getShowMsg());
     }
 
@@ -99,9 +100,21 @@ public class ControllerHandleConfig {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public BaseRes<?> rpcExceptionHandler(RpcException e) {
-        log.error("====RPC异常===", e);
-        return BaseRes.buildFailure(e.getCode(), CodeEnum.ErrorCodeEnum.ERROR_CODE_FAIL.getMsg());
+        log.error("====RPC异常:code:{},msg:{},showMsg:{}", e.getCode(), e.getMessage(), e.getShowMsg(), e);
+        return BaseRes.buildFailure(e.getCode(), e.getShowMsg());
     }
+
+    /**
+     * 运行异常，给前台返回异常数据
+     */
+    @ExceptionHandler(value = PlatformException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public BaseRes<?> rpcExceptionHandler(PlatformException e) {
+        log.error("====运行异常:code:{},msg:{},showMsg:{}", e.getCode(), e.getMessage(), e.getShowMsg(), e);
+        return BaseRes.buildFailure(e.getCode(), e.getShowMsg());
+    }
+
 
     /**
      * 所有异常报错

@@ -2,6 +2,7 @@ package com.healerjean.proj.exceptions;
 
 
 import com.healerjean.proj.common.enums.CodeEnum;
+import lombok.Getter;
 
 /**
  * 业务异常 BusinessException
@@ -9,6 +10,8 @@ import com.healerjean.proj.common.enums.CodeEnum;
  * @author zhangyujin
  * @date 2023/5/22  17:02.
  */
+
+@Getter
 public class BusinessException extends RuntimeException {
 
     /**
@@ -19,12 +22,12 @@ public class BusinessException extends RuntimeException {
     /**
      * 返回错误码
      */
-    private  String code;
+    private final String code;
 
     /**
      * 展示信息
      */
-    private  String showMsg;
+    private final String showMsg;
 
 
     /**
@@ -50,20 +53,4 @@ public class BusinessException extends RuntimeException {
         this.showMsg = message;
     }
 
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getShowMsg() {
-        return showMsg;
-    }
-
-    public void setShowMsg(String showMsg) {
-        this.showMsg = showMsg;
-    }
 }

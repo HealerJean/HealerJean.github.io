@@ -1,0 +1,1 @@
+server:  port: 8888spring:  profiles:    include: project-config####################################### log4j2####################################logging:  config: classpath:log4j2.xml

@@ -9,7 +9,7 @@ import com.healerjean.proj.enums.FileTaskEnum;
 import com.healerjean.proj.service.BigDataService;
 import com.healerjean.proj.utils.JsonUtils;
 import com.healerjean.proj.utils.ThreadPoolUtils;
-import com.healerjean.proj.utils.file.ExcelWriteHolder;
+import com.healerjean.proj.utils.file.ExcelWriteUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -75,7 +75,7 @@ public class ExportDemoFileTaskHandler extends AbstractExportFileTaskHandler {
         // 大数据量-线程池limit查询
         CompletionService<List<UserDemoBO>> completionService = new ExecutorCompletionService<>(ThreadPoolUtils.DEFAULT_THREAD_POOL_TASK_EXECUTOR);
         List<Future<List<UserDemoBO>>> futures = bigDataService.queryAllUserDemoByPoolLimit(completionService, queryBO);
-        ExcelWriteHolder excelWriteHolder = ExcelWriteHolder.instance(ExcelEnum.ExcelObjEnum.EXPORT_EXCEL_USER_DEMO);
+        ExcelWriteUtils excelWriteUtils = ExcelWriteUtils.instance(ExcelEnum.ExcelObjEnum.EXPORT_EXCEL_USER_DEMO);
         for (int i = 0; i < futures.size(); i++) {
             Future<List<UserDemoBO>> future = completionService.take();
             List<UserDemoBO> userDemos = future.get();
@@ -83,9 +83,9 @@ public class ExportDemoFileTaskHandler extends AbstractExportFileTaskHandler {
                 continue;
             }
             List<UserDemoExportExcel> excels = UserDemoConverter.INSTANCE.covertUserDemoPoToExcelList(userDemos);
-            excelWriteHolder.write(excels);
+            excelWriteUtils.write(excels);
         }
-        excelWriteHolder.close();
+        excelWriteUtils.close();
 
         // 大数据量-IdSize查询全部
         // List<UserDemoBO> queryAllUserDemoByIdSize = bigDataService.queryAllUserDemoByIdSize(queryBO);
