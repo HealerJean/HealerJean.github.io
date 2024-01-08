@@ -26,12 +26,24 @@ public class PlatformException extends RuntimeException {
     /**
      * PlatformException
      *
+     * @param message message
+     */
+    public PlatformException(String message) {
+        super(message);
+        this.code = CodeEnum.PlatformErrorEnum.ERROR_CODE_40000.getCode();
+        this.showMsg = CodeEnum.ErrorCodeEnum.ERROR_CODE_FAIL.getMsg();
+    }
+
+    /**
+     * PlatformException
+     *
      * @param platformErrorEnum platformErrorEnum
      */
     public PlatformException(CodeEnum.PlatformErrorEnum platformErrorEnum) {
         super(platformErrorEnum.getMsg());
         this.code = platformErrorEnum.getCode();
         this.showMsg = CodeEnum.ErrorCodeEnum.ERROR_CODE_FAIL.getMsg();
-
     }
+
+
 }

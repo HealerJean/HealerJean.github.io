@@ -30,6 +30,16 @@ public class RpcException extends RuntimeException {
     /**
      * RpcException-处理未知的异常
      *
+     * @param rpcErrorEnum rpcErrorEnum
+     */
+    public RpcException(CodeEnum.RpcErrorEnum rpcErrorEnum, Throwable e) {
+        super(e.getMessage(), e);
+        this.code = rpcErrorEnum.getCode();
+        this.showMsg = CodeEnum.ErrorCodeEnum.ERROR_CODE_FAIL.getMsg();
+    }
+
+    /**
+     * RpcException-处理未知的异常
      *
      * @param rpcErrorEnum rpcErrorEnum
      */
