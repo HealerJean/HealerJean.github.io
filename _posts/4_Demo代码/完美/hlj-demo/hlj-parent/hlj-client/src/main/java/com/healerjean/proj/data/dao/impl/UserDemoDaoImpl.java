@@ -1,5 +1,6 @@
 package com.healerjean.proj.data.dao.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.healerjean.proj.data.dao.UserDemoDao;
 import com.healerjean.proj.data.mapper.UserDemoMapper;
@@ -16,4 +17,14 @@ import org.springframework.stereotype.Service;
 public class UserDemoDaoImpl extends ServiceImpl<UserDemoMapper, UserDemo> implements UserDemoDao {
 
 
+    /**
+     * resCountUpdate
+     *
+     * @param updateWrapper updateWrapper
+     * @return int
+     */
+    @Override
+    public int resCountUpdate(UpdateWrapper<UserDemo> updateWrapper) {
+        return this.getBaseMapper().update(null, updateWrapper);
+    }
 }

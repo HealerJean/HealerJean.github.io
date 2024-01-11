@@ -644,10 +644,28 @@ public class MybatisPlusUtil {
 
 ## 2.2、`UpdateWrapper、LambdaUpdateChainWrapper`
 
-
-
 > 继承自 `AbstractWrapper` ,自身的内部属性 `entity` 、也用于生成 `where` 条件（主要是这个功能）
 > 及 `LambdaUpdateWrapper`, `LambdaUpdateChainWrapper`可以通过 `new UpdateWrapper().lambda()` 方法获取!
+
+
+
+### 2.2.1、`UpdateWrapper`
+
+```java
+Wrapper<UserDemo> updateWrapper = Wrappers.lambdaUpdate(UserDemo.class)
+              .eq(Objects.nonNull(userDemo.getId()), UserDemo::getId, userDemo.getId())
+              .set(Objects.nonNull(userDemo.getEndTime()), UserDemo::getEndTime, userDemo.getEndTime());
+      return userDemoDao.update(updateWrapper);
+```
+
+
+
+```java
+Wrapper<BPrizeVenderDetail> updateWrapper = new UpdateWrapper<BPrizeVenderDetail>().lambda()
+          .set(BPrizeVenderDetail::getStatus, status).
+          eq(BPrizeVenderDetail::getBenefitsId, benefitsId);
+  return bPrizeVenderDetailDao.update(updateWrapper);
+```
 
 
 
@@ -666,7 +684,7 @@ public void update(){
         .eq(User::getId, 2L);
     user.setName("jjjjjk"); //会生效
     user.setEmail("66666"); //不会生效 以updateWrapper里面的为主
-    //一般不用这二者的结合，毫无意义，写出来的sql也很有可能是错误的，一般用
+    //一般不用这二者的结合，毫无意义，写出来的sql也很有可能是错误的
     userMapper.update(user, userWrapper);
 
 
@@ -691,8 +709,6 @@ public void update(){
 
 
 ### 2.2.1、`set`：SET 字段
-
-
 
 ```java
 set(String column, Object val)
@@ -1725,7 +1741,7 @@ public class UserDTO {
 
 
 
-##### 5.1.2.1.1、Mapper.java
+##### 5.1.2.1.1、`Mapper`.java
 
 ```java
 @Results({
@@ -1972,30 +1988,26 @@ public void testDateList(){
 
 
 
-
-
 ## 5.2、日期问题 
 
-
-
-> 可能会遇到日期格式的时间段问题，当数据库的时间为 `DATE` 类型时，`MyBatis` 的`jdbcType`应该使用DATE
+> 可能会遇到日期格式的时间段问题，当数据库的时间为 `DATE` 类型时，`MyBatis` 的`jdbcType`应该使用 `DATE`
 > `jdbcType=DATE`，而不是使用`jdbcType=TIMESTAMP`
 
 
 
 ## 5.3、更新 `Null` 字段
 
-> **updateById() 方法不能更新字段为 null 的原因及解决办法。**
+> **`updateById(`) 方法不能更新字段为 `null` 的原因及解决办法。**
 >
 > `Mybatis-plus` 的字段策略（`FieldStrategy`）有三种策略：默认的更新策略是 `NOT_NULL`，即通过接口更新数据时数据为 `NULL`值时将不更新进数据库。
 
 
 
-| 策略            | 说明                |
-| --------------- | ------------------- |
-| **IGNORED**：   | 0 忽略              |
-| **NOT_NULL**：  | 1 非 NULL，默认策略 |
-| **NOT_EMPTY**： | 2 非空              |
+| 策略              | 说明                |
+| ----------------- | ------------------- |
+| **`IGNORED`**`：  | 0 忽略              |
+| **`NOT_NULL`**：  | 1 非 NULL，默认策略 |
+| **`NOT_EMPTY`**： | 2 非空              |
 
 ### 5.3.1、方案1：在配置文件中修改全局策略
 
@@ -2036,7 +2048,15 @@ if(user!=null){
 
 
 
+### 5.4、返回值问题
 
+#### 1）更新返回 `boolean`
+
+| 数据情况     | 说明                                                         |      |
+| ------------ | ------------------------------------------------------------ | ---- |
+| 数据不存在   | 用于表示更新操作是否成功。如果数据不存在，方法通常会返回 `false`，因为更新操作没有影响到任何记录。 |      |
+| 数据并未修改 | 这通常意味着没有满足更新条件的记录被更新，因此该方法通常会返回 `false` |      |
+| 返回 `int`   | `userDemoDao.getBaseMapper().update(null, updateWrapper)`    |      |
 
 
 

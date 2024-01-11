@@ -1,9 +1,9 @@
 package com.healerjean.proj.data.manager.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -16,8 +16,8 @@ import com.healerjean.proj.data.convert.UserConverter;
 import com.healerjean.proj.data.dao.UserDemoDao;
 import com.healerjean.proj.data.manager.UserDemoManager;
 import com.healerjean.proj.data.po.UserDemo;
-import com.healerjean.proj.utils.db.IdQueryBO;
 import com.healerjean.proj.utils.db.BatchQueryUtils;
+import com.healerjean.proj.utils.db.IdQueryBO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -79,17 +79,18 @@ public class UserDemoManagerImpl implements UserDemoManager {
      */
     @Override
     public boolean updateUserDemo(UserDemo userDemo) {
-        Wrapper<UserDemo> updateWrapper = Wrappers.lambdaUpdate(UserDemo.class)
+        UpdateWrapper<UserDemo> updateWrapper =new UpdateWrapper<>();
+        updateWrapper.lambda()
                 .eq(Objects.nonNull(userDemo.getId()), UserDemo::getId, userDemo.getId())
                 .eq(Objects.nonNull(userDemo.getValidFlag()), UserDemo::getValidFlag, userDemo.getValidFlag())
-
                 .set(StringUtils.isNotBlank(userDemo.getName()), UserDemo::getName, userDemo.getName())
                 .set(StringUtils.isNotBlank(userDemo.getPhone()), UserDemo::getPhone, userDemo.getPhone())
                 .set(StringUtils.isNotBlank(userDemo.getEmail()), UserDemo::getEmail, userDemo.getEmail())
                 .set(Objects.nonNull(userDemo.getAge()), UserDemo::getAge, userDemo.getAge())
                 .set(Objects.nonNull(userDemo.getStartTime()), UserDemo::getStartTime, userDemo.getStartTime())
                 .set(Objects.nonNull(userDemo.getEndTime()), UserDemo::getEndTime, userDemo.getEndTime());
-        return userDemoDao.update(updateWrapper);
+        int size = userDemoDao.getBaseMapper().update(null, updateWrapper);
+        return size > 0 ;
     }
 
 
