@@ -22,6 +22,15 @@ public class ParameterException extends RuntimeException {
      */
     private final String code;
 
+    /**
+     * ParameterErrorException
+     *
+     * @param showMessage message
+     */
+    public ParameterException(String showMessage) {
+        super(showMessage);
+        this.code = CodeEnum.PlatformErrorEnum.ERROR_CODE_200000.getCode();
+    }
 
     /**
      * BusinessException
@@ -33,14 +42,15 @@ public class ParameterException extends RuntimeException {
         this.code = paramErrorEnum.getCode();
     }
 
+
     /**
-     * ParameterErrorException
+     * BusinessException
      *
-     * @param message message
+     * @param paramErrorEnum paramErrorEnum
      */
-    public ParameterException(String message) {
-        super(message);
-        this.code = CodeEnum.ErrorCodeEnum.ERROR_CODE_PARAMS_ERROR.getCode();
+    public ParameterException(CodeEnum.ParamsErrorEnum paramErrorEnum, String showMessage) {
+        super(showMessage);
+        this.code = paramErrorEnum.getCode();
     }
 
 }

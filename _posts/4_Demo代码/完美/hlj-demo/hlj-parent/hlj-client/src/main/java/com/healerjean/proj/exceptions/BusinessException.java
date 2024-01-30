@@ -39,18 +39,28 @@ public class BusinessException extends RuntimeException {
         super(businessErrorEnum.getMsg());
         this.code = businessErrorEnum.getCode();
         this.showMsg = businessErrorEnum.getShowMsg();
-
     }
 
     /**
      * BusinessException
      *
-     * @param message message
+     * @param businessErrorEnum businessErrorEnum
      */
-    public BusinessException(String message) {
-        super(message);
-        this.code = CodeEnum.ErrorCodeEnum.ERROR_CODE_BUSINESS_ERROR.getCode();
-        this.showMsg = message;
+    public BusinessException(CodeEnum.BusinessErrorEnum businessErrorEnum, Throwable e) {
+        super(businessErrorEnum.getMsg(), e);
+        this.code = businessErrorEnum.getCode();
+        this.showMsg = businessErrorEnum.getShowMsg();
+    }
+
+    /**
+     * BusinessException
+     *
+     * @param showMessage message
+     */
+    public BusinessException(CodeEnum.BusinessErrorEnum businessErrorEnum, String showMessage) {
+        super(businessErrorEnum.getMsg());
+        this.code = CodeEnum.BusinessErrorEnum.ERROR_CODE_300000.getCode();
+        this.showMsg = showMessage;
     }
 
 }

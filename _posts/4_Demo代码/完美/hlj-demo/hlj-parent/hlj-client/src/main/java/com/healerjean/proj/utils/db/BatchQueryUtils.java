@@ -13,6 +13,7 @@ import java.util.concurrent.CompletionService;
 import java.util.concurrent.Future;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.LongFunction;
 
 /**
  * MybatisPlusQueryUtils
@@ -46,26 +47,18 @@ public final class BatchQueryUtils {
     }
 
 
+
     /**
      * 大数据量-分页查询全部
      *
-     * @param function function
-     * @param Q        1
-     * @param pageSize pageSize
      * @return {@link List<R>}
      */
 
-    public static <Q, R> List<R> queryAllByLimit(Function<PageQueryBO<Q>, PageBO<R>> function,
-                                                 Q q,
-                                                 long pageSize) {
-        PageQueryBO<Q> pageQuery = new PageQueryBO<>(1L, 1L);
-        pageQuery.setData(q);
-        Long totalPage = function.apply(pageQuery).getTotalPage();
+    public static <R> List<R> queryAllByLimit(LongFunction<PageBO<R>> function) {
         List<R> result = new ArrayList<>();
-        for (long i = 1; i <= totalPage; i++) {
-            pageQuery.setPageSize(pageSize);
-            pageQuery.setCurrPage(i);
-            PageBO<R> pageBo = function.apply(pageQuery);
+        long currentPageNo = 1;
+        while (true) {
+            PageBO<R> pageBo = function.apply(currentPageNo++);
             if (CollectionUtils.isEmpty(pageBo.getList())) {
                 break;
             }
@@ -78,40 +71,33 @@ public final class BatchQueryUtils {
     /**
      * 大数据量-IdSize查询全部
      *
-     * @param function function
-     * @param query    query
-     * @param minMax   minMax
      * @return {@link List<R>}
      */
-    public static <Q, R> List<R> queryAllByIdSize(BiFunction<IdQueryBO, Q, List<R>> function,
-                                                  Q query,
-                                                  IdQueryBO minMax) {
+    public static <R> List<R> queryAllByIdSize(Function<IdQueryBO, List<R>> function, long pageSize) {
+
+        IdQueryBO idQuery = new IdQueryBO(0L, pageSize);
         List<R> result = Lists.newArrayList();
-        Long minId = minMax.getMinId();
-        Long size = minMax.getSize();
-        while (minId != null) {
-            IdQueryBO idQueryBO = new IdQueryBO(minId, size);
-            List<R> dbList = function.apply(idQueryBO, query);
+        while (true) {
+            List<R> dbList = function.apply(idQuery);
             if (CollectionUtils.isEmpty(dbList)) {
                 break;
             }
-            minId = idQueryBO.getMaxId();
+            idQuery.setMinId(idQuery.getMaxId());
             result.addAll(dbList);
         }
         return result;
     }
 
 
+
+
+
     /**
      * 大数据量-Id区间查询全部
      *
-     * @param function function
-     * @param query    query
-     * @param minMax   minMax
      * @return {@link List<R>}
      */
-    public static <Q, R> List<R> queryAllByIdSub(BiFunction<IdQueryBO, Q, List<R>> function,
-                                                 Q query,
+    public static <Q, R> List<R> queryAllByIdSub(Function<IdQueryBO, List<R>> function,
                                                  IdQueryBO minMax) {
         List<R> result = Lists.newArrayList();
         Long minId = minMax.getMinId();
@@ -121,7 +107,7 @@ public final class BatchQueryUtils {
             long endId = Math.min(i + size, maxId);
             boolean maxEqualFlag = endId == maxId;
             IdQueryBO idQueryBO = new IdQueryBO(true, i, maxEqualFlag, endId, size);
-            List<R> dbList = function.apply(idQueryBO, query);
+            List<R> dbList = function.apply(idQueryBO);
             if (CollectionUtils.isEmpty(dbList)) {
                 break;
             }

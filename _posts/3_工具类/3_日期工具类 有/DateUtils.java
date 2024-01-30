@@ -29,8 +29,8 @@ public class DateUtils {
          * @param localDate localDate
          * @return String
          */
-        public static String toStr(LocalDate localDate) {
-            return toStr(localDate, DateConstants.YYYY_MM_DD);
+        public static String toDateString(LocalDate localDate) {
+            return toDateString(localDate, DateConstants.YYYY_MM_DD);
         }
 
         /**
@@ -40,7 +40,7 @@ public class DateUtils {
          * @param format    format
          * @return String
          */
-        public static String toStr(LocalDate localDate, String format) {
+        public static String toDateString(LocalDate localDate, String format) {
             return Optional.ofNullable(localDate).map(item -> DateTimeFormatter.ofPattern(format).format(item)).orElse(null);
         }
 
@@ -50,8 +50,8 @@ public class DateUtils {
          * @param localDateTime localDateTime
          * @return String
          */
-        public static String toStr(LocalDateTime localDateTime) {
-            return toStr(localDateTime, DateConstants.YYYY_MM_DD_HH_MM_SS);
+        public static String toDateString(LocalDateTime localDateTime) {
+            return toDateString(localDateTime, DateConstants.YYYY_MM_DD_HH_MM_SS);
         }
 
 
@@ -62,7 +62,7 @@ public class DateUtils {
          * @param format        format
          * @return String
          */
-        public static String toStr(LocalDateTime localDateTime, String format) {
+        public static String toDateString(LocalDateTime localDateTime, String format) {
             return Optional.ofNullable(localDateTime).map(item -> item.format(DateTimeFormatter.ofPattern(format))).orElse(null);
         }
 
@@ -131,10 +131,33 @@ public class DateUtils {
             return Optional.ofNullable(date).map(item -> item.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()).orElse(null);
         }
 
+
+        /**
+         * toDate
+         *
+         * @param localDateTime localDateTime
+         * @return Date
+         */
+        public static Date toDate(LocalDateTime localDateTime) {
+            return Optional.ofNullable(localDateTime).map(item -> Date.from(item.atZone(ZoneId.systemDefault()).toInstant())).orElse(null);
+        }
+
+        /**
+         * toDate
+         *
+         * @param localDate localDate
+         * @return Date
+         */
+        public static Date toDate(LocalDate localDate) {
+            return Optional.ofNullable(localDate).map(item -> Date.from(item.atStartOfDay(ZoneId.systemDefault()).toInstant())).orElse(null);
+        }
+
     }
 
 
     public static class TimeExtTool {
+
+
 
         /**
          * 获取开始时间
@@ -142,7 +165,7 @@ public class DateUtils {
          * @param localDateTime localDateTime
          * @return LocalDateTime
          */
-        public static LocalDateTime toFirstTime(LocalDateTime localDateTime, ChronoUnit chronoUnit) {
+        public static LocalDateTime getFirstTime(LocalDateTime localDateTime, ChronoUnit chronoUnit) {
             switch (chronoUnit) {
                 case MINUTES:
                     return localDateTime.withSecond(0).withNano(0);
@@ -165,7 +188,7 @@ public class DateUtils {
          * @param localDateTime localDateTime
          * @return LocalDateTime
          */
-        public static LocalDateTime toEndTime(LocalDateTime localDateTime, ChronoUnit chronoUnit) {
+        public static LocalDateTime getEndTime(LocalDateTime localDateTime, ChronoUnit chronoUnit) {
             switch (chronoUnit) {
                 case MINUTES:
                     return localDateTime.withSecond(59).withNano(0);
@@ -247,33 +270,33 @@ public class DateUtils {
         public static void main(String[] args) {
             // TimeExtTool.getFirstTime
             LocalDateTime dateTime = LocalDateTime.of(2023, 10, 23, 20, 23, 21); // 示例日期时间
-            System.out.println("TimeExtTool.getFirstTime" + DateUtils.TimeTool.toStr(dateTime));
-            System.out.println(DateUtils.TimeTool.toStr(toFirstTime(dateTime, ChronoUnit.MINUTES)));
-            System.out.println(DateUtils.TimeTool.toStr(toFirstTime(dateTime, ChronoUnit.HOURS)));
-            System.out.println(DateUtils.TimeTool.toStr(toFirstTime(dateTime, ChronoUnit.DAYS)));
-            System.out.println(DateUtils.TimeTool.toStr(toFirstTime(dateTime, ChronoUnit.MONTHS)));
-            System.out.println(DateUtils.TimeTool.toStr(toFirstTime(dateTime, ChronoUnit.YEARS)));
+            System.out.println("TimeExtTool.getFirstTime" + DateUtils.TimeTool.toDateString(dateTime));
+            System.out.println(DateUtils.TimeTool.toDateString(getFirstTime(dateTime, ChronoUnit.MINUTES)));
+            System.out.println(DateUtils.TimeTool.toDateString(getFirstTime(dateTime, ChronoUnit.HOURS)));
+            System.out.println(DateUtils.TimeTool.toDateString(getFirstTime(dateTime, ChronoUnit.DAYS)));
+            System.out.println(DateUtils.TimeTool.toDateString(getFirstTime(dateTime, ChronoUnit.MONTHS)));
+            System.out.println(DateUtils.TimeTool.toDateString(getFirstTime(dateTime, ChronoUnit.YEARS)));
             System.out.println();
-            System.out.println("TimeExtTool.getFirstTime" + DateUtils.TimeTool.toStr(dateTime));
-            System.out.println(DateUtils.TimeTool.toStr(dateTime));
-            System.out.println(DateUtils.TimeTool.toStr(toEndTime(dateTime, ChronoUnit.MINUTES)));
-            System.out.println(DateUtils.TimeTool.toStr(toEndTime(dateTime, ChronoUnit.HOURS)));
-            System.out.println(DateUtils.TimeTool.toStr(toEndTime(dateTime, ChronoUnit.DAYS)));
-            System.out.println(DateUtils.TimeTool.toStr(toEndTime(dateTime, ChronoUnit.MONTHS)));
-            System.out.println(DateUtils.TimeTool.toStr(toEndTime(dateTime, ChronoUnit.YEARS)));
+            System.out.println("TimeExtTool.getFirstTime" + DateUtils.TimeTool.toDateString(dateTime));
+            System.out.println(DateUtils.TimeTool.toDateString(dateTime));
+            System.out.println(DateUtils.TimeTool.toDateString(getEndTime(dateTime, ChronoUnit.MINUTES)));
+            System.out.println(DateUtils.TimeTool.toDateString(getEndTime(dateTime, ChronoUnit.HOURS)));
+            System.out.println(DateUtils.TimeTool.toDateString(getEndTime(dateTime, ChronoUnit.DAYS)));
+            System.out.println(DateUtils.TimeTool.toDateString(getEndTime(dateTime, ChronoUnit.MONTHS)));
+            System.out.println(DateUtils.TimeTool.toDateString(getEndTime(dateTime, ChronoUnit.YEARS)));
             System.out.println();
-            System.out.println("TimeExtTool.minusRoll" + DateUtils.TimeTool.toStr(dateTime));
-            System.out.println(DateUtils.TimeTool.toStr(minusRoll(dateTime, ChronoUnit.DAYS, 1)));
+            System.out.println("TimeExtTool.minusRoll" + DateUtils.TimeTool.toDateString(dateTime));
+            System.out.println(DateUtils.TimeTool.toDateString(minusRoll(dateTime, ChronoUnit.DAYS, 1)));
             System.out.println();
-            System.out.println("TimeExtTool.plusRoll" + DateUtils.TimeTool.toStr(dateTime));
-            System.out.println(DateUtils.TimeTool.toStr(plusRoll(dateTime, ChronoUnit.DAYS, 1)));
+            System.out.println("TimeExtTool.plusRoll" + DateUtils.TimeTool.toDateString(dateTime));
+            System.out.println(DateUtils.TimeTool.toDateString(plusRoll(dateTime, ChronoUnit.DAYS, 1)));
 
             System.out.println();
-            System.out.println("TimeExtTool.getDates" + DateUtils.TimeTool.toStr(dateTime));
+            System.out.println("TimeExtTool.getDates" + DateUtils.TimeTool.toDateString(dateTime));
             LocalDateTime startDate = LocalDateTime.of(2023, 10, 23, 20, 23, 21); // 示例日期时间
             LocalDateTime endDate = LocalDateTime.of(2023, 11, 23, 20, 23, 21); // 示例日期时间
-            System.out.println(getDates(TimeTool.toStr(startDate), TimeTool.toStr(endDate), ChronoUnit.DAYS, DateConstants.YYYY_MM_DD));
-            System.out.println(getDates(TimeTool.toStr(startDate), TimeTool.toStr(endDate), ChronoUnit.MONTHS, DateConstants.YYYY_MM));
+            System.out.println(getDates(TimeTool.toDateString(startDate), TimeTool.toDateString(endDate), ChronoUnit.DAYS, DateConstants.YYYY_MM_DD));
+            System.out.println(getDates(TimeTool.toDateString(startDate), TimeTool.toDateString(endDate), ChronoUnit.MONTHS, DateConstants.YYYY_MM));
         }
 
     }
@@ -288,7 +311,7 @@ public class DateUtils {
          * @param pattern pattern
          * @return {@link String}
          */
-        public static String toStr(Date date, String pattern) {
+        public static String toDateString(Date date, String pattern) {
             SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
             return dateFormat.format(date);
         }
@@ -308,30 +331,7 @@ public class DateUtils {
             } catch (ParseException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }
-
         }
-
-        /**
-         * toDate
-         *
-         * @param localDate localDate
-         * @return Date
-         */
-        public static Date toDate(LocalDate localDate) {
-            return Optional.ofNullable(localDate).map(item -> Date.from(item.atStartOfDay(ZoneId.systemDefault()).toInstant())).orElse(null);
-        }
-
-
-        /**
-         * toDate
-         *
-         * @param localDateTime localDateTime
-         * @return Date
-         */
-        public static Date toDate(LocalDateTime localDateTime) {
-            return Optional.ofNullable(localDateTime).map(item -> Date.from(item.atZone(ZoneId.systemDefault()).toInstant())).orElse(null);
-        }
-
 
 
         /**

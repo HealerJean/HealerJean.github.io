@@ -5,7 +5,6 @@ import com.healerjean.proj.common.enums.CodeEnum;
 import com.healerjean.proj.exceptions.BusinessException;
 import com.healerjean.proj.exceptions.ParameterException;
 import com.healerjean.proj.exceptions.PlatformException;
-import com.healerjean.proj.exceptions.RpcException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -39,7 +38,7 @@ public class ControllerHandleConfig {
     @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
     public BaseRes<?> methodNotSupportExceptionHandler(HttpRequestMethodNotSupportedException e) {
         log.error("不支持的请求方式", e);
-        return BaseRes.buildFailure(CodeEnum.ParamsErrorEnum.ERROR_CODE_10001.getCode(), e.getMessage());
+        return BaseRes.buildFailure(CodeEnum.ParamsErrorEnum.ERROR_CODE_101001.getCode(), e.getMessage());
     }
 
 
@@ -53,7 +52,7 @@ public class ControllerHandleConfig {
     @ResponseBody
     public BaseRes<?> bindExceptionHandler(BindException e) {
         log.error("====参数类型错误===", e);
-        return BaseRes.buildFailure(CodeEnum.ParamsErrorEnum.ERROR_CODE_10000);
+        return BaseRes.buildFailure(CodeEnum.ParamsErrorEnum.ERROR_CODE_100000);
     }
 
 
@@ -65,7 +64,7 @@ public class ControllerHandleConfig {
     @ResponseBody
     public BaseRes<?> httpMessageConversionExceptionHandler(Exception e) {
         log.error("====参数格式异常===", e);
-        return BaseRes.buildFailure(CodeEnum.ParamsErrorEnum.ERROR_CODE_10002);
+        return BaseRes.buildFailure(CodeEnum.ParamsErrorEnum.ERROR_CODE_102000);
     }
 
 
@@ -94,23 +93,12 @@ public class ControllerHandleConfig {
 
 
     /**
-     * RPC，给前台返回异常数据
-     */
-    @ExceptionHandler(value = RpcException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public BaseRes<?> rpcExceptionHandler(RpcException e) {
-        log.error("====RPC异常:code:{},msg:{},showMsg:{}", e.getCode(), e.getMessage(), e.getShowMsg(), e);
-        return BaseRes.buildFailure(e.getCode(), e.getShowMsg());
-    }
-
-    /**
      * 运行异常，给前台返回异常数据
      */
     @ExceptionHandler(value = PlatformException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public BaseRes<?> rpcExceptionHandler(PlatformException e) {
+    public BaseRes<?> platformExceptionHandler(PlatformException e) {
         log.error("====运行异常:code:{},msg:{},showMsg:{}", e.getCode(), e.getMessage(), e.getShowMsg(), e);
         return BaseRes.buildFailure(e.getCode(), e.getShowMsg());
     }

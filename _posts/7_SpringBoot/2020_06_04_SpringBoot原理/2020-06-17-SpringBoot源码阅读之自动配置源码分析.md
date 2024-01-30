@@ -548,8 +548,6 @@ static class Registrar implements ImportBeanDefinitionRegistrar, DeterminableImp
 
 #### 2.1.3.2、`@Import(AutoConfigurationImportSelector.class)`
 
-
-
 ```java
 @Override
 public String[] selectImports(AnnotationMetadata annotationMetadata) {

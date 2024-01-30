@@ -4,16 +4,17 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
-import com.healerjean.proj.data.excel.UserDemoExportExcel;
 import com.healerjean.proj.enums.ExcelEnum;
 import com.healerjean.proj.utils.date.DateUtils;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.LongFunction;
 
 /**
  * ExcelWriteResult
@@ -59,12 +60,15 @@ public class ExcelWriteUtils implements Serializable {
      * @return {@link ExcelWriteUtils}
      */
     public static ExcelWriteUtils instance(ExcelEnum.ExcelObjEnum excelObjEnum) {
-        String filePath = ExcelUtils.DEFAULT_LOCAL_PATH + DateUtils.toDateString(LocalDateTime.now(), DateUtils.YYYYMMDD) + "/" + excelObjEnum.name().toLowerCase() + "/" + System.currentTimeMillis() + ".xlsx";
+        String filePath = ExcelUtils.DEFAULT_LOCAL_PATH + DateUtils.toDateString(LocalDateTime.now(), DateUtils.YYYYMMDD) + "/" + excelObjEnum.name().toLowerCase() + "/";
+        String fileName = System.currentTimeMillis() + ".csv";
+        String file = filePath + fileName ;
+        // FileUtils.createDir(file, true);
         return new ExcelWriteUtils()
                 .setCount(new AtomicLong(0))
-                .setExcelWriter(EasyExcel.write(filePath, UserDemoExportExcel.class).registerWriteHandler(new LongestMatchColumnWidthStyleStrategy()).autoCloseStream(false).build())
+                .setExcelWriter(EasyExcel.write(file, excelObjEnum.getClazz()).registerWriteHandler(new LongestMatchColumnWidthStyleStrategy()).autoCloseStream(false).build())
                 .setWriteSheet(EasyExcel.writerSheet(1, "Sheet1").build())
-                .setFilePath(filePath);
+                .setFilePath(file);
     }
 
     /**
@@ -85,12 +89,32 @@ public class ExcelWriteUtils implements Serializable {
      *
      * @param list list
      */
-    public ExcelWriteUtils write(List list) {
+    public <T> ExcelWriteUtils write(List<T> list) {
         writeSheet.setSheetNo((int) (count.addAndGet(list.size()) / ExcelUtils.EXCEL_SHEET_ROW_MAX_SIZE + 1));
         writeSheet.setSheetName("Sheet" + writeSheet.getSheetNo());
         excelWriter.write(list, writeSheet);
         return this;
     }
+
+    /**
+     * write
+     *
+     * @param pageFunction pageFunction
+     * @return {@link ExcelWriteUtils}
+     */
+     public <T> ExcelWriteUtils pageWrite(LongFunction<List<T>> pageFunction){
+         long pageNo = 1;
+         while (true){
+             List<T> rpcList =  pageFunction.apply(pageNo);
+             if (CollectionUtils.isEmpty(rpcList)){
+                 break;
+             }
+             this.write(rpcList);
+             pageNo++;
+         }
+         close();
+         return this;
+     }
 
 
 }
