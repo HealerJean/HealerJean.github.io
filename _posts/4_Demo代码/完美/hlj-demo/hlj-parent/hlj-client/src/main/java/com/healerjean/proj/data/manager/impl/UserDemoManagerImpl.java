@@ -253,7 +253,6 @@ public class UserDemoManagerImpl implements UserDemoManager {
 
         List<UserDemo> list = userDemoDao.list(lambdaQueryWrapper);
         if (CollectionUtils.isEmpty(list)){
-            idQueryBO.setMaxId(null);
             return null;
         }
         idQueryBO.setMaxId(list.get(list.size()-1).getId());

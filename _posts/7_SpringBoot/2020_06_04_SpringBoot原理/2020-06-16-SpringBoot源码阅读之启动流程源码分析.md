@@ -426,7 +426,7 @@ org.springframework.boot.liquibase.LiquibaseServiceLocatorApplicationListener
 
 
 
-# 2、SpringBootApplication.run()方法  
+# 2、`SpringBootApplication.run()` 方法  
 
 >  第一步：获取并启动监听器     
 >
@@ -530,11 +530,11 @@ public ConfigurableApplicationContext run(String... args) {
 
 
 
-## 2.1、获取并启动监听器`SpringApplicationRunListeners`
+## 2.1、获取并启动监听器 `SpringApplicationRunListeners`
 
-> 获取并启动监听器 (从META-INF/spring.factories中获取监听器)       
+> 获取并启动监听器 (从 `META-INF/spring.factories` 中获取监听器)       
 >
-> **事件机制在Spring是很重要的一部分内容，通过事件机制我们可以监听Spring容器中正在发生的一些事件，同样也可以自定义监听事件**。     
+> **事件机制在 `Spring` 是很重要的一部分内容，通过事件机制我们可以监听 `Spring` 容器中正在发生的一些事件，同样也可以自定义监听事件**。     
 >
 > Spring的事件为Bean和Bean之间的消息传递提供支持。当一个被监听对象执行某种任务后，监听器进行某些处理，常用的场景有进行某些操作后发送通知，消息、邮件等情况。
 
@@ -596,7 +596,7 @@ org.springframework.boot.context.event.EventPublishingRunListener
 
 
 
-> `getSpringFactoriesInstances`中`createSpringFactoriesInstances(type, parameterTypes, classLoader, args, names);`      
+> `getSpringFactoriesInstances` 中 `createSpringFactoriesInstances(type, parameterTypes, classLoader, args, names);`      
 >
 > 反射获取实例时会触发`EventPublishingRunListener`的构造函数，我们来看看`EventPublishingRunListener`的构造函数：    
 
@@ -722,8 +722,6 @@ void starting() {
     }
 }
 ```
-
-
 
 
 
@@ -1122,8 +1120,6 @@ private static final String DEFAULT_SEARCH_LOCATIONS = "classpath:/,classpath:/c
 
 至此，项目的变量配置已全部加载完毕，来一起看一下：
 
-
-
 ![image-20200616163841790](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200616163841790.png)
 
 
@@ -1272,7 +1268,7 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 
 
 
-### 2.3.2、创建IOC容器`BeanFactory`  
+### 2.3.2、创建 `IOC` 容器`BeanFactory`  
 
 > `beanFactory`正是在`AnnotationConfigServletWebServerApplicationContext`实现的接口`GenericApplicationContext`中定义的。在上面`createApplicationContext()`方法中的，     
 >
@@ -1457,7 +1453,7 @@ listeners.contextPrepared(context
 
 ### 2.4.3、加载启动指定类（重点）    
 
-> 启动类`SpringBoot_Application.class`被加载到 `bean`工厂的  `beanDefinitionMap`中，后续该启动类将作为开启自动化配置的入口，    
+> 启动类 `SpringBoot_Application.class   `被加载到 `bean` 工厂的  `beanDefinitionMap`中，后续该启动类将作为开启自动化配置的入口，    
 
 ```java
 Set<Object> sources = getAllSources();
@@ -1467,7 +1463,7 @@ load(context, sources.toArray(new Object[0]));
 
 
 
-> 大家先回到文章最开始看看，在创建`SpringApplication`实例时，先将`SpringBoot_Application.class`存储在`this.primarySources`属性中，现在就是用到这个属性的时候了，我们来看看`getAllSources（）`
+> 大家先回到文章最开始看看，在创建  `SpringApplication` 实例时，先将 `SpringBoot_Application.class` 存储在`this.primarySources `属性中，现在就是用到这个属性的时候了，我们来看看 `getAllSources（）`
 
 ```java
 public Set<Object> getAllSources() {
@@ -1507,9 +1503,7 @@ protected void load(ApplicationContext context, Object[] sources) {
 
 #### 2.4.3.1、`getBeanDefinitionRegistry`	
 
-> 　这里将我们前文创建的上下文强转为`BeanDefinitionRegistry`，他们之间是有继承关系的。`BeanDefinitionRegistry`定义了很重要的方法`registerBeanDefinition()`，该方法将`BeanDefinition`注册进`DefaultListableBeanFactory`容器的`beanDefinitionMap`中。
-
-
+> 这里将我们前文创建的上下文强转为 `BeanDefinitionRegistry `，他们之间是有继承关系的。`BeanDefinitionRegistry `定义了很重要的方法`registerBeanDefinition()`，该方法将 `BeanDefinition `注册进 `DefaultListableBeanFactory` 容器的`beanDefinitionMap` 中。
 
 ```java
 private BeanDefinitionRegistry getBeanDefinitionRegistry(ApplicationContext context) {
@@ -1563,7 +1557,7 @@ BeanDefinitionLoader(BeanDefinitionRegistry registry, Object... sources) {
 
 
 
-#### 2.4.3.3、loader.load();
+#### 2.4.3.3、`loader` . `load()` ;
 
 > 启动类`SpringBoot_Application.class`被加载到 bean工厂的  `beanDefinitionMap`中
 
@@ -1611,7 +1605,7 @@ private int load(Class<?> source) {
         load(loader);
     }
     
-    //判断是否被注解@Component注释（@SpringBootApplication是一个组合注解）
+    //判断是否被注解 @Component 注释（@SpringBootApplication是一个组合注解）
     if (isComponent(source)) {
         
         //解形式的Bean定义读取器
@@ -1628,9 +1622,7 @@ private int load(Class<?> source) {
 
 #### 2.4.3.4、`registerBeanDefinition`  
 
-> 因为启动类`BeanDefinition`的注册流程和后面我们自定义的`BeanDefinition`的注册流程是一样的。这先介绍一遍这个流程，后面熟悉了这个流程就好理解了。后面马上就到最最最重要的`refresh()`方法了。   
-
-
+> 因为启动类 `BeanDefinition` 的注册流程和后面我们自定义的 `BeanDefinition` 的注册流程是一样的。这先介绍一遍这个流程，后面熟悉了这个流程就好理解了。后面马上就到最最最重要的 `refresh()` 方法了。   
 
 **`AnnotatedBeanDefinitionReader` 注解Bean定义读取器进行注册class**
 
@@ -1967,10 +1959,10 @@ public void refresh() throws BeansException, IllegalStateException {
             finishBeanFactoryInitialization(beanFactory);
 
             /**
-             * 通过spring的事件发布机制发布ContextRefreshedEvent事件，以保证对应的监听器做进一步的处理
-             * 即对那种在spring启动后需要处理的一些类，这些类实现了ApplicationListener<ContextRefreshedEvent>，
-             * 这里就是要触发这些类的执行(执行onApplicationEvent方法)
-             * 另外，spring的内置Event有ContextClosedEvent、ContextRefreshedEvent、ContextStartedEvent、ContextStoppedEvent、RequestHandleEvent
+             * 通过 spring 的事件发布机制发布 ContextRefreshedEvent 事件，以保证对应的监听器做进一步的处理
+             * 即对那种在 spring 启动后需要处理的一些类，这些类实现了 ApplicationListener<ContextRefreshedEvent>，
+             * 这里就是要触发这些类的执行(执行 onApplicationEvent 方法)
+             * 另外，spring的内置Event有 ContextClosedEvent、ContextRefreshedEvent、ContextStartedEvent、ContextStoppedEvent、RequestHandleEvent
              * 完成初始化，通知生命周期处理器lifeCycleProcessor刷新过程，同时发出ContextRefreshEvent通知其他人
              */
             finishRefresh();
@@ -1988,7 +1980,7 @@ public void refresh() throws BeansException, IllegalStateException {
 
 ### 2.5.1、获取并刷新`beanFactory`（ioc容器）
 
-> 在创建应用上下文的时候，触发了`GenericApplicationContext类`的构造方法如下所示，创建了`beanFactory`，也就是创建了`DefaultListableBeanFactory`类。
+> 在创建应用上下文的时候，触发了`GenericApplicationContext类 `的构造方法如下所示，创建了`beanFactory`，也就是创建了`DefaultListableBeanFactory`类。
 
 ```java
 public abstract class AbstractApplicationContext extends DefaultResourceLoader
@@ -2108,9 +2100,7 @@ protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
 
 ### 2.5.3、`postProcessBeanFactory(beanFactory)`;`,beanFactory`后置处理
 
-> `postProcessBeanFactory()`方法向上下文中添加了一系列的`Bean`的后置处理器（`BeanPostProcesser`），。后置处理器工作的时机是在所有的`beanDenifition`加载完成之后，`bean`实例化之前执行。简单来说Bean的后置处理器可以修改`BeanDefinition`的属性信息。
-
-
+> `postProcessBeanFactory()` 方法向上下文中添加了一系列的  `Bean` 的后置处理器（`BeanPostProcesser`），。后置处理器工作的时机是在所有的 `beanDenifition`  加载完成之后，`bean`实例化之前执行。简单来说 `Bean` 的后置处理器可以修改`BeanDefinition`的属性信息。
 
 > `AnnotationConfigServletWebServerApplicationContext`
 
@@ -2144,36 +2134,33 @@ protected void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactor
 
 > IoC容器的初始化过程包括三个步骤   (看不懂没关系，等看完代码再过来捋一捋)
 >
-> **1，第一步：Resource定位** 　
+> **1，第一步：`Resource` 定位** 　
 >
-> > 在SpringBoot中，我们都知道他的包扫描是从主类所在的包开始扫描的，`prepareContext()`方法中，会先将主类解析成`BeanDefinition`，然后在`refresh()`方法的`invokeBeanFactoryPostProcessors()`方法中解析主类的`BeanDefinition`获取`basePackage`的路径。这样就完成了定位的过程。      
+> > 在 `SpringBoot` 中，我们都知道他的包扫描是从主类所在的包开始扫描的，`prepareContext()`方法中，会先将主类解析成`BeanDefinition`，然后在`refresh()`方法的`invokeBeanFactoryPostProcessors()`方法中解析主类的`BeanDefinition`获取`basePackage`的路径。这样就完成了定位的过程。      
 > >
-> > **其次SpringBoot的各种starter是通过SPI扩展机制实现的自动装配，SpringBoot的自动装配同样也是在invokeBeanFactoryPostProcessors()方法中实现的。还有一种情况，在SpringBoot中有很多的@EnableXXX注解，细心点进去看的应该就知道其底层是@Import注解，在invokeBeanFactoryPostProcessors()方法中也实现了对该注解指定的配置类的定位加载。**       
+> > **其次 `SpringBoot` 的各种 `starter` 是通过 `SPI` 扩展机制实现的自动装配，`SpringBoot`的自动装配同样也是在`invokeBeanFactoryPostProcessors()` 方法中实现的。还有一种情况，在 `SpringBoot` 中有很多的 `@EnableXXX` 注解，细心点进去看的应该就知道其底层是 `@Import` 注解，在 `invokeBeanFactoryPostProcessors()`方法中也实现了对该注解指定的配置类的定位加载。**       
 > >
-> > 常规的在SpringBoot中有三种实现定位，**第一个是主类所在包的**，**第二个是SPI扩展机制实现的自动装配（比如各种starter）**，**第三种就是@Import注解指定的类。（对于非常规的不说了）**
+> > 常规的在 `SpringBoot` 中有三种实现定位，**第一个是主类所在包的**，**第二个是SPI扩展机制实现的自动装配（比如各种`starter` ）**，**第三种就是 `@Import` 注解指定的类。（对于非常规的不说了）**
 >
-> **2，第二步：`BeanDefinition`的载入**
+> **2，第二步：`BeanDefinition` 的载入**
 >
-> > 在第一步中说了三种Resource的定位情况，定位后紧接着就是BeanDefinition的分别载入。所谓的载入就是通过上面的定位得到的basePackage，SpringBoot会将该路径拼接成：classpath*:org/springframework/boot/demo/**/*.class这样的形式，然后一个叫做`PathMatchingResourcePatternResolver`的类会将该路径下所有的.class文件都加载进来，然后遍历判断是不是有@Component注解，如果有的话，就是我们要装载的BeanDefinition。大致过程就是这样的了。   
+> > 在第一步中说了三种 `Resource` 的定位情况，定位后紧接着就是 `BeanDefinition` 的分别载入。所谓的载入就是通过上面的定位得到的 `basePackage`，`SpringBoot` 会将该路径拼接成：`classpath*:org/springframework/boot/demo/**/*.class` 这样的形式，然后一个叫做`PathMatchingResourcePatternResolver`的类会将该路径下所有的.class文件都加载进来，然后遍历判断是不是有`@Component` 注解，如果有的话，就是我们要装载的BeanDefinition。大致过程就是这样的了。   
 >
-> **3、第三个过程：注册BeanDefinition**
+> **3、第三个过程：注册 `BeanDefinition`**
 >
-> > 这个过程通过调用上文提到的BeanDefinitionRegister接口的实现来完成。这个注册过程把载入过程中解析得到的BeanDefinition向IoC容器进行注册。通过上文的分析，我们可以看到，在IoC容器中将BeanDefinition注入到一个ConcurrentHashMap中，IoC容器就是通过这个HashMap来持有这些BeanDefinition数据的。比如DefaultListableBeanFactory 中的beanDefinitionMap属性。
+> > 这个过程通过调用上文提到的 `BeanDefinitionRegister` 接口的实现来完成。这个注册过程把载入过程中解析得到的`BeanDefinition` 向 `IoC`  容器进行注册。通过上文的分析，我们可以看到，在 `IoC` 容器中将 `BeanDefinition`注入到一个`ConcurrentHashMap` 中，`IoC` 容器就是通过这个 `HashMap` 来持有这些 `BeanDefinition`数据的。比如`DefaultListableBeanFactory `中的 `beanDefinitionMap` 属性。
 
 
 
+#### 2.5.4.1、`resource` 定位  
 
-
-
-
-#### 2.5.4.1、resource定位  
-
-> 执行bean工厂后置处理器
+> 执行 `bean` 工厂后置处理器
 
 ```java
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
         // 后置处理注册代表  执行bean工厂后置处理器 ，传入bean工厂和 bean工厂后置处理器
-		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
+		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, 
+                                                                      getBeanFactoryPostProcessors());
 
 		if (beanFactory.getTempClassLoader() == null && beanFactory.containsBean(LOAD_TIME_WEAVER_BEAN_NAME)) {
 			beanFactory.addBeanPostProcessor(new LoadTimeWeaverAwareProcessor(beanFactory));
@@ -2683,7 +2670,7 @@ protected void registerBeanDefinition(BeanDefinitionHolder definitionHolder, Bea
 
 
 
-#### 2.5.4.4、@Import注解的解析过程
+#### 2.5.4.4、`@Import` 注解的解析过程
 
 > 各种`@EnableXXX`注解，很大一部分都是对@Import的二次封装（其实也是为了解耦，比如当`@Import`导入的类发生变化时，我们的业务系统也不需要改任何代码）。
 
@@ -2708,12 +2695,6 @@ private Set<SourceClass> getImports(SourceClass sourceClass) throws IOException 
 
 
 ![image-20200708174218646](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20200708174218646.png)
-
-
-
-
-
-
 
 
 

@@ -69,10 +69,10 @@ public interface UserConverter {
         result.setPhone(userDemo.getPhone());
         result.setEmail(userDemo.getEmail());
         result.setValidFlag(userDemo.getValidFlag());
-        result.setStartTime(DateUtils.toDateString(userDemo.getStartTime()));
-        result.setEndTime(DateUtils.toDateString(userDemo.getEndTime()));
-        result.setCreateTime(DateUtils.toDateString(userDemo.getCreateTime()));
-        result.setUpdateTime(DateUtils.toDateString(userDemo.getUpdateTime()));
+        result.setStartTime(DateUtils.TimeTool.toStr(userDemo.getStartTime()));
+        result.setEndTime(DateUtils.TimeTool.toStr(userDemo.getEndTime()));
+        result.setCreateTime(DateUtils.TimeTool.toStr(userDemo.getCreateTime()));
+        result.setUpdateTime(DateUtils.TimeTool.toStr(userDemo.getUpdateTime()));
         return result;
     }
 
@@ -146,7 +146,7 @@ public interface UserConverter {
         userDemoQueryBO.setPhone(req.getPhone());
         userDemoQueryBO.setEmail(req.getEmail());
         userDemoQueryBO.setValidFlag(req.getValidFlag());
-        userDemoQueryBO.setQueryTime(DateUtils.toLocalDateTime(req.getQueryTime()));
+        userDemoQueryBO.setQueryTime(DateUtils.TimeTool.toLocalDateTime(req.getQueryTime()));
         userDemoQueryBO.setLikeName(req.getLikeName());
         userDemoQueryBO.setLikePhone(req.getLikePhone());
         userDemoQueryBO.setSelectFields(req.getSelectFields());
@@ -171,8 +171,8 @@ public interface UserConverter {
         userDemoBO.setAge(req.getAge());
         userDemoBO.setPhone(req.getPhone());
         userDemoBO.setEmail(req.getEmail());
-        userDemoBO.setStartTime(DateUtils.toLocalDateTime(req.getStartTime()));
-        userDemoBO.setEndTime(DateUtils.toLocalDateTime(req.getEndTime()));
+        userDemoBO.setStartTime(DateUtils.TimeTool.toLocalDateTime(req.getStartTime()));
+        userDemoBO.setEndTime(DateUtils.TimeTool.toLocalDateTime(req.getEndTime()));
         return userDemoBO;
 
     }

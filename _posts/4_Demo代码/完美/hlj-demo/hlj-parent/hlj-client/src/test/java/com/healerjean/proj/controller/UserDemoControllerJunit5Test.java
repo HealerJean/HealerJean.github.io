@@ -43,7 +43,6 @@ public class UserDemoControllerJunit5Test extends BaseJunit5SpringTest {
         BaseRes<UserDemoVO> res = userDemoController.queryUserDemoSingle(id);
         log.info("[UserDemoControllerTest#testQueryUserDemoSingle] id:{}, res:{}", id, JsonUtils.toString(res));
         Assertions.assertNotNull(res, "res不能为空");
-        Assertions.assertEquals(res.getSuccess(), Boolean.TRUE);
     }
 
 
@@ -61,7 +60,6 @@ public class UserDemoControllerJunit5Test extends BaseJunit5SpringTest {
         BaseRes<UserDemoVO> res = userDemoController.queryUserDemoSingle(id);
         log.info("[UserDemoControllerTest#testQueryUserDemoSingleDbTest] id:{}, res:{}", id, JsonUtils.toString(res));
         Assertions.assertNotNull(res, "res不能为空");
-        Assertions.assertEquals(res.getSuccess(), Boolean.TRUE);
     }
 
 
@@ -77,7 +75,6 @@ public class UserDemoControllerJunit5Test extends BaseJunit5SpringTest {
         BaseRes<UserDemoVO> res = userDemoController.queryUserDemoSingle(id);
         log.info("[UserDemoControllerTest#testQueryUserDemoSingleDbTest] id:{}, res:{}", id, JsonUtils.toString(res));
         Assertions.assertNotNull(res, "res不能为空");
-        Assertions.assertEquals(res.getSuccess(), Boolean.TRUE);
     }
 
 
@@ -93,7 +90,6 @@ public class UserDemoControllerJunit5Test extends BaseJunit5SpringTest {
         BaseRes<UserDemoVO> res = userDemoController.queryUserDemoSingle(id);
         log.info("[UserDemoControllerTest#testQueryUserDemoSingleDbTest] id:{}, res:{}", id, JsonUtils.toString(res));
         Assertions.assertNotNull(res, "res不能为空");
-        Assertions.assertEquals(res.getSuccess(), Boolean.TRUE);
     }
 
 

@@ -1,13 +1,14 @@
 package com.healerjean.proj.service.impl;
 
+import com.healerjean.proj.common.data.bo.PageQueryBO;
 import com.healerjean.proj.data.bo.UserDemoBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
 import com.healerjean.proj.data.convert.UserConverter;
 import com.healerjean.proj.data.manager.UserDemoManager;
 import com.healerjean.proj.data.po.UserDemo;
 import com.healerjean.proj.service.BidDataService;
-import com.healerjean.proj.utils.db.IdQueryBO;
 import com.healerjean.proj.utils.db.BatchQueryUtils;
+import com.healerjean.proj.utils.db.IdQueryBO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,12 @@ public class BigDataServiceImpl implements BidDataService {
      */
     @Override
     public List<UserDemoBO> queryAllUserDemoByLimit(UserDemoQueryBO queryBo) {
-        return BatchQueryUtils.queryAllByLimit(p -> userDemoManager.queryUserDemoPage(p), queryBo, 1000L);
+        PageQueryBO<UserDemoQueryBO> pageQuery = new PageQueryBO<>(1L, 100L);
+        pageQuery.setData(queryBo);
+        return BatchQueryUtils.queryAllByLimit(pageNo -> {
+            pageQuery.setCurrPage(pageNo);
+            return userDemoManager.queryUserDemoPage(pageQuery);
+        });
     }
 
     /**
@@ -52,11 +58,8 @@ public class BigDataServiceImpl implements BidDataService {
      */
     @Override
     public List<UserDemoBO> queryAllUserDemoByIdSize(UserDemoQueryBO queryBo) {
-        IdQueryBO idQueryBO = new IdQueryBO(0L, 2L);
         List<UserDemo> list = BatchQueryUtils.queryAllByIdSize(
-                (p, q) -> userDemoManager.queryUserDemoByIdSize(p, q),
-                queryBo,
-                idQueryBO);
+                p -> userDemoManager.queryUserDemoByIdSize(p, queryBo), 2);
         return UserConverter.INSTANCE.covertUserDemoPoToBoList(list);
     }
 
@@ -73,8 +76,7 @@ public class BigDataServiceImpl implements BidDataService {
         Long maxId = minAndMaxId.getRight();
         IdQueryBO idQueryBO = new IdQueryBO(minId, maxId, 2L);
         List<UserDemo> list = BatchQueryUtils.queryAllByIdSub(
-                (p, q) -> userDemoManager.queryUserDemoByIdSub(p, q),
-                queryBo,
+                p -> userDemoManager.queryUserDemoByIdSub(p, queryBo),
                 idQueryBO);
         return UserConverter.INSTANCE.covertUserDemoPoToBoList(list);
     }
@@ -90,7 +92,7 @@ public class BigDataServiceImpl implements BidDataService {
      */
     @Override
     public List<Future<List<UserDemoBO>>> queryAllUserDemoByPoolLimit(CompletionService<List<UserDemoBO>> completionService, UserDemoQueryBO query) {
-        return BatchQueryUtils.queryAllByPoolLimit(completionService, p -> userDemoManager.queryUserDemoPage(p), query, 1);
+        return BatchQueryUtils.queryAllByPoolLimit(completionService, p -> userDemoManager.queryUserDemoPage(p),query, 1);
     }
 
 

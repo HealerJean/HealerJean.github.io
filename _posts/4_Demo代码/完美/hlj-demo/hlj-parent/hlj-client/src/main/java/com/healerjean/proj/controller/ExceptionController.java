@@ -7,7 +7,6 @@ import com.healerjean.proj.data.vo.UserDemoVO;
 import com.healerjean.proj.exceptions.BusinessException;
 import com.healerjean.proj.exceptions.ParameterException;
 import com.healerjean.proj.exceptions.PlatformException;
-import com.healerjean.proj.exceptions.RpcException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +35,7 @@ public class ExceptionController {
     @GetMapping("parameterExceptionEnum")
     @ResponseBody
     public BaseRes<List<UserDemoVO>> parameterExceptionEnum() {
-        throw new ParameterException(CodeEnum.ParamsErrorEnum.ERROR_CODE_10002);
+        throw new ParameterException(CodeEnum.ParamsErrorEnum.ERROR_CODE_100000);
     }
 
 
@@ -55,52 +54,34 @@ public class ExceptionController {
     @GetMapping("businessExceptionEnum")
     @ResponseBody
     public BaseRes<List<UserDemoVO>> businessExceptionEnum() {
-        throw new BusinessException(CodeEnum.BusinessErrorEnum.ERROR_CODE_20001);
+        throw new BusinessException(CodeEnum.BusinessErrorEnum.ERROR_CODE_300000);
     }
 
-    @ApiOperation("businessExceptionMsg")
+
+    @ApiOperation("businessExceptionShowMessage")
     @LogIndex
-    @GetMapping("businessExceptionMsg")
+    @GetMapping("businessExceptionShowMessage")
     @ResponseBody
-    public BaseRes<List<UserDemoVO>> businessExceptionMsg() {
-        throw new BusinessException("用户创建失败");
+    public BaseRes<List<UserDemoVO>> businessExceptionShowMessage() {
+        throw new BusinessException(CodeEnum.BusinessErrorEnum.ERROR_CODE_301000, "订单创建失败，我是失败原因");
     }
-
-
-
-    @ApiOperation("rpcExceptionDefaultEnum")
-    @LogIndex
-    @GetMapping("rpcExceptionDefaultEnum")
-    @ResponseBody
-    public BaseRes<List<UserDemoVO>> rpcExceptionDefaultEnum() {
-        throw new RpcException(CodeEnum.RpcErrorEnum.ERROR_CODE_USER_0_30001_0001);
-    }
-
-
-    @ApiOperation("rpcExceptionEnumShowMsg")
-    @LogIndex
-    @GetMapping("rpcExceptionEnumShowMsg")
-    @ResponseBody
-    public BaseRes<List<UserDemoVO>> rpcExceptionEnumShowMsg() {
-        throw new RpcException(CodeEnum.RpcErrorEnum.ERROR_CODE_USER_1_30001_0001, "1000", "用户不存在");
-    }
-
-
-    @ApiOperation("rpcExceptionEnumMsg")
-    @LogIndex
-    @GetMapping("rpcExceptionEnumMsg")
-    @ResponseBody
-    public BaseRes<List<UserDemoVO>> rpcExceptionEnumMsg() {
-        throw new RpcException(CodeEnum.RpcErrorEnum.ERROR_CODE_USER_1_30001_0001, "1000", "底层结构异常", "用户不存在");
-    }
-
-
 
     @ApiOperation("platformException")
     @LogIndex
     @GetMapping("platformException")
     @ResponseBody
     public BaseRes<List<UserDemoVO>> platformException() {
-        throw new PlatformException(CodeEnum.PlatformErrorEnum.ERROR_CODE_40001);
+        throw new PlatformException(CodeEnum.PlatformErrorEnum.ERROR_CODE_200000);
     }
+
+
+    @ApiOperation("platformExceptionShowMessage")
+    @LogIndex
+    @GetMapping("platformExceptionShowMessage")
+    @ResponseBody
+    public BaseRes<List<UserDemoVO>> platformExceptionShowMessage() {
+        throw new PlatformException(CodeEnum.PlatformErrorEnum.ERROR_CODE_201001, "任务处理失败");
+    }
+
+
 }
