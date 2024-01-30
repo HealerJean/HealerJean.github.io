@@ -81,6 +81,18 @@ public class ControllerHandleConfig {
 
 
     /**
+     * 运行异常，给前台返回异常数据
+     */
+    @ExceptionHandler(value = PlatformException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public BaseRes<?> platformExceptionHandler(PlatformException e) {
+        log.error("====运行异常:code:{},msg:{},showMsg:{}", e.getCode(), e.getMessage(), e.getShowMsg(), e);
+        return BaseRes.buildFailure(e.getCode(), e.getShowMsg());
+    }
+
+
+    /**
      * 业务异常，给前台返回异常数据
      */
     @ExceptionHandler(value = BusinessException.class)
@@ -92,16 +104,6 @@ public class ControllerHandleConfig {
     }
 
 
-    /**
-     * 运行异常，给前台返回异常数据
-     */
-    @ExceptionHandler(value = PlatformException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public BaseRes<?> platformExceptionHandler(PlatformException e) {
-        log.error("====运行异常:code:{},msg:{},showMsg:{}", e.getCode(), e.getMessage(), e.getShowMsg(), e);
-        return BaseRes.buildFailure(e.getCode(), e.getShowMsg());
-    }
 
 
     /**
