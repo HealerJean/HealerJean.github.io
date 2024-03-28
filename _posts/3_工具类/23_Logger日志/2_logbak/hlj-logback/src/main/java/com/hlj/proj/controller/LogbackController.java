@@ -4,11 +4,14 @@ import com.hlj.proj.controller.config.aspect.LogIndex;
 import com.hlj.proj.controller.dto.UserDTO;
 import com.hlj.proj.controller.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author HealerJean
@@ -23,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class LogbackController {
 
+    private static final Logger BUSINESS_LOG = LoggerFactory.getLogger("bizLog");
+
     @LogIndex
     @GetMapping("logback")
     public String logback() {
@@ -30,9 +35,15 @@ public class LogbackController {
         log.info("info日志==================");
         log.warn("warn日志====================");
         log.error("error日志=====================");
+
+        BUSINESS_LOG.debug("debug日志==================");
+        BUSINESS_LOG.info("info日志==================");
+        BUSINESS_LOG.warn("warn日志====================");
+        BUSINESS_LOG.error("error日志=====================");
             int i = 1 / 0;
         return "日志处理成功";
     }
+
 
     @LogIndex
     @GetMapping("logJson")

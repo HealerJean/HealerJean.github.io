@@ -56,4 +56,10 @@ public interface BidDataService {
      */
     List<UserDemoBO> queryAllUserDemoByIdSub(UserDemoQueryBO queryBo);
 
+    /**
+     * 大key缓存
+     *
+     * @param queryBO queryBO
+     */
+    Long bigKeyCache(UserDemoQueryBO queryBO);
 }

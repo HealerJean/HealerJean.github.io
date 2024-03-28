@@ -129,6 +129,16 @@ public class BigDataController {
     }
 
 
+    @ApiOperation("大数据量-分页缓存全部")
+    @LogIndex(resFlag = false)
+    @GetMapping("user/bigKeyCache")
+    @ResponseBody
+    public BaseRes<Long> bigKeyCache(UserDemoQueryReq req) {
+        UserDemoQueryBO userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
+        return BaseRes.buildSuccess(bidDataService.bigKeyCache(userDemoPageQuery));
+    }
+
+
 
 
 }

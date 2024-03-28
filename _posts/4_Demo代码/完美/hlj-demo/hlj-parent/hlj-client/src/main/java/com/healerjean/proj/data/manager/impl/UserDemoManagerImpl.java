@@ -297,5 +297,13 @@ public class UserDemoManagerImpl implements UserDemoManager {
     }
 
 
-
+    /**
+     * 批量保存
+     *
+     * @param users users
+     */
+    @Override
+    public void batchSaveOrUpdateUserDemo(List<UserDemo> users) {
+        userDemoDao.saveOrUpdateBatch(users);
+    }
 }

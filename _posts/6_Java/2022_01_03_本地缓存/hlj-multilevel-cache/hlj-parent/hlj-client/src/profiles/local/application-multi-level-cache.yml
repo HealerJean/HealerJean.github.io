@@ -10,7 +10,7 @@ cache:
       # 是否全部启用一级缓存，默认false
       level1AllSwitch: false
       # 是否手动启用一级缓存，默认false
-      level1Switch: false
+      level1Switch: true
       # 手动配置走一级缓存的缓存key集合，针对单个key维度
       level1SwitchKeys:
         - userCache:1
