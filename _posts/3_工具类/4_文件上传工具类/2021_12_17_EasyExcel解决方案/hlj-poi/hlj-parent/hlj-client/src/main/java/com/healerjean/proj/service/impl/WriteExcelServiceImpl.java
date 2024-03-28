@@ -122,7 +122,9 @@ public class WriteExcelServiceImpl implements WriteExcelService {
     @Override
     public void complexHeadWrite() {
         String newFileName = WRITE_COMPLEXHEADWRITE_EXCEL_RESULT_FILE.replace(CURRENT_TIME_MILLIS_NAME, String.valueOf(System.currentTimeMillis()));
-        EasyExcel.write(newFileName, ComplexHeadData.class).sheet("模板").doWrite(data());
+        // EasyExcel.write(newFileName, ComplexHeadData.class).includeColumnFiledNames(Lists.newArrayList("doubleData")).sheet("模板").doWrite(Lists.newArrayList());
+        EasyExcel.write(newFileName, ComplexHeadData.class).sheet("模板").doWrite(Lists.newArrayList());
+
     }
 
 
@@ -334,13 +336,13 @@ public class WriteExcelServiceImpl implements WriteExcelService {
 
     private List<DemoData> data() {
         List<DemoData> list = Lists.newArrayList();
-        for (int i = 0; i < 10; i++) {
-            DemoData data = new DemoData();
-            data.setString("字符串" + i);
-            data.setDate(new Date());
-            data.setDoubleData(0.56);
-            list.add(data);
-        }
+        // for (int i = 0; i < 10; i++) {
+        //     DemoData data = new DemoData();
+        //     data.setString("字符串" + i);
+        //     data.setDate(new Date());
+        //     data.setDoubleData(0.56);
+        //     list.add(data);
+        // }
         return list;
     }
 

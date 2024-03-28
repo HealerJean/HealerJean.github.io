@@ -103,5 +103,11 @@ public interface UserDemoManager {
     List<UserDemo> queryUserDemoByIdSize(IdQueryBO idQueryBO, UserDemoQueryBO userDemoQueryBO);
 
 
+    /**
+     * 批量保存
+     *
+     * @param users users
+     */
+    void batchSaveOrUpdateUserDemo(List<UserDemo> users);
 
 }

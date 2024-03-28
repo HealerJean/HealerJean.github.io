@@ -115,4 +115,53 @@ public class RedisConstants {
             return sb.toString();
         }
     }
+
+    /**
+     * Redis的缓存Key
+     */
+    @AllArgsConstructor
+    @Getter
+    public enum BigCacheEnum {
+        /**
+         * Redis的缓存Key
+         */
+        BIG_KEY("BIG_KEY", "公共CACHE",  3000L, 60 * 10),
+        ;
+        /**
+         * key
+         */
+        private final String code;
+        /**
+         * 含义
+         */
+        private final String name;
+
+        /**
+         * 单个小Key存储多少value
+         */
+        private final Long valueSize;
+        /**
+         * 超时时长
+         * 单位秒
+         */
+        private final Integer expireSec;
+
+        /**
+         * KEY中追加业务的属性
+         *
+         * @param args 业务属性
+         * @return 得到的Key
+         */
+        public String join(Object... args) {
+            StringBuilder sb = new StringBuilder(SERVER_NAME).append(SPLIT)
+                    .append(CACHE).append(SPLIT).append(code);
+            if (null == args || args.length < 1) {
+                return sb.toString();
+            }
+            for (Object arg : args) {
+                sb.append(SPLIT).append(arg);
+            }
+            return sb.toString();
+        }
+    }
 }

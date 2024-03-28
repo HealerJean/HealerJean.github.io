@@ -15,7 +15,7 @@ description: 设计模式之交给子类_FactoryMethod模式_将实例生成交�
 
  博客：[http://blog.healerjean.com](http://HealerJean.github.io)       
 
-# 1、FactoryMethod模式
+# 1、`FactoryMethod` 模式
 
 > 父类决定实例的生成方式，但并不决定所要生成的具体的类，将实例的生成交给子类，通过工厂具体使用哪个类
 
@@ -26,8 +26,6 @@ description: 设计模式之交给子类_FactoryMethod模式_将实例生成交�
 2、将产品实例生成的交给子类             
 
 3、我们通过工厂选择需要的产品，小米用到     
-
-
 
 
 

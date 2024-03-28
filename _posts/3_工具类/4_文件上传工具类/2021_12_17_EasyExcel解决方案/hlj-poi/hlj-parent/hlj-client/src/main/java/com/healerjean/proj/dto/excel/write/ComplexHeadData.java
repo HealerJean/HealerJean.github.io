@@ -22,4 +22,10 @@ public class ComplexHeadData {
     private Date date;
     @ExcelProperty({"主标题", "数字标题"})
     private Double doubleData;
+
+    @ExcelProperty({"计算类型（1比例 2固定）", "计算类型（1比例 2固定）"})
+    private String calculateType;
+
+    @ExcelProperty({"保费（元）比例（%）", "保费（元）比例（%）"})
+    private String fee;
 }

@@ -10,8 +10,6 @@ description: 设计模式之交给子类_TemplateMethod模模式_讲具体处理
 
 
 
-
-
 **前言**     
 
  Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
@@ -26,19 +24,17 @@ description: 设计模式之交给子类_TemplateMethod模模式_讲具体处理
 
 ## 1.1、使用场景  
 
-
-
 > 也就是说多个业务有重合的地方，重合的地方交给父类，子类继承，也可重写
 
 
 
 ## 1.2、角色
 
-### 1.2.1、AbstractClass（抽象类 父类） 
+### 1.2.1、`AbstractClass`（抽象类 父类） 
 
 > **期待，并且要求子类去实现抽象方法**     
 
-### 1.2.2、ConcreteClass（具体类 ，子类）
+### 1.2.2、`ConcreteClass`（具体类 ，子类）
 
 > **1、在子类中可以使用父类中定义的方法 **   
 >

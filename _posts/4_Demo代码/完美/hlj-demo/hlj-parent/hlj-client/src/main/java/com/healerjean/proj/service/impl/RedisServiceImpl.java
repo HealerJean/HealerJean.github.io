@@ -3,13 +3,16 @@ package com.healerjean.proj.service.impl;
 import com.healerjean.proj.common.anno.LogIndex;
 import com.healerjean.proj.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.UUID;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author zhangyujin
@@ -49,6 +52,27 @@ public class RedisServiceImpl implements RedisService {
             log.error("[RedisService#get] error, key:{}", key, e);
             return null;
         }
+    }
+
+    @Override
+    public Long zAdd(String key, Map<String, Double> members) {
+        Set<ZSetOperations.TypedTuple<String>> values = members.keySet().stream().map(memberKey-> new DefaultTypedTuple<>(memberKey,members.get(memberKey))).collect(Collectors.toSet());
+        return redisTemplate.opsForZSet().add(key, values);
+    }
+
+    @Override
+    public Set<String> zRange(String key, long start, long end) {
+        return null;
+    }
+
+    @Override
+    public Long zCard(String key) {
+        return null;
+    }
+
+    @Override
+    public boolean expire(String key, int seconds) {
+        return false;
     }
 
     @LogIndex

@@ -1,5 +1,7 @@
 package com.healerjean.proj.service.impl;
 
+import com.google.common.collect.Lists;
+import com.healerjean.proj.common.contants.RedisConstants;
 import com.healerjean.proj.common.data.bo.PageQueryBO;
 import com.healerjean.proj.data.bo.UserDemoBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
@@ -7,16 +9,23 @@ import com.healerjean.proj.data.convert.UserConverter;
 import com.healerjean.proj.data.manager.UserDemoManager;
 import com.healerjean.proj.data.po.UserDemo;
 import com.healerjean.proj.service.BidDataService;
+import com.healerjean.proj.service.RedisService;
+import com.healerjean.proj.utils.JsonUtils;
 import com.healerjean.proj.utils.db.BatchQueryUtils;
+import com.healerjean.proj.utils.db.BigKeyCacheRefreshUtils;
 import com.healerjean.proj.utils.db.IdQueryBO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 /**
  * BigDataServiceImpl
@@ -33,6 +42,12 @@ public class BigDataServiceImpl implements BidDataService {
      */
     @Resource
     private UserDemoManager userDemoManager;
+
+    /**
+     * redisService
+     */
+    @Resource
+    private RedisService redisService;
 
     /**
      * 大数据量-分页查询全部
@@ -114,6 +129,44 @@ public class BigDataServiceImpl implements BidDataService {
                 query,
                 idQueryBO,
                 UserConverter.INSTANCE::covertUserDemoPoToBoList);
+    }
+
+    /**
+     * 分页缓存全部
+     * @param queryBo queryBO
+     */
+    @Override
+    public Long bigKeyCache(UserDemoQueryBO queryBo) {
+        RedisConstants.BigCacheEnum bigCacheEnum = RedisConstants.BigCacheEnum.BIG_KEY;
+        Long currentTimeMillis = System.currentTimeMillis();
+        return BigKeyCacheRefreshUtils.cacheBigCache(p -> userDemoManager.queryUserDemoByIdSize(p, queryBo), 10000, (bigKeyBo) -> {
+            bigKeyBo.setMinValueSize(bigCacheEnum.getValueSize().longValue());
+            List<UserDemo> readyList = (List<UserDemo>) bigKeyBo.getReadyList();
+            if (CollectionUtils.isEmpty(readyList)){
+                return;
+            }
+            while (readyList.size() >= bigCacheEnum.getValueSize()) {
+                List<List<UserDemo>> partition = Lists.partition(readyList, bigCacheEnum.getValueSize().intValue());
+                List<UserDemo> removes = Lists.newArrayList();
+                for (List<UserDemo> userDemos : partition){
+                    if (userDemos.size() < bigCacheEnum.getValueSize()) {
+                        break;
+                    }
+                    Map<String, Double> map = userDemos.stream().collect(Collectors.toMap(JsonUtils::toString, v -> Double.valueOf(v.getId())));
+                    redisService.zAdd(bigCacheEnum.join(currentTimeMillis, bigKeyBo.getMinKeyIndex()), map);
+                    redisService.expire(bigCacheEnum.join(currentTimeMillis, bigKeyBo.getMinKeyIndex()), bigCacheEnum.getExpireSec());
+                    removes.addAll(userDemos);
+                    bigKeyBo.setMinKeyIndex(bigKeyBo.getMinKeyIndex() + 1);
+                }
+                readyList.removeAll(removes);
+            }
+            if (bigKeyBo.getEndFlag() && !CollectionUtils.isEmpty(readyList)) {
+                Map<String, Double> map = readyList.stream().collect(Collectors.toMap(JsonUtils::toString, v -> Double.valueOf(v.getId())));
+                redisService.zAdd(bigCacheEnum.join(currentTimeMillis, bigKeyBo.getMinKeyIndex()), map);
+                redisService.expire(bigCacheEnum.join(currentTimeMillis, bigKeyBo.getMinKeyIndex()), bigCacheEnum.getExpireSec());
+            }
+            redisService.set(bigCacheEnum.join(bigCacheEnum.getCode()), currentTimeMillis + "_" + bigKeyBo.getMinKeyIndex().toString(), bigCacheEnum.getExpireSec());
+        });
     }
 
 }

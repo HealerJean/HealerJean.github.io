@@ -198,6 +198,23 @@
                 <version>2.9.3</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.healerjean.proj</groupId>
+                <artifactId>hlj-client</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+
+            <!--//
+           long RamUsageEstimator.sizeOf(Object obj)        计算指定对象及其引用树上的所有对象的综合大小，单位字节
+           String RamUsageEstimator.humanSizeOf(Object obj) 计算指定对象及其引用树上的所有对象的综合大小，返回可读的结果，如：2KB
+           long RamUsageEstimator.shallowSizeOf(Object obj) 计算指定对象本身在堆空间的大小，单位字节
+           -->
+            <!--lucene-core-->
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-core</artifactId>
+                <version>8.11.2</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
