@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-<!--学习 https://blog.csdn.net/ZYC88888/article/details/85060315-->
+    <!--学习 https://blog.csdn.net/ZYC88888/article/details/85060315-->
 
     <!--
      格式化输出：%d表示日期，
      %thread表示线程名，
      %-5level：级别从左显示5个字符宽度,
      %logger{50} 表示 Logger 名字最长36个字符,
-     %msg：日志消息，%n是换行符 -->
+     %msg：日志消息，
+     %M : 日志输出所在方法名
+     %L : 日志输出所在行数
+     %n是换行符 -->
     -->
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg %n "/>
-
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level -[%-32X{REQ_UID}] - %msg  -%logger{50}.%M[%L]%n "/>
     <property name="LOG_PATH" value="/Users/healerjean/Desktop/logs"/>
     <property name="FILE_PATH_INFO"  value="${LOG_PATH}/hlj-logback.log"/>
     <property name="FILE_PATH_ERROR" value="${LOG_PATH}/hlj-logback-error.log"/>
+    <property name="FILE_BIZ" value="${LOG_PATH}/hlj-logback-biz.log"/>
 
     <!--控制台-->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
+        <filter class="com.hlj.proj.controller.config.LogbackJsonFilter"/>
+        <encoder charset="UTF-8"  >
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
 
-    <appender name="FILE-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!--日志文件输出的文件名 -->
         <File>${FILE_PATH_INFO}</File>
         <!--滚动日志 基于时间和文件大小-->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <!-- 滚动日志文件保存格式 i是超出文件大小MaxFileSize 从0开始起步，
+            <!-- 滚动日志文件保存格式 i是超出文件大小MaxFileSize 讲历史日志后缀名从0开始起步，
             如果超过了最大的totalSizeCap，就会全部删除，重新开始-->
             <FileNamePattern>${FILE_PATH_INFO}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
             <MaxFileSize>1MB</MaxFileSize>
@@ -45,9 +49,21 @@
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
+    <appender name="ASYNC_FILE_INFO" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 1. 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>8192</queueSize>
+        <!-- 2. 队列剩余容量小于discardingThreshold,则会丢弃TRACT、DEBUG、INFO级别的日志;默认值-1,为queueSize的20%;0不丢失日志 -->
+        <discardingThreshold>-1</discardingThreshold>
+        <!-- 3. 默认：false，如果系统异常之后，error级别的日志把队列占满了，会出现阻塞情况。可以设置为true，丢弃日志，从而不影响业务线程。 -->
+        <neverBlock>true</neverBlock>
+        <!--是否提取调用者数据-->
+        <includeCallerData>false</includeCallerData>
+        <!-- 一个异步appender 只能对应一个同步的appender。 -->
+        <appender-ref ref="INFO_FILE"/>
+    </appender>
 
 
-    <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${FILE_PATH_ERROR}</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <FileNamePattern>${FILE_PATH_ERROR}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
@@ -62,18 +78,61 @@
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
+    <appender name="ASYNC_ERROR_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 1. 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>8192</queueSize>
+        <!-- 2. 队列剩余容量小于discardingThreshold,则会丢弃TRACT、DEBUG、INFO级别的日志;默认值-1,为queueSize的20%;0不丢失日志 -->
+        <discardingThreshold>-1</discardingThreshold>
+        <!-- 3. 默认：false，如果系统异常之后，error级别的日志把队列占满了，会出现阻塞情况。可以设置为true，丢弃日志，从而不影响业务线程。 -->
+        <neverBlock>true</neverBlock>
+        <!--是否提取调用者数据-->
+        <includeCallerData>false</includeCallerData>
+        <!-- 一个异步appender 只能对应一个同步的appender。 -->
+        <appender-ref ref="ERROR_FILE"/>
+    </appender>
 
 
 
-    <logger name="org.springframework" level="INFO"/>
-    <logger name="org.springframework.aop.framework" level="OFF"/>
+
+
+
+
+    <appender name="BIZ_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${FILE_BIZ}</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${FILE_BIZ}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <MaxFileSize>60MB</MaxFileSize>
+            <totalSizeCap>5GB</totalSizeCap>
+            <MaxHistory>10</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <appender name="ASYNC_BIZ_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 1. 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>8192</queueSize>
+        <!-- 2. 队列剩余容量小于discardingThreshold,则会丢弃TRACT、DEBUG、INFO级别的日志;默认值-1,为queueSize的20%;0不丢失日志 -->
+        <discardingThreshold>-1</discardingThreshold>
+        <!-- 3. 默认：false，如果系统异常之后，error级别的日志把队列占满了，会出现阻塞情况。可以设置为true，丢弃日志，从而不影响业务线程。 -->
+        <neverBlock>true</neverBlock>
+        <!--是否提取调用者数据-->
+        <includeCallerData>false</includeCallerData>
+        <!-- 一个异步appender 只能对应一个同步的appender。 -->
+        <appender-ref ref="BIZ_FILE"/>
+    </appender>
+    <logger name="TRADE_LOG" additivity="false" level="INFO">
+        <appender-ref ref="BIZ_FILE"/>
+    </logger>
+
+
 
 
     <!--以配置文件application.properties 中为主，如果配置文件中不存在以它为主-->
-    <root level="info">
+    <root level="debug">
         <appender-ref ref="STDOUT" />
-        <appender-ref ref="FILE-ERROR"/>
-        <appender-ref ref="FILE-INFO"/>
+        <appender-ref ref="ASYNC_ERROR_FILE"/>
+        <appender-ref ref="ASYNC_FILE_INFO"/>
     </root>
 </configuration>
 

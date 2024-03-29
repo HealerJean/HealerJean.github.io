@@ -16,7 +16,7 @@
     <property name="LOG_PATH" value="/Users/healerjean/Desktop/logs"/>
     <property name="FILE_PATH_INFO"  value="${LOG_PATH}/hlj-logback.log"/>
     <property name="FILE_PATH_ERROR" value="${LOG_PATH}/hlj-logback-error.log"/>
-    <property name="FILE_BIZ_ERROR" value="${LOG_PATH}/hlj-logback-biz.log"/>
+    <property name="FILE_BIZ" value="${LOG_PATH}/hlj-logback-biz.log"/>
 
     <!--控制台-->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -49,6 +49,18 @@
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
+    <appender name="ASYNC_FILE_INFO" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 1. 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>8192</queueSize>
+        <!-- 2. 队列剩余容量小于discardingThreshold,则会丢弃TRACT、DEBUG、INFO级别的日志;默认值-1,为queueSize的20%;0不丢失日志 -->
+        <discardingThreshold>-1</discardingThreshold>
+        <!-- 3. 默认：false，如果系统异常之后，error级别的日志把队列占满了，会出现阻塞情况。可以设置为true，丢弃日志，从而不影响业务线程。 -->
+        <neverBlock>true</neverBlock>
+        <!--是否提取调用者数据-->
+        <includeCallerData>false</includeCallerData>
+        <!-- 一个异步appender 只能对应一个同步的appender。 -->
+        <appender-ref ref="INFO_FILE"/>
+    </appender>
 
 
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -66,36 +78,6 @@
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
-
-
-    <appender name="BIZ_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${FILE_BIZ_ERROR}</File>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <FileNamePattern>${FILE_BIZ_ERROR}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
-            <MaxFileSize>60MB</MaxFileSize>
-            <totalSizeCap>5GB</totalSizeCap>
-            <MaxHistory>10</MaxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-        </encoder>
-    </appender>
-
-
-    <appender name="ASYNC_FILE_INFO" class="ch.qos.logback.classic.AsyncAppender">
-        <!-- 1. 更改默认的队列的深度,该值会影响性能.默认值为256 -->
-        <queueSize>8192</queueSize>
-        <!-- 2. 队列剩余容量小于discardingThreshold,则会丢弃TRACT、DEBUG、INFO级别的日志;默认值-1,为queueSize的20%;0不丢失日志 -->
-        <discardingThreshold>-1</discardingThreshold>
-        <!-- 3. 默认：false，如果系统异常之后，error级别的日志把队列占满了，会出现阻塞情况。可以设置为true，丢弃日志，从而不影响业务线程。 -->
-        <neverBlock>true</neverBlock>
-        <!--是否提取调用者数据-->
-        <includeCallerData>false</includeCallerData>
-        <!-- 一个异步appender 只能对应一个同步的appender。 -->
-        <appender-ref ref="INFO_FILE"/>
-    </appender>
-
-
     <appender name="ASYNC_ERROR_FILE" class="ch.qos.logback.classic.AsyncAppender">
         <!-- 1. 更改默认的队列的深度,该值会影响性能.默认值为256 -->
         <queueSize>8192</queueSize>
@@ -110,6 +92,20 @@
     </appender>
 
 
+
+     <!--自定义业务日志目录-->
+    <appender name="BIZ_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${FILE_BIZ}</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${FILE_BIZ}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <MaxFileSize>60MB</MaxFileSize>
+            <totalSizeCap>5GB</totalSizeCap>
+            <MaxHistory>10</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
     <appender name="ASYNC_BIZ_FILE" class="ch.qos.logback.classic.AsyncAppender">
         <!-- 1. 更改默认的队列的深度,该值会影响性能.默认值为256 -->
         <queueSize>8192</queueSize>
@@ -122,11 +118,34 @@
         <!-- 一个异步appender 只能对应一个同步的appender。 -->
         <appender-ref ref="BIZ_FILE"/>
     </appender>
-
-
-    <logger name="TRADE_LOG" additivity="false" level="INFO">
+    <logger name="BIZ_LOG" additivity="false" level="INFO">
         <appender-ref ref="BIZ_FILE"/>
     </logger>
+
+
+
+    <!-- 自定义输出 -->
+    <appender name="MQ_APPENDER"  class="com.hlj.proj.controller.log.plugin.MqAppender">
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>MARKER_MQ_LOG</marker>
+            </evaluator>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!-- 日志收集最低日志级别 -->
+            <level>INFO</level>
+        </filter>
+        <layout
+            class="ch.qos.logback.classic.PatternLayout">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </layout>
+        <!-- 自定义参数 -->
+        <params>HEALER_JEAN:</params>
+    </appender>
+
 
 
     <!--以配置文件application.properties 中为主，如果配置文件中不存在以它为主-->
@@ -134,6 +153,7 @@
         <appender-ref ref="STDOUT" />
         <appender-ref ref="ASYNC_ERROR_FILE"/>
         <appender-ref ref="ASYNC_FILE_INFO"/>
+        <appender-ref ref="MQ_APPENDER"/>
     </root>
 </configuration>
 
