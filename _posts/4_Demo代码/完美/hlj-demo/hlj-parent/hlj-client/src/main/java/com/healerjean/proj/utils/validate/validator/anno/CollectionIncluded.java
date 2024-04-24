@@ -1,4 +1,4 @@
-package com.healerjean.proj.common.anno;
+package com.healerjean.proj.utils.validate.validator.anno;
 
 
 import javax.validation.Constraint;

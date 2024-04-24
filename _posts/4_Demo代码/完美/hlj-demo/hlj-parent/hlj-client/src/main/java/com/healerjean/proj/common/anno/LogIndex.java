@@ -25,4 +25,9 @@ public @interface LogIndex {
      */
     boolean resFlag() default true;
 
+    /**
+     * 耗时统计
+     */
+    long timeOut() default -1;
+
 }

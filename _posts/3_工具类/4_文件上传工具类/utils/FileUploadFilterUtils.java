@@ -16,7 +16,7 @@ import java.util.Map;
  * @author HealerJean
  * @date 2020/9/4  16:11.
  */
-public class FileUploadContentTypeFilterUtils {
+public class FileUploadFilterUtils {
 
     /**
      * 默认判断文件头前三个字节内容

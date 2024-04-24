@@ -67,6 +67,9 @@ public class LogAspect {
             if (Boolean.TRUE.equals(logIndex.resFlag())) {
                 map.put("res", result);
             }
+            if (logIndex.timeOut() > -1 && timeCost >= logIndex.timeOut()){
+                map.put("timeOutFlag", true);
+            }
             map.put("timeCost", timeCost + "ms");
             log.info("{}, aspectLog:{}", className + "." + methodName, JsonUtils.toString(map));
         }

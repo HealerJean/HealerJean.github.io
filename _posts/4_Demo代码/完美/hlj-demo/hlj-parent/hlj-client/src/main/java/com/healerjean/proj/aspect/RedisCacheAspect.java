@@ -3,6 +3,7 @@ package com.healerjean.proj.aspect;
 import com.healerjean.proj.common.anno.RedisCache;
 import com.healerjean.proj.service.RedisService;
 import com.healerjean.proj.utils.AspectUtils;
+import com.healerjean.proj.utils.ExceptionUtils;
 import com.healerjean.proj.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * r2m缓存处理
@@ -62,12 +64,25 @@ public class RedisCacheAspect {
             return joinPoint.proceed();
         }
         String r2mKey = redisCache.value().join(paramKey);
-        String value = redisService.get(r2mKey);
+        Object proceed = null;
+
+        String value = ExceptionUtils.catchFuntionException(redisService::get, r2mKey, log, "redisService.get");
         if (StringUtils.isNotBlank(value)) {
             return JsonUtils.toObject(value, method.getGenericReturnType());
         }
-        Object proceed = joinPoint.proceed();
-        redisService.set(r2mKey, JsonUtils.toString(proceed), redisCache.value().getExpireSec());
+
+        try {
+            proceed = joinPoint.proceed();
+        } finally {
+            if (Objects.nonNull(proceed)) {
+                redisService.set(r2mKey, JsonUtils.toString(proceed), redisCache.value().getExpireSec());
+            }
+        }
         return proceed;
     }
+
+
+
+
+
 }
