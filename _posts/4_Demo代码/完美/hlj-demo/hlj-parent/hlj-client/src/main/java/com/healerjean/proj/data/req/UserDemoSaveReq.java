@@ -1,6 +1,6 @@
 package com.healerjean.proj.data.req;
 
-import com.healerjean.proj.common.anno.CollectionIncluded;
+import com.healerjean.proj.utils.validate.validator.anno.CollectionIncluded;
 import com.healerjean.proj.common.data.ValidateGroup;
 import lombok.Data;
 

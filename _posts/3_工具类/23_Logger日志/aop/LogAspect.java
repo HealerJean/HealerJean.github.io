@@ -1,6 +1,7 @@
-package com.hlj.proj.aspect;
+package com.healerjean.proj.aspect;
 
-import com.hlj.proj.utils.JsonUtils;
+import com.healerjean.proj.common.anno.LogIndex;
+import com.healerjean.proj.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -8,7 +9,6 @@ import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,14 +18,14 @@ import java.lang.reflect.Parameter;
 import java.util.*;
 
 /**
+ * LogAspect
+ *
  * @author zhangyujin
- * @date 2021/11/9  5:24 下午
- * @desciption 切面日志
+ * @date 2023/6/14  18:17
  */
 @Slf4j
 @Component
 @Aspect
-@Order(2)
 public class LogAspect {
 
     @Around(value = "(execution(* *(..)) && @annotation(logIndex))", argNames = "pjp,logIndex")
@@ -61,15 +61,17 @@ public class LogAspect {
         } finally {
             long timeCost = System.currentTimeMillis() - start;
             Map<String, Object> map = new HashMap<>(8);
-            map.put("method", className + "." + methodName);
             if (Boolean.TRUE.equals(logIndex.reqFlag())) {
                 map.put("req", reqParams);
             }
             if (Boolean.TRUE.equals(logIndex.resFlag())) {
                 map.put("res", result);
             }
+            if (logIndex.timeOut() > -1 && timeCost >= logIndex.timeOut()){
+                map.put("timeOutFlag", true);
+            }
             map.put("timeCost", timeCost + "ms");
-            log.info("LogAspect:{}", JsonUtils.toJsonString(map));
+            log.info("{}, aspectLog:{}", className + "." + methodName, JsonUtils.toString(map));
         }
         return result;
     }

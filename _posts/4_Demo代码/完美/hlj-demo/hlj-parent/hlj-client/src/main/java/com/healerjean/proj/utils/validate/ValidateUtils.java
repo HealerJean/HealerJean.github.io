@@ -1,6 +1,6 @@
 package com.healerjean.proj.utils.validate;
 
-import com.healerjean.proj.common.anno.CollectionIncluded;
+import com.healerjean.proj.utils.validate.validator.anno.CollectionIncluded;
 import com.healerjean.proj.utils.validate.validator.CollectionIncludedValidator;
 import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.HibernateValidatorConfiguration;

@@ -1,7 +1,7 @@
 package com.healerjean.proj.utils.validate.validator;
 
 
-import com.healerjean.proj.common.anno.CollectionIncluded;
+import com.healerjean.proj.utils.validate.validator.anno.CollectionIncluded;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

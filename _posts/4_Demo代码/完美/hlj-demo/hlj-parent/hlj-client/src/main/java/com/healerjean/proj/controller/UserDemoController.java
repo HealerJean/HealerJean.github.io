@@ -78,7 +78,7 @@ public class UserDemoController {
     }
 
     @RedisCache(RedisConstants.CacheEnum.USER)
-    @LogIndex
+    @LogIndex(timeOut = 0)
     @ApiOperation("用户信息-单条查询")
     @GetMapping("user/{userId}")
     @ResponseBody
@@ -89,7 +89,7 @@ public class UserDemoController {
     }
 
     @ApiOperation("用户信息-列表查询")
-    @LogIndex
+    @LogIndex(timeOut = 0)
     @GetMapping("user/list")
     @ResponseBody
     public BaseRes<List<UserDemoVO>> queryUserDemoList(UserDemoQueryReq req) {

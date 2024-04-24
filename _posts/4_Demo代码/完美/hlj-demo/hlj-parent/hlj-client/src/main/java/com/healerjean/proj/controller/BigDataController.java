@@ -45,7 +45,7 @@ public class BigDataController {
 
 
     @ApiOperation("大数据量-分页查询全部")
-    @LogIndex(resFlag = false)
+    @LogIndex(resFlag = false, timeOut = 0)
     @GetMapping("user/queryAllUserDemoByLimit")
     @ResponseBody
     public BaseRes<List<UserDemoVO>> queryAllUserDemoByLimit(UserDemoQueryReq req) {
