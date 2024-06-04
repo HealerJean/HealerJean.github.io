@@ -1,3 +1,4 @@
+drop table user_demo;
 create table if not exists `user_demo`
 (
     `id`          bigint unsigned not null auto_increment comment '主键',
@@ -10,7 +11,6 @@ create table if not exists `user_demo`
     `valid_flag`  int             not null default 1 comment '1有效 0 废弃',
     `create_time` datetime        not null default current_timestamp comment '创建时间',
     `update_time` datetime        not null default current_timestamp on update current_timestamp comment '更新时间',
-    unique uk_uuid(`phone`),
     primary key (`id`)
 ) engine = innodb
   default charset = utf8;
@@ -36,4 +36,4 @@ begin
 end;
 
 
-CALL test_batch_create(10, '2023-07-01');
+CALL test_batch_create(10, '2024-04-01');

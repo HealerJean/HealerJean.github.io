@@ -605,6 +605,17 @@ public void UNNECESSARY (){
 
 
 
+# 4、`toString`
+
+
+
+| 方法                  | 说明                                           |
+| --------------------- | ---------------------------------------------- |
+| `toString`            | 是科学计数法表示的字符串形式，不会去除尾随的零 |
+| `toEngineeringString` | 科学计数法，并去除尾随的零                     |
+| `toPlainString`       | 不使用科学计数法，并且也不会去除尾随的零。     |
+| `stripTrailingZeros`  | 去除 BigDecimal 数字表示中尾随的零             |
+
 
 
 
