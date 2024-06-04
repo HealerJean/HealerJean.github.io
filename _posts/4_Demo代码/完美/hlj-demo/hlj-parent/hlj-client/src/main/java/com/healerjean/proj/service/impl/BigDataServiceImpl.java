@@ -22,9 +22,9 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -75,7 +75,15 @@ public class BigDataServiceImpl implements BidDataService {
     public List<UserDemoBO> queryAllUserDemoByIdSize(UserDemoQueryBO queryBo) {
         List<UserDemo> list = BatchQueryUtils.queryAllByIdSize(
                 p -> userDemoManager.queryUserDemoByIdSize(p, queryBo), 2);
-        return UserConverter.INSTANCE.covertUserDemoPoToBoList(list);
+        List<UserDemoBO> result =  UserConverter.INSTANCE.covertUserDemoPoToBoList(list);
+
+        // 取出并消费
+        AtomicReference<Integer> size = new AtomicReference<>(0);
+        BatchQueryUtils.queryAllByIdSizeConsumer(p -> userDemoManager.queryUserDemoByIdSize(p, queryBo), l->{
+            size.set(l.size() + size.get());
+        },2);
+        log.info("[queryAllUserDemoByIdSize] size:{}", size);
+        return  result;
     }
 
     /**

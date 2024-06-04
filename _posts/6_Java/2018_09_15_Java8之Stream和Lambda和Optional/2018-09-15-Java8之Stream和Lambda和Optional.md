@@ -1375,11 +1375,12 @@ public void sort() {
     sortEntries.add(new SortEntry(29, 98));
     sortEntries.add(new SortEntry(22, 89));
     Collections.sort(sortEntries, (o1, o2) -> {
-        int i = o1.getScore() - o2.getScore();  //先按照分数排序
-        if (i == 0) {
-            return o1.getAge() - o2.getAge();  //如果年龄相等了再用分数进行排序
+        int i = o1.getScore();
+        int j = o2.getScore();  //先按照分数排序
+        if (i != j) {
+ 						return i-j;
         }
-        return i;
+        return o1.getAge() - o2.getAge();  //如果年龄相等了再用分数进行排序
     });
     System.out.println(sortEntries);
 
@@ -1404,6 +1405,10 @@ public void sort() {
     Collections.sort(sortEntries2, Comparator.comparing(sortEntry -> sortEntry.getName()));
     System.out.println(sortEntries2);
 }
+
+
+
+
 
 ```
 
@@ -1442,9 +1447,7 @@ Collections.sort(sortEntries2, Comparator.comparing(sortEntry -> sortEntry.getNa
 
 
 
-#### g、指定规则排序
-
-**简单方法**
+#### g、指定规则排序-**简单方法**
 
 ```java
 @Test
@@ -1483,7 +1486,7 @@ public void sort2() {
 }
 ```
 
-**复杂方法**
+#### g、指定规则排序-复杂方法
 
 ```java
 package com.jd.merchant.business.platform.core.service.util.comparator;

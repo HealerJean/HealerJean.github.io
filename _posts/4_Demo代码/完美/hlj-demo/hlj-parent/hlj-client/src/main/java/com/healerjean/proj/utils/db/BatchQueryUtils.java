@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.Future;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.LongFunction;
 
@@ -87,6 +88,26 @@ public final class BatchQueryUtils {
         }
         return result;
     }
+
+
+
+    /**
+     * 大数据量-IdSize查询全部(消费)
+     *
+     */
+    public static <R> void queryAllByIdSizeConsumer(Function<IdQueryBO, List<R>> function, Consumer<List<R>> consumer, long pageSize) {
+
+        IdQueryBO idQuery = new IdQueryBO(0L, pageSize);
+        while (true) {
+            List<R> dbList = function.apply(idQuery);
+            if (CollectionUtils.isEmpty(dbList)) {
+                break;
+            }
+            consumer.accept(dbList);
+            idQuery.setMinId(idQuery.getMaxId());
+        }
+    }
+
 
 
 
