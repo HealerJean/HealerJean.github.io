@@ -110,4 +110,6 @@ public interface UserDemoManager {
      */
     void batchSaveOrUpdateUserDemo(List<UserDemo> users);
 
+
+    void saveOrUpdateBatchByCondition(List<UserDemo> users);
 }

@@ -66,7 +66,7 @@ public class RedisCacheAspect {
         String r2mKey = redisCache.value().join(paramKey);
         Object proceed = null;
 
-        String value = ExceptionUtils.catchFuntionException(redisService::get, r2mKey, log, "redisService.get");
+        String value = ExceptionUtils.catchFunctionException(redisService::get, r2mKey, log, "redisService.get");
         if (StringUtils.isNotBlank(value)) {
             return JsonUtils.toObject(value, method.getGenericReturnType());
         }
