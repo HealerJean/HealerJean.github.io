@@ -20,6 +20,7 @@ import com.healerjean.proj.utils.db.BatchQueryUtils;
 import com.healerjean.proj.utils.db.IdQueryBO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,8 @@ public class UserDemoManagerImpl implements UserDemoManager {
      */
     @Override
     public boolean saveUserDemo(UserDemo userDemo) {
+        List<UserDemo> userDemos = Lists.newArrayList();
+        userDemos.add(userDemo);
         return userDemoDao.save(userDemo);
     }
 
@@ -305,5 +308,16 @@ public class UserDemoManagerImpl implements UserDemoManager {
     @Override
     public void batchSaveOrUpdateUserDemo(List<UserDemo> users) {
         userDemoDao.saveOrUpdateBatch(users);
+    }
+
+
+    /**
+     * 根据唯一索引批量保存或更新
+     *
+     * @param users users
+     */
+    @Override
+    public void saveOrUpdateBatchByCondition(List<UserDemo> users) {
+        userDemoDao.saveOrUpdateBatchByUniqueKey(users);
     }
 }

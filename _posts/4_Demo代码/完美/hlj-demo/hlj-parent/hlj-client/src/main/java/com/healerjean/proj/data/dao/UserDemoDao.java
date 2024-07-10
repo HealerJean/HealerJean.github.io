@@ -1,9 +1,10 @@
 package com.healerjean.proj.data.dao;
 
 
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.healerjean.proj.data.po.UserDemo;
+
+import java.util.List;
 
 /**
  * UserDemoDao
@@ -13,6 +14,13 @@ import com.healerjean.proj.data.po.UserDemo;
  */
 public interface UserDemoDao extends IService<UserDemo> {
 
-    int resCountUpdate(UpdateWrapper<UserDemo>updateWrapper);
+
+    /**
+     * 根据唯一索引插入或更新
+     *
+     * @param userDemos userDemos
+     * @return {@link boolean}
+     */
+    boolean saveOrUpdateBatchByUniqueKey(List<UserDemo> userDemos);
 
 }

@@ -1186,36 +1186,6 @@ public class TestMain {
     }
 
 
-
-
-    @Test
-    public void test2() {
-        List<Person> personList = Arrays.asList(
-            new Person(1L, "a"),
-            new Person(1L, "b"),
-            new Person(2L, "b"),
-            new Person(2L, "b"));
-
-        //单属性去重
-        List<Person> collect = personList.stream().collect(
-            Collectors.collectingAndThen(
-                Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(o -> o.getName()))),
-                ArrayList::new));
-        System.out.println(collect);
-
-
-        //多属性去重
-        collect = personList.stream().collect(
-            Collectors.collectingAndThen(
-                Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(o -> o.getName() + ":" + o.getId()))),
-                ArrayList::new));
-        System.out.println(collect);
-
-    }
-
-
-
-
 }
 ```
 
@@ -1486,7 +1456,7 @@ public void sort2() {
 }
 ```
 
-#### g、指定规则排序-复杂方法
+#### H、指定规则排序-复杂方法
 
 ```java
 package com.jd.merchant.business.platform.core.service.util.comparator;
@@ -1554,6 +1524,27 @@ String[] sortRule = new String[]{"a","c"};
 buttonInfos.sort(new ButtonComparator(sortRule));
 IntStream.range(0, buttonInfos.size()).forEach(i -> buttonInfos.get(i).setButtonSort(i + 1));
 ```
+
+
+
+
+
+#### **i：多字段排序**
+
+```java
+  List<String> sortRule = Lists.newArrayList(
+              SignEnum.CurrentSignStatusEnum.UNSIGNED.getCode(),
+              SignEnum.CurrentSignStatusEnum.READY_EFFECT.getCode(),
+              SignEnum.CurrentSignStatusEnum.READY_STOP_SIGN.getCode(),
+              SignEnum.CurrentSignStatusEnum.ONLY_SIGNING.getCode(),
+              SignEnum.CurrentSignStatusEnum.EARLY_RENEWAL.getCode(),
+              SignEnum.CurrentSignStatusEnum.STOP_SIGN.getCode());
+return Comparator.comparingInt(o -> sortRule.indexOf(o.getCurrentSignStatus()))
+      .thenComparing(o1 -> o2.getInsuranceId())
+      .compare(o1, o2);
+```
+
+
 
 
 
