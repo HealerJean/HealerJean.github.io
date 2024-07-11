@@ -5,7 +5,7 @@ import com.healerjean.proj.common.anno.LogIndex;
 import com.healerjean.proj.common.data.bo.BaseRes;
 import com.healerjean.proj.data.bo.UserDemoBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
-import com.healerjean.proj.data.convert.UserConverter;
+import com.healerjean.proj.data.converter.UserConverter;
 import com.healerjean.proj.data.req.UserDemoQueryReq;
 import com.healerjean.proj.data.vo.UserDemoVO;
 import com.healerjean.proj.service.BidDataService;

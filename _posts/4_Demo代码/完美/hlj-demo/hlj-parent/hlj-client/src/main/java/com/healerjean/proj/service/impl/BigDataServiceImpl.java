@@ -5,7 +5,7 @@ import com.healerjean.proj.common.contants.RedisConstants;
 import com.healerjean.proj.common.data.bo.PageQueryBO;
 import com.healerjean.proj.data.bo.UserDemoBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
-import com.healerjean.proj.data.convert.UserConverter;
+import com.healerjean.proj.data.converter.UserConverter;
 import com.healerjean.proj.data.manager.UserDemoManager;
 import com.healerjean.proj.data.po.UserDemo;
 import com.healerjean.proj.service.BidDataService;

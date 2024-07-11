@@ -919,6 +919,7 @@ public class UserController extends ApiController {
 #set($reqPath=          "com.healerjean.proj.template.req")
 #set($resourcePath=     "com.healerjean.proj.template.resource")
 #set($resourceImplPath= "com.healerjean.proj.template.resource.impl")
+
 ```
 
 
@@ -1768,131 +1769,7 @@ public class UserDemoQueryReq implements Serializable {
 
 
 
-#### h、`DeleteReq.java.vm`
 
-```v
-##导入宏定义
-$!{define.vm}
-$!{healerjean.vm}
-
-##设置表后缀（宏定义）
-#setTableSuffix("DeleteReq")
-
-##保存文件（宏定义）
-#save("/req", "DeleteReq.java")
-
-##包路径（宏定义）
-#setPackageSuffix(${reqPath})
-
-##自动导入包（全局变量）
-$!{autoImport.vm}
-import java.io.Serializable;
-import lombok.Data;
-import lombok.experimental.Accessors;
-
-##表注释（宏定义）
-#tableComment("DeleteReq对象")
-@Accessors(chain = true)
-@Data
-public class $!{tableName} implements Serializable {
-   
-    /**
-     * serialVersionUID
-     */
-    private static final long serialVersionUID = 1L;
-
-#foreach($column in $tableInfo.fullColumn)
-    
-#if(${column.comment})
-    /**
-     * ${column.comment}
-     */
-#end
-    private $!{tool.getClsNameByFullName($column.type)} $!{column.name};
-#end
-
-}
-
-```
-
-```java
-package com.healerjean.proj.template.req;
-
-import java.util.Date;
-import java.io.Serializable;
-import lombok.Data;
-import lombok.experimental.Accessors;
-
-/**
- * (UserDemo)DeleteReq对象
- *
- * @author zhangyujin
- * @date 2023-06-17 22:00:15
- */
-@Accessors(chain = true)
-@Data
-public class UserDemoDeleteReq implements Serializable {
-   
-    /**
-     * serialVersionUID
-     */
-    private static final long serialVersionUID = 1L;
-
-    
-    /**
-     * 主键
-     */
-    private Long id;
-    
-    /**
-     * 姓名
-     */
-    private String name;
-    
-    /**
-     * 年龄
-     */
-    private Integer age;
-    
-    /**
-     * 电话
-     */
-    private String phone;
-    
-    /**
-     * 邮箱
-     */
-    private String email;
-    
-    /**
-     * 开始时间
-     */
-    private Date startTime;
-    
-    /**
-     * 结束时间
-     */
-    private Date endTime;
-    
-    /**
-     * 1有效 0 废弃
-     */
-    private Integer validFlag;
-    
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-    
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
-}
-
-
-```
 
 
 
