@@ -1,4 +1,4 @@
-package com.healerjean.proj.data.convert;
+package com.healerjean.proj.data.converter;
 
 import com.healerjean.proj.common.data.bo.PageQueryBO;
 import com.healerjean.proj.common.data.convert.PageConverter;

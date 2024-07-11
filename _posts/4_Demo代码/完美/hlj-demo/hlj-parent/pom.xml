@@ -192,35 +192,6 @@
             </dependency>
 
 
-            <!--   es -->
-<!--            <dependency>-->
-<!--                <groupId>org.elasticsearch.client</groupId>-->
-<!--                <artifactId>elasticsearch-rest-high-level-client</artifactId>-->
-<!--                <version>7.10.2</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>org.elasticsearch.client</groupId>-->
-<!--                <artifactId>elasticsearch-rest-client</artifactId>-->
-<!--                <version>7.10.2</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>org.elasticsearch</groupId>-->
-<!--                <artifactId>elasticsearch</artifactId>-->
-<!--                <version>7.10.2</version>-->
-<!--            </dependency>-->
-
-            <dependency>
-                <groupId>co.elastic.clients</groupId>
-                <artifactId>elasticsearch-java</artifactId>
-                <version>8.5.0</version>
-            </dependency>
-
-            <!-- elasticsearch引入依赖  start -->
-            <dependency>
-                <!--es的starter， 主要是为了实现自动化配置，方便快捷的获取rest client-->
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -316,6 +287,7 @@
                                 <goal>prepare-agent</goal>
                             </goals>
                         </execution>
+                        <!--  在执行 mvn test 时，生成聚合测试覆盖率报告，所有 Maven 子模块的测试覆盖率数据 -->
                         <execution>
                             <id>report</id>
                             <phase>test</phase>

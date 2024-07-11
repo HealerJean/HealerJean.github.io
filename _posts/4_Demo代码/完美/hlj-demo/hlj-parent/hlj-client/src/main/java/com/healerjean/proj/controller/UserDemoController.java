@@ -13,7 +13,7 @@ import com.healerjean.proj.common.data.req.PageReq;
 import com.healerjean.proj.common.data.vo.PageVO;
 import com.healerjean.proj.data.bo.UserDemoBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
-import com.healerjean.proj.data.convert.UserConverter;
+import com.healerjean.proj.data.converter.UserConverter;
 import com.healerjean.proj.data.req.UserDemoQueryReq;
 import com.healerjean.proj.data.req.UserDemoSaveReq;
 import com.healerjean.proj.data.vo.UserDemoVO;
