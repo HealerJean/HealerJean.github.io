@@ -1,6 +1,8 @@
 package com.healerjean.proj.data.bo;
 
+import com.healerjean.proj.service.RedisService;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.function.Function;
@@ -11,8 +13,9 @@ import java.util.function.Function;
  * @author zhangyujin
  * @date 2024/6/14
  */
+@Accessors(chain = true)
 @Data
-public class BusinessFunctionBO<Req, Res> implements Serializable {
+public class BusinessFunctionBO<REQ, RES> implements Serializable {
 
 
     /**
@@ -23,38 +26,93 @@ public class BusinessFunctionBO<Req, Res> implements Serializable {
     /**
      * 请求
      */
-    private Function<Req, Res> function;
-
-    /**
-     * 任务名
-     */
-    private String taskName;
-
-    /**
-     * 唯一id
-     */
-    private String uuid;
+    private Function<REQ, RES> function;
 
     /**
      * 请求对象
      */
-    private Req req;
+    private ReqBusinessBO<REQ> reqBusiness;
+
+    /**
+     * 返回对象
+     */
+    private ResBusinessBO<RES> resBusiness;
 
 
     /**
-     * 返回 对象
+     * instance
+     *
      */
-    private Res res;
+    public static <REQ, RES> BusinessFunctionBO<REQ, RES> instance() {
+        return new BusinessFunctionBO<REQ, RES>()
+                .setReqBusiness(new ReqBusinessBO<>())
+                .setResBusiness(new ResBusinessBO<>());
+    }
 
-    /**
-     * 执行成功
-     */
-    private Boolean invokeFlag;
+    @Accessors(chain = true)
+    @Data
+    public static class ReqBusinessBO<Req>{
 
-    /**
-     * 执行异常信息
-     */
-    private Exception exception;
+        /**
+         * 任务名
+         */
+        private String name;
+
+        /**
+         * 请求对象
+         */
+        private Req req;
+
+
+        /**
+         * 幂等对象
+         */
+        private IdempotentBO idempotent;
+
+        /**
+         * 幂等对象
+         */
+        @Accessors(chain = true)
+        @Data
+        public static class IdempotentBO{
+            /**
+             * 幂等唯一Id
+             */
+            private String uuid;
+
+            /**
+             * 多久幂等（单位s）
+             */
+            private Integer expireSec;
+
+            /**
+             * 幂等操作类
+             */
+            private RedisService redisService;
+        }
+
+    }
+
+    @Accessors(chain = true)
+    @Data
+    public static class ResBusinessBO<Res>{
+
+        /**
+         * 执行结果
+         */
+        private Boolean invokeFlag;
+
+        /**
+         * 返回 对象
+         */
+        private Res res;
+
+        /**
+         * 执行异常信息
+         */
+        private Exception exception;
+    }
+
 }
 
 

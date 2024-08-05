@@ -16,13 +16,11 @@ description: SpringBoot整合Mybatis-Plus
 
 
 
-# 1、SpringBoot整合Mybatis-Plus
 
 
+# 一、依赖  
 
-## 1.1、依赖  
-
-### 1.1.1、`mybatis-plus`依赖
+## 1、`mybatis-plus`依赖
 
 ```xml
 <!--mybatis-plus-->
@@ -39,9 +37,9 @@ description: SpringBoot整合Mybatis-Plus
 
 
 
-### 1.1.2、我的项目依赖 
+## 2、我的项目依赖 
 
-#### 1.1.2.1、主项目 
+### 1）主项目 
 
 ```java
 <?xml version="1.0" encoding="UTF-8"?>
@@ -272,11 +270,9 @@ description: SpringBoot整合Mybatis-Plus
 
 
 
-## 1.2、配置文件  
+## 3、配置文件  
 
-
-
-### 1.2.1、`application.properties`
+### 1）、`application.properties`
 
 ```properties
 spring.application.name=hlj-mybatis-plus
@@ -322,7 +318,7 @@ mybatis-plus.refresh-mapper: true
 
 
 
-### 1.2.2、`application-local.properties`
+### 2）`application-local.properties`
 
 ```properties
 server.port=8888
@@ -338,7 +334,7 @@ spring.datasource.druid.password=123456
 
 ```
 
-### 1.2.3、`MybatisPlusConfiguration`
+### 3）`MybatisPlusConfiguration`
 
 ```java
 
@@ -373,7 +369,7 @@ public class MybatisPlusConfiguration {
 
 
 
-## 1.3、数据库语句
+## 4、数据库语句
 
 ```java
 CREATE TABLE `user` (
@@ -387,7 +383,7 @@ CREATE TABLE `user` (
 
 
 
-## 1.4、`Mapper` 扫描配置
+## 5、`Mapper` 扫描配置
 
 > 两种方式，一种是每个mapper上使用注解@Mapper  
 >
@@ -405,7 +401,7 @@ public class MybatisPlusConfig {
 
 
 
-## 1.4、`User`实体类 
+## 6、`User`实体类 
 
 ```java
 package com.healerjean.proj.data.entity;
@@ -424,7 +420,7 @@ public class User {
 
 
 
-## 1.5、`Mapper`类
+## 7、`Mapper`类
 
 ```java
 package com.healerjean.proj.data.mapper;
@@ -440,7 +436,7 @@ public interface UserMapper  extends BaseMapper<User> {
 
 
 
-## 1.6、测试 
+## 8、测试 
 
 ```java
 @RestController
@@ -488,11 +484,11 @@ http://127.0.0.1:8888/hlj/user/selectById?id=1235553744515612673
 
 
 
-# 2、 `Wrapper` 对象
+# 二、 `Wrapper` 对象
 
 
 
-## 2.1、`QueryWrapper`  
+## 1、`QueryWrapper`  
 
 > 继承自 ·`AbstractWrapper` ,自身的内部属性 `entity` 也用于生成` where` 条件 及` LambdaQueryWrapper`,
 
@@ -504,9 +500,9 @@ http://127.0.0.1:8888/hlj/user/selectById?id=1235553744515612673
 
 
 
-### 2.1.1、获取`QueryWrapper`对象  
+### 1）、获取`QueryWrapper`对象  
 
-#### 2.1.1.1、`Wrappers.<User>lambdaQuery()`
+#### a、`Wrappers.<User>lambdaQuery()`
 
 ```java
 LambdaQueryWrapper<User> userWrapper = Wrappers.<User>lambdaQuery()
@@ -518,7 +514,7 @@ System.out.println(JsonUtils.toJsonString(users));
 
 
 
-#### 2.1.1.2、`Wrappers.lambdaQuery(User.class)`  
+#### b、`Wrappers.lambdaQuery(User.class)`  
 
 ```java
 LambdaQueryWrapper<User> userWrapper = Wrappers.lambdaQuery(User.class)
@@ -530,7 +526,7 @@ System.out.println(JsonUtils.toJsonString(users));
 
 
 
-#### 2.1.1.3、`new QueryWrapper<User>().lambda()`
+#### c、`new QueryWrapper<User>().lambda()`
 
 ```java
 LambdaQueryWrapper<User> userWrapper = new QueryWrapper<User>().lambda()
@@ -543,7 +539,7 @@ System.out.println(JsonUtils.toJsonString(users));
 
 
 
-#### 2.1.1.4、`new QueryWrapper<UserDemo>()`
+#### d、`new QueryWrapper<UserDemo>()`
 
 ```java
 public Page<UserDemo> queryUserDemoPage(PageQueryBO<UserDemoQueryBO> pageQuery) {
@@ -569,7 +565,7 @@ public Page<UserDemo> queryUserDemoPage(PageQueryBO<UserDemoQueryBO> pageQuery) 
 
 
 
-### 2.1.2、`select`：设置查询字段 
+### 2）`select`：设置查询字段 
 
 > 分法为两类.第二类方法为:过滤查询字段(主键除外),入参不包含 class 的调用前需要`wrapper`内的`entity`属性有值!      
 >
@@ -642,14 +638,14 @@ public class MybatisPlusUtil {
 
 
 
-## 2.2、`UpdateWrapper、LambdaUpdateChainWrapper`
+## 2、`UpdateWrapper、LambdaUpdateChainWrapper`
 
 > 继承自 `AbstractWrapper` ,自身的内部属性 `entity` 、也用于生成 `where` 条件（主要是这个功能）
 > 及 `LambdaUpdateWrapper`, `LambdaUpdateChainWrapper`可以通过 `new UpdateWrapper().lambda()` 方法获取!
 
 
 
-### 2.2.1、`UpdateWrapper`
+### 1）`UpdateWrapper`
 
 ```java
 Wrapper<UserDemo> updateWrapper = Wrappers.lambdaUpdate(UserDemo.class)
@@ -708,7 +704,7 @@ public void update(){
 
 
 
-### 2.2.1、`set`：SET 字段
+### 2）`set`：SET 字段
 
 ```java
 set(String column, Object val)
@@ -723,7 +719,7 @@ set(boolean condition, String column, Object val)
 
 
 
-### 2.2.2、`setSql`：设置 SET 部分 SQL
+### 3）`setSql`：设置 SET 部分 SQL
 
 ```java
 setSql(String sql)
@@ -739,9 +735,9 @@ setSql(String sql)
 
 
 
-# 3、Wrapper方法的的使用 
+# 三、Wrapper方法的的使用 
 
-## 3.1、`eq`：等于 =
+## 1、`eq`：等于 =
 
 ```java
 eq(R column, Object val)
@@ -764,7 +760,7 @@ List<User>  users = userMapper.selectList(userWrapper);
 
 
 
-## 3.2、`ne`：不等于 <>
+## 2、`ne`：不等于 <>
 
 ```java
 ne(R column, Object val)
@@ -775,7 +771,7 @@ ne(boolean condition, R column, Object val)
 
 
 
-## 3.3、`gt`：大于 >
+## 3、`gt`：大于 >
 
 ```java
 gt(R column, Object val)
@@ -788,7 +784,7 @@ gt(boolean condition, R column, Object val)
 
 
 
-## 3.4、`ge`：大于等于 >=
+## 4、`ge`：大于等于 >=
 
 ```java
 lt(R column, Object val)
@@ -803,7 +799,7 @@ ge("age", 18)--->age >= 18
 ```
 
 
-## 3.5、`lt`：小于 <
+## 5、`lt`：小于 <
 
 ```java
 lt(R column, Object val)
@@ -815,7 +811,7 @@ lt(boolean condition, R column, Object val)
 
 
 
-## 3.6、`le`：小于等于 <=
+## 6、`le`：小于等于 <=
 
 ```java
 le(R column, Object val)
@@ -826,7 +822,7 @@ le(boolean condition, R column, Object val)
 
 
 
-## 3.7、`between`：ETWEEN 值1 AND 值2
+## 7、`between`：ETWEEN 值1 AND 值2
 
 ```java
 between(R column, Object val1, Object val2)
@@ -837,7 +833,7 @@ between(boolean condition, R column, Object val1, Object val2)
 
 
 
-## 3.8、`notBetween`：NOT BETWEEN 值1 AND 值2
+## 8、`notBetween`：NOT BETWEEN 值1 AND 值2
 
 ```java
 notBetween(R column, Object val1, Object val2)
@@ -848,7 +844,7 @@ notBetween(boolean condition, R column, Object val1, Object val2)
 
 
 
-## 3.9、`like`：LIKE '%值%'
+## 9、`like`：LIKE '%值%'
 
 ```java
 like(R column, Object val)
@@ -858,7 +854,8 @@ like(boolean condition, R column, Object val)
 ```
 
 
-## 3.10、`notLike`：NOT LIKE '%值%'
+
+## 10、`notLike`：NOT LIKE '%值%'
 
 ```java
 notLike(R column, Object val)
@@ -869,7 +866,7 @@ notLike(boolean condition, R column, Object val)
 
 
 
-## 3.11、`likeLeft`：LIKE '%值'
+## 11、`likeLeft`：LIKE '%值'
 
 ```java
 likeLeft(R column, Object val)
@@ -880,7 +877,7 @@ likeLeft(boolean condition, R column, Object val)
 
 
 
-## 3.12、`likeRight`：LIKE '值%'
+## 12、`likeRight`：LIKE '值%'
 
 ```java
 likeRight(R column, Object val)
@@ -891,7 +888,7 @@ likeRight(boolean condition, R column, Object val)
 
 
 
-## 3.13、`isNull`：字段 IS NULL
+## 13、`isNull`：字段 IS NULL
 
 ```java
 isNull(R column)
@@ -901,7 +898,7 @@ isNull(boolean condition, R column)
 ```
 
 
-## 3.14、`isNotNull`：字段 IS NOT NULL
+## 14、`isNotNull`：字段 IS NOT NULL
 
 ```java
 isNotNull(R column)
@@ -912,7 +909,7 @@ isNotNull(boolean condition, R column)
 
 
 
-## 3.15、`in`：字段 IN
+## 15、`in`：字段 IN
 
 ```java
 in(R column, Collection<?> value)
@@ -952,7 +949,7 @@ public void in() {
 
 
 
-## 3.16、`notIn`：字段 IN (value.get(0), value.get(1), ...)
+## 16、`notIn`：字段 IN (value.get(0), value.get(1), ...)
 
 ```java
 notIn(R column, Collection<?> value)
@@ -974,7 +971,7 @@ notIn(boolean condition, R column, Object... values)
 
 
 
-## 3.17、`inSql`：字段 IN ( sql语句 )
+## 17、`inSql`：字段 IN ( sql语句 )
 
 ```java
 inSql(R column, String inValue)
@@ -1003,7 +1000,7 @@ public void inSql() {
 
 
 
-## 3.18、`notInSql`：字段 NOT IN ( sql语句 )
+## 18、`notInSql`：字段 NOT IN ( sql语句 )
 
 ```java
 notInSql(R column, String inValue)
@@ -1019,7 +1016,7 @@ notInSql(boolean condition, R column, String inValue)
 
 
 
-## 3.19、`groupBy`：分组：GROUP BY 字段, .
+## 19、`groupBy`：分组：GROUP BY 字段, .
 
 ```java
 groupBy(R... columns)
@@ -1049,7 +1046,7 @@ public void groupBy() {
 
 
 
-## 3.20、`orderBy/orderByAsc`：ORDER BY 字段, ... ASC
+## 20、`orderBy/orderByAsc`：ORDER BY 字段, ... ASC
 
 
 ```java
@@ -1068,7 +1065,7 @@ orderByAsc(boolean condition, R... columns)
 
 
 
-## 3.21、`orderByDesc`：排序：ORDER BY 字段, ... DESC
+## 21、`orderByDesc`：排序：ORDER BY 字段, ... DESC
 
 ```java
 orderByDesc(R... columns)
@@ -1081,7 +1078,7 @@ orderByDesc(boolean condition, R... columns)
 
 
 
-## 3.22、`having`：HAVING ( sql语句 )
+## 22、`having`：HAVING ( sql语句 )
 
 ```java
 having(String sqlHaving, Object... params)
@@ -1108,7 +1105,7 @@ public void groupBy() {
 
 
 
-## 3.23、`or`：拼接 OR 
+## 23、`or`：拼接 OR 
 
 > 注意事项：主动调用`or`表示紧接着下一个**方法**不是用`and`连接!(不调用`or`则默认为使用`and`连接)
 
@@ -1121,7 +1118,7 @@ or(boolean condition)
 
 
 
-### 3.23.1、`OR` 嵌套 
+### 1）`OR` 嵌套 
 
 ```java
 例: or(i -> i.eq("name", "李白")
@@ -1152,7 +1149,7 @@ SELECT id,name,age,email FROM user WHERE ((age = ? AND age = ?) OR name = ?)
 
 
 
-## 3.24、`and`：默认为and
+## 24、`and`：默认为and
 
 ```java
 and(Consumer<Param> consumer)
@@ -1160,7 +1157,7 @@ and(boolean condition, Consumer<Param> consumer)
 
 ```
 
-### 3.24.1、`and` 嵌套
+### 1）`and` 嵌套
 
 ```java
 例:  and(i -> i.eq("name", "李白")
@@ -1173,7 +1170,7 @@ and(boolean condition, Consumer<Param> consumer)
 
 
 
-## 3.25、`nested`：正常嵌套 不带 AND 或者 OR
+## 25、`nested`：正常嵌套 不带 AND 或者 OR
 
 > 默认都是自动加and
 
@@ -1212,7 +1209,7 @@ SELECT id,name,age,email FROM user WHERE
 
 
 
-## 3.26、`apply`：拼接 sql 
+## 26、`apply`：拼接 sql 
 
 > 该方法可用于数据库**函数** 动态入参的`params`对应前面`applySql`内部的`{index}`部分.这样是不会有sql注入风险的,反之会有!
 
@@ -1267,7 +1264,7 @@ queryWrapper.orderByDesc(SystemHelpDoc::getModifiedTime);
 
 
 
-## 3.27、`last`：无视优化规则直接拼接到 sql 的最后
+## 27、`last`：无视优化规则直接拼接到 sql 的最后
 
 > 只能调用一次,多次调用以最后一次为准 有sql注入的风险,请谨慎使用
 >
@@ -1285,7 +1282,7 @@ last(boolean condition, String lastSql)
 
 
 
-## 3.28、`exists`：拼接 EXISTS ( sql语句 )
+## 28、`exists`：拼接 EXISTS ( sql语句 )
 
 ```java
 exists(String existsSql)
@@ -1298,7 +1295,7 @@ exists(boolean condition, String existsSql)
 
 
 
-## 3.29、`notExists`：拼接 NOT EXISTS ( sql语句 )
+## 29、`notExists`：拼接 NOT EXISTS ( sql语句 )
 
 ```java
 notExists(String notExistsSql)
@@ -1313,11 +1310,11 @@ notExists(boolean condition, String notExistsSql)
 
 
 
-# 4、复杂`SQL `
+# 四、复杂`SQL `
 
-## 4.1、返回自定义对象 
+## 1、返回自定义对象 
 
-### 4.1.1、Mapper
+### 1）Mapper
 
 ```java
  public interface UserMapper  extends BaseMapper<User> {
@@ -1334,7 +1331,7 @@ notExists(boolean condition, String notExistsSql)
 
 ```
 
-### 4.1.2、测试类 
+### 2）测试类 
 
 ```java
 @Test
@@ -1351,9 +1348,9 @@ public void userDTO(){
 
 
 
-## 4.2、原生·SQL·使用 ·Script· 语句 
+## 2、原生·SQL·使用 ·Script· 语句 
 
-### 4.2.1、Mapper
+### 1）Mapper
 
 ```java
 @Select({
@@ -1372,7 +1369,7 @@ List<UserDTO> selectListByScript(UserDTO userDTO);
 
 
 
-### 4.2.2、测试类 
+### 2）测试类 
 
 ```java
 @Test
@@ -1389,9 +1386,9 @@ public void selectListByScript() {
 
 
 
-## 4.3、配置`mapper.xml` 
+## 3、配置`mapper.xml` 
 
-### 4.3.1、`application.properties`配置
+### 1）`application.properties`配置
 
 ```properties
 # 配置 mybatis的一些配置，也可以在 application.properties 中配置，如果配置了就不需要了mybatis.xml
@@ -1414,7 +1411,7 @@ mybatis-plus.refresh-mapper: true
 
 
 
-### 4.3.2、`mybatis.xml`
+### 2）`mybatis.xml`
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1432,7 +1429,7 @@ mybatis-plus.refresh-mapper: true
 
 
 
-### 4.3.3、`mapper.xml`  
+### 3）`mapper.xml`  
 
 ![1584524650597](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1584524650597.png)
 
@@ -1454,7 +1451,7 @@ mybatis-plus.refresh-mapper: true
 
 
 
-### 4.3.4、`Mapepr.java`
+### 4）`Mapepr.java`
 
 ```java
 List<UserDTO> selectByMappeXml(UserDTO userDTO);
@@ -1462,7 +1459,7 @@ List<UserDTO> selectByMappeXml(UserDTO userDTO);
 
 
 
-### 4.3.5、测试
+### 5）测试
 
 ```java
 
@@ -1482,13 +1479,11 @@ public void test(){
 
 
 
+## 4、分页查询
 
+### 1）、准备数据
 
-## 4.4、分页查询
-
-### 4.4.1、准备数据
-
-#### 4.4.1.1、`@Configuration`
+#### a、`@Configuration`
 
 ```java
 @Configuration
@@ -1511,7 +1506,7 @@ public class MybatisPlusConfig {
 
 ```
 
-#### 4.4.1.2.、`BeanUtils`封装
+#### b、`BeanUtils`封装
 
 ```java
 public static <T> PageDTO<T> toPageDTO(IPage iPage, List<T> datas) {
@@ -1525,9 +1520,9 @@ public static <T> PageDTO<T> toPageDTO(IPage iPage, List<T> datas) {
 
 
 
-### 4.4.2、简单分页
+### 2）简单分页
 
-#### 4.4.2.1、简单分页
+#### a、简单分页
 
 ```java
 /** 传入QueryWrapper分页 */
@@ -1550,7 +1545,7 @@ public void page2(){
 
 ```
 
-#### 4.4.2.1、`Mapper`
+#### b、`Mapper`
 
 ```java
 public interface UserMapper extends BaseMapper<User> {
@@ -1568,9 +1563,9 @@ public interface UserMapper extends BaseMapper<User> {
 
 
 
-### 4.2.3、复杂分页 
+### 3、复杂分页 
 
-#### 4.2.3.1、`Service`
+#### a、`Service`
 
 ```java
 @Test
@@ -1582,7 +1577,7 @@ public void page3() {
 }
 ```
 
-#### 4.2.3.2、`Mapper`
+#### b、`Mapper`
 
 ```java
 public interface UserMapper extends BaseMapper<User> {
@@ -1600,9 +1595,9 @@ public interface UserMapper extends BaseMapper<User> {
 
 
 
-### 4.2.4、传入实体对象分页
+### 4、传入实体对象分页
 
-#### 4.2.4.1、`Service`
+#### a、`Service`
 
 ```java
 @Test
@@ -1621,7 +1616,7 @@ public void page4() {
 
 ```
 
-#### 4.2.2.2、`Mapper`
+#### b、`Mapper`
 
 ```java
 public interface UserMapper extends BaseMapper<User> {
@@ -1639,7 +1634,7 @@ public interface UserMapper extends BaseMapper<User> {
 
 
 
-## 4.3、`Wrapepr`复用
+## 3、`Wrapepr`复用
 
 ```java
 @Test
@@ -1657,7 +1652,7 @@ public void queryManyUse() {
 
 
 
-## 4.4、返回自定义函数和字段
+## 4、返回自定义函数和字段
 
 > 注意大 使用双引号，否则出来是大写 `MINID`、`MAXID`
 
@@ -1680,248 +1675,31 @@ return ImmutablePair.of(MapUtils.getLong(map, "minId"), MapUtils.getLong(map, "m
 
 
 
-# 5、问题
+# 五、问题
+
+## 1、日期问题 
+
+### 1）日期格式
+
+> 可能会遇到日期格式的时间段问题，当数据库的时间为 `DATE` 类型时，`MyBatis` 的`jdbcType`应该使用 `DATE`
+> `jdbcType=DATE`，而不是使用`jdbcType=TIMESTAMP`
 
 
 
-## 5.1、返回类型为`LocalDate`和`LocalDateTime` 的报错问题  
+### 2）返回 `LocalDate `和 `LocalDateTime` 报错
 
-
-
-### 5.1.1、 准备 
-
-#### 5.1.1.1、sql表 
-
-```java
-CREATE TABLE `user`
-(
-  `id`          bigint(20) NOT NULL COMMENT '主键ID',
-  `name`        varchar(30) DEFAULT NULL COMMENT '姓名',
-  `age`         int(11)     DEFAULT NULL COMMENT '年龄',
-  `email`       varchar(50) DEFAULT NULL COMMENT '邮箱',
-  `create_date` date        DEFAULT NULL COMMENT '日期',
-  `create_time` datetime    DEFAULT NULL COMMENT '日期时间',
-  PRIMARY KEY (`id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8
-
-INSERT INTO hlj_mybatis_plus.user (id, name, age, email, create_date, create_time) VALUES (1, 'healer', 22, 'healerjean@gmial.com', '2020-03-18', '2020-03-18 16:28:20');
-```
-
-
-
-#### 5.1.1.2、`UserDTO`
+> 提高 `druid `版本,我提高到了1.1.21
 
 ```java
-@Data
-public class UserDTO {
-
-    private Long id;
-    private Long userId;
-    private List<Long> ids ;
-    private String name;
-    private Integer age;
-    private String email;
-
-
-    /** 添加日期进行测试 */
-    private LocalDate createDate;
-    private LocalDateTime createTime;
-
-}
-```
-
-
-
-
-
-### 5.1.2、第一种方案（List查询不支持，单个对象查询支持）
-
-#### 5.1.2.1、查询对象 
-
-
-
-##### 5.1.2.1.1、`Mapper`.java
-
-```java
-@Results({
-    @Result(column = "create_time", property = "createTime", 
-            javaType = LocalDateTime.class,
-            jdbcType = JdbcType.TIMESTAMP, 
-            typeHandler = CustomLocalDateTimeTypeHandler.class),
-    @Result(column = "create_date", property = "createDate", 
-            javaType = LocalDate.class,
-            jdbcType = JdbcType.DATE, 
-            typeHandler = CustomLocalDateTypeHandler.class)
-})
-@Select("select * from user where id = 1")
-UserDTO queryLocalDate();
-```
-
-
-##### 5.1.2.1.2、`CustomLocalDateTypeHandler`、`CustomLocalDateTimeTypeHandler`
-
-
-
-```java
-package com.healerjean.proj.config;
-
-import org.apache.ibatis.type.LocalDateTimeTypeHandler;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-
-/**
- * @author HealerJean
- * @ClassName CustomLocalDateTimeTypeHandler
- * @date 2020/3/26  11:16.
- * @Description
- */
-public class CustomLocalDateTimeTypeHandler extends LocalDateTimeTypeHandler {
-
-    @Override
-    public LocalDateTime getResult(ResultSet rs, String columnName) throws SQLException {
-        Object object = rs.getObject(columnName);
-        System.out.println(object);
-        //在这里强行转换，将sql的时间转换为LocalDateTime
-        if (object instanceof java.sql.Timestamp) {
-            LocalDateTime localDateTime = ((java.sql.Timestamp) object).toLocalDateTime();
-            return localDateTime;
-        }
-        return super.getResult(rs, columnName);
-    }
-}
-
-```
-
-
-
-
-
-```java
-package com.healerjean.proj.config;
-
-import org.apache.ibatis.type.LocalDateTypeHandler;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
-
-/**
- * @author HealerJean
- * @ClassName CustomLocalDateTypeHandler
- * @date 2020/3/26  11:20.
- * @Description
- */
-public class CustomLocalDateTypeHandler extends LocalDateTypeHandler {
-
-    @Override
-    public LocalDate getResult(ResultSet rs, String columnName) throws SQLException {
-        Object object = rs.getObject(columnName);
-        System.out.println(object);
-        //在这里强行转换，将sql的时间转换为LocalDateTime
-        if (object instanceof java.sql.Date) {
-            LocalDate localDate = ((java.sql.Date) object).toLocalDate();
-            return localDate;
-        }
-        return super.getResult(rs, columnName);
-    }
-}
-
-```
-
-
-
-##### 5.1.2.1.3、测试 
-
-```java
-
-@Test
-public void testDate(){
-    UserDTO userDTO= userMapper.queryLocalDate();
-    System.out.println(JsonUtils.toJsonString(userDTO));
-}
-
-
-
-
-{"id":1,"name":"healer","age":22,"email":"healerjean@gmial.com","createDate":"2020-03-18","createTime":"2020-03-18 16:28:20"}
-```
-
-
-
-
-
-#### 5.1.2.2、查询集合List
-
-##### 5.1.2.2.1、`Maper.java`
-
-```java
-   @Results({
-            @Result(column = "create_time", property = "createTime", 
-                    javaType = LocalDateTime.class,
-                    jdbcType = JdbcType.TIMESTAMP, 
-                    typeHandler = CustomLocalDateTimeTypeHandler.class),
-            @Result(column = "create_date", property = "createDate", 
-                    javaType = LocalDate.class,
-                    jdbcType = JdbcType.DATE, 
-                    typeHandler = CustomLocalDateTypeHandler.class)
-    })
-    List<UserDTO> selectLocalDateByMappeXml(UserDTO userDTO);
-```
-
-
-
-##### 5.1.2.2.2、`Mapper.xml`
-
-```xml
-<select id="selectLocalDateByMappeXml" resultType="com.healerjean.proj.dto.UserDTO">
-    select * from user where name = #{name}
-</select>
-```
-
-
-
-
-
-##### 5.1.2.2.3、测试 
-
-```java
-@Test
-public void testDateList(){
-    UserDTO userDTO = new UserDTO();
-    userDTO.setName("healer");
-    List<UserDTO> userDTOS = userMapper.selectLocalDateByMappeXml(userDTO);
-    System.out.println(JsonUtils.toJsonString(userDTOS));
-}
-```
-
-
-
-##### 5.1.2.2.4、报错如下
-
-
-
-```java
-
 org.springframework.dao.InvalidDataAccessApiUsageException: Error attempting to get column 'create_date' from result set.  Cause: java.sql.SQLFeatureNotSupportedException
 ; null; nested exception is java.sql.SQLFeatureNotSupportedException
 ```
 
 
 
-
-
-### 5.1.3、第二种：完美的解决方案
-
-#### 5.1.3.1、提高`druid`版本,我提高到了1.1.21
-
 ```xml
 <!--数据源-->
 <com-alibaba-druid.version>1.1.20</com-alibaba-druid.version>
-
 
 
 <!--数据源-->
@@ -1934,74 +1712,11 @@ org.springframework.dao.InvalidDataAccessApiUsageException: Error attempting to 
 
 
 
-#### 5.1.3.2、`Mapper.java`
-
-```java
-
-UserDTO queryLocalDate();
-
-List<UserDTO> selectLocalDateByMappeXml(UserDTO userDTO);
-```
-
-
-
-
-
-#### 5.1.3.3、`Mapper.xml`
-
-```xml
-
-<select id="selectLocalDateByMappeXml" resultType="com.healerjean.proj.dto.UserDTO">
-    select * from user where name = #{name}
-</select>
-
-```
-
-
-
-#### 5.1.3.4、测试
-
-
-
-```java
-@Test
-public void testDate(){
-    UserDTO userDTO= userMapper.queryLocalDate();
-    System.out.println(JsonUtils.toJsonString(userDTO));
-}
-
-
-{"id":1,"name":"healer","age":22,"email":"healerjean@gmial.com","createDate":"2020-03-18","createTime":"2020-03-18 16:28:20"}
-
-
-
-@Test
-public void testDateList(){
-    UserDTO userDTO = new UserDTO();
-    userDTO.setName("healer");
-    List<UserDTO> userDTOS = userMapper.selectLocalDateByMappeXml(userDTO);
-    System.out.println(JsonUtils.toJsonString(userDTOS));
-}
-
-[{"id":1,"name":"healer","age":22,"email":"healerjean@gmial.com","createDate":"2020-03-18","createTime":"2020-03-18 16:28:20"}]
-```
-
-
-
-## 5.2、日期问题 
-
-> 可能会遇到日期格式的时间段问题，当数据库的时间为 `DATE` 类型时，`MyBatis` 的`jdbcType`应该使用 `DATE`
-> `jdbcType=DATE`，而不是使用`jdbcType=TIMESTAMP`
-
-
-
-## 5.3、更新 `Null` 字段
+## 2、更新 `Null` 字段
 
 > **`updateById(`) 方法不能更新字段为 `null` 的原因及解决办法。**
 >
 > `Mybatis-plus` 的字段策略（`FieldStrategy`）有三种策略：默认的更新策略是 `NOT_NULL`，即通过接口更新数据时数据为 `NULL`值时将不更新进数据库。
-
-
 
 | 策略              | 说明                |
 | ----------------- | ------------------- |
@@ -2009,7 +1724,7 @@ public void testDateList(){
 | **`NOT_NULL`**：  | 1 非 NULL，默认策略 |
 | **`NOT_EMPTY`**： | 2 非空              |
 
-### 5.3.1、方案1：在配置文件中修改全局策略
+### 1）方案1：在配置文件中修改全局策略
 
 > 这样做是进行全局配置，在更新时会忽略对所有字段的判断。但是如果一些字段没有传值过来，会被直接更新为null，可能会影响其它业务数据的准确性。不推荐使用此方法。
 
@@ -2025,7 +1740,7 @@ mybatis-plus:
 
 
 
-### 5.3.2、方案2：对指定的字段单独设置 `field-strategy`
+### 2）方案2：对指定的字段单独设置 `field-strategy`
 
 > 设置好了之后，在更新时就可以直接使用 `mybatis-plus` 中的 `updateById` 方法就可以成功将字段更新为 `null,`但是这样做存在一定的弊端，就是当需要这样处理的字段比较多时，要给对应的字段都要添加上这样的注解。
 
@@ -2034,7 +1749,9 @@ mybatis-plus:
 private String updateBy;
 ```
 
-### 5.3.3、方案2：使用 `update`方法结合`UpdateWrapper`方式更新
+
+
+### 3）方案2：使用 `update`方法结合`UpdateWrapper`方式更新
 
 ```java
 User user=userService.lambdaQuery().eq(User::getUserId,userId).one();
@@ -2048,7 +1765,7 @@ if(user!=null){
 
 
 
-### 5.4、返回值问题
+## 3、返回值问题
 
 #### 1）更新返回 `boolean`
 
@@ -2057,6 +1774,25 @@ if(user!=null){
 | 数据不存在   | 用于表示更新操作是否成功。如果数据不存在，方法通常会返回 `false`，因为更新操作没有影响到任何记录。 |      |
 | 数据并未修改 | 这通常意味着没有满足更新条件的记录被更新，因此该方法通常会返回 `false` |      |
 | 返回 `int`   | `userDemoDao.getBaseMapper().update(null, updateWrapper)`    |      |
+
+
+
+## 4、SQL执行问题
+
+### 1）多出现 `limit`
+
+> **原因：**在执行 `sql` 的时候，使用了自定义的分页，但是执行之后自动在后面加上了一个 `limit` ，导致 `sql` 执行报错，虽然自己没有使用，但是项目中配置了 `PageHelper` 分页插件，然后查找资料，才发现只要自定义的 `sql` 中有 `pageSize` 和 `pageNum`参数值，就会在执行之后自动加上 `limit `  
+>
+> **解决：**在执行的 `sql` 中，把 `pageSize` 和 `pageNum` 规避掉，可以换成 `startIndex` 和 `maxCount`
+
+```sql
+limit #{pageNum,jdbcType=INTEGER},  #{pageSize,jdbcType=INTEGER}
+
+替换成limit #{maxCount,jdbcType=INTEGER}, #{startIndex,jdbcType=INTEGER}
+
+```
+
+
 
 
 

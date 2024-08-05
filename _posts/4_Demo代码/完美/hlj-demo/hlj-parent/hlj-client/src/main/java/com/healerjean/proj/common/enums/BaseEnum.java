@@ -1,8 +1,6 @@
 package com.healerjean.proj.common.enums;
 
-import com.healerjean.proj.data.vo.BaseEnumVO;
-
-import java.util.Objects;
+import com.healerjean.proj.data.vo.EnumLabelDTO;
 
 /**
  * BaseEnum
@@ -26,14 +24,9 @@ public interface BaseEnum {
     /**
      * baseEnum
      *
-     * @param baseEnum baseEnum
-     * @return DictionaryVO
      */
-    default BaseEnumVO toBaseVO(BaseEnum baseEnum) {
-        if (Objects.isNull(baseEnum)) {
-            return null;
-        }
-        return new BaseEnumVO().setCode(baseEnum.getCode()).setDesc(baseEnum.getDesc());
+    default EnumLabelDTO toBaseDto() {
+        return new EnumLabelDTO().setCode(this.getCode()).setDesc(this.getDesc());
     }
 
 
