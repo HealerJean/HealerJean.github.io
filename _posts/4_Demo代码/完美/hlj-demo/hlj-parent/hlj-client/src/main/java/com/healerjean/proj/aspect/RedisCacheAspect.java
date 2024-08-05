@@ -1,9 +1,10 @@
 package com.healerjean.proj.aspect;
 
 import com.healerjean.proj.common.anno.RedisCache;
+import com.healerjean.proj.data.bo.BusinessFunctionBO;
 import com.healerjean.proj.service.RedisService;
 import com.healerjean.proj.utils.AspectUtils;
-import com.healerjean.proj.utils.ExceptionUtils;
+import com.healerjean.proj.utils.FunctionUtils;
 import com.healerjean.proj.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -66,9 +67,12 @@ public class RedisCacheAspect {
         String r2mKey = redisCache.value().join(paramKey);
         Object proceed = null;
 
-        String value = ExceptionUtils.catchFunctionException(redisService::get, r2mKey, log, "redisService.get");
-        if (StringUtils.isNotBlank(value)) {
-            return JsonUtils.toObject(value, method.getGenericReturnType());
+        BusinessFunctionBO<String, String> function = BusinessFunctionBO.instance();
+        function.getReqBusiness().setReq(r2mKey).setName("redisService.get");
+        function.setFunction(redisService::get);
+        FunctionUtils.invokeFunction(function);
+        if (Boolean.TRUE.equals(function.getResBusiness().getInvokeFlag())) {
+            return JsonUtils.toObject(function.getResBusiness().getRes(), method.getGenericReturnType());
         }
 
         try {

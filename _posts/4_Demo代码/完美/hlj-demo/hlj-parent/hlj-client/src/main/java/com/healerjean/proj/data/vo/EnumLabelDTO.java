@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @Accessors(chain = true)
 @Data
-public class BaseEnumVO implements Serializable {
+public class EnumLabelDTO implements Serializable {
 
     /**
      * serialVersionUID

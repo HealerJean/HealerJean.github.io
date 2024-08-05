@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum StatusEnum implements BaseEnum {
+public enum DeleteEnum implements BaseEnum {
 
     VALID("valid", "生效"),
     TRASH("trash", "废弃"),
@@ -26,5 +26,6 @@ public enum StatusEnum implements BaseEnum {
      * desc
      */
     private final String desc;
+
 
 }

@@ -17,9 +17,9 @@ description: Java8之Stream和Lambda和Optional
 
 
 
-# 1、`lambda`
+# 一、`lambda`
 
-## 1.1、`lambd` 使用前提
+## 1、`lambd` 使用前提
 
 > **1、必须保证只有一个接口，而且其中的抽象方法有且只有一个**        
 >
@@ -35,7 +35,7 @@ public interface Calculator {
 }
 ```
 
-## 1.2、lambda表达式
+## 2、lambda表达式
 
 | 要求     | 说明                                       |
 | -------- | ------------------------------------------ |
@@ -45,7 +45,7 @@ public interface Calculator {
 
 
 
-### 1.2.1、参数写法
+### 1）参数写法
 
 **1、 如果参数有多个，那么使用逗号分隔，(Person s,Person) ->{一些代码}**  
 
@@ -75,7 +75,7 @@ cookTest(() -> System.out.println("测试"));
 
 
 
-### 1.2.2、省略格式
+### 2）省略格式
 
 > **1、参数的类型可以省略，同时省略所有的参数类想，要么都写，要么都不写**   
 >
@@ -85,7 +85,7 @@ cookTest(() -> System.out.println("测试"));
 
 
 
-#### 1.2.2.1、案例测试
+#### a、案例测试
 
 **1、接口**
 
@@ -125,7 +125,7 @@ public class TestMain {
 
 
 
-## 1.3、方法引用符
+## 3、方法引用符
 
 > >  **格式： 对象名称::方法名称**     
 >
@@ -139,9 +139,9 @@ lambda写法     s-> System.out.println(s+"是好人")
 
 
 
-### 1.3.1、案例测试
+### 1）案例测试
 
-**1、接口**  
+#### a、接口  
 
 ```java
 //该接口作为参数的额是，需要我们写出实现这个接口的方法 ： 
@@ -151,7 +151,7 @@ public interface PrinterInterface {
 
 ```
 
-**2、启动测试** 
+#### **b、测试** 
 
 ```java
 public class TestMain {
@@ -175,7 +175,7 @@ public class TestMain {
 
 
 
-### 1.3.2、对象的引用输出
+### 2）对象的引用输出
 
 > 构造器引：`MethodRefObject::new`   
 >
@@ -185,7 +185,7 @@ public class TestMain {
 
 
 
-#### 1.3.2.1、普通对象案例测试
+#### a、普通对象案例测试
 
 **1、接口**
 
@@ -283,9 +283,7 @@ public class TestMain_1_普通对象的引用输出 {
 
 
 
-#### 1.3.2.1、数组构造器的引用输出：案例测试
-
-
+#### b、数组构造器的引用输出：案例测试
 
 **1、接口**
 
@@ -319,9 +317,9 @@ public class TestMain_2_数组构造器的引用输出 {
 
 
 
-## 1.4、lombda延迟加载
+## 4、lombda延迟加载
 
-### 1.4.1、正常情况下，资源浪费
+### 1）正常情况下，资源浪费
 
 ```java
 public class TestMain {
@@ -347,9 +345,9 @@ public class TestMain {
 }
 ```
 
-### 1.4.2、lombda延迟加载
+### 2）lombda延迟加载
 
-**1、接口**
+#### a、接口
 
 ```java
 public interface MsgBuilder {
@@ -359,7 +357,7 @@ public interface MsgBuilder {
 
 ```
 
-**2、启动测试**
+#### b、测试
 
 ```java
 public class TestMain_2_lambda延迟加载 {
@@ -387,7 +385,7 @@ public class TestMain_2_lambda延迟加载 {
 
 ## 1.5、功能性
 
-### 1.5.1、`function` 
+### 1）`function` 
 
 > 传入参数返回结果，`Cousumer` 没有返回结果。`Function` 相当于 `stram` 中的 `map`
 
@@ -413,7 +411,7 @@ public class TestMain {
 
 
 
-### 1.5.2、`Cousumer` 
+### 2）`Cousumer` 
 
 > 解释：消费掉我们传入的参数  ,    **`Consumer`在 `stream`中相当于是 `forEach()`中执行**
 
@@ -444,7 +442,7 @@ public class TestMain {
 
 
 
-### 1.5.3、`Supplier`：
+### 3）`Supplier`：
 
 > 解释：直接返回结果
 
@@ -468,7 +466,7 @@ public class TestMain {
 
 
 
-### 1.5.4、`Predicate` ：
+### 4）`Predicate` ：
 
 > 解释：断言，返回true或者false ，` stream`中相当于是 `filter()`中执行
 
@@ -507,7 +505,7 @@ public class TestMain {
 
 
 
-# 2、`Stream`
+# 二、`Stream`
 
 > **Stream是一次使用的，阅后即焚，stream方法会返回方法本身**     
 >
@@ -519,7 +517,7 @@ public class TestMain {
 
 
 
-## 2.1、`Collection`、`Map`、`Array`：获取`Stream`
+## 1、`Collection`、`Map`、`Array`：获取`Stream`
 
 
 ```java
@@ -545,11 +543,11 @@ public void test() {
 
 
 
-## 2.2、简单属性
+## 2、简单属性
 
 
 
-### 2.2.1、`filter`
+### 1）`filter`
 
 > **解释：过滤，参数是一个predicate 断言 也就是能产生boolean结果的过滤规则,**   
 
@@ -589,7 +587,7 @@ public class TestMain {
 
 
 
-### 2.2.2、`Count`：
+### 2）`Count`：
 
 > 解释：统计stream 执行结果的个数   
 >
@@ -615,7 +613,7 @@ public class TestMain {
 
 
 
-### 2.2.3、`Limit`
+### 1）`Limit`
 
 > 解释：获取执行结果的前几个 ,，返回值为Stream   
 >
@@ -644,7 +642,7 @@ public class TestMain {
 
 
 
-### 2.2.4、`skip`
+### 4）`skip`
 
 >  解释：`skip`跳过执行结果的前几个，返回值为Stream
 
@@ -674,7 +672,7 @@ public class TestMain {
 
 
 
-### 2.2.5、`Map`
+### 5）`Map`
 
 > 解释：参数是一个Function ,返回结果 ，返回值为Stream，
 >
@@ -712,7 +710,7 @@ public class TestMain {
 
 
 
-### 2.2.6、`Concat`
+### 6）`Concat`
 
 > `Stream.concat` 可以可以将两个集合合并成一个整体
 
@@ -733,7 +731,7 @@ public class TestMain {
 
 
 
-### 2.2.7、`ForEach`
+### 7）`ForEach`
 
 > 解释：如果希望对流当中的元素，进行逐一挨个处理，参数是一个Consumer接口(方法，lambda，方法引用)        
 >
@@ -765,7 +763,7 @@ public class TestMain {
 
  
 
-### 2.2.8、`parallelStream()`：并发流
+### 8）`parallelStream()`：并发流
 
 > 1、直接获取并发流 `list.parallelStream()`   
 >
@@ -793,7 +791,7 @@ public class TestMain {
 
 
 
-### 2.2.9、`distinct` 
+### 9）`distinct` 
 
 > 解释：去重  
 >
@@ -812,7 +810,7 @@ public class TestMain {
 
 
 
-### 2.10、`anyMatch`、`allMatch`、`noneMatch`   
+### 10）`anyMatch`、`allMatch`、`noneMatch`   
 
 > **使用：参数是一个predicate 断言 也就是能产生boolean结果的过滤规则,返回的是true，或者false**
 
@@ -838,7 +836,7 @@ public class TestMain {
 
 
 
-### 2.11、`findAny、findFirst`、
+### 11）`findAny、findFirst`、
 
 > `findAny`：能够从流中随便选一个元素出来，它返回一个Optional类型的元素。    
 >
@@ -866,13 +864,13 @@ public class TestMain {
 
 
 
-## 2.3、`collect`
+## 3、`collect`
 
 > **解释 ：当中收集集合需要用到collect方法，方法的参数是一个`Collector`接口**
 >
 > **`Collector`接口通常不需要自己实现，借助工具类中的  `Collectors.toList() Collectors.toSet()` 即可**     
 
-### 2.3.1、收集成 `Collection`
+### 1）收集成 `Collection`
 
 ```java
 public class TestMain {
@@ -898,9 +896,7 @@ public class TestMain {
 
 
 
-#### 2.3.1.1、去重 
-
-**1、单一属性去重**
+#### a、单一属性去重
 
 ```java
 @Test
@@ -922,7 +918,7 @@ public void test2() {
 
 
 
-**2、多个属性去重** 
+#### b、多个属性去重
 
 ```java
 
@@ -946,7 +942,7 @@ public void test2() {
 
 
 
-### 2.3.2、收集成`map`
+### 2）收集成`map`
 
 > j解释：从下面的`Collectors.toMap`可以看到，里面需要的参数是两个`function`，`function`的参数实际上就是我们的流中的数据   
 >
@@ -961,7 +957,7 @@ Collector<T, ?, Map<K,U>> toMap(Function<? super T, ? extends K> keyMapper,
 
 
 
-#### 2.3.2.1、`Collectors.toMap`：普通数据收集成`map`
+#### a、`Collectors.toMap`：普通数据收集成`map`
 
 ```java
 public class TestMain {
@@ -982,7 +978,7 @@ public class TestMain {
 
 
 
-#### 2.3.2.2、`Collectors.toMap`：对象收集成map：
+#### b、`Collectors.toMap`：对象收集成map：
 
 ```java
 public class TestMain {
@@ -1016,7 +1012,7 @@ public class TestMain {
 
 
 
-### 2.2.3、`Collectors.mapping`：收集并映射
+### 3）`Collectors.mapping`：收集并映射
 
 > **映射：先对集合中的元素进行映射，然后再对映射的结果使用 `Collectors` 操作**
 
@@ -1045,9 +1041,9 @@ public class TestMain {
 
 
 
-### 2.3.4、`groupby` 分组
+### 4）`groupby` 分组
 
-#### 2.3.4.1、`Collection`：分组收集
+#### a、`Collection`：分组收集
 
 ```java
 public class TestMain {
@@ -1077,7 +1073,7 @@ public class TestMain {
 
 
 
-#### 2.3.4.2、组内数据再映射（收集并映射）
+#### b、组内数据再映射（收集并映射）
 
 
 ```java
@@ -1106,7 +1102,7 @@ public class TestMain {
 
 
 
-#### 2.3.4.3、分组计数
+#### c、分组计数
 
 > 根据某个属性分组计数
 
@@ -1137,7 +1133,7 @@ public class TestMain {
 
 
 
-### 2.3.5、`Collectors.joining`：收集并拼接
+### 5）`Collectors.joining`：收集并拼接
 
  **将字符串结果用逗号隔开**  
 
@@ -1161,7 +1157,7 @@ public class TestMain {
 
 
 
-### 2.3.5、`collectingAndThen`：收集然后处理
+### 6）`collectingAndThen`：收集然后处理
 
 > 最终返回的是一个普通对象/普通数据
 
@@ -1182,7 +1178,6 @@ public class TestMain {
             .map(Integer::valueOf)
             .collect(Collectors.collectingAndThen(Collectors.maxBy(Comparator.comparingInt(o -> o)), item -> item));
         System.out.println(max.get()); //3
-
     }
 
 
@@ -1193,9 +1188,9 @@ public class TestMain {
 
 
 
-## 2.4、聚合计算
+## 4、聚合计算
 
-### 2.4.1、最大值、最小值
+### 1）最大值、最小值
 
 ```java
 public class TestMain {
@@ -1232,7 +1227,7 @@ public class TestMain {
 
 
 
-### 2.4.2、平均值 
+### 2）平均值 
 
 ```java
 public class TestMain {
@@ -1267,7 +1262,7 @@ public class TestMain {
 
 
 
-### 2.4.3、求和  
+### 3）求和  
 
 ```java
 public class TestMain {
@@ -1296,7 +1291,7 @@ public class TestMain {
 
 
 
-### 2.4.4、排序
+### 4）排序
 
 #### a、逆序
 
@@ -1548,14 +1543,14 @@ return Comparator.comparingInt(o -> sortRule.indexOf(o.getCurrentSignStatus()))
 
 
 
-# 3、`Optional`
+# 三、`Optional`
 
-## 3.1、`get()`
+## 1、`get()`
 
 > 解释：如果Optional有值则将其返回，否则抛出NoSuchElementException。
 >
 
-## 3.2、`of`
+## 2、`of`
 
 > 解释：通过工厂方法创建Optional类，创建对象时传入的参数不能为null。如果传入参数为null，则抛出NullPointerException 。
 
@@ -1577,7 +1572,7 @@ public void test1() {
 
 
 
-## 3.3、`ofNullable`
+## 3、`ofNullable`
 
 > 解释：ofNullable与of方法相似，唯一的区别是可以接受参数为null的情况，为指定的值创建一个Optional，如果指定的值为null，则返回一个空的Optional。    
 
@@ -1595,7 +1590,7 @@ public void test2() {
 
 
 
-## 3.4、`isPresent`
+## 4、`isPresent`
 
 > 解释：如果值存在返回true，否则返回false。
 
@@ -1622,11 +1617,11 @@ public void isPresent() {
 
 
 
-## 3.5、`orElse`、`orElseGet`
+## 5、`orElse`、`orElseGet`
 
 > 解释：如果有值则将其返回，否则返回指定的其它值。      
 >
-> `orElseGet`：`orElseGet`与`orElse`方法类似，区别在于得到的默认值，`orElse`方法将传入的字符串作为默认值，`orElseGet`方法可以接受Supplier接口的实现用来生成默认值。示例如下：
+> `orElseGet`：`orElseGet` 与 `orElse`方法类似，区别在于得到的默认值，`orElse`方法将传入的字符串作为默认值，`orElseGet`方法可以接受 `Supplier` 接口的实现用来生成默认值。示例如下：
 
 ```java
     @Test
@@ -1694,7 +1689,7 @@ public void isPresent() {
 
 
 
-## 3.6、`stream `使用
+## 6、`stream `使用
 
 ```java
 @Test
@@ -1712,7 +1707,7 @@ public void filter() {
 
 
 
-## 3.8、`orElseThrow`
+## 7、`orElseThrow`
 
 ```java
     Optional.ofNullable(null).orElseThrow(RuntimeException::new);
@@ -1722,7 +1717,350 @@ public void filter() {
 
 
 
-​    
+
+
+# 四、工具
+
+## 1、函数调用工具
+
+
+
+### 1）`BusinessFunctionBO`
+
+```java
+package com.healerjean.proj.data.bo;
+
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.function.Function;
+
+/**
+ * 批量消费
+ *
+ * @author zhangyujin
+ * @date 2024/6/14
+ */
+@Accessors(chain = true)
+@Data
+public class BusinessFunctionBO<REQ, RES> implements Serializable {
+
+
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = -7922977872203781755L;
+
+    /**
+     * 请求
+     */
+    private Function<REQ, RES> function;
+
+    /**
+     * 请求对象
+     */
+    private ReqBusinessBO<REQ> reqBusiness;
+
+    /**
+     * 返回对象
+     */
+    private ResBusinessBO<RES> resBusiness;
+
+
+    /**
+     * instance
+     *
+     */
+    public static <REQ, RES> BusinessFunctionBO<REQ, RES> instance() {
+        return new BusinessFunctionBO<REQ, RES>()
+                .setReqBusiness(new ReqBusinessBO<>())
+                .setResBusiness(new ResBusinessBO<>());
+    }
+
+    @Accessors(chain = true)
+    @Data
+    public static class ReqBusinessBO<Req>{
+
+        /**
+         * 任务名
+         */
+        private String name;
+
+        /**
+         * 请求对象
+         */
+        private Req req;
+
+    }
+
+    @Accessors(chain = true)
+    @Data
+    public static class ResBusinessBO<Res>{
+
+        /**
+         * 执行结果
+         */
+        private Boolean invokeFlag;
+
+        /**
+         * 返回 对象
+         */
+        private Res res;
+
+        /**
+         * 执行异常信息
+         */
+        private Exception exception;
+    }
+
+}
+
+
+
+```
+
+
+
+### 2）`BusinessConsumerBO`
+
+```java
+package com.healerjean.proj.data.bo;
+
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.function.Consumer;
+
+/**
+ * 批量消费
+ *
+ * @author zhangyujin
+ * @date 2024/6/14
+ */
+@Accessors(chain = true)
+@Data
+public class BusinessConsumerBO<REQ> implements Serializable {
+
+
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = -7922977872203781755L;
+
+    /**
+     * 请求
+     */
+    private Consumer<REQ> consumer;
+
+    /**
+     * 请求对象
+     */
+    private ReqBusinessBO<REQ> reqBusiness;
+
+    /**
+     * 返回对象
+     */
+    private ResBusinessBO resBusiness;
+
+
+    /**
+     * instance
+     *
+     */
+    public static <REQ> BusinessConsumerBO<REQ> instance() {
+        return new BusinessConsumerBO<REQ>()
+                .setReqBusiness(new ReqBusinessBO<>())
+                .setResBusiness(new ResBusinessBO());
+    }
+
+    @Accessors(chain = true)
+    @Data
+    public static class ReqBusinessBO<Req>{
+
+        /**
+         * 任务名
+         */
+        private String name;
+
+        /**
+         * 请求对象
+         */
+        private Req req;
+
+    }
+
+
+    @Accessors(chain = true)
+    @Data
+    public static class ResBusinessBO{
+
+        /**
+         * 执行结果
+         */
+        private Boolean invokeFlag;
+
+
+        /**
+         * 执行异常信息
+         */
+        private Exception exception;
+    }
+}
+
+
+
+```
+
+
+### 3）`FunctionUtils`
+```java
+package com.healerjean.proj.utils;
+
+import com.alibaba.fastjson.JSON;
+import com.healerjean.proj.data.bo.BusinessConsumerBO;
+import com.healerjean.proj.data.bo.BusinessFunctionBO;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.utils.Lists;
+import org.junit.Test;
+
+import java.util.List;
+
+/**
+ * FunctionUtils
+ *
+ * @author zhangyujin
+ * @date 2024/4/2
+ */
+@Slf4j
+public class FunctionUtils {
+
+    /**
+     * 调用函数-忽略异常
+     *
+     * @param function function
+     */
+    public static <REQ, RES> BusinessFunctionBO<REQ, RES> invokeFunction(BusinessFunctionBO<REQ, RES> function) {
+        List<BusinessFunctionBO<REQ, RES>> functions = Lists.newArrayList();
+        functions.add(function);
+
+        return invokeAllFunction(functions).get(0);
+    }
+
+    /**
+     * 调用所有函数，失败返回具体任务
+     *
+     * @param functions batchConsumers
+     * @return {@link }
+     */
+    public static <REQ, RES> List<BusinessFunctionBO<REQ, RES>> invokeAllFunction(List<BusinessFunctionBO<REQ, RES>> functions) {
+        functions.parallelStream().forEach(function -> {
+            BusinessFunctionBO.ResBusinessBO<RES> resBusiness = function.getResBusiness();
+            try {
+                resBusiness.setRes(function.getFunction().apply(function.getReqBusiness().getReq()));
+                resBusiness.setInvokeFlag(true);
+            } catch (Exception e) {
+                resBusiness.setInvokeFlag(false);
+                resBusiness.setException(e);
+                log.info("[ExceptionUtils#invokeAllFunctionFailException] taskName:{}, req:{}", function.getReqBusiness().getName(), JSON.toJSONString(function.getReqBusiness().getName()), e);
+            }
+        });
+        return functions;
+    }
+
+
+
+    /**
+     * 调用消费者-忽略异常
+     *
+     * @param consumer function
+     */
+    public static <REQ> BusinessConsumerBO<REQ> invokeConsumer(BusinessConsumerBO<REQ> consumer) {
+        List<BusinessConsumerBO<REQ>> consumers = Lists.newArrayList();
+        consumers.add(consumer);
+        return invokeAllConsumer(consumers).get(0);
+    }
+
+    /**
+     * 调用所有消费者，失败返回具体任务
+     *
+     * @param batchConsumers batchConsumers
+     * @return {@link }
+     */
+    public static <R> List<BusinessConsumerBO<R>> invokeAllConsumer(List<BusinessConsumerBO<R>> batchConsumers) {
+        batchConsumers.parallelStream().forEach(batchConsumer->{
+            BusinessConsumerBO.ResBusinessBO resBusiness = batchConsumer.getResBusiness();
+            try {
+                batchConsumer.getConsumer().accept(batchConsumer.getReqBusiness().getReq());
+                resBusiness.setInvokeFlag(true);
+            } catch (Exception e) {
+                resBusiness.setInvokeFlag(false);
+                resBusiness.setException(e);
+                log.info("[ExceptionUtils#invokeAllConsumerFailException] taskName:{}, req:{}", batchConsumer.getReqBusiness().getName(), JSON.toJSONString(batchConsumer.getReqBusiness().getReq()), e);
+            }
+        });
+        return batchConsumers;
+    }
+
+
+
+    /**
+     * testInvokeAllConsumerFailException
+     *
+     */
+    @Test
+    public void testInvokeAllFunctionFailException(){
+        BusinessFunctionBO<String, String> ironManFunction = BusinessFunctionBO.instance();
+        ironManFunction.getReqBusiness().setReq("ironMan").setName("fly");
+        ironManFunction.setFunction(req-> "success");
+
+
+        BusinessFunctionBO<String, String> thorFunction = BusinessFunctionBO.instance();
+        thorFunction.getReqBusiness().setReq("thor").setName("jump");
+        thorFunction.setFunction(req->{
+            int i =  1/0 ;
+            return "fail";
+        });
+        List<BusinessFunctionBO<String, String>> list = Lists.newArrayList();
+        list.add(ironManFunction);
+        list.add(thorFunction);
+
+        List<BusinessFunctionBO<String, String>> result = invokeAllFunction(list);
+        log.info("result:{}", JSON.toJSONString(result));
+    }
+
+
+    /**
+     * testInvokeAllConsumerFailException
+     *
+     */
+    @Test
+    public void testInvokeAllConsumerFailException(){
+        BusinessConsumerBO<String> ironManConsumer = BusinessConsumerBO.instance();
+        ironManConsumer.getReqBusiness().setReq("ironMan").setName("fly");
+        ironManConsumer.setConsumer("ironMan"::equals);
+
+        BusinessConsumerBO<String> thorConsumer = BusinessConsumerBO.instance();
+        ironManConsumer.getReqBusiness().setReq("thor").setName("jump");
+        thorConsumer.setConsumer(req->{
+            // int i =  1/0 ;
+        });
+        List<BusinessConsumerBO<String>> list = Lists.newArrayList();
+        list.add(ironManConsumer);
+        list.add(thorConsumer);
+
+        List<BusinessConsumerBO<String>> result = invokeAllConsumer(list);
+        log.info("result:{}", JSON.toJSONString(result));
+    }
+
+
+}
+
+```
+
+
+
 
 ![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)  
 
