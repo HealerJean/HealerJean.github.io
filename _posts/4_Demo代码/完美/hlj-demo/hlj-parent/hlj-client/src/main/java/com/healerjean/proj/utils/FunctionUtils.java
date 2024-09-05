@@ -1,8 +1,8 @@
 package com.healerjean.proj.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.healerjean.proj.data.bo.BusinessConsumerBO;
-import com.healerjean.proj.data.bo.BusinessFunctionBO;
+import com.healerjean.proj.data.bo.BatchConsumerBO;
+import com.healerjean.proj.data.bo.BatchFunctionBO;
 import com.healerjean.proj.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
@@ -26,8 +26,8 @@ public class FunctionUtils {
      *
      * @param function function
      */
-    public static <REQ, RES> BusinessFunctionBO<REQ, RES> invokeFunction(BusinessFunctionBO<REQ, RES> function) {
-        List<BusinessFunctionBO<REQ, RES>> functions = Lists.newArrayList();
+    public static <REQ, RES> BatchFunctionBO<REQ, RES> invokeFunction(BatchFunctionBO<REQ, RES> function) {
+        List<BatchFunctionBO<REQ, RES>> functions = Lists.newArrayList();
         functions.add(function);
 
         return invokeAllFunction(functions).get(0);
@@ -39,9 +39,9 @@ public class FunctionUtils {
      * @param functions batchConsumers
      * @return {@link }
      */
-    public static <REQ, RES> List<BusinessFunctionBO<REQ, RES>> invokeAllFunction(List<BusinessFunctionBO<REQ, RES>> functions) {
+    public static <REQ, RES> List<BatchFunctionBO<REQ, RES>> invokeAllFunction(List<BatchFunctionBO<REQ, RES>> functions) {
         functions.parallelStream().forEach(function -> {
-            BusinessFunctionBO.ResBusinessBO<RES> resBusiness = function.getResBusiness();
+            BatchFunctionBO.ResBusinessBO<RES> resBusiness = function.getResBusiness();
             try {
                 resBusiness.setRes(function.getFunction().apply(function.getReqBusiness().getReq()));
                 resBusiness.setInvokeFlag(true);
@@ -61,8 +61,8 @@ public class FunctionUtils {
      *
      * @param consumer function
      */
-    public static <REQ> BusinessConsumerBO<REQ> invokeConsumer(BusinessConsumerBO<REQ> consumer) {
-        List<BusinessConsumerBO<REQ>> consumers = Lists.newArrayList();
+    public static <REQ> BatchConsumerBO<REQ> invokeConsumer(BatchConsumerBO<REQ> consumer) {
+        List<BatchConsumerBO<REQ>> consumers = Lists.newArrayList();
         consumers.add(consumer);
         return invokeAllConsumer(consumers).get(0);
     }
@@ -73,11 +73,11 @@ public class FunctionUtils {
      * @param batchConsumers batchConsumers
      * @return {@link }
      */
-    public static <R> List<BusinessConsumerBO<R>> invokeAllConsumer(List<BusinessConsumerBO<R>> batchConsumers) {
+    public static <R> List<BatchConsumerBO<R>> invokeAllConsumer(List<BatchConsumerBO<R>> batchConsumers) {
         batchConsumers.parallelStream().forEach(batchConsumer -> {
-            BusinessConsumerBO.ResBusinessBO resBusiness = batchConsumer.getResBusiness();
-            BusinessConsumerBO.ReqBusinessBO<R> reqBusiness = batchConsumer.getReqBusiness();
-            BusinessConsumerBO.ReqBusinessBO.IdempotentBO idempotent = reqBusiness.getIdempotent();
+            BatchConsumerBO.ResBusinessBO resBusiness = batchConsumer.getResBusiness();
+            BatchConsumerBO.ReqBusinessBO<R> reqBusiness = batchConsumer.getReqBusiness();
+            BatchConsumerBO.ReqBusinessBO.IdempotentBO idempotent = reqBusiness.getIdempotent();
             try {
                 idempotentInvoke(batchConsumer.getConsumer(), reqBusiness.getReq(), idempotent);
                 resBusiness.setInvokeFlag(true);
@@ -94,7 +94,7 @@ public class FunctionUtils {
     /**
      * 幂等
      */
-    public static  <R> void idempotentInvoke(Consumer<R> consumer, R r, BusinessConsumerBO.ReqBusinessBO.IdempotentBO idempotent) {
+    public static  <R> void idempotentInvoke(Consumer<R> consumer, R r, BatchConsumerBO.ReqBusinessBO.IdempotentBO idempotent) {
         if (Objects.isNull(idempotent)) {
             consumer.accept(r);
             return;
@@ -116,22 +116,22 @@ public class FunctionUtils {
      */
     @Test
     public void testInvokeAllFunctionFailException(){
-        BusinessFunctionBO<String, String> ironManFunction = BusinessFunctionBO.instance();
+        BatchFunctionBO<String, String> ironManFunction = BatchFunctionBO.instance();
         ironManFunction.getReqBusiness().setReq("ironMan").setName("fly");
         ironManFunction.setFunction(req-> "success");
 
 
-        BusinessFunctionBO<String, String> thorFunction = BusinessFunctionBO.instance();
+        BatchFunctionBO<String, String> thorFunction = BatchFunctionBO.instance();
         thorFunction.getReqBusiness().setReq("thor").setName("jump");
         thorFunction.setFunction(req->{
             int i =  1/0 ;
             return "fail";
         });
-        List<BusinessFunctionBO<String, String>> list = Lists.newArrayList();
+        List<BatchFunctionBO<String, String>> list = Lists.newArrayList();
         list.add(ironManFunction);
         list.add(thorFunction);
 
-        List<BusinessFunctionBO<String, String>> result = invokeAllFunction(list);
+        List<BatchFunctionBO<String, String>> result = invokeAllFunction(list);
         log.info("result:{}", JSON.toJSONString(result));
     }
 
@@ -142,20 +142,20 @@ public class FunctionUtils {
      */
     @Test
     public void testInvokeAllConsumerFailException(){
-        BusinessConsumerBO<String> ironManConsumer = BusinessConsumerBO.instance();
+        BatchConsumerBO<String> ironManConsumer = BatchConsumerBO.instance();
         ironManConsumer.getReqBusiness().setReq("ironMan").setName("fly");
         ironManConsumer.setConsumer("ironMan"::equals);
 
-        BusinessConsumerBO<String> thorConsumer = BusinessConsumerBO.instance();
+        BatchConsumerBO<String> thorConsumer = BatchConsumerBO.instance();
         ironManConsumer.getReqBusiness().setReq("thor").setName("jump");
         thorConsumer.setConsumer(req->{
             // int i =  1/0 ;
         });
-        List<BusinessConsumerBO<String>> list = Lists.newArrayList();
+        List<BatchConsumerBO<String>> list = Lists.newArrayList();
         list.add(ironManConsumer);
         list.add(thorConsumer);
 
-        List<BusinessConsumerBO<String>> result = invokeAllConsumer(list);
+        List<BatchConsumerBO<String>> result = invokeAllConsumer(list);
         log.info("result:{}", JSON.toJSONString(result));
     }
 

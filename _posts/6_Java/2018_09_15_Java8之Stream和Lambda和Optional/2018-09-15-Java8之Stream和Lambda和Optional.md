@@ -35,7 +35,7 @@ public interface Calculator {
 }
 ```
 
-## 2、lambda表达式
+## 2、`lambda` 表达式
 
 | 要求     | 说明                                       |
 | -------- | ------------------------------------------ |
@@ -317,7 +317,7 @@ public class TestMain_2_数组构造器的引用输出 {
 
 
 
-## 4、lombda延迟加载
+## 4、`lombda` 延迟加载
 
 ### 1）正常情况下，资源浪费
 
@@ -861,6 +861,41 @@ public class TestMain {
 ```
 
 
+
+
+
+### 12）`mapToObj`
+
+> `mapToObj` 可以为流中的每个元素返回一个对象值流（`map` 方法只能为流中的每个元素返回另一个对象）
+
+```java
+  // 7、字符串转 int数组
+  int[] nums = Arrays.stream(array).mapToInt(Integer::new).toArray();
+  nums = Arrays.stream(array).mapToInt(Integer::valueOf).toArray();
+  // 8、int数 转 String集合
+  list = Arrays.stream(nums).mapToObj(String::valueOf).collect(Collectors.toList());
+```
+
+
+
+### 13）`flatMap`
+
+> **`flatMap` 方法可以将多个流合并为一个流，非常适用于处理多层嵌套的集合结构**
+
+
+
+```java
+List<List<Integer>> numbers = Arrays.asList(
+    Arrays.asList(1, 2, 3),
+    Arrays.asList(4, 5, 6),
+    Arrays.asList(7, 8, 9)
+);
+
+List<Integer> flattenedNumbers = numbers.stream()
+    .flatMap(Collection::stream)
+    .collect(Collectors.toList());
+
+```
 
 
 
