@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 /**
  * 批量消费
@@ -15,7 +15,7 @@ import java.util.function.Function;
  */
 @Accessors(chain = true)
 @Data
-public class BusinessFunctionBO<REQ, RES> implements Serializable {
+public class BatchConsumerBO<REQ> implements Serializable {
 
 
     /**
@@ -26,7 +26,7 @@ public class BusinessFunctionBO<REQ, RES> implements Serializable {
     /**
      * 请求
      */
-    private Function<REQ, RES> function;
+    private Consumer<REQ> consumer;
 
     /**
      * 请求对象
@@ -36,17 +36,17 @@ public class BusinessFunctionBO<REQ, RES> implements Serializable {
     /**
      * 返回对象
      */
-    private ResBusinessBO<RES> resBusiness;
+    private ResBusinessBO resBusiness;
 
 
     /**
      * instance
      *
      */
-    public static <REQ, RES> BusinessFunctionBO<REQ, RES> instance() {
-        return new BusinessFunctionBO<REQ, RES>()
+    public static <REQ> BatchConsumerBO<REQ> instance() {
+        return new BatchConsumerBO<REQ>()
                 .setReqBusiness(new ReqBusinessBO<>())
-                .setResBusiness(new ResBusinessBO<>());
+                .setResBusiness(new ResBusinessBO());
     }
 
     @Accessors(chain = true)
@@ -62,7 +62,6 @@ public class BusinessFunctionBO<REQ, RES> implements Serializable {
          * 请求对象
          */
         private Req req;
-
 
         /**
          * 幂等对象
@@ -89,30 +88,27 @@ public class BusinessFunctionBO<REQ, RES> implements Serializable {
              * 幂等操作类
              */
             private RedisService redisService;
+
         }
 
     }
 
+
     @Accessors(chain = true)
     @Data
-    public static class ResBusinessBO<Res>{
+    public static class ResBusinessBO{
 
         /**
          * 执行结果
          */
         private Boolean invokeFlag;
 
-        /**
-         * 返回 对象
-         */
-        private Res res;
 
         /**
          * 执行异常信息
          */
         private Exception exception;
     }
-
 }
 
 

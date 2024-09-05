@@ -1,6 +1,7 @@
 package com.healerjean.proj.d05_线程池;
 
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
@@ -45,9 +46,8 @@ public class ThreadPoolUtils {
         int maximumPoolSize = 100;
         long keepAliveTime = 60;
         TimeUnit unit = TimeUnit.SECONDS;
-        AtomicInteger tag = new AtomicInteger(1);
         BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>(500);
-        ThreadFactory threadFactory = r -> new Thread(r, "defaultThreadPoolExecutor" + tag.incrementAndGet());
+        ThreadFactory threadFactory =  new ThreadFactoryBuilder().setNameFormat("defaultThreadPoolExecutor-%d").build();
         RejectedExecutionHandler handler = new ThreadPoolExecutor.CallerRunsPolicy();
         return new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
     }
@@ -68,19 +68,16 @@ public class ThreadPoolUtils {
         // 缓存队列：用来缓冲执行任务的队列
         taskExecutor.setQueueCapacity(500);
         // 线程工厂
-        AtomicInteger tag = new AtomicInteger(1);
-        taskExecutor.setThreadFactory(r -> new Thread(r, "defaultThreadPoolTaskExecutor" + tag.incrementAndGet()));
+        taskExecutor.setThreadFactory(new ThreadFactoryBuilder().setNameFormat("defaultThreadPoolTaskExecutor-%d").build());
         // 拒绝策略由调用线程处理该任务
         taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        // defaultThreadPoolTaskExecutor
-        taskExecutor.setThreadNamePrefix("defaultThreadPoolTaskExecutor");
 
         // 调度器shutdown被调用时等待当前被调度的任务完成：用来设置线程池关闭的时候等待所有任务都完成再继续销毁其他的Bean
         taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
         //该方法用来设置线程池中任务的等待时间:如果超过这个时候还没有销毁就强制销毁，以确保应用最后能够被关闭，而不是阻塞住
         taskExecutor.setAwaitTerminationSeconds(60);
         taskExecutor.initialize();
-        log.info("Executor - threadPoolTaskExecutor injected!");
+        log.info("Executor - defaultThreadPoolTaskExecutor injected!");
         return taskExecutor;
     }
 

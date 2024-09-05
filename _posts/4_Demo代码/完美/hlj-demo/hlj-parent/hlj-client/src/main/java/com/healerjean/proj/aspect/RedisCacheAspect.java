@@ -1,7 +1,7 @@
 package com.healerjean.proj.aspect;
 
 import com.healerjean.proj.common.anno.RedisCache;
-import com.healerjean.proj.data.bo.BusinessFunctionBO;
+import com.healerjean.proj.data.bo.BatchFunctionBO;
 import com.healerjean.proj.service.RedisService;
 import com.healerjean.proj.utils.AspectUtils;
 import com.healerjean.proj.utils.FunctionUtils;
@@ -67,7 +67,7 @@ public class RedisCacheAspect {
         String r2mKey = redisCache.value().join(paramKey);
         Object proceed = null;
 
-        BusinessFunctionBO<String, String> function = BusinessFunctionBO.instance();
+        BatchFunctionBO<String, String> function = BatchFunctionBO.instance();
         function.getReqBusiness().setReq(r2mKey).setName("redisService.get");
         function.setFunction(redisService::get);
         FunctionUtils.invokeFunction(function);

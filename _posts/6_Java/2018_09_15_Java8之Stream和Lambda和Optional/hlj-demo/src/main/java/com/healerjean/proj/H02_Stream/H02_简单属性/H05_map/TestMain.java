@@ -3,7 +3,9 @@ package com.healerjean.proj.H02_Stream.H02_简单属性.H05_map;
 import com.healerjean.proj.H02_Stream.H02_简单属性.H05_map.dto.Person;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +40,25 @@ public class TestMain {
 
         List<Long> ids = personList.stream().map(Person::getId).collect(Collectors.toList());
 
+    }
+
+    @Test
+    public void testFlatMap(){
+   //2、对象
+        List<Person> personList = Arrays.asList(
+                new Person(1L, "a"),
+                new Person(2L, "b"),
+                new Person(3L, "c"));
+
+         List<Person> personList2 = Arrays.asList(
+                new Person(2L, "b"),
+                new Person(3L, "c"),
+                 new Person(4L, "c"));
+
+        List<List<Person>> list = new ArrayList<>();
+        list.add(personList2);
+        list.add(personList);
+        List<String> collect = list.stream().flatMap(Collection::stream).map(Person::getName).collect(Collectors.toList());
     }
 
 }

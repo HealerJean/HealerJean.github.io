@@ -1,5 +1,6 @@
 package com.healerjean.proj.d04_多接口返回;
 
+import com.google.common.collect.Lists;
 import com.healerjean.proj.d04_多接口返回.utils.CompletableFutureTimeout;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -17,25 +18,78 @@ import java.util.concurrent.*;
 public class TestMain {
 
     /**
-     * 1、无返回值的异步任务  CompletableFuture.runAsync
+     * 无返回值的异步任务  CompletableFuture.runAsync
      */
     @Test
-    public void test1() {
-        ExecutorService service = Executors.newFixedThreadPool(10);
+    public void test1() throws Exception {
+        ExecutorService executer = Executors.newFixedThreadPool(10);
 
         //1.无返回值的异步任务 runAsync()
         CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(() -> {
-            log.info("currentThread:{}", Thread.currentThread().getId());
-        }, service);
+            log.info("currentThread:{}", Thread.currentThread().getName());
+        }, executer);
 
+        Thread.sleep(5000L);
     }
 
 
     /**
-     * 2.有返回值异步任务 CompletableFuture.supplyAsync
+     * 有返回结果的异步执行 CompletableFuture.supplyAsync
+     * 1、completableFuture.whenComplete
+     * 第一个参数是结果
+     * 第二个参数是异常，他可以感知异常，无法返回默认数据
+     * */
+    @Test
+    public void test_whenComplete() throws Exception{
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+
+        CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
+            log.info("currentThread:{}", Thread.currentThread().getId());
+            int i = 1 / 0;
+            return "HealerJean";
+        }, executor);
+
+
+        log.info("==============");
+        CompletableFuture<String> completableFuture2 = completableFuture.whenComplete((r, e) -> {
+            log.info("[completableFuture.whenComplete] result:{} ", r, e);
+        });
+
+        Thread.sleep(5000L);
+    }
+
+
+    /**
+     * 有返回结果的异步执行 CompletableFuture.supplyAsync
+     * 2、completableFuture.exceptionally
+     * 只有一个参数是异常类型，他可以感知异常，同时返回默认数据
      */
     @Test
-    public void test2() throws ExecutionException, InterruptedException {
+    public void test_exceptionally() throws Exception {
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+
+        CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
+            log.info("currentThread:{}", Thread.currentThread().getId());
+            int i = 1 / 0;
+            return "HealerJean";
+        }, executor);
+
+
+        CompletableFuture<String> exceptionally = completableFuture.exceptionally(e -> {
+            log.error("[completableFuture.exceptionally] error", e);
+            return "exceptionally";
+        });
+
+        Thread.sleep(5000L);
+    }
+
+    /**
+     * 有返回结果的异步执行 CompletableFuture.supplyAsync
+     * 3、completableFuture.handle
+     * 既可以感知异常，也可以返回默认数据，是whenComplete和exceptionally的结合
+     */
+    @Test
+    public void test2() throws Exception {
         ExecutorService service = Executors.newFixedThreadPool(10);
 
         CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
@@ -46,26 +100,7 @@ public class TestMain {
 
 
         log.info("==============");
-        // 1、whenComplete
-        // 第一个参数是结果
-        // 第二个参数是异常，他可以感知异常，无法返回默认数据
-        CompletableFuture<String> completableFuture1 = completableFuture.whenComplete((r, e) -> {
-            log.info("[completableFuture.whenComplete] result:{} ", r, e);
-        });
-
-        log.info("==============");
-        // 2、exceptionally
-        // 只有一个参数是异常类型，他可以感知异常，同时返回默认数据
-        CompletableFuture<String> exceptionally = completableFuture.exceptionally(e -> {
-            log.error("[completableFuture.exceptionally] error", e);
-            return "exceptionally";
-        });
-        System.out.println("-------" + exceptionally.get());
-
-        log.info("==============");
-        // 3、handler
-        // 既可以感知异常，也可以返回默认数据，是whenComplete和exceptionally的结合
-        completableFuture.handle((r, e) -> {
+        CompletableFuture<String> handle = completableFuture.handle((r, e) -> {
             if (r != null) {
                 log.error("[completableFuture.handle] result {}", r);
                 return r;
@@ -77,65 +112,89 @@ public class TestMain {
             return "";
         });
 
-        try {
-            Thread.sleep(10000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Thread.sleep(10000L);
     }
 
 
     /**
-     * 3.线程串行化
+     * 串行任务
+     * 1、thenRunAsync() 无入参，无返回值（线程池执行）
      */
     @Test
-    public void test3() throws ExecutionException, InterruptedException {
+    public void test_thenRunAsync() throws InterruptedException {
         log.info("[test]  currentThread:{}", Thread.currentThread().getId());
+        // currentThread:1
+        long start = System.currentTimeMillis();
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
+            log.info("[completableFuture.supplyAsync] currentThread:{}", Thread.currentThread().getId());
+            // completableFuture.supplyAsync] currentThread:11
+            return "HealerJean";
+        }, executor);
+
+        // 1、thenRunAsync()  无入参，无返回值（线程池执行）
+        completableFuture.thenRunAsync(() -> {
+            long cost = System.currentTimeMillis() - start;
+            log.info("[completableFuture.thenRunAsync] currentThread:{}, cost:{}", Thread.currentThread().getId(), cost);
+            // [completableFuture.thenRunAsync] currentThread:12, cost:84
+        }, executor);
+
+        Thread.sleep(5000L);
+    }
+
+
+    /**
+     * 串行任务
+     * 2、thenAccept() 有入参，无返回值，不传线程池(main线程)
+     */
+    @Test
+    public void test_thenAccept(){
+        log.info("[test]  currentThread:{}", Thread.currentThread().getId());
+        // currentThread:1
 
         long start = System.currentTimeMillis();
         ExecutorService service = Executors.newFixedThreadPool(10);
         CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
             log.info("[completableFuture.supplyAsync] currentThread:{}", Thread.currentThread().getId());
-
-            try {
-                Thread.sleep(3000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            // [completableFuture.supplyAsync] currentThread:11
             return "HealerJean";
         }, service);
 
-        // 1、thenRunAsync() 无入参，无返回值 、线程池执行
-        completableFuture.thenRunAsync(() -> {
-            long cost = System.currentTimeMillis() - start;
-            log.info("[completableFuture.thenRunAsync] currentThread:{}, cost:{}", Thread.currentThread().getId(), cost);
-        }, service);
-
-
-        // 2、thenAccept() 有入参，无返回值，不传线程池
+        // 2、thenAccept() 有入参，无返回值，不传线程池(main线程)
         completableFuture.thenAccept((r) -> {
             long cost = System.currentTimeMillis() - start;
             log.info("[completableFuture.thenAccept]  currentThread:{}, result:{}, cost:{}", Thread.currentThread().getId(), r, cost);
+            // [completableFuture.thenAccept]  currentThread:1, result:HealerJean, cost:76
         });
+    }
+
+    /**
+     * 线程串行化
+     * 3、thenApply() 有入参，有返回值，不传线程池(main线程)
+     */
+    @Test
+    public void test3() throws ExecutionException, InterruptedException {
+        log.info("[test]  currentThread:{}", Thread.currentThread().getId());
+        // currentThread:1
+
+        long start = System.currentTimeMillis();
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
+            log.info("[completableFuture.supplyAsync] currentThread:{}", Thread.currentThread().getId());
+            // [completableFuture.supplyAsync] currentThread:11
+            return "HealerJean";
+        }, executor);
 
 
-        String result = completableFuture.get();
-        log.info("[stringCompletableFuture.get()]  result:{}", result);
-
-        // 3、thenApply() 有入参，有返回值，不传线程池 main线程
-        CompletableFuture<String> stringCompletableFuture = completableFuture.thenApply((r) -> {
+        // 3、thenApply() 有入参，有返回值，不传线程池(main线程)
+        completableFuture.thenApply((r) -> {
             long cost = System.currentTimeMillis() - start;
             log.info("[completableFuture.thenApply]  currentThread:{}, result:{}, cost:{}", Thread.currentThread().getId(), r, cost);
+            // [completableFuture.thenApply]  currentThread:1, result:HealerJean, cost:74
             return "thenAccept";
         });
-        result = stringCompletableFuture.get();
-        log.info("[stringCompletableFuture.get()]  result:{}", result);
 
-        try {
-            Thread.sleep(10000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Thread.sleep(5000L);
     }
 
 
@@ -143,7 +202,7 @@ public class TestMain {
      * 4、异步，两任务组合 ：两个异步任务都完成，第三个任务才开始执行
      */
     @Test
-    public void test4() {
+    public void test4() throws InterruptedException {
         ExecutorService service = Executors.newFixedThreadPool(10);
         //定义两个任务
         //任务一
@@ -176,11 +235,7 @@ public class TestMain {
         }, service);
 
 
-        try {
-            Thread.sleep(10000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Thread.sleep(5000L);
     }
 
 
@@ -210,6 +265,7 @@ public class TestMain {
             log.info("[completableFuture.supplyAsync] task2 currentThread:{}", Thread.currentThread().getId());
             return "task_2";
         }, service);
+
 
         CompletableFuture<String> task3 = CompletableFuture.supplyAsync(() -> {
             try {
@@ -286,12 +342,11 @@ public class TestMain {
 
 
     /**
-     * 6、一个任务完成则结束
+     * 6、输出最先完成的n个任务
      */
     @Test
-    public void test6() {
+    public void test6() throws Exception {
         ExecutorService service = Executors.newFixedThreadPool(10);
-        long start = System.currentTimeMillis();
         CompletableFuture<String> task1 = CompletableFuture.supplyAsync(() -> {
             log.info("[completableFuture.supplyAsync] task1 currentThread:{}", Thread.currentThread().getId());
             try {
@@ -321,11 +376,27 @@ public class TestMain {
             return "task_3";
         }, service);
 
+        int n = 2;
+        CountDownLatch latch = new CountDownLatch(n);
+        List<CompletableFuture<String>> results = Lists.newArrayList();
+        CompletableFuture<String>[] completableFutures = new CompletableFuture[]{task1, task2, task3};
+        // 对每个future添加完成时的回调
+        for (CompletableFuture<String> future : completableFutures) {
+            future.whenComplete((r, e) -> {
+                synchronized (results) {
+                    if (results.size() < n) {
+                        latch.countDown();
+                        results.add(future);
+                    }
+                }
+            });
+        }
 
-        CompletableFuture[] completableFutures = new CompletableFuture[]{task1, task2, task3};
-        Object result = CompletableFuture.anyOf(completableFutures).join();
-        Long cost = System.currentTimeMillis() - start;
-        log.info("[test] task finish cost:{}, result:{}", cost, result);
+        latch.await();
+        for (CompletableFuture<String> future: results){
+            log.info("[test] task finish  result:{}", future.get());
+        }
+        Thread.sleep(5000L);
     }
 
 

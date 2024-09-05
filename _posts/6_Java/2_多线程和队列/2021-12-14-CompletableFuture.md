@@ -16,228 +16,262 @@ description: CompletableFuture
 
 
 
-# 1、`CompletableFuture.runAsync`
+# 一、`CompletableFuture` 
+
+## 1、`CompletableFuture.runAsync`
 
 ```java
-/**
- * 1、无返回值的异步任务  CompletableFuture.runAsync
- */
-@Test
-public void test1() {
-  ExecutorService service = Executors.newFixedThreadPool(10);
+  /**
+   * 1、无返回值的异步任务  CompletableFuture.runAsync
+   */
+  @Test
+  public void test1() throws Exception {
+      ExecutorService executer = Executors.newFixedThreadPool(10);
 
-  //1.无返回值的异步任务 runAsync()
-  CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(() -> {
-    log.info("currentThread:{}", Thread.currentThread().getId());
-  }, service);
+      //1.无返回值的异步任务 runAsync()
+      CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(() -> {
+          log.info("currentThread:{}", Thread.currentThread().getName());
+      }, executer);
 
-}
+      Thread.sleep(5000L);
+  }
 
 ```
 
 
 
-# 2、`CompletableFuture.supplyAsync`
+## 2、`CompletableFuture.supplyAsync`
 
-## 2.1、`whenComplete`
+| 方法            | 结果 | 返回 | 异常捕获 | 说明                                                         |
+| --------------- | ---- | ---- | -------- | ------------------------------------------------------------ |
+| `whenComplete`  | 有   | 无   | 有       | 第一个参数是结果，第二个参数是异常                           |
+| `exceptionally` | 无   | 有   | 有       | 只有一个参数是异常类型，他可以感知异常                       |
+| `handle`        | 有   | 有   | 有       | 既可以感知异常，也可以返回默认数据，是 `whenComplete` 和 `exceptionally`的结合 |
 
-> ⬤ 第一个参数是结果      
->
-> ⬤ 第二个参数是异常，他可以感知异常，无法返回默认数据
->
-> >**只会存在一个，无法返回默认数据**
 
-## 2.2、`exceptionally`
 
-> 只有一个参数是异常类型，他可以感知异常，同时返回默认数据
+### 1）`completableFuture.whenComplete`
 
-## 2.3、`handle`
-
-> 既可以感知异常，也可以返回默认数据，是 `whenComplete` 和 `exceptionally`的结合
+> 第一个参数是结果，第二个参数是异常
 
 ```java
 /**
- * 2、有返回值异步任务 CompletableFuture.supplyAsync
+ * 有返回结果的异步执行 CompletableFuture.supplyAsync
+ * 1、completableFuture.whenComplete
+ * 第一个参数是结果
+ * 第二个参数是异常，他可以感知异常，无法返回默认数据
+ * */
+@Test
+public void test_whenComplete() throws Exception{
+    ExecutorService executor = Executors.newFixedThreadPool(10);
+
+    CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
+        log.info("currentThread:{}", Thread.currentThread().getId());
+        int i = 1 / 0;
+        return "HealerJean";
+    }, executor);
+
+
+    log.info("==============");
+    CompletableFuture<String> completableFuture2 = completableFuture.whenComplete((r, e) -> {
+        log.info("[completableFuture.whenComplete] result:{} ", r, e);
+    });
+
+    Thread.sleep(5000L);
+}
+```
+
+
+
+### 2）`completableFuture.exceptionally`
+
+> 只有一个参数是异常类型，他可以感知异常，同时返回默认数据
+
+```java
+/**
+ * 有返回结果的异步执行 CompletableFuture.supplyAsync
+ * 2、completableFuture.exceptionally
+ * 只有一个参数是异常类型，他可以感知异常，同时返回默认数据
  */
 @Test
-public void test2() {
+public void test_exceptionally() throws Exception {
+    ExecutorService executor = Executors.newFixedThreadPool(10);
+
+    CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
+        log.info("currentThread:{}", Thread.currentThread().getId());
+        int i = 1 / 0;
+        return "HealerJean";
+    }, executor);
+
+
+    CompletableFuture<String> exceptionally = completableFuture.exceptionally(e -> {
+        log.error("[completableFuture.exceptionally] error", e);
+        return "exceptionally";
+    });
+
+    Thread.sleep(5000L);
+}
+```
+
+
+
+### 3）`completableFuture.handle`
+
+> 既可以感知异常，也可以返回默认数据，是whenComplete和exceptionally的结合
+
+```java
+/**
+ * 有返回结果的异步执行 CompletableFuture.supplyAsync
+ * 3、completableFuture.handle
+ * 既可以感知异常，也可以返回默认数据，是whenComplete和exceptionally的结合
+ */
+@Test
+public void test2() throws Exception {
     ExecutorService service = Executors.newFixedThreadPool(10);
 
     CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
         log.info("currentThread:{}", Thread.currentThread().getId());
-        int i = 1/0;
+        int i = 1 / 0;
         return "HealerJean";
     }, service);
 
 
-    // 1、whenComplete
-    // 第一个参数是结果
-    // 第二个参数是异常，他可以感知异常，无法返回默认数据
-    completableFuture.whenComplete((r, e) -> {
-        log.info("[completableFuture.whenComplete] result:{} ", r, e);
-    });
-
-    // 2、exceptionally
-    // 只有一个参数是异常类型，他可以感知异常，同时返回默认数据
-    completableFuture .exceptionally(e -> {
-        log.error("[completableFuture.whenComplete] error" , e);
-        return "exceptionally";
-    });
-
-    // 3、handler
-    // 既可以感知异常，也可以返回默认数据，是whenComplete和exceptionally的结合
-    completableFuture.handle((r, e) -> {
+    log.info("==============");
+    CompletableFuture<String> handle = completableFuture.handle((r, e) -> {
         if (r != null) {
-            log.error("[completableFuture.handle] ", r);
+            log.error("[completableFuture.handle] result {}", r);
             return r;
         }
         if (e != null) {
-            log.error("[completableFuture.handle] error", r);
+            log.error("[completableFuture.handle] error", e);
             return "error";
         }
         return "";
     });
 
-    try {
-        Thread.sleep(10000L);
-    } catch (InterruptedException e) {
-        e.printStackTrace();
-    }
+    Thread.sleep(10000L);
 }
-
-
-
-16:45:56.769 [pool-1-thread-1] INFO com.hlj.threadpool.d04_多接口返回.TestMain - currentThread:11
-
-
-  
-16:45:56.769 [main] INFO com.hlj.threadpool.d04_多接口返回.TestMain - ==============
-16:45:56.777 [main] INFO com.hlj.threadpool.d04_多接口返回.TestMain - [completableFuture.whenComplete] result:null 
-java.util.concurrent.CompletionException: java.lang.ArithmeticException: / by zero
-	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:273)
-	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:280)
-	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1606)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
-	at java.lang.Thread.run(Thread.java:748)
-Caused by: java.lang.ArithmeticException: / by zero
-	at com.hlj.threadpool.d04_多接口返回.TestMain.lambda$test2$1(TestMain.java:42)
-	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1604)
-	... 3 common frames omitted
-  
-  
-16:45:56.777 [main] INFO com.hlj.threadpool.d04_多接口返回.TestMain - ==============
-16:45:56.778 [main] ERROR com.hlj.threadpool.d04_多接口返回.TestMain - [completableFuture.exceptionally] error
-java.util.concurrent.CompletionException: java.lang.ArithmeticException: / by zero
-	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:273)
-	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:280)
-	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1606)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
-	at java.lang.Thread.run(Thread.java:748)
-Caused by: java.lang.ArithmeticException: / by zero
-	at com.hlj.threadpool.d04_多接口返回.TestMain.lambda$test2$1(TestMain.java:42)
-	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1604)
-	... 3 common frames omitted
-  
-  
-  
-16:45:56.779 [main] INFO com.hlj.threadpool.d04_多接口返回.TestMain - ==============
-16:45:56.779 [main] ERROR com.hlj.threadpool.d04_多接口返回.TestMain - [completableFuture.handle] error
-
 ```
 
 
 
-# 3、线程串行化
 
-## 3.1、`thenRunAsync()`  异步，无入参，无返回值
+
+# 二、线程任务
+
+## 1、串行任务
+
+### 1）`thenRunAsync()`  异步，无入参，无返回值
 
 > `thenRunAsync()`  无入参，无返回值 、线程池执行
 
-## 3.2、`thenAccept()`同步  有入参，无返回值
+```java
+/**
+ * 串行任务
+ * 1、thenRunAsync() 无入参，无返回值（线程池执行）
+ */
+@Test
+public void test_thenRunAsync() throws InterruptedException {
+    log.info("[test]  currentThread:{}", Thread.currentThread().getId());
+    // currentThread:1
+    long start = System.currentTimeMillis();
+    ExecutorService executor = Executors.newFixedThreadPool(10);
+    CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
+        log.info("[completableFuture.supplyAsync] currentThread:{}", Thread.currentThread().getId());
+        // completableFuture.supplyAsync] currentThread:11
+        return "HealerJean";
+    }, executor);
+
+    // 1、thenRunAsync()  无入参，无返回值（线程池执行）
+    completableFuture.thenRunAsync(() -> {
+        long cost = System.currentTimeMillis() - start;
+        log.info("[completableFuture.thenRunAsync] currentThread:{}, cost:{}", Thread.currentThread().getId(), cost);
+        // [completableFuture.thenRunAsync] currentThread:12, cost:84
+    }, executor);
+
+    Thread.sleep(5000L);
+}
+```
+
+
+
+### 2）`thenAccept() `同步  有入参，无返回值
 
 > `thenAccept() ` 有入参，无返回值，不传线程池 
 
-## 3.2、`thenApply() `  同步 有入参，有返回值
+```java
+/**
+ * 串行任务
+ * 2、thenAccept() 有入参，无返回值，不传线程池(main线程)
+ */
+@Test
+public void test_thenAccept(){
+    log.info("[test]  currentThread:{}", Thread.currentThread().getId());
+    // currentThread:1
+
+    long start = System.currentTimeMillis();
+    ExecutorService service = Executors.newFixedThreadPool(10);
+    CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
+        log.info("[completableFuture.supplyAsync] currentThread:{}", Thread.currentThread().getId());
+        // [completableFuture.supplyAsync] currentThread:11
+        return "HealerJean";
+    }, service);
+
+    // 2、thenAccept() 有入参，无返回值，不传线程池(main线程)
+    completableFuture.thenAccept((r) -> {
+        long cost = System.currentTimeMillis() - start;
+        log.info("[completableFuture.thenAccept]  currentThread:{}, result:{}, cost:{}", Thread.currentThread().getId(), r, cost);
+        // [completableFuture.thenAccept]  currentThread:1, result:HealerJean, cost:76
+    });
+}
+```
+
+
+
+### 3）`thenApply() `  同步 有入参，有返回值
 
 > `thenApply() ` 有入参，有返回值，不传线程池 （`Main`线程）
 
 ```java
 /**
- * 3.1、线程串行化
+ * 线程串行化
+ * 3、thenApply() 有入参，有返回值，不传线程池(main线程)
  */
 @Test
-public void test() throws ExecutionException, InterruptedException {
-          log.info("[test]  currentThread:{}", Thread.currentThread().getId());
+public void test3() throws ExecutionException, InterruptedException {
+    log.info("[test]  currentThread:{}", Thread.currentThread().getId());
+    // currentThread:1
+
     long start = System.currentTimeMillis();
-    ExecutorService service = Executors.newFixedThreadPool(10);
+    ExecutorService executor = Executors.newFixedThreadPool(10);
     CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> {
         log.info("[completableFuture.supplyAsync] currentThread:{}", Thread.currentThread().getId());
-
-        try {
-            Thread.sleep(3000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return "HealerJean" ;
-    }, service);
-
-    // 1、thenRunAsync() 无入参，无返回值 、线程池执行
-    completableFuture.thenRunAsync(() -> {
-        long cost  = System.currentTimeMillis() - start;
-        log.info("[completableFuture.thenRunAsync] currentThread:{}, cost:{}", Thread.currentThread().getId(), cost);
-    }, service);
+        // [completableFuture.supplyAsync] currentThread:11
+        return "HealerJean";
+    }, executor);
 
 
-    // 2、thenAccept() 有入参，无返回值，不传线程池 
-    completableFuture.thenAccept((r) -> {
-        long cost = System.currentTimeMillis() - start;
-        log.info("[completableFuture.thenAccept]  currentThread:{}, result:{}, cost:{}", Thread.currentThread().getId(), r, cost);
-    });
-
-
-    String result = completableFuture.get();
-    log.info("[stringCompletableFuture.get()]  result:{}", result);
-
-    // 3、thenApply() 有入参，有返回值，不传线程池 main线程
-    CompletableFuture<String> stringCompletableFuture = completableFuture.thenApply((r) -> {
+    // 3、thenApply() 有入参，有返回值，不传线程池(main线程)
+    completableFuture.thenApply((r) -> {
         long cost = System.currentTimeMillis() - start;
         log.info("[completableFuture.thenApply]  currentThread:{}, result:{}, cost:{}", Thread.currentThread().getId(), r, cost);
+        // [completableFuture.thenApply]  currentThread:1, result:HealerJean, cost:74
         return "thenAccept";
     });
-    result = stringCompletableFuture.get();
-    log.info("[stringCompletableFuture.get()]  result:{}", result);
 
-    try {
-        Thread.sleep(10000L);
-    } catch (InterruptedException e) {
-        e.printStackTrace();
-    }
+    Thread.sleep(5000L);
 }
-
-```
-
-```
-[completableFuture.supplyAsync] currentThread:11
-[completableFuture.thenAccept]  currentThread:11, result:HealerJean, cost:3089
-
-[stringCompletableFuture.get()]  result:HealerJean
-
-[completableFuture.thenRunAsync] currentThread:13, cost:3090
-[completableFuture.thenApply]  currentThread:1, result:HealerJean, cost:3091
-[stringCompletableFuture.get()]  result:thenAccept
-
-Process finished with exit code 0
 ```
 
 
 
 
 
-# 4、异步任务
 
-## 4.1、两个异步任务都完成，第三个任务才开始执行
+
+## 2、异步任务
+
+### 1）两个异步任务都完成，第三个任务才开始执行
 
 ```java
 /**
@@ -296,7 +330,13 @@ public void test4(){
 
 
 
-## 4.2、当一个任务失败后迅速返回
+
+
+
+
+### 2）当一个任务失败后迅速返回
+
+> 异常捕获，有一个失败就结束任务
 
 ```java
 @Test
@@ -348,7 +388,7 @@ public void test4_3() {
 
 
 
-## 4.3、等待所有任务结束
+### 3）等待所有任务结束
 
 > 循环使用 `get` 方法等待任务结束耗时比 `allOf`  方法多
 
@@ -407,16 +447,12 @@ public void test5() throws ExecutionException, InterruptedException {
 
 ```
 
-## 4.4、输出最先完成的任务的结果
+### 4）输出最先完成的n个任务
 
 ```java
-/**
- * 一个任务完成则结束
- */
 @Test
-public void test6(){
+public void test6() throws Exception {
     ExecutorService service = Executors.newFixedThreadPool(10);
-    long start = System.currentTimeMillis();
     CompletableFuture<String> task1 = CompletableFuture.supplyAsync(() -> {
         log.info("[completableFuture.supplyAsync] task1 currentThread:{}", Thread.currentThread().getId());
         try {
@@ -436,7 +472,7 @@ public void test6(){
         return "task_2";
     }, service);
 
-    CompletableFuture<String> task3= CompletableFuture.supplyAsync(() -> {
+    CompletableFuture<String> task3 = CompletableFuture.supplyAsync(() -> {
         log.info("[completableFuture.supplyAsync] task3 currentThread:{}", Thread.currentThread().getId());
         try {
             Thread.sleep(100L);
@@ -446,17 +482,33 @@ public void test6(){
         return "task_3";
     }, service);
 
+    int n = 2;
+    CountDownLatch latch = new CountDownLatch(n);
+    List<CompletableFuture<String>> results = Lists.newArrayList();
+    CompletableFuture<String>[] completableFutures = new CompletableFuture[]{task1, task2, task3};
+    // 对每个future添加完成时的回调
+    for (CompletableFuture<String> future : completableFutures) {
+        future.whenComplete((r, e) -> {
+            synchronized (results) {
+                if (results.size() < n) {
+                    latch.countDown();
+                    results.add(future);
+                }
+            }
+        });
+    }
 
-    CompletableFuture[] completableFutures = new CompletableFuture[]{task1,task2, task3};
-    Object result = CompletableFuture.anyOf(completableFutures).join();
-    Long cost = System.currentTimeMillis() - start;
-    log.info("[test] task finish cost:{}, result:{}", cost, result);
+    latch.await();
+    for (CompletableFuture<String> future: results){
+        log.info("[test] task finish  result:{}", future.get());
+    }
+    Thread.sleep(5000L);
 }
 ```
 
-# 5、异步超时
+# 三、超时
 
-## 5.1、`CompletableFutureTimeout`
+## 1、异步： `CompletableFutureTimeout`
 
 > `java8` 中 `CompletableFuture` 异步处理超时的方法     
 >
@@ -466,7 +518,7 @@ public void test6(){
 
 
 
-### 5.1.1、`CompletableFutureTimeout`
+### 1）`CompletableFutureTimeout`
 
 > **注意：异常会被吃掉，返回超时的默认值。我就猜想，如果代码无法保证，既然有超时这种默认值，那么本身的业务异常应该毫无意义**
 
@@ -550,7 +602,7 @@ public class CompletableFutureTimeout {
 }
 ```
 
-### 5.1.2、测试
+### 2）测试
 
 ```java
 @Test
@@ -619,120 +671,42 @@ public void test() throws ExecutionException, InterruptedException {
 
 
 
-## 5.2、`completableFuture`
+## 2、同步：`completableFuture`
 
 ```java
-@Test
-public void testTimeOut2() {
-      ThreadPoolTaskExecutor threadPoolTaskExecutor = threadPoolTaskExecutor();
-      CompletableFuture<String> task1 = CompletableFuture.supplyAsync(() -> {
-          log.info("task1 start ");
-          try {
-              Thread.sleep(10);
-          } catch (InterruptedException e) {
-              e.printStackTrace();
-          }
-          log.info("task1 end ");
-          return "task1 success";
-      }, threadPoolTaskExecutor);
 
-      CompletableFuture<String> task3 = CompletableFuture.supplyAsync(() -> {
-          log.info("task3 start ");
-          try {
-              Thread.sleep(3500);
-          } catch (InterruptedException e) {
-              e.printStackTrace();
-          }
-          log.info("task3 end ");
-          return "task3 success";
-      }, threadPoolTaskExecutor);
-
-
-      // 等待所有任务完成，或者直到50毫秒后超时
-      try {
-          CompletableFuture.allOf(new CompletableFuture[]{task1,task3}).get(50, TimeUnit.MILLISECONDS);
-      } catch (TimeoutException e) {
-          // 这里处理超时异常
-          e.printStackTrace();
-      } catch (InterruptedException | ExecutionException e) {
-          // 这里处理其他可能的异常
-          e.printStackTrace();
-      }
-  }
-```
-
-
-
-
-
-```java
-/**
- * 试算超时
- *
- * @param allCheckFuture allCheckFuture
- * @return MarginCheckBO
- */
-public MarginCheckContextBO trialAllCheckFutureResult(CompletableFuture<MarginCheckContextBO>[] allCheckFuture) {
-    MarginCheckContextBO marginCheck = new MarginCheckContextBO();
-    CompletableFuture<MarginEnum.InsuredFailEnum> insureCheckFuture = CompletableFuture.supplyAsync(() -> allCheckFutureResult(allCheckFuture), threadPoolTaskExecutor);
-    int timeOut = 3;
-    try {
-        MarginEnum.InsuredFailEnum insuredFailEnum = insureCheckFuture.get(timeOut, TimeUnit.SECONDS);
-        marginCheck.setInsuredFailEnum(insuredFailEnum);
-    } catch (TimeoutException e) {
-        log.warn("[MarginService#premiumTrial] 商家试算验超时3s，直接算费");
-        marginCheck.setTrialTimeOut(Boolean.TRUE);
-        marginCheck.setInsuredFailEnum(MarginEnum.InsuredFailEnum.SUCCESSFUL);
-    } catch (Exception e) {
-        log.error("[MarginService#premiumTrial] 试算失败", e);
-        throw new AppRunException(e.getMessage());
+public MarginEnum.InsuredFailEnum allCheckFutureResult(CompletableFuture<MarginCheckContextBO>[] allCheckFuture) {
+    for (CompletableFuture<MarginCheckContextBO> completableFuture : allCheckFuture) {
+        if (Objects.isNull(completableFuture)) {
+            continue;
+        }
+        try {
+            MarginCheckContextBO marginCheckContextBo = completableFuture.get();
+            if (MarginEnum.InsuredFailEnum.SUCCESSFUL != marginCheckContextBo.getInsuredFailEnum()) {
+                return marginCheckContextBo.getInsuredFailEnum();
+            }
+        } catch (Exception e) {
+            log.error("[MarginService#vendorInsureCheck] ERROR", e);
+            throw new AppRunException(e.getMessage());
+        }
     }
-    return marginCheck;
-
+    return MarginEnum.InsuredFailEnum.SUCCESSFUL;
 }
 ```
 
 
 
-```java
-    /**
-     * 获取线程池结果
-     *
-     * @param allCheckFuture allCheckFuture
-     * @return MarginEnum.InsuredFailEnum
-     */
-    public MarginEnum.InsuredFailEnum allCheckFutureResult(CompletableFuture<MarginCheckContextBO>[] allCheckFuture) {
-        for (CompletableFuture<MarginCheckContextBO> completableFuture : allCheckFuture) {
-            if (Objects.isNull(completableFuture)) {
-                continue;
-            }
-            try {
-                MarginCheckContextBO marginCheckContextBo = completableFuture.get();
-                if (MarginEnum.InsuredFailEnum.SUCCESSFUL != marginCheckContextBo.getInsuredFailEnum()) {
-                    return marginCheckContextBo.getInsuredFailEnum();
-                }
-            } catch (Exception e) {
-                log.error("[MarginService#vendorInsureCheck] ERROR", e);
-                throw new AppRunException(e.getMessage());
-            }
-        }
-        return MarginEnum.InsuredFailEnum.SUCCESSFUL;
-    }
-```
 
 
 
 
-
-
-
-# 6、原理
+# 三、原理
 
 转子：https://mp.weixin.qq.com/s/GQGidprakfticYnbVYVYGQ
 
-## 6.1、`CompletableFuture` 的背景和定义加载
+## 1、`CompletableFuture` 的背景和定义加载
 
-### 6.1.1、`CompletableFuture` 解决的问题
+### 1）`CompletableFuture` 解决的问题
 
 > `CompletableFuture` 是由 `Java 8` 引入的，在 `Java8` 之前我们一般通过 `Future` 实现异步。      
 >
@@ -742,7 +716,7 @@ public MarginCheckContextBO trialAllCheckFutureResult(CompletableFuture<MarginCh
 
 下面将举例来说明，我们通过 `ListenableFuture`、`CompletableFuture`来实现异步的差异。假设有三个操作 `step1`、`step2`、`step3`存在依赖关系，其中 `step3` 的执行依赖step1和step2的结果。
 
-#### 6.1.1.1、`Future` ( `ListenableFuture` )：
+#### a、`Future` ( `ListenableFuture` )：
 
 ```java
 ExecutorService executor = Executors.newFixedThreadPool(5);
@@ -782,7 +756,7 @@ Futures.addCallback(future1And2, new FutureCallback<List<String>>() {
   }}, guavaExecutor);
 ```
 
-#### 6.1.1.2、`CompletableFuture` 的实现如下：
+#### b、`CompletableFuture` 的实现如下：
 
 > 显然，`CompletableFuture` 的实现更为简洁，可读性更好。
 
@@ -805,7 +779,7 @@ cf1.thenCombine(cf2, (result1, result2) -> {
 
 
 
-## 6.2、`CompletableFuture` 的定义
+## 2、`CompletableFuture` 的定义
 
 > `CompletableFuture` 实现了两个接口（如上图所示）：``Future`、`CompletionStage`。
 >
@@ -815,7 +789,7 @@ cf1.thenCombine(cf2, (result1, result2) -> {
 
 
 
-## 6.3、`CompletableFuture` 的使用
+## 3、`CompletableFuture` 的使用
 
 > 下面我们通过一个例子来讲解 `CompletableFuture` 如何使用，使用 `CompletableFuture` 也是构建依赖树的过程。一个`CompletableFuture` 的完成会触发另外一系列依赖它的 `CompletableFuture` 的执行：
 
@@ -825,7 +799,7 @@ cf1.thenCombine(cf2, (result1, result2) -> {
 
 ![image-20220525174132283](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20220525174132283.png)
 
-### 6.3.1、零依赖：`CompletableFuture` 的创建
+### 1）零依赖：`CompletableFuture` 的创建
 
 > 我们先看下如何不依赖其他 `CompletableFuture` 来创建新的 `CompletableFuture`：
 
@@ -850,7 +824,7 @@ cf.complete("success");
 
 ```
 
-### 6.3.2、一元依赖：依赖一个CF
+### 2）一元依赖：依赖一个CF
 
 > `CF3`，`CF5` 分别依赖于 `CF1` 和 `CF2` ，这种对于单个 `CompletableFuture` 的依赖可以通过 `thenApply`、`thenAccept`、`thenCompose`等方法来实现，代码如下所示：
 
@@ -871,7 +845,7 @@ CompletableFuture<String> cf5 = cf2.thenApply(result2 -> {
 
 
 
-### 6.3.3、二元依赖：依赖两个 `CF`
+### 3）二元依赖：依赖两个 `CF`
 
 > `CF4 ` 同时依赖于两个 `CF1` 和 `CF2`，这种二元依赖可以通过 `thenCombine` 等回调来实现，如下代码所示：
 >
@@ -888,7 +862,7 @@ CompletableFuture<String> cf4 = cf1.thenCombine(cf2, (result1, result2) -> {
 });
 ```
 
-### 6.3.4、多元依赖：依赖多个 `CF`
+### 4）多元依赖：依赖多个 `CF`
 
 > 如上图红色链路所示，整个流程的结束依赖于三个步骤CF3、CF4、CF5，这种多元依赖可以通过`allOf`或`anyOf`方法来实现，     
 >
@@ -913,7 +887,7 @@ CompletableFuture<String> result = cf6.thenApply(v -> {
 
 
 
-## 6.4、`CompletbleFuture`  原理
+## 4、`CompletbleFuture`  原理
 
 > `CompletableFuture` 中包含两个字段：**`result`** 和 **`stack`**。 `result` 用于存储当前 `CF` 的结果，`stack`（`Completion`）表示当前`CF`完成后需要触发的依赖动作（`Dependency` `Actions`），去触发依赖它的 `CF` 的计算，依赖动作可以有多个（表示有多个依赖它的 `CF`），以栈[`Treiber stack`]的形式存储，`stack` 表示栈顶元素。
 
@@ -928,13 +902,13 @@ CompletableFuture<String> result = cf6.thenApply(v -> {
 - `UniCompletion` 继承了 `Completion`，是一元依赖的基类，例如 `thenApply` 的实现类 `UniApply`就继承自 `UniCompletion`。
 - `BiCompletion` 继承了 `UniCompletion`，是二元依赖的基类，同时也是多元依赖的基类。例如 `thenCombine`的实现类 `BiRelay`就继承自`BiCompletion`。
 
-### 6.4.1、设计思想
+### 1）设计思想
 
 > 按照类似“观察者模式”的设计思想，原理分析可以从“观察者”和“被观察者”两个方面着手。由于回调种类多，但结构差异不大，所以这里单以一元依赖中的 `thenApply` 为例，不再枚举全部回调类型。如下图所示：
 
 ![image-20220525182352908](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20220525182352908.png)
 
-### 6.4.1、被观察者
+### 2）被观察者
 
 1、每个 `CompletableFuture`· 都可以被看作一个被观察者，其内部有一个 `Completion`类型的链表成员变量 `stack`，用来存储注册到其中的所有观察者。当被观察者执行完成后会弹栈 `stack`属性，依次通知注册到其中的观察者。上面例子中步骤 `fn2`就是作为观察者被封装在 `UniApply` 中。      
 
@@ -942,7 +916,7 @@ CompletableFuture<String> result = cf6.thenApply(v -> {
 
  
 
-### 6.4.2、观察者
+### 3）观察者
 
 > `CompletableFuture` 支持很多回调方法，例如 `thenAccept`、`thenApply`、`exceptionally` 等，这些方法接收一个函数类型的参数f，生成一个`Completion`类型的对象（即观察者），并将入参函数f赋值给 `Completion` 的成员变量 `fn`，然后检查当前CF是否已处于完成状态（即result != null），如果已完成直接触发 `fn`，否则将观察者 `Completion`加入到 `CF` 的观察者链 `stack`中，再次尝试触发，如果被观察者未执行完则其执行完毕之后通知触发。
 
@@ -952,9 +926,9 @@ CompletableFuture<String> result = cf6.thenApply(v -> {
 
 
 
-## 6.5、整体流程
+## 5整体流程
 
-### 6.5.1、一元依赖
+### 1）一元依赖
 
 这里仍然以 `thenApply` 为例来说明一元依赖的流程：
 
@@ -970,7 +944,7 @@ CompletableFuture<String> result = cf6.thenApply(v -> {
 
 
 
-#### 5.6.1.1、FAQ
+#### A、FAQ
 
 **Q1**：在观察者注册之前，如果 `CF` 已经执行完成，并且已经发出通知，那么这时观察者由于错过了通知是不是将永远不会被触发呢 ？     
 
@@ -998,7 +972,7 @@ CompletableFuture<String> result = cf6.thenApply(v -> {
 
 
 
-### 6.5.2、二元依赖
+### 2）二元依赖
 
 > 我们以thenCombine为例来说明二元依赖：    
 >
@@ -1006,15 +980,15 @@ CompletableFuture<String> result = cf6.thenApply(v -> {
 
 ![image-20220525184716812](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20220525184716812.png)
 
-### 6.5.3、多元依赖
+### 3）多元依赖
 
 > 依赖多个 `CompletableFuture` 的回调方法包括 `allOf`、`anyOf`，区别在于 `allOf `观察者实现类为 `BiRelay`，需要所有被依赖的CF完成后才会执行回调；而 `anyOf`观察者实现类为 `OrRelay`，任意一个被依赖的 `C` F完成后就会触发。二者的实现方式都是将多个被依赖的 `C` F构建成一棵平衡二叉树，执行结果层层通知，直到根节点，触发回调监听。
 
 
 
-# 7、线程阻塞的问题
+# 四、常见问题
 
-## 7.1、代码执行在哪个线程上
+## 1、执行在哪个线程上
 
 > 要合理治理线程资源，最基本的前提条件就是要在写代码时，清楚地知道每一行代码都将执行在哪个线程上。下面我们看一下`CompletableFuture`的执行线程情况。     
 >
@@ -1056,9 +1030,11 @@ future1.thenApplyAsync(value -> {
 }, threadPool1);
 ```
 
-## 7.2、线程池须知
 
-### 7.2.1、 异步回调要传线程池
+
+## 2、线程池须知
+
+### 1） 异步回调要传线程池
 
 > 前面提到，异步回调方法可以选择是否传递线程池参数 `Executor`，这里我们建议**强制传线程池，且根据实际情况做线程池隔离**。
 >
@@ -1068,7 +1044,7 @@ future1.thenApplyAsync(value -> {
 
 
 
-### 7.2.2、线程池循环引用会导致死锁
+### 2）线程池循环引用会导致死锁
 
 > `doGet` 方法第三行通过 `supplyAsync` 向 `threadPool1` 请求线程，并且内部子任务又向 `threadPool1`请求线程。`threadPool1`大小为 `10`，当同一时刻有 `10` 个请求到达，则 `threadPool1`被打满，子任务请求线程时进入阻塞队列排队，但是父任务的完成又依赖于子任务，这时由于子任务得不到线程，父任务无法完成。主线程执行 `cf1.join()` 进入阻塞状态，并且永远无法恢复。
 
@@ -1092,17 +1068,22 @@ public Object doGet() {
 
 
 
-### 7.2.3、异步 `RPC `调用注意不要阻塞IO线程池
+### 3）异步 `RPC ` 调用注意不要阻塞IO线程池
 
-服务异步化后很多步骤都会依赖于异步 `RPC` 调用的结果，这时需要特别注意一点，如果是使用基于NIO（比如 `Netty`）的异步 `RPC`，则返回结果是由 `IO` 线程负责设置的，即回调方法由 `IO` 线程触发，`CompletableFuture` 同步回调（如 `thenApply`、`thenAccept` 等无`Async`后缀的方法）如果依赖的异步 `RPC` 调用的返回结果，那么这些同步回调将运行在 `IO` 线程上，而整个服务只有一个 `IO` 线程池，**这时需要保证同步回调中不能有阻塞等耗时过长的逻辑，否则在这些逻辑执行完成前，`IO` 线程将一直被占用，影响整个服务的响应**。
+> 服务异步化后很多步骤都会依赖于异步 `RPC` 调用的结果，这时需要特别注意一点，如果是使用基于 `NIO`（比如 `Netty`）的异步 `RPC`，则返回结果是由 `IO` 线程负责设置的，即回调方法由 `IO` 线程触发，`CompletableFuture` 同步回调（如 `thenApply`、`thenAccept` 等无`Async`后缀的方法）如果依赖的异步 `RPC` 调用的返回结果，那么这些同步回调将运行在 `IO` 线程上，而整个服务只有一个 `IO` 线程池，**这时需要保证同步回调中不能有阻塞等耗时过长的逻辑，否则在这些逻辑执行完成前，`IO` 线程将一直被占用，影响整个服务的响应**。
+>
 
 
 
-### 7.2.4、其他
 
-#### 7.2.4.1、异常处理
 
-> 由于异步执行的任务在其他线程上执行，而异常信息存储在线程栈中，因此当前线程除非阻塞等待返回结果，否则无法通过 `try` \ `catch` 捕获异常。`CompletableFuture` 提供了异常捕获回调 `exceptionally`，相当于同步调用中的 `try` \ `catch`。使用方法如下所示：
+
+
+## 3、异常问题
+
+### 1）异常处理
+
+> 由于异步执行的任务在其他线程上执行，而异常信息存储在线程栈中，因此当前线程除非阻塞等待返回结果，无法通过 `try` \ `catch` 捕获异常。`CompletableFuture` 提供了异常捕获回调 `exceptionally`，相当于同步调用中的 `try` \ `catch`。使用方法如下所示：
 
 ```java
 @Autowired
@@ -1121,7 +1102,7 @@ public CompletableFuture<Integer> getCancelTypeAsync(long orderId) {
 
 
 
-#### 7.2.4.1、真正的异常
+### 2）真正的异常
 
 > 有一点需要注意，`CompletableFuture` 在回调方法中对异常进行了包装。大部分异常会封装成 `CompletionException` 后抛出，真正的异常存储在 `cause` 属性中，因此如果调用链中经过了回调方法处理那么就需要用 `Throwable.getCause()` 方法提取真正的异常。但是，有些情况下会直接返回真正的异常
 
@@ -1156,6 +1137,16 @@ public class ExceptionUtils {
     }
 }
 ```
+
+
+
+
+
+## 4、`CompletableFuture` 和 线程池
+
+**1、直接使用线程池**适用于简单的并发任务执行场景，通过直接管理线程和任务，可以更好地控制资源的分配和任务的执行。    
+
+**2、`CompletableFuture` + 线程池**则更适用于复杂的异步编程场景，通过 `CompletableFuture` 提供的强大异步编程能力，可以更方便地实现任务的组合、结果的非阻塞等待和异常处理等。
 
 
 
