@@ -166,6 +166,7 @@ public class DateUtils {
          * @return LocalDateTime
          */
         public static LocalDateTime toEndTime(LocalDateTime localDateTime, ChronoUnit chronoUnit) {
+
             switch (chronoUnit) {
                 case MINUTES:
                     return localDateTime.withSecond(59).withNano(0);
@@ -190,22 +191,14 @@ public class DateUtils {
          * @param num           num
          * @return {@link LocalDateTime}
          */
-        public static LocalDateTime minusRoll(LocalDateTime localDateTime, ChronoUnit field, int num) {
-            return localDateTime.minus(num, field);
+        public static LocalDateTime roll(LocalDateTime localDateTime, ChronoUnit field, int num) {
+
+            if (num >= 0) {
+                return localDateTime.plus(num, field);
+            }
+            return localDateTime.minus(-num, field);
         }
 
-
-        /**
-         * roll
-         *
-         * @param localDateTime localDateTime
-         * @param field         field
-         * @param num           num
-         * @return {@link LocalDateTime}
-         */
-        public static LocalDateTime plusRoll(LocalDateTime localDateTime, ChronoUnit field, int num) {
-            return localDateTime.plus(num, field);
-        }
 
         /**
          * 获取包含日期所在月份的所有月
@@ -263,10 +256,10 @@ public class DateUtils {
             System.out.println(DateUtils.TimeTool.toStr(toEndTime(dateTime, ChronoUnit.YEARS)));
             System.out.println();
             System.out.println("TimeExtTool.minusRoll" + DateUtils.TimeTool.toStr(dateTime));
-            System.out.println(DateUtils.TimeTool.toStr(minusRoll(dateTime, ChronoUnit.DAYS, 1)));
+            System.out.println(DateUtils.TimeTool.toStr(roll(dateTime, ChronoUnit.DAYS, -1)));
             System.out.println();
             System.out.println("TimeExtTool.plusRoll" + DateUtils.TimeTool.toStr(dateTime));
-            System.out.println(DateUtils.TimeTool.toStr(plusRoll(dateTime, ChronoUnit.DAYS, 1)));
+            System.out.println(DateUtils.TimeTool.toStr(roll(dateTime, ChronoUnit.DAYS, 1)));
 
             System.out.println();
             System.out.println("TimeExtTool.getDates" + DateUtils.TimeTool.toStr(dateTime));

@@ -1,16 +1,14 @@
-package com.jd.merchant.mq.route.util;
+package com.hlj.util.z028_灰度工具;
 
-import com.alibaba.fastjson.JSON;
-import com.jd.merchant.mq.route.bean.GrayInsuranceBusinessDto;
-import com.jd.merchant.mq.route.config.DuccBypassInsuranceConfiguration;
-import com.jd.merchant.mq.route.enums.GrayEnum;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Test;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -25,98 +23,110 @@ import java.util.Set;
 public class GrayUtil {
 
     /**
-     * duccBypassInsuranceConfiguration
+     * grayConfiguration
      */
-    @Resource
-    private DuccBypassInsuranceConfiguration duccBypassInsuranceConfiguration;
+    private static final GrayConfiguration grayConfiguration;
+
+    static {
+        grayConfiguration = new GrayConfiguration();
+        Map<String, GrayBizBO> grayBizMap = Maps.newHashMap();
+        grayBizMap.put(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1.getBizType(),
+                     new GrayBizBO()
+                        .setFlag(true)
+                        .setRate(2)
+                        .setAmount(10)
+                        .setWhiteInfos(Sets.newHashSet("4", "5", "6"))
+                        .setBlackInfos(Sets.newHashSet("7", "8", "9")));
+        grayConfiguration.setGrayBizMap(grayBizMap);
+
+    }
+
 
     /**
      * 是否命中灰度
-     * 1、判断灰度开关是否打开
-     * 2、判断灰度对象是否在灰度白名单中
-     * 3、判断是否命中灰度百分比
+     * 一、灰度业务判断
+     * 1、灰度业务不存在 返回：GrayEnum.GrayResEnum.GRAY_NOT_EXIST
+     * 2、判断是否灰度关闭，是返回 GrayEnum.GrayResEnum.GRAY_CLOSE;
+     * 二、灰度黑白名单判断
      *
      * @param grayBusinessEnum 灰度业务枚举
-     * @param grayObject       灰度值
+     * @param grayValue        灰度值
      * @return 灰度开关是否打开
      */
-    public <T> boolean hitGray(GrayEnum.GrayBusinessEnum grayBusinessEnum, T grayObject) {
-        if (grayObject instanceof String) {
-            return getInsuranceVendorGraySwitch(grayBusinessEnum, (String) grayObject);
-        }
-        return false;
-    }
+    public static GrayEnum.GrayResEnum hitGray(GrayEnum.GrayBusinessEnum grayBusinessEnum, String grayValue) {
 
+        // 一、灰度业务判断
+        // 1、灰度业务不存在 返回：GrayEnum.GrayResEnum.GRAY_NOT_EXIST
+        Map<String, GrayBizBO> grayBizMap = Optional.ofNullable(grayConfiguration.getGrayBizMap()).orElse(Maps.newHashMap());
+        GrayBizBO grayBiz = grayBizMap.get(grayBusinessEnum.getBizType());
+        if (Objects.isNull(grayBiz)) {
+            log.info("[GrayUtil#hitGray] grayBusinessEnum:{}, grayValue:{} 灰度结果: false(未配置灰度)", grayBusinessEnum, grayValue);
+            return GrayEnum.GrayResEnum.GRAY_NOT_EXIST;
+        }
+
+        // 2、判断是否灰度关闭，是返回 GrayEnum.GrayResEnum.GRAY_CLOSE;
+        if (Boolean.FALSE.equals(grayBiz.getFlag())) {
+            log.info("[GrayUtil#hitGray] grayBusinessEnum:{}, grayValue:{} 灰度结果: false(灰度关闭)", grayBusinessEnum, grayValue);
+            return GrayEnum.GrayResEnum.GRAY_CLOSE;
+        }
+
+
+        // 二、灰度黑白名单判断
+        // 1、白名单判断,如果在白名单，返回：GrayEnum.GrayResEnum.GRAY_WHITE_TRUE;
+        Set<String> whiteUsers = Optional.ofNullable(grayBiz.getWhiteInfos()).orElse(Sets.newHashSet());
+        if (whiteUsers.contains(grayValue)) {
+            log.info("[GrayUtil#hitGray] grayBusinessEnum:{}, grayValue:{} 灰度结果：true(白名单命中)", grayBusinessEnum, grayValue);
+            return GrayEnum.GrayResEnum.GRAY_WHITE_TRUE;
+        }
+
+        // 2、黑白名单判断,如果在白名单，返回：GrayEnum.GrayResEnum.GRAY_BLACK_TRUE;
+        Set<String> blackInfos = Optional.ofNullable(grayBiz.getBlackInfos()).orElse(Sets.newHashSet());
+        if (blackInfos.contains(grayValue)) {
+            log.info("[GrayUtil#hitGray] grayBusinessEnum:{}, grayValue:{} 灰度结果：false(黑名单命中)", grayBusinessEnum, grayValue);
+            return GrayEnum.GrayResEnum.GRAY_BLACK_TRUE;
+        }
+
+        // 三、灰度比例判断
+        // 3.1、灰度比例不存在，则返回false
+        Integer grayPercent = grayBiz.getRate();
+        Integer grayPercentAmount = grayBiz.getAmount();
+
+        // 3.2、灰度比例计算，命中返回ture，不命中返回false
+        int rate = Math.abs(hashValue(grayBusinessEnum, grayValue)) % grayPercentAmount;
+        if (rate <= grayPercent) {
+            log.info("[GrayUtil#hitGray] grayBusinessEnum:{}, grayValue:{} 灰度结果：true(灰度命中)", grayBusinessEnum, grayValue);
+            return GrayEnum.GrayResEnum.GRAY_TRUE;
+        }
+        log.info("[GrayUtil#hitGray] grayBusinessEnum:{}, grayValue:{} 灰度结果：false(灰度未命中)", grayBusinessEnum, grayValue);
+        return GrayEnum.GrayResEnum.GRAY_FALSE;
+    }
 
 
     /**
-     * ducc险种灰度开关 (定制化)
-     * 1、如果ducc配置为空或入参为空，则返回false
-     * 2、灰度开关判断
-     * 2.1、如果灰度对象为空，则返回false
-     * 2.2、如果灰度开关状态不存在或者开关关闭，则返回false
-     * 2.3、如果灰度开关状态显示全量，则返回true
-     * 3、商家白名单判断,如果商家在白名单，则返回true
-     * 4、灰度比例判断
-     * 4.1、灰度比例不存在，则返回false
-     * 4.2、灰度比例计算，命中返回ture，不命中返回false
+     * hashValue
      *
-     * @param insuranceId 险种Id
-     * @return 路由切换开关
+     * @param grayBusinessEnum grayBusinessEnum
+     * @param grayValue        grayValue
+     * @return {@link Integer}
      */
-    private boolean getInsuranceVendorGraySwitch(GrayEnum.GrayBusinessEnum grayBusinessEnum, String vendorId) {
-        Map<String, GrayInsuranceBusinessDto> bypassInsuranceSwitchMap = duccBypassInsuranceConfiguration.getBypassGrayVendorMap();
-
-        // 1、如果ducc配置为空或入参为空，则返回 灰度关闭
-        if (CollectionUtils.isEmpty(bypassInsuranceSwitchMap)) {
-            return false;
-        }
-
-        //ducc 这个小傻瓜不支持直接转对象
-        String json = JSON.toJSONString(bypassInsuranceSwitchMap.get(grayBusinessEnum.getInsuranceId())) ;
-        GrayInsuranceBusinessDto grayVendor =JSON.parseObject(json, GrayInsuranceBusinessDto.class);
-
-        // 2.1、如果灰度对象为空，则返回false
-        if (Objects.isNull(grayVendor)) {
-            return false;
-        }
-
-        // 2.2、如果灰度开关状态不存在或者开关关闭，则返回false
-        String graySwitchCode = grayVendor.getGraySwitchCode();
-        GrayEnum.GraySwitchEnum graySwitchEnum = GrayEnum.GraySwitchEnum.toGraySwitchEnum(graySwitchCode);
-        if (Objects.isNull(graySwitchEnum) || GrayEnum.GraySwitchEnum.GRAY_CLOSE == graySwitchEnum) {
-            return false;
-        }
-
-        // 2.3、如果灰度开关状态显示全量，则返回true
-        if (GrayEnum.GraySwitchEnum.ALL_PERCENT == graySwitchEnum) {
-            return true;
-        }
-        if (GrayEnum.GraySwitchEnum.GRAY_PERCENT != graySwitchEnum) {
-            return false;
-        }
-
-        // 3、商家白名单判断,如果商家在白名单，则返回true
-        Set<String> whiteVendorIds = grayVendor.getWhiteVendorIds();
-        if (!CollectionUtils.isEmpty(whiteVendorIds) && whiteVendorIds.contains(vendorId)) {
-            log.info("[GrayUtil#getInsuranceVendorGraySwitch] 商家白名单命中，商家id:{}, 白名单商家集合:{}：灰度状态：true", vendorId, JSON.toJSONString(whiteVendorIds));
-            return true;
-        }
-
-        // 4.1、灰度比例不存在，则返回false
-        Integer grayPercent = grayVendor.getGrayPercent();
-        Integer grayPercentAmount = grayVendor.getGrayPercentAmount();
-        if (Objects.isNull(grayPercent) || Objects.isNull(grayPercentAmount)) {
-            return false;
-        }
-        // 4.2、灰度比例计算，命中返回ture，不命中返回false
-        int hashCode = vendorId.hashCode();
-        int rate = Math.abs(hashCode) % grayPercentAmount;
-        if (rate <= grayPercent) {
-            log.info("[GrayUtil#getInsuranceVendorGraySwitch] 商家Id:{}，命中灰度:{} grayPercent:{}, grayPercentAmount:{}， 灰度状态：true", vendorId, rate, grayPercent, grayPercentAmount);
-            return true;
-        }
-        return false;
+    public static Integer hashValue(GrayEnum.GrayBusinessEnum grayBusinessEnum, String grayValue) {
+        return Integer.valueOf(grayValue);
     }
+
+
+     @Test
+     public void test(){
+         System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "1"));
+         System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "2"));
+         System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "3"));
+         System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "4"));
+         System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "5"));
+         System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "6"));
+         System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "7"));
+         System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "8"));
+         System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "9"));
+     }
+
+
 
 }

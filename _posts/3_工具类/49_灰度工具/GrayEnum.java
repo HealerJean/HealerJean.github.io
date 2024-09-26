@@ -1,4 +1,7 @@
-package com.jd.merchant.mq.route.enums;
+package com.hlj.util.z028_灰度工具;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.util.Arrays;
 
@@ -9,110 +12,77 @@ import java.util.Arrays;
  */
 public interface GrayEnum {
 
+
+    /**
+     * 灰度进度
+     */
+    @Getter
+    @AllArgsConstructor
+    enum GrayResEnum implements GrayEnum {
+
+        /**
+         * GRAY_CLOSE
+         */
+        GRAY_WHITE_TRUE( "whiteHit", true,"命中灰度白名单"),
+        GRAY_TRUE("hit" ,true,"命中灰度"),
+
+        GRAY_CLOSE( "close", false,"灰度关闭"),
+        GRAY_NOT_EXIST( "notExist", false,"灰度不存在"),
+        GRAY_BLACK_TRUE( "blackHit", false,"命中灰度白名单"),
+        GRAY_FALSE("unHit", false, "未命中或者灰度不存在"),
+        ;
+
+
+        /**
+         * 灰度详细结果
+         */
+        private final String code;
+
+        /**
+         * 灰度结果
+         */
+        private final Boolean flag;
+
+        /**
+         * desc
+         */
+        private final String desc;
+
+    }
+
+
+
     /**
      * 灰度业务
      */
+    @Getter
+    @AllArgsConstructor
     enum GrayBusinessEnum implements GrayEnum {
         /**
          * INSURANCE_6067
          */
-        INSURANCE_6067("6067", "晚发赔"),
-        INSURANCE_6072("6072", "6072"),
-        INSURANCE_6073("6073", "6073"),
-        INSURANCE_6074("6074", "6074"),
+        BUSINESS_OOO1("businessDemo", "灰度场景1"),
         ;
 
         /**
          * insuranceId
          */
-        private final String insuranceId;
+        private final String bizType;
+
         /**
          * desc
          */
-        private final String desc;
+        private final String bizDesc;
+
 
         /**
          * GrayBusinessEnum
-         *
-         * @param insuranceId insuranceId
-         * @param desc        desc
-         */
-        GrayBusinessEnum(String insuranceId, String desc) {
-            this.insuranceId = insuranceId;
-            this.desc = desc;
-        }
-
-        public String getInsuranceId() {
-            return insuranceId;
-        }
-
-        public String getDesc() {
-            return desc;
-        }
-
-        /**
-         * GrayBusinessEnum
-         * @param insuranceId insuranceId
+         * @param bizType insuranceId
          * @return GrayBusinessEnum
          */
-        public static GrayBusinessEnum toGrayBusinessEnum(String insuranceId) {
-            return Arrays.stream(GrayBusinessEnum.values()).filter(item->item.getInsuranceId().equals(insuranceId)).findAny().orElse(null);
+        public static GrayBusinessEnum toGrayBusinessEnum(String bizType) {
+            return Arrays.stream(GrayBusinessEnum.values()).filter(item->item.getBizType().equals(bizType)).findAny().orElse(null);
         }
     }
-
-
-    /**
-     * 灰度业务
-     */
-    enum GraySwitchEnum implements GrayEnum {
-
-        /**
-         * GRAY_CLOSE
-         */
-        GRAY_CLOSE("GrayClose", "灰度关闭"),
-        GRAY_PERCENT("Percent", "灰度中"),
-        ALL_PERCENT("AllPercent", "全量"),
-
-        ;
-
-        /**
-         * code
-         */
-        private final String code;
-        /**
-         * desc
-         */
-        private final String desc;
-
-        /**
-         * GrayBusinessEnum
-         *
-         * @param code insuranceId
-         * @param desc desc
-         */
-        GraySwitchEnum(String code, String desc) {
-            this.code = code;
-            this.desc = desc;
-        }
-
-        /**
-         * GraySwitchEnum
-         *
-         * @param code code
-         * @return GraySwitchEnum
-         */
-        public static GraySwitchEnum toGraySwitchEnum(String code) {
-            return Arrays.stream(GraySwitchEnum.values()).filter(item -> item.getCode().equals(code)).findAny().orElse(null);
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-        public String getDesc() {
-            return desc;
-        }
-    }
-
 
 }

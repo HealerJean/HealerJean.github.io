@@ -1144,7 +1144,204 @@ long totalTime = (System.currentTimeMillis() - startTime) / NumberConstant.ONE_T
 
 
 
-## 3.3、如何设置参数才合理
+
+
+## 3.3、分析线程数
+
+> 一个 `CPU` 核心，单位时间内只能执行一个线程的指令
+
+### 3.3.1、分析
+
+> 那么理论上，我一个线程只需要不停的执行指令，就可以跑满一个核心的利用率。来写个死循环空跑的例子验证一下：
+
+```java
+public class CPUUtilizationTest{
+   public static void main(String[] args){
+     //死循环，什么都不做
+     while(true){
+     }
+}}
+```
+
+运行这个例子后，来看看现在CPU的利用率：从图可以看到，我的 `3` 号核心利用率已经被跑满了
+
+![image-20240923114950008](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20240923114950008.png)
+
+
+
+那基于上面的理论，我多开几个线程试试呢？
+
+```java
+public class CPUUtilizationTest{
+     public static void main(String[] args){
+         for(int j =0; j <6; j++){
+         new Thread(newRunnable(){
+             @Override
+             public void run(){
+                 while(true){
+                 }
+             }
+         }).start();
+     }
+}}
+```
+
+此时再看 `CPU` 利用率，1/2/5/7/9/11 几个核心的利用率已经被跑满：
+
+![image-20240923115030531](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20240923115030531.png)
+
+那如果开 `12` 个线程呢，是不是会把所有核心的利用率都跑满？答案一定是会的：
+
+![image-20240923115044303](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20240923115044303.png)
+
+
+
+如果此时我把上面例子的线程数继续增加到24个线程，会出现什么结果呢？
+
+`CPU` 利用率和上一步一样，还是所有核心 `100%` ，不过此时负载从 `11.x` 增加到了`22.x` ，说明此时 `CPU`更繁忙，线程的任务无法及时执行。   
+
+**现代CPU基本都是多核心的，我们可以简单的认为是12核心CPU。那么我这个CPU就可以同时做12件事，互不打扰。 **  
+
+
+
+**问题1：既然一个线程就能打满一个核心，那我见过线程数都比较多，这是怎么回事？**     
+
+答案：如果要执行的线程大于核心数，那么就需要通过操作系统的调度了。操作系统给每个线程分配 `CPU` 时间片资源，然后不停的切换，从而实现**“并行”执行的效果**。
+
+
+
+**问题2：执行的线程大于核心数 这样真的就快了吗**？    
+
+答案：一个线程就可以把一个核心的利用率跑满。如果每个线程都很“霸道”，不停的执行指令，不给 `CPU` 空闲的时间，并且同时执行的线程数大于 `CPU` 的核心数，就会导致操作系统更频繁的执行切换线程执行，以确保每个线程都可以得到执行。 不过切换是有代价的，**每次切换会伴随着寄存器数据更新，内存页表更新等操作**。虽然一次切换的代价和 `I/O` 操作比起来微不足道，但如果线程过多，线程切换的过于频繁，甚至在单位时间内切换的耗时已经大于程序执行的时间，就会导致 `CPU` 资源过多的浪费在上下文切换上，而不是在执行程序，得不偿失。
+
+
+
+**问题3：那真的会这么多死循环空跑的线程吗？**    
+
+答案：大多程序在运行时都会有一些 `I/O` 操作，可能是读写文件，网络收发报文等，这些 `I/O`  操作在进行时时需要等待反馈的。比如网络读写时，需要等待报文发送或者接收到，在这个等待过程中，线程是等待状态，`CPU` 没有工作。此时操作系统就会调度 `CPU` 去执行其他线程的指令，这样就完美利用了 `CPU` 这段空闲期，提高了 `CPU` 的利用率。     
+
+
+
+
+
+**问题4：如果在上面的死循环中插入一段 `I/O` 操作呢**     
+
+**1、单线程效果：唯一有利用率的9号核心，利用率也才50%，和前面没有sleep的100%相比，已经低了一半了**
+
+```java
+public class CPUUtilizationTest{
+     public static void main(String[] args)throws InterruptedException{
+         for(int n =0; n <1; n++){
+         new Thread(newRunnable(){
+             @Override
+             public void run(){
+                 while(true){
+                     //每次空循环 1亿 次后，sleep 50ms，模拟 I/O等待、切换
+                     for(int i =0; i <100_000_000l; i++){ 
+                     }
+                     try{
+                       Thread.sleep(50);
+                     }
+                     catch(InterruptedException e){
+                       e.printStackTrace();
+                     }
+                 }
+             }
+         }).start();
+     }
+}}
+```
+
+![image-20240923115603334](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20240923115603334.png)
+
+
+
+
+
+
+
+**2、线程数调整到12（调满）：单个核心的利用率60左右**
+
+![image-20240923115655248](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20240923115655248.png)
+
+
+
+**3、线程数增加到18：此时单核心利用率，已经接近100%了。由此可见，当线程中有 I/O 等操作不占用CPU资源时，操作系统可以调度CPU可以同时执行更多的线程**
+
+![image-20240923115724267](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20240923115724267.png)
+
+
+
+**总结：**将 `I/O` 事件的频率调高看看呢，把循环次数减到一半，50_000_000，同样是 `18`个线程，此时每个核心的利用率，大概只有 `70%` 左右了。
+
+
+
+### 3.3.2、线程数和 `CPU` 利用率总结
+
+> 上面的例子，只是辅助，为了更好的理解线程数/程序行为/CPU状态的关系，来简单总结一下：
+
+⬤ 一个极端的线程（不停执行“计算”型操作时），就可以把单个核心的利用率跑满，多核心 `CPU` 最多只能同时执行等于核心数的“极端”线程数    
+
+⬤ 如果每个线程都这么“极端”，且同时执行的线程数超过核心数，会导致不必要的切换，造成负载过高，只会让执行更慢      
+
+⬤ `I/O` 等暂停类操作时，`CPU` 处于空闲状态，操作系统调度 `CPU` 执行其他线程，可以提高 `CPU` 利用率，同时执行更多的线程    
+
+⬤ `I/O` 事件的频率越高，或者等待/暂停时间越长，`CPU` 的空闲时间也就更长，利用率越低，操作系统可以调度 `CPU` 执行更多的线程
+
+
+
+### 3.3.3、计算核心线程数
+
+> 在《Java 并发编程实战》中介绍了一个线程数计算的公式 下面也有介绍（方案一）
+
+![image-20240923130949861](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20240923130949861.png)
+
+
+
+如果我期望目标利用率为 `90%`（多核90），那么需要的线程数为：
+
+> 核心数 `12` * 利用率 `0.9` * (1 + 50(sleep时间)/50(循环50_000_000耗时)) ≈ 22
+
+计算：`W` 是等待时间比如 `IO` 等待的时间，`C` 是计算时间即我完成那么多次循环一共耗时是多少，现在把线程数调到 `22`，看看结果：   
+
+结果：现在 `CPU` 利用率大概 `80+`，和预期比较接近了，由于线程数过多，还有些上下文切换的开销，再加上测试用例不够严谨，所以实际利用率低一些也正常。
+
+
+
+![image-20240923131153282](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20240923131153282.png)
+
+
+
+
+
+
+
+
+
+### 3.3.4、真实程序
+
+> 那么在实际的程序中，或者说一些 `Java` 的业务系统中，线程数（线程池大小）规划多少合适呢？
+>
+> > 先说结论：没有固定答案，先设定预期，比如我期望的 `CPU` 利用率在多少，负载在多少，`GC` 频率多少之类的指标后，再通过测试不断的调整到一个合理的线程数。比如一个普通的，`SpringBoot`  为基础的业务系统，默认 `Tomcat` 容器+连接池+垃圾回收器，如果此时项目中也需要一个业务场景的多线程（或者线程池）来异步/并行执行业务流程。   
+>
+> 此时按照上面的公式来规划线程数的话，误差一定会很大。因为此时这台主机上，已经有很多运行中的线程了，`Tomcat` 有自己的线程池，`JVM` 也有一些线程，垃圾回收器都有自己的后台线程。这些线程也是运行在当前进程、当前主机上的，也会占用`CPU`的资源。
+
+
+
+正确流程：
+
+- 分析当前主机上，有没有其他进程干扰
+- 分析当前 `JVM` 进程上，有没有其他运行中或可能运行的线程
+- 设定目标
+- 目标CPU利用率 - 我最高能容忍我的CPU飙到多少？
+- 目标 `GC` 频率/暂停时间 - 多线程执行后，`GC` 频率会增高，最大能容忍到什么频率，每次暂停时间多少？
+- 执行效率 - 比如批处理时，我单位时间内要开多少线程才能及时处理完毕
+
+
+
+
+
+## 3.4、如何设置参数才合理
 
 > 线程池使用面临的核心的问题在于：**线程池的参数并不好配置**。     
 >
@@ -1158,7 +1355,7 @@ long totalTime = (System.currentTimeMillis() - startTime) / NumberConstant.ONE_T
 
 
 
-### 3.3.1、设置规则
+### 3.4.1、设置规则
 
 > **第一阶段**，单 `CPU` 时代，单 `CPU` 在同一时间点，只能执行单一线程。比如，的某一刻 00:00:00 这一秒，只计算1＋1=2（假设cpu每秒计算一次）          
 >
@@ -1168,9 +1365,9 @@ long totalTime = (System.currentTimeMillis() - startTime) / NumberConstant.ONE_T
 
 
 
-#### 3.3.1.1、设计原则
+#### 3.4.1.1、设计原则
 
-> 1、系统的资源状况（处理器的数目，内存容量，CPU使用率上限）         
+> 1、系统的资源状况（处理器的数目，内存容量，`CPU` 使用率上限）         
 >
 > 2、线程所执行任务的特性（`cpu` 密集型，`i/o` 密集型）             
 >
@@ -1188,7 +1385,7 @@ public class NumMain {
 }
 ```
 
-#### 3.3.1.2、验证 `cup`密集型 N<sub>cpu</sub>+1 是否可行
+#### 3.4.1.2、验证 `cup`密集型 N<sub>cpu</sub>+1 是否可行
 
 ```java
 import java.util.List;
@@ -1258,9 +1455,9 @@ public class CPUTypeTest implements Runnable {
 
 **分析：**
 
-> 测试代码在 `4` 核 intel i5 CPU 机器上的运行时间变化如下：
+> 测试代码在 `4` 核 `intel i5 CPU` 机器上的运行时间变化如下：
 
-![image-20210730144823839](/Users/healerjean/Library/Application Support/typora-user-images/image-20210730144823839.png)
+![image-20210730144823839](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730144823839.png)
 
 **总结：**
 
@@ -1272,7 +1469,7 @@ public class CPUTypeTest implements Runnable {
 
 
 
-#### 3.3.1.3、验证 `i/o`密集型任务
+#### 3.4.1.3、验证 `i/o`密集型任务
 
 > 这种任务应用起来，系统会用大部分的时间来处理 `I/O` 交互，而线程在处理 `I/O` 的时间段内不会占用 `CPU` 来处理，这时就可以将 `CPU` 交出给其它线程使用。因此在` I/O` 密集型任务的应用中，我们可以多配置一些线程，具体的计算方法是 `2N`。
 
@@ -1353,7 +1550,7 @@ public class IOTypeTest implements Runnable {
 
 **分析：**
 
-![image-20210730145243354](/Users/healerjean/Library/Application Support/typora-user-images/image-20210730145243354.png)
+![image-20210730145243354](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730145243354.png)
 
 
 
@@ -1361,7 +1558,7 @@ public class IOTypeTest implements Runnable {
 
 
 
-#### 3.2.3.4、非极端如何配置
+#### 3.4.3.4、非极端如何配置
 
 > 看完以上两种情况下的线程计算方法，你可能还想说，在平常的应用场景中，我们常常遇不到这两种极端情况，那么碰上一些常规的业务操作      
 >
@@ -1373,9 +1570,9 @@ public class IOTypeTest implements Runnable {
 
 
 
-### 3.3.2、方案收集
+### 3.4.2、方案收集
 
-#### 3.3.2.1、方案1
+#### 3.4.2.1、方案1
 
 ⬤ cup 的个数（Ncpu）= 当前机器的cpu核数（number of CPUs）   
 
@@ -1383,11 +1580,11 @@ public class IOTypeTest implements Runnable {
 
 ⬤ cpu 的等待时间和计算时间百分比 ( W / C ) = cpu 的等待时间 / cpu的计算时间    
 
-⬤ 保持处理器的理想利用率的最佳池大小是 Nthreads=Ncpu*Rcpu*(1+W/C)
+⬤ 保持处理器的理想利用率的最佳池大小是 Nthreads=Ncpu * Rcpu * (1+W/C)
 
 出自《Java并发编程实践》该方案偏理论化。     
 
-问题：首先，线程计算的时间和等待的时间要如何确定呢？这个在实际开发中很难得到确切的值。另外计算出来的线程个数逼近线程实体的个数，Java线程池可以利用线程切换的方式最大程度利用CPU核数，这样计算出来的结果是非常偏离业务场景的 
+问题：首先，线程计算的时间和等待的时间要如何确定呢？这个在实际开发中很难得到确切的值。另外计算出来的线程个数逼近线程实体的个数，`Java` 线程池可以利用线程切换的方式最大程度利用CPU核数，这样计算出来的结果是非常偏离业务场景的 
 
 **任务类型：`CPU` 密集型任务，则线程数 = `Ncpu` +1**
 
@@ -1395,9 +1592,9 @@ public class IOTypeTest implements Runnable {
 
 
 
-#### 3.3.2.2、方案2
+#### 3.4.2.2、方案2
 
-⬤  核心线程数 = 2 * `cpu` 的个数     
+⬤ 核心线程数 = 2 * `cpu` 的个数     
 
 ⬤ 最大线程数 = 25 * `cpu` 的个数
 
@@ -1405,7 +1602,7 @@ public class IOTypeTest implements Runnable {
 
 
 
-#### 3.3.2.3、方案3
+#### 3.4.2.3、方案3
 
 ⬤ 核心线程数=Tps * time      
 
@@ -1415,9 +1612,9 @@ public class IOTypeTest implements Runnable {
 
  
 
-### 3.3.1、动态化线程池
+### 3.4.3、动态化线程池
 
-#### 3.3.1.1、新流程图
+#### 3.4.3.1、新流程图
 
 > 调研了以上业界方案后，我们并没有得出通用的线程池计算方式，这样就导致了下面两个问题：         
 >
@@ -1429,7 +1626,7 @@ public class IOTypeTest implements Runnable {
 
 ![image-20210730163623141](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730163623141.png)
 
-#### 3.3.1.2、使用场景参数配置
+#### 3.4.3.2、使用场景参数配置
 
 > 线程池构造参数有8个，但是最核心的是3个：`corePoolSize`、`maximumPoolSize`，`workQueue`，它们最大程度地决定了线程池的任务分配和线程分配策略。考虑到在实际应用中我们获取并发性的场景主要是两种
 >
@@ -1461,7 +1658,7 @@ public class IOTypeTest implements Runnable {
 
 
 
-### 3.3.2、利特尔法则合理配置参数值
+### 3.4.4、利特尔法则合理配置参数值
 
 > 我们认为线程池是由队列连接的一个或多个服务提供程序，这样我们也可以通过科特尔法则来定义线程池大小。我们只需计算请求到达率和请求处理的平均时间。然后，将上述值放到利特尔法则（Little’s law）就可以算出系统平均请求数。     
 >
@@ -1508,6 +1705,12 @@ public class IOTypeTest implements Runnable {
 ​        
 
 **5、`keepAliveTime` 和 `allowCoreThreadTimeout` 采用默认通常能满足**。
+
+
+
+
+
+
 
 
 

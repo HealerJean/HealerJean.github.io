@@ -103,11 +103,15 @@ public class BatchConsumerBO<REQ> implements Serializable {
          */
         private Boolean invokeFlag;
 
-
         /**
          * 执行异常信息
          */
         private Exception exception;
+
+        /**
+         * 消费时间
+         */
+        private Long cost;
     }
 }
 
