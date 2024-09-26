@@ -9,10 +9,6 @@ package com.healerjean.proj.enmus;
 public interface MapperNamedConstant {
 
     /**
-     * CLASS_TRANSFER_ENUM_SEX
-     */
-    String CLASS_TRANSFER_ENUM_SEX = "transferEnumSexClass";
-    /**
      * METHOD_SEX_CODE_TO_ENUM
      */
     String METHOD_SEX_CODE_TO_ENUM = "sexCodeToEnumMethod";
@@ -22,10 +18,6 @@ public interface MapperNamedConstant {
     String METHOD_SEX_ENUM_TO_CODE = "sexEnumToCodeMethod";
 
 
-    /**
-     * CLASS_TRANSFER_DATE
-     */
-    String CLASS_TRANSFER_DATE = "transferDateClass";
     /**
      * METHOD_DATE_TO_LOCAL_DATE_TIME
      */

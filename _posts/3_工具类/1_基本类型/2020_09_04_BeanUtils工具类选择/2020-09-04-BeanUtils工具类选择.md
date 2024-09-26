@@ -16,11 +16,11 @@ description: BeanUtils工具类选择
 
 
 
-# 1、`BeanUtils` 复制字段值
+# 一、`BeanUtils` 复制字段值
 
 
 
-## 1.1、`org.springframework.beans.BeanUtils`
+## 1、`org.springframework.beans.BeanUtils`
 
 > `a` 拷贝到 `b`
 
@@ -46,7 +46,7 @@ BeanUtils.copyProperties(appsApp,data,ignore);
 
  
 
-## 1.2、`org.apache.commons.beanutils.BeanUtils ` 
+## 2、`org.apache.commons.beanutils.BeanUtils ` 
 
 > `b` 拷贝到 `a 
 
@@ -54,9 +54,13 @@ BeanUtils.copyProperties(appsApp,data,ignore);
 
 
 
-# 2、`MapStruct`
+# 二、`MapStruct`
 
-## 2.1、`pom`依赖
+
+
+## 1、对象构建
+
+### 1）、`pom`依赖
 
 ```xml
 <org.mapstruct.version>1.3.0.Final</org.mapstruct.version>
@@ -75,9 +79,7 @@ BeanUtils.copyProperties(appsApp,data,ignore);
 
 
 
-## 2.2、案例分析
-
-### 2.2.1、`pojo`：`DictionaryType`
+### 2）`pojo`：`DictionaryType`
 
 ```java
 @Data
@@ -104,7 +106,7 @@ public class DictionaryType implements Serializable {
 
 
 
-### 2.2.2、`DTO`：`DictionaryTypeDTO`
+### 3）`DTO`：`DictionaryTypeDTO`
 
 ```java
 @Data
@@ -131,7 +133,7 @@ public class DictionaryTypeDTO {
 
 
 
-### 2.2.3、枚举
+### 4）枚举 `SystemEmum`
 
 ```java
 public interface SystemEmum {
@@ -180,9 +182,42 @@ public interface SystemEmum {
 
 
 
-### 2.2.4、字段转化
+## 2、使用说明
+
+### 1）、字段映射
+
+#### a、嵌套字段映射
+
+```java
+@Mapper
+public interface FishTankMapper {
+  @Mapping(target = "fish.kind", source = "fish.type")
+  @Mapping(target = "fish.name", ignore = true)
+  @Mapping(target = "ornament", source = "interior.ornament")
+  @Mapping(target = "material.materialType", source = "material")
+  @Mapping(target = "quality.report.organisation.name", source = "quality.report.organisationName")
+  FishTankDto map(FishTank source );
+  
+}
+```
 
 
+
+#### b、忽略字段映射
+
+```java
+@Mapping(target = "id", ignore = true)
+@Mapping(target = "ruleId", source = "rulesDO.id")
+MessageDO voRule2Do(MessageVO messageVO, RulesDO rulesDO);
+```
+
+
+
+### 2）自定义映射 `@Named`
+
+#### a、日期&枚举
+
+**1、转化类 `BeanTransfer`**
 
 ```java
 package com.healerjean.proj.beanmap.transfer;
@@ -198,7 +233,7 @@ import java.util.Date;
 
 /**
  * BeanTransfer
- * 
+ *
  * @author HealerJean
  * @date 2023-06-19 06:06:56
  */
@@ -207,7 +242,6 @@ public interface BeanTransfer {
     /**
      * Date和LocalDateTime互转
      */
-    @Named(MapperNamedConstant.CLASS_TRANSFER_DATE)
     class TransferDateAndLocalDateTime implements BeanTransfer {
 
         @Named(MapperNamedConstant.METHOD_DATE_TO_LOCAL_DATE_TIME)
@@ -236,7 +270,6 @@ public interface BeanTransfer {
     /**
      * Code和枚举互转
      */
-    @Named(MapperNamedConstant.CLASS_TRANSFER_ENUM_SEX)
      class TransferSexEnum  implements BeanTransfer{
 
         @Named(MapperNamedConstant.METHOD_SEX_CODE_TO_ENUM)
@@ -250,13 +283,14 @@ public interface BeanTransfer {
         }
     }
 
+
 }
 
 ```
 
 
 
-### 2.3.5、`MapperNamedConstant`
+**2、转化常亮定义`MapperNamedConstant`**
 
 ```java
 package com.healerjean.proj.enmus;
@@ -270,10 +304,6 @@ package com.healerjean.proj.enmus;
 public interface MapperNamedConstant {
 
     /**
-     * CLASS_TRANSFER_ENUM_SEX
-     */
-    String CLASS_TRANSFER_ENUM_SEX = "transferEnumSexClass";
-    /**
      * METHOD_SEX_CODE_TO_ENUM
      */
     String METHOD_SEX_CODE_TO_ENUM = "sexCodeToEnumMethod";
@@ -284,10 +314,6 @@ public interface MapperNamedConstant {
 
 
     /**
-     * CLASS_TRANSFER_DATE
-     */
-    String CLASS_TRANSFER_DATE = "transferDateClass";
-    /**
      * METHOD_DATE_TO_LOCAL_DATE_TIME
      */
     String METHOD_DATE_TO_LOCAL_DATE_TIME = "dateToLocalDateTimeMethod";
@@ -297,9 +323,10 @@ public interface MapperNamedConstant {
     String METHOD_LOCAL_DATE_TIME_TO_DATE = "localDateTimeToDateMethod";
 
 }
+
 ```
 
-### 2.3.6、`BeanUtils` 工具类
+**3、`BeanUtils` 工具类**
 
 ```java
 @Mapper(uses = {
@@ -320,13 +347,13 @@ public interface BeanUtils {
      * @return 返回值对应转化后的对象
      */
     @Mappings({
-            /** 名字不同转化 */
-            @Mapping(source = "dictionaryTypeId", target = "id"),
+           
             /** 类型和名字都不同转化 */
             @Mapping(source = "sex", 
                      target = "sexEnum", 
                      qualifiedByName = {TRANSFER_OF_SEX_ENUM, 
                                         BeanTransfer.TransferSexEnum.CODE_TO_SEX_ENUM}),
+      
             @Mapping(source = "createTime", 
                      target = "createTime", 
                      qualifiedByName = {TRANSFER_OF_DATE_AND_LOCAL_DATE_TIME, 
@@ -339,42 +366,22 @@ public interface BeanUtils {
 
 ```
 
-
-
-### 2.3.7、测试
-
-```java
-@Test
-public void test() {
-    DictionaryType dictionaryType = new DictionaryType();
-    dictionaryType.setDictionaryTypeId(1L);
-    dictionaryType.setTypeDesc("Loan");
-    dictionaryType.setStatus("10");
-    dictionaryType.setCreateTime(new Date());
-    dictionaryType.setSex(1);
-    DictionaryTypeDTO dto = BeanUtils.MAPPER.dictionaryType2DTO(dictionaryType);
-    System.out.println(dto);
-}
-```
-
-
-
-#### 2.3.7、`MapStrut`生成的类
+**4、`MapStrut`生成的类**
 
 ```java
 package com.healerjean.proj.beanmap;
 
+import com.healerjean.proj.beanmap.transfer.BeanTransfer.TransferDateAndLocalDateTime;
 import com.healerjean.proj.beanmap.transfer.BeanTransfer.TransferSexEnum;
 import com.healerjean.proj.dto.DictionaryType;
 import com.healerjean.proj.pojo.DictionaryTypeDTO;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+
 import javax.annotation.Generated;
 
 @Generated(
-    value = "org.mapstruct.ap.MappingProcessor",
-    date = "2020-09-04T15:23:22+0800",
-    comments = "version: 1.3.0.Final, compiler: javac, environment: Java 1.8.0_201-2-redhat (Oracle Corporation)"
+        value = "org.mapstruct.ap.MappingProcessor",
+        date = "2024-09-10T13:26:21+0800",
+        comments = "version: 1.3.0.Final, compiler: javac, environment: Java 1.8.0_271 (Oracle Corporation)"
 )
 public class BeanUtilsImpl implements BeanUtils {
 
@@ -382,25 +389,162 @@ public class BeanUtilsImpl implements BeanUtils {
 
     @Override
     public DictionaryTypeDTO dictionaryType2DTO(DictionaryType dictionaryType) {
-        if ( dictionaryType == null ) {
+        if (dictionaryType == null) {
             return null;
         }
 
         DictionaryTypeDTO dictionaryTypeDTO = new DictionaryTypeDTO();
 
-        dictionaryTypeDTO.setId( dictionaryType.getDictionaryTypeId() );
-        dictionaryTypeDTO.setSexEnum( transferSexEnum.codeToSexEnum( dictionaryType.getSex() ) );
-        if (dictionaryType.getCreateTime() != null ) {
-            dictionaryTypeDTO.setCreateTime( LocalDateTime.ofInstant( dictionaryType.getCreateTime().toInstant(), 
-                                                                     ZoneId.of( "UTC" ) ) );
-        }
-        dictionaryTypeDTO.setTypeKey( dictionaryType.getTypeKey() );
-        dictionaryTypeDTO.setTypeDesc( dictionaryType.getTypeDesc() );
+        dictionaryTypeDTO.setId(dictionaryType.getDictionaryTypeId());
+        dictionaryTypeDTO.setSexEnum(transferSexEnum.sexCodeToEnum(dictionaryType.getSex()));
+      
+        dictionaryTypeDTO
+          .setCreateTime(TransferDateAndLocalDateTime.toLocalDateTime(dictionaryType.getCreateTime()));
+        dictionaryTypeDTO.setTypeKey(dictionaryType.getTypeKey());
+        dictionaryTypeDTO.setTypeDesc(dictionaryType.getTypeDesc());
 
         return dictionaryTypeDTO;
     }
 }
 
+```
+
+
+
+
+
+### 3）常数 `constant`
+
+```java
+@Mapper
+public interface SourceTargetMapper {
+    SourceTargetMapper INSTANCE = Mappers.getMapper( SourceTargetMapper.class );
+    @Mapping(target = "stringConstant", constant = "Constant Value")
+    @Mapping(target = "integerConstant", constant = "14")
+    @Mapping(target = "longWrapperConstant", constant = "3001")
+    @Mapping(target = "dateConstant", dateFormat = "dd-MM-yyyy", constant = "09-01-2014")
+    Target sourceToTarget(Source s);
+}
+```
+
+
+
+
+
+### 4）默认值 `defaultValue`
+
+> 当 `source` 对象的对应字段为 `null` 时，`defaultValue` 指定的默认值会被放入 `target `的对应字段。
+
+```java
+@Mapper
+public interface SourceTargetMapper {
+    SourceTargetMapper INSTANCE = Mappers.getMapper( SourceTargetMapper.class );
+    @Mapping(target = "stringProperty", source = "stringProp", defaultValue = "undefined")
+    @Mapping(target = "longProperty", source = "longProp", defaultValue = "-1")
+    @Mapping(target = "booleanProperty", defaultValue = "false")
+    Target sourceToTarget(Source s);
+}
+```
+
+
+
+### 5）更新 不是新生成
+
+> 如果不想自动生成一个新的 `target` 实例，而是更新参数传入的 `target` 实例，可以给 `target` 增加 `@MappingTarget` 注解，此时返回的是传入的 target 对象
+
+```java
+@Mapper
+interface DeliveryAddressMapper {
+    @Mapping(source = "address.postalcode", target = "postalcode")
+    @Mapping(source = "address.county", target = "county")
+    DeliveryAddress updateAddress(@MappingTarget DeliveryAddress deliveryAddress, Address address);
+}
+```
+
+
+
+
+
+## 3、注意事项
+
+### 1）浅拷贝非深拷贝
+
+> `MapStruct` 在进行对象拷贝时，主要执行的是**浅拷贝**操作。浅拷贝意味着它会创建目标对象的一个新实例，并复制源对象的所有属性值。然而，如果源对象的属性值是引用类型（如对象、数组等），则 `MapStruct` 会复制这个引用地址，而不是引用的对象本身。因此，如果源对象中的引用类型属性发生了变化，那么这些变化也会反映到通过 `MapStruct` 拷贝得到的目标对象中。   
+>
+> > 1、具体来说，`MapStruct通` 过注解处理器在编译时自动生成映射代码，这些代码会实现将源对象的属性值复制到目标对象的相应属性中。对于基本数据类型（如 `int`、`double` 等），`MapStruct` 会进行值传递；而对于引用数据类型，则进行的是引用传递，即复制引用地址。      
+> >
+> > 2、虽然 `MapStruct` 本身主要执行浅拷贝，但开发者可以通过自定义转换器或转换逻辑来实现深拷贝的效果。例如，在映射接口中使用 `@AfterMapping` 注解来执行额外的逻辑，或者在映射方法中直接调用深拷贝方法。
+
+
+
+**反例：**
+
+```java
+public static void main(String[] args) {
+      OrderMessage orderMessage  = new OrderMessage();
+      ContractSignDTO contractSign = new ContractSignDTO();
+      contractSign.setContractNo("ooooooo");
+      orderMessage.setContractSign(contractSign);
+      OrderMessage newOrderMessage = OrderMessageConverter.INSTANCE.convertToOrderMessage(orderMessage);
+
+      ContractSignDTO newContractSign = newOrderMessage.getContractSign();
+      newContractSign.setContractNo("newnewnewnew");
+      System.out.println(JSON.toJSONString(orderMessage));
+      System.out.println(JSON.toJSONString(newOrderMessage));
+      // 二者结果一模一样
+  		
+  }
+```
+
+**正例：**
+
+> `SerializationUtils` 是  `Apache` `Commons` `Lang` 库中的一个工具类，它提供了基于 Java 序列化机制的对象序列化和反序列化功能。虽 然 `SerializationUtils` 本质上是通过序列化/反序列化来实现对象的深拷贝，但它为开发者提供了一个简洁的 API 来完成这一任务，而无需直接处理 `ObjectOutputStream` 和 `ObjectInputStream`。    
+>
+> > 注意：`SerializationUtils.clone(Object)` 方法在内部使用了 `Java` 的序列化机制来创建对象的深拷贝。因此，它要求被拷贝的对象及其所有非瞬态（`non`-`transient`）和非静态（`non`-`static`）字段都必须实现了 `Serializable` 接口。如果对象图中有任何字段没有实现 `Serializable` 接口，或者包含了不支持序列化的类型（如 `java.io.File`），那么序列化过程将会失败，并抛出 `NotSerializableException` 或其他异常。
+
+```java
+    public static void main(String[] args) {
+        OrderMessage orderMessage  = new OrderMessage();
+        ContractSignDTO contractSign = new ContractSignDTO();
+        contractSign.setContractNo("ooooooo");
+        contractSign.setOrderIds(Lists.newArrayList("1","2"));
+        orderMessage.setContractSign(contractSign);
+        OrderMessage deepCopyOrderMessage = SerializationUtils.clone(orderMessage);
+
+        ContractSignDTO deepCopyContractSign = deepCopyOrderMessage.getContractSign();
+        deepCopyContractSign.setContractNo("deepCopydeepCopy");
+
+        System.out.println(JSON.toJSONString(orderMessage));
+        //{"contractSign":{"contractNo":"ooooooo","orderIds":["1","2"]},"factoryShipFlag":false,"paymentType":0,"productsNum":0}
+        System.out.println(JSON.toJSONString(deepCopyContractSign));
+       // {"contractNo":"deepCopydeepCopy","orderIds":["1","2"]} 会看到上面基本类型没有考虑过来     
+
+
+    }
+```
+
+
+
+**说明：**
+
+```java
+public class ExampleClass implements Serializable {  
+    private static final long serialVersionUID = 1L;  
+  
+    // 静态字段，不会被序列化  
+    private static String staticField = "Static Value";  
+  
+    // 瞬态字段，不会被序列化  
+    private transient String transientField = "Transient Value";  
+  
+    // 非瞬态且非静态字段，会被序列化  
+    private String nonTransientNonStaticField = "Non-Transient, Non-Static Value";  
+  
+    // 不会被序列化
+    private int baseInt; 
+  
+    // ... 其他代码，如getter和setter ...  
+}
 ```
 
 

@@ -1777,7 +1777,7 @@ if(user!=null){
 
 
 
-## 4、SQL执行问题
+## 4、`SQL` 执行问题
 
 ### 1）多出现 `limit`
 
@@ -1791,8 +1791,6 @@ limit #{pageNum,jdbcType=INTEGER},  #{pageSize,jdbcType=INTEGER}
 替换成limit #{maxCount,jdbcType=INTEGER}, #{startIndex,jdbcType=INTEGER}
 
 ```
-
-
 
 
 

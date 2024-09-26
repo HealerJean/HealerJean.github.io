@@ -1,6 +1,7 @@
 package com.healerjean.proj;
 
 import com.healerjean.proj.beanmap.BeanUtils;
+import com.healerjean.proj.beanmap.DeepCopyUtil;
 import com.healerjean.proj.dto.DictionaryType;
 import com.healerjean.proj.pojo.DictionaryTypeDTO;
 import org.junit.Test;
@@ -17,7 +18,7 @@ import java.util.Date;
 public class TestMain {
 
     @Test
-    public void test() {
+    public void test1() {
         DictionaryType dictionaryType = new DictionaryType();
         dictionaryType.setDictionaryTypeId(1L);
         dictionaryType.setTypeDesc("Loan");
@@ -28,6 +29,11 @@ public class TestMain {
         System.out.println(dto);
     }
 
+
+    @Test
+    public void test2(){
+        DeepCopyUtil.deepCopy()
+    }
 
 
 

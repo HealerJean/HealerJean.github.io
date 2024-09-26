@@ -20,7 +20,6 @@ public interface BeanTransfer {
     /**
      * Date和LocalDateTime互转
      */
-    @Named(MapperNamedConstant.CLASS_TRANSFER_DATE)
     class TransferDateAndLocalDateTime implements BeanTransfer {
 
         @Named(MapperNamedConstant.METHOD_DATE_TO_LOCAL_DATE_TIME)
@@ -49,7 +48,6 @@ public interface BeanTransfer {
     /**
      * Code和枚举互转
      */
-    @Named(MapperNamedConstant.CLASS_TRANSFER_ENUM_SEX)
      class TransferSexEnum  implements BeanTransfer{
 
         @Named(MapperNamedConstant.METHOD_SEX_CODE_TO_ENUM)

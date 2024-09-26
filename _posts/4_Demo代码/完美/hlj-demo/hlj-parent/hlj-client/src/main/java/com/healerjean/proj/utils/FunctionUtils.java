@@ -2,7 +2,9 @@ package com.healerjean.proj.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.healerjean.proj.data.bo.BatchConsumerBO;
+import com.healerjean.proj.data.bo.BatchConsumerInvokeBO;
 import com.healerjean.proj.data.bo.BatchFunctionBO;
+import com.healerjean.proj.data.bo.BatchFunctionInvokeBO;
 import com.healerjean.proj.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
@@ -30,28 +32,35 @@ public class FunctionUtils {
         List<BatchFunctionBO<REQ, RES>> functions = Lists.newArrayList();
         functions.add(function);
 
-        return invokeAllFunction(functions).get(0);
+        BatchFunctionInvokeBO<REQ, RES> batchInvoker = BatchFunctionInvokeBO.of(functions);
+        invokeAllFunction(batchInvoker).await();
+        return functions.get(0);
     }
 
     /**
      * 调用所有函数，失败返回具体任务
      *
-     * @param functions batchConsumers
      * @return {@link }
      */
-    public static <REQ, RES> List<BatchFunctionBO<REQ, RES>> invokeAllFunction(List<BatchFunctionBO<REQ, RES>> functions) {
+    public static <REQ, RES> BatchFunctionInvokeBO<REQ, RES> invokeAllFunction(BatchFunctionInvokeBO<REQ, RES> batchInvoker) {
+        List<BatchFunctionBO<REQ, RES>> functions = batchInvoker.getBatchFunctions();
         functions.parallelStream().forEach(function -> {
+            long startTime = System.currentTimeMillis();
             BatchFunctionBO.ResBusinessBO<RES> resBusiness = function.getResBusiness();
             try {
                 resBusiness.setRes(function.getFunction().apply(function.getReqBusiness().getReq()));
                 resBusiness.setInvokeFlag(true);
+                resBusiness.setCost(System.currentTimeMillis() - startTime);
             } catch (Exception e) {
                 resBusiness.setInvokeFlag(false);
                 resBusiness.setException(e);
+                resBusiness.setCost(System.currentTimeMillis() - startTime);
                 log.info("[ExceptionUtils#invokeAllFunctionFailException] taskName:{}, req:{}", function.getReqBusiness().getName(), JSON.toJSONString(function.getReqBusiness().getName()), e);
+            }finally {
+                batchInvoker.countDown();
             }
         });
-        return functions;
+        return batchInvoker;
     }
 
 
@@ -64,30 +73,37 @@ public class FunctionUtils {
     public static <REQ> BatchConsumerBO<REQ> invokeConsumer(BatchConsumerBO<REQ> consumer) {
         List<BatchConsumerBO<REQ>> consumers = Lists.newArrayList();
         consumers.add(consumer);
-        return invokeAllConsumer(consumers).get(0);
+        BatchConsumerInvokeBO<REQ> batchConsumerInvoke = BatchConsumerInvokeBO.of(consumers);
+        invokeAllConsumer(batchConsumerInvoke).await();
+        return batchConsumerInvoke.getBatchConsumers().get(0);
     }
 
     /**
      * 调用所有消费者，失败返回具体任务
      *
-     * @param batchConsumers batchConsumers
      * @return {@link }
      */
-    public static <R> List<BatchConsumerBO<R>> invokeAllConsumer(List<BatchConsumerBO<R>> batchConsumers) {
+    public static <R> BatchConsumerInvokeBO<R> invokeAllConsumer(BatchConsumerInvokeBO<R> batchConsumerInvoke) {
+        List<BatchConsumerBO<R>> batchConsumers = batchConsumerInvoke.getBatchConsumers();
         batchConsumers.parallelStream().forEach(batchConsumer -> {
+            long startTime = System.currentTimeMillis();
             BatchConsumerBO.ResBusinessBO resBusiness = batchConsumer.getResBusiness();
             BatchConsumerBO.ReqBusinessBO<R> reqBusiness = batchConsumer.getReqBusiness();
             BatchConsumerBO.ReqBusinessBO.IdempotentBO idempotent = reqBusiness.getIdempotent();
             try {
                 idempotentInvoke(batchConsumer.getConsumer(), reqBusiness.getReq(), idempotent);
                 resBusiness.setInvokeFlag(true);
+                resBusiness.setCost(System.currentTimeMillis() - startTime);
             } catch (Exception e) {
                 resBusiness.setInvokeFlag(false);
                 resBusiness.setException(e);
+                resBusiness.setCost(System.currentTimeMillis() - startTime);
                 log.info("[ExceptionUtils#invokeAllConsumerFailException] taskName:{}, req:{}", reqBusiness.getName(), JSON.toJSONString(reqBusiness.getReq()), e);
+            }finally {
+                batchConsumerInvoke.countDown();
             }
         });
-        return batchConsumers;
+        return batchConsumerInvoke;
     }
 
 
@@ -131,8 +147,9 @@ public class FunctionUtils {
         list.add(ironManFunction);
         list.add(thorFunction);
 
-        List<BatchFunctionBO<String, String>> result = invokeAllFunction(list);
-        log.info("result:{}", JSON.toJSONString(result));
+        BatchFunctionInvokeBO<String, String> batchFunctionInvoke = BatchFunctionInvokeBO.of(list);
+        invokeAllFunction(batchFunctionInvoke).await();
+        log.info("result:{}", JSON.toJSONString(batchFunctionInvoke.getBatchFunctions()));
     }
 
 
@@ -149,14 +166,21 @@ public class FunctionUtils {
         BatchConsumerBO<String> thorConsumer = BatchConsumerBO.instance();
         ironManConsumer.getReqBusiness().setReq("thor").setName("jump");
         thorConsumer.setConsumer(req->{
+            System.out.println(1);
+            try {
+                Thread.sleep(5000L);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             // int i =  1/0 ;
         });
         List<BatchConsumerBO<String>> list = Lists.newArrayList();
         list.add(ironManConsumer);
         list.add(thorConsumer);
 
-        List<BatchConsumerBO<String>> result = invokeAllConsumer(list);
-        log.info("result:{}", JSON.toJSONString(result));
+        BatchConsumerInvokeBO<String> batchConsumerInvoke = BatchConsumerInvokeBO.of(list);
+        invokeAllConsumer(batchConsumerInvoke).await();
+        log.info("result:{}", JSON.toJSONString(batchConsumerInvoke.getBatchConsumers()));
     }
 
 

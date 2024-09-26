@@ -33,11 +33,13 @@ public interface BeanUtils {
      * @return 返回值对应转化后的对象
      */
     @Mappings({
-            /** 名字不同转化 */
+            // 名字不同转化
             @Mapping(source = "dictionaryTypeId", target = "id"),
-            /** 类型和名字都不同转化 */
-            @Mapping(source = "sex", target = "sexEnum", qualifiedByName = {MapperNamedConstant.CLASS_TRANSFER_ENUM_SEX, MapperNamedConstant.METHOD_SEX_CODE_TO_ENUM}),
-            @Mapping(source = "createTime", target = "createTime", qualifiedByName = {MapperNamedConstant.CLASS_TRANSFER_DATE, MapperNamedConstant.METHOD_DATE_TO_LOCAL_DATE_TIME}),
+            @Mapping(target = "typeKey", constant = "12312"),
+
+            // 类型和名字都不同转化
+            @Mapping(source = "sex", target = "sexEnum", qualifiedByName = {MapperNamedConstant.METHOD_SEX_CODE_TO_ENUM}),
+            @Mapping(source = "createTime", target = "createTime", qualifiedByName = {MapperNamedConstant.METHOD_DATE_TO_LOCAL_DATE_TIME}),
             @Mapping(source = "status", target = "status", ignore = true),
     })
     DictionaryTypeDTO dictionaryType2DTO(DictionaryType dictionaryType);
