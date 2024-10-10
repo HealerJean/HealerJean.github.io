@@ -1,10 +1,11 @@
 package com.healerjean.proj.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.healerjean.proj.data.bo.BatchConsumerBO;
-import com.healerjean.proj.data.bo.BatchConsumerInvokeBO;
-import com.healerjean.proj.data.bo.BatchFunctionBO;
-import com.healerjean.proj.data.bo.BatchFunctionInvokeBO;
+import com.healerjean.proj.config.ThreadPoolConfiguration;
+import com.healerjean.proj.data.bo.batch.stream.BatchConsumerBO;
+import com.healerjean.proj.data.bo.batch.stream.BatchConsumerInvokeBO;
+import com.healerjean.proj.data.bo.batch.stream.BatchFunctionBO;
+import com.healerjean.proj.data.bo.batch.stream.BatchFunctionInvokeBO;
 import com.healerjean.proj.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
@@ -12,6 +13,8 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 /**
@@ -28,12 +31,12 @@ public class FunctionUtils {
      *
      * @param function function
      */
-    public static <REQ, RES> BatchFunctionBO<REQ, RES> invokeFunction(BatchFunctionBO<REQ, RES> function) {
+    public static <REQ, RES> BatchFunctionBO<REQ, RES> invokeFunction(Executor executor, BatchFunctionBO<REQ, RES> function) {
         List<BatchFunctionBO<REQ, RES>> functions = Lists.newArrayList();
         functions.add(function);
 
-        BatchFunctionInvokeBO<REQ, RES> batchInvoker = BatchFunctionInvokeBO.of(functions);
-        invokeAllFunction(batchInvoker).await();
+        BatchFunctionInvokeBO<REQ, RES> batchInvoker = BatchFunctionInvokeBO.of(executor, functions);
+        invokeAllFunction(batchInvoker);
         return functions.get(0);
     }
 
@@ -42,24 +45,26 @@ public class FunctionUtils {
      *
      * @return {@link }
      */
+    @SuppressWarnings("unchecked")
     public static <REQ, RES> BatchFunctionInvokeBO<REQ, RES> invokeAllFunction(BatchFunctionInvokeBO<REQ, RES> batchInvoker) {
         List<BatchFunctionBO<REQ, RES>> functions = batchInvoker.getBatchFunctions();
-        functions.parallelStream().forEach(function -> {
+        Executor executor = batchInvoker.getExecutor();
+        CompletableFuture<BatchConsumerBO.ResBusinessBO>[] tasks = functions.stream().map(batchFunction -> CompletableFuture.supplyAsync(() -> {
             long startTime = System.currentTimeMillis();
-            BatchFunctionBO.ResBusinessBO<RES> resBusiness = function.getResBusiness();
+            BatchFunctionBO.ResBusinessBO<RES> resBusiness = batchFunction.getResBusiness();
             try {
-                resBusiness.setRes(function.getFunction().apply(function.getReqBusiness().getReq()));
+                resBusiness.setRes(batchFunction.getFunction().apply(batchFunction.getReqBusiness().getReq()));
                 resBusiness.setInvokeFlag(true);
                 resBusiness.setCost(System.currentTimeMillis() - startTime);
             } catch (Exception e) {
                 resBusiness.setInvokeFlag(false);
                 resBusiness.setException(e);
                 resBusiness.setCost(System.currentTimeMillis() - startTime);
-                log.info("[ExceptionUtils#invokeAllFunctionFailException] taskName:{}, req:{}", function.getReqBusiness().getName(), JSON.toJSONString(function.getReqBusiness().getName()), e);
-            }finally {
-                batchInvoker.countDown();
+                log.info("[ExceptionUtils#invokeAllFunctionFailException] taskName:{}, req:{}", batchFunction.getReqBusiness().getName(), JSON.toJSONString(batchFunction.getReqBusiness().getName()), e);
             }
-        });
+            return resBusiness;
+        }, executor)).toArray(CompletableFuture[]::new);
+        CompletableFuture.allOf(tasks).join();
         return batchInvoker;
     }
 
@@ -70,11 +75,11 @@ public class FunctionUtils {
      *
      * @param consumer function
      */
-    public static <REQ> BatchConsumerBO<REQ> invokeConsumer(BatchConsumerBO<REQ> consumer) {
+    public static <REQ> BatchConsumerBO<REQ> invokeConsumer(Executor executor, BatchConsumerBO<REQ> consumer) {
         List<BatchConsumerBO<REQ>> consumers = Lists.newArrayList();
         consumers.add(consumer);
-        BatchConsumerInvokeBO<REQ> batchConsumerInvoke = BatchConsumerInvokeBO.of(consumers);
-        invokeAllConsumer(batchConsumerInvoke).await();
+        BatchConsumerInvokeBO<REQ> batchConsumerInvoke = BatchConsumerInvokeBO.of(executor, consumers);
+        invokeAllConsumer(batchConsumerInvoke);
         return batchConsumerInvoke.getBatchConsumers().get(0);
     }
 
@@ -83,9 +88,11 @@ public class FunctionUtils {
      *
      * @return {@link }
      */
+    @SuppressWarnings("unchecked")
     public static <R> BatchConsumerInvokeBO<R> invokeAllConsumer(BatchConsumerInvokeBO<R> batchConsumerInvoke) {
         List<BatchConsumerBO<R>> batchConsumers = batchConsumerInvoke.getBatchConsumers();
-        batchConsumers.parallelStream().forEach(batchConsumer -> {
+        Executor executor = batchConsumerInvoke.getExecutor();
+        CompletableFuture<BatchConsumerBO.ResBusinessBO>[] tasks = batchConsumers.stream().map(batchConsumer -> CompletableFuture.supplyAsync(() -> {
             long startTime = System.currentTimeMillis();
             BatchConsumerBO.ResBusinessBO resBusiness = batchConsumer.getResBusiness();
             BatchConsumerBO.ReqBusinessBO<R> reqBusiness = batchConsumer.getReqBusiness();
@@ -99,10 +106,12 @@ public class FunctionUtils {
                 resBusiness.setException(e);
                 resBusiness.setCost(System.currentTimeMillis() - startTime);
                 log.info("[ExceptionUtils#invokeAllConsumerFailException] taskName:{}, req:{}", reqBusiness.getName(), JSON.toJSONString(reqBusiness.getReq()), e);
-            }finally {
-                batchConsumerInvoke.countDown();
             }
-        });
+            return resBusiness;
+        }, executor)).toArray(CompletableFuture[]::new);
+
+
+        CompletableFuture.allOf(tasks).join();
         return batchConsumerInvoke;
     }
 
@@ -126,6 +135,7 @@ public class FunctionUtils {
     }
 
 
+
     /**
      * testInvokeAllConsumerFailException
      *
@@ -147,8 +157,8 @@ public class FunctionUtils {
         list.add(ironManFunction);
         list.add(thorFunction);
 
-        BatchFunctionInvokeBO<String, String> batchFunctionInvoke = BatchFunctionInvokeBO.of(list);
-        invokeAllFunction(batchFunctionInvoke).await();
+        BatchFunctionInvokeBO<String, String> batchFunctionInvoke = BatchFunctionInvokeBO.of(ThreadPoolConfiguration.THREAD_POOL_TASK_EXECUTOR, list);
+        invokeAllFunction(batchFunctionInvoke);
         log.info("result:{}", JSON.toJSONString(batchFunctionInvoke.getBatchFunctions()));
     }
 
@@ -159,27 +169,31 @@ public class FunctionUtils {
      */
     @Test
     public void testInvokeAllConsumerFailException(){
+        List<BatchConsumerBO<String>> list = Lists.newArrayList();
+
         BatchConsumerBO<String> ironManConsumer = BatchConsumerBO.instance();
         ironManConsumer.getReqBusiness().setReq("ironMan").setName("fly");
         ironManConsumer.setConsumer("ironMan"::equals);
 
-        BatchConsumerBO<String> thorConsumer = BatchConsumerBO.instance();
-        ironManConsumer.getReqBusiness().setReq("thor").setName("jump");
-        thorConsumer.setConsumer(req->{
-            System.out.println(1);
-            try {
-                Thread.sleep(5000L);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            // int i =  1/0 ;
-        });
-        List<BatchConsumerBO<String>> list = Lists.newArrayList();
-        list.add(ironManConsumer);
-        list.add(thorConsumer);
+        for (int i = 0; i < 1000; i++) {
+            BatchConsumerBO<String> thorConsumer = BatchConsumerBO.instance();
+            int finalI = i;
+            thorConsumer.setConsumer(req->{
+                try {
+                    Thread.sleep(100L);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                // int i =  1/0 ;
+                log.info("finalI:{}", finalI);
+            });
+            thorConsumer.getReqBusiness().setReq("thor" + i).setName("jump" + i);
+            list.add(thorConsumer);
+        }
 
-        BatchConsumerInvokeBO<String> batchConsumerInvoke = BatchConsumerInvokeBO.of(list);
-        invokeAllConsumer(batchConsumerInvoke).await();
+        list.add(ironManConsumer);
+        BatchConsumerInvokeBO<String> batchConsumerInvoke = BatchConsumerInvokeBO.of(ThreadPoolConfiguration.THREAD_POOL_TASK_EXECUTOR, list);
+        invokeAllConsumer(batchConsumerInvoke);
         log.info("result:{}", JSON.toJSONString(batchConsumerInvoke.getBatchConsumers()));
     }
 

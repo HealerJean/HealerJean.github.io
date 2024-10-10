@@ -10,5 +10,5 @@ public interface BuyHouse {
 
     void buyHosue();
 
-     int countAdd(int i);
+    int countAdd(int i);
 }

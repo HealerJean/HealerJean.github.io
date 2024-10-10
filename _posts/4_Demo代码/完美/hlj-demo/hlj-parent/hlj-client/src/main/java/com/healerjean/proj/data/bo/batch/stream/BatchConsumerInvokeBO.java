@@ -1,11 +1,11 @@
-package com.healerjean.proj.data.bo;
+package com.healerjean.proj.data.bo.batch.stream;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
 
 /**
  * BatchInvokeBO
@@ -16,13 +16,14 @@ import java.util.concurrent.CountDownLatch;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @Data
-public class BatchConsumerInvokeBO<T> extends BatchInvokeBO {
+public class BatchConsumerInvokeBO<REQ> extends BatchInvokeBO {
 
 
     /**
      * batchConsumer
      */
-    private List<BatchConsumerBO<T>> batchConsumers;
+    private List<BatchConsumerBO<REQ>> batchConsumers;
+
 
 
     /**
@@ -31,10 +32,10 @@ public class BatchConsumerInvokeBO<T> extends BatchInvokeBO {
      * @param batchConsumers batchConsumers
      * @return {@link BatchConsumerInvokeBO}
      */
-    public static <T> BatchConsumerInvokeBO<T> of(List<BatchConsumerBO<T>> batchConsumers) {
-        BatchConsumerInvokeBO<T> invoke = new BatchConsumerInvokeBO<>();
+    public static <REQ> BatchConsumerInvokeBO<REQ> of(Executor executor, List<BatchConsumerBO<REQ>> batchConsumers) {
+        BatchConsumerInvokeBO<REQ> invoke = new BatchConsumerInvokeBO<>();
+        invoke.setExecutor(executor);
         invoke.setBatchConsumers(batchConsumers);
-        invoke.setCountDownLatch(new CountDownLatch(batchConsumers.size()));
         return invoke;
     }
 

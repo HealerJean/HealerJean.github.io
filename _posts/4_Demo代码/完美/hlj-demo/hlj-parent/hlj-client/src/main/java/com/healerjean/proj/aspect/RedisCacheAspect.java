@@ -1,10 +1,8 @@
 package com.healerjean.proj.aspect;
 
 import com.healerjean.proj.common.anno.RedisCache;
-import com.healerjean.proj.data.bo.BatchFunctionBO;
 import com.healerjean.proj.service.RedisService;
 import com.healerjean.proj.utils.AspectUtils;
-import com.healerjean.proj.utils.FunctionUtils;
 import com.healerjean.proj.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -67,12 +65,10 @@ public class RedisCacheAspect {
         String r2mKey = redisCache.value().join(paramKey);
         Object proceed = null;
 
-        BatchFunctionBO<String, String> function = BatchFunctionBO.instance();
-        function.getReqBusiness().setReq(r2mKey).setName("redisService.get");
-        function.setFunction(redisService::get);
-        FunctionUtils.invokeFunction(function);
-        if (Boolean.TRUE.equals(function.getResBusiness().getInvokeFlag())) {
-            return JsonUtils.toObject(function.getResBusiness().getRes(), method.getGenericReturnType());
+
+        String cacheValue = redisService.get(r2mKey);
+        if (StringUtils.isNotBlank(cacheValue)){
+            return JsonUtils.toObject(cacheValue, method.getGenericReturnType());
         }
 
         try {

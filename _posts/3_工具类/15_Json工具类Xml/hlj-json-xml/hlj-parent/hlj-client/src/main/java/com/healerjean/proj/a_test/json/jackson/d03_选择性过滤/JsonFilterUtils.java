@@ -20,8 +20,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.function.IntFunction;
-import java.util.stream.Stream;
 
 /**
  * @Desc: HealerJean
@@ -69,11 +67,11 @@ public class JsonFilterUtils {
     /**
      * @param propertyFunctions 转换时包含哪些字段
      */
-    public <T, R> void include(PropertyFunction<T, R> ...  propertyFunctions ) {
+    public <T, R> void include(SFunction<T, R> ...  propertyFunctions ) {
         if (propertyFunctions.length == 0 || propertyFunctions[0] == null) {
             return;
         }
-        String[] columns = Arrays.stream(propertyFunctions).map(ReflectionFieldNameUtils::getFieldName).toArray(String[]::new);
+        String[] columns = Arrays.stream(propertyFunctions).map(LambdaUtils::convertToFieldName).toArray(String[]::new);
         objectMapper.setFilterProvider(new SimpleFilterProvider().addFilter(DYNC_INCLUDE,
                 SimpleBeanPropertyFilter.filterOutAllExcept(columns)));
         objectMapper.addMixIn(clazz, DynamicInclude.class);
@@ -83,11 +81,11 @@ public class JsonFilterUtils {
     /**
      * @param propertyFunctions 转换时过滤哪些字段
      */
-    public <T, R> void filter(PropertyFunction<T, R> ...  propertyFunctions ) {
+    public <T, R> void filter(SFunction<T, R> ...  propertyFunctions ) {
         if (clazz == null || propertyFunctions.length == 0 || propertyFunctions[0] == null) {
             return;
         }
-        String[] columns = Arrays.stream(propertyFunctions).map(ReflectionFieldNameUtils::getFieldName).toArray(String[]::new);
+        String[] columns = Arrays.stream(propertyFunctions).map(LambdaUtils::convertToFieldName).toArray(String[]::new);
         objectMapper.setFilterProvider(new SimpleFilterProvider().addFilter(DYNC_FILTER,
                 SimpleBeanPropertyFilter.serializeAllExcept(columns)));
         objectMapper.addMixIn(clazz, DynamicFilter.class);

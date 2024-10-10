@@ -1,11 +1,11 @@
-package com.healerjean.proj.data.bo;
+package com.healerjean.proj.data.bo.batch.stream;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
 
 /**
  * BatchFunctionInvokeBO
@@ -30,10 +30,10 @@ public class BatchFunctionInvokeBO<REQ, RES> extends BatchInvokeBO {
      * @param batchFunctions batchFunctions
      * @return {@link BatchFunctionInvokeBO}
      */
-    public static <REQ, RES> BatchFunctionInvokeBO<REQ, RES> of(List<BatchFunctionBO<REQ, RES>> batchFunctions) {
+    public static <REQ, RES> BatchFunctionInvokeBO<REQ, RES> of(Executor executor, List<BatchFunctionBO<REQ, RES>> batchFunctions) {
         BatchFunctionInvokeBO<REQ, RES> invoker = new BatchFunctionInvokeBO<>();
         invoker.setBatchFunctions(batchFunctions);
-        invoker.setCountDownLatch(new CountDownLatch(batchFunctions.size()));
+        invoker.setExecutor(executor);
         return invoker;
     }
 

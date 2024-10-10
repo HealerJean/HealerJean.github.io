@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public interface DateConstants {
 
     String YYYY_MM = "yyyy-MM";
-    String YYYY_MM_DD = "yyyy-MM-dd";
+    String YYYY_MM_DD = "yyyy-MM-AsyncThreadBOdd";
     String YYYY_MM_DD_HH = "yyyy-MM-dd HH";
     String YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
     String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
