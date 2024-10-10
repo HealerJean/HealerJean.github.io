@@ -1,11 +1,11 @@
-package com.healerjean.proj.data.bo;
+package com.healerjean.proj.data.bo.batch.stream;
 
 import com.healerjean.proj.service.RedisService;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * 批量消费
@@ -15,7 +15,7 @@ import java.util.function.Consumer;
  */
 @Accessors(chain = true)
 @Data
-public class BatchConsumerBO<REQ> implements Serializable {
+public class BatchFunctionBO<REQ, RES> implements Serializable {
 
 
     /**
@@ -26,7 +26,7 @@ public class BatchConsumerBO<REQ> implements Serializable {
     /**
      * 请求
      */
-    private Consumer<REQ> consumer;
+    private Function<REQ, RES> function;
 
     /**
      * 请求对象
@@ -36,17 +36,17 @@ public class BatchConsumerBO<REQ> implements Serializable {
     /**
      * 返回对象
      */
-    private ResBusinessBO resBusiness;
+    private ResBusinessBO<RES> resBusiness;
 
 
     /**
      * instance
      *
      */
-    public static <REQ> BatchConsumerBO<REQ> instance() {
-        return new BatchConsumerBO<REQ>()
+    public static <REQ, RES> BatchFunctionBO<REQ, RES> instance() {
+        return new BatchFunctionBO<REQ, RES>()
                 .setReqBusiness(new ReqBusinessBO<>())
-                .setResBusiness(new ResBusinessBO());
+                .setResBusiness(new ResBusinessBO<>());
     }
 
     @Accessors(chain = true)
@@ -62,6 +62,7 @@ public class BatchConsumerBO<REQ> implements Serializable {
          * 请求对象
          */
         private Req req;
+
 
         /**
          * 幂等对象
@@ -88,20 +89,23 @@ public class BatchConsumerBO<REQ> implements Serializable {
              * 幂等操作类
              */
             private RedisService redisService;
-
         }
 
     }
 
-
     @Accessors(chain = true)
     @Data
-    public static class ResBusinessBO{
+    public static class ResBusinessBO<Res>{
 
         /**
          * 执行结果
          */
         private Boolean invokeFlag;
+
+        /**
+         * 返回 对象
+         */
+        private Res res;
 
         /**
          * 执行异常信息
@@ -113,6 +117,7 @@ public class BatchConsumerBO<REQ> implements Serializable {
          */
         private Long cost;
     }
+
 }
 
 

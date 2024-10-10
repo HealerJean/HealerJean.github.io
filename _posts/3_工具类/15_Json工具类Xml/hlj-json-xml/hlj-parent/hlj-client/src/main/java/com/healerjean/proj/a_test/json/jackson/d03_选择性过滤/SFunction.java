@@ -4,13 +4,11 @@ import java.io.Serializable;
 import java.util.function.Function;
 
 /**
- * @author HealerJean
- * @date 2020/9/16  14:45.
- * @description
+ * SFunction
+ *
+ * @author zhangyujin
+ * @date 2024/9/30
  */
-
-public interface PropertyFunction<T, R> extends Function<T, R>, Serializable {
+public interface SFunction<T, R> extends Function<T, R>, Serializable {
 
 }
-
-

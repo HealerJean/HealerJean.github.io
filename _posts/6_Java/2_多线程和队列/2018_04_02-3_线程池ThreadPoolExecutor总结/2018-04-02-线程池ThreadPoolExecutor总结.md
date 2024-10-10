@@ -17,7 +17,7 @@ description: 3、线程池ThreadPoolExecutor总结
 
 
 
-# 1、线程池参数         
+# 一、线程池参数         
 
 
 
@@ -37,21 +37,19 @@ public class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements S
 
 
 
-## 1.1、参数解释
+## 1、参数解释
 
-### 1.1.1、`int corePoolSize`：线程池中核心线程数最大值    
-
-
+### 1）`int corePoolSize`：线程池中核心线程数最大值    
 
 > 核心线程：线程池新建线程的时候，如果当前线程总数小于`corePoolSize`，则新建的是核心线程，如果超过`corePoolSize`，则新建的是非核心线程。      
 >
 > 核心线程默认情况下会一直存活在线程池中，即使这个核心线程啥也不干(闲置状态)。   
 >
->  如果指定`ThreadPoolExecutor`的`allowCoreThreadTimeOut`这个属性为true，那么核心线程如果不干活(闲置状态)的话，超过一定时间(时长下面参数决定)，就会被销毁掉。
+>  如果指定`ThreadPoolExecutor ` 的 `allowCoreThreadTimeOut`这个属性为 `true`，那么核心线程如果不干活(闲置状态)的话，超过一定时间(时长下面参数决定)，就会被销毁掉。
 
 
 
-### 1.1.2、`int maximumPoolSize`： 线程池中线程总数最大值    
+### 2）`int maximumPoolSize`： 线程池中线程总数最大值    
 
 > 线程总数 = 核心线程数 + 非核心线程数。
 
@@ -59,7 +57,7 @@ public class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements S
 
 
 
-### 1.1.3、`long keepAliveTime`：线程池中非核心线程闲置超时时长  
+### 3）`long keepAliveTime`：线程池中非核心线程闲置超时时长  
 
 > 一个非核心线程，如果不干活(闲置状态)的时长超过这个参数所设定的时长，就会被销毁掉，    
 >
@@ -67,7 +65,7 @@ public class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements S
 
 
 
-### 1.1.4、`imeUnit unit`：`keepAliveTime`的单位   
+### 4）`imeUnit unit`：`keepAliveTime`的单位   
 
 >  `TimeUnit`是一个枚举类型，其包括： NANOSECONDS ：     
 
@@ -88,7 +86,7 @@ public class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements S
 
 
 
-### 1.1.5、`BlockingQueue workQueue`：该线程池中的任务队列：维护着等待执行的`Runnable`对象
+### 5）`BlockingQueue workQueue`：该线程池中的任务队列：维护着等待执行的`Runnable`对象
 
 > 当所有的核心线程都在干活时，新添加的任务会被添加到这个队列中等待处理，如果队列满了，则新建非核心线程执行任务。 常用的`workQueue`类型：
 
@@ -96,7 +94,7 @@ public class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements S
 
 
 
-#### 1.1.5.1、`LinkedBlockingQueue`：
+#### a、`LinkedBlockingQueue`：
 
 > 1、这个队列接收到任务的时候，如果当前线程数小于核心线程数，则新建线程(核心线程)处理任务；（先新建核心线程）     
 >
@@ -104,13 +102,13 @@ public class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements S
 
 
 
-### 1.1.6、`ThreadFactory threadFactory`：线程工厂，创建线程的方式
+### 6）`ThreadFactory threadFactory`：线程工厂，创建线程的方式
 
 > 创建线程的方式，这是一个接口，你new他的时候需要实现他的Thread new Thread(Runnable r)方法，一般用不上。   
 
 
 
-### 1.1.7、`RejectedExecutionHandler handler`：任务拒绝/饱和策略     
+### 7）`RejectedExecutionHandler handler`：任务拒绝/饱和策略     
 
 > `RejectedExecutionHandler`：任务拒绝/饱和策略，这玩意儿就是抛出异常专用的，下面会通过介绍`shotDowm`， `shotDownNow`来解释拒绝的过程
 
@@ -178,7 +176,7 @@ public class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements S
 
 
 
-#### 1.1.7.1、`DiscardPolicy`：
+#### A、`DiscardPolicy`：
 
 > 直接丢弃
 
@@ -202,7 +200,7 @@ public class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements S
 
 
 
-#### 1.1.7.2、`DiscardOldestPolicy`：
+#### B、`DiscardOldestPolicy`：
 
 > 丢弃队列中最老的任务   
 
@@ -225,7 +223,7 @@ public class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements S
 
 
 
-#### 1.1.7.4、`CallerRunsPolicy`：将任务分给调用线程来执行
+#### C、`CallerRunsPolicy`：将任务分给调用线程来执行
 
 > 没有任务被抛弃，而是将由的任务分配到main线程中执行了
 
@@ -264,7 +262,7 @@ public class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements S
 
 
 
-#### 1.1.7.3、`AbortPolicy`：抛异常(默认)
+#### D、`AbortPolicy`：抛异常(默认)
 
 > 抛出异常的方式（ `AbortPolicy` ）丢弃任务并抛出 `RejectedExecutionException`   
 
@@ -272,11 +270,11 @@ public class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements S
 
 
 
-## 1.2、线程池构造器  
+## 2、线程池构造器  
 
 
 
-### 1.2.1、 五个参数的构造函数 
+### 1） 五个参数的构造函数 
 
 ```java
 //五个参数的构造函数
@@ -289,7 +287,7 @@ public ThreadPoolExecutor(int corePoolSize,
 
 
 
-### 1.2.2、六个参数的构造函数  
+### 2）六个参数的构造函数  
 
 ```java
 //六个参数的构造函数-1
@@ -312,7 +310,7 @@ public ThreadPoolExecutor(int corePoolSize,
 
 
 
-### 1.2.3、七个参数的构造函数
+### 3）七个参数的构造函数
 
 ```java
 //七个参数的构造函数
@@ -327,7 +325,49 @@ public ThreadPoolExecutor(int corePoolSize,
 
 
 
-## 1.3、线程池信息统计
+
+
+## 3、任务执行机制
+
+### 1）任务调度
+
+1、首先检测线程池运行状态，如果不是 **`RUNNING`**，则直接拒绝，线程池要保证在RUNNING的状态下执行任务。    
+
+2、如果 `workerCount` < `corePoolSize`，则创建并启动一个线程来执行新提交的任务。       
+
+3、如果 `workerCount` >= `corePoolSize`，且线程池内的阻塞队列未满，则将任务添加到该阻塞队列中。     
+
+4、如果 `workerCount` >= `corePoolSize` && `workerCount` < `maximumPoolSiz`e，且线程池内的阻塞队列已满，则创建并启动一个线程来执行新提交的任务。        
+
+5、如果 `workerCount` >= `maximumPoolSize`，并且线程池内的阻塞队列已满, 则根据拒绝策略来处理该任务, 默认的处理方式是直接抛异常。
+
+![image-20210730160103636](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730160103636.png)
+
+
+
+### 2）任务缓冲
+
+> 任务缓冲模块是线程池能够管理任务的核心部分。线程池的本质是对任务和线程的管理，而做到这一点最关键的思想就是将任务和线程两者解耦，不让两者直接关联，才可以做后续的分配工作。线程池中是以生产者消费者模式，通过一个阻塞队列来实现的。阻塞队列缓存任务，工作线程从阻塞队列中获取任务。      
+
+
+
+| 名称                    | 描述                                                         |
+| :---------------------- | :----------------------------------------------------------- |
+| `ArrayBlockingQueue`    | **一个用数组实现的有界阻塞队列**，此队列按照先进先出 ( `FIFO`)的原则对元素进行排序。支持公平锁和非公平锁。 |
+| `LinkedBlockingQueue`   | **一个由链表结构组成的有界队列**，此队列按照先进先出( `FIFO` ) 的原则对元素进行排序。此队列的默认长度为 `Integer.MAX_VALUE`，所以默认创建的该队列有容量危险。 |
+| `PriorityBlockingQueue` | **一个支持线程优先级排序的无界队列**，默认自然序进行排序，也可以自定义实现 `compareTo()` 方法来指定元素排序规则，不能保证同优先级元素的顺序。 |
+| `DelayQueue`            | 一个实现`PriorityBlockingQueue`实现延迟获取的无界队列，在创建元素时，可以指定多久才能从队列中获取当前元素。只有延时期满后才能从队列中获取元素。 |
+| `SynchronousQueue`      | **一个不存储元素的阻塞队列**，每一个 `put`操作必须等待 `take` 操作，否则不能添加元素。支持公平锁和非公平锁。`SynchronousQueue` 的一个使用场景是在线程池里。`Executors.newCachedThreadPool()`就使用了 `SynchronousQueue`，这个线程池根据需要（新任务到来时）创建新的线程，如果有空闲线程则会重复使用，线程空闲了 `60` 秒后会被回收。 |
+| `LinkedTransferQueue`   | **一个由链表结构组成的无界阻塞队列**，相当于其它队列，`LinkedTransferQueue` 队列多了 `transfer`和 `tryTransfer`方法。 |
+| `LinkedBlockingDeque`   | **一个由链表结构组成的双向阻塞队列**。队列头部和尾部都可以添加和移除元素，多线程并发时，可以将锁的竞争最多降到一半。 |
+
+
+
+
+
+
+
+## 4、线程池信息统计
 
 | 方法           | 说明                                                         |
 | -------------- | ------------------------------------------------------------ |
@@ -344,9 +384,21 @@ public ThreadPoolExecutor(int corePoolSize,
 
 
 
-# 2、知识点详解    
+## 5、线程池几种状态
 
-## 2.1、线程池任务执行的过程和作用        
+| 运行状态         | 状态描述                                                     |
+| :--------------- | :----------------------------------------------------------- |
+| **`RUNNING`**    | 能接受新提交的任务，并且也能处理阻塞队列中的任务。           |
+| **`SHUTDOWN`**   | 关闭状态，不再接受新提交的任务，但却可以继续处理阻塞队列中已保存的任务。 |
+| **`STOP`**       | 不能接受新任务，也不处理队列中的任务，会中断正在处理任务的线程。 |
+| **`TERMINATED`** | 在 `terminated() `方法执行完后进入该状态                     |
+| **`TIDYING`**    | 所有的任务都已终止了，`workerCount` (有效线程数) 为 `0`      |
+
+ ![image-20210730155956344](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730155956344.png)
+
+
+
+## 6、线程池任务执行的过程和作用        
 
 1、线程数量未达到`corePoolSize`，则新建一个线程(核心线程)执行任务    
 
@@ -358,19 +410,19 @@ public ThreadPoolExecutor(int corePoolSize,
 
 
 
-### 2..1.1、好处
+### 1）好处
 
-> **1、降低资源消耗**：通过池化技术重复利用已创建的线程，降低线程创建和销毁造成的损耗。       
->
-> **2、提高响应速度**：任务到达时，无需等待线程创建即可立即执行。       
->
-> **3、提高线程的可管理性**：线程是稀缺资源，如果无限制创建，不仅会消耗系统资源，还会因为线程的不合理分布导致资源调度失衡，降低系统的稳定性。使用线程池可以进行统一的分配、调优和监控。         
->
-> **4、提供更多更强大的功能**：线程池具备可拓展性，允许开发人员向其中增加更多的功能。比如延时定时线程池`ScheduledThreadPoolExecutor`，就允许任务延期执行或定期执行。                  
+**1、降低资源消耗**：通过池化技术重复利用已创建的线程，降低线程创建和销毁造成的损耗。         
+
+**2、提高响应速度**：任务到达时，无需等待线程创建即可立即执行。       
+
+**3、提高线程的可管理性**：线程是稀缺资源，如果无限制创建，不仅会消耗系统资源，还会因为线程的不合理分布导致资源调度失衡，降低系统的稳定性。使用线程池可以进行统一的分配、调优和监控。         
+
+**4、提供更多更强大的功能**：线程池具备可拓展性，允许开发人员向其中增加更多的功能。比如延时定时线程池`ScheduledThreadPoolExecutor`，就允许任务延期执行或定期执行。                  
 
 
 
-### 2.1.2、风险  
+### 2）风险  
 
 > 虽然线程池是构建多线程应用程序的强大机制，但使用它并不是没有风险的。用线程池构建的应用程序容易遭受任何其它多线程应用程序容易遭受的所有并发风险，诸如同步错误和死锁，它还容易遭受特定于线程池的少数其它风险，诸如与池有关的死锁、资源不足和线程泄漏。    
 
@@ -378,8 +430,10 @@ public ThreadPoolExecutor(int corePoolSize,
 
 
 
+## 7、方法介绍
 
-## 2.2、`ExecutorService`中`execute()`和`submit()`方法的区别
+
+### 1）`ExecutorService`中`execute()`和`submit()`方法的区别
 
 > 1、方法`execute()`没有返回值，而`submit()`方法可以有返回值（通过Callable和Future接口）        
 >
@@ -389,19 +443,13 @@ public ThreadPoolExecutor(int corePoolSize,
 
 
 
+### 2）几种常见的线程池  
 
-
-
-
-## 2.3、几种常见的线程池  
-
-### 2.3.1、`newFixedThreadPool`：创建固定的线程池 
+#### a、`newFixedThreadPool`：创建固定的线程池 
 
 > 创建一个固定数目的、可重用的线程池。可控制现场最大并发数，超出的线程会在线程队列中等待     
 >
-> `newFixedThreadPool`创建的线程池`corePoolSize`和`maximumPoolSize`值是相等的，它使用的`LinkedBlockingQueue；`
-
-
+> `newFixedThreadPool` 创建的线程池 `corePoolSize` 和 `maximumPoolSize`值是相等的，它使用的`LinkedBlockingQueue；`
 
 ```java
 public class FixedThreadPoolTest {
@@ -436,13 +484,13 @@ public class FixedThreadPoolTest {
 
 
 
-### 2.3.2、`newCachedThreadPool` ：创建可缓存线程池  
+#### b、`newCachedThreadPool` ：创建可缓存线程池  
 
 > 创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。就是一次添加多个任务，长度会变大，会一直新建线程，当没有任务时，空闲线程会被回收，线程池为无限大，当执行第二个任务时第一个任务已经完成。会复用第一个任务的线程，而不是每次新建线程。       
 
 **参数情况 **       
 
-`corePoolSize`设置为0，`maximumPoolSize`为`Integer.MAX_VALUE`，    队列为`SynchronousQueue`，   
+`corePoolSize `设置为 `0` ，`maximumPoolSize ` 为 `Integer.MAX_VALUE`   
 
 `SynchronousQueue`：**不存储元素的阻塞队列 ,每个插入操作必须等到另一个线程调用移除操作**，否则插入操作一直处于阻塞状态,每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态
 
@@ -463,7 +511,7 @@ public class NewCachedThreadPooltest {
         public void run() {
             System.out.println(Thread.currentThread().getName());
         }
-    } 
+    }
 }
 
 ```
@@ -480,33 +528,39 @@ public class NewCachedThreadPooltest {
 
 
 
-### 2.3.3、`newSingleThreadExecutor`：创建一个单线程化的线程池
+#### c、`newSingleThreadExecutor`：创建一个单线程化的线程池
 
 > 创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。   
 >
-> `newSingleThreadExecutor`将`corePoolSize`和`maximumPoolSize`都设置为1，队列为`LinkedBlockingQueue`；
+> `newSingleThreadExecutor  `将 `corePoolSize` 和 `maximumPoolSize `都设置为1，队列为 `LinkedBlockingQueue`；
+
+
+
+#### d、`ScheduledThreadPool` 延迟线程池
+
+> 允许的创建线程数量为 `Integer.MAX_VALUE`
 
 
 
 
 
-## 2.2、中断判断  
+### 3）中断判断  
 
-### 2.2.1、`isShutDown()`     
+#### a、`isShutDown()`     
 
-`isShutDown()` 当调用`shutdown()`或`shutdownNow()`方法后返回为`true`。    
+`isShutDown()` 当调用 `shutdown()` 或`shutdownNow()`方法后返回为`true`。    
 
-如果线程池任务正常完成，为false（表示没有中断哦）
+如果线程池任务正常完成，为 `false`（表示没有中断哦）
 
 
 
-### 2.2.2、`isTerminated()`
+#### b、`isTerminated()`
 
-`isTerminated()`当调用`shutdown()`方法后，并且所有提交的任务完成后返回为`true`;    
+`isTerminated()` 当调用`shutdown()`方法后，并且所有提交的任务完成后返回为`true`;    
 
-`isTerminated()`当调用`shutdownNow()`方法后，成功停止后返回为`true`;       
+`isTerminated() `当调用`shutdownNow()`方法后，成功停止后返回为`true`;       
 
-如果线程池任务正常完成，为false（表示没有中断哦）
+如果线程池任务正常完成，为 `false`（表示没有中断哦）
 
 
 
@@ -525,11 +579,9 @@ while(true){
 
 
 
-## 2.3、`shutdown()`、`shutdownNow()`、``awaitTerminate(long timeout,TimeUnit unit)`
+### 4）`shutdown()`、`shutdownNow()`、``awaitTerminate(long timeout,TimeUnit unit)`
 
-
-
-#### 2.3.1、`shutdown（）`
+#### a、`shutdown（）`
 
 > 阻止新来的任务提交，对已经提交了的任务不会产生任何影响。当已经提交的任务执行完后，它会将那些闲置的线程进行中断，这个过程是异步的。    
 
@@ -537,25 +589,25 @@ while(true){
 
 **问：如何阻止新来的任务提交**    
 
-答：通过将线程池的状态改成`SHUTDOWN`，当再将执行execute提交任务时，如果测试到状态不为`RUNNING`，则抛出`rejectedExecution`，从而达到阻止新任务提交的目的。       
+答：通过将线程池的状态改成 `SHUTDOWN`，当再将执行 `execute` 提交任务时，如果测试到状态不为 `RUNNING`，则抛出`rejectedExecution`，从而达到阻止新任务提交的目的。       
 
 
 
 **问：为何对提交的任务不产生任何影响**    
 
- 答：在调用中断任务的方法时，它会检测workers中的任务，如果worker对应的任务没有中断，并且是空闲线程，它才会去中断。<font color="red"> 另外的话，workQueue中的值，还是按照一定的逻辑顺序不断的往works中进行输送的，这样一来，就可以保证提交的任务按照线程本身的逻辑执行，不受到影响。</font>      
+ 答：在调用中断任务的方法时，它会检测 `workers` 中的任务，如果 `worker` 对应的任务没有中断，并且是空闲线程，它才会去中断。<font color="red"> 另外的话，`workQueue` 中的值，还是按照一定的逻辑顺序不断的往 `works` 中进行输送的，这样一来，就可以保证提交的任务按照线程本身的逻辑执行，不受到影响。</font>      
 
 
 
-#### 2.3.2、`shutdownNow()`
+#### b、`shutdownNow()`
 
-> 阻止新来的任务提交，同时会中断当前正在运行的线程，即workers中的线程。<font color="red">   另外它还将workQueue中的任务给移除，并将这些任务添加到列表中进行返回。</font>          
+> 阻止新来的任务提交，同时会中断当前正在运行的线程，即 `workers` 中的线程。<font color="red">   另外它还将 `workQueue`中的任务给移除，并将这些任务添加到列表中进行返回。</font>          
 
 
 
 **问：如何阻止新来的任务提交**    
 
-答：通过将线程池的状态改成 `STOP`，当再将执行execute提交任务时，如果测试到状态不为`RUNNING`，则抛出`rejectedExecution`，从而达到阻止新任务提交的目的.<font color="red">（如果为RUNNING,这个线程没有抛出异常类型的阻塞，则继续阻塞，阻塞请看下个问题）</font>           
+答：通过将线程池的状态改成 `STOP`，当再将执行 `execute` 提交任务时，如果测试到状态不为`RUNNING`，则抛出`rejectedExecution`，从而达到阻止新任务提交的目的.<font color="red">（如果为 `RUNNING`,这个线程没有抛出异常类型的阻塞，则继续阻塞，阻塞请看下个问题）</font>           
 
 
 
@@ -563,13 +615,13 @@ while(true){
 
 答：当执行`shutdownNow()`方法时，如遇已经激活的任务，并且处于阻塞状态时，`shutdownNow()`会执行1次中断阻塞的操作，此时对应的线程报`InterruptedException`，如果后续还要等待某个资源，则按正常逻辑等待某个资源的到达。
 
-例如，一个线程正在`sleep()`中，此时执行`shutdownNow()`，它向该线程发起`interrupt()`请求，而`sleep()`方法遇到有`interrupt()`请求时，会抛出`InterruptedException()`，并继续往下执行。在这里要提醒注意的是，在激活的任务中，如果有多个 `sleep()`,该方法只会中断第一个`sleep()`，而后面的仍然按照正常的执行逻辑进行。
+例如，一个线程正在`sleep()`中，此时执行`shutdownNow()`，它向该线程发起`interrupt()`请求，而`sleep()`方法遇到有`interrupt()` 请求时，会抛出`InterruptedException()`，并继续往下执行。在这里要提醒注意的是，在激活的任务中，如果有多个 `sleep()`,该方法只会中断第一个`sleep()`，而后面的仍然按照正常的执行逻辑进行。
 
 
 
-#### 2.2.3、`awaitTermination(long timeout,TimeUnit unit)`
+#### c、`awaitTermination(long timeout,TimeUnit unit)`
 
-> `awaitTermination`会一直等待，直到线程池状态为`TERMINATED`(中断)或者，等待的时间到达了指定的时间。
+> `awaitTermination  `会一直等待，直到线程池状态为 `TERMINATED`(中断)或者 等待的时间到达了指定的时间。
 
 ```java
   exec.shutdown();
@@ -606,42 +658,21 @@ public static void main(String[] args) {
 
 
 
-## 2.5、优雅的关闭线程池  
-
-> 一般来说，线程执行完毕会自动结束，无需手动关闭     
->
-> 线程提供给了一个·`Stop`方法，可以即使终止一个线程，但是会发现stop已经被弃用了。Thread.stop()方法在结束线程的时候，会直接终止线程，这个线程就会立即释放掉所有的锁，而这些锁恰恰是用来维护对象的一致性的，如果此时写到了一半，强行中止，那么对象就会被破坏，或者线程可能在操作数据库，强⾏中断导致数据不一致，从而混乱的问题。所以现在不使用了
 
 
 
-### 2.5.1、线程的`interrupt`
-
-> 1、中断异常的抛出：如果此线程处于阻塞状态(比如调⽤了wait方法，io等待)，则会立刻退出阻塞，并抛出`InterruptedException`异常，线程就可以通过捕获`InterruptedException`来做⼀定的处理，然后让线程退出。
-
-> 2、中断标记状态的判断： 如果此线程正处于运行之中，则线程不受任何影响，继续运行，仅仅是线程的中断标记被设置为true。所以线程要在适当的位置通过调用`isInterrupted`方法来查看自⼰是否被中断，并做退出操作。
-
-### 2.5.2、线程池的关闭
-
-> **一定要记得，`shutdownNow`和`shuwdown`调用完，线程池并不是立马就关闭了，要想等待线程池关闭，还需调用`awaitTermination`方法来阻塞等待。**
-
-#### 2.5.2.1. `shuwdown()` 关闭
-
-当我们使用`shuwdown`方法关闭线程池时，一定要确保任务里不会有永久阻塞等待的逻辑，否则线程池就关闭不了。
-
-#### 2.5.2.2、`shuwdownnow()`关闭
-
-**所以当我们使用`shutdownNow`方法关闭线程池时，一定要对任务里进行异常捕获（相当于线程中断）。或者线程中断的判断(当然如果上面出现了非抛出异常类型的阻塞，也会一直阻塞下去)**     
 
 
 
-## 2.6、`submit()`：获取返回值      
 
-### 2.6.1、`sumbit()`返回代码详解  
 
-#### 2.6.1.1、`submit` 中可以放三个参数  
+### 5）`submit()`：获取返回值      
+
+#### a、`sumbit()`
+
+**1、`submit` 中可以放三个参数**  
 
 ```java
-
 Future<?> submit(Runnable runnable);
 
 <T> Future<T> submit(Callable<T> callable);
@@ -651,7 +682,7 @@ Future<?> submit(Runnable runnable);
 
 
 
-#### 2.6.1.2、分析下 `Runable`和`Callable`的不同  
+**b、分析下 `Runable`和`Callable`的不同**  
 
 ```java
 public Future<?> submit(Runnable task) {
@@ -691,7 +722,6 @@ protected <T> RunnableFuture<T> newTaskFor(Callable<T> callable) {
 **看到了下面，其实就大致可以知道，`Runnable` 会在这里转化成 `Callable`。我们来看下 `Executors.callable()`**    
 
 ```java
-
 public FutureTask(Runnable runnable, V result) {
     this.callable = Executors.callable(runnable, result);
     this.state = NEW;       
@@ -721,7 +751,7 @@ public class FutureTask<V> implements RunnableFuture<V> {
 
 
 
-### 2.6.2、`get方法 `   
+#### b、`get方法 `   
 
 > `V get(long timeOut, TimeUnit unit)`：获取结果，超时抛出异常
 
@@ -748,7 +778,7 @@ public <T> Future<T> submit(Callable<T> task) {
 
 
 
-#### 2.6.2.1、 `Callable`
+**1、 `Callable`**
 
 ```java
 package com.hlj.threadpool.D02SubmitFuture;
@@ -827,10 +857,9 @@ Caused by: java.lang.ArithmeticException: / by zero
 
 
 
-#### 2.6.2.2、`Runnable`
+**2、`Runnable`**
 
 ```java
-
 package com.hlj.threadpool.d01Submit;
 
 import java.util.concurrent.*;
@@ -882,10 +911,9 @@ public class CallableSubmit {
 
 
 
-### 2.6.3、`isDone  `:  执行结束（完成/取消/异常）返回`true`
+### 6）`isDone  `:  执行结束（完成/取消/异常）返回`true`
 
 ```java
-
 package com.hlj.threadpool.d01Submit.D02SubmitFuture;
 
 import java.util.concurrent.*;
@@ -953,7 +981,7 @@ public class D01FutureCancle {
 
 
 
-### 2.6.4、`cancel(boolean mayInterruptRunning)`：取消任务
+### 7）`cancel(boolean mayInterruptRunning)`：取消任务
 
 > **未开始或已完成返回false，参数表示是否中断执行中的线程**    
 >
@@ -971,9 +999,47 @@ public class D01FutureCancle {
 
 
 
-## 2.4、判断任务是否完成 
+# 二、知识点详解    
 
-### 2.4.1、倒计时器  
+
+
+## 1、优雅的关闭线程池  
+
+> 一般来说，线程执行完毕会自动结束，无需手动关闭     
+>
+> 线程提供给了一个·`Stop`方法，可以即使终止一个线程，但是会发现stop已经被弃用了。Thread.stop()方法在结束线程的时候，会直接终止线程，这个线程就会立即释放掉所有的锁，而这些锁恰恰是用来维护对象的一致性的，如果此时写到了一半，强行中止，那么对象就会被破坏，或者线程可能在操作数据库，强⾏中断导致数据不一致，从而混乱的问题。所以现在不使用了
+
+
+
+### 1）线程的`interrupt`
+
+> 1、中断异常的抛出：如果此线程处于阻塞状态(比如调⽤了 `wait` 方法，`io` 等待)，则会立刻退出阻塞，并抛出`InterruptedException`异常，线程就可以通过捕获 `InterruptedException` 来做⼀定的处理，然后让线程退出。
+
+> 2、中断标记状态的判断： 如果此线程正处于运行之中，则线程不受任何影响，继续运行，仅仅是线程的中断标记被设置为 `true` 。所以线程要在适当的位置通过调用`isInterrupted`方法来查看自⼰是否被中断，并做退出操作。
+
+
+
+### 2）线程池的关闭
+
+> **一定要记得，`shutdownNow ` 和 `shuwdown`调用完，线程池并不是立马就关闭了，要想等待线程池关闭，还需调用`awaitTermination` 方法来阻塞等待。**
+
+#### a、`shuwdown()`  关闭
+
+当我们使用 `shuwdown`  方法关闭线程池时，一定要确保任务里不会有永久阻塞等待的逻辑，否则线程池就关闭不了。
+
+
+
+#### b、`shuwdownnow()`关闭
+
+**所以当我们使用 `shutdownNow` 方法关闭线程池时，一定要对任务里进行异常捕获（相当于线程中断）。或者线程中断的判断(当然如果上面出现了非抛出异常类型的阻塞，也会一直阻塞下去)**     
+
+
+
+
+
+## 2、判断任务是否完成 
+
+### 1）倒计时器  
 
 ```java
 
@@ -1011,7 +1077,7 @@ public class CountDownLatchDemo implements Runnable {
 
 
 
-### 2.4.2、使用submit提交任务，获取返回值判断线程池任务结束
+### 2）使用 `submit` 提交任务，获取返回值判断线程池任务结束
 
 ```java
 long startTime = System.currentTimeMillis();
@@ -1044,55 +1110,205 @@ long totalTime = (System.currentTimeMillis() - startTime) / NumberConstant.ONE_T
 
 
 
+## 3、线程池核心线程空闲会占用性能吗
 
+> 线程池核心线程在空闲时确实可能会占用一定的系统性能，但这种占用通常是有限的，并且可以通过合理的配置来优化。以下是对这一问题的详细分析：
 
-## 2.5、线程池几种状态
+⬤ **空闲线程的状态：**当线程池中的核心线程处于空闲状态时，它们并不会像运行中的线程那样占用大量的 `CPU` 资源。实际上，这些空闲线程通常会处于等待（`Waiting` ）或阻塞（`Blocked` ）状态，等待新的任务到来。在这种状态下，线程的 `CPU` 占用率非常低，因为它们并没有在执行实际的计算任务。     
 
-| 运行状态       | 状态描述                                                     |
-| :------------- | :----------------------------------------------------------- |
-| **RUNNING**    | 能接受新提交的任务，并且也能处理阻塞队列中的任务。           |
-| **SHUTDOWN**   | 关闭状态，不再接受新提交的任务，但却可以继续处理阻塞队列中已保存的任务。 |
-| **STOP**       | 不能接受新任务，也不处理队列中的任务，会中断正在处理任务的线程。 |
-| **TERMINATED** | 在 `terminated() `方法执行完后进入该状态                     |
-| **TIDYING**    | 所有的任务都已终止了，`workerCount` (有效线程数) 为0         |
+⬤ **内存占用：**虽然空闲线程在 `CPU` 方面的占用较低，但它们仍然会占用一定的内存资源。每个线程都需要一定的堆栈空间来存储其执行环境，包括局部变量、调用栈等。因此，如果线程池中的核心线程数量过多，即使它们大部分时间都处于空闲状态，也会占用大量的内存资源。这可能会给垃圾回收器带来额外的压力，并可能影响系统的整体性能。           
 
- ![image-20210730155956344](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730155956344.png)
+⬤ **上下文切换：**虽然空闲线程本身不进行实际的计算任务，但系统仍然需要维护它们的上下文信息。当系统中有大量线程时，即使它们大多处于空闲状态，上下文切换的开销也会增加。这可能会降低系统的整体响应速度和吞吐量                  
 
-
-
-## 2.6、任务执行机制
-
-### 2.6.1、任务调度
-
-1、首先检测线程池运行状态，如果不是**RUNNING**，则直接拒绝，线程池要保证在RUNNING的状态下执行任务。    
-
-2、如果 `workerCount` < `corePoolSize`，则创建并启动一个线程来执行新提交的任务。       
-
-3、如果 `workerCount` >= `corePoolSize`，且线程池内的阻塞队列未满，则将任务添加到该阻塞队列中。     
-
-4、如果 `workerCount` >= `corePoolSiz`e && `workerCount` < `maximumPoolSiz`e，且线程池内的阻塞队列已满，则创建并启动一个线程来执行新提交的任务。        
-
-5、如果 `workerCount` >= `maximumPoolSize`，并且线程池内的阻塞队列已满, 则根据拒绝策略来处理该任务, 默认的处理方式是直接抛异常。
-
-![image-20210730160103636](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730160103636.png)
+⬤ **资源竞争**：虽然空闲线程不直接参与资源竞争，但它们的存在可能会间接影响其他正在运行的线程。例如，如果系统资源（如`CPU`、内存、`I/O` 设备等）有限，空闲线程可能会占用一部分资源，从而减少可用于其他任务的资源量。
 
 
 
-### 2.6.2、任务缓冲
-
-> 任务缓冲模块是线程池能够管理任务的核心部分。线程池的本质是对任务和线程的管理，而做到这一点最关键的思想就是将任务和线程两者解耦，不让两者直接关联，才可以做后续的分配工作。线程池中是以生产者消费者模式，通过一个阻塞队列来实现的。阻塞队列缓存任务，工作线程从阻塞队列中获取任务。      
 
 
+## 4、多线程并发场景有哪些坑
 
-| 名称                    | 描述                                                         |
-| :---------------------- | :----------------------------------------------------------- |
-| `ArrayBlockingQueue`    | **一个用数组实现的有界阻塞队列**，此队列按照先进先出 ( `FIFO`)的原则对元素进行排序。支持公平锁和非公平锁。 |
-| `LinkedBlockingQueue`   | **一个由链表结构组成的有界队列**，此队列按照先进先出( `FIFO` ) 的原则对元素进行排序。此队列的默认长度为 `Integer.MAX_VALUE`，所以默认创建的该队列有容量危险。 |
-| `PriorityBlockingQueue` | **一个支持线程优先级排序的无界队列**，默认自然序进行排序，也可以自定义实现 `compareTo()` 方法来指定元素排序规则，不能保证同优先级元素的顺序。 |
-| `DelayQueue`            | 一个实现`PriorityBlockingQueue`实现延迟获取的无界队列，在创建元素时，可以指定多久才能从队列中获取当前元素。只有延时期满后才能从队列中获取元素。 |
-| `SynchronousQueue`      | **一个不存储元素的阻塞队列**，每一个 `put`操作必须等待 `take` 操作，否则不能添加元素。支持公平锁和非公平锁。`SynchronousQueue` 的一个使用场景是在线程池里。`Executors.newCachedThreadPool()`就使用了 `SynchronousQueue`，这个线程池根据需要（新任务到来时）创建新的线程，如果有空闲线程则会重复使用，线程空闲了 `60` 秒后会被回收。 |
-| `LinkedTransferQueue`   | **一个由链表结构组成的无界阻塞队列**，相当于其它队列，`LinkedTransferQueue` 队列多了 `transfer`和 `tryTransfer`方法。 |
-| `LinkedBlockingDeque`   | **一个由链表结构组成的双向阻塞队列**。队列头部和尾部都可以添加和移除元素，多线程并发时，可以将锁的竞争最多降到一半。 |
+### 1）“不正确的创建”线程池
+
+>  常规来说，线程资源必须通过线程池提供，不允许在应用中自行显式创建线程 ` JAVA ` 代码规范也明确表示 “线程资源必须通过线程池提供，不允许在应用中自行显式创建线程”，但是创建线程池的方式也有很多种，不能滥用。   
+>
+> > 常见创建线程池方式如：通过 ` JDK`  提供的  `ThreadPoolExecutor` 、`ScheduledThreadPoolExecutor` 以及 JDK 7 开始引入的 `ForkJoinPool` 创建，还有更方便的` Executors` 类以及 `spring` 提供的 `ThreadPoolTaskExecutor` 等。其关系如下图：
+
+![image-20240929194213620](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20240929194213620.png)
+
+
+
+1、`FixedThreadPool` 和 `SingleThreadPool` 允许的请求任务队列长度为`Integer.MAX_VALUE`，可能会堆积大量的请求，从而导致 `OOM`。         
+
+2、`CachedThreadPool `和 `ScheduledThreadPool` 允许的创建线程数量为 `Integer.MAX_VALUE`，可能会创建大量的线程，从而导致 `OOM`。
+
+### 2）线程池“参数设置不合理”
+
+|      参数       |     含义     |                             描述                             |
+| :-------------: | :----------: | :----------------------------------------------------------: |
+|  corePoolSize   |  核心线程数  | 线程池中要保留的线程数，即使它们处于空闲状态，除非设置了 allowCoreThreadTimeOut |
+| maximumPoolSize |  最大线程数  |                   线程池中允许的最大线程数                   |
+|  keepAliveTime  | 保持存活时间 | 当线程数大于核心时，这是多余的空闲线程在终止前等待新任务的最长时间 |
+|      unit       |   时间单位   |                 keepAliveTime 参数的时间单位                 |
+|    workQueue    |   任务队列   | 用于在执行任务之前保存任务的队列。此队列将仅保存 execute方 法提交的 Runnable 任务 |
+|  threadFactory  |   线程工厂   |                执行器创建新线程时要使用的工厂                |
+|     handler     |   拒绝策略   | 当由于达到最大线程数和队列容量而导致执行受阻时使用的处理程序 |
+
+​        注意在设置任务队列时，需要考虑有界和无界队列，使用有界队列时，注意线程池满了后，被拒绝的任务如何处理。使用无界队列时，需要注意如果任务的提交速度大于线程池的处理速度，可能会导致内存溢出。           
+
+​        对于拒绝策略，首先要明确的一点是“拒绝策略的执行线程是提交任务的线程，而不是子线程”。JDK 的 `ThreadPoolExecutor` 提供了 4 种拒绝策略：
+
+|       内部类        | 调用者运行策略 |                             描述                             |
+| :-----------------: | :------------: | :----------------------------------------------------------: |
+|     AbortPolicy     |    中止策略    | 当触发拒绝策略时，直接抛出拒绝执行的 RejectedExecutionException 异常，中止策略的意思也就是打断当前执行流程。 |
+|  CallerRunsPolicy   | 调用者运行策略 | 当触发拒绝策略时，只要线程池没有关闭，就由提交任务的当前线程处理。 |
+| DiscardOldestPolicy |    弃老策略    |    如果线程池未关闭，就弹出队列头部的元素，然后尝试执行。    |
+|    DiscardPolicy    |    丢弃策略    |          直接静悄悄的丢弃这个任务，不触发任何动作。          |
+
+​         对于自定义拒绝策略，不同场景应选择相应的拒绝策略，抛开应用场景讲技术会显得苍白，大家可以参考常见技术框架的处理方式：
+
+| 常见场景 |                             描述                             |
+| :------: | :----------------------------------------------------------: |
+|  Dubbo   | Dubbo 中的线程拒绝策略 AbortPolicyWithReport，输出当前线程堆栈详情等。 |
+|   JSF    | JSF 的 BusinessPool 中 RejectedExecutionHandler 设置钩子函数，允许业务系统去扩展实现。 |
+|  Netty   | Netty 中的线程池拒绝策略 NewThreadRunsPolicy，创建一个新的线程去执行。 |
+| ActiveMq | ActiveMq 中的线程池拒绝策略，通过队列的带有超时时间的 offer 方法，比如：executor.getQueue().offer(r, 60, TimeUnit.SECONDS); 要注意拒绝策略的执行线程是主线程，offer 函数也是会阻塞线程的，要慎用。 |
+
+
+
+### 3）局部线程池“使用后不销毁回收”
+
+> ​        线程会消耗宝贵的系统资源，比如内存等，所以是很不推荐使用局部线程池（未预先创建的线程池，用完就可以销毁，下次用时还会创建）的；但是如果某些特殊场景确实使用了局部线程池，那么应该在用完后，主动销毁。主动销毁线程池主要有两种方式：
+
+|     方法      |                             描述                             |
+| :-----------: | :----------------------------------------------------------: |
+|  `shutdown`   | “温柔”的关闭线程池。不接受新任务，但是在关闭前会将之前提交的任务处理完毕。 |
+| `shutdownNow` | “粗暴”的关闭线程池，也就是直接关闭线程池，通过 Thread#interrupt() 方法终止所有线程，不会等待之前提交的任务执行完毕。但是会返回队列中未处理的任务。 |
+
+为了更深入的理解两个问题：    
+
+⬤ 问题1：到底是否所有局部创建的线程池都需要主动销毁？   
+
+⬤ 问题2：为什么 `Dubbo` 中的线程拒绝策略 `AbortPolicyWithReport` 使用了 `Executors.newSingleThreadExecutor()`，并且没有主动销毁动作？      
+
+  我们需要从 `GC` 角度进行分析。要知道对象什么时候死亡，我们需要先知道 ` JVM` 的 `GC` 是如何判断对象是可以回收的。`JAVA` 是通过可达性算法来来判断对象是否存活的。这个算法的基本思路就是通过一系列的称为“ `GC` `Roots`”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链，当一个对象到 `GC` `Roots` 没有任何引用链相连时，则证明此对象是不可用的。
+
+​        对于线程池而言，在 `ThreadPoolExecutor` 类中具有非静态内部类 `Worker`，用于表示当前线程池中的线程，**因为非静态内部类对象具有外部包装类对象的引用，所以当存在线程 ` Worker` 对象时**，线程池不会被 `GC` 回收。也就是说，**线程池没有引用，且线程池内没有存活线程时，才是可以被 `GC` 回收的**。应注意的是线程池的核心线程默认是一直存活的，除非核心线程数为 `0` 或者设置了 `allowCoreThreadTimeOut` 允许核心消除空闲时销毁。              
+
+| 线程池类型         | `CachedThreadPool`                                           | `FixedThreadPool`                        | `SingleThreadExecutor`                                       |
+| ------------------ | ------------------------------------------------------------ | ---------------------------------------- | ------------------------------------------------------------ |
+| 核心线程数         | `0`                                                          | `nThreads`（用户设定）                   | 1                                                            |
+| 最大线程数         | `Integer.MAX_VALUE`                                          | `nThreads`（用户设定）                   | 1                                                            |
+| 非核心线程存活时间 | 60s                                                          | 无非核心线程                             | 无非核心线程                                                 |
+| 等待队列最大长度   | 0（这里用的是 `SynchronousQueue`，一个不存储元素的神奇的阻塞队列） | `Integer.MAX_VALUE`                      | `Integer.MAX_VALUE`                                          |
+| 特点               | 提交任务优先复用空闲线程，没有空闲线程则创建新线程           | 固定线程数，等待运行的任务均放入等待队列 | 有且仅有一个线程在运行，等待运行任务放入等待队列，可保证任务运行顺序与提交顺序一致 |
+
+​        三种类型的线程池与 `GC` 关系：
+
+1、`CachedThreadPool`：没有核心线程，且线程具有超时时间，可见在其引用消失后，等待任务运行结束且所有线程空闲回收后，``GC` `开始回收此线程池对象；   
+
+2、`FixedThreadPool`：核心线程数及最大线程数均为 `n` `Threads`，并且在默认 `allowCoreThreadTimeOut` 为 `false` 的情况下，其引用消失后，核心线程即使空闲也不会被回收，故 `GC` 不会回收该线程池；    
+
+3、`SingleThreadExecutor`：在创建时实际返回的是 `FinalizableDelegatedExecutorService` 类的对象，该类重新了 `finalize() `函数执行线程池的销毁，该对象持有 `ThreadPoolExecutor` 对象的引用，但 `ThreadPoolExecutor` 对象并不引用 `FinalizableDelegatedExecutorService` 对象，这使得在 `FinalizableDelegatedExecutorService` 对象的外部引用消失后，`GC` 将会对其进行回收，触发` finalize` 函数，而该函数仅仅简单的调用`shutdown` 函数关闭线程，在所有当前的任务执行完成后，回收线程池中线程，则 `GC` 可回收线程池对象。         
+
+![image-20240929195835963](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20240929195835963.png)
+
+
+
+
+
+结论：`CachedThreadPool` 及 `SingleThreadExecutor` 的对象在不显式销毁时，且其对象引用消失的情况下，可以被 `GC` 回收；`FixedThreadPool` 对象在不显式销毁，且其对象引用消失的情况下不会被 `GC` 回收，会出现内存泄露。因此无论使用什么线程池，使用完毕后均调用 `shutdown` 是一个较为安全的编程习惯。
+
+
+
+### 4）线程池处理“刚启动时效率低”
+
+> 默认情况下，即使是核心线程也只能在新任务到达时才创建和启动。对于 `ThreadPoolExecutor` 线程池可以使用 `prestartCoreThread`（启动一个核心线程）或 `prestartAllCoreThreads`（启动全部核心线程）方法来提前启动核心线程。
+
+
+
+
+
+### 5）“不合理的使用共享线程池”
+
+> 提交异步任务，不指定线程池，存在最主要问题是非核心业务占用线程资源，可能会导致核心业务收影响。因为公共线程池的最大线程数、队列大小、拒绝策略都比较保守，可能引发各种问题，常见场景如下：
+
+**1、`CompleteFuture` 提交异步任务，不指定线程池。**
+
+​        `CompleteFuture` 的 `supplyAsync` 等以 *`Async` 为结尾的方法，会使用多线程异步执行。可以注意到的是，它也允许我们不携带多线程提交任务的执行线程池参数，这个时候是默认使用的 `ForkJoinPool.commonPool()`。
+
+​        `ForkJoinPool` 最适合的是计算密集型的任务，如果存在 `I/O`，线程间同步，`sleep() ` 等会造成线程长时间阻塞的情况时，最好配合使用 `ManagedBlocker`。`ForkJoinPool ` 默认线程数取决于 `parallelism ` 参数为：`CPU` 处理器核数 -1，也允许通修改 `Java` 系统属性 "`java.util.concurrent.ForkJoinPool.common.parallelism`" 进行自定义配置。
+
+```java
+System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "期望的线程数");
+```
+
+
+
+**2、`JDK` `8` 引入的集合框架的并行流 `Parallel` `Stream`。**
+
+​        `Parallel` `Stream` 也是使用的 `ForkJoinPool.commonPool()`，**但有一点区别是：`Parallel` `Stream` 的主线程 (提交任务的线程）是会去参与处理的；**比如 `8` 核心的机器执行 `Parallel` `Stream` 是有 `8` 个线程，而 `CompleteFuture` 提交的任务只有 `7` 个线程处理。不建议使用是一致的。
+
+| 参数         | 说明                                                         |
+| ------------ | ------------------------------------------------------------ |
+| 核心线程数   | 默认情况下，`ForkJoinPool.commonPool()` 的大小是根据`Runtime.getRuntime().availableProcessors()`方法返回的 `CPU`核心数来决定的。其最大线程数默认为 `CPU` 核心数减一 |
+| 非核心线程数 | 线程池中的线程数量（包括核心线程和非核心线程）是动态调整的，以适应并行任务的需求。然而，与 `ThreadPoolExecutor` 不同，`ForkJoinPool`并没有明确区分核心线程和非核心线程的概念 |
+| 最大线程数   | `ForkJoinPool.commonPool()` 的最大线程数默认是运行时可用处理器的数量减一 |
+| 队列数       | 每个工作线程都有自己的任务队列，没有统一的队列数             |
+
+﻿
+
+**3、`@Async` 提交异步任务，不指定线程池。**
+
+​        `SpringBoot 2.1.9` 之前版本使用 `@Async `不指定 `Executor` 会使用 `SimpleAsyncTaskExecutor`，该线程池默认来一个任务创建一个线程，若系统中不断的创建线程，最终会导致系统占用内存过高，引发 `OutOfMemoryError` 错误。     
+
+​       `SpringBoot 2.1.0` 之后版本引入了 `TaskExecutionAutoConfiguration`，其使用 `ThreadPoolTaskExecutor` 作为 默认 `Executor`，通过 `TaskExecutionProperties.Pool` 可以看到其配置默认核心线程数：`8`，最大线程数：`Integet.MAX_VALUE`，队列容量是：`Integet.MAX_VALUE`，空闲线程保留时间：`60s`，线程池拒绝策略：`AbortPolicy`。    
+
+​	虽然可以通实现 `AsyncConfigurer` 接口等方式，自行配置线程池参数，但仍不建议使用公共线程池。           
+
+
+
+### 6）主线程“等待时间不合理”
+
+1、应尽量避免使用 `CompletableFuture.join()`，`Future.get()` 这类不带有超时时间的阻塞主线程操作。    
+
+2、`for` 循环使用 `future.get(long timeout, TimeUnit unit)`。此方法允许我们去设置超时时间，但是如果主线程串行获取的话，下一个 `future.get` 方法的超时时间，是从第一个 `get()  `结束后开始计算的，所以会导致超时时间不合理。
+
+
+
+### 7）提交任务“不考虑子线程超时时间”
+
+**1、主线程 `Future.get` 虽然超时，但是子线程依然在执行？**
+
+​        比如当通过 `ExecutorService` 提交一个 `Callable` 任务的时候，会返回一个 `Future` 对象，`Future` 的 `get(long timeout, TimeUnit unit) `方法时，如果出现超时，则会抛出 `java.util.concurrent.TimeoutException`；但是，此时 `Future` 实例所在的线程并没有中断执行，只是主线程不等待了，也就是当前线程的 `status` 依然是 `NEW` 值为 `0` 的状态，所以当大量超时，可能就会将线程池打满。
+
+​        提到中断子线程，会想到 `future.cancel(true)` 。那么我们真的可以中断子线程吗？首先`Java` 无法直接其他线程的，如果非要实现此功能，也只能通过 `interrupt` 设置标志位，子线程执行到中间环节去查看标志位，识别到中断后做后续处理。理解一个关键点，`interrupt()` 方法仅仅是改变一个标志位的值而已，和线程的状态并没有必然的联系。     
+
+**2、子线程的任务都应该有一个合理的超时时间。**
+
+​        比如子线程调用 `RPC`/`HTTP` 接口等，一定要检查超时时间配置是否合理。
+
+
+
+### 8）“不考虑请求过载”
+
+我们设置了合理的参数，也注意优化了各种场景问题，终于可以大胆使用多线程了。也一定要考虑对下游带来的影响，比如数据库请求并发量增长，占用 `JDBC` 数据库连接、给依赖 `RPC` 服务带来性能压力等。
+
+
+
+
+
+### 9）其他
+
+**1、并发执行“线程不安全”操作**：多线程操作同一对象应考虑线程安全性。常见场景比如 `HashMap` 应该换成 `ConcurrentHashMap`；`StringBuilder` 应该换成 `StringBuffer `等。     
+
+**2、“不考虑线程变量”的传递**：提交到线程池执行的异步任务，切换了线程，子线程在执行时，获取不到主线程变量中存储的信息    
+
+**3、并发会“增大出现死锁的可能性”**：多线程不只是程序中提交到线程池执行，比如打到同一容器的 http 请求本身就是多线程，任何多线程操作都有死锁风险。使用业务线程池的并发操作需要更加注意，因为更容易暴露出来“死锁”这个问题
+
+
+
+
 
 
 
@@ -1322,7 +1538,7 @@ public class CPUUtilizationTest{
 
 > 那么在实际的程序中，或者说一些 `Java` 的业务系统中，线程数（线程池大小）规划多少合适呢？
 >
-> > 先说结论：没有固定答案，先设定预期，比如我期望的 `CPU` 利用率在多少，负载在多少，`GC` 频率多少之类的指标后，再通过测试不断的调整到一个合理的线程数。比如一个普通的，`SpringBoot`  为基础的业务系统，默认 `Tomcat` 容器+连接池+垃圾回收器，如果此时项目中也需要一个业务场景的多线程（或者线程池）来异步/并行执行业务流程。   
+> > 先说结论：没有固定答案，先设定预期，比如我期望的 `CPU` 利用率在多少，负载在多少，`GC` 频率多少之类的指标后，再通过测试不断的调整到一个合理的线程数。比如一个普通的，`SpringBoot`  为基础的业务系统，**默认 `Tomcat` 容器+连接池+垃圾回收器，如果此时项目中也需要一个业务场景的多线程（或者线程池）来异步/并行执行业务流程**。   
 >
 > 此时按照上面的公式来规划线程数的话，误差一定会很大。因为此时这台主机上，已经有很多运行中的线程了，`Tomcat` 有自己的线程池，`JVM` 也有一些线程，垃圾回收器都有自己的后台线程。这些线程也是运行在当前进程、当前主机上的，也会占用`CPU`的资源。
 
@@ -1333,9 +1549,13 @@ public class CPUUtilizationTest{
 - 分析当前主机上，有没有其他进程干扰
 - 分析当前 `JVM` 进程上，有没有其他运行中或可能运行的线程
 - 设定目标
-- 目标CPU利用率 - 我最高能容忍我的CPU飙到多少？
+- 目标 `CPU` 利用率 - 我最高能容忍我的 `CPU` 飙到多少？
 - 目标 `GC` 频率/暂停时间 - 多线程执行后，`GC` 频率会增高，最大能容忍到什么频率，每次暂停时间多少？
 - 执行效率 - 比如批处理时，我单位时间内要开多少线程才能及时处理完毕
+
+
+
+
 
 
 
@@ -1709,6 +1929,30 @@ public class IOTypeTest implements Runnable {
 
 
 
+
+
+
+### 3.4.5、线程池使用建议
+
+**1、线程维护方式：**线程资源需通过线程池提供，不应在应用中自行显式创建线程，通过池化管理系统资源，避免频繁创建销毁线程带来额外系统开销。    
+
+**2、线程命名规范：**创建线程或线程池时需指定有意义的线程名称，出现系统问题时可提升定位效率。    
+
+**3、线程池参数设置：**在创建线程池时，需显式指定如下参数，且需要通过压测谨慎评估各参数值，参数修改后亦需经过压测验证参数合理性，而后才可上线。
+
+​	**1、初始线程数/最大线程数：**需通过压测设置合理值，设置过大会导致上下文切换过多消耗系统性能，设置过小会导致突发流量处理能力不足。为避免秒级突发流量而需快速创建大量线程，可将初始线程数与最大线程数设置为相同值。
+
+​	**2、任务队列最大长度：**对应系统负载较高或任务执行耗时异常时的任务堆积能力，建议通过混沌演练模拟系统异常来设置合理值，不建议设置过大，否则当任务积压严重时可能导致频繁 `GC` ，从而形成恶性循环。
+
+​	**3、任务队列满后拒绝策略：**建议设置为“丢弃”，同时针对任务丢弃进行兜底处理，确保队列满后提交任务不阻塞。
+
+**4、线程池隔离机制：**了解每个并发任务的平均耗时与计算类型，针对不同类型的任务（如：强依赖/弱依赖、CPU密集/IO密集、长任务/短任务、高优先级/低优先级等），可各自运行在独立线程池中，避免互相干扰。“线程”作为线程池中的有限资源，需尽量避免线程资源耗尽后带来的负面影响。
+
+**5、线程池监控机制：**系统运行期间需对所有线程池进行监控覆盖，包括当前线程数、队列积压任务数、拒绝次数等，出现系统故障时可通过线程池监控快速定位。    
+
+**6、并发任务超时设置：**针对线程池中的 `IO` 操作（ `RPC` /网络`IO` /磁盘 `IO`等）需妥善设置超时时间，对于超时时间的设置建议请阅读：。   
+
+**7、线程上下文使用风险：**许多场景会通过线程上下文传递数据，容易出现线程上下文污染现象（其他任务读取到错误的线程上下文数据），在任务退出前需确保所有线程上下文数据完成清理。
 
 
 
@@ -3756,6 +4000,589 @@ public class ThreadPoolUtils {
 }
 
 ```
+
+
+
+
+
+
+
+
+
+# 四、工具
+
+## 1、批量执行任务工具
+
+### 1）`BatchInvokeBO`
+
+```java
+@Accessors(chain = true)
+@Data
+public class BatchInvokeBO {
+
+
+    /**
+     * executor
+     */
+    private Executor executor;
+
+
+}
+```
+
+
+
+### 2）`BatchConsumerInvokeBO`
+
+```java
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
+@Data
+public class BatchConsumerInvokeBO<REQ> extends BatchInvokeBO {
+
+
+    /**
+     * batchConsumer
+     */
+    private List<BatchConsumerBO<REQ>> batchConsumers;
+
+
+
+    /**
+     * consumerOf
+     *
+     * @param batchConsumers batchConsumers
+     * @return {@link BatchConsumerInvokeBO}
+     */
+    public static <REQ> BatchConsumerInvokeBO<REQ> of(Executor executor, List<BatchConsumerBO<REQ>> batchConsumers) {
+        BatchConsumerInvokeBO<REQ> invoke = new BatchConsumerInvokeBO<>();
+        invoke.setExecutor(executor);
+        invoke.setBatchConsumers(batchConsumers);
+        return invoke;
+    }
+
+}
+```
+
+
+
+
+
+### 3）`BatchConsumerBO`
+
+```java
+package com.healerjean.proj.data.bo;
+
+import com.healerjean.proj.service.RedisService;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.function.Consumer;
+
+/**
+ * 批量消费
+ *
+ * @author zhangyujin
+ * @date 2024/6/14
+ */
+@Accessors(chain = true)
+@Data
+public class BatchConsumerBO<REQ> implements Serializable {
+
+
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = -7922977872203781755L;
+
+    /**
+     * 请求
+     */
+    private Consumer<REQ> consumer;
+
+    /**
+     * 请求对象
+     */
+    private ReqBusinessBO<REQ> reqBusiness;
+
+    /**
+     * 返回对象
+     */
+    private ResBusinessBO resBusiness;
+
+
+    /**
+     * instance
+     *
+     */
+    public static <REQ> BatchConsumerBO<REQ> instance() {
+        return new BatchConsumerBO<REQ>()
+                .setReqBusiness(new ReqBusinessBO<>())
+                .setResBusiness(new ResBusinessBO());
+    }
+
+    @Accessors(chain = true)
+    @Data
+    public static class ReqBusinessBO<Req>{
+
+        /**
+         * 任务名
+         */
+        private String name;
+
+        /**
+         * 请求对象
+         */
+        private Req req;
+
+        /**
+         * 幂等对象
+         */
+        private IdempotentBO idempotent;
+
+        /**
+         * 幂等对象
+         */
+        @Accessors(chain = true)
+        @Data
+        public static class IdempotentBO{
+            /**
+             * 幂等唯一Id
+             */
+            private String uuid;
+
+            /**
+             * 多久幂等（单位s）
+             */
+            private Integer expireSec;
+
+            /**
+             * 幂等操作类
+             */
+            private RedisService redisService;
+
+        }
+
+    }
+
+
+    @Accessors(chain = true)
+    @Data
+    public static class ResBusinessBO{
+
+        /**
+         * 执行结果
+         */
+        private Boolean invokeFlag;
+
+        /**
+         * 执行异常信息
+         */
+        private Exception exception;
+
+        /**
+         * 消费时间
+         */
+        private Long cost;
+    }
+}
+
+
+
+```
+
+
+
+### 4）`BatchFunctionInvokeBO`
+
+```java
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
+@Data
+public class BatchFunctionInvokeBO<REQ, RES> extends BatchInvokeBO {
+
+    /**
+     * batchFunctions
+     */
+    private List<BatchFunctionBO<REQ, RES>> batchFunctions;
+
+
+    /**
+     * functionOf
+     *
+     * @param batchFunctions batchFunctions
+     * @return {@link BatchFunctionInvokeBO}
+     */
+    public static <REQ, RES> BatchFunctionInvokeBO<REQ, RES> of(Executor executor, List<BatchFunctionBO<REQ, RES>> batchFunctions) {
+        BatchFunctionInvokeBO<REQ, RES> invoker = new BatchFunctionInvokeBO<>();
+        invoker.setBatchFunctions(batchFunctions);
+        invoker.setExecutor(executor);
+        return invoker;
+    }
+
+
+}
+```
+
+
+
+### 5）`BatchFunctionBO`
+
+```java
+package com.healerjean.proj.data.bo;
+
+import com.healerjean.proj.service.RedisService;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.function.Function;
+
+/**
+ * 批量消费
+ *
+ * @author zhangyujin
+ * @date 2024/6/14
+ */
+@Accessors(chain = true)
+@Data
+public class BatchFunctionBO<REQ, RES> implements Serializable {
+
+
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = -7922977872203781755L;
+
+    /**
+     * 请求
+     */
+    private Function<REQ, RES> function;
+
+    /**
+     * 请求对象
+     */
+    private ReqBusinessBO<REQ> reqBusiness;
+
+    /**
+     * 返回对象
+     */
+    private ResBusinessBO<RES> resBusiness;
+
+
+    /**
+     * instance
+     *
+     */
+    public static <REQ, RES> BatchFunctionBO<REQ, RES> instance() {
+        return new BatchFunctionBO<REQ, RES>()
+                .setReqBusiness(new ReqBusinessBO<>())
+                .setResBusiness(new ResBusinessBO<>());
+    }
+
+    @Accessors(chain = true)
+    @Data
+    public static class ReqBusinessBO<Req>{
+
+        /**
+         * 任务名
+         */
+        private String name;
+
+        /**
+         * 请求对象
+         */
+        private Req req;
+
+
+        /**
+         * 幂等对象
+         */
+        private IdempotentBO idempotent;
+
+        /**
+         * 幂等对象
+         */
+        @Accessors(chain = true)
+        @Data
+        public static class IdempotentBO{
+            /**
+             * 幂等唯一Id
+             */
+            private String uuid;
+
+            /**
+             * 多久幂等（单位s）
+             */
+            private Integer expireSec;
+
+            /**
+             * 幂等操作类
+             */
+            private RedisService redisService;
+        }
+
+    }
+
+    @Accessors(chain = true)
+    @Data
+    public static class ResBusinessBO<Res>{
+
+        /**
+         * 执行结果
+         */
+        private Boolean invokeFlag;
+
+        /**
+         * 返回 对象
+         */
+        private Res res;
+
+        /**
+         * 执行异常信息
+         */
+        private Exception exception;
+
+        /**
+         * 消费时间
+         */
+        private Long cost;
+    }
+
+}
+
+
+
+```
+
+
+
+### 5）`FunctionUtils`
+
+```java
+package com.healerjean.proj.utils;
+
+import com.alibaba.fastjson.JSON;
+import com.healerjean.proj.config.ThreadPoolConfiguration;
+import com.healerjean.proj.data.bo.batch.stream.BatchConsumerBO;
+import com.healerjean.proj.data.bo.batch.stream.BatchConsumerInvokeBO;
+import com.healerjean.proj.data.bo.batch.stream.BatchFunctionBO;
+import com.healerjean.proj.data.bo.batch.stream.BatchFunctionInvokeBO;
+import com.healerjean.proj.service.RedisService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.utils.Lists;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.function.Consumer;
+
+/**
+ * FunctionUtils
+ *
+ * @author zhangyujin
+ * @date 2024/4/2
+ */
+@Slf4j
+public class FunctionUtils {
+
+    /**
+     * 调用函数，失败返回具体任务
+     *
+     * @param function function
+     */
+    public static <REQ, RES> BatchFunctionBO<REQ, RES> invokeFunction(Executor executor, BatchFunctionBO<REQ, RES> function) {
+        List<BatchFunctionBO<REQ, RES>> functions = Lists.newArrayList();
+        functions.add(function);
+
+        BatchFunctionInvokeBO<REQ, RES> batchInvoker = BatchFunctionInvokeBO.of(executor, functions);
+        invokeAllFunction(batchInvoker);
+        return functions.get(0);
+    }
+
+    /**
+     * 调用所有函数，失败返回具体任务
+     *
+     * @return {@link }
+     */
+    @SuppressWarnings("unchecked")
+    public static <REQ, RES> BatchFunctionInvokeBO<REQ, RES> invokeAllFunction(BatchFunctionInvokeBO<REQ, RES> batchInvoker) {
+        List<BatchFunctionBO<REQ, RES>> functions = batchInvoker.getBatchFunctions();
+        Executor executor = batchInvoker.getExecutor();
+        CompletableFuture<BatchConsumerBO.ResBusinessBO>[] tasks = functions.stream().map(batchFunction -> CompletableFuture.supplyAsync(() -> {
+            long startTime = System.currentTimeMillis();
+            BatchFunctionBO.ResBusinessBO<RES> resBusiness = batchFunction.getResBusiness();
+            try {
+                resBusiness.setRes(batchFunction.getFunction().apply(batchFunction.getReqBusiness().getReq()));
+                resBusiness.setInvokeFlag(true);
+                resBusiness.setCost(System.currentTimeMillis() - startTime);
+            } catch (Exception e) {
+                resBusiness.setInvokeFlag(false);
+                resBusiness.setException(e);
+                resBusiness.setCost(System.currentTimeMillis() - startTime);
+                log.info("[ExceptionUtils#invokeAllFunctionFailException] taskName:{}, req:{}", batchFunction.getReqBusiness().getName(), JSON.toJSONString(batchFunction.getReqBusiness().getName()), e);
+            }
+            return resBusiness;
+        }, executor)).toArray(CompletableFuture[]::new);
+        CompletableFuture.allOf(tasks).join();
+        return batchInvoker;
+    }
+
+
+
+    /**
+     * 调用消费者，失败返回具体任务
+     *
+     * @param consumer function
+     */
+    public static <REQ> BatchConsumerBO<REQ> invokeConsumer(Executor executor, BatchConsumerBO<REQ> consumer) {
+        List<BatchConsumerBO<REQ>> consumers = Lists.newArrayList();
+        consumers.add(consumer);
+        BatchConsumerInvokeBO<REQ> batchConsumerInvoke = BatchConsumerInvokeBO.of(executor, consumers);
+        invokeAllConsumer(batchConsumerInvoke);
+        return batchConsumerInvoke.getBatchConsumers().get(0);
+    }
+
+    /**
+     * 调用所有消费者，失败返回具体任务
+     *
+     * @return {@link }
+     */
+    @SuppressWarnings("unchecked")
+    public static <R> BatchConsumerInvokeBO<R> invokeAllConsumer(BatchConsumerInvokeBO<R> batchConsumerInvoke) {
+        List<BatchConsumerBO<R>> batchConsumers = batchConsumerInvoke.getBatchConsumers();
+        Executor executor = batchConsumerInvoke.getExecutor();
+        CompletableFuture<BatchConsumerBO.ResBusinessBO>[] tasks = batchConsumers.stream().map(batchConsumer -> CompletableFuture.supplyAsync(() -> {
+            long startTime = System.currentTimeMillis();
+            BatchConsumerBO.ResBusinessBO resBusiness = batchConsumer.getResBusiness();
+            BatchConsumerBO.ReqBusinessBO<R> reqBusiness = batchConsumer.getReqBusiness();
+            BatchConsumerBO.ReqBusinessBO.IdempotentBO idempotent = reqBusiness.getIdempotent();
+            try {
+                idempotentInvoke(batchConsumer.getConsumer(), reqBusiness.getReq(), idempotent);
+                resBusiness.setInvokeFlag(true);
+                resBusiness.setCost(System.currentTimeMillis() - startTime);
+            } catch (Exception e) {
+                resBusiness.setInvokeFlag(false);
+                resBusiness.setException(e);
+                resBusiness.setCost(System.currentTimeMillis() - startTime);
+                log.info("[ExceptionUtils#invokeAllConsumerFailException] taskName:{}, req:{}", reqBusiness.getName(), JSON.toJSONString(reqBusiness.getReq()), e);
+            }
+            return resBusiness;
+        }, executor)).toArray(CompletableFuture[]::new);
+
+
+        CompletableFuture.allOf(tasks).join();
+        return batchConsumerInvoke;
+    }
+
+
+    /**
+     * 幂等
+     */
+    public static  <R> void idempotentInvoke(Consumer<R> consumer, R r, BatchConsumerBO.ReqBusinessBO.IdempotentBO idempotent) {
+        if (Objects.isNull(idempotent)) {
+            consumer.accept(r);
+            return;
+        }
+        RedisService redisService = idempotent.getRedisService();
+        String uuid = idempotent.getUuid();
+        String idempotentFlag = redisService.get(uuid);
+        if (Objects.nonNull(idempotentFlag)) {
+            return;
+        }
+        consumer.accept(r);
+        redisService.set(uuid, "1", idempotent.getExpireSec());
+    }
+
+
+
+
+
+
+}
+
+```
+
+
+
+### 6）验证
+
+```java
+
+
+    /**
+     * testInvokeAllConsumerFailException
+     *
+     */
+    @Test
+    public void testInvokeAllFunctionFailException(){
+        BatchFunctionBO<String, String> ironManFunction = BatchFunctionBO.instance();
+        ironManFunction.getReqBusiness().setReq("ironMan").setName("fly");
+        ironManFunction.setFunction(req-> "success");
+
+
+        BatchFunctionBO<String, String> thorFunction = BatchFunctionBO.instance();
+        thorFunction.getReqBusiness().setReq("thor").setName("jump");
+        thorFunction.setFunction(req->{
+            int i =  1/0 ;
+            return "fail";
+        });
+        List<BatchFunctionBO<String, String>> list = Lists.newArrayList();
+        list.add(ironManFunction);
+        list.add(thorFunction);
+
+        BatchFunctionInvokeBO<String, String> batchFunctionInvoke = BatchFunctionInvokeBO.of(ThreadPoolConfiguration.THREAD_POOL_TASK_EXECUTOR, list);
+        invokeAllFunction(batchFunctionInvoke);
+        log.info("result:{}", JSON.toJSONString(batchFunctionInvoke.getBatchFunctions()));
+    }
+
+
+    /**
+     * testInvokeAllConsumerFailException
+     *
+     */
+    @Test
+    public void testInvokeAllConsumerFailException(){
+        List<BatchConsumerBO<String>> list = Lists.newArrayList();
+
+        BatchConsumerBO<String> ironManConsumer = BatchConsumerBO.instance();
+        ironManConsumer.getReqBusiness().setReq("ironMan").setName("fly");
+        ironManConsumer.setConsumer("ironMan"::equals);
+
+        for (int i = 0; i < 1000; i++) {
+            BatchConsumerBO<String> thorConsumer = BatchConsumerBO.instance();
+            int finalI = i;
+            thorConsumer.setConsumer(req->{
+                try {
+                    Thread.sleep(100L);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                // int i =  1/0 ;
+                log.info("finalI:{}", finalI);
+            });
+            thorConsumer.getReqBusiness().setReq("thor" + i).setName("jump" + i);
+            list.add(thorConsumer);
+        }
+
+        list.add(ironManConsumer);
+        BatchConsumerInvokeBO<String> batchConsumerInvoke = BatchConsumerInvokeBO.of(ThreadPoolConfiguration.THREAD_POOL_TASK_EXECUTOR, list);
+        invokeAllConsumer(batchConsumerInvoke);
+        log.info("result:{}", JSON.toJSONString(batchConsumerInvoke.getBatchConsumers()));
+    }
+
+```
+
+
+
+
+
+
+
+
 
 
 

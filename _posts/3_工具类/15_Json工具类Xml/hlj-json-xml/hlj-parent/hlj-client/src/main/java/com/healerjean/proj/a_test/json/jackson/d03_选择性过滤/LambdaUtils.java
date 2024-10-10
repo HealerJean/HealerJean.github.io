@@ -1,41 +1,18 @@
----
-title: 方法引用符获取字段名称
-date: 2020-02-20 03:33:00
-tags: 
-- Java
-category: 
-- Java
-description: 方法引用符获取字段名称
----
-
-**前言**     
-
- Github：[https://github.com/HealerJean](https://github.com/HealerJean)         
-
- 博客：[http://blog.healerjean.com](http://HealerJean.github.io)          
-
-
-
-
-
-# 一、工具类制作
-
-```java
-package com.healerjean.proj.utils;
-
-import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
-import com.healerjean.proj.data.po.UserDemo;
+package com.healerjean.proj.a_test.json.jackson.d03_选择性过滤;
 
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * LambdaUtils
+ *
  * @author zhangyujin
- * @date 2023/6/14  17:57.
+ * @date 2024/9/30
  */
 public class LambdaUtils {
 
@@ -52,15 +29,17 @@ public class LambdaUtils {
      */
     public static SerializedLambda getSerializedLambda(Serializable fn) {
         SerializedLambda lambda = CLASS_LAMBDA_CACHE.get(fn.getClass());
-        if (lambda == null) {
-            try {
-                Method method = fn.getClass().getDeclaredMethod("writeReplace");
-                method.setAccessible(Boolean.TRUE);
-                lambda = (SerializedLambda) method.invoke(fn);
-                CLASS_LAMBDA_CACHE.put(fn.getClass(), lambda);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (Objects.nonNull(lambda)) {
+            return lambda;
+        }
+
+        try {
+            Method method = fn.getClass().getDeclaredMethod("writeReplace");
+            method.setAccessible(Boolean.TRUE);
+            lambda = (SerializedLambda) method.invoke(fn);
+            CLASS_LAMBDA_CACHE.put(fn.getClass(), lambda);
+        } catch (Exception e) {
+             throw new RuntimeException(e.getMessage(), e);
         }
         return lambda;
     }
@@ -99,37 +78,7 @@ public class LambdaUtils {
         return name;
     }
 
-    public static void main(String[] args) {
-        System.out.println(LambdaUtils.convertToFieldName(UserDemo::getName));
-    }
+
+
+
 }
-
-```
-
-
-
-
-
-
-
-![ContactAuthor](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/assets/img/artical_bottom.jpg)
-
-
-
-
-
-<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-
-<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script> 
-<div id="gitalk-container"></div>    
- <script type="text/javascript">
-    var gitalk = new Gitalk({
-		clientID: `1d164cd85549874d0e3a`,
-		clientSecret: `527c3d223d1e6608953e835b547061037d140355`,
-		repo: `HealerJean.github.io`,
-		owner: 'HealerJean',
-		admin: ['HealerJean'],
-		id: 'JzXqGslFxWvdc2mV',
-    });
-    gitalk.render('gitalk-container');
-</script> 

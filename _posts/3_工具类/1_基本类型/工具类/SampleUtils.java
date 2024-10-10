@@ -16,30 +16,7 @@ import java.util.Objects;
 public final class SampleUtils {
 
 
-    /**
-     * isNullOr0
-     *
-     * @param obj obj
-     * @return boolean
-     */
-    public static boolean isNullOr0(Object obj) {
-        if (Objects.isNull(obj)) {
-            return true;
-        }
-        if (obj instanceof BigDecimal) {
-            return Objects.equals(BigDecimal.ZERO, new BigDecimal(String.valueOf(obj)));
-        }
-
-        if (obj instanceof Long) {
-            return Objects.equals(0L, Long.valueOf(obj.toString()));
-        }
-
-        if (obj instanceof Integer) {
-            return Objects.equals(0, Integer.valueOf(obj.toString()));
-        }
-        throw new RuntimeException("非法比较,请补充用例");
-    }
-
+  
 
     /**
      * 判断全部相等
@@ -63,44 +40,6 @@ public final class SampleUtils {
         return Arrays.asList(objs).contains(obj);
     }
 
-
-    /**
-     * 判断是否是int
-     *
-     * @param str str
-     * @return boolean
-     */
-    public static boolean isInteger(String str) {
-        if (str == null) {
-            return false;
-        }
-        try {
-            Integer.valueOf(str);
-            return true;
-        } catch (Exception e) {
-            log.info("[SampleUtils#isInteger] str:{} 非int", str);
-            return false;
-        }
-    }
-
-    /**
-     * 判断是否是long
-     *
-     * @param str str
-     * @return {@link boolean}
-     */
-    public static boolean isLong(String str) {
-        if (str == null) {
-            return false;
-        }
-        try {
-            Long.valueOf(str);
-            return true;
-        } catch (Exception e) {
-            log.info("[SampleUtils#isLong] str:{} 非long", str);
-            return false;
-        }
-    }
 
 
 }
