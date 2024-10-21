@@ -16,13 +16,13 @@ import java.util.concurrent.Executor;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @Data
-public class BatchConsumerInvokeBO<REQ> extends BatchInvokeBO {
+public class BatchConsumerInvokeBO extends BatchInvokeBO {
 
 
     /**
      * batchConsumer
      */
-    private List<BatchConsumerBO<REQ>> batchConsumers;
+    private List<BatchConsumerBO> batchConsumers;
 
 
 
@@ -32,8 +32,8 @@ public class BatchConsumerInvokeBO<REQ> extends BatchInvokeBO {
      * @param batchConsumers batchConsumers
      * @return {@link BatchConsumerInvokeBO}
      */
-    public static <REQ> BatchConsumerInvokeBO<REQ> of(Executor executor, List<BatchConsumerBO<REQ>> batchConsumers) {
-        BatchConsumerInvokeBO<REQ> invoke = new BatchConsumerInvokeBO<>();
+    public static  BatchConsumerInvokeBO of(Executor executor, List<BatchConsumerBO> batchConsumers) {
+        BatchConsumerInvokeBO invoke = new BatchConsumerInvokeBO();
         invoke.setExecutor(executor);
         invoke.setBatchConsumers(batchConsumers);
         return invoke;

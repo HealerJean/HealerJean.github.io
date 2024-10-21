@@ -19,8 +19,6 @@ description: 3、线程池ThreadPoolExecutor总结
 
 # 一、线程池参数         
 
-
-
 > ⬤  线程池的概念是 `Executor` 这个接口 `ExecutorService` 继承了它，具体实现为 `ThreadPoolExecutor` 类，学习Java中的线程池，就可以直接学习对线程池的配置，就是对`ThreadPoolExecutor`构造函数的参数的配置    
 >
 > ⬤ `Executors` 类提供工厂方法用来创建不同类型的线程池
@@ -61,7 +59,7 @@ public class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements S
 
 > 一个非核心线程，如果不干活(闲置状态)的时长超过这个参数所设定的时长，就会被销毁掉，    
 >
-> 如果设置`allowCoreThreadTimeOut = true`，则会作用于核心线程。
+> 如果设置 `allowCoreThreadTimeOut = true`，则会作用于核心线程。
 
 
 
@@ -349,19 +347,15 @@ public ThreadPoolExecutor(int corePoolSize,
 
 > 任务缓冲模块是线程池能够管理任务的核心部分。线程池的本质是对任务和线程的管理，而做到这一点最关键的思想就是将任务和线程两者解耦，不让两者直接关联，才可以做后续的分配工作。线程池中是以生产者消费者模式，通过一个阻塞队列来实现的。阻塞队列缓存任务，工作线程从阻塞队列中获取任务。      
 
-
-
 | 名称                    | 描述                                                         |
 | :---------------------- | :----------------------------------------------------------- |
 | `ArrayBlockingQueue`    | **一个用数组实现的有界阻塞队列**，此队列按照先进先出 ( `FIFO`)的原则对元素进行排序。支持公平锁和非公平锁。 |
 | `LinkedBlockingQueue`   | **一个由链表结构组成的有界队列**，此队列按照先进先出( `FIFO` ) 的原则对元素进行排序。此队列的默认长度为 `Integer.MAX_VALUE`，所以默认创建的该队列有容量危险。 |
 | `PriorityBlockingQueue` | **一个支持线程优先级排序的无界队列**，默认自然序进行排序，也可以自定义实现 `compareTo()` 方法来指定元素排序规则，不能保证同优先级元素的顺序。 |
-| `DelayQueue`            | 一个实现`PriorityBlockingQueue`实现延迟获取的无界队列，在创建元素时，可以指定多久才能从队列中获取当前元素。只有延时期满后才能从队列中获取元素。 |
-| `SynchronousQueue`      | **一个不存储元素的阻塞队列**，每一个 `put`操作必须等待 `take` 操作，否则不能添加元素。支持公平锁和非公平锁。`SynchronousQueue` 的一个使用场景是在线程池里。`Executors.newCachedThreadPool()`就使用了 `SynchronousQueue`，这个线程池根据需要（新任务到来时）创建新的线程，如果有空闲线程则会重复使用，线程空闲了 `60` 秒后会被回收。 |
+| `DelayQueue`            | 一个实现`PriorityBlockingQueue` 实现延迟获取的无界队列，在创建元素时，可以指定多久才能从队列中获取当前元素。只有延时期满后才能从队列中获取元素。 |
+| `SynchronousQueue`      | **一个不存储元素的阻塞队列**，每一个 `put`操作必须等待 `take` 操作，否则不能添加元素。支持公平锁和非公平锁。`SynchronousQueue` 的一个使用场景是在线程池里。`Executors.newCachedThreadPool()` 就使用了 `SynchronousQueue`，这个线程池根据需要（新任务到来时）创建新的线程，如果有空闲线程则会重复使用，线程空闲了 `60` 秒后会被回收。 |
 | `LinkedTransferQueue`   | **一个由链表结构组成的无界阻塞队列**，相当于其它队列，`LinkedTransferQueue` 队列多了 `transfer`和 `tryTransfer`方法。 |
 | `LinkedBlockingDeque`   | **一个由链表结构组成的双向阻塞队列**。队列头部和尾部都可以添加和移除元素，多线程并发时，可以将锁的竞争最多降到一半。 |
-
-
 
 
 
@@ -394,7 +388,7 @@ public ThreadPoolExecutor(int corePoolSize,
 | **`TERMINATED`** | 在 `terminated() `方法执行完后进入该状态                     |
 | **`TIDYING`**    | 所有的任务都已终止了，`workerCount` (有效线程数) 为 `0`      |
 
- ![image-20210730155956344](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730155956344.png)
+![image-20210730155956344](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730155956344.png)
 
 
 
@@ -425,8 +419,6 @@ public ThreadPoolExecutor(int corePoolSize,
 ### 2）风险  
 
 > 虽然线程池是构建多线程应用程序的强大机制，但使用它并不是没有风险的。用线程池构建的应用程序容易遭受任何其它多线程应用程序容易遭受的所有并发风险，诸如同步错误和死锁，它还容易遭受特定于线程池的少数其它风险，诸如与池有关的死锁、资源不足和线程泄漏。    
-
-
 
 
 
@@ -1880,7 +1872,7 @@ public class IOTypeTest implements Runnable {
 
 ### 3.4.4、利特尔法则合理配置参数值
 
-> 我们认为线程池是由队列连接的一个或多个服务提供程序，这样我们也可以通过科特尔法则来定义线程池大小。我们只需计算请求到达率和请求处理的平均时间。然后，将上述值放到利特尔法则（Little’s law）就可以算出系统平均请求数。     
+> 我们认为线程池是由队列连接的一个或多个服务提供程序，这样我们也可以通过利特尔法则来定义线程池大小。我们只需计算请求**到达率和请求处理的平均时间。然后，将上述值放到利特尔法则（Little’s law）就可以算出系统平均请求数**。     
 >
 > ⬤ 若请求数小于我们线程池的大小，就相应地减小线程池的大小。      
 >
@@ -2140,10 +2132,15 @@ public class ThreadPoolUtils {
         // 拒绝策略由调用线程处理该任务
         taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
 
-        // 调度器shutdown被调用时等待当前被调度的任务完成：用来设置线程池关闭的时候等待所有任务都完成再继续销毁其他的Bean
+      
+      // 以下这两个配置选项通常一起使用，以确保线程池在关闭时能够优雅地处理所有任务，同时避免应用因为等待任务完成而无限期地挂起。例如，在Spring Boot应用中，你可能会在配置类中这样配置线程池
+        // 调设置为true时，线程池会等待所有已提交的任务（包括正在执行的和队列中等待的任务）完成后再关闭。这确保了所有任务都有机会执行完毕。
+        // 如果设置为false，线程池会立即尝试停止所有正在执行的任务，并且不再启动队列中等待的任务
         taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
-        //该方法用来设置线程池中任务的等待时间:如果超过这个时候还没有销毁就强制销毁，以确保应用最后能够被关闭，而不是阻塞住
+        // 用于设置线程池在尝试关闭时等待任务完成的最长时间（以秒为单位）。如果在指定的时间内，所有任务没有完成，线程池会强制停止所有正在执行的任务，并继续关闭过程。
+        // 这个参数与setWaitForTasksToCompleteOnShutdown(true)配合使用，确保即使在线程池关闭时，应用也不会无限期地等待任务完成，从而避免应用无法正常关闭的问题
         taskExecutor.setAwaitTerminationSeconds(60);
+
         taskExecutor.initialize();
         log.info("Executor - defaultThreadPoolTaskExecutor injected!");
         return taskExecutor;
@@ -4035,16 +4032,31 @@ public class BatchInvokeBO {
 ### 2）`BatchConsumerInvokeBO`
 
 ```java
+package com.healerjean.proj.data.bo.batch.stream;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+
+import java.util.List;
+import java.util.concurrent.Executor;
+
+/**
+ * BatchInvokeBO
+ *
+ * @author zhangyujin
+ * @date 2024/9/24
+ */
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @Data
-public class BatchConsumerInvokeBO<REQ> extends BatchInvokeBO {
+public class BatchConsumerInvokeBO extends BatchInvokeBO {
 
 
     /**
      * batchConsumer
      */
-    private List<BatchConsumerBO<REQ>> batchConsumers;
+    private List<BatchConsumerBO> batchConsumers;
 
 
 
@@ -4054,14 +4066,15 @@ public class BatchConsumerInvokeBO<REQ> extends BatchInvokeBO {
      * @param batchConsumers batchConsumers
      * @return {@link BatchConsumerInvokeBO}
      */
-    public static <REQ> BatchConsumerInvokeBO<REQ> of(Executor executor, List<BatchConsumerBO<REQ>> batchConsumers) {
-        BatchConsumerInvokeBO<REQ> invoke = new BatchConsumerInvokeBO<>();
+    public static  BatchConsumerInvokeBO of(Executor executor, List<BatchConsumerBO> batchConsumers) {
+        BatchConsumerInvokeBO invoke = new BatchConsumerInvokeBO();
         invoke.setExecutor(executor);
         invoke.setBatchConsumers(batchConsumers);
         return invoke;
     }
 
 }
+
 ```
 
 
@@ -4071,7 +4084,7 @@ public class BatchConsumerInvokeBO<REQ> extends BatchInvokeBO {
 ### 3）`BatchConsumerBO`
 
 ```java
-package com.healerjean.proj.data.bo;
+package com.healerjean.proj.data.bo.batch.stream;
 
 import com.healerjean.proj.service.RedisService;
 import lombok.Data;
@@ -4088,7 +4101,7 @@ import java.util.function.Consumer;
  */
 @Accessors(chain = true)
 @Data
-public class BatchConsumerBO<REQ> implements Serializable {
+public class BatchConsumerBO implements Serializable {
 
 
     /**
@@ -4099,12 +4112,12 @@ public class BatchConsumerBO<REQ> implements Serializable {
     /**
      * 请求
      */
-    private Consumer<REQ> consumer;
+    private Consumer<Object> consumer;
 
     /**
      * 请求对象
      */
-    private ReqBusinessBO<REQ> reqBusiness;
+    private ReqBusinessBO reqBusiness;
 
     /**
      * 返回对象
@@ -4116,15 +4129,15 @@ public class BatchConsumerBO<REQ> implements Serializable {
      * instance
      *
      */
-    public static <REQ> BatchConsumerBO<REQ> instance() {
-        return new BatchConsumerBO<REQ>()
-                .setReqBusiness(new ReqBusinessBO<>())
+    public static  BatchConsumerBO instance() {
+        return new BatchConsumerBO()
+                .setReqBusiness(new ReqBusinessBO())
                 .setResBusiness(new ResBusinessBO());
     }
 
     @Accessors(chain = true)
     @Data
-    public static class ReqBusinessBO<Req>{
+    public static class ReqBusinessBO{
 
         /**
          * 任务名
@@ -4134,7 +4147,7 @@ public class BatchConsumerBO<REQ> implements Serializable {
         /**
          * 请求对象
          */
-        private Req req;
+        private Object req;
 
         /**
          * 幂等对象
@@ -4197,15 +4210,30 @@ public class BatchConsumerBO<REQ> implements Serializable {
 ### 4）`BatchFunctionInvokeBO`
 
 ```java
+package com.healerjean.proj.data.bo.batch.stream;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+
+import java.util.List;
+import java.util.concurrent.Executor;
+
+/**
+ * BatchFunctionInvokeBO
+ *
+ * @author zhangyujin
+ * @date 2024/9/24
+ */
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @Data
-public class BatchFunctionInvokeBO<REQ, RES> extends BatchInvokeBO {
+public class BatchFunctionInvokeBO extends BatchInvokeBO {
 
     /**
      * batchFunctions
      */
-    private List<BatchFunctionBO<REQ, RES>> batchFunctions;
+    private List<BatchFunctionBO> batchFunctions;
 
 
     /**
@@ -4214,8 +4242,8 @@ public class BatchFunctionInvokeBO<REQ, RES> extends BatchInvokeBO {
      * @param batchFunctions batchFunctions
      * @return {@link BatchFunctionInvokeBO}
      */
-    public static <REQ, RES> BatchFunctionInvokeBO<REQ, RES> of(Executor executor, List<BatchFunctionBO<REQ, RES>> batchFunctions) {
-        BatchFunctionInvokeBO<REQ, RES> invoker = new BatchFunctionInvokeBO<>();
+    public static  BatchFunctionInvokeBO of(Executor executor, List<BatchFunctionBO> batchFunctions) {
+        BatchFunctionInvokeBO invoker = new BatchFunctionInvokeBO();
         invoker.setBatchFunctions(batchFunctions);
         invoker.setExecutor(executor);
         return invoker;
@@ -4223,6 +4251,7 @@ public class BatchFunctionInvokeBO<REQ, RES> extends BatchInvokeBO {
 
 
 }
+
 ```
 
 
@@ -4230,7 +4259,7 @@ public class BatchFunctionInvokeBO<REQ, RES> extends BatchInvokeBO {
 ### 5）`BatchFunctionBO`
 
 ```java
-package com.healerjean.proj.data.bo;
+package com.healerjean.proj.data.bo.batch.stream;
 
 import com.healerjean.proj.service.RedisService;
 import lombok.Data;
@@ -4247,7 +4276,7 @@ import java.util.function.Function;
  */
 @Accessors(chain = true)
 @Data
-public class BatchFunctionBO<REQ, RES> implements Serializable {
+public class BatchFunctionBO implements Serializable {
 
 
     /**
@@ -4258,32 +4287,32 @@ public class BatchFunctionBO<REQ, RES> implements Serializable {
     /**
      * 请求
      */
-    private Function<REQ, RES> function;
+    private Function<Object, Object> function;
 
     /**
      * 请求对象
      */
-    private ReqBusinessBO<REQ> reqBusiness;
+    private ReqBusinessBO reqBusiness;
 
     /**
      * 返回对象
      */
-    private ResBusinessBO<RES> resBusiness;
+    private ResBusinessBO resBusiness;
 
 
     /**
      * instance
      *
      */
-    public static <REQ, RES> BatchFunctionBO<REQ, RES> instance() {
-        return new BatchFunctionBO<REQ, RES>()
-                .setReqBusiness(new ReqBusinessBO<>())
-                .setResBusiness(new ResBusinessBO<>());
+    public static  BatchFunctionBO instance() {
+        return new BatchFunctionBO()
+                .setReqBusiness(new ReqBusinessBO())
+                .setResBusiness(new ResBusinessBO());
     }
 
     @Accessors(chain = true)
     @Data
-    public static class ReqBusinessBO<Req>{
+    public static class ReqBusinessBO{
 
         /**
          * 任务名
@@ -4293,8 +4322,7 @@ public class BatchFunctionBO<REQ, RES> implements Serializable {
         /**
          * 请求对象
          */
-        private Req req;
-
+        private Object req;
 
         /**
          * 幂等对象
@@ -4327,7 +4355,7 @@ public class BatchFunctionBO<REQ, RES> implements Serializable {
 
     @Accessors(chain = true)
     @Data
-    public static class ResBusinessBO<Res>{
+    public static class ResBusinessBO{
 
         /**
          * 执行结果
@@ -4337,7 +4365,7 @@ public class BatchFunctionBO<REQ, RES> implements Serializable {
         /**
          * 返回 对象
          */
-        private Res res;
+        private Object res;
 
         /**
          * 执行异常信息
@@ -4394,11 +4422,11 @@ public class FunctionUtils {
      *
      * @param function function
      */
-    public static <REQ, RES> BatchFunctionBO<REQ, RES> invokeFunction(Executor executor, BatchFunctionBO<REQ, RES> function) {
-        List<BatchFunctionBO<REQ, RES>> functions = Lists.newArrayList();
+    public static  BatchFunctionBO invokeFunction(Executor executor, BatchFunctionBO function) {
+        List<BatchFunctionBO> functions = Lists.newArrayList();
         functions.add(function);
 
-        BatchFunctionInvokeBO<REQ, RES> batchInvoker = BatchFunctionInvokeBO.of(executor, functions);
+        BatchFunctionInvokeBO batchInvoker = BatchFunctionInvokeBO.of(executor, functions);
         invokeAllFunction(batchInvoker);
         return functions.get(0);
     }
@@ -4409,14 +4437,15 @@ public class FunctionUtils {
      * @return {@link }
      */
     @SuppressWarnings("unchecked")
-    public static <REQ, RES> BatchFunctionInvokeBO<REQ, RES> invokeAllFunction(BatchFunctionInvokeBO<REQ, RES> batchInvoker) {
-        List<BatchFunctionBO<REQ, RES>> functions = batchInvoker.getBatchFunctions();
+    public static  BatchFunctionInvokeBO invokeAllFunction(BatchFunctionInvokeBO batchInvoker) {
+        List<BatchFunctionBO> functions = batchInvoker.getBatchFunctions();
         Executor executor = batchInvoker.getExecutor();
         CompletableFuture<BatchConsumerBO.ResBusinessBO>[] tasks = functions.stream().map(batchFunction -> CompletableFuture.supplyAsync(() -> {
             long startTime = System.currentTimeMillis();
-            BatchFunctionBO.ResBusinessBO<RES> resBusiness = batchFunction.getResBusiness();
+            BatchFunctionBO.ResBusinessBO resBusiness = batchFunction.getResBusiness();
             try {
-                resBusiness.setRes(batchFunction.getFunction().apply(batchFunction.getReqBusiness().getReq()));
+                Object req = batchFunction.getReqBusiness().getReq();
+                resBusiness.setRes(batchFunction.getFunction().apply(req));
                 resBusiness.setInvokeFlag(true);
                 resBusiness.setCost(System.currentTimeMillis() - startTime);
             } catch (Exception e) {
@@ -4438,10 +4467,10 @@ public class FunctionUtils {
      *
      * @param consumer function
      */
-    public static <REQ> BatchConsumerBO<REQ> invokeConsumer(Executor executor, BatchConsumerBO<REQ> consumer) {
-        List<BatchConsumerBO<REQ>> consumers = Lists.newArrayList();
+    public static  BatchConsumerBO invokeConsumer(Executor executor, BatchConsumerBO consumer) {
+        List<BatchConsumerBO> consumers = Lists.newArrayList();
         consumers.add(consumer);
-        BatchConsumerInvokeBO<REQ> batchConsumerInvoke = BatchConsumerInvokeBO.of(executor, consumers);
+        BatchConsumerInvokeBO batchConsumerInvoke = BatchConsumerInvokeBO.of(executor, consumers);
         invokeAllConsumer(batchConsumerInvoke);
         return batchConsumerInvoke.getBatchConsumers().get(0);
     }
@@ -4452,13 +4481,13 @@ public class FunctionUtils {
      * @return {@link }
      */
     @SuppressWarnings("unchecked")
-    public static <R> BatchConsumerInvokeBO<R> invokeAllConsumer(BatchConsumerInvokeBO<R> batchConsumerInvoke) {
-        List<BatchConsumerBO<R>> batchConsumers = batchConsumerInvoke.getBatchConsumers();
+    public static  BatchConsumerInvokeBO invokeAllConsumer(BatchConsumerInvokeBO batchConsumerInvoke) {
+        List<BatchConsumerBO> batchConsumers = batchConsumerInvoke.getBatchConsumers();
         Executor executor = batchConsumerInvoke.getExecutor();
         CompletableFuture<BatchConsumerBO.ResBusinessBO>[] tasks = batchConsumers.stream().map(batchConsumer -> CompletableFuture.supplyAsync(() -> {
             long startTime = System.currentTimeMillis();
             BatchConsumerBO.ResBusinessBO resBusiness = batchConsumer.getResBusiness();
-            BatchConsumerBO.ReqBusinessBO<R> reqBusiness = batchConsumer.getReqBusiness();
+            BatchConsumerBO.ReqBusinessBO reqBusiness = batchConsumer.getReqBusiness();
             BatchConsumerBO.ReqBusinessBO.IdempotentBO idempotent = reqBusiness.getIdempotent();
             try {
                 idempotentInvoke(batchConsumer.getConsumer(), reqBusiness.getReq(), idempotent);
@@ -4500,8 +4529,6 @@ public class FunctionUtils {
 
 
 
-
-
 }
 
 ```
@@ -4519,22 +4546,22 @@ public class FunctionUtils {
      */
     @Test
     public void testInvokeAllFunctionFailException(){
-        BatchFunctionBO<String, String> ironManFunction = BatchFunctionBO.instance();
+        BatchFunctionBO ironManFunction = BatchFunctionBO.instance();
         ironManFunction.getReqBusiness().setReq("ironMan").setName("fly");
         ironManFunction.setFunction(req-> "success");
 
 
-        BatchFunctionBO<String, String> thorFunction = BatchFunctionBO.instance();
-        thorFunction.getReqBusiness().setReq("thor").setName("jump");
+        BatchFunctionBO thorFunction = BatchFunctionBO.instance();
+        thorFunction.getReqBusiness().setReq(123).setName("jump");
         thorFunction.setFunction(req->{
             int i =  1/0 ;
             return "fail";
         });
-        List<BatchFunctionBO<String, String>> list = Lists.newArrayList();
+        List<BatchFunctionBO> list = Lists.newArrayList();
         list.add(ironManFunction);
         list.add(thorFunction);
 
-        BatchFunctionInvokeBO<String, String> batchFunctionInvoke = BatchFunctionInvokeBO.of(ThreadPoolConfiguration.THREAD_POOL_TASK_EXECUTOR, list);
+        BatchFunctionInvokeBO batchFunctionInvoke = BatchFunctionInvokeBO.of(ThreadPoolConfiguration.THREAD_POOL_TASK_EXECUTOR, list);
         invokeAllFunction(batchFunctionInvoke);
         log.info("result:{}", JSON.toJSONString(batchFunctionInvoke.getBatchFunctions()));
     }
@@ -4546,14 +4573,14 @@ public class FunctionUtils {
      */
     @Test
     public void testInvokeAllConsumerFailException(){
-        List<BatchConsumerBO<String>> list = Lists.newArrayList();
+        List<BatchConsumerBO> list = Lists.newArrayList();
 
-        BatchConsumerBO<String> ironManConsumer = BatchConsumerBO.instance();
+        BatchConsumerBO ironManConsumer = BatchConsumerBO.instance();
         ironManConsumer.getReqBusiness().setReq("ironMan").setName("fly");
         ironManConsumer.setConsumer("ironMan"::equals);
 
         for (int i = 0; i < 1000; i++) {
-            BatchConsumerBO<String> thorConsumer = BatchConsumerBO.instance();
+            BatchConsumerBO thorConsumer = BatchConsumerBO.instance();
             int finalI = i;
             thorConsumer.setConsumer(req->{
                 try {
@@ -4569,10 +4596,11 @@ public class FunctionUtils {
         }
 
         list.add(ironManConsumer);
-        BatchConsumerInvokeBO<String> batchConsumerInvoke = BatchConsumerInvokeBO.of(ThreadPoolConfiguration.THREAD_POOL_TASK_EXECUTOR, list);
+        BatchConsumerInvokeBO batchConsumerInvoke = BatchConsumerInvokeBO.of(ThreadPoolConfiguration.THREAD_POOL_TASK_EXECUTOR, list);
         invokeAllConsumer(batchConsumerInvoke);
         log.info("result:{}", JSON.toJSONString(batchConsumerInvoke.getBatchConsumers()));
     }
+
 
 ```
 

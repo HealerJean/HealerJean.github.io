@@ -15,7 +15,7 @@ import java.util.function.Function;
  */
 @Accessors(chain = true)
 @Data
-public class BatchFunctionBO<REQ, RES> implements Serializable {
+public class BatchFunctionBO implements Serializable {
 
 
     /**
@@ -26,32 +26,32 @@ public class BatchFunctionBO<REQ, RES> implements Serializable {
     /**
      * 请求
      */
-    private Function<REQ, RES> function;
+    private Function<Object, Object> function;
 
     /**
      * 请求对象
      */
-    private ReqBusinessBO<REQ> reqBusiness;
+    private ReqBusinessBO reqBusiness;
 
     /**
      * 返回对象
      */
-    private ResBusinessBO<RES> resBusiness;
+    private ResBusinessBO resBusiness;
 
 
     /**
      * instance
      *
      */
-    public static <REQ, RES> BatchFunctionBO<REQ, RES> instance() {
-        return new BatchFunctionBO<REQ, RES>()
-                .setReqBusiness(new ReqBusinessBO<>())
-                .setResBusiness(new ResBusinessBO<>());
+    public static  BatchFunctionBO instance() {
+        return new BatchFunctionBO()
+                .setReqBusiness(new ReqBusinessBO())
+                .setResBusiness(new ResBusinessBO());
     }
 
     @Accessors(chain = true)
     @Data
-    public static class ReqBusinessBO<Req>{
+    public static class ReqBusinessBO{
 
         /**
          * 任务名
@@ -61,8 +61,7 @@ public class BatchFunctionBO<REQ, RES> implements Serializable {
         /**
          * 请求对象
          */
-        private Req req;
-
+        private Object req;
 
         /**
          * 幂等对象
@@ -95,7 +94,7 @@ public class BatchFunctionBO<REQ, RES> implements Serializable {
 
     @Accessors(chain = true)
     @Data
-    public static class ResBusinessBO<Res>{
+    public static class ResBusinessBO{
 
         /**
          * 执行结果
@@ -105,7 +104,7 @@ public class BatchFunctionBO<REQ, RES> implements Serializable {
         /**
          * 返回 对象
          */
-        private Res res;
+        private Object res;
 
         /**
          * 执行异常信息

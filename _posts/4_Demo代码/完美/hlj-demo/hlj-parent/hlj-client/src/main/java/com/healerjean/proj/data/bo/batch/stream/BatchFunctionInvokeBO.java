@@ -16,12 +16,12 @@ import java.util.concurrent.Executor;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @Data
-public class BatchFunctionInvokeBO<REQ, RES> extends BatchInvokeBO {
+public class BatchFunctionInvokeBO extends BatchInvokeBO {
 
     /**
      * batchFunctions
      */
-    private List<BatchFunctionBO<REQ, RES>> batchFunctions;
+    private List<BatchFunctionBO> batchFunctions;
 
 
     /**
@@ -30,8 +30,8 @@ public class BatchFunctionInvokeBO<REQ, RES> extends BatchInvokeBO {
      * @param batchFunctions batchFunctions
      * @return {@link BatchFunctionInvokeBO}
      */
-    public static <REQ, RES> BatchFunctionInvokeBO<REQ, RES> of(Executor executor, List<BatchFunctionBO<REQ, RES>> batchFunctions) {
-        BatchFunctionInvokeBO<REQ, RES> invoker = new BatchFunctionInvokeBO<>();
+    public static  BatchFunctionInvokeBO of(Executor executor, List<BatchFunctionBO> batchFunctions) {
+        BatchFunctionInvokeBO invoker = new BatchFunctionInvokeBO();
         invoker.setBatchFunctions(batchFunctions);
         invoker.setExecutor(executor);
         return invoker;
