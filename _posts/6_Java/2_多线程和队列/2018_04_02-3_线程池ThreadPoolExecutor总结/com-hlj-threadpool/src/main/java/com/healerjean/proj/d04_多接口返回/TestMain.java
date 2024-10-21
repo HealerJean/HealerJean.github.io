@@ -464,10 +464,16 @@ public class TestMain {
         taskExecutor.setKeepAliveSeconds(60);
         // threadPoolTaskExecutor
         taskExecutor.setThreadNamePrefix("threadPoolTaskExecutor");
-        // 调度器shutdown被调用时等待当前被调度的任务完成：用来设置线程池关闭的时候等待所有任务都完成再继续销毁其他的Bean
+
+        // 以下这两个配置选项通常一起使用，以确保线程池在关闭时能够优雅地处理所有任务，同时避免应用因为等待任务完成而无限期地挂起。例如，在Spring Boot应用中，你可能会在配置类中这样配置线程池
+        // 调设置为true时，线程池会等待所有已提交的任务（包括正在执行的和队列中等待的任务）完成后再关闭。这确保了所有任务都有机会执行完毕。
+        // 如果设置为false，线程池会立即尝试停止所有正在执行的任务，并且不再启动队列中等待的任务
         taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
-        //该方法用来设置线程池中任务的等待时间:如果超过这个时候还没有销毁就强制销毁，以确保应用最后能够被关闭，而不是阻塞住
+        // 用于设置线程池在尝试关闭时等待任务完成的最长时间（以秒为单位）。如果在指定的时间内，所有任务没有完成，线程池会强制停止所有正在执行的任务，并继续关闭过程。
+        // 这个参数与setWaitForTasksToCompleteOnShutdown(true)配合使用，确保即使在线程池关闭时，应用也不会无限期地等待任务完成，从而避免应用无法正常关闭的问题
         taskExecutor.setAwaitTerminationSeconds(60);
+
+
         taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         taskExecutor.initialize();
         log.info("Executor - threadPoolTaskExecutor injected!");

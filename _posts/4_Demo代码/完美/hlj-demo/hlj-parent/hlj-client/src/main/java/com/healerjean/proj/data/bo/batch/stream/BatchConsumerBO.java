@@ -15,7 +15,7 @@ import java.util.function.Consumer;
  */
 @Accessors(chain = true)
 @Data
-public class BatchConsumerBO<REQ> implements Serializable {
+public class BatchConsumerBO implements Serializable {
 
 
     /**
@@ -26,12 +26,12 @@ public class BatchConsumerBO<REQ> implements Serializable {
     /**
      * 请求
      */
-    private Consumer<REQ> consumer;
+    private Consumer<Object> consumer;
 
     /**
      * 请求对象
      */
-    private ReqBusinessBO<REQ> reqBusiness;
+    private ReqBusinessBO reqBusiness;
 
     /**
      * 返回对象
@@ -43,15 +43,15 @@ public class BatchConsumerBO<REQ> implements Serializable {
      * instance
      *
      */
-    public static <REQ> BatchConsumerBO<REQ> instance() {
-        return new BatchConsumerBO<REQ>()
-                .setReqBusiness(new ReqBusinessBO<>())
+    public static  BatchConsumerBO instance() {
+        return new BatchConsumerBO()
+                .setReqBusiness(new ReqBusinessBO())
                 .setResBusiness(new ResBusinessBO());
     }
 
     @Accessors(chain = true)
     @Data
-    public static class ReqBusinessBO<Req>{
+    public static class ReqBusinessBO{
 
         /**
          * 任务名
@@ -61,7 +61,7 @@ public class BatchConsumerBO<REQ> implements Serializable {
         /**
          * 请求对象
          */
-        private Req req;
+        private Object req;
 
         /**
          * 幂等对象
