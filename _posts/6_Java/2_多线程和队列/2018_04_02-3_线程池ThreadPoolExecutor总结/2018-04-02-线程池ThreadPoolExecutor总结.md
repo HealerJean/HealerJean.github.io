@@ -363,18 +363,18 @@ public ThreadPoolExecutor(int corePoolSize,
 
 ## 4、线程池信息统计
 
-| 方法           | 说明                                                         |
-| -------------- | ------------------------------------------------------------ |
-| 活动线程数     | executor.getActiveCount()                                    |
-| 当前线程数     | executor.getPoolSize()                                       |
-| 最大线程数     | executor.getMaximumPoolSize()                                |
-| 历史最大线程数 | executor.getLargestPoolSize()                                |
-| 线程池活跃度   | divide(executor.getActiveCount(), executor.getMaximumPoolSize()) |
-| 任务完成数     | executor.getCompletedTaskCount()                             |
-| 队列大小       | executor.getQueue().size() + executor.getQueue().remainingCapacity() |
-| 当前排队线程数 | executor.getQueue().size()                                   |
-| 队列剩余大小   | executor.getQueue().remainingCapacity()                      |
-| 队列使用度     | divide(executor.getQueue().size(), executor.getQueue().size() + executor.getQueue().remainingCapacity()) |
+| 方法           | 解释                                                         | 说明                                                         |
+| -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 活动线程数     | 返回当前正在执行任务的线程数量                               | executor.getActiveCount()                                    |
+| 当前线程数     | 返回线程池中当前线程的数量，包括空闲线程和活动线程           | executor.getPoolSize()                                       |
+| 最大线程数     | 返回线程池允许的最大线程数量。当工作队列满时，线程池可以创建的新线程的最大数量。 | executor.getMaximumPoolSize()                                |
+| 历史最大线程数 | 返回线程池在其生命周期中曾经达到的最大线程数量               | executor.getLargestPoolSize()                                |
+| 线程池活跃度   | 通过活动线程数除以最大线程数计算得出，表示线程池的当前活跃程度。值越接近1，表示线程池越忙碌。 | divide(executor.getActiveCount(), executor.getMaximumPoolSize()) |
+| 任务完成数     | 返回线程池已经成功完成的任务总数                             | executor.getCompletedTaskCount()                             |
+| 队列大小       |                                                              | executor.getQueue().size() + executor.getQueue().remainingCapacity() |
+| 当前排队线程数 | 回当前等待执行的任务数量，即已经提交但尚未开始执行的任务数量。 | executor.getQueue().size()                                   |
+| 队列剩余大小   | 返回队列还能容纳的任务数量，即队列的剩余空间。               | executor.getQueue().remainingCapacity()                      |
+| 队列使用度     | 通过当前排队线程数除以（当前排队线程数 + 队列剩余大小）计算得出，表示队列的使用程度 | divide(executor.getQueue().size(), executor.getQueue().size() + executor.getQueue().remainingCapacity()) |
 
 
 
