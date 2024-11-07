@@ -43,15 +43,13 @@ public class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements S
 >
 > 核心线程默认情况下会一直存活在线程池中，即使这个核心线程啥也不干(闲置状态)。   
 >
->  如果指定`ThreadPoolExecutor ` 的 `allowCoreThreadTimeOut`这个属性为 `true`，那么核心线程如果不干活(闲置状态)的话，超过一定时间(时长下面参数决定)，就会被销毁掉。
+>  如果指定 `ThreadPoolExecutor ` 的  `allowCoreThreadTimeOut`这个属性为 `true`，那么核心线程如果不干活(闲置状态)的话，超过一定时间(时长下面参数决定)，就会被销毁掉。
 
 
 
 ### 2）`int maximumPoolSize`： 线程池中线程总数最大值    
 
 > 线程总数 = 核心线程数 + 非核心线程数。
-
-
 
 
 
@@ -205,14 +203,14 @@ public class ScheduledThreadPoolExecutor extends ThreadPoolExecutor implements S
 如果将拒绝策略改为：`DiscardOldestPolicy` (丢弃队列中比较久的任务)   
 
 ```java
-    2016-08-04 22:31:58  pool-1-thread-1begin run task :0
-    2016-08-04 22:31:58  main thread before sleep!!!
-    2016-08-04 22:31:59  pool-1-thread-1 finish run  task :0
-    2016-08-04 22:31:59  pool-1-thread-1begin run task :9
-    2016-08-04 22:32:00  pool-1-thread-1 finish run  task :9
-    2016-08-04 22:32:02  before shutdown()
-    2016-08-04 22:32:02  after shutdown(),pool.isTerminated=false
-    2016-08-04 22:32:02  now,pool.isTerminated=true
+2016-08-04 22:31:58  pool-1-thread-1begin run task :0
+2016-08-04 22:31:58  main thread before sleep!!!
+2016-08-04 22:31:59  pool-1-thread-1 finish run  task :0
+2016-08-04 22:31:59  pool-1-thread-1begin run task :9
+2016-08-04 22:32:00  pool-1-thread-1 finish run  task :9
+2016-08-04 22:32:02  before shutdown()
+2016-08-04 22:32:02  after shutdown(),pool.isTerminated=false
+2016-08-04 22:32:02  now,pool.isTerminated=true
 ```
 
 从结果可以看出，只有`task0`和`task9`被执行了。
@@ -339,7 +337,7 @@ public ThreadPoolExecutor(int corePoolSize,
 
 5、如果 `workerCount` >= `maximumPoolSize`，并且线程池内的阻塞队列已满, 则根据拒绝策略来处理该任务, 默认的处理方式是直接抛异常。
 
-![image-20210730160103636](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730160103636.png)
+![image-20210730160103636](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20210730160103636.png)
 
 
 
@@ -385,10 +383,10 @@ public ThreadPoolExecutor(int corePoolSize,
 | **`RUNNING`**    | 能接受新提交的任务，并且也能处理阻塞队列中的任务。           |
 | **`SHUTDOWN`**   | 关闭状态，不再接受新提交的任务，但却可以继续处理阻塞队列中已保存的任务。 |
 | **`STOP`**       | 不能接受新任务，也不处理队列中的任务，会中断正在处理任务的线程。 |
-| **`TERMINATED`** | 在 `terminated() `方法执行完后进入该状态                     |
+| **`TERMINATED`** | 在 `terminated() ` 方法执行完后进入该状态                    |
 | **`TIDYING`**    | 所有的任务都已终止了，`workerCount` (有效线程数) 为 `0`      |
 
-![image-20210730155956344](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730155956344.png)
+![image-20210730155956344](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20210730155956344.png)
 
 
 
@@ -512,9 +510,7 @@ public class NewCachedThreadPooltest {
 
 **控制台执行结果，会发现虽然上面开启了10个线程，但是线程其实是有重复使用的，这样就大大节省了资源**   
 
-
-
-![1583116171179](D:\study\HealerJean.github.io\blogImages\1583116171179.png)   
+![1583116171179](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/1583116171179.png)   
 
 
 
@@ -613,7 +609,7 @@ while(true){
 
 #### c、`awaitTermination(long timeout,TimeUnit unit)`
 
-> `awaitTermination  `会一直等待，直到线程池状态为 `TERMINATED`(中断)或者 等待的时间到达了指定的时间。
+> `awaitTermination  ` 会一直等待，直到线程池状态为 `TERMINATED`(中断)或者 等待的时间到达了指定的时间。
 
 ```java
   exec.shutdown();
@@ -1306,7 +1302,7 @@ System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "期�
 
 # 3、业务实战
 
-## 3.1、业务背景
+## 1、业务背景
 
 ### 3.1.1、场景1：快速响应用户请求
 
@@ -1314,7 +1310,7 @@ System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "期�
 >
 > **分析**：从用户体验角度看，这个结果响应的越快越好，如果一个页面半天都刷不出，用户可能就放弃查看这个商品了。而面向用户的功能聚合通常非常复杂，伴随着调用与调用之间的级联、多级级联等情况，业务开发同学往往会选择使用线程池这种简单的方式，将调用封装成任务并行的执行，缩短总体响应时间。另外，使用线程池也是有考量的，这种场景最重要的就是获取最大的响应速度去满足用户，**所以应该不设置队列去缓冲并发任务，调高`corePoolSize` 和 `maxPoolSize` 去尽可能创造多的线程快速执行任务。**
 
-![image-20210730162000392](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730162000392.png)
+![image-20210730162000392](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20210730162000392.png)
 
 
 
@@ -1328,9 +1324,9 @@ System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "期�
 
 
 
-![image-20210730162010971](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730162010971.png)
+![image-20210730162010971](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20210730162010971.png)
 
-## 3.2、实际问题及方案思考
+## 2、实际问题及方案思考
 
 ### 3.2.1、问题1：最大核心数偏小，导致任务拒绝服务降级
 
@@ -1340,7 +1336,7 @@ System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "期�
 
 
 
-![image-20210730162233535](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730162233535.png)
+![image-20210730162233535](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20210730162233535.png)
 
 ### 3.2.2、问题2：队列过长，任务执行时间拉长，导致超时
 
@@ -1348,13 +1344,13 @@ System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "期�
 >
 > **事故原因**：该服务处理请求内部逻辑使用线程池做资源隔离，由于**队列设置过长**，最大线程数设置失效，导致请求数量增加时，大量任务堆积在队列中，任务执行时间过长，最终导致下游服务的大量调用超时失败。示意图如下：
 
-![image-20210730162412222](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730162412222.png)
+![image-20210730162412222](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20210730162412222.png)
 
 
 
 
 
-## 3.3、分析线程数
+## 3、分析线程数
 
 > 一个 `CPU` 核心，单位时间内只能执行一个线程的指令
 
@@ -1553,13 +1549,13 @@ public class CPUUtilizationTest{
 
 
 
-## 3.4、如何设置参数才合理
+## 4、如何设置参数才合理
 
 > 线程池使用面临的核心的问题在于：**线程池的参数并不好配置**。     
 >
 > ⬤ 一方面线程池的运行机制不是很好理解，配置合理需要强依赖开发人员的个人经验和知识；         
 >
-> ⬤ 另一方面，线程池执行的情况和任务类型相关性较大，`IO`密集型和`CPU`密集型的任务运行起来的情况差异非常大，这导致业界并没有一些成熟的经验策略帮助开发人员参考。    
+> ⬤ 另一方面，线程池执行的情况和任务类型相关性较大，`IO`密集型和 `CPU` 密集型的任务运行起来的情况差异非常大，这导致业界并没有一些成熟的经验策略帮助开发人员参考。    
 >
 > > 这导致业界并没有一些成熟的经验策略帮助开发人员参考，下面罗列了几个业界线程池参数配置方案：
 
@@ -1571,7 +1567,7 @@ public class CPUUtilizationTest{
 
 > **第一阶段**，单 `CPU` 时代，单 `CPU` 在同一时间点，只能执行单一线程。比如，的某一刻 00:00:00 这一秒，只计算1＋1=2（假设cpu每秒计算一次）          
 >
-> **第二阶段**，单 `CPU` 多任务阶段，计算机在同一时间点，并行执行多个线程。但这并非真正意义上的同时执行，而是多个任务共享一个`CPU`，操作系统协调`CPU`在某个时间点，执行某个线程，因为`CPU`在线程之间切换比较快，给人的感觉，就好像多个任务在同时运行。比如，电脑开了两个程序 `qq` 和 `qq`音乐，假设这两个程序都只有一个线程。人能够感觉到`CPU`切换的频率是一秒一次，假设当前 `cpu`计算速度是1秒1次，那么我们就能明显感到卡顿，当聊天，点击发送按钮时候，qq音乐就会停止运行。当前cpu计算速度是1秒`100`次，也就是它能在一秒之内在这两个进程见切换100次，那么我们就感不到卡顿，觉得QQ和QQ音乐是同时在运行。                 
+> **第二阶段**，单 `CPU` 多任务阶段，计算机在同一时间点，并行执行多个线程。但这并非真正意义上的同时执行，而是多个任务共享一个`CPU`，操作系统协调 `CPU` 在某个时间点，执行某个线程，因为`CPU`在线程之间切换比较快，给人的感觉，就好像多个任务在同时运行。比如，电脑开了两个程序 `qq` 和 `qq`音乐，假设这两个程序都只有一个线程。人能够感觉到`CPU`切换的频率是一秒一次，假设当前 `cpu`计算速度是1秒1次，那么我们就能明显感到卡顿，当聊天，点击发送按钮时候，qq音乐就会停止运行。当前cpu计算速度是1秒`100`次，也就是它能在一秒之内在这两个进程见切换100次，那么我们就感不到卡顿，觉得QQ和QQ音乐是同时在运行。                 
 >
 > **第三阶段**，多 `CPU` 多任务阶段，真正实现的，在同一时间点运行多个线程。具体到哪个线程在哪个 `CPU`执行，这就跟操作系统和`CPU`本身的设计有关了。
 
@@ -1669,7 +1665,7 @@ public class CPUTypeTest implements Runnable {
 
 > 测试代码在 `4` 核 `intel i5 CPU` 机器上的运行时间变化如下：
 
-![image-20210730144823839](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730144823839.png)
+![image-20210730144823839](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20210730144823839.png)
 
 **总结：**
 
@@ -1762,7 +1758,7 @@ public class IOTypeTest implements Runnable {
 
 **分析：**
 
-![image-20210730145243354](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730145243354.png)
+![image-20210730145243354](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20210730145243354.png)
 
 
 
@@ -1836,7 +1832,7 @@ public class IOTypeTest implements Runnable {
 
 
 
-![image-20210730163623141](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730163623141.png)
+![image-20210730163623141](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20210730163623141.png)
 
 #### 3.4.3.2、使用场景参数配置
 
@@ -1878,7 +1874,7 @@ public class IOTypeTest implements Runnable {
 >
 > ⬤ 与之相反，如果请求数大于线程池大小，事情就有点复杂了,因为不可能无限放大线程池线程数，也不能无限放大线程池队列数，太大了，服务会崩溃掉。所以最好的办法就是通过压力测试来合理的设置线程池大小。
 
-![image-20210730164313732](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/image-20210730164313732.png)
+![image-20210730164313732](/Users/healerjean/Desktop/HealerJean/HCode/HealerJean.github.io/blogImages/image-20210730164313732.png)
 
 
 
@@ -1947,6 +1943,21 @@ public class IOTypeTest implements Runnable {
 **7、线程上下文使用风险：**许多场景会通过线程上下文传递数据，容易出现线程上下文污染现象（其他任务读取到错误的线程上下文数据），在任务退出前需确保所有线程上下文数据完成清理。
 
 
+
+## 5、常见业务线程池配置
+
+### 1）`JSF` 线程池
+
+> 一个端口（即一个jsf:server）后有一个业务线程池。目前业务线程池支持固定（ `fixed` ）和伸缩的（ `cached`）两种线程池类型。通过配置 `threadpool` 线程池类型，通过 `threads` 配置最大线程数。业务线程池同时支持队列，可通过 `queuetype` 配置线程池队列类型，通过 `queues` 参数配置队列大小。
+
+
+
+|                              | 线程池类型 | 初始线程数 | 最大线程数 | 队列大小 | 说明                                                         | 优点                                                         | 缺点                   |
+| ---------------------------- | ---------- | ---------- | ---------- | -------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------- |
+| 伸缩有队列线程池             | cached     | 20         | 100        | 256      | 任务来了先丢到队列中，队列满了才会增加线程，直到线程满， 得不到执行线程抛异常 | 节约线程资源，空闲一分钟自动回收，需要时重建； 队列带来一定的并发缓冲功能 | 队列带来一定的执行延迟 |
+| 伸缩无队列线程池（**默认**） | cached     | 20         | 200        | 0        | 任务来了直接分配线程，直到线程池满，得不到执行线程抛异常     | 节约线程资源，空闲一分钟自动回收，需要时重建；               | 并发突然变大无缓冲     |
+| 固定有队列线程池             | fixed      | 100        | 100        | 256      | 线程数量固定，没有拿到线程丢到队列里，得不到执行线程抛异常   | 没有线程伸缩带来的性能问题； 队列带来一定的并发缓冲功能      | 队列带来一定的执行延迟 |
+| 固定无队列线程池             | fixed      | 200        | 200        | 0        | 线程数量固定，得不到执行线程抛异常                           | 没有线程伸缩带来的性能问题                                   | 并发突然变大无缓冲     |
 
 
 

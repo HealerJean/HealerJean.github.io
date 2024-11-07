@@ -16,7 +16,7 @@ description: SpringBoot之_ SmartLifecycle自定义生命周期
 
 
 
-# 1、引入
+# 一、`Lifecycle`
 
 >  在使用`Spring` 开发时，我们都知道，所有`bean`都交给 `Spring` 容器来统一管理，其中包括每一个`bean`的加载和初始化。       
 >
@@ -28,7 +28,43 @@ description: SpringBoot之_ SmartLifecycle自定义生命周期
 
 
 
-## 1.1、样例
+## 1、基本介绍
+
+### 1）`start`
+
+> ⬤ **容器 `refresh` 时**：在 `Spring` 容器执行 `refresh` 方法的最后阶段，即 `finishRefresh` 阶段，会实例化所有的单例对象。此后，会获取所有的生命周期处理器，并根据 `phase` 分组，然后以组为单位执行 `start` 方法。不过，需要注意的是，只有在 `bean`的`isRunning()` 方法返回 `false` 时，才会执行其 `start()` 方法。    
+>
+> **自动启动**：对于实现了 `SmartLifecycle` 接口的 `bean` ，如果其 `isAutoStartup()` 方法返回 `true`（这也是默认值），则容器会在适当的时候自动调用其 `start()` 方法，而不需要显式地调用。
+
+
+
+### 2）`stop`
+
+> **容器 `close` 时**：当 `Spring` 容器关闭时，会优化执行所有实现了 `SmartLifecycle` 接口的 `bean` 的 `stop` 方法，以进行资源的清理和释放。    
+>
+> **回调执行**：`SmartLifecycle` 接口还提供了一个 `stop(Runnable callback)` 方法，允许在停止生命周期组件后执行一个回调。
+
+
+
+### 3）使用场景
+
+> `SmartLifecycle` 接口通常用于需要在`Spring` 容器完全启动之前或之后执行特定任务的场景。    
+>
+> > 例如，在 `Spring` `Boot` 应用中，可能需要一些组件在数据库连接建立之后才能启动，或者需要在某些服务注册到 `Eureka` 服务器之后才能启动。通过使用 `SmartLifecycle`接口，可以确保这些组件在依赖条件满足后按正确的顺序启动。
+
+
+
+### 4）注意事项
+
+> 1、实现 `SmartLifecycle` 接口的 `bean` 必须是单例的。   
+>
+> 2、如果需要控制 `SmartLifecycle` 实例的启动顺序，可以通过实现 `getPhase()` 方法来返回一个整数值，数值越小，启动越早。
+
+
+
+
+
+## 2、案例
 
 ```java
 package com.sankuai.windmill.riding.mafka.consumer;

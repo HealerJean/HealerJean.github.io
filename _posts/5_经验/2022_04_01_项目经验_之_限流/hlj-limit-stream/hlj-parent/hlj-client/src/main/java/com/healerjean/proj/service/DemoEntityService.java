@@ -1,6 +1,6 @@
 package com.healerjean.proj.service;
 
-import com.healerjean.proj.dto.Demo.DemoDTO;
+import com.healerjean.proj.dto.demo.DemoDTO;
 
 /**
  * @Desc:

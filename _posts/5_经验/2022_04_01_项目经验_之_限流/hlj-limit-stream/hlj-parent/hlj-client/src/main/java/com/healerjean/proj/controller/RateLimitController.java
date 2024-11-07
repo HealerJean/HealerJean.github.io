@@ -1,7 +1,7 @@
 package com.healerjean.proj.controller;
 
 import com.healerjean.proj.common.ResponseBean;
-import com.healerjean.proj.dto.Demo.DemoDTO;
+import com.healerjean.proj.dto.demo.DemoDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
