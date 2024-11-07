@@ -1,4 +1,4 @@
-package com.healerjean.proj.dto.Demo;
+package com.healerjean.proj.dto.demo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.healerjean.proj.common.ValidateGroup;

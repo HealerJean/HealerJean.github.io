@@ -60,7 +60,7 @@ BeanUtils.copyProperties(appsApp,data,ignore);
 
 ## 1、对象构建
 
-### 1）、`pom`依赖
+### 1）`pom`依赖
 
 ```xml
 <org.mapstruct.version>1.3.0.Final</org.mapstruct.version>
@@ -184,7 +184,7 @@ public interface SystemEmum {
 
 ## 2、使用说明
 
-### 1）、字段映射
+### 1）字段映射
 
 #### a、嵌套字段映射
 
@@ -465,9 +465,7 @@ interface DeliveryAddressMapper {
 
 
 
-## 3、注意事项
-
-### 1）浅拷贝非深拷贝
+### 6）浅拷贝非深拷贝
 
 > `MapStruct` 在进行对象拷贝时，主要执行的是**浅拷贝**操作。浅拷贝意味着它会创建目标对象的一个新实例，并复制源对象的所有属性值。然而，如果源对象的属性值是引用类型（如对象、数组等），则 `MapStruct` 会复制这个引用地址，而不是引用的对象本身。因此，如果源对象中的引用类型属性发生了变化，那么这些变化也会反映到通过 `MapStruct` 拷贝得到的目标对象中。   
 >
@@ -496,7 +494,28 @@ public static void main(String[] args) {
   }
 ```
 
-**正例：**
+
+
+#### a、实现
+
+```java
+@Mapper
+public interface ActivityMapper {
+
+    ActivityMapper INSTANCE = Mappers.getMapper(ActivityMapper.class);
+
+    @Mappings({@Mapping(target = "activityRule",expression = 
+                        "java(deepCopyRule(activity.getActivityRule()))")})
+    Activity deepCopy(Activity activity);
+
+    ActivityRule  deepCopyRule(ActivityRule activityRule);
+
+}
+```
+
+
+
+#### b、其他序列化方式
 
 > `SerializationUtils` 是  `Apache` `Commons` `Lang` 库中的一个工具类，它提供了基于 Java 序列化机制的对象序列化和反序列化功能。虽 然 `SerializationUtils` 本质上是通过序列化/反序列化来实现对象的深拷贝，但它为开发者提供了一个简洁的 API 来完成这一任务，而无需直接处理 `ObjectOutputStream` 和 `ObjectInputStream`。    
 >

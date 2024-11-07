@@ -1,4 +1,4 @@
-package com.healerjean.proj.aspect;
+package com.healerjean.proj.config.aspect;
 
 import com.google.common.util.concurrent.RateLimiter;
 import com.healerjean.proj.util.limit.RateLimiterPropertyUtil;

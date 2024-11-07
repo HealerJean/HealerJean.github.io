@@ -3,7 +3,7 @@ package com.healerjean.proj.controller;
 import com.healerjean.proj.common.ValidateGroup;
 import com.healerjean.proj.service.DemoEntityService;
 import com.healerjean.proj.common.constant.CommonConstants;
-import com.healerjean.proj.dto.Demo.DemoDTO;
+import com.healerjean.proj.dto.demo.DemoDTO;
 import com.healerjean.proj.common.ResponseBean;
 import com.healerjean.proj.common.enums.ResponseEnum;
 import com.healerjean.proj.common.exception.BusinessException;

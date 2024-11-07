@@ -1,6 +1,6 @@
 package com.healerjean.proj.service.impl;
 
-import com.healerjean.proj.dto.Demo.DemoDTO;
+import com.healerjean.proj.dto.demo.DemoDTO;
 import com.healerjean.proj.service.DemoEntityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
