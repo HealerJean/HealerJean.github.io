@@ -7,12 +7,10 @@ import com.healerjean.proj.data.bo.BigKeyDataBO;
 import com.healerjean.proj.service.RedisService;
 import com.healerjean.proj.utils.JsonUtils;
 import com.healerjean.proj.utils.SpringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -57,10 +55,12 @@ public class BigKeyCacheUtils {
      * 大数据量-IdSize查询全部
      */
     public static <R> void cacheBigDayData(BigKeyDataBO<R> bigKeyBo) {
-        long uuid = System.currentTimeMillis();
         RedisService redisService = SpringUtils.getBean(RedisService.class);
         RedisConstants.BigCacheEnum cacheEnum = bigKeyBo.getCacheEnum();
-
+        if (StringUtils.isBlank(bigKeyBo.getUuid())){
+            bigKeyBo.setUuid(String.valueOf(System.currentTimeMillis()));
+        }
+        String uuid = bigKeyBo.getUuid();
         int size = cacheEnum.getValueSize();
         List<R> readyList = bigKeyBo.getReadyList();
         while (readyList.size() >= size) {
@@ -80,15 +80,20 @@ public class BigKeyCacheUtils {
             readyList.removeAll(removes);
         }
         if (bigKeyBo.getEndFlag() && !CollectionUtils.isEmpty(readyList)) {
+            String smallKey = cacheEnum.join(bigKeyBo.getIndex(), uuid);
             Map<String, Double> map = readyList.stream().collect(Collectors.toMap(JsonUtils::toString, v -> Double.valueOf(ReflectUtil.getFieldValue(v, "id").toString())));
-            redisService.zAdd(cacheEnum.join(bigKeyBo.getIndex(), uuid), map);
-            redisService.expire(cacheEnum.join(bigKeyBo.getIndex(), uuid), cacheEnum.getExpireSec());
+            redisService.zAdd(smallKey, map);
+            redisService.expire(smallKey, cacheEnum.getExpireSec());
             bigKeyBo.setIndex(bigKeyBo.getIndex() + 1);
+            readyList.clear();
         }
 
         if (bigKeyBo.getEndFlag()){
             bigKeyBo.setIndex(bigKeyBo.getIndex()-1);
-            redisService.set(cacheEnum.join(), uuid + "_" + bigKeyBo.getIndex().toString(), cacheEnum.getExpireSec());
+            String value = uuid + "_" + bigKeyBo.getIndex().toString();
+            redisService.set(cacheEnum.join(), value, cacheEnum.getExpireSec());
+            bigKeyBo.setKey(cacheEnum.join());
+            bigKeyBo.setValue(value);
         }
     }
 
