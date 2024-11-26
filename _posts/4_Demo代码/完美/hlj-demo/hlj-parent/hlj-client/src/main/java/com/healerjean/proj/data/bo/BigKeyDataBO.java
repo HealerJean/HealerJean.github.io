@@ -28,6 +28,21 @@ public class BigKeyDataBO<T> implements Serializable {
      */
     private RedisConstants.BigCacheEnum cacheEnum;
 
+
+    /**
+     * key
+     */
+    private String key;
+    /**
+     * value
+     */
+    private String value;
+
+    /**
+     * uuid
+     */
+    private String uuid;
+
     /**
      * 小key缓存索引，默认从1开始
      */
