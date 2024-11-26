@@ -4,8 +4,6 @@ package com.healerjean.proj.data.dao;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.healerjean.proj.data.po.UserDemo;
 
-import java.util.List;
-
 /**
  * UserDemoDao
  *
@@ -14,13 +12,5 @@ import java.util.List;
  */
 public interface UserDemoDao extends IService<UserDemo> {
 
-
-    /**
-     * 根据唯一索引插入或更新
-     *
-     * @param userDemos userDemos
-     * @return {@link boolean}
-     */
-    boolean saveOrUpdateBatchByUniqueKey(List<UserDemo> userDemos);
 
 }

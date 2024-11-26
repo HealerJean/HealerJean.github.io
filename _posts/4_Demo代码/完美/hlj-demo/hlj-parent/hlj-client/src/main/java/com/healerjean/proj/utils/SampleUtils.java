@@ -1,8 +1,8 @@
 package com.healerjean.proj.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -17,32 +17,7 @@ public final class SampleUtils {
 
 
     /**
-     * isNullOr0
-     *
-     * @param obj obj
-     * @return boolean
-     */
-    public static boolean isNullOr0(Object obj) {
-        if (Objects.isNull(obj)) {
-            return true;
-        }
-        if (obj instanceof BigDecimal) {
-            return Objects.equals(BigDecimal.ZERO, new BigDecimal(String.valueOf(obj)));
-        }
-
-        if (obj instanceof Long) {
-            return Objects.equals(0L, Long.valueOf(obj.toString()));
-        }
-
-        if (obj instanceof Integer) {
-            return Objects.equals(0, Integer.valueOf(obj.toString()));
-        }
-        throw new RuntimeException("非法比较,请补充用例");
-    }
-
-
-    /**
-     * 判断全部相等
+     * 全部相等
      *
      * @param obj  str
      * @param objs stars
@@ -65,41 +40,74 @@ public final class SampleUtils {
 
 
     /**
-     * 判断是否是int
+     * 所有属性都不为null
      *
-     * @param str str
-     * @return boolean
+     * @param objs stars
+     * @return {@link boolean}
      */
-    public static boolean isInteger(String str) {
-        if (str == null) {
+    public static boolean allNotNull(Object... objs) {
+        if (Objects.isNull(objs)) {
             return false;
         }
-        try {
-            Integer.valueOf(str);
-            return true;
-        } catch (Exception e) {
-            log.info("[SampleUtils#isInteger] str:{} 非int", str);
-            return false;
-        }
+        return Arrays.stream(objs).allMatch(Objects::nonNull);
     }
 
     /**
-     * 判断是否是long
+     * 所有属性存在null
      *
-     * @param str str
+     * @param objs stars
      * @return {@link boolean}
      */
-    public static boolean isLong(String str) {
-        if (str == null) {
+    public static boolean existNotNull(Object... objs) {
+        if (Objects.isNull(objs)) {
             return false;
         }
-        try {
-            Long.valueOf(str);
-            return true;
-        } catch (Exception e) {
-            log.info("[SampleUtils#isLong] str:{} 非long", str);
+        return Arrays.stream(objs).anyMatch(Objects::nonNull);
+    }
+
+
+    /**
+     * 所有属性存在null
+     *
+     * @param objs stars
+     * @return {@link boolean}
+     */
+    public static boolean existNull(Object... objs) {
+        if (Objects.isNull(objs)) {
             return false;
         }
+        return Arrays.stream(objs).anyMatch(Objects::isNull);
+    }
+
+
+
+
+    @Test
+    public void test() {
+        System.out.println(allEquals("123", "123", "123"));
+        // true
+        System.out.println(allEquals("123", "456", "123"));
+        // false
+
+        System.out.println(existEquals("123", "123", "45"));
+        // true
+        System.out.println(existEquals("123", "456", "678"));
+        // false
+
+        System.out.println(allNotNull("23423", "2234"));
+        // true
+        System.out.println(allNotNull(null, "2234"));
+        // false
+
+        System.out.println(existNull(null, "2234"));
+        // true
+        System.out.println(existNull("23423", "2234"));
+        // false
+
+        System.out.println(existNotNull(null, "2234"));
+        // true
+        System.out.println(existNotNull(null, null));
+
     }
 
 

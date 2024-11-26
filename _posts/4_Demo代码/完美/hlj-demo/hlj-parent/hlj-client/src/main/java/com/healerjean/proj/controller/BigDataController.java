@@ -3,9 +3,11 @@ package com.healerjean.proj.controller;
 import com.google.common.collect.Lists;
 import com.healerjean.proj.common.anno.LogIndex;
 import com.healerjean.proj.common.data.bo.BaseRes;
+import com.healerjean.proj.data.bo.BigKeyDataBO;
 import com.healerjean.proj.data.bo.UserDemoBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
 import com.healerjean.proj.data.converter.UserConverter;
+import com.healerjean.proj.data.po.UserDemo;
 import com.healerjean.proj.data.req.UserDemoQueryReq;
 import com.healerjean.proj.data.vo.UserDemoVO;
 import com.healerjean.proj.service.BidDataService;
@@ -55,13 +57,13 @@ public class BigDataController {
         return BaseRes.buildSuccess(userDemoVos);
     }
 
-    @ApiOperation("大数据量-IdSize查询全部")
+    @ApiOperation("大数据量-IdCursor查询全部")
     @LogIndex(resFlag = false)
     @GetMapping("user/queryAllUserDemoByIdSize")
     @ResponseBody
-    public BaseRes<List<UserDemoVO>> queryAllUserDemoByIdSize(UserDemoQueryReq req) {
+    public BaseRes<List<UserDemoVO>> queryAllUserDemoByIdCursor(UserDemoQueryReq req) {
         UserDemoQueryBO userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
-        List<UserDemoBO> list = bidDataService.queryAllUserDemoByIdSize(userDemoPageQuery);
+        List<UserDemoBO> list = bidDataService.queryAllUserDemoByIdCursor(userDemoPageQuery);
         List<UserDemoVO> userDemoVos = UserConverter.INSTANCE.covertUserDemoBoToVoList(list);
         return BaseRes.buildSuccess(userDemoVos);
     }
@@ -133,7 +135,7 @@ public class BigDataController {
     @LogIndex(resFlag = false)
     @GetMapping("user/bigKeyCache")
     @ResponseBody
-    public BaseRes<Long> bigKeyCache(UserDemoQueryReq req) {
+    public BaseRes<BigKeyDataBO<UserDemo>> bigKeyCache(UserDemoQueryReq req) {
         UserDemoQueryBO userDemoPageQuery = UserConverter.INSTANCE.covertUserDemoQueryReqToBo(req);
         return BaseRes.buildSuccess(bidDataService.bigKeyCache(userDemoPageQuery));
     }

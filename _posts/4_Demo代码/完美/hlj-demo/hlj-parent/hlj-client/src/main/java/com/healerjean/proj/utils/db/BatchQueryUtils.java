@@ -95,7 +95,7 @@ public final class BatchQueryUtils {
      * 大数据量-IdSize查询全部(消费)
      *
      */
-    public static <R> void queryAllByIdSizeConsumer(Function<IdQueryBO, List<R>> function, Consumer<List<R>> consumer, long pageSize) {
+    public static <R> void queryAllByIdCursorConsumer(Function<IdQueryBO, List<R>> function, Consumer<List<R>> consumer, long pageSize) {
 
         IdQueryBO idQuery = new IdQueryBO(0L, pageSize);
         while (true) {

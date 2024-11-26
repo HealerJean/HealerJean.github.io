@@ -1,7 +1,9 @@
 package com.healerjean.proj.data.bo;
 
+import com.healerjean.proj.common.contants.RedisConstants;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.apache.commons.compress.utils.Lists;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.List;
  */
 @Accessors(chain = true)
 @Data
-public class BigKeyBO<T> implements Serializable {
+public class BigKeyDataBO<T> implements Serializable {
 
     /**
      * serialVersionUID
@@ -22,19 +24,19 @@ public class BigKeyBO<T> implements Serializable {
     private static final long serialVersionUID = -7560782834954336712L;
 
     /**
-     * 小key缓存索引
+     * 缓存key
      */
-    private Long minKeyIndex;
+    private RedisConstants.BigCacheEnum cacheEnum;
 
     /**
-     * 小Key缓存数量
+     * 小key缓存索引，默认从1开始
      */
-    private Long minValueSize;
+    private Long index = 1L;
 
     /**
      * 查询是否结束
      */
-    private Boolean endFlag;
+    private Boolean endFlag = false;
 
     /**
      * 待缓存对象
@@ -42,8 +44,8 @@ public class BigKeyBO<T> implements Serializable {
     private List<T> readyList;
 
     /**
-     * 总数
+     * 总数据
      */
-    private Long count;
+    private List<T> data = Lists.newArrayList();
 
 }

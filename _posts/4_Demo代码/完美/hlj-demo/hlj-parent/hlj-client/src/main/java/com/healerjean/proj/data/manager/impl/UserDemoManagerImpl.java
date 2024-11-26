@@ -235,7 +235,7 @@ public class UserDemoManagerImpl implements UserDemoManager {
      * @param idQueryBO idQueryBO
      */
     @Override
-    public List<UserDemo> queryUserDemoByIdSize(IdQueryBO idQueryBO, UserDemoQueryBO query) {
+    public List<UserDemo> queryUserDemoByIdCursor(IdQueryBO idQueryBO, UserDemoQueryBO query) {
         QueryWrapper<UserDemo> queryWrapper = new QueryWrapper<>();
         if (!CollectionUtils.isEmpty(query.getSelectFields())) {
             queryWrapper.select(StringUtils.join(query.getSelectFields(), ","));
@@ -300,24 +300,4 @@ public class UserDemoManagerImpl implements UserDemoManager {
     }
 
 
-    /**
-     * 批量保存
-     *
-     * @param users users
-     */
-    @Override
-    public void batchSaveOrUpdateUserDemo(List<UserDemo> users) {
-        userDemoDao.saveOrUpdateBatch(users);
-    }
-
-
-    /**
-     * 根据唯一索引批量保存或更新
-     *
-     * @param users users
-     */
-    @Override
-    public void saveOrUpdateBatchByCondition(List<UserDemo> users) {
-        userDemoDao.saveOrUpdateBatchByUniqueKey(users);
-    }
 }

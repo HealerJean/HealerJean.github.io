@@ -125,12 +125,13 @@ public class RedisConstants {
         /**
          * Redis的缓存Key
          */
-        BIG_KEY("BIG_KEY", "公共CACHE",  3000L, 60 * 10),
+        BIG_KEY("BIG_KEY", "公共CACHE",  2, 60 * 10),
         ;
         /**
          * key
          */
         private final String code;
+
         /**
          * 含义
          */
@@ -139,7 +140,8 @@ public class RedisConstants {
         /**
          * 单个小Key存储多少value
          */
-        private final Long valueSize;
+        private final Integer valueSize;
+
         /**
          * 超时时长
          * 单位秒
@@ -153,8 +155,7 @@ public class RedisConstants {
          * @return 得到的Key
          */
         public String join(Object... args) {
-            StringBuilder sb = new StringBuilder(SERVER_NAME).append(SPLIT)
-                    .append(CACHE).append(SPLIT).append(code);
+            StringBuilder sb = new StringBuilder(SERVER_NAME).append(SPLIT).append(code);
             if (null == args || args.length < 1) {
                 return sb.toString();
             }

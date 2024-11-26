@@ -1,7 +1,9 @@
 package com.healerjean.proj.service;
 
+import com.healerjean.proj.data.bo.BigKeyDataBO;
 import com.healerjean.proj.data.bo.UserDemoBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;
+import com.healerjean.proj.data.po.UserDemo;
 
 import java.util.List;
 import java.util.concurrent.CompletionService;
@@ -46,7 +48,7 @@ public interface BidDataService {
      * @param queryBo queryBo
      * @return List<UserDemoBO>
      */
-    List<UserDemoBO> queryAllUserDemoByIdSize(UserDemoQueryBO queryBo);
+    List<UserDemoBO> queryAllUserDemoByIdCursor(UserDemoQueryBO queryBo);
 
     /**
      * 大数据量-Id区间查询全部
@@ -61,5 +63,5 @@ public interface BidDataService {
      *
      * @param queryBO queryBO
      */
-    Long bigKeyCache(UserDemoQueryBO queryBO);
+    BigKeyDataBO<UserDemo> bigKeyCache(UserDemoQueryBO queryBO);
 }
