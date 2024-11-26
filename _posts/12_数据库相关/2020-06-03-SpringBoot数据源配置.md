@@ -168,7 +168,7 @@ jdbc:数据库类型://主机名:端口号/数据库名?参数1=值1&参数2=值
 
 | 参数            | 说明                                                         |
 | --------------- | ------------------------------------------------------------ |
-| **jdbc**:       | 前缀表明这是一个JDBC（Java Database Connectivity）连接。     |
+| **`jdbc`**:     | 前缀表明这是一个JDBC（Java Database Connectivity）连接。     |
 | **数据库类型**: | 如`mysql`、`postgresql`、`oracle`等，指明了要连接的数据库类型。 |
 | **主机名**:     | 数据库服务器的IP地址或域名。                                 |
 | **端口号**:     | 数据库服务监听的端口，不同的数据库类型和服务配置可能使用不同的端口号。 |
@@ -231,7 +231,7 @@ jdbc:mysql://healerjean.com:3306/healerjean?createDatabaseIfNotExist=true&charac
 
 # 四、项目应用
 
-## 1、MT (70多台机器呢)
+## 1、`MT`  (`70` 多台机器呢)
 
 ```java
   private int minPoolSize = 5;

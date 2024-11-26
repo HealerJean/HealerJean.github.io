@@ -1,6 +1,6 @@
 package com.healerjean.proj.config;
 
-import com.healerjean.proj.data.bo.QpsRateLimitBO;
+import com.healerjean.proj.utils.QpsRateLimitUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -23,6 +23,6 @@ public class QpsRateLimitConfiguration {
     /**
      * 限流集合
      */
-    private Map<String, QpsRateLimitBO> limitConfig;
+    private Map<String, QpsRateLimitUtils.QpsRateLimitDTO> limitConfig;
 
 }

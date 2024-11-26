@@ -60,5 +60,5 @@ qps:
   limitConfig:
     get:
       openFlag: true
-      limitThreshold: 0.2
+      limit: 0.2
 

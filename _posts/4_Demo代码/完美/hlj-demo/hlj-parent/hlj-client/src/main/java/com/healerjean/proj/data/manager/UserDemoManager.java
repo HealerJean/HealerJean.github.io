@@ -100,16 +100,7 @@ public interface UserDemoManager {
      * @param userDemoQueryBO userDemoQueryBO
      * @return List<UserDemo>
      */
-    List<UserDemo> queryUserDemoByIdSize(IdQueryBO idQueryBO, UserDemoQueryBO userDemoQueryBO);
+    List<UserDemo> queryUserDemoByIdCursor(IdQueryBO idQueryBO, UserDemoQueryBO userDemoQueryBO);
 
 
-    /**
-     * 批量保存
-     *
-     * @param users users
-     */
-    void batchSaveOrUpdateUserDemo(List<UserDemo> users);
-
-
-    void saveOrUpdateBatchByCondition(List<UserDemo> users);
 }
