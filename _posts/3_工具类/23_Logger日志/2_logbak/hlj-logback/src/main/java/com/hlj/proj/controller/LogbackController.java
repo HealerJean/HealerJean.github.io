@@ -45,12 +45,11 @@ public class LogbackController {
 
     @LogIndex
     @GetMapping("logJson")
-    public UserDTO logJson(HttpServletRequest request) {
+    public UserDTO logJson() {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(0L);
         userDTO.setName("HealerJean");
         log.info("userDTO：{}, name：{}", userDTO, userDTO.getName());
-        log.info("request:{}", JsonUtils.toJsonString(request));
         return userDTO;
     }
 

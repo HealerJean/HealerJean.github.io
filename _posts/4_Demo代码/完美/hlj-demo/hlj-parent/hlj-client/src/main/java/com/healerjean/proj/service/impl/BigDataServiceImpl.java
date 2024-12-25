@@ -39,11 +39,6 @@ public class BigDataServiceImpl implements BidDataService {
     @Resource
     private UserDemoManager userDemoManager;
 
-    /**
-     * redisService
-     */
-    @Resource
-    private RedisService redisService;
 
     /**
      * 大数据量-分页查询全部
