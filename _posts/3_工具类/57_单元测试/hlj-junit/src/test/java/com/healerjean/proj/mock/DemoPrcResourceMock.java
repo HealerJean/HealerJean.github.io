@@ -14,7 +14,10 @@ public class DemoPrcResourceMock {
      * @return String
      */
     public static Answer<String> rpcInvoke() {
-        return invocation -> "rpcInvoke";
+        return invocation ->{
+            Object[] arguments = invocation.getArguments();
+            return  "rpcInvoke";
+        };
     }
 
 

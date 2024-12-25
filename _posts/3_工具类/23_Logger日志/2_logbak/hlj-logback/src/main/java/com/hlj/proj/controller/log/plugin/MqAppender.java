@@ -5,6 +5,7 @@ import ch.qos.logback.core.Layout;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.stereotype.Service;
 
 /**
  * LogMqAppender
@@ -12,6 +13,7 @@ import lombok.EqualsAndHashCode;
  * @author zhangyujin
  * @date 2024/3/29
  */
+@Service
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class MqAppender extends  UnsynchronizedAppenderBase<ILoggingEvent>{
@@ -63,8 +65,8 @@ public class MqAppender extends  UnsynchronizedAppenderBase<ILoggingEvent>{
 
         // 打印信息
         String message = event.getMessage();
-        System.out.print(params + "：" + logInfo);
-        System.out.print(params + "：" + message);
+        System.out.print(params + "：" + logInfo + "\n");
+        System.out.print(params + "：" + message+ "\n");
 
     }
 }
