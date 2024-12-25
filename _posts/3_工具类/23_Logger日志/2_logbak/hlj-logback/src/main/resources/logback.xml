@@ -118,9 +118,7 @@
         <!-- 一个异步appender 只能对应一个同步的appender。 -->
         <appender-ref ref="BIZ_FILE"/>
     </appender>
-    <logger name="BIZ_LOG" additivity="false" level="INFO">
-        <appender-ref ref="BIZ_FILE"/>
-    </logger>
+
 
 
 
@@ -146,7 +144,9 @@
         <params>HEALER_JEAN:</params>
     </appender>
 
-
+    <logger name="BIZ_LOG" additivity="false" level="INFO">
+        <appender-ref ref="BIZ_FILE"/>
+    </logger>
 
     <!--以配置文件application.properties 中为主，如果配置文件中不存在以它为主-->
     <root level="debug">

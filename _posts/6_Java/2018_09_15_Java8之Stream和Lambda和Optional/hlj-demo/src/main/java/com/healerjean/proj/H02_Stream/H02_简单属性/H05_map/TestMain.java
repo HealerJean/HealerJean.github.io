@@ -36,7 +36,7 @@ public class TestMain {
                 new Person(3L, "c"));
         //二者一样
         List<String> names = personList.stream().map(Person::getName).collect(Collectors.toList());
-        names = personList.stream().collect(Collectors.mapping(item -> item.getName(), Collectors.toList()));
+        names = personList.stream().map(Person::getName).collect(Collectors.toList());
 
         List<Long> ids = personList.stream().map(Person::getId).collect(Collectors.toList());
 

@@ -957,22 +957,35 @@ public void test2() {
 
 ```java
 
-@Test
-public void test2() {
-    List<Person> personList = Arrays.asList(
-        new Person(1L, "a"),
-        new Person(1L, "b"),
-        new Person(2L, "b"),
-        new Person(2L, "b"));
+  /**
+   * 2、去重
+   */
+  @Test
+  public void test2() {
+      List<Person> personList = Arrays.asList(
+              new Person(1L, "a"),
+              new Person(1L, "b"),
+              new Person(2L, "b"),
+              new Person(2L, "b"));
 
-    //多属性去重
-    collect = personList.stream().collect(
-        Collectors.collectingAndThen(
-            Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(o -> o.getName() + ":" + o.getId()))),
-            ArrayList::new));
-    System.out.println(collect);
+      //单属性去重 1
+      List<Person> collect = personList.stream().collect(
+              Collectors.collectingAndThen(
+                      Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Person::getName))),
+                      ArrayList::new));
+      System.out.println(collect);
 
-}
+      //单属性去重 2
+      collect = new ArrayList<>(personList.stream().collect(Collectors.toMap(Person::getName, Function.identity(), (existing, replacement) -> existing)).values());
+      System.out.println(collect);
+
+      //多属性去重 1
+      collect = personList.stream().collect(
+              Collectors.collectingAndThen(
+                      Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(o -> o.getName() + ":" + o.getId()))),
+                      ArrayList::new));
+      System.out.println(collect);
+  }
 ```
 
 
