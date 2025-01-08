@@ -57,12 +57,12 @@ spring:
           username: root
           password: 12345678
 qps:
-  limitConfig:
+  limit-config:
     get:
       limit: 0.2
 gray:
-  grayBizMap:
-    businessDemo:
+  gray-biz-map:
+    business-demo:
       whiteInfos:
         - 4
         - 5
@@ -74,8 +74,12 @@ gray:
       rate: 2
       amount: 10
 filter:
-  compressedBizMap:
+  compressed-config-map:
     default:
-      key: initKey
       expireSeconds: 3600
       bucketSize: 65536
+  bloom-config-map:
+    default:
+      expectedInsertions: 4000000
+      falseProbability: 0.01
+

@@ -1,7 +1,6 @@
 package com.healerjean.proj.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.healerjean.proj.config.ThreadPoolConfiguration;
 import com.healerjean.proj.data.bo.batch.stream.BatchConsumerBO;
 import com.healerjean.proj.data.bo.batch.stream.BatchConsumerInvokeBO;
 import com.healerjean.proj.data.bo.batch.stream.BatchFunctionBO;
@@ -158,7 +157,7 @@ public class FunctionUtils {
         list.add(ironManFunction);
         list.add(thorFunction);
 
-        BatchFunctionInvokeBO batchFunctionInvoke = BatchFunctionInvokeBO.of(ThreadPoolConfiguration.THREAD_POOL_TASK_EXECUTOR, list);
+        BatchFunctionInvokeBO batchFunctionInvoke = BatchFunctionInvokeBO.of(ThreadPoolUtils.DEFAULT_THREAD_POOL_EXECUTOR, list);
         invokeAllFunction(batchFunctionInvoke);
         log.info("result:{}", JSON.toJSONString(batchFunctionInvoke.getBatchFunctions()));
     }
@@ -193,7 +192,7 @@ public class FunctionUtils {
         }
 
         list.add(ironManConsumer);
-        BatchConsumerInvokeBO batchConsumerInvoke = BatchConsumerInvokeBO.of(ThreadPoolConfiguration.THREAD_POOL_TASK_EXECUTOR, list);
+        BatchConsumerInvokeBO batchConsumerInvoke = BatchConsumerInvokeBO.of(ThreadPoolUtils.DEFAULT_THREAD_POOL_TASK_EXECUTOR, list);
         invokeAllConsumer(batchConsumerInvoke);
         log.info("result:{}", JSON.toJSONString(batchConsumerInvoke.getBatchConsumers()));
     }

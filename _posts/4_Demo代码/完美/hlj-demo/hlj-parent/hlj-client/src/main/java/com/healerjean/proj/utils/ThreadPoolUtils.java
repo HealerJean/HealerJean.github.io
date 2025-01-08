@@ -38,8 +38,8 @@ public class ThreadPoolUtils {
      * @return ThreadPoolExecutor
      */
     private static ThreadPoolExecutor buildDefaultThreadPoolExecutor() {
-        int corePoolSize = 10;
-        int maximumPoolSize = 100;
+        int corePoolSize = 1000;
+        int maximumPoolSize = 1000;
         long keepAliveTime = 60;
         TimeUnit unit = TimeUnit.SECONDS;
         AtomicInteger tag = new AtomicInteger(1);

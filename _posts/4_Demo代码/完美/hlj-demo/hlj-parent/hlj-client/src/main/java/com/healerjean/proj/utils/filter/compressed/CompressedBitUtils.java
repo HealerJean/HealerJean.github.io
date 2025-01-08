@@ -3,6 +3,8 @@ package com.healerjean.proj.utils.filter.compressed;
 import com.google.common.collect.Lists;
 import com.healerjean.proj.service.RedisService;
 import com.healerjean.proj.utils.SpringUtils;
+import com.healerjean.proj.utils.filter.FilterConfiguration;
+import com.healerjean.proj.utils.filter.FilterEnum;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.BitSet;
@@ -21,16 +23,15 @@ public class CompressedBitUtils {
     /**
      * 设置压缩位图在offset上的值,并且设置过期时间(秒)
      */
-    public static CompressedBitInfo setCompressedBit(CompressedEnum.CompressedInfoEnum compressedInfoEnum, long offset) {
+    public static CompressedBitInfo setCompressedBit(FilterEnum.CompressedEnum compressedInfoEnum, long offset) {
         return setCompressedBit(compressedInfoEnum, offset, true);
     }
-
 
 
     /**
      * 删除压缩位图在offset上的值(相当于设置为false)
      */
-    public static CompressedBitInfo remCompressedBit(CompressedEnum.CompressedInfoEnum compressedInfoEnum, long offset) {
+    public static CompressedBitInfo remCompressedBit(FilterEnum.CompressedEnum compressedInfoEnum, long offset) {
         return setCompressedBit(compressedInfoEnum, offset, false);
     }
 
@@ -38,26 +39,27 @@ public class CompressedBitUtils {
     /**
      * 设置压缩位图在offset上的值,并且设置过期时间(秒)
      */
-    public static CompressedBitInfo setCompressedBit(CompressedEnum.CompressedInfoEnum compressedInfoEnum, long offset, boolean value) {
-        CompressedFilterConfiguration compressedFilterConfiguration = SpringUtils.getBean(CompressedFilterConfiguration.class);
-        CompressedBizBO compressedBiz = compressedFilterConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
+    public static CompressedBitInfo setCompressedBit(FilterEnum.CompressedEnum compressedInfoEnum, long offset, boolean value) {
+        FilterConfiguration filterConfiguration = SpringUtils.getBean(FilterConfiguration.class);
+        FilterConfiguration.CompressedConfig compressedConfig = filterConfiguration.getCompressedConfig(compressedInfoEnum.getCode());
 
         CompressedBitInfo bitInfo = getBitInfo(compressedInfoEnum, offset);
         String bitKey = bitInfo.getBitKey();
         RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.setBit(bitKey, bitInfo.getBucketOffset(), value);
-        redisService.expire(bitKey, compressedBiz.getExpireSeconds());
+        redisService.expire(bitKey, compressedConfig.getExpireSeconds());
 
         long sourceOffset = getSourceOffset(compressedInfoEnum, bitInfo.getBucketIndex(), bitInfo.getBucketOffset());
         bitInfo.setSourceOffset(sourceOffset);
         bitInfo.setBitValue(value);
-
         return bitInfo;
     }
+
+
     /**
      * 获取压缩位图在offset上的值
      */
-    public static CompressedBitInfo getCompressedBit(CompressedEnum.CompressedInfoEnum compressedInfoEnum, long offset) {
+    public static CompressedBitInfo getCompressedBit(FilterEnum.CompressedEnum compressedInfoEnum, long offset) {
         CompressedBitInfo bitInfo = getBitInfo(compressedInfoEnum, offset);
         String bitKey = bitInfo.getBitKey();
         log.debug("getCompressedBit with key:{}, offset:{}", bitKey, bitInfo.getBucketOffset());
@@ -72,14 +74,14 @@ public class CompressedBitUtils {
     /**
      * 获取压缩位图每个小桶的子key集合
      */
-    public static List<String> getAllBucketKeys(CompressedEnum.CompressedInfoEnum compressedInfoEnum, long maxOffset) {
+    public static List<String> getAllBucketKeys(FilterEnum.CompressedEnum compressedInfoEnum, long maxOffset) {
         List<String> result = Lists.newArrayList();
-        CompressedFilterConfiguration compressedFilterConfiguration = SpringUtils.getBean(CompressedFilterConfiguration.class);
-        CompressedBizBO compressedBiz = compressedFilterConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
+        FilterConfiguration filterConfiguration = SpringUtils.getBean(FilterConfiguration.class);
+        FilterConfiguration.CompressedConfig compressedConfig = filterConfiguration.getCompressedConfig(compressedInfoEnum.getCode());
 
         CompressedBitInfo bitInfo = getBitInfo(compressedInfoEnum, maxOffset);
         for (int i = 0; i <= bitInfo.getBucketIndex(); i++) {
-            String bitKey = getBitKey(compressedBiz.getKey(), i);
+            String bitKey = getBitKey(compressedConfig.getKey(), i);
             result.add(bitKey);
         }
         return result;
@@ -88,13 +90,12 @@ public class CompressedBitUtils {
     /**
      * 删除所有桶里的的Bitmap
      */
-    public static void deleteAllCompressedBit(CompressedEnum.CompressedInfoEnum compressedInfoEnum, long maxOffset) {
-        CompressedFilterConfiguration compressedFilterConfiguration = SpringUtils.getBean(CompressedFilterConfiguration.class);
-        CompressedBizBO compressedBiz = compressedFilterConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
-
+    public static void deleteAllCompressedBit(FilterEnum.CompressedEnum compressedInfoEnum, long maxOffset) {
+        FilterConfiguration filterConfiguration = SpringUtils.getBean(FilterConfiguration.class);
+        FilterConfiguration.CompressedConfig compressedConfig = filterConfiguration.getCompressedConfig(compressedInfoEnum.getCode());
         CompressedBitInfo bitInfo = getBitInfo(compressedInfoEnum, maxOffset);
         for (int i = 0; i < bitInfo.getBucketIndex(); i++) {
-            String bitKey = getBitKey(compressedBiz.getKey(), i);
+            String bitKey = getBitKey(compressedConfig.getKey(), i);
             RedisService redisService = SpringUtils.getBean(RedisService.class);
             redisService.expire(bitKey, 0);
         }
@@ -140,21 +141,21 @@ public class CompressedBitUtils {
     /**
      * getBitInfo
      */
-    public static CompressedBitInfo getBitInfo(CompressedEnum.CompressedInfoEnum compressedInfoEnum, long sourceOffset) {
-        CompressedFilterConfiguration compressedFilterConfiguration = SpringUtils.getBean(CompressedFilterConfiguration.class);
-        CompressedBizBO compressedBiz = compressedFilterConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
+    public static CompressedBitInfo getBitInfo(FilterEnum.CompressedEnum compressedInfoEnum, long sourceOffset) {
+        FilterConfiguration filterConfiguration = SpringUtils.getBean(FilterConfiguration.class);
+        FilterConfiguration.CompressedConfig compressedConfig = filterConfiguration.getCompressedConfig(compressedInfoEnum.getCode());
 
         CompressedBitInfo bucketInfo = new CompressedBitInfo();
         bucketInfo.setSourceOffset(sourceOffset);
 
-        long bucketSize = compressedBiz.getBucketSize();
+        long bucketSize = compressedConfig.getBucketSize();
         long bucketIndex = sourceOffset / bucketSize;
         bucketInfo.setBucketIndex(bucketIndex);
 
         long bucketOffset = sourceOffset % bucketSize;
         bucketInfo.setBucketOffset(bucketOffset);
 
-        String bitKey = getBitKey(compressedBiz.getKey(), bucketIndex);
+        String bitKey = getBitKey(compressedConfig.getKey(), bucketIndex);
         bucketInfo.setBitKey(bitKey);
         return bucketInfo;
     }
@@ -172,10 +173,10 @@ public class CompressedBitUtils {
      * @param bucketOffset bucketOffset
      * @return {@link long}
      */
-    public static long getSourceOffset(CompressedEnum.CompressedInfoEnum compressedInfoEnum, long bucketIndex, long bucketOffset) {
-        CompressedFilterConfiguration compressedFilterConfiguration = SpringUtils.getBean(CompressedFilterConfiguration.class);
-        CompressedBizBO compressedBiz = compressedFilterConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
-        return bucketIndex * compressedBiz.getBucketSize() + bucketOffset;
+    public static long getSourceOffset(FilterEnum.CompressedEnum compressedInfoEnum, long bucketIndex, long bucketOffset) {
+        FilterConfiguration filterConfiguration = SpringUtils.getBean(FilterConfiguration.class);
+        FilterConfiguration.CompressedConfig compressedConfig = filterConfiguration.getCompressedConfig(compressedInfoEnum.getCode());
+        return bucketIndex * compressedConfig.getBucketSize() + bucketOffset;
     }
 
 }
