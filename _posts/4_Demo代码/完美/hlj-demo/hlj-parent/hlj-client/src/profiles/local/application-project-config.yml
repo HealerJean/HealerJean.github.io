@@ -80,6 +80,6 @@ filter:
       bucketSize: 65536
   bloom-config-map:
     default:
-      expectedInsertions: 4000000
+      expectedInsertions: 50000000
       falseProbability: 0.01
 

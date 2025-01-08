@@ -27,7 +27,7 @@ public class FilterConfiguration {
 
 
     /**
-     * 配置
+     * 布隆过滤器配置
      */
     private Map<String, BloomFilterConfig> bloomConfigMap;
 
