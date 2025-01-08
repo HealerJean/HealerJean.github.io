@@ -39,8 +39,8 @@ public class CompressedBitUtils {
      * 设置压缩位图在offset上的值,并且设置过期时间(秒)
      */
     public static CompressedBitInfo setCompressedBit(CompressedEnum.CompressedInfoEnum compressedInfoEnum, long offset, boolean value) {
-        FilterCompressedConfiguration filterCompressedConfiguration = SpringUtils.getBean(FilterCompressedConfiguration.class);
-        CompressedBizBO compressedBiz = filterCompressedConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
+        CompressedFilterConfiguration compressedFilterConfiguration = SpringUtils.getBean(CompressedFilterConfiguration.class);
+        CompressedBizBO compressedBiz = compressedFilterConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
 
         CompressedBitInfo bitInfo = getBitInfo(compressedInfoEnum, offset);
         String bitKey = bitInfo.getBitKey();
@@ -74,8 +74,8 @@ public class CompressedBitUtils {
      */
     public static List<String> getAllBucketKeys(CompressedEnum.CompressedInfoEnum compressedInfoEnum, long maxOffset) {
         List<String> result = Lists.newArrayList();
-        FilterCompressedConfiguration filterCompressedConfiguration = SpringUtils.getBean(FilterCompressedConfiguration.class);
-        CompressedBizBO compressedBiz = filterCompressedConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
+        CompressedFilterConfiguration compressedFilterConfiguration = SpringUtils.getBean(CompressedFilterConfiguration.class);
+        CompressedBizBO compressedBiz = compressedFilterConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
 
         CompressedBitInfo bitInfo = getBitInfo(compressedInfoEnum, maxOffset);
         for (int i = 0; i <= bitInfo.getBucketIndex(); i++) {
@@ -89,8 +89,8 @@ public class CompressedBitUtils {
      * 删除所有桶里的的Bitmap
      */
     public static void deleteAllCompressedBit(CompressedEnum.CompressedInfoEnum compressedInfoEnum, long maxOffset) {
-        FilterCompressedConfiguration filterCompressedConfiguration = SpringUtils.getBean(FilterCompressedConfiguration.class);
-        CompressedBizBO compressedBiz = filterCompressedConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
+        CompressedFilterConfiguration compressedFilterConfiguration = SpringUtils.getBean(CompressedFilterConfiguration.class);
+        CompressedBizBO compressedBiz = compressedFilterConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
 
         CompressedBitInfo bitInfo = getBitInfo(compressedInfoEnum, maxOffset);
         for (int i = 0; i < bitInfo.getBucketIndex(); i++) {
@@ -141,8 +141,8 @@ public class CompressedBitUtils {
      * getBitInfo
      */
     public static CompressedBitInfo getBitInfo(CompressedEnum.CompressedInfoEnum compressedInfoEnum, long sourceOffset) {
-        FilterCompressedConfiguration filterCompressedConfiguration = SpringUtils.getBean(FilterCompressedConfiguration.class);
-        CompressedBizBO compressedBiz = filterCompressedConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
+        CompressedFilterConfiguration compressedFilterConfiguration = SpringUtils.getBean(CompressedFilterConfiguration.class);
+        CompressedBizBO compressedBiz = compressedFilterConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
 
         CompressedBitInfo bucketInfo = new CompressedBitInfo();
         bucketInfo.setSourceOffset(sourceOffset);
@@ -173,8 +173,8 @@ public class CompressedBitUtils {
      * @return {@link long}
      */
     public static long getSourceOffset(CompressedEnum.CompressedInfoEnum compressedInfoEnum, long bucketIndex, long bucketOffset) {
-        FilterCompressedConfiguration filterCompressedConfiguration = SpringUtils.getBean(FilterCompressedConfiguration.class);
-        CompressedBizBO compressedBiz = filterCompressedConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
+        CompressedFilterConfiguration compressedFilterConfiguration = SpringUtils.getBean(CompressedFilterConfiguration.class);
+        CompressedBizBO compressedBiz = compressedFilterConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
         return bucketIndex * compressedBiz.getBucketSize() + bucketOffset;
     }
 

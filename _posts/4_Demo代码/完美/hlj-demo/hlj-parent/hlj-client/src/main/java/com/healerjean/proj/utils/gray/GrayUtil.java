@@ -88,10 +88,5 @@ public class GrayUtil {
     }
 
 
-    @Test
-    public void test() {
-
-    }
-
 
 }

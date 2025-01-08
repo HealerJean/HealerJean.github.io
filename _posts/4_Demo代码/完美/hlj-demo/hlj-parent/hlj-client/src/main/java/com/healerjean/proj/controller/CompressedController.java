@@ -3,12 +3,14 @@ package com.healerjean.proj.controller;
 import com.google.common.collect.Lists;
 import com.healerjean.proj.common.anno.LogIndex;
 import com.healerjean.proj.common.data.bo.BaseRes;
+import com.healerjean.proj.utils.filter.bloom.BloomFilterUtils;
 import com.healerjean.proj.utils.filter.compressed.CompressedBitInfo;
 import com.healerjean.proj.utils.filter.compressed.CompressedBitUtils;
 import com.healerjean.proj.utils.filter.compressed.CompressedEnum;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RBloomFilter;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,15 +25,15 @@ import java.util.List;
  * @date 2025/1/7
  */
 @RestController
-@RequestMapping("hlj/compressed")
-@Api(tags = "CompressedController")
+@RequestMapping("hlj/filter")
+@Api(tags = "FilterController")
 @Slf4j
 public class CompressedController {
 
 
-    @ApiOperation("getBitInfo")
+    @ApiOperation("compressed/getBitInfo")
     @LogIndex
-    @PostMapping("getBitInfo")
+    @PostMapping("compressed/getBitInfo")
     @ResponseBody
     public BaseRes<CompressedBitInfo> getBitInfo(long sourceOffset) {
         CompressedBitInfo bitInfo = CompressedBitUtils.getBitInfo(CompressedEnum.CompressedInfoEnum.DEFAULT, sourceOffset);
@@ -39,9 +41,9 @@ public class CompressedController {
     }
 
 
-    @ApiOperation("setCompressedBit")
+    @ApiOperation("compressed/setCompressedBit")
     @LogIndex
-    @PostMapping("setCompressedBit")
+    @PostMapping("compressed/setCompressedBit")
     @ResponseBody
     public BaseRes<CompressedBitInfo> setCompressedBit(long sourceOffset) {
         CompressedBitInfo result = CompressedBitUtils.setCompressedBit(CompressedEnum.CompressedInfoEnum.DEFAULT, sourceOffset);
@@ -49,9 +51,9 @@ public class CompressedController {
     }
 
 
-    @ApiOperation("setBatchCompressedBit")
+    @ApiOperation("compressed/setBatchCompressedBit")
     @LogIndex
-    @PostMapping("setBatchCompressedBit")
+    @PostMapping("compressed/setBatchCompressedBit")
     @ResponseBody
     public BaseRes<List<CompressedBitInfo>> setBatchCompressedBit(long sourceOffset) {
         List<CompressedBitInfo> result = Lists.newArrayList();
@@ -63,18 +65,18 @@ public class CompressedController {
     }
 
 
-    @ApiOperation("remCompressedBit")
+    @ApiOperation("compressed/remCompressedBit")
     @LogIndex
-    @PostMapping("remCompressedBit")
+    @PostMapping("compressed/remCompressedBit")
     @ResponseBody
     public BaseRes<CompressedBitInfo> remCompressedBit(long sourceOffset) {
         CompressedBitInfo result = CompressedBitUtils.remCompressedBit(CompressedEnum.CompressedInfoEnum.DEFAULT, sourceOffset);
         return BaseRes.buildSuccess(result);
     }
 
-    @ApiOperation("getCompressedBit")
+    @ApiOperation("compressed/getCompressedBit")
     @LogIndex
-    @PostMapping("getCompressedBit")
+    @PostMapping("compressed/getCompressedBit")
     @ResponseBody
     public BaseRes<CompressedBitInfo> getCompressedBit(long sourceOffset) {
         CompressedBitInfo result = CompressedBitUtils.getCompressedBit(CompressedEnum.CompressedInfoEnum.DEFAULT, sourceOffset);
@@ -82,9 +84,9 @@ public class CompressedController {
     }
 
 
-    @ApiOperation("getAllBucketKeys")
+    @ApiOperation("compressed/getAllBucketKeys")
     @LogIndex
-    @PostMapping("getAllBucketKeys")
+    @PostMapping("compressed/getAllBucketKeys")
     @ResponseBody
     public BaseRes<List<String>> getAllBucketKeys(long sourceOffset) {
         List<String> result = CompressedBitUtils.getAllBucketKeys(CompressedEnum.CompressedInfoEnum.DEFAULT, sourceOffset);
@@ -92,13 +94,22 @@ public class CompressedController {
     }
 
 
-    @ApiOperation("deleteAllCompressedBit")
+    @ApiOperation("compressed/deleteAllCompressedBit")
     @LogIndex
-    @PostMapping("deleteAllCompressedBit")
+    @PostMapping("compressed/deleteAllCompressedBit")
     @ResponseBody
     public BaseRes<Boolean> deleteAllCompressedBit(long sourceOffset) {
         CompressedBitUtils.deleteAllCompressedBit(CompressedEnum.CompressedInfoEnum.DEFAULT, sourceOffset);
         return BaseRes.buildSuccess(true);
+    }
+
+
+    @ApiOperation("bloom/bloomFilterCreate")
+    @LogIndex
+    @PostMapping("bloom/bloomFilterCreate")
+    @ResponseBody
+    public BaseRes<RBloomFilter<?>> bloomFilterCreate(long sourceOffset) {
+        return BaseRes.buildSuccess( BloomFilterUtils.create("bloomInitKey", 2000, 0.01));
     }
 
 

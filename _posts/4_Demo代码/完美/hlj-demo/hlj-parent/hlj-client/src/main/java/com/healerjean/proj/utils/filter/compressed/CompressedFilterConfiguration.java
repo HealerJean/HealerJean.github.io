@@ -17,7 +17,7 @@ import java.util.Map;
 @Data
 @Configuration
 @ConfigurationProperties("filter")
-public class FilterCompressedConfiguration {
+public class CompressedFilterConfiguration {
 
 
     /**
