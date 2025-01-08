@@ -92,4 +92,9 @@ public interface RedisService {
      * @return 解锁结果
      */
     boolean unLock(String key, String threadId);
+
+    void setBit(String bitKey, long bucketOffset, boolean value);
+
+
+    Boolean getBit(String bitKey, long bucketOffset);
 }

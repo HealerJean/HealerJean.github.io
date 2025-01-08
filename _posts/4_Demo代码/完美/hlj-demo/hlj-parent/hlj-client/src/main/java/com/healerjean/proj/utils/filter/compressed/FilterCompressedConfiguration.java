@@ -1,4 +1,4 @@
-package com.healerjean.proj.utils.gray;
+package com.healerjean.proj.utils.filter.compressed;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -8,21 +8,21 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Map;
 
 /**
- * DuccBypassInsuranceConfiguration
+ * FilterCompressedConfiguration
  *
  * @author zhangyujin
- * @date 2022/9/21  21:21.
+ * @date 2025/1/8
  */
 @Slf4j
 @Data
 @Configuration
-@ConfigurationProperties("gray")
-public class GrayConfiguration {
+@ConfigurationProperties("filter")
+public class FilterCompressedConfiguration {
+
 
     /**
-     * 灰度对象
+     * 压缩过滤器配置
      */
-    private Map<String, GrayBizBO> grayBizMap;
-
+    private Map<String, CompressedBizBO> compressedBizMap;
 
 }

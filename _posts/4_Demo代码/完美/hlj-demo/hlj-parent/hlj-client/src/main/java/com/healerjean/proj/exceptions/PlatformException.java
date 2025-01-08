@@ -12,7 +12,9 @@ import lombok.Getter;
 @Getter
 public class PlatformException extends RuntimeException {
 
+    @SuppressWarnings("all")
     private static final long serialVersionUID = 5535821215702463243L;
+
     /**
      * 返回错误码
      */

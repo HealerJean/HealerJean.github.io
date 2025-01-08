@@ -88,4 +88,17 @@ public class RedisServiceImpl implements RedisService {
         return true;
     }
 
+    @LogIndex
+    @Override
+    public void setBit(String bitKey, long bucketOffset, boolean value) {
+        redisTemplate.opsForValue().setBit(bitKey, bucketOffset, value);
+    }
+    @LogIndex
+    @Override
+    public Boolean getBit(String bitKey, long bucketOffset) {
+        return redisTemplate.opsForValue().getBit(bitKey, bucketOffset);
+    }
+
+
+
 }
