@@ -74,9 +74,12 @@ public class CompressedBitUtils {
      */
     public static List<String> getAllBucketKeys(CompressedEnum.CompressedInfoEnum compressedInfoEnum, long maxOffset) {
         List<String> result = Lists.newArrayList();
+        FilterCompressedConfiguration filterCompressedConfiguration = SpringUtils.getBean(FilterCompressedConfiguration.class);
+        CompressedBizBO compressedBiz = filterCompressedConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
+
         CompressedBitInfo bitInfo = getBitInfo(compressedInfoEnum, maxOffset);
         for (int i = 0; i <= bitInfo.getBucketIndex(); i++) {
-            String bitKey = getBitKey(compressedInfoEnum.getCode(), i);
+            String bitKey = getBitKey(compressedBiz.getKey(), i);
             result.add(bitKey);
         }
         return result;
@@ -86,9 +89,12 @@ public class CompressedBitUtils {
      * 删除所有桶里的的Bitmap
      */
     public static void deleteAllCompressedBit(CompressedEnum.CompressedInfoEnum compressedInfoEnum, long maxOffset) {
+        FilterCompressedConfiguration filterCompressedConfiguration = SpringUtils.getBean(FilterCompressedConfiguration.class);
+        CompressedBizBO compressedBiz = filterCompressedConfiguration.getCompressedBizMap().get(compressedInfoEnum.getCode());
+
         CompressedBitInfo bitInfo = getBitInfo(compressedInfoEnum, maxOffset);
         for (int i = 0; i < bitInfo.getBucketIndex(); i++) {
-            String bitKey = getBitKey(compressedInfoEnum.getCode(), i);
+            String bitKey = getBitKey(compressedBiz.getKey(), i);
             RedisService redisService = SpringUtils.getBean(RedisService.class);
             redisService.expire(bitKey, 0);
         }
