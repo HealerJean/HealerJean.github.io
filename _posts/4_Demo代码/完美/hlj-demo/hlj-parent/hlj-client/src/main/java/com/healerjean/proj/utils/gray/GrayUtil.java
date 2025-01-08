@@ -2,9 +2,9 @@ package com.healerjean.proj.utils.gray;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.healerjean.proj.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
-import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.Objects;
@@ -18,27 +18,8 @@ import java.util.Set;
  * @author healerjean
  * @date 2022-09-21 22:27
  */
-@Service
 @Slf4j
 public class GrayUtil {
-
-    /**
-     * grayConfiguration
-     */
-    private static final GrayConfiguration grayConfiguration;
-
-    static {
-        grayConfiguration = new GrayConfiguration();
-        Map<String, GrayBizBO> grayBizMap = Maps.newHashMap();
-        grayBizMap.put(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1.getCode(),
-                new GrayBizBO()
-                        .setRate(2L)
-                        .setAmount(10L)
-                        .setWhiteInfos(Sets.newHashSet("4", "5", "6"))
-                        .setBlackInfos(Sets.newHashSet("7", "8", "9")));
-        grayConfiguration.setGrayBizMap(grayBizMap);
-
-    }
 
 
     /**
@@ -52,9 +33,10 @@ public class GrayUtil {
      * @param grayValue        灰度值
      * @return 灰度开关是否打开
      */
-    public GrayEnum.GrayResEnum hitGray(GrayEnum.GrayBusinessEnum grayBusinessEnum, String grayValue) {
+    public static GrayEnum.GrayResEnum hitGray(GrayEnum.GrayBusinessEnum grayBusinessEnum, String grayValue) {
 
         // 一、灰度业务判断 返回：GrayEnum.GrayResEnum.GRAY_NOT_EXIST
+        GrayConfiguration grayConfiguration = SpringUtils.getBean(GrayConfiguration.class);
         Map<String, GrayBizBO> grayBizMap = Optional.ofNullable(grayConfiguration.getGrayBizMap()).orElse(Maps.newHashMap());
         GrayBizBO grayBiz = grayBizMap.get(grayBusinessEnum.getCode());
         if (Objects.isNull(grayBiz)) {
@@ -101,22 +83,14 @@ public class GrayUtil {
      * @param grayValue        grayValue
      * @return {@link Integer}
      */
-    public Long hashValue(GrayEnum.GrayBusinessEnum grayBusinessEnum, String grayValue) {
+    private static Long hashValue(GrayEnum.GrayBusinessEnum grayBusinessEnum, String grayValue) {
         return Long.valueOf(grayValue);
     }
 
 
     @Test
     public void test() {
-        System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "1"));
-        System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "2"));
-        System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "3"));
-        System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "4"));
-        System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "5"));
-        System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "6"));
-        System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "7"));
-        System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "8"));
-        System.out.println(hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "9"));
+
     }
 
 

@@ -47,18 +47,35 @@ spring:
           # initialTimeout: 这个参数表示在建立连接时，如果服务器没有响应，经过指定的时间后，将会抛出一个超时异常。也就是说，在客户端尝试与服务器建立连接的过程中，如果超过了指定的时间限制，就会抛出异常。
           # connectTimeout: 这个参数主要用来控制与服务器请求建立连接的超时时间。假设应用程序尝试与数据库服务器建立连接，但在指定的时间内无法建立连接，超过了connectTimeout指定的时间限制。在这种情况下，应用程序会抛出ConnectionTimeoutException异常，提示连接超时。这样的设置可以避免客户端长时间等待服务器的响应，及时中断连接并通知用户连接失败。
           # socketTimeout:  这个参数表示在数据传输期间，如果服务器没有响应，经过指定的时间后，将会抛出一个超时异常。这可以防止客户端的连接被长时间占用。在查询时间超过一定的阈值后，断开连接可以防止客户端的连接被一直占用。对于慢查询监控而言，这种异常可以帮助我们判断客户端连接是否被长时间占用。
-          url: jdbc:mysql://localhost:3306/healerjean?characterEncoding=utf-8&useUnicode=true&autoReconnect=true&connectTimeout=3000&initialTimeout=1&socketTimeout=10000&useSSL=false&serverTimezone=CTT
+          url: jdbc:mysql://localhost:3306/healerjean?characterEncoding=utf-8&useUnicode=true&autoReconnect=true&connectTimeout=3000&initialTimeout=1&socketTimeout=10000&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
           username: root
           password: 12345678
         test:
           # 3.2.0开始支持SPI可省略此配置
           driver-class-name: com.mysql.jdbc.Driver
-          url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8&useUnicode=true&autoReconnect=true&connectTimeout=3000&initialTimeout=1&socketTimeout=10000&useSSL=false&serverTimezone=CTT
+          url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8&useUnicode=true&autoReconnect=true&connectTimeout=3000&initialTimeout=1&socketTimeout=10000&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
           username: root
           password: 12345678
 qps:
   limitConfig:
     get:
-      openFlag: true
       limit: 0.2
-
+gray:
+  grayBizMap:
+    businessDemo:
+      whiteInfos:
+        - 4
+        - 5
+        - 6
+      blackInfos:
+        - 7
+        - 8
+        - 9
+      rate: 2
+      amount: 10
+filter:
+  compressedBizMap:
+    default:
+      key: initKey
+      expireSeconds: 3600
+      bucketSize: 65536

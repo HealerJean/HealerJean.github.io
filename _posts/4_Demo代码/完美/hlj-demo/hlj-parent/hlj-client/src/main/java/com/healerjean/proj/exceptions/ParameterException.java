@@ -16,7 +16,9 @@ public class ParameterException extends RuntimeException {
     /**
      * serialVersionUID
      */
+    @SuppressWarnings("all")
     private static final long serialVersionUID = -6114625076221233075L;
+
     /**
      * 返回错误码
      */
