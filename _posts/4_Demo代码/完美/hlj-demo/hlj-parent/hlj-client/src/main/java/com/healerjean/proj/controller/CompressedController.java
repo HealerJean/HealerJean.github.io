@@ -117,7 +117,7 @@ public class CompressedController {
     @PostMapping("bloom/setBloomBit")
     @ResponseBody
     public BaseRes<Boolean> setBloomBit(String bitValue) {
-        return BaseRes.buildSuccess( BloomFilterUtils.setBloomBit(FilterEnum.BloomEnum.DEFAULT,  bitValue));
+        return BaseRes.buildSuccess( BloomFilterUtils.setBloomBit(FilterEnum.BloomEnum.DEFAULT, bitValue));
     }
 
     @ApiOperation("bloom/getBloomBit")
@@ -125,7 +125,7 @@ public class CompressedController {
     @PostMapping("bloom/getBloomBit")
     @ResponseBody
     public BaseRes<Boolean> getBloomBit(String bitValue) {
-        return BaseRes.buildSuccess( BloomFilterUtils.getBloomBit(FilterEnum.BloomEnum.DEFAULT,  bitValue));
+        return BaseRes.buildSuccess( BloomFilterUtils.getBloomBit(FilterEnum.BloomEnum.DEFAULT, bitValue));
     }
 
 
@@ -139,7 +139,7 @@ public class CompressedController {
         List<Future> futureList = Lists.newArrayList();
         stopWatch.start("setBloomBit");
         ThreadPoolExecutor defaultThreadPoolExecutor = ThreadPoolUtils.DEFAULT_THREAD_POOL_EXECUTOR;
-        for (long i = 0; i < 4000000; i++) {
+        for (long i = 0; i < 50000000; i++) {
             Future<?> submit = defaultThreadPoolExecutor.submit(() -> {
                 String bitValue = String.valueOf(RandomUtil.randomLong(304311552319L, 1000000000000L)) ;
                 BloomFilterUtils.setBloomBit(FilterEnum.BloomEnum.DEFAULT, bitValue);
