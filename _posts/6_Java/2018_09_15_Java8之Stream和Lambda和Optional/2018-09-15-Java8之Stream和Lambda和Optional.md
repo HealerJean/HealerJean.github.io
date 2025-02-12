@@ -552,8 +552,6 @@ public void test() {
 > **解释：过滤，参数是一个predicate 断言 也就是能产生boolean结果的过滤规则,**   
 
 
-
-
 ```java
 public class TestMain {
 

@@ -1781,6 +1781,8 @@ if(user!=null){
 
 ### 1）多出现 `limit`
 
+#### a、字段名冲突
+
 > **原因：**在执行 `sql` 的时候，使用了自定义的分页，但是执行之后自动在后面加上了一个 `limit` ，导致 `sql` 执行报错，虽然自己没有使用，但是项目中配置了 `PageHelper` 分页插件，然后查找资料，才发现只要自定义的 `sql` 中有 `pageSize` 和 `pageNum`参数值，就会在执行之后自动加上 `limit `  
 >
 > **解决：**在执行的 `sql` 中，把 `pageSize` 和 `pageNum` 规避掉，可以换成 `startIndex` 和 `maxCount`
@@ -1791,6 +1793,16 @@ limit #{pageNum,jdbcType=INTEGER},  #{pageSize,jdbcType=INTEGER}
 替换成limit #{maxCount,jdbcType=INTEGER}, #{startIndex,jdbcType=INTEGER}
 
 ```
+
+#### b、多线程复用
+
+> https://developer.aliyun.com/article/1009244      
+>
+> 1、保证`startPage() `后紧跟 `sql` 命令         
+>
+> 2、担心有嫌犯潜逃，在有问题的方法使用 `clearPage()` 来打补丁。有问题的方法使用 `clearPage()` 来打补丁。
+
+
 
 
 

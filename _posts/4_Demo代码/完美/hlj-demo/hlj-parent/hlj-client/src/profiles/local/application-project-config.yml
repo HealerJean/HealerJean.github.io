@@ -62,7 +62,7 @@ qps:
       limit: 0.2
 gray:
   gray-biz-map:
-    business-demo:
+    businessDemo:
       whiteInfos:
         - 4
         - 5
@@ -80,6 +80,6 @@ filter:
       bucketSize: 65536
   bloom-config-map:
     default:
-      expectedInsertions: 50000000
+      expectedInsertions: 2000
       falseProbability: 0.01
 
