@@ -78,14 +78,17 @@ public interface PageConverter {
     /**
      * coverOrderByDtoToBo
      *
-     * @param orderByBo orderByBo
+     * @param dto orderByBo
      * @return PageQueryBO.OrderByBO
      */
-    default OrderByBO coverOrderByDtoToBo(OrderByDTO orderByBo) {
-        OrderByBO orderByBO = new OrderByBO();
-        orderByBO.setProperty(orderByBo.getProperty());
-        orderByBO.setDirection(orderByBo.getDirection());
-        return orderByBO;
+    default OrderByBO coverOrderByDtoToBo(OrderByDTO dto) {
+        OrderByBO result = new OrderByBO();
+        result.setSortId(dto.getSortId());
+        result.setProperty(dto.getProperty());
+        result.setAscFlag(dto.getAscFlag());
+        result.setNullBeforeFlag(dto.getNullBeforeFlag());
+        result.setOrderFields(dto.getOrderFields());
+        return result;
     }
 
     /**

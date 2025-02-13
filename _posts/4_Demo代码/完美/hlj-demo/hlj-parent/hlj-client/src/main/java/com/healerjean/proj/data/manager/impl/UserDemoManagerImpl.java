@@ -17,6 +17,7 @@ import com.healerjean.proj.data.dao.UserDemoDao;
 import com.healerjean.proj.data.manager.UserDemoManager;
 import com.healerjean.proj.data.po.UserDemo;
 import com.healerjean.proj.utils.db.BatchQueryUtils;
+import com.healerjean.proj.utils.db.DbQueryUtils;
 import com.healerjean.proj.utils.db.IdQueryBO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
@@ -121,9 +122,7 @@ public class UserDemoManagerImpl implements UserDemoManager {
         if (!CollectionUtils.isEmpty(query.getSelectFields())) {
             queryWrapper.select(StringUtils.join(query.getSelectFields(), ","));
         }
-        if (!CollectionUtils.isEmpty(query.getOrderByList())) {
-            query.getOrderByList().forEach(item -> queryWrapper.orderBy(Boolean.TRUE, item.getDirection(), item.getProperty()));
-        }
+        DbQueryUtils.orderBy(queryWrapper, query.getOrderByList());
 
         LambdaQueryWrapper<UserDemo> lambdaQueryWrapper = queryWrapper.lambda()
                 .eq(Objects.nonNull(query.getId()), UserDemo::getId, query.getId())
@@ -154,9 +153,8 @@ public class UserDemoManagerImpl implements UserDemoManager {
             queryWrapper.select(StringUtils.join(query.getSelectFields(), ","));
         }
 
-        if (!CollectionUtils.isEmpty(query.getOrderByList())) {
-            query.getOrderByList().forEach(item -> queryWrapper.orderBy(Boolean.TRUE, item.getDirection(), item.getProperty()));
-        }
+        DbQueryUtils.orderBy(queryWrapper, query.getOrderByList());
+
         LambdaQueryWrapper<UserDemo> lambdaQueryWrapper = queryWrapper.lambda()
                 .eq(Objects.nonNull(query.getId()), UserDemo::getId, query.getId())
                 .eq(Objects.nonNull(query.getValidFlag()), UserDemo::getValidFlag, query.getValidFlag())
@@ -186,9 +184,8 @@ public class UserDemoManagerImpl implements UserDemoManager {
         if (!CollectionUtils.isEmpty(query.getSelectFields())) {
             queryWrapper.select(StringUtils.join(query.getSelectFields(), ","));
         }
-        if (!CollectionUtils.isEmpty(query.getOrderByList())) {
-            query.getOrderByList().forEach(item -> queryWrapper.orderBy(Boolean.TRUE, item.getDirection(), item.getProperty()));
-        }
+
+        DbQueryUtils.orderBy(queryWrapper, query.getOrderByList());
         LambdaQueryWrapper<UserDemo> wrapper = queryWrapper.lambda()
                 .eq(Objects.nonNull(query.getId()), UserDemo::getId, query.getId())
                 .eq(Objects.nonNull(query.getValidFlag()), UserDemo::getValidFlag, query.getValidFlag())
