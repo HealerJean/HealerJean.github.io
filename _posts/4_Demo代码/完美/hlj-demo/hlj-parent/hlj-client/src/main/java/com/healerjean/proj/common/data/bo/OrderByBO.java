@@ -19,13 +19,33 @@ public class OrderByBO implements Serializable {
      * serialVersionUID
      */
     private static final long serialVersionUID = 160148478613404512L;
+
+    /**
+     * 顺序
+     */
+    private Integer sortId;
+
     /**
      * 排序属性
      */
     private String property;
+
     /**
-     * 排序方向
+     * 排序方向 （ascFlag、orderFields 二选一）
      */
-    private Boolean direction;
+    private Boolean ascFlag;
+
+    /**
+     * 指定排序方向-自定义顺序 （ascFlag、orderFields 二选一）
+     */
+    private String orderFields;
+
+    /**
+     * 空在前 true 空在后 false
+     */
+    private Boolean nullBeforeFlag;
+
+
+
 
 }

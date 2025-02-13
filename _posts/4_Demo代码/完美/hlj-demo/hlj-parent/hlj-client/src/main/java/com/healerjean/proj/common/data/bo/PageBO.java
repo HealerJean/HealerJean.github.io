@@ -1,5 +1,6 @@
 package com.healerjean.proj.common.data.bo;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -73,5 +74,14 @@ public class PageBO<T> implements Serializable {
      */
     public static <T> PageBO<T> none(Long pageSize, Long currenPage) {
         return new PageBO<>(0L, pageSize, 0L, currenPage, Collections.emptyList());
+    }
+
+
+
+    /**
+     * 无数据
+     */
+    public static <T> PageBO<T> page(Page<?> page, List<T> list) {
+        return new PageBO<>(page.getTotal(), page.getSize(), page.getPages(), page.getCurrent(), list);
     }
 }
