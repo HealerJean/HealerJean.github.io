@@ -1,7 +1,9 @@
 package com.healerjean.proj.utils;
 
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.*;
@@ -26,10 +28,25 @@ public class ThreadPoolUtils {
      */
     public static ThreadPoolExecutor DEFAULT_THREAD_POOL_EXECUTOR;
 
+    /**
+     * 定时任务，只有1个线程
+     */
+    public static ScheduledExecutorService SCHEDULED_THREAD_POOL_EXECUTOR;
 
     static {
         DEFAULT_THREAD_POOL_TASK_EXECUTOR = buildDefaultThreadPoolTaskExecutor();
         DEFAULT_THREAD_POOL_EXECUTOR = buildDefaultThreadPoolExecutor();
+        SCHEDULED_THREAD_POOL_EXECUTOR = buildScheduledThreadPoolExecutor();
+    }
+
+
+    /**
+     * buildScheduledThreadPoolExecutor
+     *
+     * @return {@link ScheduledExecutorService}
+     */
+    private static ScheduledExecutorService buildScheduledThreadPoolExecutor() {
+       return new ScheduledThreadPoolExecutor(1, new ThreadFactoryBuilder().setNameFormat("scheduledThreadPoolExecutor-%d").build());
     }
 
     /**
@@ -81,5 +98,43 @@ public class ThreadPoolUtils {
         return taskExecutor;
     }
 
+
+    /**
+     * 超时
+     * @param task
+     * @return
+     */
+    public static T schdule(Callable<T> task){
+        final CountDownLatch latch = new CountDownLatch(1);
+        final T[] resultHolder = (T[]) new Object[1];
+
+        // 每 3 秒执行一次任务
+        ScheduledFuture<?> scheduledFuture = SCHEDULED_THREAD_POOL_EXECUTOR.scheduleAtFixedRate(() -> {
+            try {
+                Future<T> future = Executors.newSingleThreadExecutor().submit(task);
+                resultHolder[0] = future.get();
+                if (resultHolder[0] != null) {
+                    latch.countDown();
+                }
+            } catch (Exception e) {
+                log.error("method error", e);
+            }
+        }, 0, 3, TimeUnit.SECONDS);
+
+        try {
+            // 等待 30 秒超时
+            boolean isCompleted = latch.await(30, TimeUnit.SECONDS);
+            if (isCompleted) {
+                return resultHolder[0];
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            // 取消任务调度
+            scheduledFuture.cancel(true);
+            SCHEDULED_THREAD_POOL_EXECUTOR.shutdown();
+        }
+        return null;
+    }
 
 }

@@ -1,6 +1,6 @@
 package com.healerjean.proj.common.enums;
 
-import com.healerjean.proj.data.vo.EnumLabelDTO;
+import com.healerjean.proj.common.data.vo.EnumLabelVO;
 
 /**
  * BaseEnum
@@ -22,11 +22,51 @@ public interface BaseEnum {
 
 
     /**
-     * baseEnum
-     *
+     * 枚举名称
      */
-    default EnumLabelDTO toBaseDto() {
-        return new EnumLabelDTO().setCode(this.getCode()).setDesc(this.getDesc());
+    String name();
+
+    /**
+     * getName
+     *
+     * @return {@link String}
+     */
+    default String getName() {
+        return name();
+    }
+
+
+    /**
+     * match
+     *
+     * @param code code
+     * @return {@link boolean}
+     */
+    default boolean matchCode(String code) {
+        if (code == null) {
+            return false;
+        }
+        return code.equals(getCode());
+    }
+
+    /**
+     * match
+     *
+     * @param name name
+     * @return {@link boolean}
+     */
+    default boolean matchName(String name) {
+        if (name == null) {
+            return false;
+        }
+        return name.equals(getName());
+    }
+
+    /**
+     * baseEnum
+     */
+    default EnumLabelVO toBaseDto() {
+        return new EnumLabelVO().setCode(this.getCode()).setDesc(this.getDesc()).setName(this.getName());
     }
 
 

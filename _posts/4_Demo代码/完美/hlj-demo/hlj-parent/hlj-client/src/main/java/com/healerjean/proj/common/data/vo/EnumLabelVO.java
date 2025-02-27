@@ -1,4 +1,4 @@
-package com.healerjean.proj.data.vo;
+package com.healerjean.proj.common.data.vo;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -13,13 +13,12 @@ import java.io.Serializable;
  */
 @Accessors(chain = true)
 @Data
-public class EnumLabelDTO implements Serializable {
+public class EnumLabelVO implements Serializable {
 
     /**
      * serialVersionUID
      */
     private static final long serialVersionUID = -1504794630853926135L;
-
 
     /**
      * 字典编码
@@ -30,6 +29,11 @@ public class EnumLabelDTO implements Serializable {
      * 字典描述
      */
     private String desc;
+
+    /**
+     * 字典名称
+     */
+    private String name;
 
 
 

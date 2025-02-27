@@ -1,10 +1,13 @@
 package com.healerjean.proj.utils;
 
 import com.healerjean.proj.cache.EnumCache;
+import com.healerjean.proj.common.data.vo.EnumLabelVO;
 import com.healerjean.proj.common.enums.BaseEnum;
-import com.healerjean.proj.data.vo.EnumLabelDTO;
+import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -21,9 +24,9 @@ public class EnumUtils {
      *
      * @param clazz clazz
      * @param code  code
-     * @return {@link EnumLabelDTO}
+     * @return {@link EnumLabelVO}
      */
-    public static  <E extends Enum> EnumLabelDTO getLabelByCode(Class<E> clazz, String code) {
+    public static  <E extends Enum> EnumLabelVO getLabelByCode(Class<E> clazz, String code) {
         E e = EnumCache.findByValue(clazz, code);
         if (Objects.isNull(e)) {
             return null;
@@ -42,9 +45,9 @@ public class EnumUtils {
      *
      * @param clazz clazz
      * @param name  name
-     * @return {@link EnumLabelDTO}
+     * @return {@link EnumLabelVO}
      */
-    public static  <E extends Enum> EnumLabelDTO getLabelByName(Class<E> clazz, String name) {
+    public static  <E extends Enum> EnumLabelVO getLabelByName(Class<E> clazz, String name) {
         E e = EnumCache.findByName(clazz, name);
         if (Objects.isNull(e)) {
             return null;
@@ -58,19 +61,22 @@ public class EnumUtils {
     }
 
 
-    public static List<EnumLabelDTO> getlabelValues(String simpleClassName) {
-        Class<? extends Enum> clazz = EnumCache.findClassByName(simpleClassName);
-        if (Objects.isNull(clazz)) {
+    /**
+     * getEnumLabelByCode
+     *
+     * @param className className
+     * @return {@link EnumLabelVO}
+     */
+    public static List<EnumLabelVO> getLabelByClazz(String className) {
+        List<Enum> enums = EnumCache.findClassByName(className);
+        if (CollectionUtils.isEmpty(enums)){
             return Collections.emptyList();
         }
-
-        EnumSet enumSet = EnumSet.allOf(clazz);
-        return (List<EnumLabelDTO>) enumSet.stream().map(e -> {
-            BaseEnum baseEnum = (BaseEnum) e;
+        return enums.stream().map(item -> {
+            BaseEnum baseEnum = (BaseEnum) item;
             return baseEnum.toBaseDto();
         }).collect(Collectors.toList());
     }
-
 
 
 }
