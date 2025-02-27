@@ -93,8 +93,6 @@ Content-Type: image/jpeg
 
 文件路径选择，然后点击 ，进行复制路径
 
-
-
 ![1569579338051](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1569579338051.png)
 
 
@@ -205,42 +203,6 @@ Cookie: scf-manager_SID=e1fd90bf-1148-4368-9fe9-018dcaf1aa0d
 # 返回结果
 # "{\"msg\":\"字典类型删除成功\"}"
 ```
-
-
-
-# 二、`PostMan`
-
-## 1、`Cookie`文件上传测试
-
-![1569579681814](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1569579681814.png)
-
-![1569579673129](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1569579673129.png)
-
-
-
-
-
-## 2、`postman` 配置环境变量
-
-### 1）设置添加环境变量
-
-![1570762848691](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1570762848691.png)
-
-
-
-![1570762873858](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1570762873858.png)
-
-
-### 2）配置环境变量的值
-
-
-![1570762887604](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1570762887604.png)
-
-
-
-### 3）变量访问{{ucenter_url}}
-
-![1570762979110](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1570762979110.png)
 
 
 
