@@ -2,8 +2,11 @@ package com.healerjean.proj.cache;
 
 import com.healerjean.proj.common.enums.DeleteEnum;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * EnumCache 枚举缓存
@@ -30,12 +33,11 @@ public class EnumCache {
     /**
      * 枚举静态块加载标识缓存结构
      */
-    static final Map<String, Class<? extends Enum>> NAME_LOADED = new ConcurrentHashMap<>();
+    static final Map<String, List<Enum>> NAME_LOADED = new ConcurrentHashMap<>();
 
 
     static {
-        NAME_LOADED.put("DeleteEnum", DeleteEnum.class);
-
+        EnumCache.registerByClassName(DeleteEnum.class);
         // 通过名称构建缓存,通过EnumCache.findByName(StatusEnum.class,"SUCCESS",null);调用能获取枚举
         EnumCache.registerByName(DeleteEnum.class, DeleteEnum.values());
         // 通过code构建缓存,通过EnumCache.findByValue(StatusEnum.class,"S",null);调用能获取枚举
@@ -57,6 +59,19 @@ public class EnumCache {
             map.put(e.name(), e);
         }
         CACHE_BY_NAME.put(clazz, map);
+    }
+
+
+
+    /**
+     * 以枚举名称构建缓存，在枚举的静态块里面调用
+     *
+     * @param clazz clazz
+     * @param <E>   Enum
+     */
+    public static <E extends Enum> void  registerByClassName(Class<E> clazz) {
+        List<Enum> enumConstants = Arrays.stream(clazz.getEnumConstants()).collect(Collectors.toList());
+        NAME_LOADED.put(clazz.getSimpleName(), enumConstants);
     }
 
     /**
@@ -137,7 +152,7 @@ public class EnumCache {
      *
      * @param className simpleClassName
      */
-    public static Class<? extends Enum> findClassByName(String className) {
+    public static List<Enum> findClassByName(String className) {
         return   NAME_LOADED.get(className);
     }
 
