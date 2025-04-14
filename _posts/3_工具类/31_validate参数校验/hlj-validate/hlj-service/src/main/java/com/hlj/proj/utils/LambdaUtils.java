@@ -22,7 +22,7 @@ public class LambdaUtils {
     /**
      * 方法缓存
      */
-    private static Map<Class<?>, SerializedLambda> CLASS_LAMBDA_CACHE = new ConcurrentHashMap<>();
+    private static final Map<Class<?>, SerializedLambda> CLASS_LAMBDA_CACHE = new ConcurrentHashMap<>();
 
     /**
      * 从lambda表达式获取SerializedLambda实例

@@ -1,7 +1,7 @@
 package com.healerjean.proj.aspect;
 
 import com.healerjean.proj.common.anno.RateLimit;
-import com.healerjean.proj.utils.QpsRateLimitUtils;
+import com.healerjean.proj.utils.ratelimit.QpsRateLimitUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;

@@ -1,6 +1,6 @@
 package com.healerjean.proj.config;
 
-import com.healerjean.proj.utils.QpsRateLimitUtils;
+import com.healerjean.proj.utils.ratelimit.QpsRateLimitUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;

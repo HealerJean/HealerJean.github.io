@@ -31,7 +31,7 @@ public class ParameterException extends RuntimeException {
      */
     public ParameterException(String showMessage) {
         super(showMessage);
-        this.code = CodeEnum.PlatformErrorEnum.ERROR_CODE_200000.getCode();
+        this.code = CodeEnum.ParamsErrorEnum.ERROR_CODE_100000.getCode();
     }
 
     /**

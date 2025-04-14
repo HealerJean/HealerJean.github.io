@@ -215,9 +215,14 @@ MessageDO voRule2Do(MessageVO messageVO, RulesDO rulesDO);
 
 ### 2）自定义映射 `@Named`
 
-#### a、日期&枚举
+> **`@Named`注解本身无法直接全局生效**，它需要结合`qualifiedByName`属性在具体的映射方法中显式指定才能生效
+>
+> `MapStruct` 的设计目标是**类型安全与高性能**，通过编译时生成代码避免反射。若允许`@Named`全局生效，可能导致以下问题：
+>
+> - **隐式行为风险**：自动应用转换可能引入不可预期的副作用。
+> - **类型冲突**：同一类型可能有多种转换需求（如`double`转`int`或`String`），需明确指定逻辑。
 
-**1、转化类 `BeanTransfer`**
+#### a、转化类 `BeanTransfer`
 
 ```java
 package com.healerjean.proj.beanmap.transfer;
@@ -290,7 +295,7 @@ public interface BeanTransfer {
 
 
 
-**2、转化常亮定义`MapperNamedConstant`**
+#### b、转化常亮定义`MapperNamedConstant`
 
 ```java
 package com.healerjean.proj.enmus;
@@ -321,12 +326,13 @@ public interface MapperNamedConstant {
      * METHOD_LOCAL_DATE_TIME_TO_DATE
      */
     String METHOD_LOCAL_DATE_TIME_TO_DATE = "localDateTimeToDateMethod";
-
 }
 
 ```
 
-**3、`BeanUtils` 工具类**
+
+
+#### c、`BeanUtils` 工具类
 
 ```java
 @Mapper(uses = {
@@ -366,7 +372,7 @@ public interface BeanUtils {
 
 ```
 
-**4、`MapStrut`生成的类**
+#### d、`MapStrut `生成的类
 
 ```java
 package com.healerjean.proj.beanmap;
@@ -411,8 +417,6 @@ public class BeanUtilsImpl implements BeanUtils {
 
 
 
-
-
 ### 3）常数 `constant`
 
 ```java
@@ -450,7 +454,7 @@ public interface SourceTargetMapper {
 
 ### 5）更新 不是新生成
 
-> 如果不想自动生成一个新的 `target` 实例，而是更新参数传入的 `target` 实例，可以给 `target` 增加 `@MappingTarget` 注解，此时返回的是传入的 target 对象
+> 如果不想自动生成一个新的 `target` 实例，而是更新参数传入的 `target` 实例，可以给 `target` 增加 `@MappingTarget` 注解，此时返回的是传入的 `target` 对象
 
 ```java
 @Mapper

@@ -84,4 +84,14 @@ public class ExceptionController {
     }
 
 
+    @ApiOperation("exception")
+    @LogIndex
+    @GetMapping("exception")
+    @ResponseBody
+    public BaseRes<List<UserDemoVO>> exception() {
+        throw new RuntimeException("系统异常");
+    }
+
+
+
 }

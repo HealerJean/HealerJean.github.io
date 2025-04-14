@@ -880,8 +880,6 @@ public class TestMain {
 
 > **`flatMap` 方法可以将多个流合并为一个流，非常适用于处理多层嵌套的集合结构**
 
-
-
 ```java
 List<List<Integer>> numbers = Arrays.asList(
     Arrays.asList(1, 2, 3),
@@ -1028,32 +1026,37 @@ public class TestMain {
 
 ```java
 public class TestMain {
-  
-    /**
-     * 2、对象
-     */
-    @Test
-    public void test2() {
-        List<Person> personList = Arrays.asList(
-                new Person(1L, "a"),
-                // 如果收集成map，则Key 不能重复，否则会报错，
-                // new Person(1L, "d"),
-                new Person(2L, "b"),
-                new Person(3L, "c"));
+
+  /**
+   * 2、对象
+   */
+  @Test
+  public void test2() {
+      List<Person> personList = Arrays.asList(
+              new Person(1L, "a"),
+              // 如果收集成map，则Key 不能重复，否则会报错，
+              // new Person(1L, "d"),
+              new Person(2L, "b"),
+              new Person(3L, "c"));
 
 
-        Map<Long, String> mapName = personList.stream()
-                .collect(Collectors.toMap(k -> k.getId(), v -> v.getName()));
+      Map<Long, String> mapName = personList.stream()
+              .collect(Collectors.toMap(k -> k.getId(), v -> v.getName()));
 
 
-        Map<Long, Person> mapPerson = personList.stream()
-                .collect(Collectors.toMap(k -> k.getId(), v -> v));
+      Map<Long, Person> mapPerson = personList.stream()
+              .collect(Collectors.toMap(k -> k.getId(), v -> v));
 
-      //假如id存在重复值，则会报错Duplicate key xxx, 解决方案是：
-     Map<Long, Person> map = list.stream()
-        .collect(Collectors.toMap(Student::getId, v1 -> v1,(v1,v2)->v1));
+    //假如id存在重复值，则会报错Duplicate key xxx, 解决方案是：
+   Map<Long, Person> map = list.stream()
+      .collect(Collectors.toMap(Student::getId, v1 -> v1,(v1,v2)->v1));
 
 
+     Map<String, Person> map = list.stream().collect(Collectors.toMap(
+                Student::getId,,
+                Function.identity(),
+                (afterRecord, beforeRecord) -> afterRecord.getEndTime().before(beforeRecord.getEndTime()) ? beforeRecord : afterRecord));
+    
 ```
 
 

@@ -26,10 +26,10 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class LogbackController {
 
-    public static final Marker MARKER_MQ_LOG = MarkerFactory.getMarker("MARKER_MQ_LOG");
+    public static final Marker MARKER_MQ_LOG = MarkerFactory.getMarker("marker_mq_log");
 
 
-    private static final Logger BIZ_LOG = LoggerFactory.getLogger("BIZ_LOG");
+    private static final Logger BIZ_LOG = LoggerFactory.getLogger("biz_log");
 
     @LogIndex
     @GetMapping("logback")
