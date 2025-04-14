@@ -30,10 +30,6 @@ public class TestMain {
     }
 
 
-    @Test
-    public void test2(){
-        DeepCopyUtil.deepCopy()
-    }
 
 
 

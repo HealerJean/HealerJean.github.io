@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.UnexpectedTypeException;
 
@@ -111,8 +112,10 @@ public class ControllerHandleConfig {
      */
     @ExceptionHandler
     @ResponseBody
-    public HttpEntity<BaseRes<?>> allExceptionHandler(HttpServletResponse response, Exception e) {
-        log.error("====系统错误===", e);
+    public HttpEntity<BaseRes<?>> allExceptionHandler(HttpServletRequest httpServletRequest,  HttpServletResponse response, Exception e) {
+        String requestUrl = httpServletRequest.getRequestURL().toString();
+        String requestMethod = httpServletRequest.getMethod();
+        log.error("====系统错误===requestUrl:{}, requestMethod:{}", requestUrl, requestMethod,  e);
         response.setStatus(500);
         return returnMessage(BaseRes.buildFailure(CodeEnum.ErrorCodeEnum.ERROR_CODE_FAIL));
     }
@@ -146,9 +149,10 @@ public class ControllerHandleConfig {
     // }
     // @ExceptionHandler(value ={HttpMessageConversionException.class, BindException.class} )
     // @ResponseBody
-    // public HttpEntity<ResponseBean> httpMessageConversionExceptionHandler(Exception e) {
+    // public HttpEntity<BaseRes<?>> httpMessageConversionExceptionHandler(Exception e) {
     //     log.error("====参数格式异常===", e);
-    //     return new ResponseEntity<>(ResponseBean.buildFailure(ResponseEnum.参数格式异常),HttpStatus.BAD_REQUEST);
+    //     return new ResponseEntity<>(BaseRes.buildFailure(CodeEnum.ParamsErrorEnum.ERROR_CODE_100000),HttpStatus.BAD_REQUEST);
     // }
+    //  HttpUtils.writeHttpResponse()
 
 }

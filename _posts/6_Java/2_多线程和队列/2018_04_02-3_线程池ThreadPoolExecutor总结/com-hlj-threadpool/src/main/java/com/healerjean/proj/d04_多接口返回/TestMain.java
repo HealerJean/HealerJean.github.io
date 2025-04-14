@@ -327,10 +327,10 @@ public class TestMain {
 
 
         // 第一种方式：CompletableFuture.allOf
-        CompletableFuture[] completableFutures = new CompletableFuture[]{task1, task2, task3};
-        CompletableFuture.allOf(completableFutures).join();
-        Long cost = System.currentTimeMillis() - start;
-        log.info("[test] task finish cost:{}", cost);
+        // CompletableFuture[] completableFutures = new CompletableFuture[]{task1, task2, task3};
+        // CompletableFuture.allOf(completableFutures).join();
+        // Long cost = System.currentTimeMillis() - start;
+        // log.info("[test] task finish cost:{}", cost);
 
         // 第二种方式：completableFuture.get()
         // for (CompletableFuture completableFuture : completableFutures){
@@ -338,6 +338,36 @@ public class TestMain {
         //     Long cost = System.currentTimeMillis() - start;
         //     log.info("[task]  cost:{},  result:{}", cost, result);
         // }
+
+
+        // 第三种方式：CompletableFuture.allOf 顺便获取结果
+        CompletableFuture[] completableFutures = new CompletableFuture[]{task1, task2, task3};
+        CompletableFuture<String> stringCompletableFuture = CompletableFuture.allOf(completableFutures).thenApply(f -> {
+            String task1Res = null;
+            try {
+                task1Res = task1.get();
+            } catch (Exception e) {
+                throw new RuntimeException("");
+            }
+            String task2Res = null;
+            try {
+                task2Res = task2.get();
+            } catch (Exception e) {
+                throw new RuntimeException("");
+            }
+
+            String task3Res = null;
+            try {
+                task3Res = task3.get();
+            } catch (Exception e) {
+                throw new RuntimeException("");
+            }
+            return task1Res + task2Res + task3Res;
+        });
+        String join = stringCompletableFuture.join();
+        log.info("join:{}", join);
+        Long cost = System.currentTimeMillis() - start;
+        log.info("[test] task finish cost:{}", cost);
     }
 
 

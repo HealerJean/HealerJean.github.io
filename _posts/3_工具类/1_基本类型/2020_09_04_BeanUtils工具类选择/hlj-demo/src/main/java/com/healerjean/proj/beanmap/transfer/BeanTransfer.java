@@ -1,5 +1,6 @@
 package com.healerjean.proj.beanmap.transfer;
 
+import com.healerjean.proj.anno.mapper.SetConverter;
 import com.healerjean.proj.enmus.MapperNamedConstant;
 import com.healerjean.proj.enmus.SystemEmum;
 import org.mapstruct.Named;

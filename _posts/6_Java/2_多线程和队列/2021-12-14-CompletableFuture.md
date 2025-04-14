@@ -50,9 +50,26 @@ description: CompletableFuture
 
 
 
+|    **维度**    |      `thenRunAsync`      |        `whenComplete`        |
+| :------------: | :----------------------: | :--------------------------: |
+|    **用途**    |     执行独立后续任务     | 处理结果或异常（不修改结果） |
+|  **线程行为**  |  默认异步执行（新线程）  | 默认同步执行（前序任务线程） |
+|  **异常传递**  |    前序异常会跳过回调    |   无论是否异常，回调均执行   |
+| **返回值影响** | 无返回值，不影响前序结果 |        不修改前序结果        |
+
+
+
 ### 1）`completableFuture.whenComplete`
 
 > 第一个参数是结果，第二个参数是异常
+
+|   **维度**   |         **`thenApply`**         |              **`whenComplete`**               |
+| :----------: | :-----------------------------: | :-------------------------------------------: |
+| **触发条件** | 仅在前序任务**成功完成**时触发  |         无论任务**成功或失败**均触发          |
+| **输入参数** |    接受前序任务的结果（`T`）    |     接受结果（`T`）和异常（`Throwable`）      |
+|  **返回值**  | 返回新的 `CompletableFuture<U>` | 返回与原任务相同结果的 `CompletableFuture<T>` |
+| **异常处理** |     不处理异常，异常会传播      |      可访问异常，但需显式处理以避免传播       |
+| **典型场景** |    数据转换、链式流水线操作     |         日志记录、资源清理、异常监控          |
 
 ```java
 /**
@@ -117,7 +134,7 @@ public void test_exceptionally() throws Exception {
 
 ### 3）`completableFuture.handle`
 
-> 既可以感知异常，也可以返回默认数据，是whenComplete和exceptionally的结合
+> 既可以感知异常，也可以返回默认数据，是 `whenComplete` 和 `exceptionally`的结合
 
 ```java
 /**
@@ -154,6 +171,14 @@ public void test2() throws Exception {
 ```
 
 
+
+## 3、`join`、`get`
+
+|    **维度**    |                 `join()`                  |                           `get()`                            |
+| :------------: | :---------------------------------------: | :----------------------------------------------------------: |
+|  **异常类型**  | 仅抛出非受检异常（`CompletionException`） | 抛出受检异常（`InterruptedException`, `ExecutionException`） |
+| **代码简洁性** |     无需 `try-catch` 包裹，代码更简洁     |                 需显式处理受检异常，代码冗长                 |
+|  **适用场景**  | 推荐在 `CompletableFuture` 链式调用中使用 |            需精确控制异常时使用（如强制中断任务）            |
 
 
 
@@ -443,9 +468,86 @@ public void test5() throws ExecutionException, InterruptedException {
         Long cost = System.currentTimeMillis() - start;
         log.info("[task]  cost:{},  result:{}", cost, result);
     }
+  
+  
+      // 第三种方式：CompletableFuture.allOf 顺便获取结果
+        CompletableFuture[] completableFutures = new CompletableFuture[]{task1, task2, task3};
+        CompletableFuture<String> stringCompletableFuture = CompletableFuture.allOf(completableFutures).thenApply(f -> {
+            String task1Res = null;
+            try {
+                task1Res = task1.get();
+            } catch (Exception e) {
+                throw new RuntimeException("");
+            }
+            String task2Res = null;
+            try {
+                task2Res = task2.get();
+            } catch (Exception e) {
+                throw new RuntimeException("");
+            }
+
+            String task3Res = null;
+            try {
+                task3Res = task3.get();
+            } catch (Exception e) {
+                throw new RuntimeException("");
+            }
+            return task1Res + task2Res + task3Res;
+        });
+        String join = stringCompletableFuture.join();
+        log.info("join:{}", join);
+        Long cost = System.currentTimeMillis() - start;
+        log.info("[test] task finish cost:{}", cost);
+  
+  
 }
 
 ```
+
+
+
+```java
+public ResultDTO dynamicRpcQuery(Query query) {
+      List<QueryType> queryTypes = query.getQueryTypes();
+      String id = query.getId();
+      String pin = query.getPin();
+      List<CompletableFuture<?>> futures = new ArrayList<>();
+
+      // 模拟 RPC 调用 1
+      CompletableFuture<String> future1 = queryTypes.contains(QueryType.TYPE1) ?
+              CompletableFuture.supplyAsync(() -> rpcService.getData1(id), THREAD_POOL) : null;
+      Optional.ofNullable(future1).ifPresent(futures::add);
+
+      // 模拟 RPC 调用 2
+      CompletableFuture<String> future2 = queryTypes.contains(QueryType.TYPE2) ?
+              CompletableFuture.supplyAsync(() -> rpcService.getData2(id), THREAD_POOL) : null;
+      Optional.ofNullable(future2).ifPresent(futures::add);
+
+      // 模拟 RPC 调用 3
+      CompletableFuture<String> future3 = queryTypes.contains(QueryType.TYPE3) ?
+              CompletableFuture.supplyAsync(() -> rpcService.getData3(pin), THREAD_POOL) : null;
+      Optional.ofNullable(future3).ifPresent(futures::add);
+
+      ResultDTO result = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+        .thenApply(f -> {
+          ResultDTO dto = new ResultDTO();
+          Optional.ofNullable(future1).ifPresent(item -> dto.setData1(item.join()));
+          Optional.ofNullable(future2).ifPresent(item -> dto.setData2(item.join()));
+          Optional.ofNullable(future3).ifPresent(item -> dto.setData3(item.join()));
+          return dto;
+      }).exceptionally(e -> {
+          log.log(Level.SEVERE, "id: " + id, e);
+          return new ResultDTO();
+      }).join();
+
+      result.setId(id);
+      result.setPin(pin);
+      return result;
+  }
+
+```
+
+
 
 ### 4）输出最先完成的n个任务
 
@@ -1000,7 +1102,7 @@ CompletableFuture<String> result = cf6.thenApply(v -> {
 
 2、如果注册时被依赖的操作还未执行完，则由回调线程执行。
 
-⬤ 异步方法（即带 `Async` 后缀的方法）：可以选择是否传递线程池参数 `Executor`运行在指定线程池中；当不传递`Executor`时，会使用 `ForkJoinPool` 中的共用线程池 `CommonPool`（`CommonPool`的大小是 `CPU` 核数 - 1 ，如果是`IO`密集的应用，线程数可能成为瓶颈）。
+⬤ 异步方法（即带 `Async` 后缀的方法）：可以选择是否传递线程池参数 `Executor`运行在指定线程池中；当不传递`Executor`时，会使用 `ForkJoinPool` 中的共用线程池 `CommonPool`（`CommonPool`的大小是 `CPU` 核数 - 1 ，如果是`IO `密集的应用，线程数可能成为瓶颈）。
 
 ```java
 ExecutorService threadPool1 = new ThreadPoolExecutor(10, 10, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100));
