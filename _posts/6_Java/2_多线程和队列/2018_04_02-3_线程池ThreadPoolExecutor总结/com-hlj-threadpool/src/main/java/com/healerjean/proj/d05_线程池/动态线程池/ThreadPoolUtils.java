@@ -4,6 +4,7 @@ package com.healerjean.proj.d05_线程池.动态线程池;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -117,22 +118,31 @@ public class ThreadPoolUtils {
         log.info("updateExecutorConfig end");
     }
 
+
     /**
      * 自定义上报属性，字段值与ump监控配置"自定义字段"一致
      *
-     * @param executor executor
      * @return Map<String, Number>
      */
-    private Map<String, Number> buildCustomerProperty(ThreadPoolExecutor executor) {
+    private  Map<String, Number> buildCustomerProperty(ThreadPoolExecutor executor ) {
         Map<String, Number> dataMap = new HashMap<>(16);
+        // 核心线程数：返回线程池中核心线程的数量。核心线程是线程池中一直存在的线程，它们不会被销毁，除非线程池被关闭。
         dataMap.put("corePoolSize", executor.getCorePoolSize());
+        // 最大线程数：返回线程池允许的最大线程数量。当工作队列满时，线程池可以创建的新线程的最大数量。
         dataMap.put("maximumPoolSize", executor.getMaximumPoolSize());
+        // 当前线程数：返回线程池中当前线程的数量，包括空闲线程和活动线程
         dataMap.put("poolSize", executor.getPoolSize());
+        // 活动线程数：返回当前正在执行任务的线程数量
         dataMap.put("activeCount", executor.getActiveCount());
+        // 队列大小
         dataMap.put("queueCapacity", executor.getQueue().size() + executor.getQueue().remainingCapacity());
+        // 当前排队线程数：当前等待执行的任务数量，即已经提交但尚未开始执行的任务数量。
         dataMap.put("queueSize", executor.getQueue().size());
+        // 队列剩余容量：返回队列还能容纳的任务数量，即队列的剩余空间。
         dataMap.put("remainingCapacity", executor.getQueue().remainingCapacity());
+        // 任务完成数：返回线程池已经成功完成的任务总数
         dataMap.put("completedTaskCount", executor.getCompletedTaskCount());
+        // 历史最大线程数：返回线程池在其生命周期中曾经达到的最大线程数量
         dataMap.put("largestPoolSize", executor.getLargestPoolSize());
         return dataMap;
     }
