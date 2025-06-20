@@ -62,16 +62,17 @@ public final class ContextHolder {
 
 ### 1、`#set `方法
 
-> 线程隔离的秘密，就在于`ThreadLocalMap`这个类。`ThreadLocalMap`是`ThreadLocal`类的一个静态内部类，它实现了键值对的设置和获取（对比 `Map` 对象来理解），          
+> 线程隔离的秘密，就在于`ThreadLocalMap`这个类。`ThreadLocalMap` 是 `ThreadLocal`类的一个静态内部类，它实现了键值对的设置和获取（对比 `Map` 对象来理解），          
 
-> 1、先获取当前线程，然后通过`#getMap(Thread t)`方法获取一个和当前线程相关的`ThreadLocalMap`，然后将变量的值设置到这个`ThreadLocalMap`对象中，当然如果获取到的`ThreadLocalMap`对象为空，就通过`createMap`方法创建。        
+> 1、先获取当前线程，然后通过 `#getMap(Thread t)`  方法获取一个和当前线程相关的`ThreadLocalMap`，然后将变量的值设置到这个`ThreadLocalMap`对象中，当然如果获取到的`ThreadLocalMap`对象为空，就通过`createMap`方法创建。        
 >
->  2、每个线程中都有一个独立的`ThreadLocalMap`副本，它所存储的值，只能被当前线程读取和修改。`ThreadLocal`类通过操作每一个线程特有的`ThreadLocalMap`副本，从而实现了变量访问在不同线程中的隔离。因为每个线程的变量都是自己特有的，完全不会有并发错误。还有一点就是   `ThreadLocalMap`存储的键值对中的键是 `this` 对象指向的`ThreadLocal`对象，而值就是你所设置的对象了
+>  2、每个线程中都有一个独立的 `ThreadLocalMap` 副本，它所存储的值，只能被当前线程读取和修改。`ThreadLocal` 类通过操作每一个线程特有的`ThreadLocalMap`副本，从而实现了变量访问在不同线程中的隔离。因为每个线程的变量都是自己特有的，完全不会有并发错误。还有一点就是   `ThreadLocalMap` 存储的键值对中的键是 `this` 对象指向的`ThreadLocal`对象，而值就是你所设置的对象了
 
 
 
 ```java
-
+ThreadLocal.ThreadLocalMap threadLocals = null; （在Thread类中）
+  
 public void set(T value) {
     Thread t = Thread.currentThread();
     ThreadLocalMap map = getMap(t);
@@ -87,12 +88,10 @@ ThreadLocalMap getMap(Thread t) {
 }	
 
 
-
 void createMap(Thread t, T firstValue) {	 //this是ThreadLocal对象
     t.threadLocals = new ThreadLocalMap(this, firstValue); 
 }
 
-ThreadLocal.ThreadLocalMap threadLocals = null; （在Thread类中）
 
 ```
 
@@ -138,7 +137,7 @@ protected T initialValue() {
 
 ### 3、总结：
 
-> 当我们调用`get`方法的时候，其实每个当前线程中都有一个`ThreadLocalMap`。每次获取或者设置都是对该ThreadLocal进行的操作，是与其他线程分开的。从本质来讲，就是每个线程都维护了一个`map`，而这个`map`的`key`就是`threadLocal`，而值就是我们set的那个值        
+> 当我们调用`get`方法的时候，其实每个当前线程中都有一个`ThreadLocalMap`。每次获取或者设置都是对该 `ThreadLocal`进行的操作，是与其他线程分开的。从本质来讲，就是每个线程都维护了一个`map`，而这个`map`的`key`就是`threadLocal`，而值就是我们set的那个值        
 
 
 
@@ -171,7 +170,7 @@ protected T initialValue() {
 
 ### 3.1、为什么使用弱引用
 
-`key` 使用强引用：当`ThreadLocalMap`的`key`为强引用回收`ThreadLocal`时，因为`ThreadLocalMap`还持有`ThreadLocal`的强引用，如果没有`key` 使用弱引用：手动删除，`ThreadLocal`不会被回收，导致`Entry`内存泄漏。 譬如 设置：`ThreadLocal=null` 以后，应该会被回收的，但实际情况是`ThreadLocalMap`还有一个强引用，导致无法回收           
+`key` 使用强引用：当 `ThreadLocalMap` 的`key`为 强引用回收 `ThreadLocal` 时，因为`ThreadLocalMap`还持有`ThreadLocal`的强引用，如果没有`key` 使用弱引用：手动删除，`ThreadLocal`不会被回收，导致`Entry`内存泄漏。 譬如 设置：`ThreadLocal=null` 以后，应该会被回收的，但实际情况是`ThreadLocalMap`还有一个强引用，导致无法回收           
 
 `key` 使用弱引用：当`ThreadLocalMap`的`key`为弱引用回收`ThreadLocal`时，由于`ThreadLocalMap`持有`ThreadLocal`的弱引用，即使没有手动删除，`ThreadLocal`也会被回收。当`key`为`null`，在下一次`ThreadLocalMap`调用`set()` ,`get()`，`remove()`方法的时候会被清除`value`值。（`ThreadLocal` 对象只是作为`ThreadLocalMap`的一个`key`而存在的，现在它被回收了，但是它对应的`value`并没有被回收，内存泄露依然存在！而且`key`被删了之后，变成了`null`，`value`更是无法被访问到了！针对这一问题，`ThreadLocalMap`类的设计本身已经有了这一问题的解决方案，那就是在每次`get()`/`set()`/`remove()` `ThreadLocalMap`中的值的时候，会自动清理`key`为 `null` 的 `value`。如此一来，value也能被回收了）        
 
