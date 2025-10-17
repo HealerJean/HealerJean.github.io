@@ -1,7 +1,6 @@
 package com.healerjean.proj.config.filter;
 
 import org.slf4j.MDC;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.*;
 import java.io.IOException;
@@ -26,9 +25,12 @@ public class Log4j2ReqUidFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        MDC.put(REQ_UID, UUID.randomUUID().toString().replace("-", ""));
-        filterChain.doFilter(servletRequest, servletResponse);
-        MDC.remove(REQ_UID);
+        try {
+            MDC.put(REQ_UID, UUID.randomUUID().toString().replace("-", ""));
+            filterChain.doFilter(servletRequest, servletResponse);
+        }finally {
+            MDC.remove(REQ_UID);
+        }
     }
 
     @Override

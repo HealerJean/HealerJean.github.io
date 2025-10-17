@@ -1,5 +1,8 @@
 package com.healerjean.proj.common.contants;
 
+import com.alibaba.fastjson.TypeReference;
+import com.healerjean.proj.common.data.bo.BaseRes;
+import com.healerjean.proj.data.vo.UserDemoVO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -80,7 +83,6 @@ public class RedisConstants {
         /**
          * Redis的缓存Key
          */
-        COMMON("COMMON", "公共CACHE", 60 * 10),
         USER("USER", "用户相关缓存", 60 * 60 * 2),
         ;
         /**
@@ -96,6 +98,7 @@ public class RedisConstants {
          * 单位秒
          */
         private final Integer expireSec;
+
 
         /**
          * KEY中追加业务的属性

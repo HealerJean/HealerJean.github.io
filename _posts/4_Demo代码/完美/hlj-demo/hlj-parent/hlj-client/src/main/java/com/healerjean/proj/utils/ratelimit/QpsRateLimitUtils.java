@@ -1,5 +1,6 @@
 package com.healerjean.proj.utils.ratelimit;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.util.concurrent.RateLimiter;
 import com.healerjean.proj.config.QpsRateLimitConfiguration;
 import lombok.Data;
@@ -7,6 +8,8 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -49,20 +52,36 @@ public class QpsRateLimitUtils {
      */
     @PostConstruct
     public void init() {
-        refreshRateLimitMap(qpsRateLimitConfiguration.getLimitConfig());
+        Map<String, QpsRateLimitDTO> limitConfig = qpsRateLimitConfiguration.getLimitConfig();
+        try {
+            if (log.isInfoEnabled()){
+                log.info("limitConfig: {}", JSON.toJSONString(limitConfig));
+            }
+            if (CollectionUtils.isEmpty(limitConfig)){
+                log.error("限流未配置, limitConfig:{}", JSON.toJSON(limitConfig), e);
+                return;
+            }
+            limitConfig.forEach((k, v) -> {
+                Assert.notNull(k);
+                Assert.notNull(v.getLimit());
+            });
+            refreshRateLimitMap(qpsRateLimitConfiguration.getLimitConfig());
+        } catch (Exception e) {
+            log.error("限流配置加载失败, rateLimitConfig:{}", JSON.toJSON(limitConfig), e);
+            throw new RuntimeException(e);
+        }
     }
 
     /**
      * 需要支持动态更新
      */
     public void refreshRateLimitMap(Map<String, QpsRateLimitDTO> limitConfig) {
+        // 赋值
         QRS_RATE_LIMIT_MAP = limitConfig.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, v ->
                         new QpsRateLimitDTO()
-                                .setKey(v.getKey())
                                 .setLimit(v.getValue().getLimit())
                                 .setRateLimiter(RateLimiter.create(v.getValue().getLimit()))));
-
     }
 
     /**
@@ -71,14 +90,19 @@ public class QpsRateLimitUtils {
      * @param key key
      */
     public static double acquire(String key) {
-        QpsRateLimitDTO qpsRateLimit = QRS_RATE_LIMIT_MAP.get(key);
-        if (Objects.isNull(qpsRateLimit)){
+        // -1 表示无限流配置
+        QpsRateLimitDTO limitConfig = QRS_RATE_LIMIT_MAP.get(key);
+        if (Objects.isNull(limitConfig)) {
             return -1;
         }
-        RateLimiter rateLimiter = qpsRateLimit.getRateLimiter();
+
+        RateLimiter rateLimiter = limitConfig.getRateLimiter();
         double acquire = rateLimiter.acquire();
-        if (log.isInfoEnabled()){
-            log.info("key:{},限流值:{}, rate:{} 等待:{}s", key, qpsRateLimit.getLimit(),rateLimiter.getRate(), acquire);
+        if (acquire > 0 && log.isWarnEnabled()){
+            log.warn("key:{},被限流:{}, rate:{} 等待:{}s", key, limitConfig.getLimit(), rateLimiter.getRate(), acquire);
+        }
+        if (acquire <= 0 && log.isInfoEnabled()) {
+            log.info("key:{},限流值:{}, rate:{} 等待:{}s", key, limitConfig.getLimit(), rateLimiter.getRate(), acquire);
         }
         return acquire;
     }

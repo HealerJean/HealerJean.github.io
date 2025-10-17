@@ -30,7 +30,7 @@ Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 
 
 
-> `shutdownHook `是一种特殊的结构，它允许开发人员插入 `JVM` 关闭时执行的一段代码。这种情况在我们需要做特殊清理操作`的情况下很有用
+> `shutdownHook `是一种特殊的结构，它允许开发人员插入 `JVM` 关闭时执行的一段代码。这种情况在我们需要做特殊清理操作 的情况下很有用
 
 ⬤ **`Application` 正常退出，在退出时执行特定的业务逻辑，或者关闭资源等操作**。
 
@@ -237,7 +237,7 @@ Tue Nov 12 17:42:38 CST 2024 等我5分钟
 
 **2、许多中间件框架也利用`addShutdownHook`来实现资源回收、清理等操作**
 
-​    比如 `Spring` 框架中，使用了 `ShutdownHook` 注册，我们常用的@ `PreDestroy` 在 `Bean`销毁前执行一些操作，也是借助其回调的。
+​    比如 `Spring` 框架中，使用了 `ShutdownHook` 注册，我们常用的 `@PreDestroy` 在 `Bean`销毁前执行一些操作，也是借助其回调的。
 
 
 

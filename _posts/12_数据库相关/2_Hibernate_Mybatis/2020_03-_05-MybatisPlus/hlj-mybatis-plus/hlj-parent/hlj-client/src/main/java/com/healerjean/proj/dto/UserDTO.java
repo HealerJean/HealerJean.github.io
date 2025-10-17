@@ -22,6 +22,7 @@ public class UserDTO {
     private String name;
     private Integer age;
     private String email;
+    private String telPhone;
 
 
     /** 添加日期进行测试 */
