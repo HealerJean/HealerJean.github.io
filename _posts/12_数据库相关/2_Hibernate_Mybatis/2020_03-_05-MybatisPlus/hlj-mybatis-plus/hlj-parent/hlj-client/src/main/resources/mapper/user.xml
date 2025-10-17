@@ -6,7 +6,7 @@
         <id column="ID" jdbcType="BIGINT" property="id" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="age" jdbcType="INTEGER" property="age" />
-        <result column="tel_phone" jdbcType="VARCHAR" property="telPhone" />
+        <result column="tel_phone" jdbcType="VARCHAR" property="telPhone" typeHandler="com.healerjean.proj.config.keycenter.SecretTypeHandler" />
         <result column="email" jdbcType="VARCHAR" property="email" />
         <result column="create_date" jdbcType="DATE" property="createDate" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -42,5 +42,12 @@
         select *
         from user
     </select>
+
+    <select id="getBaseResultMap" resultMap="BaseResultMap">
+        select *
+        from user
+    </select>
+
+
 
 </mapper>

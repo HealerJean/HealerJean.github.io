@@ -56,8 +56,17 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public Long zAdd(String key, Map<String, Double> members) {
-        Set<ZSetOperations.TypedTuple<String>> values = members.keySet().stream().map(memberKey-> new DefaultTypedTuple<>(memberKey,members.get(memberKey))).collect(Collectors.toSet());
-        return redisTemplate.opsForZSet().add(key, values);
+        Set<ZSetOperations.TypedTuple<String>> values = members.entrySet().stream()
+                .map(entry -> new DefaultTypedTuple<>(
+                        entry.getKey(),
+                        entry.getValue()
+                ))
+                .collect(Collectors.toSet());
+
+        // 显式获取ZSet操作对象并执行添加
+        ZSetOperations<String, String> zSetOps = redisTemplate.opsForZSet();
+        return zSetOps.add(key, values);
+        // return redisTemplate.opsForZSet().add(key, members);
     }
 
     @Override

@@ -8,15 +8,16 @@ import com.healerjean.proj.dto.UserDTO;
 import com.healerjean.proj.utils.JsonUtils;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.session.ResultContext;
-import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.*;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,26 +30,43 @@ import java.util.List;
 @Slf4j
 public class StreamReadController {
 
+
     /**
-     * userMapper
+     * sqlSessionFactory
      */
     @Resource
-    private UserMapper userMapper;
+    private SqlSessionFactory sqlSessionFactory;
+
 
     @GetMapping(value = "selectList", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public ResponseBean selectList() {
         List<User> users = Lists.newArrayList();
-        userMapper.getStreamAll(new ResultHandler<User>() {
-            /**
-             * mybatis流失查询会回调处理逻辑
-             */
-            @Override
-            public void handleResult(ResultContext<? extends User> resultContext) {
-                log.info("resultContext.result:{}", resultContext);
-                users.add(resultContext.getResultObject());
-            }
-        });
+
+        try(SqlSession sqlSession = sqlSessionFactory.openSession()){
+            UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+            mapper.getStreamAll(new ResultHandler<User>() {
+                private int batchCount = 0;
+                private List<User> batch = new ArrayList<>(1000);
+                @Override
+                public void handleResult(ResultContext<? extends User> resultContext) {
+                    User user = resultContext.getResultObject();
+                    batch.add(user);
+                    batchCount++;
+
+                    // 每 1000 条处理一次（如批量入库、写文件）
+                    if (batchCount % 1000 == 0) {
+                        processBatch(batch);
+                        batch.clear();
+                        sqlSession.commit();
+                    }
+                }
+                private void processBatch(List<User> batch) {
+                    // 例如：批量插入、导出文件、发送消息等
+                }
+            });
+            sqlSession.commit();
+        }
 
         log.info("用户管理--------selectLis：【{}】", JsonUtils.toJsonString(users));
         return ResponseBean.buildSuccess(users);

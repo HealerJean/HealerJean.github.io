@@ -28,15 +28,14 @@ public class BigKeyDataBO<T> implements Serializable {
      */
     private RedisConstants.BigCacheEnum cacheEnum;
 
-
     /**
      * key
      */
-    private String key;
+    private String keyName;
     /**
      * value
      */
-    private String value;
+    private String keyValue;
 
     /**
      * uuid
@@ -44,9 +43,9 @@ public class BigKeyDataBO<T> implements Serializable {
     private String uuid;
 
     /**
-     * 小key缓存索引，默认从1开始
+     * 小key缓存索引，默认从0开始
      */
-    private Long index = 1L;
+    private Long index = 0L;
 
     /**
      * 查询是否结束
@@ -56,11 +55,22 @@ public class BigKeyDataBO<T> implements Serializable {
     /**
      * 待缓存对象
      */
-    private List<T> readyList;
+    private List<T> readyCacheList = Lists.newArrayList();
 
     /**
      * 总数据
      */
     private List<T> data = Lists.newArrayList();
+
+    /**
+     * 添加-待缓存记录
+     *
+     * @param readyList readyList
+     */
+    public void addReadyCacheRecords(List<T> readyList) {
+        this.getReadyCacheList().addAll(readyList);
+        data.addAll(readyList);
+    }
+
 
 }

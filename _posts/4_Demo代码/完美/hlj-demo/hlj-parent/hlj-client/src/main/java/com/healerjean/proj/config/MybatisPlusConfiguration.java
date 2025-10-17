@@ -1,5 +1,6 @@
 package com.healerjean.proj.config;
 
+import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.healerjean.proj.config.interceptor.SqlLogInterceptor;
@@ -40,12 +41,19 @@ public class MybatisPlusConfiguration implements SmartInitializingSingleton {
         return interceptor;
     }
 
+    /**
+     * 注册 SQL 日志拦截器
+     */
+    @Bean
+    public ConfigurationCustomizer configurationCustomizer() {
+        // 通过 lambda 表达式配置 MyBatis 全局配置
+        return configuration -> {
+            // 添加我们自定义的 SQL 拦截器
+            configuration.addInterceptor(new SqlLogInterceptor());
+        };
+    }
 
     @Override
     public void afterSingletonsInstantiated() {
-        sqlSessionFactory.getConfiguration().addInterceptor(new SqlLogInterceptor());
     }
-
-
-
 }

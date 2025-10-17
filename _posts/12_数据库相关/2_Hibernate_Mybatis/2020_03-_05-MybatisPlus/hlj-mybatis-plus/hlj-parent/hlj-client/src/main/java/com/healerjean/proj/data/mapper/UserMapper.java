@@ -1,12 +1,11 @@
 package com.healerjean.proj.data.mapper;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.healerjean.proj.config.keycenter.one.CustomTypeHandler;
+import com.healerjean.proj.config.keycenter.SecretTypeHandler;
 import com.healerjean.proj.data.entity.User;
 import com.healerjean.proj.dto.UserDTO;
 import org.apache.ibatis.annotations.Param;
@@ -60,12 +59,8 @@ public interface UserMapper extends BaseMapper<User> {
     List<UserDTO> selectLocalDateTimeByMappeXml(UserDTO userDTO);
 
 
-
-
-
     @Results({
-            @Result(column = "email", property = "email", typeHandler = CustomTypeHandler.class),
-            @Result(column = "tel_phone", property = "telPhone", typeHandler = CustomTypeHandler.class)})
+            @Result(column = "tel_phone", property = "telPhone", typeHandler = SecretTypeHandler.class)})
     @Select("select * from user where id = #{id}")
     List<User> selectDncryptList(Long id);
 
@@ -85,4 +80,6 @@ public interface UserMapper extends BaseMapper<User> {
      * @return List<UserDTO>
      */
     void getStreamAll(ResultHandler<User> handler);
+
+    List<User> getBaseResultMap(Object o);
 }

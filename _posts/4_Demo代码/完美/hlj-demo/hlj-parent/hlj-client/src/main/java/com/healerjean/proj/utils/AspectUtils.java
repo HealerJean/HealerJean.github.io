@@ -4,6 +4,8 @@ import com.healerjean.proj.common.contants.RedisConstants;
 import com.healerjean.proj.common.anno.ElParam;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -21,6 +23,23 @@ public class AspectUtils {
      * el解析器
      */
     private static final ExpressionParser PARSER = new SpelExpressionParser();
+
+
+    /**
+     * 获取方法名
+     *
+     * @param joinPoint ProceedingJoinPoint
+     * @return 方法名
+     */
+    public static String getMethodName(ProceedingJoinPoint joinPoint) {
+        Signature signature = joinPoint.getSignature();
+        if (signature instanceof MethodSignature) {
+            MethodSignature methodSignature = (MethodSignature) signature;
+            return methodSignature.getMethod().getName();
+        }
+        return "unKnow";
+    }
+
 
     /**
      * 获取缓存key,规则：项目:Cacheable.prefix:R2mCacheParam.value表达式获取的值

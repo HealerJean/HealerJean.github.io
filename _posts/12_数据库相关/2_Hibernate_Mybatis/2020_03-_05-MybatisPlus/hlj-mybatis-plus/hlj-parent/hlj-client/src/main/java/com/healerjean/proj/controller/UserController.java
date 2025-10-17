@@ -1,16 +1,12 @@
 package com.healerjean.proj.controller;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.healerjean.proj.common.dto.ResponseBean;
 import com.healerjean.proj.data.entity.User;
 import com.healerjean.proj.data.mapper.UserMapper;
 import com.healerjean.proj.dto.UserDTO;
 import com.healerjean.proj.utils.JsonUtils;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author HealerJean
@@ -53,6 +47,15 @@ public class UserController {
         return ResponseBean.buildSuccess(users);
     }
 
+    @GetMapping(value = "selectBaseList", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public ResponseBean selectBaseList(UserDTO userDTO) {
+        List<User> users = userMapper.getBaseResultMap(null);
+        log.info("用户管理--------selectLis：【{}】", JsonUtils.toJsonString(users));
+        return ResponseBean.buildSuccess(users);
+    }
+
+
 
     @GetMapping(value = "insert", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
@@ -62,6 +65,7 @@ public class UserController {
         user.setName(userDTO.getName());
         user.setAge(userDTO.getAge());
         user.setEmail(userDTO.getEmail());
+        user.setTelPhone(userDTO.getTelPhone());
         userMapper.insert(user);
         log.info("用户管理--------insert：【{}】", JsonUtils.toJsonString(user));
         return ResponseBean.buildSuccess(user);

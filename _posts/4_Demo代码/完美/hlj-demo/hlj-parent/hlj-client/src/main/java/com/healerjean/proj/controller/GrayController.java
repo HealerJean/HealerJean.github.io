@@ -29,17 +29,17 @@ public class GrayController {
     @PostMapping("hit")
     @ResponseBody
     public BaseRes<GrayEnum.GrayResEnum> getBitInfo(GrayEnum.GrayBusinessEnum grayBusinessEnum, String grayValue) {
-        log.info("1:{}",GrayUtil.hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "1"));
-        log.info("2:{}",GrayUtil.hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "2"));
-        log.info("3:{}",GrayUtil.hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "3"));
-        log.info("4:{}",GrayUtil.hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "4"));
-        log.info("5:{}",GrayUtil.hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "5"));
-        log.info("6:{}",GrayUtil.hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "6"));
-        log.info("7:{}",GrayUtil.hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "7"));
-        log.info("8:{}",GrayUtil.hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "8"));
-        log.info("9:{}",GrayUtil.hitGray(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, "9"));
+        log.info("1:{}",GrayUtil.hitGray( "1", GrayEnum.GrayBusinessEnum.BUSINESS_OOO1));
+        log.info("2:{}",GrayUtil.hitGray( "2", GrayEnum.GrayBusinessEnum.BUSINESS_OOO1));
+        log.info("3:{}",GrayUtil.hitGray( "3", GrayEnum.GrayBusinessEnum.BUSINESS_OOO1));
+        log.info("4:{}",GrayUtil.hitGray( "4", GrayEnum.GrayBusinessEnum.BUSINESS_OOO1));
+        log.info("5:{}",GrayUtil.hitGray( "5", GrayEnum.GrayBusinessEnum.BUSINESS_OOO1));
+        log.info("6:{}",GrayUtil.hitGray( "6", GrayEnum.GrayBusinessEnum.BUSINESS_OOO1));
+        log.info("7:{}",GrayUtil.hitGray( "7", GrayEnum.GrayBusinessEnum.BUSINESS_OOO1));
+        log.info("8:{}",GrayUtil.hitGray( "8", GrayEnum.GrayBusinessEnum.BUSINESS_OOO1));
+        log.info("9:{}",GrayUtil.hitGray( "9", GrayEnum.GrayBusinessEnum.BUSINESS_OOO1));
 
-        return BaseRes.buildSuccess(GrayUtil.hitGray(grayBusinessEnum, grayValue));
+        return BaseRes.buildSuccess(GrayUtil.hitGray(grayValue, grayBusinessEnum));
     }
 
 }

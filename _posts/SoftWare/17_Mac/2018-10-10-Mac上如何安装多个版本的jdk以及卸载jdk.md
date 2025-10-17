@@ -15,17 +15,20 @@ description: mac上如何安装多个版本的jdk以及卸载jdk
 
 
 
-### 1、直接安装
-####  dmp包直接安装两个版本的jdk，比如我这里安装的`1.8.0_181` 、`10.0.2`。
+# 一、安装
+
+## 1、直接安装
+> `dmp`包直接安装两个版本的jdk，比如我这里安装的`1.8.0_181` 、`10.0.2`。
 
 ![WX20181009-112351@2x](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/WX20181009-112351@2x.png)
 
-### 2、配置环境
+## 2、配置环境
 
-打开环境变量配置文件`bash_profile `
+> 打开环境变量配置文件`bash_profile `
+>
 
 
-```
+```sh
 vim ~/.bash_profile 
 
 
@@ -44,11 +47,11 @@ source ~/.bash_profile
 
 ```
 
-### 3、任意切换java环境
-#### 控制台输入jdk8或者jdk10就会自动切换
+## 3、任意切换 `java` 环境
+> 控制台输入 `jdk8` 或者 `jdk10` 就会自动切换
 
 
-```
+```sh
 JeandeMBP:~ healerjean$ jdk8
 JeandeMBP:~ healerjean$ java -version
 java version "1.8.0_181"
@@ -66,22 +69,27 @@ Java HotSpot(TM) 64-Bit Server VM 18.3 (build 10.0.2+13, mixed mode)
 ```
 
 
-## 4、删除jdk
+## 4、删除 `jdk`
 
 
-```
-输入 
+```sh
+#输入 
 sudo rm -fr /Library/Internet\ Plug-Ins/JavaAppletPlugin.plugin  sudo rm -fr /Library/PreferencesPanes/JavaControlPanel.prefpane
 
 
-查找当前版本  输入：ls /Library/Java/JavaVirtualMachines/ 
-输出：jdk1.8.0_181.jdk
+#查找当前版本 输入：ls /Library/Java/JavaVirtualMachines/ 
+#输出：jdk1.8.0_181.jdk
 
 sudo rm -rf /Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk
-
-
-
 ```
+
+
+
+
+
+
+
+
 
 
 

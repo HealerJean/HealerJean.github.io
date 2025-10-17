@@ -16,8 +16,6 @@ description: SpringBoot整合Mybatis-Plus
 
 
 
-
-
 # 一、依赖  
 
 ## 1、`mybatis-plus`依赖
@@ -129,7 +127,7 @@ description: SpringBoot整合Mybatis-Plus
 
 
 
-#### 1.1.2.2、子工程 
+### 2）子工程 
 
 ```java
 <?xml version="1.0" encoding="UTF-8"?>
@@ -272,7 +270,7 @@ description: SpringBoot整合Mybatis-Plus
 
 ## 3、配置文件  
 
-### 1）、`application.properties`
+### 1）`application.properties`
 
 ```properties
 spring.application.name=hlj-mybatis-plus
@@ -315,6 +313,12 @@ mybatis-plus.capital-mode: true
 mybatis-plus.refresh-mapper: true
 
 ```
+
+
+
+
+
+
 
 
 
@@ -1684,8 +1688,6 @@ return ImmutablePair.of(MapUtils.getLong(map, "minId"), MapUtils.getLong(map, "m
 > 可能会遇到日期格式的时间段问题，当数据库的时间为 `DATE` 类型时，`MyBatis` 的`jdbcType`应该使用 `DATE`
 > `jdbcType=DATE`，而不是使用`jdbcType=TIMESTAMP`
 
-
-
 ### 2）返回 `LocalDate `和 `LocalDateTime` 报错
 
 > 提高 `druid `版本,我提高到了1.1.21
@@ -1709,6 +1711,19 @@ org.springframework.dao.InvalidDataAccessApiUsageException: Error attempting to 
     <version>${com-alibaba-druid.version}</version>
 </dependency>
 ```
+
+
+
+### 3）精度问题
+
+- **问题**：你的 Java 字段是 `LocalDateTime`，但数据库字段（如 `MySQL` 的 `DATETIME` 或 `TIMESTAMP`）的精度可能低于 `Java` 中的纳秒级精度。
+- **表现**：如果数据库只支持到毫秒或秒级别，而你的 `LocalDateTime` 包含了更精细的纳秒部分，在存储时可能会被截断或四舍五入，这在某些情况下可能表现为“+1s”或“-1s”的错觉，**比如 23:59:59:999 -> 会变成次日 00:00:00。**
+- 解决：
+  - **不使用，或者自行处理精度问题**
+  - 检查数据库表结构，确认 `DATETIME`/`TIMESTAMP` 字段的精度（例如 `DATETIME(6)` 支持微秒）。
+  - 确保 `JDBC` `URL` 中启用了对高精度的支持（对于 `MySQL`，通常是默认开启的）。
+
+
 
 
 
@@ -1801,6 +1816,8 @@ limit #{pageNum,jdbcType=INTEGER},  #{pageSize,jdbcType=INTEGER}
 > 1、保证`startPage() `后紧跟 `sql` 命令         
 >
 > 2、担心有嫌犯潜逃，在有问题的方法使用 `clearPage()` 来打补丁。有问题的方法使用 `clearPage()` 来打补丁。
+
+
 
 
 
