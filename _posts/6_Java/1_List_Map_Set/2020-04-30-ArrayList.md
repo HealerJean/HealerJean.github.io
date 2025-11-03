@@ -16,7 +16,7 @@ description: ArrayList
 
 
 
-# 1、`ArrayList`
+# 一、`ArrayList`
 
 > 底层的数据结构就是数组，数组元素类型为`Object`类型，即可以存放所有类型数据。    
 >
@@ -24,7 +24,7 @@ description: ArrayList
 
 
 
-## 1.1、类结构 
+## 1、类结构 
 
 ```java
 public class ArrayList<E> extends AbstractList<E>
@@ -34,7 +34,7 @@ public class ArrayList<E> extends AbstractList<E>
 
 
 
-## 1.2、静态变量 
+## 2、静态变量 
 
 ```java
 //数组默认初始容量
@@ -54,7 +54,7 @@ private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 
 
 
-## 1.3、实例变量 
+## 3、实例变量 
 
 ```java
 // 数据存的地方它的容量就是这个数组的长度，
@@ -69,9 +69,9 @@ private int size;
 
 
 
-## 1.3、构造器
+## 4、构造器
 
-### 1.3.1、无参构造器
+### 1）无参构造器
 
 > 初始化一个空的数组
 
@@ -83,7 +83,7 @@ public ArrayList() {
 
 
 
-### 1.3.2、指定大小的构造器
+### 2）指定大小的构造器
 
 > 如果指定了大小，则直接初始化
 
@@ -102,7 +102,7 @@ public ArrayList(int initialCapacity) {
 
 
 
-## 1.4、`add(E e)`、grow初始化和扩容  
+## 5、`add(E e)`、`grow` 初始化和扩容  
 
 1、一进来就首先确保 `elementData`数组有合适的大小，调用`ensureCapacityInternal(int minCapacity)`，`minCapacity`为数组最少需要的容量，也可以作为扩容阀值。执行2
 
@@ -122,7 +122,7 @@ public ArrayList(int initialCapacity) {
 
 
 
-### 1.4.1、add  
+### 1）`add`
 
 ```java
 public boolean add(E e) {
@@ -165,7 +165,7 @@ private void ensureExplicitCapacity(int minCapacity) {
 
 
 
-### 1.4.2、扩容 
+### 2）扩容 
 
 > 数组扩容才是按照当前容量的1.5倍进行扩容   => 新容量为 旧容量 + 旧容量的一半
 
@@ -219,7 +219,7 @@ private static int hugeCapacity(int minCapacity) {
 
 
 
-## 1.5、`remove(int index)`
+## 6、`remove(int index)`
 
 **1、判断是否索引位是否越界，数组移动元素**  
 
@@ -287,7 +287,7 @@ public  void RemoveIndexMethod() {
 
 
 
-## 1.6、`get(int index)`
+## 7、`get(int index)`
 
 > 检查是否越界，直接返回数组下标 
 
@@ -302,7 +302,7 @@ public  void RemoveIndexMethod() {
 
 
 
-## 1.7、`set(int index, E e)`
+## 8、`set(int index, E e)`
 
 > 检查是否越界，替换然后返回替换的元素即可
 
@@ -320,121 +320,184 @@ public E set(int index, E e) {
 
 
 
-## 1.8、`for`的遍历问题
+## 9、`for`的遍历问题
 
 > `ArrayList`、`LinkedList`、`HashMap`中都有一个字段叫`modCount`。    
 
-### 1.8.1、`modCount`用途
+- **普通 `for` 循环正向遍历的问题**：
+  - 当你删除索引 `i` 处的元素时，该位置之后的所有元素都会向前移动一位。
+  - 此时，循环变量 `i` 会执行 `i++`，导致**跳过了原本在 `i+1` 位置的元素**。
+  - 例如：`[A, B, C, D]`，当 `i=1` 时删除 "B"，列表变为 `[A, C, D]`，此时 "C" 在索引1处。但 `i++` 后 `i=2`，直接检查 "D"，跳过了 "C"。
+- **增强 `for` 循环（ `foreach` ）的问题**：
+  - `Java` 集合类（如 `ArrayList`, `LinkedList`）实现了 **fail-fast 机制**。
+  - 当你使用迭代器（`foreach` 语法糖背后就是迭代器）遍历集合时，会记录一个 `modCount`（修改次数）。
+  - 如果在遍历过程中，直接调用集合的 `add()` 或 `remove()` 方法修改了集合，`modCount` 会改变。
+  - 迭代器在下一次调用 `next()` 时会检查 `expectedModCount` 是否等于当前的 `modCount`，如果不等，就抛出 `ConcurrentModificationException`。
+
+
+
+### 1）`modCount`用途
 
 > 该字段被`Iterator`以及`ListIterator`的实现类所使用，如果该值被意外更改，`Iterator`或者`ListIterator` 将抛出`ConcurrentModificationException`异常    
->
-> **1、在 `ArrayList`中有个成员变量`modCount`，继承于`AbstractArrAayList`，每对 `List`对象修改一次，也就每次`add`或者`remove`它的值都会加1.**          
->
-> **2、`Itr`类里有一个成员变量`expectedModCount`，它的值为创建Iterator对象的时候`List`的`modCount`值。**                
+
+- `modCount`：**在 `ArrayList`中有个成员变量 `modCount`，继承于`AbstractArrAayList`，每对 `List`对象修改一次，也就每次`add`或者`remove`它的值都会加1.**          
+
+- `expectedModCount`：**`Itr`类里有一个成员变量`expectedModCount`，它的值为创建 `Iterator` 对象的时候`List`的`modCount`值。**         
+
+  - 用此 **`expectedModCount `**变量来检验在迭代过程中`List`对象是否被修改了，如果被修改了则抛出 `java.util.ConcurrentModificationException `异常。       
+
+  - 在每次调用`Itr `对象的 `next`() 或者 `remove `方法的时候都会调用 `checkForComodification`() 方法进行一次检验，     
 
 
+  - `checkForComodification`() 方法中做的工作就是比较 `expectedModCount`  和 `modCount` 的值是否相等，**如果不相等， 就认为还有其他对象正在对当前的List进行操作，那个就会抛出`ConcurrentModificationException`异常**
 
-1、用此**`expectedModCount`**变量来检验在迭代过程中`List`对象是否被修改了，如果被修改了则抛出`java.util.ConcurrentModificationException`异常。       
+    
 
-2、在每次调用`Itr`对象的`next`()或者`remove`方法的时候都会调用`checkForComodification`()方法进行一次检验，     
+    
 
-3、`checkForComodification`()方法中做的工作就是比较`expectedModCount` 和modCount的值是否相等，**如果不相等， 就认为还有其他对象正在对当前的List进行操作，那个就会抛出`ConcurrentModificationException`异常**。   
+### 2）错误举例
 
-​      
-
-### 1.8.2、测试1
-
-> 将 `lis`t对象里面的“c"删除了，同时list对象的`modCount`值加1，但是Itr对象的`expectedModCount`没有变，他们肯定是不相等了。等再一次执行`next`()方法的时候调用了`checkForComodification`()方法，这时候就抛出异常了。 
+#### a、使用普通for循环正向遍历并删除元素
 
 ```java
-public static void main(String[] args) {
-    List<String> list = new ArrayList<String>();
-    
-    list.add("a");
-    list.add("b");
-    list.add("c");
-    list.add("d");
-    list.add("e");
-    Iterator iterator = list.iterator();
-    while(iterator.hasNext()){
-        String str = (String) iterator.next();
-        if(str.equals("c")){
+/**
+ * 问题：删除元素后，后续元素索引前移，但循环变量i递增，导致跳过下一个元素。
+ */
+public static void wrongWay_ForwardLoop() {
+    System.out.println("=== 错误方式1：普通for循环正向遍历删除 ===");
+    List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
 
-            list.remove(str);
-        }else{
-            System.out.println(str);
+
+    for (int i = 0; i < list.size(); i++) {
+        String item = list.get(i);
+        System.out.println("检查元素: " + item + " (索引: " + i + ")");
+        if ("B".equals(item)) {
+            System.out.println("删除元素: " + item);
+            list.remove(i); // 删除后，"C" 移动到索引1，但i会++，跳过"C"
+            System.out.println("删除后列表: " + list);
         }
     }
-    
-    
-    
-a
-Exception in thread "main" java.util.ConcurrentModificationException
-b
-at java.util.ArrayList$Itr.checkForComodification(ArrayList.java:907)
-at java.util.ArrayList$Itr.next(ArrayList.java:857)
-at com.hlj.Arraylist.ListForEach.main(ListForEach.java:25)
-
-    
-```
-
-此时将c变成d，它是通过Itr的对象的cursor（下一个索引）与List对象的size值来判断是否还有未迭代的对象，当遍历完“d"的时候cursor=4，删除”d"的时候，List对象的size就会减1，size首先为5，后来变为4，这时候cursor和size是相等的，hasNext()方法返回的是false，就认为遍历结束了，所以删除以后没有进去执行next()方法了，就没有抛出异常了，当然"e"也没有输出来。 
-
-
-
-```
-a
-b
-c
-
-```
-
-### 1.8.3、测试2
-
-```java
-@Test
-public void remove(){
-  List<String> list = new ArrayList();
-  list.add("aaaaaa");
-  list.add("bbbbbb");
-  list.add("cccccc");
-  list.add("dddddd");
-  list.add("eeeeee");
-
-  Iterator it = list.iterator();
-  //it.remove(); //删除的是上一个元素 IllegalStateException
-  int i = 0;
-  String s = null;
-  while(it.hasNext()){
-    if(i==2){
-      // list.remove(it.next()); 如果用list.remove(it.next());会报异常checkForComodification
-
-      it.remove();//虽然移除了，但是后面的还会继续遍历哦
-    }
-    System.out.println("第"+i+"个元素"+it.next());
-    i++ ;
-  }
-  System.out.println("----------------");
-  Iterator it2 = list.iterator();
-  while(it2.hasNext()){
-    System.out.println(it2.next());
-  }
-
+    System.out.println("最终结果: " + list);
+    System.out.println("注意：如果要删除'C'，它可能会被跳过！\n");
 }
 
-第0个元素aaaaaa
-  第1个元素bbbbbb
-  第2个元素cccccc
-  第3个元素dddddd
-  第4个元素eeeeee
-  ----------------
-  aaaaaa
-  cccccc
-  dddddd
-  eeeeee
 
-
+=== 错误方式1：普通for循环正向遍历删除 ===
+检查元素: A (索引: 0)
+检查元素: B (索引: 1)
+删除元素: B
+删除后列表: [A, C, D]
+检查元素: D (索引: 2)
+最终结果: [A, C, D]
+注意：如果要删除'C'，它可能会被跳过！
 ```
+
+#### b、增强 `for` 循环（foreach）删除
+
+```java
+/**
+ * 问题：触发fail-fast机制，抛出ConcurrentModificationException。
+ */
+public static void wrongWay_ForeachLoop() {
+    System.out.println("=== 错误方式2：增强for循环（foreach）删除 ===");
+    List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+    System.out.println("原始列表: " + list);
+
+    try {
+        for (String item : list) {
+            System.out.println("检查元素: " + item);
+            if ("B".equals(item)) {
+                System.out.println("尝试删除元素: " + item);
+                list.remove(item); // ⚠️ 直接修改集合，破坏迭代器状态
+            }
+        }
+    } catch (ConcurrentModificationException e) {
+        System.out.println("❌ 捕获到异常: " + e.getClass().getSimpleName());
+        System.out.println("   原因：增强for循环使用迭代器，直接修改集合会触发fail-fast机制。\n");
+    }
+}
+
+=== 错误方式2：增强for循环（foreach）删除 ===
+原始列表: [A, B, C, D]
+检查元素: A
+检查元素: B
+尝试删除元素: B
+❌ 捕获到异常: ConcurrentModificationException
+   原因：增强for循环使用迭代器，直接修改集合会触发fail-fast机制。
+```
+
+
+
+### 3）正例
+
+| 方法                                 | 是否推荐               | 说明                                   |
+| :----------------------------------- | :--------------------- | :------------------------------------- |
+| 增强 `for` 循环 + `list.remove()`    | 绝对避免               | 抛出 `ConcurrentModificationException` |
+| 普通 `for` 循环正向遍历 + `remove()` | 不推荐                 | 会跳过元素，逻辑错误                   |
+| **`Iterator` + `iterator.remove()`** | **强烈推荐**           | 最安全、最标准的方式                   |
+| **普通for循环反向遍历**              | 推荐                   | 简单有效，适用于简单删除               |
+| **`removeIf()`**                     | **强烈推荐 (Java 8+)** | 简洁、高效、函数式                     |
+| 收集后 `removeAll()`                 | 推荐                   | 适合删除多个不连续元素                 |
+
+#### a、使用 `Iterator` 的 `remove()` 方法
+
+> 这是最推荐、最安全的方式。`Iterator` 提供了 `remove()` 方法，它知道如何安全地删除当前元素。
+
+```java
+List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+Iterator<String> iterator = list.iterator();
+while (iterator.hasNext()) {
+    String item = iterator.next();
+    if ("B".equals(item)) {
+        iterator.remove(); 
+    }
+}
+System.out.println(list); // 输出: [A, C, D]
+```
+
+#### b、普通 `for` 循环反向遍历
+
+> 从列表末尾开始向前遍历。这样即使删除了某个元素，也不会影响前面还未遍历的元素的索引。
+
+```java
+List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+for (int i = list.size() - 1; i >= 0; i--) {
+    if ("B".equals(list.get(i))) {
+        list.remove(i); 
+    }
+}
+System.out.println(list); // 输出: [A, C, D]
+```
+
+#### c、使用 `removeIf()` 方法（`Java 8+`）
+
+```java
+List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+list.removeIf(item -> "B".equals(item)); 
+System.out.println(list); // 输出: [A, C, D]
+```
+
+
+
+#### d、收集要删除的元素，最后统一删除
+
+> 先遍历收集，再批量删除。适用于删除多个不同元素的场景。
+
+```java
+List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+Set<String> toRemove = new HashSet<>();
+for (String item : list) {
+    if ("B".equals(item) || "C".equals(item)) {
+        toRemove.add(item);
+    }
+}
+list.removeAll(toRemove); 
+System.out.println(list); // 输出: [A, D]
+```
+
+
+
+
 
 
 
