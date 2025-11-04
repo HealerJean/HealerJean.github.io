@@ -1,0 +1,130 @@
+@startuml
+' 设置流程图方向为横向（left to right）
+left to right direction
+
+' 定义参与者（角色/系统）
+actor "客户" as Customer
+participant "订单系统" as OrderSystem
+participant "库存系统" as InventorySystem
+participant "支付网关" as PaymentGateway
+participant "物流系统" as LogisticsSystem
+participant "通知系统" as NotificationSystem
+participant "风控系统" as RiskSystem
+
+' 开始流程
+Customer -> OrderSystem: 提交订单请求\n(包含商品ID、数量、收货信息)
+activate OrderSystem
+
+OrderSystem -> OrderSystem: 验证订单基本信息\n(必填项、格式校验)
+alt 信息不完整
+    OrderSystem --> Customer: 返回错误提示\n(请补充信息)
+    deactivate OrderSystem
+else 信息完整
+    OrderSystem -> InventorySystem: 检查商品库存\n(商品ID、请求数量)
+    activate InventorySystem
+
+    InventorySystem -> InventorySystem: 实时库存查询
+    alt 库存不足
+        InventorySystem --> OrderSystem: 返回库存不足\n(建议调整数量)
+        deactivate InventorySystem
+        OrderSystem --> Customer: 提示库存不足
+        deactivate OrderSystem
+    else 库存充足
+        InventorySystem --> OrderSystem: 返回库存确认\n(锁定对应库存，有效期15分钟)
+        deactivate InventorySystem
+
+        OrderSystem -> RiskSystem: 订单风险评估\n(用户信用、商品合规性)
+        activate RiskSystem
+
+        RiskSystem -> RiskSystem: 执行风控规则\n(黑名单检查、异常订单检测)
+        alt 存在风险
+            RiskSystem --> OrderSystem: 标记为风险订单
+            deactivate RiskSystem
+            OrderSystem -> OrderSystem: 冻结订单
+            OrderSystem --> Customer: 提示订单需人工审核
+            deactivate OrderSystem
+        else 无风险
+            RiskSystem --> OrderSystem: 风险通过
+            deactivate RiskSystem
+
+            OrderSystem -> Customer: 生成支付链接
+            activate Customer
+            Customer --> PaymentGateway: 发起支付\n(选择支付方式)
+            deactivate Customer
+            activate PaymentGateway
+
+            PaymentGateway -> PaymentGateway: 处理支付\n(加密传输、银行接口调用)
+            alt 支付失败
+                PaymentGateway --> Customer: 支付失败提示\n(余额不足/卡片异常)
+                PaymentGateway --> OrderSystem: 支付失败通知
+                deactivate PaymentGateway
+                OrderSystem -> InventorySystem: 解锁库存
+                activate InventorySystem
+                InventorySystem --> OrderSystem: 库存已解锁
+                deactivate InventorySystem
+                OrderSystem --> Customer: 可重新发起支付
+                deactivate OrderSystem
+            else 支付成功
+                PaymentGateway --> OrderSystem: 支付成功回执\n(包含交易号)
+                deactivate PaymentGateway
+                OrderSystem -> OrderSystem: 更新订单状态为【已支付】
+
+                ' 并行处理：通知用户 + 通知仓库
+                fork
+                    OrderSystem -> NotificationSystem: 发送支付成功短信
+                    activate NotificationSystem
+                    NotificationSystem --> Customer: 短信通知
+                    deactivate NotificationSystem
+                join
+                fork
+                    OrderSystem -> InventorySystem: 确认扣减库存
+                    activate InventorySystem
+                    InventorySystem --> OrderSystem: 库存扣减完成
+                    deactivate InventorySystem
+                join
+
+                OrderSystem -> LogisticsSystem: 创建物流单\n(商品信息、收货地址)
+                activate LogisticsSystem
+
+                LogisticsSystem -> LogisticsSystem: 分配仓库\n(根据收货地址就近原则)
+                alt 仓库分配失败
+                    LogisticsSystem --> OrderSystem: 分配失败\n(无可用仓库)
+                    deactivate LogisticsSystem
+                    OrderSystem -> NotificationSystem: 发送订单异常通知
+                    activate NotificationSystem
+                    NotificationSystem --> Customer: 订单暂无法发货
+                    deactivate NotificationSystem
+                    OrderSystem -> OrderSystem: 订单状态改为【待处理】
+                    deactivate OrderSystem
+                else 仓库分配成功
+                    LogisticsSystem --> OrderSystem: 物流单创建成功\n(物流单号)
+                    deactivate LogisticsSystem
+                    OrderSystem -> OrderSystem: 更新订单状态为【待发货】
+
+                    loop 物流状态跟踪（每30分钟）
+                        OrderSystem -> LogisticsSystem: 查询物流状态
+                        activate LogisticsSystem
+                        LogisticsSystem --> OrderSystem: 返回当前状态\n(已揽收/运输中/派送中)
+                        deactivate LogisticsSystem
+
+                        alt 物流状态更新
+                            OrderSystem -> NotificationSystem: 推送物流更新
+                            activate NotificationSystem
+                            NotificationSystem --> Customer: 物流状态通知
+                            deactivate NotificationSystem
+                        end
+                    end
+
+                    LogisticsSystem --> OrderSystem: 物流状态变为【已签收】
+                    OrderSystem -> OrderSystem: 更新订单状态为【已完成】
+                    OrderSystem -> NotificationSystem: 发送订单完成问卷
+                    activate NotificationSystem
+                    NotificationSystem --> Customer: 邀请评价
+                    deactivate NotificationSystem
+                    deactivate OrderSystem
+                end
+            end
+        end
+    end
+end
+@enduml
