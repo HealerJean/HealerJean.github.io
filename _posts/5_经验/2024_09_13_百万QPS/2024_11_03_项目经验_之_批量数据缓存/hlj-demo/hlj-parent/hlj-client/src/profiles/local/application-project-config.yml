@@ -1,0 +1,110 @@
+####################################
+### DB
+####################################
+spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+  datasource:
+    dynamic:
+      # 设置默认的数据源或者数据源组,默认值即为master
+      primary: healerjean
+      # 设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候会抛出异常,不启动则使用默认数据源
+      strict: true
+      druid:
+        # 初始化时建立物理连接的个数
+        initialSize: 5
+        # 最小连接池数量
+        minIdle: 5
+        # 最大连接池数量
+        maxActive: 20
+        # 获取连接等待超时时间
+        maxWait: 60000
+        ## 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+        timeBetweenEvictionRunsMillis: 60000
+        ## 连接保持空闲而不被驱逐的最小时间
+        minEvictableIdleTimeMillis: 300000
+        # 用来检测连接是否有效的sql，要求是一个查询语句
+        validationQuery: SELECT 1 FROM DUAL
+        # 建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。
+        testWhileIdle: true
+        # 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+        testOnBorrow: false
+        # 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+        testOnReturn: false
+        #打開PSCache，並指定每個連接上PSCache的大小。oracle設爲true，mysql設爲false。分庫分表較多推薦設置爲false
+        pool-prepared-statements: false
+        max-pool-prepared-statement-per-connection-size: 20
+        stat:
+          #日志输出执行慢的SQL
+          log-slow-sql: true
+          #slowSqlMillis的缺省值为3000，也就是3秒。
+          slow-sql-millis: 2000
+      datasource:
+        healerjean:
+          # 3.2.0开始支持SPI可省略此配置
+          driver-class-name: com.mysql.jdbc.Driver
+          # initialTimeout: 这个参数表示在建立连接时，如果服务器没有响应，经过指定的时间后，将会抛出一个超时异常。也就是说，在客户端尝试与服务器建立连接的过程中，如果超过了指定的时间限制，就会抛出异常。
+          # connectTimeout: 这个参数主要用来控制与服务器请求建立连接的超时时间。假设应用程序尝试与数据库服务器建立连接，但在指定的时间内无法建立连接，超过了connectTimeout指定的时间限制。在这种情况下，应用程序会抛出ConnectionTimeoutException异常，提示连接超时。这样的设置可以避免客户端长时间等待服务器的响应，及时中断连接并通知用户连接失败。
+          # socketTimeout:  这个参数表示在数据传输期间，如果服务器没有响应，经过指定的时间后，将会抛出一个超时异常。这可以防止客户端的连接被长时间占用。在查询时间超过一定的阈值后，断开连接可以防止客户端的连接被一直占用。对于慢查询监控而言，这种异常可以帮助我们判断客户端连接是否被长时间占用。
+          url: jdbc:mysql://localhost:3306/healerjean?characterEncoding=utf-8&useUnicode=true&autoReconnect=true&connectTimeout=3000&initialTimeout=1&socketTimeout=10000&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+          username: root
+          password: 12345678
+        test:
+          # 3.2.0开始支持SPI可省略此配置
+          driver-class-name: com.mysql.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8&useUnicode=true&autoReconnect=true&connectTimeout=3000&initialTimeout=1&socketTimeout=10000&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+          username: root
+          password: 12345678
+qps:
+  limit-config:
+    get:
+      limit: 0.2
+gray:
+  gray-biz-map:
+    businessDemo:
+      whiteInfos:
+        - 4
+        - 5
+        - 6
+      blackInfos:
+        - 7
+        - 8
+        - 9
+      rate: 2
+      amount: 10
+filter:
+  compressed-config-map:
+    default:
+      expireSeconds: 3600
+      bucketSize: 65536
+  bloom-config-map:
+    default:
+      expectedInsertions: 2000
+      falseProbability: 0.01
+hot-snapshot:
+  # 默认全局配置
+  default:
+    shard-count: 8
+    batch-size: 1000
+    compress: true
+    serializer: fastjson  # 可选: fastjson, protobuf
+    thread-pool: default-pool
+  # 各个数据集独立配置（可被配置中心覆盖）
+  datasets:
+    user_tag:
+      shard-count: 100
+      batch-size: 10000
+      compress: false
+      serializer-strategy: fastjson
+      thread-pool: user_tag
+      max-concurrent: 10
+      enable-checkpoint: true
+      storage-strategy: local
+    product_info:
+      shard-count: 8
+      batch-size: 1000
+      compress: true
+      serializer-strategy: fastjson
+      thread-pool: product_info
+

@@ -223,6 +223,28 @@
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
         </dependency>
+
+
+        <!-- 根据 Serializer<T> 接口的实现选择 -->
+
+        <!-- Option 1: JSON 序列化 (Jackson) -->
+        <!-- 如果使用 JSON 格式存储快照文件 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.16.1</version>
+        </dependency>
+
+        <!-- Option 2: Protobuf 序列化 (推荐用于高性能、紧凑的二进制格式) -->
+        <!-- 需要配合 protoc 编译器将 .proto 文件编译成 Java 类 -->
+         <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.25.3</version>
+        </dependency>
+
+
+
     </dependencies>
 
     <build>
