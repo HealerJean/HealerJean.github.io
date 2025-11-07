@@ -4,6 +4,7 @@ package com.healerjean.proj.hotcache.shard;
 import com.healerjean.proj.hotcache.constants.SnapshotPaths;
 import com.healerjean.proj.hotcache.service.serialization.DataSerializerStrategy;
 import com.healerjean.proj.hotcache.service.storage.StorageServiceStrategy;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -17,11 +18,14 @@ import java.io.OutputStream;
  */
 @Slf4j
 public class ShardWriter<T> implements java.io.Closeable {
-    private final int shardId;
+
+    @Getter
+    private final Integer shardId;
+    @Getter
     private final String filename;
     private final StorageServiceStrategy storage;
     private final DataSerializerStrategy<T> serializer;
-    private OutputStream outputStream;
+    private final OutputStream outputStream;
     private boolean closed = false;
     private final java.util.concurrent.atomic.AtomicInteger recordCount = new java.util.concurrent.atomic.AtomicInteger(0);
 
@@ -84,5 +88,4 @@ public class ShardWriter<T> implements java.io.Closeable {
      */
     public int getRecordCount() { return recordCount.get(); }
 
-    public String getFilename() { return filename; }
 }

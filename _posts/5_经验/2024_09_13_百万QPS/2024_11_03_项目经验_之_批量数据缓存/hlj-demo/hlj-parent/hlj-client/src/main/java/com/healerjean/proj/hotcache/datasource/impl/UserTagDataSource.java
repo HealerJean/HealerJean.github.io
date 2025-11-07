@@ -66,6 +66,6 @@ public class UserTagDataSource implements SnapshotDataSource<UserTag> {
      */
     @Override
     public long estimateTotalCount() {
-        return 5000002L;
+        return 5000000L;
     }
 }

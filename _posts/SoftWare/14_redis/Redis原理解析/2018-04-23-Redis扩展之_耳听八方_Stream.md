@@ -30,7 +30,7 @@ description: Redis扩展之_耳听八方_Stream
 
 **4、同一个消费组 (`Consumer` `Group)` 可以挂接多个消费者 (`Consumer`)，这些消费者之间是竞争关系，任意一个消费者读取了消息都会使游标 `last_delivered_id` 往前移动。每个消费者有 一个组内唯一名称。**      
 
-5、**消费者 (`Consumer`) 内部会有个状态变量 `pending_ids`，它记录了当前已经被客户端读取的消息，但是还没有 `ack`。**如果客户端没有 `ack`，**这个变量里面的消息`ID` 会越来越多**，一 旦某个消息被 `ack`，它就开始减少。这个 `pending_ids` 变量在 `Redis` 官方被称之为 `PEL`，也 就是 `Pending Entries List`，**这是一个很核心的数据结构，它用来确保客户端至少消费了消息一 次，而不会在网络传输的中途丢失了没处理**。
+5、**当客户端通过 `XREADGROUP` 读取消息后，`Redis` 会在服务端的 **`Pending Entries List **(PEL)`   记录了当前已经被客户端读取的消息**如果客户端没有 `ack`，**这个变量里面的消息`ID` 会越来越多**，一 旦某个消息被 `ack`，它就开始减少。这个 `pending_ids` 变量在 `Redis` 官方被称之为 `PEL`，也 就是 `Pending Entries List`，**这是一个很核心的数据结构，它用来确保客户端至少消费了消息一 次，而不会在网络传输的中途丢失了没处理**。
 
 
 
