@@ -83,28 +83,23 @@ filter:
       expectedInsertions: 2000
       falseProbability: 0.01
 hot-snapshot:
-  # 默认全局配置
-  default:
-    shard-count: 8
-    batch-size: 1000
-    compress: true
-    serializer: fastjson  # 可选: fastjson, protobuf
-    thread-pool: default-pool
   # 各个数据集独立配置（可被配置中心覆盖）
   datasets:
     user_tag:
-      shard-count: 100
-      batch-size: 10000
-      compress: false
-      serializer-strategy: fastjson
-      thread-pool: user_tag
-      max-concurrent: 10
-      enable-checkpoint: true
-      storage-strategy: local
-    product_info:
-      shard-count: 8
-      batch-size: 1000
-      compress: true
-      serializer-strategy: fastjson
-      thread-pool: product_info
-
+      # 全量快照配置
+      snapshot:
+        shard-count: 100
+        batch-size: 10000
+        compress: false
+        serializer-strategy: fastjson
+        thread-pool: user_tag
+        max-concurrent: 10
+        enable-checkpoint: true
+        storage-strategy: local
+        incr-pull-interval: -2
+      # 增量快照配置
+      incremental:
+        max-members-size: 4000
+        db-save-offset-interval: 100
+        ttl-seconds: 86400
+        time2-offset-interval: 60

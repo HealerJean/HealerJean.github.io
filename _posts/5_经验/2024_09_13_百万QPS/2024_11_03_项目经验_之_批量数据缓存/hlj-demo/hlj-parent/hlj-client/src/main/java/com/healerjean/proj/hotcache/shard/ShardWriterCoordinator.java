@@ -3,7 +3,7 @@ package com.healerjean.proj.hotcache.shard;
 
 import com.healerjean.proj.hotcache.config.DatasetSnapshotConfig;
 import com.healerjean.proj.hotcache.config.SnapshotExecutionConfig;
-import com.healerjean.proj.hotcache.constants.SnapshotPaths;
+import com.healerjean.proj.hotcache.enums.SnapshotPathEnum;
 import com.healerjean.proj.hotcache.factory.ThreadPoolFactory;
 import com.healerjean.proj.hotcache.service.serialization.DataSerializerStrategy;
 import com.healerjean.proj.hotcache.service.storage.StorageServiceStrategy;
@@ -48,7 +48,7 @@ public class ShardWriterCoordinator<T> {
         StorageServiceStrategy storage = runConfig.getStorageServiceStrategy();
 
         for (int i = 0; i < shardCount; i++) {
-            String filename = String.format(SnapshotPaths.SNAPSHOT_FILE_FORMAT, datasetName, datasetName, version, i);
+            String filename = SnapshotPathEnum.FILE_SNAPSHOT_FILE_FORMAT.format(datasetName, version, datasetName, version, i);
             ws.add(new ShardWriter<>(i, filename, storage, serializer, compress));
         }
         return ws;
@@ -59,7 +59,10 @@ public class ShardWriterCoordinator<T> {
      */
     public void distribute(T record, Object key) throws IOException {
         int shardId = Math.abs(key.hashCode()) % shardCount;
-        writers.get(shardId).add(record);
+        ShardWriter<T> shardWriter = writers.get(shardId);
+        synchronized(shardWriter){
+            shardWriter.add(record);
+        }
     }
 
     /**
@@ -69,7 +72,9 @@ public class ShardWriterCoordinator<T> {
         CompletableFuture.allOf(writers.stream()
                 .map(writer -> CompletableFuture.runAsync(() -> {
                     try {
-                        writer.close();
+                        synchronized (writer){
+                            writer.close();
+                        }
                     } catch (IOException e) {
                         log.error("关闭 ShardWriter 失败: {}", e.getMessage(), e);
                         throw new RuntimeException(e);

@@ -3,6 +3,7 @@ package com.healerjean.proj.hotcache.service.checkpoint;
 
 import com.healerjean.proj.hotcache.config.SnapshotExecutionConfig;
 import com.healerjean.proj.hotcache.constants.SnapshotPaths;
+import com.healerjean.proj.hotcache.enums.SnapshotPathEnum;
 import com.healerjean.proj.hotcache.model.Checkpoint;
 import com.healerjean.proj.hotcache.service.storage.StorageServiceStrategy;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ public class CheckpointManager {
         String datasetName = runConfig.getDatasetName();
         String version = runConfig.getVersion();
         StorageServiceStrategy storage = runConfig.getStorageServiceStrategy();
-        String path = String.format(SnapshotPaths.CHECKPOINT_FILE_FORMAT, datasetName, datasetName, version);
+        String path = SnapshotPathEnum.FILE_CHECKPOINT_FILE_FORMAT.format(datasetName, version, datasetName, version);
         try {
             if (!storage.exists(path)) {
                 log.info("检查点文件不存在: {}", path);
@@ -62,8 +63,7 @@ public class CheckpointManager {
 
         com.google.gson.Gson gson = new com.google.gson.Gson();
         String json = gson.toJson(cp);
-        String path = String.format(SnapshotPaths.CHECKPOINT_FILE_FORMAT, datasetName, datasetName, version);
-
+        String path = SnapshotPathEnum.FILE_CHECKPOINT_FILE_FORMAT.format(datasetName, version, datasetName, version);
         try (java.io.OutputStream os = storage.getOutputStream(path)) {
             os.write(json.getBytes(java.nio.charset.StandardCharsets.UTF_8));
         }

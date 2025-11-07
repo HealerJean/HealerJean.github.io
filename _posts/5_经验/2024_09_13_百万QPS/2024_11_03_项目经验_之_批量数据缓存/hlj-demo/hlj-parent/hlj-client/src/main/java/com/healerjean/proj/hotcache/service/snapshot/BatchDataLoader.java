@@ -40,7 +40,6 @@ public class BatchDataLoader<T> {
         DatasetSnapshotConfig config = runConfig.getDatasetSnapshotConfig();
         int batchSize = config.getBatchSize();
         boolean enableCheckpoint = config.getEnableCheckpoint();
-        String version = runConfig.getVersion();
         SnapshotDataSource<T> provider = (SnapshotDataSource<T>)runConfig.getSnapshotDataSource();
         int total = 0;
         Object lastKey = null;

@@ -1,6 +1,7 @@
 package com.healerjean.proj.hotcache.config;
 
 import com.healerjean.proj.hotcache.datasource.SnapshotDataSource;
+import com.healerjean.proj.hotcache.model.SnapshotMetadata;
 import com.healerjean.proj.hotcache.service.serialization.DataSerializerStrategy;
 import com.healerjean.proj.hotcache.service.storage.StorageServiceStrategy;
 import lombok.Data;
@@ -25,6 +26,16 @@ public class SnapshotExecutionConfig {
     private String datasetName;
 
     /**
+     * 任务执行时间
+     */
+    private String executeTime;
+
+    /**
+     * 增量拉取时间的下界（分钟级） yyyyMMddHHmm
+     */
+    private Long incrPullTimeLowerBound;
+
+    /**
      * 运行时内存配置，可通过配置中心进行变更
      */
     private DatasetSnapshotConfig datasetSnapshotConfig;
@@ -43,5 +54,12 @@ public class SnapshotExecutionConfig {
      * 数据提供服务
      */
     private SnapshotDataSource<?> snapshotDataSource;
+
+    /**
+     * 快照元数据
+     */
+    private SnapshotMetadata snapshotMetadata;
+
+
 
 }

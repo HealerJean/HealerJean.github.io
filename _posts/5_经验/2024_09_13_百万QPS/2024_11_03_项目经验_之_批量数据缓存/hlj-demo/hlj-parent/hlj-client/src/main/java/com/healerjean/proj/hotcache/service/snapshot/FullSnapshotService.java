@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 /**
  * 全量快照生成主流程控制器。
  */
@@ -28,15 +30,12 @@ public class FullSnapshotService {
     @Autowired
     private BatchDataLoader batchDataLoader;
 
-
-    public <T> void generate(String datasetName) throws Exception {
-        // 生成版本号
-        String version = String.valueOf(System.currentTimeMillis() / 1000);
+    public String generate(String datasetName, LocalDateTime dateTime) throws Exception {
 
         // 根据数据集名称获取运行配置
-        SnapshotExecutionConfig runConfig = snapshotGlobalConfig.instanceRunConfig(datasetName, version);
-
         long start = System.currentTimeMillis();
+        SnapshotExecutionConfig runConfig = snapshotGlobalConfig.instanceRunConfig(datasetName, dateTime);
+        String version = runConfig.getVersion();
         log.info("🚀 开始生成快照: dataset={}, version={}", datasetName, version);
 
         try {
@@ -53,7 +52,7 @@ public class FullSnapshotService {
             manifestGenerator.generate(runConfig, shardWriterCoordinator.getWriters(), total);
 
             // 6. 发布到 Redis
-            snapshotPublisher.publish(start, total, runConfig);
+            snapshotPublisher.publish(runConfig);
 
             // 7. 清理旧版本
             cleanupService.cleanupOld(runConfig);
@@ -65,6 +64,8 @@ public class FullSnapshotService {
             log.error("❌ 快照生成失败: dataset={}, error={}", datasetName, e.getMessage(), e);
             throw e;
         }
+
+        return version;
     }
 
 
