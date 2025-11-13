@@ -36,7 +36,7 @@
         <!--swagger导出接口文档-->
         <io.springfox.version>2.9.2</io.springfox.version>
         <!--http工具-->
-        <okhttp3.version>3.11.0</okhttp3.version>
+        <okhttp3.version>4.9.2</okhttp3.version>
         <!--要激活的resoure目录-->
         <profiles.active>src/profiles/local</profiles.active>
         <!--fastjson-->
