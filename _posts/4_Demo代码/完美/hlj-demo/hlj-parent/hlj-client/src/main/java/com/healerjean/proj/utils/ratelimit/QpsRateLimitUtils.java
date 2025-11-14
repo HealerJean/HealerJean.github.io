@@ -58,7 +58,7 @@ public class QpsRateLimitUtils {
                 log.info("limitConfig: {}", JSON.toJSONString(limitConfig));
             }
             if (CollectionUtils.isEmpty(limitConfig)){
-                log.error("限流未配置, limitConfig:{}", JSON.toJSON(limitConfig), e);
+                log.error("限流未配置, limitConfig:{}", JSON.toJSON(limitConfig));
                 return;
             }
             limitConfig.forEach((k, v) -> {

@@ -21,6 +21,34 @@ import static com.healerjean.proj.utils.date.DateUtils.TimeTool.toLocalDateTime;
  */
 public class DateUtils {
 
+
+    public static class ExtTool {
+        // ===== 新增：秒数转人性化时间格式 =====
+        public static String formatDuration(long totalSeconds) {
+            if (totalSeconds <= 0) {
+                return "0秒";
+            }
+
+            long hours = totalSeconds / 3600;
+            long minutes = (totalSeconds % 3600) / 60;
+            long seconds = totalSeconds % 60;
+
+            StringBuilder sb = new StringBuilder();
+            if (hours > 0) {
+                sb.append(hours).append("小时");
+            }
+            if (minutes > 0) {
+                sb.append(minutes).append("分钟");
+            }
+            if (seconds > 0 || sb.length() == 0) { // 如果全是0，至少显示0秒
+                sb.append(seconds).append("秒");
+            }
+
+            return sb.toString();
+        }
+    }
+
+
     public static class TimeTool {
 
         /**
@@ -218,7 +246,7 @@ public class DateUtils {
                     Stream.iterate(startDateTimeLocal, d -> d.plusMinutes(1)).limit(distance + 1).forEach(f -> result.add(df.format(f)));
                     break;
                 case HOURS:
-                   Stream.iterate(startDateTimeLocal, d -> d.plusHours(1)).limit(distance + 1).forEach(f -> result.add(df.format(f)));
+                    Stream.iterate(startDateTimeLocal, d -> d.plusHours(1)).limit(distance + 1).forEach(f -> result.add(df.format(f)));
                     break;
                 case DAYS:
                     Stream.iterate(startDateTimeLocal, d -> d.plusDays(1)).limit(distance + 1).forEach(f -> result.add(df.format(f)));
@@ -267,6 +295,16 @@ public class DateUtils {
             LocalDateTime endDate = LocalDateTime.of(2023, 11, 23, 20, 23, 21); // 示例日期时间
             System.out.println(getDates(TimeTool.toStr(startDate), TimeTool.toStr(endDate), ChronoUnit.DAYS, DateConstants.YYYY_MM_DD));
             System.out.println(getDates(TimeTool.toStr(startDate), TimeTool.toStr(endDate), ChronoUnit.MONTHS, DateConstants.YYYY_MM));
+
+            System.out.println("formatDuration");
+            System.out.println(ExtTool.formatDuration(50));
+            System.out.println(ExtTool.formatDuration(60));
+            System.out.println(ExtTool.formatDuration(61));
+            System.out.println(ExtTool.formatDuration(3650));
+            System.out.println(ExtTool.formatDuration(3600));
+            System.out.println(ExtTool.formatDuration(3601));
+            System.out.println(ExtTool.formatDuration(3660));
+            System.out.println(ExtTool.formatDuration(3661));
         }
 
     }
@@ -324,7 +362,6 @@ public class DateUtils {
         public static Date toDate(LocalDateTime localDateTime) {
             return Optional.ofNullable(localDateTime).map(item -> Date.from(item.atZone(ZoneId.systemDefault()).toInstant())).orElse(null);
         }
-
 
 
         /**
@@ -432,9 +469,9 @@ public class DateUtils {
         /**
          * roll
          *
-         * @param date date
+         * @param date  date
          * @param field field
-         * @param num num
+         * @param num   num
          * @return {@link Date}
          */
         public static Date roll(Date date, int field, int num) {
@@ -443,8 +480,6 @@ public class DateUtils {
             cal.add(field, num);
             return cal.getTime();
         }
-
-
 
 
     }

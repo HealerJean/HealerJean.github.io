@@ -33,7 +33,7 @@ public class GrayUtil {
      * @param grayValue        灰度值
      * @return 灰度开关是否打开
      */
-    public static GrayEnum.GrayResEnum hitGray(String grayValue, GrayEnum.GrayBusinessEnum grayBusinessEnum,) {
+    public static GrayEnum.GrayResEnum hitGray(String grayValue, GrayEnum.GrayBusinessEnum grayBusinessEnum) {
 
         // 一、灰度业务判断 返回：GrayEnum.GrayResEnum.GRAY_NOT_EXIST
         GrayConfiguration grayConfiguration = SpringUtils.getBean(GrayConfiguration.class);
