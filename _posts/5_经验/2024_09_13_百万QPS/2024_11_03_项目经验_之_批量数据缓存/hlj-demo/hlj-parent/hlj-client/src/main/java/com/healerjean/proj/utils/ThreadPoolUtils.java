@@ -37,6 +37,7 @@ public class ThreadPoolUtils {
         DEFAULT_THREAD_POOL_TASK_EXECUTOR = buildDefaultThreadPoolTaskExecutor();
         DEFAULT_THREAD_POOL_EXECUTOR = buildDefaultThreadPoolExecutor();
         SCHEDULED_THREAD_POOL_EXECUTOR = buildScheduledThreadPoolExecutor();
+
     }
 
 
@@ -74,9 +75,9 @@ public class ThreadPoolUtils {
     private static ThreadPoolTaskExecutor buildDefaultThreadPoolTaskExecutor() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         // 核心线程数：线程池创建时候初始化的线程数
-        taskExecutor.setCorePoolSize(10);
+        taskExecutor.setCorePoolSize(6000);
         // 最大线程数：只有在缓冲队列满了之后才会申请超过核心线程数的线程
-        taskExecutor.setMaxPoolSize(100);
+        taskExecutor.setMaxPoolSize(6000);
         // 线程池维护线程所允许的空闲时间：当超过了核心线程出之外的线程在空闲时间到达之后会被销毁
         taskExecutor.setKeepAliveSeconds(60);
         // 缓存队列：用来缓冲执行任务的队列

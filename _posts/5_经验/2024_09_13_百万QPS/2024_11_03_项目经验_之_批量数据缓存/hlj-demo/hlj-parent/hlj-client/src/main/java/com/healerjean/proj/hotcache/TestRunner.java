@@ -54,7 +54,8 @@ public class TestRunner implements CommandLineRunner {
         // fullSnapshot();
         //
         // writeIncremental();
-        writeLuaIncremental();
+
+        // writeLuaIncremental();
 
 
         // FullSnapshotToMemory();

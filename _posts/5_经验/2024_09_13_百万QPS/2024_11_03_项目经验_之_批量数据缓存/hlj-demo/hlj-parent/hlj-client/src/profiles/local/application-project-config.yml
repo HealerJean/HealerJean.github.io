@@ -103,3 +103,8 @@ hot-snapshot:
         db-save-offset-interval: 100
         ttl-seconds: 86400
         time2-offset-interval: 60
+task:
+  schedule:
+    enabled: true
+    interval-seconds: 60      # 每 30 分钟执行一次（1800 秒）
+    total-batches: 2          # 分 30 批 → 每批间隔 60 秒
