@@ -1668,6 +1668,19 @@ public void isPresent() {
 
 ## 5、`orElse`、`orElseGet`
 
+- **用 `orElseGet` ** —— 惰性创建，默认值只在需要时生成。
+  - 默认值需要 **`new` 对象**（如 `new ArrayList<>()`, `new HashMap<>()`）
+  - 默认值来自 **方法调用**（如 `computeDefault()`, `fetchFromDB()`）
+  - 默认值涉及 **`IO`、网络、复杂计算**
+- **用 `orElse` ** —— 会提前创建对象，浪费资源。
+  - **默认值是一个轻量、无副作用、已存在的常量或字面量**
+  - **默认值已经预先计算好（不是临时创建的）**
+
+| 方法                                        | 行为                                                         |
+| ------------------------------------------- | ------------------------------------------------------------ |
+| `orElse(T other)`                           | **立即执行**参数表达式（即使 Optional 有值），传入的是一个**已创建的对象**。 |
+| `orElseGet(Supplier<? extends T> supplier)` | **仅在 Optional 为空时**才调用 `supplier.get()`，是**惰性求值（lazy）**。 |
+
 > 解释：如果有值则将其返回，否则返回指定的其它值。      
 >
 > `orElseGet`：`orElseGet` 与 `orElse`方法类似，区别在于得到的默认值，`orElse`方法将传入的字符串作为默认值，`orElseGet`方法可以接受 `Supplier` 接口的实现用来生成默认值。示例如下：
