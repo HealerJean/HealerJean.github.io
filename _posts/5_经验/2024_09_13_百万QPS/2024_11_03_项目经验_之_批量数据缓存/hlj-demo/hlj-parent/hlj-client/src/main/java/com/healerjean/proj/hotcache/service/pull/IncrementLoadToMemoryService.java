@@ -48,6 +48,7 @@ public class IncrementLoadToMemoryService {
     private final static Map<String, AtomicLong> LOCAL_PROCESSED_OFFSET_MAP = new ConcurrentHashMap<>();
 
 
+
     /**
      * 增量拉取流程
      *
