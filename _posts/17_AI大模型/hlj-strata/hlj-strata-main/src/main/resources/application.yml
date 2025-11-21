@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: hlj-strata
+  profiles:
+    include: project-config
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: qwen3:14b
+    mcp:
+      server:
+        enabled: true
+        name: your-application-server
+        version: 1.0.0
+        type: SYNC
+        sse-message-endpoint: /mcp/message
+server:
+  port: 8888
+

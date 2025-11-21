@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.healerjean.proj</groupId>
+        <artifactId>hlj-strata</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>hlj-strata-infra-impl</artifactId>
+    <name>hlj-strata-infra-impl</name>
+    <description>infra-impl 模块，用于外部服务访问防腐层</description>
+    <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.healerjean.proj</groupId>
+            <artifactId>hlj-strata-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.healerjean.proj</groupId>
+            <artifactId>hlj-strata-infra-api</artifactId>
+        </dependency>
+
+        <!-- ⭐ 引入 Ollama Starter（关键！） -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-ollama-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!--   mcp 服务端依赖    -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-mcp-server-spring-boot-starter</artifactId>
+        </dependency>
+
+    </dependencies>
+
+
+</project>
