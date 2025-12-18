@@ -203,6 +203,12 @@
                 <version>5.5.1</version>
             </dependency>
 
+            <!--arthas-->
+            <dependency>
+                <groupId>com.taobao.arthas</groupId>
+                <artifactId>arthas-spring-boot-starter</artifactId>
+                <version>4.0.3</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

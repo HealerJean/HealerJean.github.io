@@ -1,6 +1,7 @@
 package com.healerjean.proj.aspect;
 
 import com.healerjean.proj.common.anno.LogIndex;
+import com.healerjean.proj.config.LogConfiguration;
 import com.healerjean.proj.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -11,6 +12,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
@@ -28,46 +30,54 @@ import java.util.*;
 @Aspect
 public class LogAspect {
 
+
+    /**
+     * logConfiguration
+     */
+    @Resource
+    private LogConfiguration logConfiguration;
+
     @Around(value = "(execution(* *(..)) && @annotation(logIndex))", argNames = "pjp,logIndex")
     public Object printLog(final ProceedingJoinPoint pjp, LogIndex logIndex) throws Throwable {
         Object[] args = pjp.getArgs();
         Signature sig = pjp.getSignature();
-        long start = System.currentTimeMillis();
+        String methodName = pjp.getSignature().getName();
+        String className = sig.getDeclaringTypeName();
         Method method = null;
-        String methodName = null;
-        String className = null;
+        if ((sig instanceof MethodSignature)) {
+            MethodSignature signature = (MethodSignature) sig;
+            Object target = pjp.getTarget();
+            method = target.getClass().getMethod(signature.getName(), signature.getParameterTypes());
+        } else {
+            log.error("signature is not instanceof MethodSignature!");
+        }
+        if (method == null) {
+            return pjp.proceed();
+        }
+
         Object result = null;
         Object reqParams = null;
-        try {
-            methodName = pjp.getSignature().getName();
-            className = sig.getDeclaringTypeName();
-            if ((sig instanceof MethodSignature)) {
-                MethodSignature signature = (MethodSignature) sig;
-                Object target = pjp.getTarget();
-                method = target.getClass().getMethod(signature.getName(), signature.getParameterTypes());
-            } else {
-                log.error("signature is not instanceof MethodSignature!");
-            }
+        String key = className + "#" + methodName;
 
-            if (method == null) {
-                return pjp.proceed();
-            } else {
-                Parameter[] parameters = method.getParameters();
-                if (Boolean.TRUE.equals(logIndex.reqFlag())) {
-                    reqParams = getRequestParams(args, parameters);
-                }
-                result = pjp.proceed();
+        boolean enableReq = logConfiguration.isEnableReq(key);
+        boolean enableRes = logConfiguration.isEnableRes(key);
+        long start = System.currentTimeMillis();
+        try {
+            Parameter[] parameters = method.getParameters();
+            if (enableReq && Boolean.TRUE.equals(logIndex.reqFlag())) {
+                reqParams = getRequestParams(args, parameters);
             }
+            result = pjp.proceed();
         } finally {
             long timeCost = System.currentTimeMillis() - start;
             Map<String, Object> map = new HashMap<>(8);
-            if (Boolean.TRUE.equals(logIndex.reqFlag())) {
+            if (enableReq && Boolean.TRUE.equals(logIndex.reqFlag())) {
                 map.put("req", reqParams);
             }
-            if (Boolean.TRUE.equals(logIndex.resFlag())) {
+            if (enableRes && Boolean.TRUE.equals(logIndex.resFlag())) {
                 map.put("res", result);
             }
-            if (logIndex.timeOut() > -1 && timeCost >= logIndex.timeOut()){
+            if (logIndex.timeOut() > -1 && timeCost >= logIndex.timeOut()) {
                 map.put("timeOutFlag", true);
             }
             map.put("timeCost", timeCost + "ms");

@@ -167,7 +167,7 @@ private void ensureExplicitCapacity(int minCapacity) {
 
 ### 2）扩容 
 
-> 数组扩容才是按照当前容量的1.5倍进行扩容   => 新容量为 旧容量 + 旧容量的一半
+> 数组扩容才是按照当前容量的 1.5倍进行扩容   => 新容量为 旧容量 + 旧容量的一半
 
 ```java
 /**
@@ -552,6 +552,224 @@ private void fastRemove(int index) {
 		// [String one, String two]
 	}
 ```
+
+
+
+
+
+# 二、`ObjectArrayList`
+
+
+
+## 1、所属库与背景
+
+| 特性     | `ArrayList` (JDK)         | `ObjectArrayList` (Eclipse Collections)         |
+| -------- | ------------------------- | ----------------------------------------------- |
+| 所属库   | Java 标准库 (`java.util`) | 第三方高性能集合库（Eclipse Collections）       |
+| 开发维护 | Oracle / OpenJDK 社区     | 原为高盛内部开发，后开源并捐赠给 Eclipse 基金会 |
+| 设计目标 | 通用、稳定、兼容性强      | 高性能、内存效率、函数式编程支持                |
+
+
+
+## 2、内存结构
+
+`ObjectArrayList` 内部维护一个泛型数组：
+
+```
+protected T[] items;
+protected int size;
+```
+
+- `items`：底层数组，初始容量默认为 0 或指定值
+- `size`：当前元素个数
+- 当添加元素超出容量时，自动扩容（策略类似 `ArrayList`，但可配置）
+
+
+
+### 1）添加元素（`add(T element)`）
+
+- 直接写入 `items[size++]`
+- 若容量不足，触发扩容 → 复制数组
+- **无同步**，非线程安全
+
+
+
+### 2）随机访问（`get(int index)`）
+
+- 直接返回 `items[index]`
+- 有边界检查（`if (index < 0 || index >= size) throw ...`）
+- 时间复杂度：**O(1)**
+
+
+
+### 3）删除元素（`remove(int index)`）
+
+- 将 `index` 后所有元素前移一位（`System.arraycopy`）
+- 时间复杂度：**O(n)**
+
+
+
+### 4）函数式操作（如 `select`, `collect`）
+
+- 内部使用**快速循环**（fast enumeration），避免创建中间迭代器或 Stream 对象
+
+- 示例：
+
+  ```
+  list.select(x -> x > 10); // 返回新的 ObjectArrayList，过滤高效
+  ```
+
+- 比 `JDK` 的 `Stream.filter().collect()` 更少 `GC` 压力，尤其在小数据集上更快
+
+
+
+
+
+## 3、原始类型特化（核心优势）
+
+- **零装箱/拆箱**：直接操作基本类型，不创建 `Integer` 等包装对象
+- **内存节省**：`int` 占 4 字节，`Integer` 对象至少 16 字节（含对象头）
+- **`GC` 友好**：减少堆对象数量，降低 `GC` 频率和停顿时间
+
+-  实测：存储 1000 万个整数
+  - `ArrayList<Integer>`：约占用 `160 MB` + 高频 GC
+  - `IntArrayList`：仅占用 40 MB + 几乎无 `GC`
+
+| 基本类型  | 特化列表类         | 底层数组    |
+| --------- | ------------------ | ----------- |
+| `int`     | `IntArrayList`     | `int[]`     |
+| `long`    | `LongArrayList`    | `long[]`    |
+| `double`  | `DoubleArrayList`  | `double[]`  |
+| `boolean` | `BooleanArrayList` | `boolean[]` |
+
+
+
+
+
+
+
+
+
+
+
+## 4、相比 `ArrayList`
+
+### 1）`ObjectArrayList`
+
+> 内存分配上没啥优势，重点还是看特性的吧
+
+| 对比维度         | `ObjectArrayList`（Eclipse Collections） | `ArrayList`（JDK）                     |
+| ---------------- | ---------------------------------------- | -------------------------------------- |
+| **所属库**       | 第三方库（需引入依赖）                   | Java 标准库（`java.util`）             |
+| **底层结构**     | `T[] items`                              | `transient Object[] elementData`       |
+| **扩容公式**     | `1.5 × old + 1`                          | `1.5 × old`                            |
+| **设计哲学**     | **性能优先**                             | 内存保守                               |
+| **中间对象创建** | 少（内部优化循环）                       | 多（`Stream`、`Collector` 等临时对象） |
+| **线程安全**     | 非线程安全                               | 非线程安全                             |
+| **序列化**       | 支持                                     | 支持                                   |
+| **学习成本**     | 中（需熟悉 EC API）                      | 低（Java 开发者必备）                  |
+| **生态兼容性**   | 需转换为 `List` 才能与部分框架无缝集成   | 完全兼容所有 Java 生态                 |
+| **适用场景**     | 高性能计算、游戏、金融、大数据处理       | 通用业务开发、教学、简单应用           |
+
+
+
+#### a、底层字段对比
+
+| 类                | 关键字段                                    |
+| ----------------- | ------------------------------------------- |
+| `ArrayList`       | `transient Object[] elementData` `int size` |
+| `ObjectArrayList` | `T[] items` `int size`                      |
+
+
+
+#### b、空列表的内存占用
+
+| 时期         | `ArrayList` 行为                  | `ObjectArrayList` 行为 | 是否有优势                 |
+| ------------ | --------------------------------- | ---------------------- | -------------------------- |
+| **JDK 8~16** | 默认分配 `Object[10]`（即使为空） | 懒初始化，不分配       | `ObjectArrayList` 明显更省 |
+| **JDK 17+**  | 懒初始化，不分配（共享空数组）    | 懒初始化，不分配       | 两者相同，无相对优势       |
+
+
+
+### 2）`IntArrayList`
+
+> **存储大量基本类型数据时，`IntArrayList` 的内存占用仅为 `ArrayList<Integer>` 的约 20%，节省高达 80% 的堆内存，并极大降低 GC 压力。**
+
+| 方式                 | 底层结构            | 对象数量                         | 堆内存估算 | GC 压力 |
+| -------------------- | ------------------- | -------------------------------- | ---------- | ------- |
+| `ArrayList<Integer>` | `Object[1_000_000]` | ≈ 1,000,001 个                   | ≥ 160 MB   | 高      |
+| `IntArrayList`       | `int[1_000_000]`    | 1 个（只有 `IntArrayList` 自身） | ≈ 40 MB    | 极低    |
+
+
+
+## 5、`FQA`
+
+### 1）空间效率：`trim` 的核心价值 
+
+#### a、显著收益：
+
+一个长期驻留的缓存列表（`capacity`=`100万`, `size=1万`）
+
+- 不 `trim`：持续占用 `4MB`
+- `trim` 后：仅占 `40KB` → **节省 `99%` 内存，`GC` 压力大幅下降**
+
+| 场景                   | 效果                                                |
+| ---------------------- | --------------------------------------------------- |
+| **减少堆内存占用**     | 直接释放未使用的数组空间                            |
+| **降低 `GC` 频率**     | 年轻代压力减小，Minor GC 更少                       |
+| **减少 `GC` 停顿时间** | `GC` 扫描的对象图更小                               |
+| **避免内存碎片**       | 尤其对 G1、ZGC 等区域化 GC 友好                     |
+| **提升系统稳定性**     | 降低 OOM 风险，尤其在容器化环境（如 Docker 内存限制 |
+
+
+
+#### a、和 `ArrayList` `trim`对比
+
+| 方面     | `ArrayList.trimToSize()`           | `ObjectArrayList.trimToSize()`                      |
+| -------- | ---------------------------------- | --------------------------------------------------- |
+| 拷贝开销 | `Arrays.copyOf(elementData, size)` | `Arrays.copyOf(items, size)`                        |
+| 时间效率 | 几乎相同                           | 几乎相同                                            |
+| 空间效率 | 相同                               | 相同                                                |
+| 额外优势 | 无                                 | EC 的 `ImmutableList` 构造时自动紧凑，无需手动 trim |
+
+
+
+#### b、什么时候 `trim`
+
+> `trim` 牺牲一点时间，换大量空间 → **在内存受限或长期持有场景下，整体效率更高**。
+
+| 方面     | `ArrayList.trimToSize()`           | `ObjectArrayList.trimToSize()`                        |
+| -------- | ---------------------------------- | ----------------------------------------------------- |
+| 拷贝开销 | `Arrays.copyOf(elementData, size)` | `Arrays.copyOf(items, size)`                          |
+| 时间效率 | 几乎相同                           | 几乎相同                                              |
+| 空间效率 | 相同                               | 相同                                                  |
+| 额外优势 | 无                                 | `EC` 的 `ImmutableList` 构造时自动紧凑，无需手动 trim |
+
+
+
+### 2）扩容
+
+| 特性      | `ArrayList`（Java） | `ObjectArrayList`      |
+| --------- | ------------------- | ---------------------- |
+| 扩容公式  | `old + old/2`       | `old + old/2 + 1`      |
+| 容量=1 时 | 可能停滞（1→1）     | 一定增长（1→2）        |
+| 设计倾向  | 通用、保守          | 高性能、防边界陷阱     |
+| 适用场景  | 一般应用            | 算法、高频操作、小容器 |
+
+#### a、 为什么要 `+1`？考虑 `oldCapacity = 1`：
+
+- `ArrayList`：`1 + (1>>1) = 1 + 0 = 1` → 容量没变！不够用 → 实际会强制扩到 `minCapacity`（如 2）
+- `ObjectArrayList`：`1 + 0 + 1 = 2` → 直接满足需求
+
+
+
+
+
+
+
+‘
+
+
 
 
 

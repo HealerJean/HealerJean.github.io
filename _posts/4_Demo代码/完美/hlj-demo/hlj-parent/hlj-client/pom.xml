@@ -222,6 +222,11 @@
             <artifactId>hutool-all</artifactId>
         </dependency>
 
+        <!--arthas-->
+        <dependency>
+            <groupId>com.taobao.arthas</groupId>
+            <artifactId>arthas-spring-boot-starter</artifactId>
+        </dependency>
 
     </dependencies>
 

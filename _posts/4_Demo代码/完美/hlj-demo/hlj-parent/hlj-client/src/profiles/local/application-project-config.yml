@@ -82,4 +82,15 @@ filter:
     default:
       expectedInsertions: 2000
       falseProbability: 0.01
+arthas:
+  tunnel-server: ws://127.0.0.1:7777/ws
+  agent-id: hlj-demo
+  telnet-port: 3658
+  http-port: 8563
+log:
+  dynamic-log-map:
+    "[com.healerjean.proj.controller.UserDemoController#queryUserDemoSingle]":
+      enableReq: false
+      enableRes: true
+
 
