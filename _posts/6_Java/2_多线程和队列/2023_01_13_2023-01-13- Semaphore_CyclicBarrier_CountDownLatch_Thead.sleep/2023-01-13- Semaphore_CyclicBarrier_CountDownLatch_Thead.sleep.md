@@ -353,7 +353,7 @@ public static void sleepUninterruptibly(long sleepFor, TimeUnit unit) {
 
 ⬤ 适用于需要确保线程休眠完整时间而不受中断影响的场景。例如，在限流控制或定时任务中，可能需要确保线程休眠一段时间以等待下一个时间窗口或任务周期。
 
-2、**Sleep**     
+2、**`Sleep`**     
 
 ⬤ 适用于一般的休眠需求，特别是在不需要考虑中断影响的场景中。例如，在简单的延时操作或等待某个事件发生时，可以使用`Sleep `函数或 `Thread.sleep()`方法。
 

@@ -33,12 +33,12 @@ public class GrayBizBO implements Serializable {
     /**
      * 灰度比例
      */
-    private Long rate;
+    private long rate;
 
     /**
      * 灰度总额
      */
-    private Long amount;
+    private long amount;
 
 
 

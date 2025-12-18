@@ -80,11 +80,15 @@ public class GrayUtil {
         if (Objects.isNull(grayValue)){
             return false;
         }
+        long amount = grayBiz.getAmount();
+        if (amount <= 0) {
+            return false;
+        }
         long hashValue = Math.abs(grayValue.hashCode());
         if (NumberUtil.isLong(grayValue)) {
             hashValue =  Long.parseLong(grayValue);
         }
-        long rate = hashValue % grayBiz.getAmount() + 1;
+        long rate = hashValue % amount + 1;
         return rate <= grayBiz.getRate();
     }
 

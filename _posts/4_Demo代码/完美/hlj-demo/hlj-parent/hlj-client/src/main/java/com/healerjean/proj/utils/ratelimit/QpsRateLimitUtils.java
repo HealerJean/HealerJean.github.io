@@ -1,10 +1,7 @@
 package com.healerjean.proj.utils.ratelimit;
 
 import com.alibaba.fastjson.JSON;
-import com.google.common.util.concurrent.RateLimiter;
 import com.healerjean.proj.config.QpsRateLimitConfiguration;
-import lombok.Data;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
@@ -76,59 +73,39 @@ public class QpsRateLimitUtils {
      * 需要支持动态更新
      */
     public void refreshRateLimitMap(Map<String, QpsRateLimitDTO> limitConfig) {
-        // 赋值
+        // 使用QpsRateLimitDTO的静态工厂方法创建实例
         QRS_RATE_LIMIT_MAP = limitConfig.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, v ->
-                        new QpsRateLimitDTO()
-                                .setLimit(v.getValue().getLimit())
-                                .setRateLimiter(RateLimiter.create(v.getValue().getLimit()))));
+                        QpsRateLimitDTO.create(v.getValue().getLimit())));
     }
+
 
     /**
      * 限流配置
      *
      * @param key key
+     * @return 等待时间，-1表示无限流配置
      */
     public static double acquire(String key) {
         // -1 表示无限流配置
-        QpsRateLimitDTO limitConfig = QRS_RATE_LIMIT_MAP.get(key);
-        if (Objects.isNull(limitConfig)) {
+        QpsRateLimitDTO qpsRateLimit = QRS_RATE_LIMIT_MAP.get(key);
+        if (Objects.isNull(qpsRateLimit)) {
             return -1;
         }
 
-        RateLimiter rateLimiter = limitConfig.getRateLimiter();
-        double acquire = rateLimiter.acquire();
-        if (acquire > 0 && log.isWarnEnabled()){
-            log.warn("key:{},被限流:{}, rate:{} 等待:{}s", key, limitConfig.getLimit(), rateLimiter.getRate(), acquire);
+        double acquire = qpsRateLimit.getRateLimiter().acquire();
+        if (acquire > 0 && log.isInfoEnabled()) {
+            log.info("key:{},被限流:{}, rate:{} 等待:{}s", key, qpsRateLimit.getLimit(),
+                    qpsRateLimit.getRateLimiter().getRate(), acquire);
         }
-        if (acquire <= 0 && log.isInfoEnabled()) {
-            log.info("key:{},限流值:{}, rate:{} 等待:{}s", key, limitConfig.getLimit(), rateLimiter.getRate(), acquire);
+        if (acquire <= 0 && log.isDebugEnabled()) {
+            log.debug("key:{},限流值:{}, rate:{} 等待:{}s", key, qpsRateLimit.getLimit(),
+                    qpsRateLimit.getRateLimiter().getRate(), acquire);
         }
         return acquire;
     }
 
 
-    @Accessors(chain = true)
-    @Data
-    public static class QpsRateLimitDTO {
-
-
-        /**
-         * 限流Key
-         */
-        private String key;
-
-        /**
-         * 限流阈值
-         */
-        private Double limit;
-
-        /**
-         * 限流器
-         */
-        private RateLimiter rateLimiter;
-
-    }
 
 
 }
