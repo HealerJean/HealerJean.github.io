@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * CompressedController
  *
@@ -28,7 +31,7 @@ public class GrayController {
     @LogIndex
     @PostMapping("hit")
     @ResponseBody
-    public BaseRes<GrayEnum.GrayResEnum> getBitInfo(GrayEnum.GrayBusinessEnum grayBusinessEnum, String grayValue) {
+    public BaseRes<GrayEnum.GrayResEnum> gray(String grayValue) {
         log.info("1:{}",GrayUtil.hitGrayRule(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1,"1"));
         log.info("2:{}",GrayUtil.hitGrayRule(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1,"2"));
         log.info("3:{}",GrayUtil.hitGrayRule(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1,"3"));
@@ -39,6 +42,12 @@ public class GrayController {
         log.info("8:{}",GrayUtil.hitGrayRule(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1,"8"));
         log.info("9:{}",GrayUtil.hitGrayRule(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1,"9"));
 
+
+        Map<GrayEnum.GrayBusinessEnum, String> grayBusinessMap = new HashMap<>();
+        grayBusinessMap.put(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, grayValue);
+        log.info("ANY_HIT:{}:{}", grayValue,  GrayUtil.hitGrayRules(GrayEnum.GrayStrategyEnum.ANY_HIT, grayBusinessMap));
+        grayBusinessMap.put(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, grayValue);
+        log.info("ALL_HIT:{}:{}",  grayValue, GrayUtil.hitGrayRules(GrayEnum.GrayStrategyEnum.ALL_HIT, grayBusinessMap));
         return BaseRes.buildSuccess(GrayUtil.hitGrayRule(GrayEnum.GrayBusinessEnum.BUSINESS_OOO1, grayValue));
     }
 

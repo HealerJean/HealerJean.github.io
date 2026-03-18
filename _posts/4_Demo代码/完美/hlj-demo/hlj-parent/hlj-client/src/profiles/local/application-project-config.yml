@@ -62,7 +62,7 @@ qps:
       limit: 0.2
 gray:
   gray-biz-map:
-    businessDemo:
+    demo:
       whiteInfos:
         - 4
         - 5

@@ -28,7 +28,7 @@ public class GrayUtil {
      * @param grayBusinessMap grayBusinessMap
      * @return {@link GrayEnum.GrayResEnum}
      */
-    public GrayEnum.GrayResEnum hitGrayRules(GrayEnum.GrayStrategyEnum grayStrategyEnum, Map<GrayEnum.GrayBusinessEnum, String> grayBusinessMap) {
+    public static GrayEnum.GrayResEnum hitGrayRules(GrayEnum.GrayStrategyEnum grayStrategyEnum, Map<GrayEnum.GrayBusinessEnum, String> grayBusinessMap) {
         // 全部命中
         if (GrayEnum.GrayStrategyEnum.ALL_HIT == grayStrategyEnum){
             for (Map.Entry<GrayEnum.GrayBusinessEnum, String> entry : grayBusinessMap.entrySet()) {
