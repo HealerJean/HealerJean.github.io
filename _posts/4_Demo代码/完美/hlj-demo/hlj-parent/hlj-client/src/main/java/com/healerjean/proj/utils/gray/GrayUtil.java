@@ -73,7 +73,9 @@ public class GrayUtil {
         Map<String, GrayBizBO> grayBizMap = Optional.ofNullable(grayConfiguration.getGrayBizMap()).orElse(Maps.newHashMap());
         GrayBizBO grayBiz = grayBizMap.get(grayBusinessEnum.getCode());
         if (Objects.isNull(grayBiz)) {
-            log.info("[GrayUtil#hitGray] grayBusinessEnum:{}, grayValue:{} 灰度结果: false(未配置灰度)", grayBusinessEnum, grayValue);
+            if (log.isDebugEnabled()) {
+                log.debug("[GrayUtil#hitGray] grayBusinessEnum:{}, grayValue:{} 灰度结果: false(未配置灰度)", grayBusinessEnum, grayValue);
+            }
             return GrayEnum.GrayResEnum.GRAY_NOT_EXIST;
         }
 
@@ -82,48 +84,56 @@ public class GrayUtil {
         // 1、白名单判断,如果在白名单，返回：GrayEnum.GrayResEnum.GRAY_WHITE_TRUE;
         Set<String> whiteUsers = Optional.ofNullable(grayBiz.getWhiteInfos()).orElse(Sets.newHashSet());
         if (whiteUsers.contains(grayValue)) {
-            log.info("[GrayUtil#hitGray] grayBusinessEnum:{}, grayValue:{} 灰度结果：true(白名单命中)", grayBusinessEnum, grayValue);
+            if (log.isDebugEnabled()) {
+                log.debug("[GrayUtil#hitGray] grayBusinessEnum:{}, grayValue:{} 灰度结果：true(白名单命中)", grayBusinessEnum, grayValue);
+            }
             return GrayEnum.GrayResEnum.GRAY_WHITE_TRUE;
         }
 
         // 2、黑白名单判断,如果在白名单，返回：GrayEnum.GrayResEnum.GRAY_BLACK_TRUE;
         Set<String> blackInfos = Optional.ofNullable(grayBiz.getBlackInfos()).orElse(Sets.newHashSet());
         if (blackInfos.contains(grayValue)) {
-            log.info("[GrayUtil#hitGray] grayBusinessEnum:{}, grayValue:{} 灰度结果：false(黑名单命中)", grayBusinessEnum, grayValue);
+            if (log.isDebugEnabled()) {
+                log.debug("[GrayUtil#hitGray] grayBusinessEnum:{}, grayValue:{} 灰度结果：false(黑名单命中)", grayBusinessEnum, grayValue);
+            }
             return GrayEnum.GrayResEnum.GRAY_BLACK_TRUE;
         }
 
         // 三、灰度比例判断
         // 3.1、灰度比例不存在，则返回false
+        long grayPercent = grayBiz.getRate();
+        long grayPercentAmount = grayBiz.getAmount();
+
         // 3.2、灰度比例计算，命中返回ture，不命中返回false
-        boolean isHitHashValue = hitHashValue(grayBiz, grayValue);
-        if (isHitHashValue) {
-            log.info("[GrayUtil#hitGray] grayBusinessEnum:{}, grayValue:{} 灰度结果：true(灰度命中)", grayBusinessEnum, grayValue);
+        long rate = Math.abs(hashValue(grayBusinessEnum, grayValue)) % grayPercentAmount + 1;
+        if (rate <= grayPercent) {
+            if (log.isDebugEnabled()) {
+                log.debug("[GrayUtil#hitGray] grayBusinessEnum:{}, grayValue:{} 灰度结果：true(灰度命中)", grayBusinessEnum, grayValue);
+            }
             return GrayEnum.GrayResEnum.GRAY_TRUE;
         }
-        log.info("[GrayUtil#hitGray] grayBusinessEnum:{}, grayValue:{} 灰度结果：false(灰度未命中)", grayBusinessEnum, grayValue);
+        if (log.isDebugEnabled()) {
+            log.debug("[GrayUtil#hitGray] grayBusinessEnum:{}, grayValue:{} 灰度结果：false(灰度未命中)", grayBusinessEnum, grayValue);
+        }
         return GrayEnum.GrayResEnum.GRAY_FALSE;
     }
 
-    /**
-     * hitHashValue
-     *
-     */
-    private static boolean hitHashValue(GrayBizBO grayBiz, String grayValue) {
-        if (Objects.isNull(grayValue)){
-            return false;
-        }
-        long amount = grayBiz.getAmount();
-        if (amount <= 0) {
-            return false;
-        }
-        long hashValue = Math.abs(grayValue.hashCode());
-        if (NumberUtil.isLong(grayValue)) {
-            hashValue =  Long.parseLong(grayValue);
-        }
-        long rate = hashValue % amount + 1;
-        return rate <= grayBiz.getRate();
-    }
 
+    /**
+     * hashValue
+     *
+     * @param grayBusinessEnum grayBusinessEnum
+     * @param grayValue        grayValue
+     * @return {@link Integer}
+     */
+    private static Long hashValue(GrayEnum.GrayBusinessEnum grayBusinessEnum, String grayValue) {
+        if (Objects.isNull(grayValue)){
+            return 0L;
+        }
+        if (NumberUtil.isLong(grayValue)) {
+            return Long.valueOf(grayValue);
+        }
+        return (long) grayValue.hashCode();
+    }
 
 }
