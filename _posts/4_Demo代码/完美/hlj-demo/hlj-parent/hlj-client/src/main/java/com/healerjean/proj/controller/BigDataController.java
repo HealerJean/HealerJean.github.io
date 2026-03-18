@@ -2,7 +2,7 @@ package com.healerjean.proj.controller;
 
 import com.google.common.collect.Lists;
 import com.healerjean.proj.common.anno.LogIndex;
-import com.healerjean.proj.common.data.bo.BaseRes;
+import com.healerjean.proj.common.data.res.BaseRes;
 import com.healerjean.proj.data.bo.BigKeyDataBO;
 import com.healerjean.proj.data.bo.UserDemoBO;
 import com.healerjean.proj.data.bo.UserDemoQueryBO;

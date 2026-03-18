@@ -53,4 +53,10 @@ public class PageQueryBO<T> implements Serializable {
         this.pageSize = pageSize;
         this.searchCountFlag = true;
     }
+
+    public PageQueryBO(long currPage, long pageSize, boolean searchCountFlag) {
+        this.currPage = currPage;
+        this.pageSize = pageSize;
+        this.searchCountFlag = searchCountFlag;
+    }
 }

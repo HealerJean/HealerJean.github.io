@@ -16,167 +16,245 @@ description: 设计模式之交给子类_TemplateMethod模模式_讲具体处理
 
  博客：[http://blog.healerjean.com](http://HealerJean.github.io)       
 
-# 1、模板方法
+# 一、**模板方法（`Template Method`）设计模式**
 
-> 父类中定义处理流程的框架，在子类中实现具体处理的模式 ，这种模式我们经常会遇到，项目中太多了   ,**就是说一个父类中有一些方法有不同的实现，需要多个子类来处理。** 
+## 1、**模式概述**
 
+> **模板方法模式** 是一种 **行为型设计模式**，它在 **父类中定义一个算法的骨架（流程框架）**，而将 **某些具体步骤延迟到子类中实现**。
+> 子类可以在不改变算法结构的前提下，重新定义该算法的特定步骤。   
 
+**模板方法 = 算法骨架 + 插槽实现**：-----> **流程我定，细节你填**
 
-## 1.1、使用场景  
+- **核心思想**：**“封装不变部分，扩展可变部分”** —— 将公共流程固化在父类，差异化逻辑由子类实现。
 
-> 也就是说多个业务有重合的地方，重合的地方交给父类，子类继承，也可重写
-
-
-
-## 1.2、角色
-
-### 1.2.1、`AbstractClass`（抽象类 父类） 
-
-> **期待，并且要求子类去实现抽象方法**     
-
-### 1.2.2、`ConcreteClass`（具体类 ，子类）
-
-> **1、在子类中可以使用父类中定义的方法 **   
->
-> **2、在子类中重新父类的方法可以改变程序的行为**   
->
-> **3、在子类中添加方法来实现新的功能**    
+- 它不是让你“重写整个流程”，而是让你“填空”——在框架预留的位置，填入你的具体逻辑。
 
 
 
+## 2、**使用场景**
+
+模板方法适用于以下情况：
+
+- 多个子类有 **相同的处理流程**，但 **某些步骤的具体实现不同**；
+- 需要 **控制子类扩展范围**（通过 `final` 方法防止关键流程被篡改）；
+- 希望 **避免代码重复**，将公共逻辑上提到父类。
+
+**典型例子**：
+
+- 数据库操作模板（连接 → 执行 → 关闭）
+- 算法框架（初始化 → 处理 → 清理）
+- 测试用例执行流程（setUp → test → tearDown）
 
 
-## 1.3、示例程序
 
-### 1.2.1、抽象父类 `AbstractDisplay`
+## 3、**模式角色**
+
+### 1）`AbstractClass`（抽象类 父类） 
+
+> **定义模板方法，并声明若干抽象方法或钩子方法供子类实现**   
+
+- **模板方法（如 `display()`）通常声明为 `final`**，防止子类覆盖破坏流程；
+- **抽象方法（如 `open()`, `print()`, `close()`）强制子类实现**；
+- 可引入 **钩子方法（`Hook Method`）**（空实现的 protected 方法），提供可选扩展点。
+
+
+
+### 2）`ConcreteClass`（具体类 ，子类）
+
+**1、在子类中可以使用父类中定义的方法 **   
+
+**2、在子类中重写父类的方法可以改变程序的行为**   
+
+**3、在子类中添加方法来实现新的功能**    
+
+
+
+## 4、**示例程序：显示不同格式的内容**
+
+### 1）**抽象父类** `AbstractDisplay`
+
+- `display()` 是 **final** 的，确保流程不可篡改；
+- 三个抽象方法构成 **可变点**，由子类填充。
 
 ```java
-public abstract class AbstractDisplay { // 抽象类AbstractDisplay
-    public abstract void open();        // 交给子类去实现的抽象方法(1) open
-    public abstract void print();       // 交给子类去实现的抽象方法(2) print
-    public abstract void close();       // 交给子类去实现的抽象方法(3) close
-    public final void display() {       // 本抽象类中实现的display方法
-        open();                         // 首先打开…
-        for (int i = 0; i < 5; i++) {   // 循环调用5次print
-            print();                    
+/**
+ * 抽象显示类 —— 定义显示流程的模板
+ */
+public abstract class AbstractDisplay {
+
+    // === 抽象方法：由子类实现具体行为 ===
+    public abstract void open();   // 打开显示
+    public abstract void print();  // 打印内容
+    public abstract void close();  // 关闭显示
+
+    // === 模板方法：定义固定流程（final 防止被重写）===
+    public final void display() {
+        open();
+        for (int i = 0; i < 5; i++) {
+            print();
         }
-        close();                        // …最后关闭。这就是display方法所实现的功能
+        close();
     }
 }
 ```
 
 
 
-### 1.2.2、子类 `CharDisplay`
+### 2）**具体子类 1：**`CharDisplay`
 
 ```java
-package com.hlj.moudle.design.D03_交给子类.D03_TeampleMethod模式.TemplateMethod.Sample;
+/**
+ * 字符显示：用 <<H>> 形式显示单个字符
+ */
+public class CharDisplay extends AbstractDisplay {
+    private final char ch;
 
-public class CharDisplay extends AbstractDisplay {  // CharDisplay是AbstractDisplay的子类
-    private char ch;                                // 需要显示的字符
-
-    public CharDisplay(char ch) {                   // 构造函数中接收的字符被
-        this.ch = ch;                               // 保存在字段中
+    public CharDisplay(char ch) {
+        this.ch = ch;
     }
 
-    public void open() {                            // 在父类中是抽象方法，此处重写该方法
-        System.out.print("<<");                     // 显示开始字符"<<"
+    @Override
+    public void open() {
+        System.out.print("<<");
     }
 
-    public void print() {                           // 同样地重写print方法。该方法会在display中被重复调用
-        System.out.print(ch);                       // 显示保存在字段ch中的字符
+    @Override
+    public void print() {
+        System.out.print(ch);
     }
 
-    public void close() {                           // 同样地重写close方法
-        System.out.println(">>");                   // 显示结束字符">>"
+    @Override
+    public void close() {
+        System.out.println(">>");
     }
 }
-
 ```
 
 
 
-### 1.2.3、子类 `StringDisplay`
+### 3） **具体子类 2：**`StringDisplay`
 
 ```java
-package com.hlj.moudle.design.D03_交给子类.D03_TeampleMethod模式.TemplateMethod.Sample;
-// StringDisplay也是AbstractDisplay的子类
-public class StringDisplay extends AbstractDisplay {    
-    // 需要显示的字符串
-    private String string;                             
-     // 以字节为单位计算出的字符串长度
-    private int width;                                 
+/**
+ * 字符串显示：用方框包围字符串
+ */
+public class StringDisplay extends AbstractDisplay {
+    private final String str;
+    private final int width;
 
-     // 构造函数中接收的字符串被
-    public StringDisplay(String string) {              
-        this.string = string;                          
-        this.width = string.getBytes().length;          
+    public StringDisplay(String str) {
+        this.str = str;
+        // 注意：生产环境建议使用 str.length() 或指定编码
+        this.width = str.getBytes().length;
     }
 
-    // 重写的open方法
-    public void open() {                                
-        printLine();                                   
+    @Override
+    public void open() {
+        printLine();
     }
 
-    // print方法
-    public void print() {                               
-        System.out.println("|" + string + "|");         
+    @Override
+    public void print() {
+        System.out.println("|" + str + "|");
     }
 
-    // close方法
-    public void close() {                               
-        printLine();                                    
+    @Override
+    public void close() {
+        printLine();
     }
 
-    // 被open和close方法调用。由于可见性是private，因此只能在本类中被调用
-    private void printLine() {                          
-        System.out.print("+");                          // 显示表示方框的角的"+"
-        for (int i = 0; i < width; i++) {               // 显示width个"-"
-            System.out.print("-");                      // 组成方框的边框
+    // 私有辅助方法：绘制横线
+    private void printLine() {
+        System.out.print("+");
+        for (int i = 0; i < width; i++) {
+            System.out.print("-");
         }
-        System.out.println("+");                        // /显示表示方框的角的"+"
+        System.out.println("+");
     }
 }
-
 ```
 
+### 4）**客户端测试** `Main`
 
-
-#####  1.2.4、测试Main
+**优势体现**：客户端只需调用 `display()`，无需关心内部是字符还是字符串，**流程统一，实现各异**。
 
 ```java
 public class Main {
     public static void main(String[] args) {
-        // 生成一个持有'H'的CharDisplay类的实例 
-        AbstractDisplay d1 = new CharDisplay('H');        
-        
-        // 生成一个持有"Hello, world."的StringDisplay类的实例 
-        AbstractDisplay d2 = new StringDisplay("Hello, world.");  
-        
-        // 生成一个持有"你好，世界。"的StringDisplay类的实例 
-        AbstractDisplay d3 = new StringDisplay("你好，世界。");     
-        
-        // 由于d1、d2和d3都是AbstractDisplay类的子类
-        d1.display();                                     
-        // 可以调用继承的display方法
-        d2.display();            
-        // 实际的程序行为取决于CharDisplay类和StringDisplay类的具体实现
-        d3.display();                                               
+        AbstractDisplay d1 = new CharDisplay('H');
+        AbstractDisplay d2 = new StringDisplay("Hello, world.");
+        AbstractDisplay d3 = new StringDisplay("你好，世界。");
 
+        d1.display(); // 输出: <<HHHHH>>
+        d2.display(); // 输出: 方框包围 "Hello, world."（5次）
+        d3.display(); // 输出: 方框包围 "你好，世界。"（5次）
     }
 }
-
 ```
 
 
 
 
 
-## 1.4、UML图
+## 5、`UML` 图
+
+- `AbstractDisplay` 定义模板方法 `display()` 和抽象方法；
+- `CharDisplay` 与 `StringDisplay` 实现具体行为。
 
 ![1558693456672](https://raw.githubusercontent.com/HealerJean/HealerJean.github.io/master/blogImages/1558693456672.png)
 
  
+
+
+
+
+
+## 6、 **模式优点与注意事项**
+
+### 1）**优点**
+
+- **代码复用**：公共流程集中管理，避免重复；
+- **扩展灵活**：新增子类即可支持新行为；
+- **控制扩展点**：通过 `final` 保护核心流程，通过抽象方法开放定制点；
+- **符合开闭原则**：对扩展开放（加子类），对修改关闭（不动父类 `final` ）。
+
+
+
+### 2）**注意事项**
+
+- **避免过度设计**：如果只有两个相似类，可能不需要抽象；
+- **谨慎使用继承**：Java 单继承限制，若父类已存在，可考虑组合 + 策略模式替代；
+- **钩子方法（`Hook`）**：可添加 `protected boolean isPrintEnabled()` 等空方法，提供条件扩展。
+
+
+
+### 3）**与相关模式对比**
+
+- 流程固定、步骤差异小 → **模板方法**
+- 算法完全可替换、运行时动态切换 → **策略模式**
+
+| 模式                         | 区别                                                         |
+| ---------------------------- | ------------------------------------------------------------ |
+| 策略模式（`Strategy`）       | 模板方法用 继承 实现多态，策略模式用 组合 实现算法替换，更灵活 |
+| 工厂方法（`Factory Method`） | 工厂方法是模板方法的一种特例（模板方法用于创建对象）         |
+
+在实际开发中：
+
+- `Spring` 的 `JdbcTemplate`、`RestTemplate` 是经典应用；
+- `JUnit` 的 `@Before` / `@Test` / `@After` 执行流程也是模板方法；
+- 任何“先 A，再 B×N，最后 C”的流程都适合此模式。
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,4 +1,4 @@
-package com.healerjean.proj.common.data.bo;
+package com.healerjean.proj.common.data.res;
 
 
 import com.healerjean.proj.common.enums.CodeEnum;

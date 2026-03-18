@@ -2,7 +2,7 @@ package com.healerjean.proj.controller;
 
 import com.healerjean.proj.base.BaseJunit5SpringTest;
 import com.healerjean.proj.common.contants.DataSourceConstant;
-import com.healerjean.proj.common.data.bo.BaseRes;
+import com.healerjean.proj.common.data.res.BaseRes;
 import com.healerjean.proj.data.vo.UserDemoVO;
 import com.healerjean.proj.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;

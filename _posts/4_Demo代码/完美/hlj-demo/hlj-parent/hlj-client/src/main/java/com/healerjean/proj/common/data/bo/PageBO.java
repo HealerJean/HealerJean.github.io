@@ -19,7 +19,7 @@ public class PageBO<T> implements Serializable {
     /**
      * serialVersionUID
      */
-    private static final long serialVersionUID = 1411218404349777400L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 总记录数

@@ -26,6 +26,8 @@ public class ValidateUtils {
      */
     public static final String COMMON_SUCCESS = "success";
 
+
+
     /**
      * 校验工具类
      */

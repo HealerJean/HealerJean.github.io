@@ -31,7 +31,7 @@ public class DemoRpcAdapterImpl implements DemoRpcAdapter {
         try {
             return demoRpcProxy.rpcInvoke(msg);
         } catch (Exception e) {
-            log.info("[DemoAdapter#rpcInvoke] msg", msg, e);
+            log.info("[DemoAdapter#rpcInvoke] msg:{}", msg, e);
             return null;
         }
     }

@@ -18,8 +18,6 @@ description: BeanUtils工具类选择
 
 # 一、`BeanUtils` 复制字段值
 
-
-
 ## 1、`org.springframework.beans.BeanUtils`
 
 > `a` 拷贝到 `b`

@@ -16,7 +16,11 @@ description: SpringBoot数据源配置
 
 
 
-# 一、`Spring` 配置文件
+# 一、数据源配置
+
+## 1、服务配置
+
+### 1）`pom` 依赖
 
 ```xml
 <!-- 数据源 -->
@@ -28,7 +32,13 @@ description: SpringBoot数据源配置
 
 
 
+### 2）`yml`
+
 ```properties
+####################################
+### DB
+####################################
+#durid
 spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
 spring.datasource.druid.driver-class-name=com.mysql.cj.jdbc.Driver
 # 初始化时建立物理连接的个数
@@ -52,6 +62,9 @@ spring.datasource.druid.testOnBorrow=false
 # 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
 spring.datasource.druid.testOnReturn=false
 
+####################################
+### DB
+####################################
 spring.datasource.url=jdbc:mysql://127.0.0.1:3306/healerjean?serverTimezone=CTT&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
 spring.datasource.username=root
 spring.datasource.password=123456
@@ -59,38 +72,7 @@ spring.datasource.password=123456
 
 
 
-# 二、`DataSourcerConfig`
-
-```properties
-####################################
-### DB
-####################################
-#durid
-spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
-spring.datasource.druid.driver-class-name=com.mysql.jdbc.Driver
-spring.datasource.druid.initialSize=5
-spring.datasource.druid.minIdle=5
-spring.datasource.druid.maxActive=20
-spring.datasource.druid.maxWait=60000
-spring.datasource.druid.timeBetweenEvictionRunsMillis=60000
-spring.datasource.druid.minEvictableIdleTimeMillis=300000
-spring.datasource.druid.validationQuery=SELECT 1 FROM DUAL
-spring.datasource.druid.testWhileIdle=true
-spring.datasource.druid.testOnBorrow=false
-spring.datasource.druid.testOnReturn=false
-
-
-####################################
-### DB
-####################################
-spring.datasource.druid.url=jdbc:mysql://localhost:3306/hlj_jpa_mybatis_plus?serverTimezone=CTT&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
-spring.datasource.druid.username=root
-spring.datasource.druid.password=123456
-####################################
-
-```
-
-
+### 3）`DataSourcerConfig`
 
 ```java
 @Configuration
@@ -158,13 +140,11 @@ public class DataResourceConfig {
 
 
 
-# 三、连接配置
+# 二、`url` 连接配置
 
-```http
+```
 jdbc:数据库类型://主机名:端口号/数据库名?参数1=值1&参数2=值2
 ```
-
-## 1、基本配置
 
 | 参数            | 说明                                                         |
 | --------------- | ------------------------------------------------------------ |
@@ -175,14 +155,12 @@ jdbc:数据库类型://主机名:端口号/数据库名?参数1=值1&参数2=值
 | **数据库名**:   | 要连接的数据库的名称。                                       |
 | **参数**:       | 连接字符串末尾可以附加多个参数，用于指定连接属性，如字符集、超时时间等。 |
 
-
-
-## 2、参数
+## 1、核心参数
 
 | 参数                                          | 说明                                                         | 建议                                                         |
 | --------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | **`useSSL`**                                  | 指定是否使用SSL加密数据库连接                                | 根据你的应用环境和安全需求设置。在生产环境中，如果数据库服务器支持且配置了SSL，建议使用SSL来加密数据库连接。 |
-| **`allowPublicKeyRetrieval`**                 | 在启用SSL时，允许客户端从服务器请求公钥。                    | 与`useSSL`一起使用，以确保SSL连接的安全。                    |
+| **`allowPublicKeyRetrieval`**                 | 在启用 `SSL`c 时，允许客户端从服务器请求公钥。               | 与`useSSL`一起使用，以确保SSL连接的安全。                    |
 | **`serverTimezone`**                          | 设置服务器时区，以解决时区不一致导致的问题。                 | 根据你的应用需求和数据库服务器的时区设置来选择。             |
 | **`characterEncoding`** 和 **`useUnicode`**： | 设置客户端和服务器之间交换数据的字符编码。                   | 通常设置为`UTF-8`以支持国际化字符集。                        |
 | **`connectTimeout`**                          | `connectTimeout`设置建立连接前的超时时间（毫秒）             | 根据你的网络环境和数据库服务器的响应时间来设置。             |
@@ -197,11 +175,11 @@ jdbc:mysql://healerjean.com:3306/healerjean?createDatabaseIfNotExist=true&charac
 
 ### 1）`tcp` 超时：`socketTimeout`
 
-> **定义**：`socketTimeout` 是 `TCP` 层面的超时设置，它指的是客户端从服务器读取数据时的超时时间。在数据库连接的上下文中，这通常指的是  `JDBC` 客户端与 `MySQL`  服务器之间通过 `Socket` 传输数据时，等待服务器响应的超时时间。       
->
-> **作用**：`socketTimeout` 用于防止在网络延迟或服务器无响应的情况下，客户端无限期地等待数据。如果设置了 `socketTimeout`，当超过这个时间后，客户端将抛出 `SocketTimeoutException`，从而允许应用程序采取相应的错误处理措施。     
->
-> **设置方式**：在 `JDBC` 连接字符串中，可以通过添加 `socketTimeout` 参数来设置，例如：`jdbc:mysql://localhost:3306/mydatabase?socketTimeout=30000`（单位为毫秒）。
+- **定义**：`socketTimeout` 是 `TCP` 层面的超时设置，它指的是客户端从服务器读取数据时的超时时间。在数据库连接的上下文中，这通常指的是  `JDBC` 客户端与 `MySQL`  服务器之间通过 `Socket` 传输数据时，等待服务器响应的超时时间。       
+
+- **作用**：`socketTimeout` 用于防止在网络延迟或服务器无响应的情况下，客户端无限期地等待数据。如果设置了 `socketTimeout`，当超过这个时间后，客户端将抛出 `SocketTimeoutException`，从而允许应用程序采取相应的错误处理措施。     
+
+- **设置方式**：在 `JDBC` 连接字符串中，可以通过添加 `socketTimeout` 参数来设置，例如：`jdbc:mysql://localhost:3306/mydatabase?socketTimeout=30000`（单位为毫秒）。
 
 
 
@@ -209,13 +187,15 @@ jdbc:mysql://healerjean.com:3306/healerjean?createDatabaseIfNotExist=true&charac
 
 ### 2）`SQL` 超时（ `statement timeout`）
 
-> **定义**：`SQL` 超时，通常通过 `statement timeout` 来实现，指的是单个 `SQL` 语句执行时的超时时间。这是数据库驱动层面或应用层面的设置，用于限制`SQL` 语句的执行时间，以防止长时间运行的查询耗尽系统资源。    
->
-> **作用**：`statement timeout` 用于保护数据库和应用免受长时间运行查询的影响，确保系统资源得到合理分配和利用。    
->
-> **设置方式**：在` JDBC` 中，可以通过调用 `Statement` 或 `PreparedStatement` 对象的 `setQueryTimeout(int seconds)` 方法来设置 `SQL` 超时时间（以秒为单位）。不过，也可以通过一些框架或连接池的配置来设置默认的 `SQL` 超时时间。
+**定义**：`SQL` 超时，通常通过 `statement timeout` 来实现，指的是单个 `SQL` 语句执行时的超时时间。这是数据库驱动层面或应用层面的设置，用于限制`SQL` 语句的执行时间，以防止长时间运行的查询耗尽系统资源。    
+
+**作用**：`statement timeout` 用于保护数据库和应用免受长时间运行查询的影响，确保系统资源得到合理分配和利用。    
+
+**设置方式**：在` JDBC` 中，可以通过调用 `Statement` 或 `PreparedStatement` 对象的 `setQueryTimeout(int seconds)` 方法来设置 `SQL` 超时时间（以秒为单位）。不过，也可以通过一些框架或连接池的配置来设置默认的 `SQL` 超时时间。
 
  
+
+### 3）`tcp` 超时 和 `SQL` 超时 差异
 
 - **级别差异**：`socketTimeout` 是 `TCP` 层面的超时，它作用于整个 `Socket` 连接上的数据传输；而 `SQL` 超时（`statement timeout`）是应用或数据库驱动层面的超时，它作用于单个 `SQL` 语句的执行。     
 
@@ -225,14 +205,30 @@ jdbc:mysql://healerjean.com:3306/healerjean?createDatabaseIfNotExist=true&charac
 
 
 
-### 3）初始连接数和最小连接数
+# 三、连接数配置
+
+> `MT`  (`70` 多台机器呢)
+
+```java
+  private int minPoolSize = 5;
+  private int maxPoolSize = 20;
+  private int initialPoolSize = 5;
+  private int checkoutTimeout = 3000;
+  private boolean removeAbandoned = true;
+  private int timeBetweenEvictionRunsMillis = 600000;
+  private int minEvictableIdleTimeMillis = 300000;
+```
+
+
+
+## 1、初始连接数和最小连接数
 
 | 场景             | 推荐值  | 原因                                                         |
 | ---------------- | ------- | ------------------------------------------------------------ |
 | **单库架构**     | `1 ~ 2` | 应用启动后立即有少量可用连接，避免首次请求冷启动延迟；同时不浪费资源。 |
 | **分库分表架构** | **`0`** | 每台应用只访问部分分片，若为每个分库都保活连接（如设为 2），会导致大量**空闲但真实的数据库连接**堆积，浪费内存并可能打满 `max_connections`。设为 0 可按需创建、用完回收，更安全高效。 |
 
-#### a、**`minimumIdle=0` 在分库场景下是安全、高效、推荐的做法。**
+### 1）**`minimumIdle=0` 在分库场景下是安全、高效、推荐的做法。**
 
 - 它 **不会导致“每次请求都建连”**
 - 只有 **长时间不用的分库** 才会释放连接
@@ -240,7 +236,7 @@ jdbc:mysql://healerjean.com:3306/healerjean?createDatabaseIfNotExist=true&charac
 
 
 
-#### b、`minimumIdle=0` 如何避免“频繁建连”？
+### 2）`minimumIdle=0` 如何避免“频繁建连”？
 
 **方案 1：适当调大 `idleTimeout`**
 
@@ -250,10 +246,14 @@ idle-timeout: 1800000  # 30分钟（默认10分钟）
 
 → 让连接活得更久，减少重建概率。
 
+
+
 **方案 2：对高频分库做“预热”（启动时主动访问）**
 
 - 应用启动后，自动查一下自己负责的分片
 - 触发连接创建，避免首次用户请求等待
+
+
 
 **方案 3：监控 + 动态调整**
 
@@ -262,7 +262,7 @@ idle-timeout: 1800000  # 30分钟（默认10分钟）
 
 
 
-### 4）最大连接数
+## 2、最大连接数
 
 | 推荐做法            | 说明                                                         |
 | ------------------- | ------------------------------------------------------------ |
@@ -292,23 +292,17 @@ idle-timeout: 1800000  # 30分钟（默认10分钟）
 
 
 
+## 3、`FAQ`
 
-
-
-
-## 3、问题
-
-### 1）误区
-
-#### a、大量扩容和缩容时，不关注数据库连接数
+### 1）错误：大量扩容和缩容时，不关注数据库连接数-
 
 大量扩容和缩容时，都会极大的影响数据库连接数，从而影响到数据库的性能和稳定性，需要及时调整数据库连接池的配置。
 
 
 
-#### b、数据库连接数越大，数据库吞吐量越高
+### 2）错误：数据库连接数越大，数据库吞吐量越高
 
-**错误：**`MySQL`服务器允许同时连接的最大客户端数由 `max_connections` 系统变量决定，当达到此最大值时，服务器将不会接受新连接。因此，有一种观念认为只要不超 `max_connections`，数据库连接数越大，数据库性能越好，吞吐量越高。
+**错误：**`MySQL` 服务器允许同时连接的最大客户端数由 `max_connections` 系统变量决定，当达到此最大值时，服务器将不会接受新连接。因此，有一种观念认为只要不超 `max_connections`，数据库连接数越大，数据库性能越好，吞吐量越高。
 
 **误区澄清：**连接数 ≠ 吞吐量。**连接数过多反而会导致性能下降，存在一个最优连接数区间，超过后系统吞吐不升反降**。
 
@@ -318,35 +312,225 @@ idle-timeout: 1800000  # 30分钟（默认10分钟）
 
 
 
-
-
-
-
-
-
-# 四、项目应用
-
-## 1、`MT`  (`70` 多台机器呢)
+### 3）服务启动：数据源预热
 
 ```java
-  private int minPoolSize = 5;
-  private int maxPoolSize = 20;
-  private int initialPoolSize = 5;
-  private int checkoutTimeout = 3000;
-  private boolean removeAbandoned = true;
-  private int timeBetweenEvictionRunsMillis = 600000;
-  private int minEvictableIdleTimeMillis = 300000;
+/**
+ * 数据源预热
+ *
+ * @author zhangyujin
+ * @date 2026/1/15
+ */
+@Service
+public class DataSourceWarmUp implements CommandLineRunner {
+
+
+    /**
+     * dataSourceStartWarmUp
+     */
+    @Resource
+    private DataSourceStartWarmUp dataSourceStartWarmUp;
+
+    /**
+     * 数据源预热
+     */
+    @Override
+    public void run(String... args) throws Exception {
+        dataSourceStartWarmUp.warmUp();
+    }
+
+}
+
+
+
+
+import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
+import com.jd.merchant.business.platform.core.common.DbConstants;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+/**
+ * DataSourceStartWarmUp
+ *
+ * @author zhangyujin
+ * @date 2026/1/15
+ */
+@Service
+@Slf4j
+public class DataSourceStartWarmUp {
+    /**
+     * dynamicRoutingDataSource
+     */
+    @Resource
+    private DynamicRoutingDataSource dynamicRoutingDataSource;
+
+    /**
+     * 数据源预热
+     */
+    @Retryable(value = Exception.class, maxAttempts = 4, backoff = @Backoff(delay = 20000, multiplier = 1.5))
+    public void warmUp() {
+        DataSource targetDs = dynamicRoutingDataSource.getDataSource(DbConstants.DataSourceName);
+        if (targetDs == null) {
+            throw new IllegalStateException("数据源 [" + DbConstants.DataSourceName + "] 未找到");
+        }
+
+        try (Connection conn = targetDs.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT 1");
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                log.info("数据源 [{}] 预热成功", DbConstants.DataSourceName);
+            }
+        } catch (Exception e) {
+            log.warn("数据源 [{}] 预热失败，原因:{}", DbConstants.DataSourceName, e.getMessage());
+            throw new RuntimeException("数据源预热失败，触发重试", e);
+        }
+    }
+
+    /**
+     * 数据源预热后失败了
+     */
+    @Recover
+    public void recoverWarmUp(Exception ex) {
+        log.error("所有重试均失败，数据源预热彻底失败", ex);
+        throw new RuntimeException("数据源预热最终失败，应用无法安全启动", ex);
+    }
+}
+
+
+```
+
+
+
+# 四、多数据源配置
+
+## 1、`dynamic-datasource-spring-boot-starter`
+
+### 1）`pom`
+
+```xml
+<!--数据源-->
+<dependency>
+    <groupId>com.baomidou</groupId>
+    <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+    <version>3.6.1</version>
+</dependency>
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>druid-spring-boot-starter</artifactId>
+    <version>1.1.22</version>
+</dependency>
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>5.1.45</version>
+</dependency>
+```
+
+
+
+### 2）`yml`
+
+```yaml
+####################################
+### DB
+####################################
+spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+  datasource:
+    dynamic:
+      # 设置默认的数据源或者数据源组,默认值即为master
+      primary: healerjean
+      # 设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候会抛出异常,不启动则使用默认数据源
+      strict: true
+      druid:
+        # 初始化时建立物理连接的个数
+        initialSize: 5
+        # 最小连接池数量
+        minIdle: 5
+        # 最大连接池数量
+        maxActive: 20
+        # 获取连接等待超时时间
+        maxWait: 60000
+        ## 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+        timeBetweenEvictionRunsMillis: 60000
+        ## 连接保持空闲而不被驱逐的最小时间
+        minEvictableIdleTimeMillis: 300000
+        # 用来检测连接是否有效的sql，要求是一个查询语句
+        validationQuery: SELECT 1 FROM DUAL
+        # 建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。
+        testWhileIdle: true
+        # 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+        testOnBorrow: false
+        # 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+        testOnReturn: false
+        #打開PSCache，並指定每個連接上PSCache的大小。oracle設爲true，mysql設爲false。分庫分表較多推薦設置爲false
+        pool-prepared-statements: false
+        max-pool-prepared-statement-per-connection-size: 20
+        stat:
+          #日志输出执行慢的SQL
+          log-slow-sql: true
+          #slowSqlMillis的缺省值为3000，也就是3秒。
+          slow-sql-millis: 2000
+      datasource:
+        healerjean:
+          # 3.2.0开始支持SPI可省略此配置
+          driver-class-name: com.mysql.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/healerjean?characterEncoding=utf-8&useUnicode=true&autoReconnect=true&connectTimeout=3000&initialTimeout=1&socketTimeout=5000&useSSL=false&serverTimezone=CTT
+          username: root
+          password: 12345678
+        test:
+          # 3.2.0开始支持SPI可省略此配置
+          driver-class-name: com.mysql.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8&useUnicode=true&autoReconnect=true&connectTimeout=3000&initialTimeout=1&socketTimeout=5000&useSSL=false&serverTimezone=CTT
+          username: root
+          password: 12345678
+
+
+
+```
+
+### 3）样例 `@DS(DateSourceConstant.SLAVE_TEST)`
+
+```java
+@DS(DateSourceConstant.SLAVE_TEST)
+@ApiOperation(value = "用户信息-单条查询", notes = "用户信息-单条查询-描述")
+@RedisCache(RedisConstants.CacheEnum.COMMON)
+@LogIndex
+@GetMapping("user/{userId}")
+@ResponseBody
+public BaseRes<UserDemoVO> selectById(@ElParam @PathVariable("userId") Long userId) {
+    UserDemoBO userDemoBo = userDemoService.selectById(userId);
+    UserDemoVO userDemoVo = UserConverter.INSTANCE.covertUserDemoBoToVo(userDemoBo);
+    return BaseRes.buildSuccess(userDemoVo);
+}
 ```
 
 
 
 
 
+## 2、`FAQ`
 
+### 1）版本选择
 
-
-
-
+|       维度        |    3.6.1     |         2.5.3          |    2.3.4    |
+| :---------------: | :----------: | :--------------------: | :---------: |
+|  上下文丢失问题   |   完全修复   |        完全修复        |    存在     |
+| 内部调用 @DS 失效 | 内置兜底机制 | 部分兜底（需少量适配） |   无兜底    |
+| 事务与数据源冲突  |   完全修复   |        基本修复        |  严重冲突   |
+| Spring Boot 兼容  |  2.7.x/3.x   |      2.1.x-2.6.x       | 2.0.x-2.3.x |
+|   官方维护状态    |   长期维护   |       仅紧急修复       |  停止维护   |
 
 
 
