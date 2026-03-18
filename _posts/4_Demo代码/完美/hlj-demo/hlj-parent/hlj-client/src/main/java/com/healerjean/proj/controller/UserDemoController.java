@@ -3,7 +3,7 @@ package com.healerjean.proj.controller;
 import com.healerjean.proj.common.anno.*;
 import com.healerjean.proj.common.contants.RedisConstants;
 import com.healerjean.proj.common.data.ValidateGroup;
-import com.healerjean.proj.common.data.bo.BaseRes;
+import com.healerjean.proj.common.data.res.BaseRes;
 import com.healerjean.proj.common.data.bo.PageBO;
 import com.healerjean.proj.common.data.bo.PageQueryBO;
 import com.healerjean.proj.common.data.convert.PageConverter;

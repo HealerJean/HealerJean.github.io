@@ -1,8 +1,5 @@
 package com.healerjean.proj.common.contants;
 
-import com.alibaba.fastjson.TypeReference;
-import com.healerjean.proj.common.data.bo.BaseRes;
-import com.healerjean.proj.data.vo.UserDemoVO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

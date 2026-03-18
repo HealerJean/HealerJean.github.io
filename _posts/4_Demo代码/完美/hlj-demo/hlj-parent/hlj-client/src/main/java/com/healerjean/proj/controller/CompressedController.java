@@ -3,7 +3,7 @@ package com.healerjean.proj.controller;
 import cn.hutool.core.util.RandomUtil;
 import com.google.common.collect.Lists;
 import com.healerjean.proj.common.anno.LogIndex;
-import com.healerjean.proj.common.data.bo.BaseRes;
+import com.healerjean.proj.common.data.res.BaseRes;
 import com.healerjean.proj.utils.ThreadPoolUtils;
 import com.healerjean.proj.utils.filter.FilterEnum;
 import com.healerjean.proj.utils.filter.bloom.BloomFilterUtils;

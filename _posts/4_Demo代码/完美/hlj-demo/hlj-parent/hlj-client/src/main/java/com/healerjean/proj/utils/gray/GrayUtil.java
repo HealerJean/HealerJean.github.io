@@ -23,6 +23,40 @@ public class GrayUtil {
 
 
     /**
+     * hitGray
+     *
+     * @param grayBusinessMap grayBusinessMap
+     * @return {@link GrayEnum.GrayResEnum}
+     */
+    public GrayEnum.GrayResEnum hitGrayRules(GrayEnum.GrayStrategyEnum grayStrategyEnum, Map<GrayEnum.GrayBusinessEnum, String> grayBusinessMap) {
+        // 全部命中
+        if (GrayEnum.GrayStrategyEnum.ALL_HIT == grayStrategyEnum){
+            for (Map.Entry<GrayEnum.GrayBusinessEnum, String> entry : grayBusinessMap.entrySet()) {
+                GrayEnum.GrayResEnum grayResEnum = hitGrayRule(entry.getKey(), entry.getValue());
+                if (!grayResEnum.getHitFlag()) {
+                    return grayResEnum;
+                }
+            }
+            return GrayEnum.GrayResEnum.GRAY_TRUE;
+        }
+
+        // 任一命中
+        if (GrayEnum.GrayStrategyEnum.ANY_HIT == grayStrategyEnum){
+            for (Map.Entry<GrayEnum.GrayBusinessEnum, String> entry : grayBusinessMap.entrySet()) {
+                GrayEnum.GrayResEnum grayResEnum = hitGrayRule(entry.getKey(), entry.getValue());
+                if (grayResEnum.getHitFlag()) {
+                    return grayResEnum;
+                }
+            }
+            return GrayEnum.GrayResEnum.GRAY_FALSE;
+        }
+        throw new RuntimeException("灰度策略不支持");
+    }
+
+
+
+
+    /**
      * 是否命中灰度
      * 一、灰度业务判断
      * 1、灰度业务不存在 返回：GrayEnum.GrayResEnum.GRAY_NOT_EXIST
@@ -33,8 +67,7 @@ public class GrayUtil {
      * @param grayValue        灰度值
      * @return 灰度开关是否打开
      */
-    public static GrayEnum.GrayResEnum hitGray(String grayValue, GrayEnum.GrayBusinessEnum grayBusinessEnum) {
-
+    public static GrayEnum.GrayResEnum hitGrayRule(GrayEnum.GrayBusinessEnum grayBusinessEnum, String grayValue) {
         // 一、灰度业务判断 返回：GrayEnum.GrayResEnum.GRAY_NOT_EXIST
         GrayConfiguration grayConfiguration = SpringUtils.getBean(GrayConfiguration.class);
         Map<String, GrayBizBO> grayBizMap = Optional.ofNullable(grayConfiguration.getGrayBizMap()).orElse(Maps.newHashMap());

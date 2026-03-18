@@ -1,7 +1,7 @@
 package com.healerjean.proj.controller;
 
 import com.healerjean.proj.common.anno.LogIndex;
-import com.healerjean.proj.common.data.bo.BaseRes;
+import com.healerjean.proj.common.data.res.BaseRes;
 import com.healerjean.proj.common.data.vo.EnumLabelVO;
 import com.healerjean.proj.utils.EnumUtils;
 import io.swagger.annotations.Api;

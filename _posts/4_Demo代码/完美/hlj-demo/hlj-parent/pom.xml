@@ -210,6 +210,26 @@
                 <version>4.0.3</version>
             </dependency>
 
+            <!--fastutil-->
+            <dependency>
+                <groupId>it.unimi.dsi</groupId>
+                <artifactId>fastutil</artifactId>
+                <version>8.5.13</version>
+            </dependency>
+
+            <!--ec-->
+            <dependency>
+                <groupId>org.eclipse.collections</groupId>
+                <artifactId>eclipse-collections</artifactId>
+                <version>11.1.0</version>
+            </dependency>
+
+            <!-- Failsafe 依赖 -->
+            <dependency>
+                <groupId>dev.failsafe</groupId>
+                <artifactId>failsafe</artifactId>
+                <version>3.3.2</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

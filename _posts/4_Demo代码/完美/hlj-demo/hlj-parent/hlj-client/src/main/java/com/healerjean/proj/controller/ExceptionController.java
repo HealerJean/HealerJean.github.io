@@ -1,7 +1,7 @@
 package com.healerjean.proj.controller;
 
 import com.healerjean.proj.common.anno.LogIndex;
-import com.healerjean.proj.common.data.bo.BaseRes;
+import com.healerjean.proj.common.data.res.BaseRes;
 import com.healerjean.proj.common.enums.CodeEnum;
 import com.healerjean.proj.data.vo.UserDemoVO;
 import com.healerjean.proj.exceptions.BusinessException;

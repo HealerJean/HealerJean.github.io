@@ -54,7 +54,7 @@ public interface GrayEnum {
         /**
          * 灰度结果标识
          */
-        private final Boolean flag;
+        private final Boolean hitFlag;
 
         /**
          * 结果描述
@@ -69,6 +69,45 @@ public interface GrayEnum {
          */
         public static Optional<GrayResEnum> fromCode(String code) {
             return Arrays.stream(GrayResEnum.values())
+                    .filter(item -> item.getCode().equals(code))
+                    .findFirst();
+        }
+    }
+
+
+    /**
+     * 灰度策略
+     */
+    @Getter
+    @AllArgsConstructor
+    enum GrayStrategyEnum implements GrayEnum {
+
+        /**
+         * 演示业务
+         */
+        ALL_HIT("allHit", "全部命中"),
+        ANY_HIT("anyHIt", "任意命中"),
+
+        ;
+
+        /**
+         * 业务编码
+         */
+        private final String code;
+
+        /**
+         * 业务描述
+         */
+        private final String desc;
+
+        /**
+         * 根据code获取灰度业务枚举
+         *
+         * @param code 业务编码
+         * @return 灰度业务枚举，如果未找到返回null
+         */
+        public static Optional<GrayBusinessEnum> fromCode(String code) {
+            return Arrays.stream(GrayBusinessEnum.values())
                     .filter(item -> item.getCode().equals(code))
                     .findFirst();
         }

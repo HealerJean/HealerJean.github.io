@@ -159,6 +159,18 @@ public class DateUtils {
             return Optional.ofNullable(date).map(item -> item.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()).orElse(null);
         }
 
+        /**
+         * 将 LocalDateTime 转换为毫秒时间戳（基于系统默认时区）
+         *
+         * @param localDateTime 要转换的时间，不能为 null
+         * @return 对应的 Unix 毫秒时间戳
+         */
+        public static long toEpochMilli(LocalDateTime localDateTime) {
+            if (localDateTime == null) {
+                throw new IllegalArgumentException("LocalDateTime 不能为 null");
+            }
+            return localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        }
     }
 
 

@@ -1813,7 +1813,7 @@ limit #{pageNum,jdbcType=INTEGER},  #{pageSize,jdbcType=INTEGER}
 
 > https://developer.aliyun.com/article/1009244      
 >
-> 1、保证`startPage() `后紧跟 `sql` 命令         
+> 1、保证 `startPage() `后紧跟 `sql` 命令         
 >
 > 2、担心有嫌犯潜逃，在有问题的方法使用 `clearPage()` 来打补丁。有问题的方法使用 `clearPage()` 来打补丁。
 

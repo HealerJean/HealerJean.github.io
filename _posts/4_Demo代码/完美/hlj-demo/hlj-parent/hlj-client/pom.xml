@@ -228,6 +228,23 @@
             <artifactId>arthas-spring-boot-starter</artifactId>
         </dependency>
 
+        <!--fastutil-->
+        <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
+        </dependency>
+
+        <!--ec-->
+        <dependency>
+            <groupId>org.eclipse.collections</groupId>
+            <artifactId>eclipse-collections</artifactId>
+        </dependency>
+
+        <!-- Failsafe 依赖 -->
+        <dependency>
+            <groupId>dev.failsafe</groupId>
+            <artifactId>failsafe</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
