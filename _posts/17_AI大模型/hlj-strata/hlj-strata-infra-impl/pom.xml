@@ -26,18 +26,6 @@
             <artifactId>hlj-strata-infra-api</artifactId>
         </dependency>
 
-        <!-- ⭐ 引入 Ollama Starter（关键！） -->
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-ollama-spring-boot-starter</artifactId>
-        </dependency>
-
-        <!--   mcp 服务端依赖    -->
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-mcp-server-spring-boot-starter</artifactId>
-        </dependency>
-
     </dependencies>
 
 

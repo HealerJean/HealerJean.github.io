@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.7</version>
+        <version>4.0.5</version>
         <relativePath/>
     </parent>
     <packaging>pom</packaging>
@@ -15,7 +15,8 @@
         <module>hlj-strata-client</module>
         <module>hlj-strata-common</module>
         <module>hlj-strata-domain</module>
-        <module>hlj-strata-main</module>
+        <module>hlj-strata-mcp-client</module>
+        <module>hlj-strata-mcp-server</module>
         <module>hlj-strata-infra-api</module>
         <module>hlj-strata-infra-impl</module>
         <module>hlj-strata-test</module>
@@ -29,6 +30,7 @@
     <description>Demo project for Dong Boot</description>
     <properties>
         <java.version>21</java.version>
+        <spring-ai.version>2.0.0-M4</spring-ai.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -56,7 +58,7 @@
             </dependency>
             <dependency>
                 <groupId>com.healerjean.proj</groupId>
-                <artifactId>hlj-strata-main</artifactId>
+                <artifactId>hlj-strata-mcp-client</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
@@ -93,19 +95,20 @@
                 <version>2.0.13</version>
             </dependency>
 
-
-            <!-- ⭐ 引入 Ollama Starter（关键！） -->
+            <!-- 引入 Spring AI BOM，统一管理所有 AI 相关依赖的版本 -->
             <dependency>
                 <groupId>org.springframework.ai</groupId>
-                <artifactId>spring-ai-ollama-spring-boot-starter</artifactId>
-                <version>1.0.0-M6</version>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
-            <!--   mcp 服务端依赖     -->
+            <!-- Spring AI Alibaba Agent Framework -->
             <dependency>
-                <groupId>org.springframework.ai</groupId>
-                <artifactId>spring-ai-mcp-server-spring-boot-starter</artifactId>
-                <version>1.0.0-M6</version>
+                <groupId>com.alibaba.cloud.ai</groupId>
+                <artifactId>spring-ai-alibaba-agent-framework</artifactId>
+                <version>1.1.2.0</version>
             </dependency>
 
         </dependencies>
