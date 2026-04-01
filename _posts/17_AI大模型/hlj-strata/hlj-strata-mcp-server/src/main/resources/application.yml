@@ -1,0 +1,38 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: hlj-strata-mcp-server
+  profiles:
+    include: project-config
+  ai:
+    ollama:
+      base-url: http://127.0.0.1:11434  # Ollama 服务地址（默认 11434）
+      chat:
+        model: qwen3:14b # 默认使用的模型（与 ollama pull 一致）
+        options:
+          temperature: 0.7  # 温度参数（0-1，值越高越随机，越低越精准）
+          max-tokens: 1000  # 最大生成 token 数
+      embedding:
+        model: nomic-embed-text  # 嵌入模型 ollama  pull nomic-embed-text
+    mcp:
+      server:
+        enabled: true
+        name: hlj-strata-mcp-server
+        instructions: "hlj-strata-mcp-server的服务"
+        request-timeout: 20s
+        type: SYNC                     # 客户端类型：SYNC / ASYNC
+        # SSE
+        sse-endpoint: /sse
+        sse-message-endpoint: /mcp/message
+        keep-alive-interval: 30s
+        annotation-scanner:
+          enabled: true
+        # 能力开关
+        capabilities:
+          tool: true
+          resource: true
+          prompt: false
+          completion: false
+
+

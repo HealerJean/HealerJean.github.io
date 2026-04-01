@@ -43,5 +43,6 @@ out/
 overlays/
 MANIFEST.MF
 HELP.md
+**/.joycode/
 
 

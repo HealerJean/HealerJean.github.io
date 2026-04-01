@@ -1,0 +1,78 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: hlj-strata
+  profiles:
+    include: project-config
+  ai:
+    ollama:
+      base-url: http://127.0.0.1:11434  # Ollama 服务地址（默认 11434）
+      chat:
+        model: qwen3:14b # 默认使用的模型（与 ollama pull 一致）
+        options:
+          temperature: 0.7  # 温度参数（0-1，值越高越随机，越低越精准）
+          max-tokens: 1000  # 最大生成 token 数
+      embedding:
+        model: nomic-embed-text  # 嵌入模型 ollama  pull nomic-embed-text
+    chat:
+      client:
+        observations:
+          # 开启后会在观测中记录聊天提示内容 (默认 false)
+          log-prompt: true
+          # 开启后会在观测中记录聊天完成内容 (默认 false)
+          log-completion: true
+    # 工具调用监控
+    tools:
+      observations:
+        include-content: true
+    # 图像模型监控
+    image:
+      observations:
+        log-prompt: true
+    # 向量库监控
+    vectorstore:
+      observations:
+        log-query-response: true
+  # ======================
+  # 链路追踪
+  # ======================
+  sleuth:
+    sampler:
+      probability: 1.0  # 全采样（测试用）
+#    mcp:
+#      client:
+#        enabled: true                  # 启用/禁用整个MCP客户端
+#        name: hlj-strata-mcp-client    # MCP客户端名称（标识用）
+#        version: 1.0.0                 # 客户端版本
+#        initialized: true              # 是否自动初始化（必须true才能用）
+#        request-timeout: 20s           # 请求超时时间
+#        type: SYNC                     # 客户端类型：SYNC / ASYNC
+#        root-change-notification: true # 根目录变更通知（文件服务器用）
+#        toolcallback:
+#          enabled: true                # 开启工具集成（Ollama必须开）
+#        annotation-scanner:
+#          enabled: true  # 是否自动扫描项目中 `@McpLogging`、`@McpProgress` 等注解处理器
+#        sse:
+#          connections:
+#            server1:
+#              url: http://localhost:8080          # 服务端地址
+#              sse-endpoint: /sse                  # 服务端 SSE 端点
+# ======================
+# 暴露监控接口
+# ======================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # 暴露所有监控端点
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+  metrics:
+    enable:
+      all: true
+  tracing:
+    enabled: true
