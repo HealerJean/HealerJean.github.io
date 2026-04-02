@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: hlj-strata
+  profiles:
+    include: project-config
+server:
+  port: 8888
