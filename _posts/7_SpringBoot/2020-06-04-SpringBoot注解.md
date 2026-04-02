@@ -716,7 +716,7 @@ public class DemoProperties {
 
 ```
 
-### 3）、`DemoPropertiesAutoConfiguration`
+### 3）`DemoPropertiesAutoConfiguration`
 
 > 写了 `@EnableConfigurationProperties(DemoProperties.class)`  可以不写 `@Configuration`，都是自动装配的意思
 
