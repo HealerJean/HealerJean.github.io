@@ -1,0 +1,6 @@
+https://github.com/HealerJean/HealerJean.github.io/actions
+
+git commit --allow-empty -m "Trigger pages build (fix 10-month stuck)"
+
+
+git push orign 
