@@ -1259,8 +1259,6 @@ public CompleteResult completeCity(String prefix) {
 - **`@McpTool`** 是 **`MCP` (`Model Context Protocol`)** 协议专用的注解，用于将方法暴露为标准的 `MCP` 服务器工具
 
 
-
-
 ## 1、核心区别对比表
 
 | 特性     | `@Tool` (Spring AI 原生)                                     | `@McpTool` (MCP 协议)                            |
