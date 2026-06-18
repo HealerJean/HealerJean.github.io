@@ -40,7 +40,7 @@
         <!--要激活的resoure目录-->
         <profiles.active>src/profiles/local</profiles.active>
         <!--fastjson-->
-        <com-alibaba-fastjson.version>1.2.58</com-alibaba-fastjson.version>
+        <com-alibaba-fastjson.version>1.2.83</com-alibaba-fastjson.version>
         <!--校验-->
         <javax-validation.version>2.0.1.Final</javax-validation.version>
         <hibernate-validator.version>6.0.9.Final</hibernate-validator.version>
