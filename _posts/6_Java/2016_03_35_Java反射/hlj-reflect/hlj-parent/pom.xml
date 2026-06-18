@@ -38,7 +38,7 @@
         <com-alibaba-fastjson.version>1.2.58</com-alibaba-fastjson.version>
         <javax-validation.version>1.0.0.GA</javax-validation.version>
         <!--默认的版本是6.0.9.Final 使用过程中NotBlank会显示红色，所以这里讲版本降低，这样就不会显示红色了-->
-        <hibernate-validator.version>4.3.2.Final</hibernate-validator.version>
+        <hibernate-validator.version>6.2.0.Final</hibernate-validator.version>
     </properties>
 
 
