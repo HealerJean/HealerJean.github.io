@@ -76,7 +76,7 @@ public class UserDemoController {
 
     @RateLimit(key = "get")
     // @RedisCache(RedisConstants.CacheEnum.USER)
-    @LogIndex(timeOut = 0)
+    @LogIndex(estimateTime = 0)
     @ApiOperation("用户信息-单条查询")
     @GetMapping("user/{userId}")
     @ResponseBody
@@ -87,7 +87,7 @@ public class UserDemoController {
     }
 
     @ApiOperation("用户信息-列表查询")
-    @LogIndex(timeOut = 0)
+    @LogIndex(value = "用户信息-列表查询", estimateTime = 0)
     @GetMapping("user/list")
     @ResponseBody
     public BaseRes<List<UserDemoVO>> queryUserDemoList(UserDemoQueryReq req) {
@@ -98,7 +98,7 @@ public class UserDemoController {
     }
 
     @ApiOperation("用户信息-分页查询")
-    @LogIndex
+    @LogIndex("用户信息-分页查询")
     @PostMapping("user/page")
     @ResponseBody
     public BaseRes<PageVO<UserDemoVO>> queryUserDemoPage(@RequestBody PageReq<UserDemoQueryReq> req) {

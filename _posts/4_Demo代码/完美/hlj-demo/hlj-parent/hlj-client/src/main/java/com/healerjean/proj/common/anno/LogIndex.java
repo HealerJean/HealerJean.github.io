@@ -16,18 +16,23 @@ import java.lang.annotation.Target;
 public @interface LogIndex {
 
     /**
+     * 接口描述
+     */
+    String value() default "";
+
+    /**
      * 是否打印入参日志，默认是
      */
-    boolean reqFlag() default true;
+    boolean enableReq() default true;
 
     /**
      * 是否打印出参日志，默认是
      */
-    boolean resFlag() default true;
+    boolean enableRes() default true;
 
     /**
-     * 耗时统计
+     * 预估时间（毫秒）
      */
-    long timeOut() default -1;
+    int estimateTime() default -1;
 
 }

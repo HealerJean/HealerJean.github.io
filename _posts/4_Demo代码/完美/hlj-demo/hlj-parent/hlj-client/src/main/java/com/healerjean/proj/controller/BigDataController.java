@@ -47,7 +47,7 @@ public class BigDataController {
 
 
     @ApiOperation("大数据量-分页查询全部")
-    @LogIndex(resFlag = false, timeOut = 0)
+    @LogIndex(enableRes = false, estimateTime = 0)
     @GetMapping("user/queryAllUserDemoByLimit")
     @ResponseBody
     public BaseRes<List<UserDemoVO>> queryAllUserDemoByLimit(UserDemoQueryReq req) {
@@ -58,7 +58,7 @@ public class BigDataController {
     }
 
     @ApiOperation("大数据量-IdCursor查询全部")
-    @LogIndex(resFlag = false)
+    @LogIndex(enableRes = false)
     @GetMapping("user/queryAllUserDemoByIdSize")
     @ResponseBody
     public BaseRes<List<UserDemoVO>> queryAllUserDemoByIdCursor(UserDemoQueryReq req) {
@@ -69,7 +69,7 @@ public class BigDataController {
     }
 
     @ApiOperation("大数据量-Id区间查询全部")
-    @LogIndex(resFlag = false)
+    @LogIndex(enableRes = false)
     @GetMapping("user/queryAllUserDemoByIdSub")
     @ResponseBody
     public BaseRes<List<UserDemoVO>> queryAllUserDemoByIdSub(UserDemoQueryReq req) {
@@ -81,7 +81,7 @@ public class BigDataController {
 
 
     @ApiOperation("大数据量-线程池根据Id区间查询")
-    @LogIndex(resFlag = false)
+    @LogIndex(enableRes = false)
     @GetMapping("user/queryAllUserDemoByPoolIdSub")
     @ResponseBody
     public BaseRes<List<UserDemoVO>> queryAllUserDemoByPoolIdSub() {
@@ -106,7 +106,7 @@ public class BigDataController {
     }
 
     @ApiOperation("大数据量-线程池limit查询")
-    @LogIndex(resFlag = false)
+    @LogIndex(enableRes = false)
     @GetMapping("user/queryAllUserDemoByPoolLimit")
     @ResponseBody
     public BaseRes<List<UserDemoVO>> queryAllUserDemoByPoolLimit() {
@@ -132,7 +132,7 @@ public class BigDataController {
 
 
     @ApiOperation("大数据量-分页缓存全部")
-    @LogIndex(resFlag = false)
+    @LogIndex(enableRes = false)
     @GetMapping("user/bigKeyCache")
     @ResponseBody
     public BaseRes<BigKeyDataBO<UserDemo>> bigKeyCache(UserDemoQueryReq req) {
