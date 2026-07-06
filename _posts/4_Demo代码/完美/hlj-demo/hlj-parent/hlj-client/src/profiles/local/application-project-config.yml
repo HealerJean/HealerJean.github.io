@@ -89,7 +89,7 @@ arthas:
   http-port: 8563
 log:
   dynamic-log-map:
-    "[com.healerjean.proj.controller.UserDemoController#queryUserDemoSingle]":
+    "[UserDemoController#queryUserDemoList]":
       enableReq: false
       enableRes: true
 

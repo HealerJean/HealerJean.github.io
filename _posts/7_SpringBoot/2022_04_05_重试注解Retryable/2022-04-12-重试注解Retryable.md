@@ -425,7 +425,7 @@ String result = executor.get(() -> callExternalService());
 
 
 
-### 2. 异步执行（`runAsync` / `getAsync`）
+### 2）异步执行（`runAsync` / `getAsync`）
 
 ```java
 CompletableFuture<String> future = executor.getAsync(() -> callExternalService());
