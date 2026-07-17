@@ -18,8 +18,6 @@ https://github.com/jnMetaCode/superpowers-zh
 
 
 
-
-
 # 一、`Superpowers` 
 
 ## 1、认识 `Superpowers`：给 AI 装上工程纪律
@@ -958,8 +956,6 @@ test-driven-development（TDD 核心理念）
 6. **自检** — 检查占位符、矛盾、歧义、范围
 7. **用户审批** — 架构师确认设计文档
 
-
-
 ```
 # Kanban Board Implementation Plan
 
@@ -1017,10 +1013,6 @@ React 18, TypeScript, React Testing Library
 ### 4）`Step 4`：验收与归档
 
 > 执行 `/opsx:verify` 做三维度的自动检查——完整性（任务是否都完成）、正确性（实现是否匹配规格意图）、一致性（设计决策是否反映在代码中）。
-
-
-
-
 
 
 
