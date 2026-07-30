@@ -30,9 +30,10 @@ public class DatasetIncrementalConfig {
     private Long ttlSeconds;
 
     /**
-     * 默认 每5分钟记录一次时间对应的偏移量（必须是60的倍数，分钟级）
+     * 增量时间索引粒度（单位：分钟），默认1分钟对齐到整点
+     * 例如：timeIntervalMinutes=1 → 每分钟一个窗口，timeIntervalMinutes=5 → 每5分钟一个窗口
      */
-    private Integer time2OffsetInterval = 60;
+    private Integer timeIntervalMinutes = 1;
 
 
 }

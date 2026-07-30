@@ -67,18 +67,10 @@ public class IncrementalWriteService {
             redisTemplate.expire(zsetKey, ttl);
         }
 
-        // 4. 写入时间索引
-        long incrTimeSecond = executionConfig.getIncrIntervalTimeSecond(dateTime, 1);
-        String timePeriodKey = SnapshotPathEnum.REDIS_INCR_TIME_PERIOD_KEY.format(datasetName);
-        String timeOffset = SnapshotPathEnum.REDIS_INCR_TIME_OFFSET_KEY.format(datasetName, String.valueOf(incrTimeSecond));
-        redisTemplate.opsForValue().set(timeOffset, offset.toString(), ttl);
-        redisTemplate.opsForZSet().add(timePeriodKey, String.valueOf(incrTimeSecond), (double) incrTimeSecond);
-        Long currentSize = redisTemplate.opsForZSet().size(timePeriodKey);
-        if (currentSize != null && currentSize > maxMembersSize) {
-            long removeCount = currentSize - maxMembersSize;
-            redisTemplate.opsForZSet().removeRange(timePeriodKey, 0, removeCount - 1);
-        }
-        redisTemplate.expire(timePeriodKey, ttl);
+        // 4. 写入时间索引（分钟级整点对齐，String key 存 offset）
+        String minuteKey = executionConfig.getIncrIntervalMinuteKey(dateTime);
+        String timeOffsetKey = SnapshotPathEnum.REDIS_INCR_TIME_OFFSET_KEY.format(datasetName, minuteKey);
+        redisTemplate.opsForValue().set(timeOffsetKey, offset.toString(), ttl);
 
         // 6. todo 将 offset 写入数据库
 

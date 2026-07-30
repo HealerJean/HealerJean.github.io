@@ -27,25 +27,21 @@ public class IncrementalExecutionConfig {
 
 
     /**
-     * 计算下一个周期的开始时间（格式：yyyyMMddHHmmss），并支持偏移
+     * 计算时间对齐到当前周期起始时间（格式：yyyyMMddHHmm）
+     * 按配置的分钟粒度向下对齐到整点，例如：
+     * - timeIntervalMinutes=1 → 10:17:33 → "202607281017"
+     * - timeIntervalMinutes=5 → 10:17:33 → "202607281015"
      *
      * @param dateTime 当前时间
-     * @param offset   偏移量（-1=前一个周期，0=当前周期，1=下一个周期）
+     * @return 当前周期起始时间标识，如 "202607281017"
      */
-    public long getIncrIntervalTimeSecond(LocalDateTime dateTime, int offset) {
-        int cycleMinutes = incrementalConfig.getTime2OffsetInterval() / 60;
-        if (cycleMinutes % 5 != 0 && cycleMinutes != 1) {
-            throw new IllegalArgumentException("cycleMinutes 必须是1或5的倍数");
-        }
+    public String getIncrIntervalMinuteKey(LocalDateTime dateTime) {
+        int intervalMinutes = incrementalConfig.getTimeIntervalMinutes();
         LocalDateTime cleanMinute = dateTime.withSecond(0).withNano(0);
-        int remainder = cleanMinute.getMinute() % cycleMinutes;
-        LocalDateTime cycleStart = dateTime.minusMinutes(remainder);
-        // 计算目标周期（当前周期 + offset）
-        LocalDateTime targetCycleStart = cycleStart.plusMinutes((long) offset * cycleMinutes).withSecond(0).withNano(0);
-        // 格式化为 yyyyMMddHHmm 字符串，再转为长整型（避免字符串操作，直接数字存储）
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        String dateStr = targetCycleStart.format(formatter);
-        return Long.parseLong(dateStr);
+        int remainder = cleanMinute.getMinute() % intervalMinutes;
+        LocalDateTime cycleStart = cleanMinute.minusMinutes(remainder);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+        return cycleStart.format(formatter);
     }
 
 }
