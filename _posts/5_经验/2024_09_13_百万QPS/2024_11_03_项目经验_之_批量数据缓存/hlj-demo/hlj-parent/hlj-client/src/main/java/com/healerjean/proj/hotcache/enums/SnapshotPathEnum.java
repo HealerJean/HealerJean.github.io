@@ -23,11 +23,9 @@ public enum SnapshotPathEnum {
     REDIS_SNAPSHOT_VERSIONS_KEY("{0}:snapshot:versions", "最近的版本集合 [dataset]"),
     REDIS_SNAPSHOT_LATEST_VERSION_KEY("{0}:snapshot:latestVersion", "最新快照版本 [dataset]"),
     REDIS_SNAPSHOT_VERSION_META_KEY("{0}:snapshot:versionMeta:{1}", "版本元数据 [dataset, version]"),
-    REDIS_INCR_LATEST_OFFSET_KEY("{0}:incr:latestOffset", "增量最新偏移量 [dataset]"),
-    REDIS_INCR_CURRENT_SHARD_KEY("{0}:incr:shard:{1}", "增量分片数据 [dataset, shardId]"),
-    REDIS_INCR_TIME_PERIOD_KEY("{0}:incr:timePeriod", "时间区间 [dataset]"),
-    REDIS_INCR_TIME_OFFSET_KEY("{0}:incr:timeOffset:{1}", "时间对应偏移量 [dataset, time]"
-    ),
+    REDIS_INCR_LATEST_OFFSET_KEY("incr:'{'{0}'}':latestOffset", "增量最新偏移量 [dataset]，hash tag 保证同 slot"),
+    REDIS_INCR_CURRENT_SHARD_KEY("incr:'{'{0}'}':shard:{1}", "增量分片数据 [dataset, shardId]，hash tag 保证同 slot"),
+    REDIS_INCR_TIME_OFFSET_KEY("incr:'{'{0}'}':timeOffset:{1}", "时间窗口对应最新偏移量 [dataset, yyyyMMddHHmm]，hash tag 保证同 slot"),
     ;
 
 

@@ -33,7 +33,7 @@ public class SnapshotExecutionConfig {
     /**
      * 增量拉取时间的下界（分钟级） yyyyMMddHHmm
      */
-    private Long incrPullTimeLowerBound;
+    private String incrPullTimeLowerBound;
 
     /**
      * 运行时内存配置，可通过配置中心进行变更

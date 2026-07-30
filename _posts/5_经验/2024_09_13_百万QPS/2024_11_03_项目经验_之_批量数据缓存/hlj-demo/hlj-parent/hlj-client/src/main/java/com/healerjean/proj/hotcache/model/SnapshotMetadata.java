@@ -36,9 +36,9 @@ public class SnapshotMetadata {
     private String executeTime;
 
     /**
-     * 增量拉取时间
+     * 增量拉取时间下界（分钟级） yyyyMMddHHmm
      */
-    private long incrPullTimeLowerBound;
+    private String incrPullTimeLowerBound;
 
     /**
      * 配置信息

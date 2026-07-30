@@ -59,8 +59,10 @@ public class SnapshotGlobalConfig {
 
         IncrementalExecutionConfig incrementalExecutionConfig = instanceIncrementalConfig(datasetName);
         Integer incrPullInterval = snapshotConfig.getIncrPullInterval();
-        long incrIntervalTimeSecond = incrementalExecutionConfig.getIncrIntervalTimeSecond(dateTime, incrPullInterval);
-        runConfig.setIncrPullTimeLowerBound(incrIntervalTimeSecond);
+        int intervalMinutes = incrementalExecutionConfig.getIncrementalConfig().getTimeIntervalMinutes();
+        String incrPullTimeLowerBound = incrementalExecutionConfig.getIncrIntervalMinuteKey(
+                dateTime.minusMinutes((long) incrPullInterval * intervalMinutes));
+        runConfig.setIncrPullTimeLowerBound(incrPullTimeLowerBound);
 
         SnapshotFactory snapshotFactory = SnapshotFactory.getInstance();
         runConfig.setDataSerializerStrategy(snapshotFactory.getDataSerializer(datasetName, snapshotConfig.getSerializerStrategy()));
