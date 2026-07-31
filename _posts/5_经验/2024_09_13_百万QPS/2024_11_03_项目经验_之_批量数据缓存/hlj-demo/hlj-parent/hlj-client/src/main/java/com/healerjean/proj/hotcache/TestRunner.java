@@ -97,7 +97,7 @@ public class TestRunner implements CommandLineRunner {
 
     public void pullIncrementalSinceBound(){
         log.info("开始增量加载用户标签快照到内存...");
-        incrementLoadToMemoryService.pullIncrementalByLowerBound("user_tag");
+        incrementLoadToMemoryService.pullIncremental("user_tag");
         log.info("增量加载用户标签快照到内存完成");
 
     }
