@@ -88,7 +88,6 @@ public class SemaphoreExample {
           e.printStackTrace();
         }final{
           semaphore.release();  //释放一个许可
-
         }
       });
     }
