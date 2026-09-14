@@ -428,9 +428,7 @@ public BaseRes<UserDemoVO> selectById(@ElParam @PathVariable("userId") Long user
 
 
 
-## 2、`FAQ`
-
-### 1）版本选择
+## 2、`FQA`：版本选择
 
 |       维度        |    3.6.1     |         2.5.3          |    2.3.4    |
 | :---------------: | :----------: | :--------------------: | :---------: |
@@ -442,13 +440,124 @@ public BaseRes<UserDemoVO> selectById(@ElParam @PathVariable("userId") Long user
 
 
 
+### 3、`FQA`：`@DS` 与 `@Transactional` 冲突问题
+
+### 1）、问题现象
+
+事务方法内跨库查询报错：
+
+```
+Table 'db_A.table_x' doesn't exist
+```
+
+但 `table_x` 实际存在于 `db_B`，且对应 DAO/Manager 已用 `@DS("db_B")` 声明数据源。**同一方法在非事务场景下调用正常**。
+
+### 2）、典型触发场景
+
+以下三个条件**同时满足**时 100% 触发：
+
+1. 外层调用点所在类/方法**未标注** `@DS`
+2. 外层调用点方法标注了 `@Transactional`
+3. 事务内调用的内层方法访问**非 primary 数据源**的表
+
+```java
+// ✗ 错误示例
+@Service
+public class OrderServiceImpl {        // 类上没有 @DS
+    
+    @Transactional                     // 事务开启时走 primary 数据源
+    public void process() {
+        // BizManager 类上有 @DS("db_B")，但此处已经失效
+        bizManager.query();            // 用 primary 库的连接去查 db_B 的表 → 报错
+    }
+}
+```
 
 
 
+### 3）、根因：AOP 拦截器执行顺序 + Spring 事务连接绑定
+
+#### 3.1 拦截器顺序（有源码依据）
+
+| Advisor                                      | 默认 order                                         | 何时执行 |
+| :------------------------------------------- | :------------------------------------------------- | :------- |
+| `@DS` (`DynamicDataSourceAnnotationAdvisor`) | `Ordered.HIGHEST_PRECEDENCE` = `Integer.MIN_VALUE` | **先**   |
+| `@Transactional` (`TransactionInterceptor`)  | `Ordered.LOWEST_PRECEDENCE` = `Integer.MAX_VALUE`  | **后**   |
+
+源码路径（`dynamic-datasource-spring-boot-starter` 3.6.1）：
+
+- `DynamicDatasourceAopProperties#order` 默认 `HIGHEST_PRECEDENCE`
+- `DynamicDataSourceAutoConfiguration` 注入到 advisor 的 order
+
+Spring 规则：AOP advisor 按 order **升序**执行（数字小的先跑）。
+
+#### 3.2 Spring 事务的连接绑定机制
+
+`@Transactional` 拦截器执行时：
+
+1. 调 `DataSourceTransactionManager.getConnection()`
+2. 触发 `DynamicRoutingDataSource.determineCurrentLookupKey()`，从 `ThreadLocal` 读取当前数据源 key
+3. **拿到连接后绑定到 `TransactionSynchronizationManager`**
+4. 事务期间同线程的所有 SQL 复用这条连接（Spring 事务的核心规则）
+
+#### 3.3 两条路径对比
+
+**路径 A：外层类/方法标了 `@DS`**（正确）
+
+```
+[@DS 拦截器 order=MIN]
+  push "db_B" 到 ThreadLocal
+    [@Transactional 拦截器 order=MAX]
+      getConnection() → 读 ThreadLocal = "db_B" → 拿 db_B 连接
+      绑定 db_B 连接到事务
+        执行方法体 → 用 db_B 连接查询 ✅
+    unbind
+  pop ThreadLocal
+```
+
+**路径 B：外层未标 `@DS`，只有 `@Transactional`**（bug 场景）
+
+```
+[@Transactional 拦截器 order=MAX]（前面没有 @DS 拦截器）
+  getConnection() → ThreadLocal 为空 → 走默认 primary = "db_A"
+  绑定 db_A 连接到事务
+    执行方法体
+      → 调 bizManager.query()
+        → [@DS 拦截器 order=MIN] push "db_B" 到 ThreadLocal
+        → MyBatis 从事务里拿连接 → 仍是 db_A 连接（事务规则）
+        → 用 db_A 连接查 db_B 的表 ❌ Table doesn't exist
+  unbind
+```
 
 
 
+### 4）、修复方案
 
+#### 4.1 首选：在外层类上加 `@DS`
+
+```java
+@Service
+@DS("db_B")                            // ← 关键：类头声明数据源
+public class OrderServiceImpl {
+
+    @Transactional
+    public void process() {
+        bizManager.query();            // ✅ 事务连接来自 db_B
+    }
+}
+```
+
+**为什么加在类上而不是方法上**：若同类多个方法都访问同一非 primary 库，类级注解更一致，避免遗漏；且不会与内层 Manager 的 `@DS` 冲突（值相同不会有副作用）。
+
+#### 4.2 备选方案
+
+- **方法级 `@DS`**：只有单个方法需要时用，改动最小
+
+  ```java
+  @Transactional
+  @DS("db_B")
+  public void process() { ... }
+  ```
 
 
 
