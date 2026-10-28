@@ -39,7 +39,7 @@
         <!-- zookeeper 版本-->
         <zookeeper.version>3.4.10</zookeeper.version>
         <!-- dubbo 版本-->
-        <dubbo.version>2.7.7</dubbo.version>
+        <dubbo.version>2.7.15</dubbo.version>
         <curator.version>4.2.0</curator.version>
         <zookeeper.version>3.4.9</zookeeper.version>
         <disruptor.version>3.3.6</disruptor.version>
