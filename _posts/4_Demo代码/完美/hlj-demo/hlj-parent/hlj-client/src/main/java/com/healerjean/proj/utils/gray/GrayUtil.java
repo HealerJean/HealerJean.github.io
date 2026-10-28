@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.healerjean.proj.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 import java.util.Objects;
@@ -54,6 +55,23 @@ public class GrayUtil {
     }
 
 
+
+    /**
+     * 灰度值为空时的处理策略
+     * @param grayBusinessEnum 灰度业务枚举类型，用于标识具体的灰度业务场景
+     * @param grayValue 灰度值，用于判断是否命中灰度规则的标识值
+     * @param emptyHit 空值是否命中
+     * @return GrayResEnum 灰度结果枚举
+     */
+    public GrayEnum.GrayResEnum hitGrayRule(GrayEnum.GrayBusinessEnum grayBusinessEnum, String grayValue, boolean emptyHit) {
+        if (StringUtils.isBlank(grayValue)) {
+            return emptyHit ? GrayEnum.GrayResEnum.GRAY_EMPTY_TRUE : GrayEnum.GrayResEnum.GRAY_EMPTY_FALSE;
+        }
+        if (StringUtils.isBlank(grayValue)){
+            return GrayEnum.GrayResEnum.GRAY_TRUE;
+        }
+        return hitGrayRule(grayBusinessEnum, grayValue);
+    }
 
 
     /**

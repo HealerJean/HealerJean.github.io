@@ -94,19 +94,20 @@ MySQL 的 **Binary Log（二进制日志）** 记录了所有对数据产生变�
 /** 标准领域事件：整条链路唯一在流转的对象 */
 @Data
 @Builder
-public class BinlogEvent {
+public class BinlogEvent<T> {
     private String table;         // 表名
     private OpType opType;        // INSERT / UPDATE / DELETE
     private long ts;              // 变更时间戳
     private String primaryKey;    // 主键值（用于幂等/去重）
-    private JSONObject before;    // 变更前
-    private JSONObject after;     // 变更后
+    private T before;             // 变更前（泛型：归一化时为 JSONObject，反序列化后为业务 BO）
+    private T after;              // 变更后
 }
 
 /** 归一化器：每种外部格式一个实现，只做「识别 + 转成领域事件」 */
 public interface FormatNormalizer {
     boolean support(String rawJson);
-    BinlogEvent normalize(String rawJson);
+    /** 归一化产物固定是 BinlogEvent<JSONObject>——此时还不知道是哪张表，无法反序列化到具体 BO */
+    BinlogEvent<JSONObject> normalize(String rawJson);
 }
 ```
 
@@ -142,12 +143,7 @@ public class BinlogConsumer {
     /** 批量入口：单条失败不影响其它消息 */
     public void onMessages(List<String> messages) {
         for (String raw : messages) {
-            try {
-                pipeline.accept(raw);
-            } catch (Exception e) {
-                // 交由 Pipeline 内部已分级处理，这里只兜最外层
-                log.error("binlog 消费异常, raw={}", raw, e);
-            }
+               pipeline.accept(raw);
         }
     }
 }
@@ -172,8 +168,8 @@ public class BinlogPipeline {
     private List<EventFilter> filters;
 
     public void accept(String rawJson) {
-        // ① 归一化：原始报文 → 标准领域事件
-        BinlogEvent event = normalize(rawJson);
+        // ① 归一化：原始报文 → 标准领域事件（after/before 是 JSONObject，尚未按表反序列化）
+        BinlogEvent<JSONObject> event = normalize(rawJson);
         if (event == null) {
             return;
         }
@@ -194,11 +190,11 @@ public class BinlogPipeline {
             }
         }
 
-        // ④ 分发到处理器：只按操作类型回调，处理器不感知前三步
+        // ④ 分发到处理器：反序列化由处理器基类内部完成，Pipeline 不掺和"用什么类型"这件事
         processor.handle(event);
     }
 
-    private BinlogEvent normalize(String rawJson) {
+    private BinlogEvent<JSONObject> normalize(String rawJson) {
         return normalizers.stream()
                 .filter(n -> n.support(rawJson))
                 .findFirst()
@@ -228,13 +224,17 @@ public class BinlogPipeline {
 
 ## 1、路由：用注解显式声明，而非 Bean 名硬约定
 
-「靠 Bean 名等于表名」是一种脆弱的隐式约定——改个 Bean 名就断了，也无法一个处理器管多张表。这里改用**显式注解** `@BinlogTable` 声明归属，启动时扫描建表：
+「靠 Bean 名等于表名」是一种脆弱的隐式约定——改个 Bean 名就断了，而且**表名一改就是全链路重命名**。这里改用**显式注解** `@BinlogTable` 声明归属：一个处理器负责一张表，同时把该表的**消息体类型**一并声明出来，交给编排层做一次反序列化即可：
 
 ```java
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface BinlogTable {
-    String[] value();   // 该处理器负责的表名，可多张
+    /** 该处理器负责的表名——一个处理器一张表，避免"多张表挤在一个类里" */
+    String value();
+
+    /** 该表 after/before 的业务 BO 类型，编排层按此做一次反序列化 */
+    Class<?> messageType();
 }
 ```
 
@@ -242,21 +242,22 @@ public @interface BinlogTable {
 @Component
 public class EventRouter {
 
+    /** table → 处理器 */
     private final Map<String, BinlogProcessor> table2processor = new HashMap<>(16);
 
-    /** 启动时扫描所有 BinlogProcessor，按注解声明的表名建立路由表 */
+    /** 启动时扫描所有 BinlogProcessor：注册路由 + 把 messageType 反塞给处理器 */
     public EventRouter(List<BinlogProcessor> processors) {
         for (BinlogProcessor p : processors) {
             BinlogTable anno = p.getClass().getAnnotation(BinlogTable.class);
             if (anno == null) {
                 throw new IllegalStateException(p.getClass() + " 缺少 @BinlogTable");
             }
-            for (String table : anno.value()) {
-                BinlogProcessor exist = table2processor.putIfAbsent(table, p);
-                if (exist != null) {
-                    throw new IllegalStateException("表[" + table + "]被多个处理器声明");
-                }
+            BinlogProcessor exist = table2processor.putIfAbsent(anno.value(), p);
+            if (exist != null) {
+                throw new IllegalStateException("表[" + anno.value() + "]被多个处理器声明");
             }
+            // 复用同一份注解解析：把 messageType 一次性交给处理器，避免处理器端再来一次反射
+            p.setMessageType(anno.messageType());
         }
     }
 
@@ -266,7 +267,7 @@ public class EventRouter {
 }
 ```
 
-比起隐式约定，注解路由**可读、可校验（重复声明启动即报错）、支持一对多**。
+比起隐式约定，注解路由**可读、可校验（重复声明启动即报错）**。更关键的是，注解里的 `messageType` 在启动扫描时就被 Router 一次性读出并塞给处理器（下节 `setMessageType`），后续每条消息不再需要重复反射注解——路由和"用什么类型反序列化"这两件事都在启动期一次搞定，运行期只做纯粹的 Map 查找。
 
 ## 2、过滤：责任链，一个 Filter 只管一件事
 
@@ -339,18 +340,34 @@ public class IdempotentFilter implements EventFilter {
 
 这类规则如果继续往 `EventFilter` 责任链里塞，责任链会迅速膨胀成"每表 × 每操作"一堆 Filter，而且每个 Filter 还得先 `if (table.equals("xxx"))` 判断是不是自己——这就退化成了大杂烩。**正确的归属是：谁的业务谁自己管**——把「本表、本操作要不要处理」这件事，内聚到该表处理器内部，和对应的业务动作一一并排。
 
-为此，`OpTypeProcessor` 为每个操作各配一个**前置判断钩子** `acceptXxx`（默认放行），`handle` 里「先判断本操作是否接受，再执行本操作」：
+`BinlogProcessor` 对外只暴露一个方法 `handle(BinlogEvent<JSONObject>)`——**Pipeline 递进来的永远是通用报文**，"用什么 BO 反序列化"由处理器自己知道（Router 启动时已经通过 `setMessageType` 塞进来了）。这一次转换在 `OpTypeProcessor<T>` 基类里做完，子类拿到的 `event.getAfter()` 就是强类型 BO：
 
 ```java
+/** 顶层接口：Pipeline 只认这一件事 */
 public interface BinlogProcessor {
-    void handle(BinlogEvent event);
+
+    void handle(BinlogEvent<JSONObject> event);
+
+    /** 由 EventRouter 启动扫描时调用，运行期只读；业务代码不应调用 */
+    void setMessageType(Class<?> messageType);
 }
 
-/** 可选基类：把「每操作的前置判断 + 业务动作」成对固化，非强制继承 */
-public abstract class OpTypeProcessor implements BinlogProcessor {
+/** 可选基类：反序列化 + 每操作的「前置判断 + 业务动作」，非强制继承 */
+public abstract class OpTypeProcessor<T> implements BinlogProcessor {
+
+    /** 由 EventRouter 从 @BinlogTable#messageType 一次性注入 */
+    private Class<T> messageType;
 
     @Override
-    public final void handle(BinlogEvent event) {
+    @SuppressWarnings("unchecked")
+    public final void setMessageType(Class<?> messageType) {
+        this.messageType = (Class<T>) messageType;
+    }
+
+    @Override
+    public final void handle(BinlogEvent<JSONObject> raw) {
+        // 一次反序列化：JSONObject → 业务 BO，之后子类看到的都是强类型 event
+        BinlogEvent<T> event = retype(raw);
         switch (event.getOpType()) {
             case INSERT: if (acceptInsert(event)) onInsert(event); break;
             case UPDATE: if (acceptUpdate(event)) onUpdate(event); break;
@@ -359,68 +376,76 @@ public abstract class OpTypeProcessor implements BinlogProcessor {
         }
     }
 
+    private BinlogEvent<T> retype(BinlogEvent<JSONObject> raw) {
+        return BinlogEvent.<T>builder()
+                .table(raw.getTable())
+                .opType(raw.getOpType())
+                .ts(raw.getTs())
+                .primaryKey(raw.getPrimaryKey())
+                .before(raw.getBefore() == null ? null : raw.getBefore().toJavaObject(messageType))
+                .after(raw.getAfter()  == null ? null : raw.getAfter().toJavaObject(messageType))
+                .build();
+    }
+
     // —— 每个操作独立的「要不要处理」判断，默认全放行，子类按表覆写 ——
-    protected boolean acceptInsert(BinlogEvent event) { return true; }
-    protected boolean acceptUpdate(BinlogEvent event) { return true; }
-    protected boolean acceptDelete(BinlogEvent event) { return true; }
+    protected boolean acceptInsert(BinlogEvent<T> event) { return true; }
+    protected boolean acceptUpdate(BinlogEvent<T> event) { return true; }
+    protected boolean acceptDelete(BinlogEvent<T> event) { return true; }
 
     // —— 每个操作的业务动作，默认空实现，子类按需覆写 ——
-    protected void onInsert(BinlogEvent event) {}
-    protected void onUpdate(BinlogEvent event) {}
-    protected void onDelete(BinlogEvent event) {}
+    protected void onInsert(BinlogEvent<T> event) {}
+    protected void onUpdate(BinlogEvent<T> event) {}
+    protected void onDelete(BinlogEvent<T> event) {}
 }
 ```
 
-这样一来，一张表的"过滤 + 处理"在自己的类里就是一张清清楚楚的表格：**哪个操作、满足什么条件、做什么**，增删改互不牵连，也不会污染别的表。
+**注意 Router → 基类的这条注入链**：`@BinlogTable#messageType` 只在启动扫描时被读一次，Router 立刻通过 `setMessageType` 把 `Class` 塞进基类字段；运行期基类只用这个字段做反序列化，不再重复反射注解——这正是刚才 Pipeline 里没有 `retype` 的原因，Router 已经在启动期把"用什么类型"的知识送到了目的地。
+
+这样一来，一张表的"过滤 + 处理"在自己的类里就是一张清清楚楚的表格：**哪个操作、满足什么条件、做什么**，增删改互不牵连，也不会污染别的表。而且泛型 `T` 就是这张表的 BO，处理器体内是**编译期强类型**——字段拼错编译不过，比 `after.getString("xxx")` 那种运行期字符串安全得多：
 
 ```java
-@BinlogTable("order_status")
+@BinlogTable(value = "order_status", messageType = Order.class)
 @Component
-public class OrderStatusProcessor extends OpTypeProcessor {
+public class OrderStatusProcessor extends OpTypeProcessor<Order> {
 
     @Resource
     private OrderSyncService orderSyncService;
 
     /** 新增：只同步目标业务类型的订单 */
     @Override
-    protected boolean acceptInsert(BinlogEvent event) {
+    protected boolean acceptInsert(BinlogEvent<Order> event) {
         return isTargetBiz(event.getAfter());
     }
 
     @Override
-    protected void onInsert(BinlogEvent event) {
-        orderSyncService.sync(toOrder(event.getAfter()));
+    protected void onInsert(BinlogEvent<Order> event) {
+        orderSyncService.sync(event.getAfter());
     }
 
     /** 更新：目标类型 且 状态确实发生变化才处理（避免无意义写下游） */
     @Override
-    protected boolean acceptUpdate(BinlogEvent event) {
+    protected boolean acceptUpdate(BinlogEvent<Order> event) {
         return isTargetBiz(event.getAfter()) && statusChanged(event);
     }
 
     @Override
-    protected void onUpdate(BinlogEvent event) {
-        orderSyncService.sync(toOrder(event.getAfter()));
+    protected void onUpdate(BinlogEvent<Order> event) {
+        orderSyncService.sync(event.getAfter());
     }
 
     // 未覆写 acceptDelete → 默认放行；也可覆写为 return false 表示本表不处理删除
     @Override
-    protected void onDelete(BinlogEvent event) {
+    protected void onDelete(BinlogEvent<Order> event) {
         orderSyncService.remove(event.getPrimaryKey());
     }
 
-    private boolean isTargetBiz(JSONObject after) {
-        return "NORMAL".equals(after.getString("biz_type"));
+    private boolean isTargetBiz(Order after) {
+        return "NORMAL".equals(after.getBizType());
     }
 
-    private boolean statusChanged(BinlogEvent event) {
+    private boolean statusChanged(BinlogEvent<Order> event) {
         return event.getBefore() != null
-                && !Objects.equals(event.getBefore().getString("status"),
-                                   event.getAfter().getString("status"));
-    }
-
-    private Order toOrder(JSONObject after) {
-        return after.toJavaObject(Order.class);
+                && !Objects.equals(event.getBefore().getStatus(), event.getAfter().getStatus());
     }
 }
 ```
@@ -494,7 +519,7 @@ Binlog 消息**天生可能重复、可能乱序**，加上下游可能临时故
 ## 4、接入新表的标准步骤（SOP）
 
 1. 定义该表对应的 **BO 对象**（字段与 `after` 一致）。
-2. 新增 **处理器**：`@BinlogTable("表名")` + 继承 `OpTypeProcessor`，实现 `onInsert/onUpdate/onDelete`。
+2. 新增 **处理器**：`@BinlogTable(value = "表名", messageType = XxxBO.class)` + 继承 `OpTypeProcessor<XxxBO>`，实现 `onInsert/onUpdate/onDelete`，方法体内直接用强类型 `event.getAfter()`，**无需自行反序列化**。
 3. 如是新采集格式，补充一个 **`FormatNormalizer`** 实现。
 4. 如该表/某个操作有业务过滤规则，在处理器里覆写对应的 `acceptInsert/acceptUpdate/acceptDelete` 即可；配置该表 **Topic 订阅**与**开关**。（只有当过滤规则真的对所有表通用时，才考虑新增 `EventFilter`）
 

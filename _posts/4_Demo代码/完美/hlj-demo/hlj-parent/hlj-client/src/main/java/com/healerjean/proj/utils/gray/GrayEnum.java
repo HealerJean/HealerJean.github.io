@@ -44,7 +44,20 @@ public interface GrayEnum {
         /**
          * 未命中灰度
          */
-        GRAY_FALSE("unHit", false, "未命中");
+        GRAY_FALSE("unHit", false, "未命中"),
+
+        /**
+         * 空值命中
+         */
+        GRAY_EMPTY_TRUE("emptyHit",true, "空值命中"),
+
+        /**
+         * 空值未命中
+         */
+        GRAY_EMPTY_FALSE("emptyUnHit", false, "空值未命中"),
+
+        ;
+
 
         /**
          * 灰度详细结果码
