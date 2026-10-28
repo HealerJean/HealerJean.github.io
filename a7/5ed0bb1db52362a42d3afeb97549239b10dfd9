@@ -1,0 +1,44 @@
+_posts/9_分布式/1_XXL-JOB/2020-05-14-XXL_JOB分布式任务调度平台.md
+  s_3a6581f2c8340b::t_0498ddb8d7ee71 116
+  s_3a6581f2c8340b::t_05b9c363661e9d 117
+_posts/3_工具类/38_Mail/hlj-mail/hlj-parent/hlj-client/src/profiles/local/application.properties
+  s_3a6581f2c8340b::t_9ed3b1617fd22e 12,15
+_posts/3_工具类/38_Mail/application.properties
+  s_3a6581f2c8340b::t_21843862989cd7 18,20-21
+_posts/4_Demo代码/5_shiro_login/hlj-shiro-login-token/hlj-parent/hlj-client/src/profiles/local/application.properties
+  s_3a6581f2c8340b::t_e627c26e25bd39 30-32
+_posts/4_Demo代码/5_shiro_login/hlj-shiro-login-token/hlj-parent/hlj-client/src/profiles/prod/application.properties
+  s_3a6581f2c8340b::t_ef7e2214acd6d4 30-32
+_posts/4_Demo代码/5_shiro_login/hlj-shiro-login-token/hlj-parent/hlj-manage/src/profiles/local/application.properties
+  s_3a6581f2c8340b::t_2b0918e10a9b6c 30-32
+_posts/4_Demo代码/5_shiro_login/hlj-shiro-login-token/hlj-parent/hlj-manage/src/profiles/prod/application.properties
+  s_3a6581f2c8340b::t_fe32fa1f4f4e33 30-32
+_posts/4_Demo代码/5_shiro_login/hlj-shiro-login/hlj-parent/hlj-client/src/profiles/local/application.properties
+  s_3a6581f2c8340b::t_1c9ae785461098 30-32
+_posts/4_Demo代码/5_shiro_login/hlj-shiro-login/hlj-parent/hlj-client/src/profiles/prod/application.properties
+  s_3a6581f2c8340b::t_39a5e30889ec0f 30-32
+_posts/4_Demo代码/5_shiro_login/hlj-shiro-login/hlj-parent/hlj-manage/src/profiles/local/application.properties
+  s_3a6581f2c8340b::t_c0dfb069b5d327 30-32
+_posts/4_Demo代码/5_shiro_login/hlj-shiro-login/hlj-parent/hlj-manage/src/profiles/prod/application.properties
+  s_3a6581f2c8340b::t_d8fcd4cccd0034 30-32
+_posts/9_分布式/1_XXL-JOB/xxl-job-2.2.0/xxl-job-admin-7070/src/main/resources/application.properties
+  s_3a6581f2c8340b::t_b3a85f104dc777 47-48
+_posts/9_分布式/1_XXL-JOB/xxl-job-2.2.0/xxl-job-admin-8080/src/main/resources/application.properties
+  s_3a6581f2c8340b::t_01ee87b5698d7a 47-48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "a75ed0bb1db52362a42d3afeb97549239b10dfd9",
+  "prompts": {},
+  "sessions": {
+    "s_3a6581f2c8340b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "88667a07-f767-4c28-99f5-1d3a251857ef",
+        "model": "unknown"
+      },
+      "human_author": "zhangyujin1 <zhangyujin1@jd.com>"
+    }
+  }
+}
