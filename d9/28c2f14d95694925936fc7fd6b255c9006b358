@@ -1,0 +1,30 @@
+"_posts/12_数据库相关/2026-09-09-MySQL Binlog消息接入实战教程.md"
+  h_db4e239d30fdb8 97,102-103,109-110,146,171-172,193,197,227,233-237,245,248,255-257,259-260,270,343,346,348-352,355-359,362-370,379-389,391-393,396-398,402-404,407,409,416,421-422,427,432-433,438,442-443,446,448,522
+_posts/3_工具类/23_Logger日志/2023-01-03-Log打印和追踪.md
+  h_db4e239d30fdb8 42-50,52-55,57-59,61-65,67,76-91,94-97,99-101,103-106,109-110,117-120
+_posts/3_工具类/33_content生成pdf/2_word模板生成pdf/工具对比.md
+  h_db4e239d30fdb8 1-61
+_posts/4_Demo代码/完美/hlj-demo/hlj-parent/hlj-client/src/main/java/com/healerjean/proj/service/impl/UserDemoServiceImpl.java
+  h_db4e239d30fdb8 121
+_posts/4_Demo代码/完美/hlj-demo/hlj-parent/hlj-client/src/main/java/com/healerjean/proj/utils/gray/GrayEnum.java
+  h_db4e239d30fdb8 47-60
+_posts/4_Demo代码/完美/hlj-demo/hlj-parent/hlj-client/src/main/java/com/healerjean/proj/utils/gray/GrayUtil.java
+  h_db4e239d30fdb8 8,59-75
+_posts/5_经验/2022_04_01_项目经验_之_限流/2022-04-01-项目经验_之_降级.md
+  h_db4e239d30fdb8 2-3,8,10,22-90,94,96-100,103-107,109-182,205,213
+"_posts/6_Java/2_多线程和队列/2023_01_13_Semaphore_CyclicBarrier_CountDownLatch_Thead.sleep/2023-01-13- Semaphore_CyclicBarrier_CountDownLatch_Thead.sleep.md"
+  h_db4e239d30fdb8 278,280
+_posts/9_分布式/1_XXL-JOB/2020-05-14-XXL_JOB分布式任务调度平台.md
+  h_db4e239d30fdb8 117
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "d928c2f14d95694925936fc7fd6b255c9006b358",
+  "prompts": {},
+  "humans": {
+    "h_db4e239d30fdb8": {
+      "author": "zhangyujin1 <zhangyujin1@jd.com>"
+    }
+  }
+}
