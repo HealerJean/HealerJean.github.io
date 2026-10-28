@@ -1,0 +1,43 @@
+_posts/3_工具类/38_Mail/application.properties
+  s_3a6581f2c8340b::t_6dd7700e7f3cac 1-22
+_posts/3_工具类/38_Mail/hlj-mail/hlj-parent/hlj-client/src/profiles/local/application.properties
+  s_3a6581f2c8340b::t_e4ec0bc1064b33 1-16
+_posts/4_Demo代码/5_shiro_login/hlj-shiro-login-token/hlj-parent/hlj-client/src/profiles/local/application.properties
+  s_3a6581f2c8340b::t_cc4581b5532114 1-35
+_posts/4_Demo代码/5_shiro_login/hlj-shiro-login-token/hlj-parent/hlj-client/src/profiles/prod/application.properties
+  s_3a6581f2c8340b::t_adcf0733fca759 1-35
+_posts/4_Demo代码/5_shiro_login/hlj-shiro-login-token/hlj-parent/hlj-manage/src/profiles/local/application.properties
+  s_3a6581f2c8340b::t_058c8e41f4607e 1-34
+_posts/4_Demo代码/5_shiro_login/hlj-shiro-login-token/hlj-parent/hlj-manage/src/profiles/prod/application.properties
+  s_3a6581f2c8340b::t_6c5031a19fcef2 1-34
+_posts/4_Demo代码/5_shiro_login/hlj-shiro-login/hlj-parent/hlj-client/src/profiles/local/application.properties
+  s_3a6581f2c8340b::t_bffd04d831e0f5 1-34
+_posts/4_Demo代码/5_shiro_login/hlj-shiro-login/hlj-parent/hlj-client/src/profiles/prod/application.properties
+  s_3a6581f2c8340b::t_c4e93ab39140da 1-34
+_posts/4_Demo代码/5_shiro_login/hlj-shiro-login/hlj-parent/hlj-manage/src/profiles/local/application.properties
+  s_3a6581f2c8340b::t_f577eec7f7d374 1-34
+_posts/4_Demo代码/5_shiro_login/hlj-shiro-login/hlj-parent/hlj-manage/src/profiles/prod/application.properties
+  s_3a6581f2c8340b::t_583ad72c5773aa 1-34
+_posts/9_分布式/1_XXL-JOB/2020-05-14-XXL_JOB分布式任务调度平台.md
+  s_3a6581f2c8340b::t_9a1ae68c0eb7fb 1-709
+_posts/9_分布式/1_XXL-JOB/xxl-job-2.2.0/xxl-job-admin-7070/src/main/resources/application.properties
+  s_3a6581f2c8340b::t_351ae7d3295481 1-66
+_posts/9_分布式/1_XXL-JOB/xxl-job-2.2.0/xxl-job-admin-8080/src/main/resources/application.properties
+  s_3a6581f2c8340b::t_fef307cd81aa0a 1-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "c2341e807cc317caa1d8d96c48660b56eed80cd9",
+  "prompts": {},
+  "sessions": {
+    "s_3a6581f2c8340b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "88667a07-f767-4c28-99f5-1d3a251857ef",
+        "model": "GLM-5.3-joybuilder"
+      },
+      "human_author": "zhangyujin1 <zhangyujin1@jd.com>"
+    }
+  }
+}
