@@ -19,7 +19,7 @@
         <java.version>1.8</java.version>
         <lombok.version>1.18.4</lombok.version>
         <!--swagger 版本-->
-        <swagger.version>2.7.0</swagger.version>
+        <swagger.version>2.10.0</swagger.version>
         <!--数据源-->
         <com-alibaba-druid.version>1.1.21</com-alibaba-druid.version>
         <!--mybatis plus-->
